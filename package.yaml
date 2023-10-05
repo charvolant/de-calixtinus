@@ -1,0 +1,83 @@
+name:                camino-planner
+version:             0.1.0.0
+github:              "githubuser/camino-planner"
+license:             BSD3
+author:              "Author name here"
+maintainer:          "example@example.com"
+copyright:           "2023 Author name here"
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/githubuser/camino-planner#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- aeson >= 2
+- aeson-pretty
+- containers
+- text
+- formatting
+- bytestring
+- HUnit == 1.6.*
+- vector
+- numeric-tools == 0.2.*
+- scientific
+- optparse-applicative
+- split
+- xml-conduit
+- xml-hamlet
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+- -Wmissing-exported-signatures
+- -Wno-missing-signatures
+
+library:
+  source-dirs: src
+
+executables:
+  camino-planner-exe:
+    main:                Main.hs
+    source-dirs:         app/planner
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - camino-planner
+  camino-map-exe:
+    main:                Main.hs
+    source-dirs:         app/mapper
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - camino-planner
+
+tests:
+  camino-planner-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - camino-planner

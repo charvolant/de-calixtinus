@@ -1030,13 +1030,6 @@
       "services": [ "Groceries" ],
       "accommodation": [ ]
     },
-    {
-      "id": "F34",
-      "name": "Murtal",
-      "position": { "latitude": 39.8717, "longitude": -8.4437 },
-      "services": [ "Restaurant" ],
-      "accommodation": [ "House" ]
-    },
 
     {
       "id": "F35",
@@ -1813,20 +1806,6 @@
       "distance": 3.4,
       "ascent": 55,
       "descent": 0
-    },
-    {
-      "from": "F33",
-      "to": "F34",
-      "distance": 3.1,
-      "ascent": 75,
-      "descent": 20
-    },
-    {
-      "from": "F34",
-      "to": "P55",
-      "distance": 5.0,
-      "ascent": 20,
-      "descent": 65
     },
 
     {

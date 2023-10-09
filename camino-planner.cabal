@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Camino.Camino
+      Camino.Html
       Camino.KML
       Camino.Planner
       Camino.Walking
@@ -41,12 +42,14 @@ library
     , aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , containers
     , formatting
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
+    , shakespeare
     , split
     , text
     , vector
@@ -66,6 +69,7 @@ executable camino-map-exe
     , aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , camino-planner
     , containers
@@ -73,6 +77,7 @@ executable camino-map-exe
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
+    , shakespeare
     , split
     , text
     , vector
@@ -92,6 +97,7 @@ executable camino-planner-exe
     , aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , camino-planner
     , containers
@@ -99,6 +105,7 @@ executable camino-planner-exe
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
+    , shakespeare
     , split
     , text
     , vector
@@ -125,6 +132,7 @@ test-suite camino-planner-test
     , aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , camino-planner
     , containers
@@ -132,6 +140,7 @@ test-suite camino-planner-test
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
+    , shakespeare
     , split
     , text
     , vector

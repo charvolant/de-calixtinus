@@ -3,12 +3,12 @@ module Main (main) where
 
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
-import Camino
-import Graph
-import Planner
+import Camino.Camino
+import Graph.Graph
+import Camino.Planner
 import Data.Text.Lazy (pack, unpack, fromStrict)
 import Formatting
-import KML
+import Camino.KML
 import Text.XML
 
 import Options.Applicative
@@ -46,5 +46,5 @@ main = do
     opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Plan a camino graph")
     camino' <- readCamino (camino opts)
     -- mapM_ printLocation (locations camino')
-    let kml = createCaminoDoc camino' Nothing
+    let kml = createCaminoDoc defaultPreferences camino' Nothing
     B.putStr $ renderLBS (def { rsPretty = True }) kml

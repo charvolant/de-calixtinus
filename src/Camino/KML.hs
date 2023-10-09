@@ -20,12 +20,16 @@ module Camino.KML where
 import Control.Monad
 import Camino.Camino
 import Camino.Planner
+import Camino.Html
 import Data.Text (Text, pack)
 import qualified Data.Set as S
 import qualified Data.Map as M
 import Data.Maybe
+import Data.List
 import Text.Hamlet.XML
 import Text.XML
+import Text.Blaze.Html.Renderer.Text
+import Data.Text.Lazy (toStrict)
 
 type Colour = String
 
@@ -73,13 +77,19 @@ caminoLocationStyle stops waypoints location
   | S.member location waypoints = "#waypointUsed"
   | otherwise = "#waypointUnused"
   
-caminoLocationKml :: S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationKml stops waypoints location = [xml|
+caminoLocationKml :: Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml preferences camino trip stops waypoints location = [xml|
     <Placemark id="${pack $ locationID location}">
       <name>#{locationName location}
+      <description>
+        #{toStrict $ renderHtml $ locationSummary preferences camino location}
+        $maybe d <- day
+          #{toStrict $ renderHtml $ daySummary preferences camino trip d}
       <styleUrl>#{caminoLocationStyle stops waypoints location}
       ^{pointKml $ locationPosition location}
   |]
+  where
+    day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
 caminoLegStyle stops waypoints leg
   | (S.member (legFrom leg) waypoints) && (S.member (legTo leg) waypoints)  = "#legUsed"
@@ -94,8 +104,8 @@ caminoLegKml stops waypoints leg = [xml|
   |]
 
 -- Create a KML document of a camino
-createCaminoDoc :: Camino -> Maybe Trip -> Document
-createCaminoDoc camino trip = Document (Prologue [] Nothing []) kml []
+createCaminoDoc :: Preferences -> Camino -> Maybe Trip -> Document
+createCaminoDoc preferences camino trip = Document (Prologue [] Nothing []) kml []
   where
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip    
@@ -103,9 +113,11 @@ createCaminoDoc camino trip = Document (Prologue [] Nothing []) kml []
     kml = Element "kml" ns
       [xml|
         <Document>
-          ^{caminoStyles camino}
+          $maybe t <- trip
+            <name>#{locationName $ start t} to #{locationName $ finish t}
+           ^{caminoStyles camino}
           $forall location <- caminoLocations camino
-            ^{caminoLocationKml stops waypoints location}
+            ^{caminoLocationKml preferences camino trip stops waypoints location}
           $forall leg <- legs camino
             ^{caminoLegKml stops waypoints leg}
       |]

@@ -3,10 +3,10 @@ module Main (main) where
 
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
-import Camino
-import Graph
-import Planner
-import KML
+import Camino.Camino
+import Graph.Graph
+import Camino.Planner
+import Camino.KML
 import Data.Text.Lazy (unpack)
 import qualified Data.Set as S
 import Options.Applicative
@@ -59,7 +59,7 @@ plan opts = do
     print preferences''
     let solution = planCamino preferences'' camino' begin' end'
     putStr $ unpack $ showTrip preferences'' camino' solution
-    let kml = createCaminoDoc camino' solution
+    let kml = createCaminoDoc preferences' camino' solution
     B.putStr $ renderLBS (def { rsPretty = True }) kml
     
 main :: IO ()

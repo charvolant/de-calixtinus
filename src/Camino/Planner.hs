@@ -24,11 +24,53 @@ import Data.List (intersperse)
 import Formatting
 import Debug.Trace (trace)
 
+-- | The metrics for a day, segement or complete trip
+data Metrics = Metrics {
+    metricsDistance :: Float, -- ^ Actual distance in km
+    metricsTime :: Float, -- ^ Time taken in hours
+    metricsPerceivedDistance :: Float, -- ^ Perceived distance in km
+    metricsAscent :: Float, -- ^ Ascent in metres
+    metricsDescent :: Float, -- ^ Descent in metres
+    metricsAccomodation :: Penance, -- ^ Accomondation penance in km-equivalent. This represents the distance you would be prepared to walk to avoid this accomodation
+    metricsStop :: Penance, -- ^ Stop penance in km-equivalent. The represents the costs of stopping for the night in food, urge to get on, whatever
+    metricsDistanceAdjust :: Penance, -- ^ Adjustments to distance cost in km-equivalent caused by going over/under target
+    metricsTimeAdjust :: Penance, -- ^ Adjustments to time cost in km-equivalent caused by going over/under target
+    metricsMisc :: Penance, -- ^ Additional miscellaneous penance costs and causes
+    metricsPenance :: Penance -- ^ Total penance for this leg of the metrics
+  } deriving (Show)
+
+instance Eq Metrics where
+  m1 == m2 = metricsPenance m1 == metricsPenance m2
+  
+instance Ord Metrics where
+  compare m1 m2 = compare (metricsPenance m1) (metricsPenance m2)
+  
+instance Semigroup Metrics where
+  m1 <> m2 = Metrics {
+    metricsDistance = metricsDistance m1 + metricsDistance m2,
+    metricsTime = metricsTime m1 + metricsTime m2,
+    metricsPerceivedDistance = metricsPerceivedDistance m1 + metricsDistance m2,
+    metricsAscent = metricsAscent m1 + metricsAscent m2,
+    metricsDescent = metricsDescent m1 + metricsDescent m2,
+    metricsAccomodation = metricsAccomodation m1 <> metricsAccomodation m2,
+    metricsStop = metricsStop m1 <> metricsStop m2,
+    metricsDistanceAdjust = metricsDistanceAdjust m1 <> metricsDistanceAdjust m2,
+    metricsTimeAdjust = metricsTimeAdjust m1 <> metricsTimeAdjust m2,
+    metricsMisc = metricsMisc m1 <> metricsMisc m2,
+    metricsPenance = metricsPenance m1 <> metricsPenance m2
+  }
+  
+instance Monoid Metrics where
+  mempty = Metrics 0.0 0.0 0.0 0.0 0.0 mempty mempty mempty mempty mempty mempty
+
+instance Score Metrics where
+  invalid = Metrics 0.0 0.0 0.0 0.0 0.0 mempty mempty mempty mempty Reject Reject
+  
 -- | A day's stage
-type Day = Chain Location Leg Penance
+type Day = Chain Location Leg Metrics
 
 -- | A complete camino
-type Trip = Chain Location Day Penance
+type Trip = Chain Location Day Metrics
 
 walking' :: String -> (Float -> Float -> Float -> Float)
 walking' n | n == "naismith" = naismith
@@ -51,18 +93,6 @@ travel :: Preferences -- ^ The calculation preferences
   -> Float -- ^ The total distance covered by the sequence
 travel _preferences legSeq = sum $ map legDistance legSeq
 
--- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: Preferences -> [Leg] -> (Float, Float, Float, Float, Float)
-travelMetrics preferences legSeq =
-  let
-    normalSpeed = nominalSpeed Normal
-    actualSpeed = nominalSpeed $ preferenceFitness preferences
-    time = hours preferences legSeq
-    distance = travel preferences legSeq
-    perceivedDistance = normalSpeed * time
-  in
-    (normalSpeed, actualSpeed, time, distance, perceivedDistance)
-
 -- | Calculate the total ascent of a sequence of legs
 totalAscent :: Preferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
@@ -74,6 +104,20 @@ totalDescent :: Preferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Float -- ^ The total distance covered by the sequence
 totalDescent _preferences legSeq = sum $ map legDescent legSeq
+
+-- | Calculate the travel metrics for a seqnece of legs
+travelMetrics :: Preferences -> [Leg] -> (Float, Float, Float, Float, Float, Float, Float)
+travelMetrics preferences legSeq =
+  let
+    normalSpeed = nominalSpeed Normal
+    actualSpeed = nominalSpeed $ preferenceFitness preferences
+    time = hours preferences legSeq
+    distance = travel preferences legSeq
+    ascent = totalAscent preferences legSeq
+    descent = totalDescent preferences legSeq
+    perceivedDistance = normalSpeed * time
+  in
+    (normalSpeed, actualSpeed, time, distance, perceivedDistance, ascent, descent)
 
 -- | Default sleeping in the open option
 openSleeping :: Accommodation
@@ -103,29 +147,26 @@ accommodation preferences _camino legSeq = accommodation' preferences stop
 
 adjustment range scale value
   | isOutOfRange range value = Reject
-  | isOutOfBounds range value = SimplePenance (scale * rangeDistance range value)
+  | isOutOfBounds range value = Penance (scale * rangeDistance range value)
   | otherwise = mempty
 
 -- | Calculate the total penance implicit in a sequence of legs
 penance :: Preferences -- ^ The user preferences
   -> Camino -- ^ The camino travelled
   -> [Leg] -- ^ The sequence of legs
-  -> Penance -- ^ The penance value
+  -> Metrics -- ^ The penance value
 penance preferences camino legSeq =
   let
-    (normalSpeed, actualSpeed, time, _distance, perceivedDistance) = travelMetrics preferences legSeq
+    (normalSpeed, actualSpeed, time, distance, perceivedDistance, ascent, descent) = travelMetrics preferences legSeq
     timeAdjust = adjustment (preferenceTime preferences) normalSpeed time
     distanceAdjust = adjustment (preferenceDistance preferences) 1.0 perceivedDistance
     accomodationAdjust = accommodation preferences camino legSeq -- accomodation penance
-    dayCost = (SimplePenance actualSpeed) -- One hour of travel not used
-    totalPenance =  (LabeledPenance "perceivedDistance" (SimplePenance perceivedDistance))
-      <> (LabeledPenance "timeAdjustment" timeAdjust)
-      <> (LabeledPenance "distanceAdjust" distanceAdjust)
-      <> accomodationAdjust
-      <> (LabeledPenance "dayCost" dayCost)
+    dayCost = Penance actualSpeed -- One hour of travel not used
+    distanceCost = Penance perceivedDistance
+    total = distanceCost <> accomodationAdjust <> dayCost <> distanceAdjust <> timeAdjust
   in
     -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head legSeq) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last legSeq) ++ " = " ++ show totalPenance) totalPenance
-    totalPenance
+    Metrics distance time perceivedDistance ascent descent accomodationAdjust dayCost distanceAdjust timeAdjust mempty total
 
 -- | Accept a day's stage as a possibility
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
@@ -142,7 +183,7 @@ dayAccept preferences _camino lseq =
 
 -- | Evaluate a day's stage for penance
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
-dayEvaluate :: Preferences -> Camino -> [Leg] -> Penance
+dayEvaluate :: Preferences -> Camino -> [Leg] -> Metrics
 dayEvaluate = penance
 
 -- | Choose a day's stage based on minimum penance
@@ -157,7 +198,7 @@ caminoAccept _preferences _camino _days = True
 -- | Evaluate a complete camino 
 --   Currently, the sum of all day scores
 --   Refuse any camino that doesn't include all required stops and exclude all excluded stops
-caminoEvaluate :: Preferences -> Camino -> Location -> [Day] -> Penance
+caminoEvaluate :: Preferences -> Camino -> Location -> [Day] -> Metrics
 caminoEvaluate preferences _camino end days =
   let
     final = finish $ last days
@@ -166,7 +207,7 @@ caminoEvaluate preferences _camino end days =
     excludedOk = not $ any (\d -> S.member (finish d) (preferenceExcluded preferences)) days
     total = mconcat $  map score days
   in
-    if not requiredOk || not excludedOk then Reject else total
+    if not requiredOk || not excludedOk then invalid else total
 
 -- | Choose a camino stage.
 --   First check that one or the other has passed through a required stop.
@@ -199,20 +240,14 @@ planCamino preferences camino begin end =
     end
 
 -- | Print a penance for a trip
-showPenance :: Penance -> LT.Text
-showPenance Reject = "reject"
-showPenance (SimplePenance value) = format (fixed 1) value
-showPenance (LabeledPenance label value) = format (text % "=" % text) (LT.pack label) (showPenance value)
-showPenance (CompoundPenance components value) = format (text % " (" % text % ")") (showPenance value) desc where
-   desc = (LT.concat $ intersperse ", " (map (\(l, v) -> LT.pack (l ++ "=" ++ (LT.unpack $ showPenance v))) (M.assocs components)))
+showMetrics :: Metrics -> LT.Text
+showMetrics metrics = LT.pack $ show metrics
 
 showDay :: Preferences -> Camino -> Int -> Day -> LT.Text
-showDay preferences _camino dn (Chain _begin end links pnce) =
-  dayFormat dn chain distance perceivedDistance time ascent' descent' (showPenance pnce)
+showDay preferences _camino dn (Chain _begin end links metrics) =
+  dayFormat dn chain distance perceivedDistance time ascent descent (showMetrics metrics)
   where
-    (_normalSpeed, _actualSpeed, time, distance, perceivedDistance) = travelMetrics preferences links
-    ascent' = totalAscent preferences links
-    descent' = totalDescent preferences links
+    (_normalSpeed, _actualSpeed, time, distance, perceivedDistance, ascent, descent) = travelMetrics preferences links
     locs = (map legFrom links) ++ [end]
     chain = LT.concat $ intersperse " -> " (map (LT.fromStrict . locationName) locs)
     dayFormat = format (
@@ -228,11 +263,11 @@ showDay preferences _camino dn (Chain _begin end links pnce) =
 -- | Print a plan in comprehenisble form
 showTrip :: Preferences -> Camino -> Maybe Trip -> LT.Text
 showTrip _preferences _camino Nothing = "Unable to find solution"
-showTrip preferences camino (Just (Chain begin end days pnce)) =
+showTrip preferences camino (Just (Chain begin end days metrics)) =
   LT.concat ([header] ++ (zipWith (\i -> \d -> showDay preferences camino i d) [0..] days))
   where
     headerFormat = format ("From " % text % " to " % text % " with penance " % text % "\n")
-    header = headerFormat (LT.fromStrict $ locationName begin) (LT.fromStrict $ locationName end) (showPenance pnce)
+    header = headerFormat (LT.fromStrict $ locationName begin) (LT.fromStrict $ locationName end) (showMetrics metrics)
 
 
 -- | Get all the stops (ie start and finish locations) on a trip in order

@@ -36,9 +36,10 @@ module Camino.Camino (
   accommodationServices,
   accommodationSleeping,
   caminoLocations,
+  defaultPreferences,
+  defaultSRS,
   placeholderLocation,
   normalisePreferences,
-  simplePenance,
   boundsDistance,
   isInsideMaximum,
   isOutOfBounds,
@@ -49,94 +50,59 @@ module Camino.Camino (
 import GHC.Generics (Generic)
 import Data.Aeson
 import Data.Text (Text, unpack, pack)
-import Data.Maybe
-import qualified Data.Map as M (Map, (!), fromList, elems, (!), assocs, empty, insert, union, mapWithKey, lookup)
+import qualified Data.Map as M (Map, (!), fromList, elems, (!), mapWithKey)
 import qualified Data.Set as S (Set, empty, map, fromList)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.List (find)
 import Graph.Graph
 import Graph.Programming
-import Debug.Trace
 
 -- | The measure of penance.
 -- |
--- | Currently, a simple float that can be thought of as equivalent to hours spent walking.
-data Penance = Reject | SimplePenance Float | LabeledPenance String Penance | CompoundPenance (M.Map String Penance) Penance deriving (Show)
-
--- | Calculate a basic reject or penance from a complex penance
-simplePenance :: Penance -- ^ The input penance
-  -> Penance -- ^ The combined penance as a @Reject@ or @SimplePenance@
-simplePenance Reject = Reject
-simplePenance p@(SimplePenance _score) = p
-simplePenance (LabeledPenance _reason1 penance1) = simplePenance penance1
-simplePenance (CompoundPenance _map1 penance1) = simplePenance penance1
-
-simplePlus penance1 penance2 = (simplePenance penance1) <> (simplePenance penance2)
+-- | Currently, based a simple float that can be thought of as equivalent to hours spent walking.
+data Penance = Reject -- ^ Unsustainable penance
+ | Penance Float -- ^ Simple penance
+ deriving (Show)
 
 instance Semigroup Penance where
   Reject <> _ = Reject
   _ <> Reject = Reject
-  (SimplePenance score1) <> (SimplePenance score2) = SimplePenance (score1 + score2)
-  p1@(SimplePenance _score1) <> p2@(LabeledPenance reason2 penance2) =
-    if p1 == mempty then p2 else LabeledPenance reason2 (simplePlus p1 penance2)
-  p1@(SimplePenance _score1) <> p2@(CompoundPenance map2 penance2) =
-    if p1 == mempty then p2 else CompoundPenance (M.insert "unknown" p1 map2) (simplePlus p1 penance2)
-  p1@(LabeledPenance reason1 penance1) <> p2@(SimplePenance _score2) =
-    if p2 == mempty then p1 else LabeledPenance reason1 (simplePlus penance1 p2)
-  (LabeledPenance reason1 penance1) <> (LabeledPenance reason2 penance2) =
-    CompoundPenance (M.fromList [(reason1, penance1), (reason2, penance2)]) (simplePlus penance1 penance2)
-  (LabeledPenance reason1 penance1) <> (CompoundPenance map2 penance2) =
-    CompoundPenance (M.insert reason1 penance1 map2) (simplePlus penance1 penance2)
-  (CompoundPenance map1 penance1) <> p2@(SimplePenance _score2) = CompoundPenance (M.insert "unknown" p2 map1) (simplePlus penance1 p2)
-  (CompoundPenance map1 penance1) <> (LabeledPenance reason2 penance2) = CompoundPenance (M.insert reason2 penance2 map1) (simplePlus penance1 penance2)
-  (CompoundPenance map1 penance1) <> (CompoundPenance map2 penance2) = CompoundPenance (M.union map1 map2) (simplePlus penance1 penance2)
+  p1@(Penance score1) <> p2@(Penance score2) = if p1 == mempty then p2 else if p2 == mempty then p1 else Penance (score1 + score2)
 
 instance Monoid Penance where
-  mempty = SimplePenance 0.0
+  mempty = Penance 0.0
 
 instance Score Penance where
   invalid = Reject
 
 instance Eq Penance where
-  a == b = case (ca, cb) of
-    (Reject, Reject) -> True
-    (Reject, _) -> False
-    (_, Reject) -> False
-    (SimplePenance v1, SimplePenance v2) -> v1 == v2
-    _ -> error ("Invalid simple scores " ++ show ca ++ ", " ++ show cb)
-    where
-      ca = simplePenance a
-      cb = simplePenance b
+  Reject == Reject = True
+  Reject == _ = False
+  _ == Reject = False
+  (Penance score1) == (Penance score2) = score1 == score2
     
 instance Ord Penance where
-  compare a b = case (ca, cb) of
-    (Reject, Reject) -> EQ
-    (Reject, _) -> GT
-    (_, Reject) -> LT
-    (SimplePenance v1, SimplePenance v2) -> compare v1 v2
-    _ -> error ("Invalid simple scores " ++ show ca ++ ", " ++ show cb)
-    where
-      ca = simplePenance a
-      cb = simplePenance b
+  compare Reject Reject = EQ
+  compare Reject _ = GT
+  compare _ Reject = LT
+  compare (Penance score1) (Penance score2) = compare score1 score2
 
 instance FromJSON Penance where
    parseJSON (Number v) = do
-     return (SimplePenance $ toRealFloat v)
+     return (Penance $ toRealFloat v)
    parseJSON (String v) = do
      return (if v /= "reject" then error ("Expecting \"reject\" got " ++ show v) else Reject)
-   parseJSON v = error ("Unable to parse accomodation object " ++ show v)
+   parseJSON v = error ("Unable to parse penance object " ++ show v)
 
 instance ToJSON Penance where
     toJSON Reject = String "reject"
-    toJSON v = case simplePenance v of
-      Reject -> "reject"
-      (SimplePenance v') -> Number $ fromFloatDigits $ v'
-      v' -> error ("Invalid " ++ show v')
+    toJSON (Penance score) = Number $ fromFloatDigits score
 
 -- | Spatial reference system
 type SRS = String
 
 -- | The default SRS
+defaultSRS :: SRS
 defaultSRS = "WGS84" :: SRS
 
 data LatLong = LatLong {
@@ -494,7 +460,7 @@ instance FromJSON Preferences where
     accomodation' <- v .: "accomodation"
     required' <- v .:? "required" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
-    let accomodation'' = M.mapWithKey (\k -> \p -> LabeledPenance (show k) p) accomodation'
+    let accomodation'' = M.mapWithKey (\_k -> \p -> p) accomodation'
     let required'' = S.map placeholderLocation required'
     let excluded'' = S.map placeholderLocation excluded'
     return Preferences {
@@ -528,3 +494,36 @@ normalisePreferences camino preferences =
       preferenceRequired = S.map (\l -> locs M.! (locationID l)) (preferenceRequired preferences),
       preferenceExcluded = S.map (\l -> locs M.! (locationID l)) (preferenceExcluded preferences)
     }
+
+-- | The default preference set.
+-- | This provides an overridable skeleton containing values that cover the suggested legs for a walker of normal fitness.
+-- | "Normal" is a little rufty-tufty for many people and allows legs of up to 34km to cover some of the more challenging stages
+defaultPreferences :: Preferences
+defaultPreferences = Preferences {
+    preferenceWalkingFunction = "tobler",
+    preferenceFitness = Normal,
+    preferenceDistance = PreferenceRange { 
+      rangeTarget = 20.0, 
+      rangeLower = 16.0, 
+      rangeUpper = 28.0, 
+      rangeMinimum = 8.0, 
+      rangeMaximum = 34.0 
+    },
+    preferenceTime = PreferenceRange { 
+      rangeTarget = 6.0, 
+      rangeLower = 5.0, 
+      rangeUpper = 8.0, 
+      rangeMinimum = 0.0, 
+      rangeMaximum = 10.0 
+    },
+    preferenceAccommodation = M.fromList [ 
+      (MunicipalAlbergue, Penance 0.0), 
+      (PrivateAlbergue, Penance 0.5), 
+      (GuestHouse, Penance 1.0),
+      (House, Penance 1.5),
+      (Hotel, Penance 2.0),
+      (Camping, Penance 5.0)
+    ],
+    preferenceRequired = S.empty,
+    preferenceExcluded = S.empty
+  } 

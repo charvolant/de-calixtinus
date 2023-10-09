@@ -17,9 +17,8 @@ assertPenanceEqual msg expected Reject _precision =
   assertBool (msg ++ " expected " ++ show expected ++ " but got rejected") False
 assertPenanceEqual msg Reject actual _precision =
   assertBool (msg ++ " expected rejected but got " ++ show actual) False
-assertPenanceEqual msg (SimplePenance expected) (SimplePenance actual) precision =
+assertPenanceEqual msg (Penance expected) (Penance actual) precision =
   assertBool (msg ++ " expected penance value " ++ show expected ++ " but got " ++ show actual) (abs (expected - actual) < precision)
-assertPenanceEqual msg penance1 penance2 precision = assertPenanceEqual msg (simplePenance penance1) (simplePenance penance2) precision
 
 testPlanner :: Preferences -> Camino -> Test
 testPlanner preferences camino = TestList [
@@ -36,8 +35,8 @@ preferences1 = Preferences {
     preferenceDistance = PreferenceRange 4.0 2.0 8.0 0.0 10.0,
     preferenceTime = PreferenceRange 6.0 0.0 8.0 0.0 10.0,
     preferenceAccommodation = M.fromList [
-        (MunicipalAlbergue, (LabeledPenance "MunicipalAlbergue" (SimplePenance 1.5))),
-        (PrivateAlbergue, (LabeledPenance "PrivateAlbergue" (SimplePenance 0.9)))
+        (MunicipalAlbergue, (Penance 1.5)),
+        (PrivateAlbergue, (Penance 0.9))
       ],
     preferenceRequired = S.empty,
     preferenceExcluded = S.empty
@@ -123,16 +122,16 @@ testTravelSimple3 = TestCase (assertFloatEqual "Travel Simple 3" 2.0 (travel pre
 
 testAccomodationSimple = TestList [ testAccomodationSimple1, testAccomodationSimple2 ]
 
-testAccomodationSimple1 = TestCase (assertPenanceEqual "Accomodation Simple 1" (SimplePenance 0.9) (accommodation preferences1 camino1 legs0) 0.001)
+testAccomodationSimple1 = TestCase (assertPenanceEqual "Accomodation Simple 1" (Penance 0.9) (accommodation preferences1 camino1 legs0) 0.001)
 
 testAccomodationSimple2 = TestCase (assertPenanceEqual "Accomodation Simple 2" Reject (accommodation preferences1 camino1 legs1) 0.001)
 
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (SimplePenance 7.296) (penance preferences1 camino1 legs0) 0.001)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 7.296) (metricsPenance $ penance preferences1 camino1 legs0) 0.001)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (penance preferences1 camino1 legs1) 0.001)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 legs1) 0.001)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 
@@ -148,15 +147,15 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 2" begin (start route)
       assertEqual "Plan Camino 1 3" end (finish route)
       assertEqual "Plan Camino 1 4" 2 (length $ path route)
-      -- assertPenanceEqual "Plan Camino 1 5" (SimplePenance 0) (score route) 0.01
+      -- assertPenanceEqual "Plan Camino 1 5" (Penance 0) (score route) 0.01
       let day1 = path route !! 0
       assertEqual "Plan Camino 1 6" "P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (SimplePenance 28.0) (score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 28.0) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (SimplePenance 25.0) (score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 25.0) (metricsPenance $ score day2) 0.1
     )

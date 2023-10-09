@@ -33,8 +33,10 @@ dependencies:
 - scientific
 - optparse-applicative
 - split
+- shakespeare
 - xml-conduit
 - xml-hamlet
+- blaze-html
 ghc-options:
 - -Wall
 - -Wcompat

@@ -23,9 +23,11 @@ module Camino.Camino (
   LatLong(..),
   Leg(..),
   Location(..),
+  Palette(..),
   Penance(..),
   PreferenceRange(..),
   Preferences(..),
+  Route(..),
   Service(..),
   Sleeping(..),
 
@@ -50,6 +52,8 @@ module Camino.Camino (
 import GHC.Generics (Generic)
 import Data.Aeson
 import Data.Text (Text, unpack, pack)
+import Data.Colour (Colour, colourConvert)
+import Data.Colour.SRGB (sRGB24read, sRGB24show, toSRGB24)
 import qualified Data.Map as M (Map, (!), fromList, elems, (!), mapWithKey)
 import qualified Data.Set as S (Set, empty, map, fromList)
 import Data.Scientific (fromFloatDigits, toRealFloat)
@@ -318,11 +322,53 @@ normaliseLeg :: M.Map String Location -> Leg -> Leg
 normaliseLeg locs (Leg from to distance ascent descent) =
   Leg { legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDistance = distance, legAscent = ascent, legDescent = descent }
 
+-- | A palette, graphical styles to use for displaying information
+data Palette = Palette {
+  paletteColour :: Colour Double -- ^ The basic colour of the element
+} deriving (Show)
+      
+instance FromJSON Palette where
+  parseJSON (Object v) = do
+    colour' <- v .: "colour"
+    return Palette { paletteColour = sRGB24read colour' }
+  parseJSON v = error ("Unable to parse palette object " ++ show v)
+
+instance ToJSON Palette where
+  toJSON (Palette colour') =
+    object [ "colour" .= sRGB24show colour' ]
+
+-- | A route, a sub-section of the camino with graphical information
+data Route = Route {
+  routeID :: String, -- ^ An identifier for the route
+  routeName :: Text, -- ^ The route name
+  routeLocations :: S.Set Location, -- ^ The locations along the route
+  routePalette :: Palette
+} deriving (Show)
+
+instance FromJSON Route where
+    parseJSON (Object v) = do
+      id' <- v .: "id"
+      name' <- v .: "name"
+      locations' <- v .: "locations"
+      palette' <- v .: "palette"
+      return Route { routeID = id', routeName = name', routeLocations = locations', routePalette = palette' }
+    parseJSON v = error ("Unable to parse route object " ++ show v)
+
+instance ToJSON Route where
+    toJSON (Route id' name' locations' palette') =
+      object [ "id" .= id', "name" .= name', "locations" .= S.map locationID locations', "palette" .= palette' ]
+
+-- | Ensure that the route locations are mapped properly
+normaliseRoute :: M.Map String Location -> Route -> Route
+normaliseRoute locs route = route { routeLocations = S.map (\l -> locs M.! locationID l) (routeLocations route)}
+
 -- | A way, consisting of a number of legs with a start and end
 --   The purpose of the Camino Planner is to divide a camino into 
 data Camino = Camino {
-  locations :: M.Map String Location,
-  legs :: [Leg]
+  locations :: M.Map String Location, -- ^ The camino locations
+  legs :: [Leg], -- ^ The legs between locations
+  routes :: [Route], -- ^ Named sub-routes
+  palette :: Palette -- ^ The default palette
 } deriving (Show)
 
 instance FromJSON Camino where
@@ -331,13 +377,16 @@ instance FromJSON Camino where
     let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
     legs' <- v .: "legs"
     let legs'' = map (normaliseLeg locMap) legs'
-    return Camino { locations = locMap, legs = legs'' }
+    routes' <- v .: "routes"
+    let routes'' = map (normaliseRoute locMap) routes'
+    palette' <- v .: "palette"
+    return Camino { locations = locMap, legs = legs'', routes = routes'', palette = palette' }
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
 
 instance ToJSON Camino where
-  toJSON (Camino locations' legs') =
-    object [ "locations" .= (M.elems locations'), "legs" .= legs']
+  toJSON (Camino locations' legs' routes' palette') =
+    object [ "locations" .= (M.elems locations'), "legs" .= legs', "routes" .= routes', "palette" .= palette' ]
 
 instance Graph Camino Leg Location where
   vertex camino vid = (locations camino) M.! vid

@@ -22,6 +22,9 @@ import Camino.Camino
 import Camino.Planner
 import Camino.Html
 import Data.Text (Text, pack)
+import Data.Colour (Colour, AlphaColour)
+import Data.Colour.SRGB (sRGB24show, toSRGB24, RGB(..))
+import Data.Colour.Names (white)
 import qualified Data.Set as S
 import qualified Data.Map as M
 import Data.Maybe
@@ -30,29 +33,44 @@ import Text.Hamlet.XML
 import Text.XML
 import Text.Blaze.Html.Renderer.Text
 import Data.Text.Lazy (toStrict)
+import Numeric (showHex)
 
-type Colour = String
+showHex2 x 
+  | x <= 0xf = ("0"++) . showHex x
+  | otherwise = showHex x
 
-kmlStyle :: String -> Double -> Colour -> Colour -> Maybe String -> [Node]
-kmlStyle identifier width line fill icon = [xml|
+-- | Convert am opaque colour into an RGB triple
+--   KML is hex aabbggrr - alpha, blue, green, red for some reason
+toARGB :: Double -> Colour Double -> Text
+toARGB alpha colour = pack $ (showHex2 a' . showHex2 b' . showHex2 g' . showHex2 r') ""
+  where
+    a' = floor (alpha * 255)
+    RGB r' g' b' = toSRGB24 colour
+
+
+kmlStyle :: String -> Double -> Double -> Colour Double -> Maybe String -> [Node]
+kmlStyle identifier width alpha color icon = [xml|
     <Style id="#{pack identifier}">
       <LineStyle>
-        <color>#{pack line}
+        <color>#{toARGB alpha color}
         <width>#{pack $ show width}
       <PolyStyle>
-        <color>#{pack fill}
+        <color>#{toARGB alpha color}
       $maybe ic <- icon
         <IconStyle>
           <Icon>#{pack ic}
   |]
-  
+
 caminoStyles :: Camino -> [Node]
 caminoStyles camino =
-    kmlStyle "waypointUsed" 1 "ffffffff" "ffffffff" (Just "http://maps.google.com/mapfiles/kml/pal3/icon48.png") ++
-    kmlStyle "waypointUnused" 1 "ffffffff" "ffffffff" (Just "http://maps.google.com/mapfiles/kml/pal3/icon56.png") ++
-    kmlStyle "stopUsed" 1 "ffffffff" "ffffffff" (Just "http://maps.google.com/mapfiles/kml/pal2/icon20.png") ++
-    kmlStyle "legUsed" 8 "ffffff00" "ffffff00" Nothing ++
-    kmlStyle "legUnused" 4 "ff808080" "ff808080" Nothing
+    kmlStyle "waypointUsed" 1 1 white (Just "https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons/location-waypoint-used.png") ++
+    kmlStyle "waypointUnused" 1 0.5 white (Just "https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons/location-waypoint-unused.png") ++
+    kmlStyle "stopUsed" 1 1 white (Just "https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons/location-stop.png") ++
+    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (routes camino) ++
+    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (routes camino) ++
+    kmlStyle "defaultUsed" 8 1 (paletteColour $ palette camino) Nothing ++
+    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ palette camino) Nothing
+
 
 pointKml :: Maybe LatLong -> [Node]
 pointKml (Just latlong) = [xml|
@@ -79,7 +97,7 @@ caminoLocationStyle stops waypoints location
   
 caminoLocationKml :: Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationKml preferences camino trip stops waypoints location = [xml|
-    <Placemark id="${pack $ locationID location}">
+    <Placemark id="#{pack $ locationID location}">
       <name>#{locationName location}
       <description>
         #{toStrict $ renderHtml $ locationSummary preferences camino location}
@@ -91,15 +109,20 @@ caminoLocationKml preferences camino trip stops waypoints location = [xml|
   where
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
-caminoLegStyle stops waypoints leg
-  | (S.member (legFrom leg) waypoints) && (S.member (legTo leg) waypoints)  = "#legUsed"
-  | otherwise = "#legUnused"
+caminoLegStyle camino stops waypoints leg =
+  let
+    from' = legFrom leg
+    to' = legTo leg
+    used = if (S.member from' waypoints) && (S.member to' waypoints) then "Used" else "Unused"
+    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (routes camino)
+  in
+    pack $ "#" ++ maybe "default" routeID route ++ used
 
-caminoLegKml :: S.Set Location -> S.Set Location -> Leg -> [Node]
-caminoLegKml stops waypoints leg = [xml|
+caminoLegKml :: Camino -> S.Set Location -> S.Set Location -> Leg -> [Node]
+caminoLegKml camino stops waypoints leg = [xml|
     <Placemark>
       <name>#{(pack $ show $ legDistance leg) <> "km"}
-      <styleUrl>#{caminoLegStyle stops waypoints leg}
+      <styleUrl>#{caminoLegStyle camino stops waypoints leg}
       ^{lineKml (locationPosition $ legFrom leg) (locationPosition $ legTo leg)}
   |]
 
@@ -119,7 +142,7 @@ createCaminoDoc preferences camino trip = Document (Prologue [] Nothing []) kml 
           $forall location <- caminoLocations camino
             ^{caminoLocationKml preferences camino trip stops waypoints location}
           $forall leg <- legs camino
-            ^{caminoLegKml stops waypoints leg}
+            ^{caminoLegKml camino stops waypoints leg}
       |]
 
 

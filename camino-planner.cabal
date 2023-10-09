@@ -44,6 +44,7 @@ library
     , base >=4.7 && <5
     , blaze-html
     , bytestring
+    , colour
     , containers
     , formatting
     , numeric-tools ==0.2.*
@@ -72,6 +73,7 @@ executable camino-map-exe
     , blaze-html
     , bytestring
     , camino-planner
+    , colour
     , containers
     , formatting
     , numeric-tools ==0.2.*
@@ -100,6 +102,7 @@ executable camino-planner-exe
     , blaze-html
     , bytestring
     , camino-planner
+    , colour
     , containers
     , formatting
     , numeric-tools ==0.2.*
@@ -135,6 +138,7 @@ test-suite camino-planner-test
     , blaze-html
     , bytestring
     , camino-planner
+    , colour
     , containers
     , formatting
     , numeric-tools ==0.2.*

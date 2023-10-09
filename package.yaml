@@ -37,6 +37,7 @@ dependencies:
 - xml-conduit
 - xml-hamlet
 - blaze-html
+- colour
 ghc-options:
 - -Wall
 - -Wcompat

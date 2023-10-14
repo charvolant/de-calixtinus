@@ -15,14 +15,12 @@ module Camino.Planner where
 
 import Camino.Walking
 import Camino.Camino
-import Graph.Programming
+import Graph.Programming()
 import qualified Data.Map as M
 import qualified Data.Set as S
-import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import Data.List (intersperse)
 import Formatting
-import Debug.Trace (trace)
 
 -- | The metrics for a day, segement or complete trip
 data Metrics = Metrics {
@@ -49,7 +47,7 @@ instance Semigroup Metrics where
   m1 <> m2 = Metrics {
     metricsDistance = metricsDistance m1 + metricsDistance m2,
     metricsTime = metricsTime m1 + metricsTime m2,
-    metricsPerceivedDistance = metricsPerceivedDistance m1 + metricsDistance m2,
+    metricsPerceivedDistance = metricsPerceivedDistance m1 + metricsPerceivedDistance m2,
     metricsAscent = metricsAscent m1 + metricsAscent m2,
     metricsDescent = metricsDescent m1 + metricsDescent m2,
     metricsAccomodation = metricsAccomodation m1 <> metricsAccomodation m2,

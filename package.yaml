@@ -38,6 +38,9 @@ dependencies:
 - xml-hamlet
 - blaze-html
 - colour
+- directory
+- filepath
+- yaml
 ghc-options:
 - -Wall
 - -Wcompat

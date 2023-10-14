@@ -31,20 +31,18 @@ readCamino file = do
 
 printLocation :: Location -> IO ()
 printLocation l = do
-  putStr $ unpack $ locFormat id name lat lon
+  putStr $ unpack $ locFormat id' name' lat' lon'
   where
     locFormat = format (text % " " % text % " " % fixed 4 % "," % fixed 4 % "\n")
-    id = pack $ locationID l
-    name = fromStrict $ locationName l
-    position = locationPosition l
-    lat = maybe 0.0 latitude position
-    lon = maybe 0.0 longitude position
+    id' = pack $ locationID l
+    name' = fromStrict $ locationName l
+    position' = locationPosition l
+    lat' = maybe 0.0 latitude position'
+    lon' = maybe 0.0 longitude position'
 
 
 main :: IO ()
 main = do
     opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Plan a camino graph")
     camino' <- readCamino (camino opts)
-    -- mapM_ printLocation (locations camino')
-    let kml = createCaminoDoc defaultPreferences camino' Nothing
-    B.putStr $ renderLBS (def { rsPretty = True }) kml
+    mapM_ printLocation (locations camino')

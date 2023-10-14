@@ -691,7 +691,286 @@
       "services": [ "BicycleRepair", "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [ "PrivateAlbergue", "Hotel" ]
     },
+    {
+      "id": "P56",
+      "name": "Netos",
+      "position": { "latitude": 39.93964,  "longitude": -8.43689 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P57",
+      "name": "Venda do Brasil",
+      "position": { "latitude": 39.95291, "longitude": -8.45365 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P58",
+      "name": "Casais da Granja",
+      "position": { "latitude": 39.95409,  "longitude": -8.45848 },
+      "services": [ ],
+      "accommodation": [ "GuestHouse", "House" ]
+    },
+    {
+      "id": "P59",
+      "name": "Junqueira",
+      "position": { "latitude": 39.96713, "longitude": -8.45559 },
+      "services": [ "Pharmacy" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P60",
+      "name": "Alvorge",
+      "position": { "latitude": 39.97881, "longitude": -8.45580 },
+      "services": [ "Restaurant", "Groceries", "Bank" ],
+      "accommodation": [ "MunicipalAlbergue", "GuestHouse" ]
+    },
+    {
+      "id": "P61",
+      "name": "Ribeira de Alcalamouque",
+      "position": { "latitude": 40.01172, "longitude": -8.45301 },
+      "services": [  ],
+      "accommodation": [ "GuestHouse" ]
+    },
+    {
+      "id": "P62",
+      "name": "Rabaçal",
+      "position": { "latitude": 40.02915, "longitude": -8.45484 },
+      "services": [ "Restaurant", "Groceries", "BicycleRepair", "Bank" ],
+      "accommodation": [ "PrivateAlbergue" ]
+    },
+     {
+      "id": "P63",
+      "name": "Zambujal",
+      "position": { "latitude": 40.05548, "longitude": -8.44599 },
+      "services": [ ],
+      "accommodation": [ "GuestHouse" ]
+    },
+    {
+      "id": "P64",
+      "name": "Fonte Coberta",
+      "position": { "latitude": 40.06932, "longitude": -8.46211 },
+      "services": [ ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P65",
+      "name": "Poço",
+      "position": { "latitude": 40.07838, "longitude": -8.47808 },
+      "services": [ ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P66",
+      "name": "Conimbriga",
+      "position": { "latitude": 40.09850, "longitude": -8.49157 },
+      "services": [ "Restaurant" ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P67",
+      "name": "Valada (Condeixa-a-Nova)",
+      "position": { "latitude": 40.10541, "longitude": -8.48771 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Conimbriga",
+          "type": "MunicipalAlbergue",
+          "services": ["Handwash", "WiFi", "Dinner", "BicycleStorage", "Towels", "Pool" ],
+          "sleeping": ["Shared"]
+        }
+      ]
+    },
+    {
+      "id": "P68",
+      "name": "Atadoa",
+      "position": { "latitude": 40.10828, "longitude": -8.47870 },
+      "services": [ ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P69",
+      "name": "Avessada",
+      "position": { "latitude": 40.11301, "longitude": -8.47686 },
+      "services": [ ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P70",
+      "name": "Orelhudo",
+      "position": { "latitude": 40.12555, "longitude": -8.47777 },
+      "services": [ "Groceries" ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P71",
+      "name": "Ribeira de Casconha",
+      "position": { "latitude": 40.130942, "longitude": -8.47169 },
+      "services": [ "Bus" ],
+      "accommodation": [  ]
+    },
+    {
+      "id": "P72",
+      "name": "Cernache",
+      "position": { "latitude": 40.13786, "longitude": -8.46969 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [ "MunicipalAlbergue" ]
+    },
+    {
+      "id": "P73",
+      "name": "Pousada",
+      "position": { "latitude": 40.14083, "longitude": -8.45492 },
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P74",
+      "name": "Palheira",
+      "position": { "latitude": 40.16453, "longitude": -8.45126 },
+      "services": [ "Bus" ],
+      "accommodation": [ "PrivateAlbergue" ]
+    },
+    {
+      "id": "P75",
+      "name": "Qunita do Limoneiro",
+      "position": { "latitude": 40.17535, "longitude": -8.45123 },
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P76",
+      "name": "Cruz dos Morouços",
+      "position": { "latitude": 40.18148, "longitude": -8.45167 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa da Tia Lena",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Kitchen", "Breakfast", "Bedlinen", "Towels", "Pets" ],
+          "sleeping": ["Double"]
+        }
+      ]
+    },
+    {
+      "id": "P77",
+      "name": "Bordalo",
+      "position": { "latitude": 40.19297, "longitude": -8.44637 },
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P78",
+      "name": "Coímbra",
+      "position": { "latitude": 40.20705, "longitude": -8.42957 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ]
+    },
+    {
+      "id": "P79",
+      "name": "Adémia de Baxio",
+      "position": { "latitude": 40.25047, "longitude": -8.45062 },
+      "services": [ "Restaurant", "Train", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P80",
+      "name": "Fornos",
+      "position": { "latitude": 40.26610, "longitude": -8.44452 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Morais Turismo Rural",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Bedlinen", "Towels" ],
+          "sleeping": ["DoubleWC"]
+        }
+      ]
+    },
+    {
+      "id": "P81",
+      "name": "Trouxemil",
+      "position": { "latitude": 40.27533, "longitude": -8.45419 },
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P82",
+      "name": "Adões",
+      "position": { "latitude": 40.28156, "longitude": -8.45361 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P83",
+      "name": "Sargento Mõr",
+      "position": { "latitude": 40.28961, "longitude": -8.44734 },
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P84",
+      "name": "Santa Luzia",
+      "position": { "latitude": 40.30531, "longitude": -8.44864 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P85",
+      "name": "Mala",
+      "position": { "latitude": 40.33570, "longitude": -8.46423 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P86",
+      "name": "Lendiosa",
+      "position": { "latitude": 40.34608, "longitude": -8.46320 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P87",
+      "name": "Vimieira",
+      "position": { "latitude": 40.35749, "longitude": -8.46366 },
+      "services": [ "Groceries" ],
+      "accommodation": [ "GuestHouse" ]
+    },
+    {
+      "id": "P88",
+      "name": "Mealhanda",
+      "position": { "latitude": 40.38071, "longitude": -8.44947 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train" ],
+      "accommodation": [
+        {
+          "name": "Hotel Oásis",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
 
+      ]
+    },
+    {
+      "id": "P89",
+      "name": "Sernadelo",
+      "position": { "latitude": 40.39079, "longitude": -8.44932 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Albegue - Residential Hilário",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Breakfast", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared" ,"Single", "DoubleWC" ]
+        },
+        {
+          "name": "Quinta dos Três Pinheiros",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Heating", "Restaurant", "Breakfast", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared" ,"Single", "DoubleWC" ]
+        }
+      ]
+    },
 
     {
       "id": "F1",
@@ -1558,6 +1837,244 @@
       "distance": 1.94,
       "ascent": 5,
       "descent": 85
+    },
+    {
+      "from": "P55",
+      "to": "P56",
+      "distance": 3.93,
+      "ascent": 70,
+      "descent": 15
+    },
+    {
+      "from": "P56",
+      "to": "P57",
+      "distance": 2.31,
+      "ascent": 35,
+      "descent": 10
+    },
+    {
+      "from": "P57",
+      "to": "P58",
+      "distance": 0.45,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "P58",
+      "to": "P59",
+      "distance": 1.65,
+      "ascent": 10,
+      "descent": 25
+    },
+    {
+      "from": "P59",
+      "to": "P60",
+      "distance": 1.61,
+      "ascent": 45,
+      "descent": 10
+    },
+    {
+      "from": "P60",
+      "to": "P61",
+      "distance": 5.11,
+      "ascent": 5,
+      "descent": 100
+    },
+    {
+      "from": "P61",
+      "to": "P62",
+      "distance": 3.78,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "P62",
+      "to": "P63",
+      "distance": 3.32,
+      "ascent": 15,
+      "descent": 30
+    },
+    {
+      "from": "P63",
+      "to": "P64",
+      "distance": 2.17,
+      "ascent": 10,
+      "descent": 30
+    },
+    {
+      "from": "P64",
+      "to": "P65",
+      "distance": 1.91,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "P65",
+      "to": "P66",
+      "distance": 3.12,
+      "ascent": 25,
+      "descent": 60
+    },
+    {
+      "from": "P66",
+      "to": "P67",
+      "distance": 1.10,
+      "ascent": 15,
+      "descent": 10
+    },
+    {
+      "from": "P67",
+      "to": "P68",
+      "distance": 0.77,
+      "ascent": 5,
+      "descent": 15
+    },
+    {
+      "from": "P68",
+      "to": "P69",
+      "distance": 0.90,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "P69",
+      "to": "P70",
+      "distance": 1.47,
+      "ascent": 5,
+      "descent": 20
+    },
+    {
+      "from": "P70",
+      "to": "P71",
+      "distance": 0.70,
+      "ascent": 30,
+      "descent": 20
+    },
+    {
+      "from": "P71",
+      "to": "P72",
+      "distance": 1.45,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "P72",
+      "to": "P73",
+      "distance": 1.42,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "P73",
+      "to": "P74",
+      "distance": 3.14,
+      "ascent": 60,
+      "descent": 45
+    },
+    {
+      "from": "P74",
+      "to": "P75",
+      "distance": 1.27,
+      "ascent": 50,
+      "descent": 35
+    },
+    {
+      "from": "P75",
+      "to": "P76",
+      "distance": 1.05,
+      "ascent": 40,
+      "descent": 5
+    },
+    {
+      "from": "P76",
+      "to": "P77",
+      "distance": 1.70,
+      "ascent": 30,
+      "descent": 115
+    },
+    {
+      "from": "P77",
+      "to": "P78",
+      "distance": 2.92,
+      "ascent": 30,
+      "descent": 115
+    },
+    {
+      "from": "P78",
+      "to": "P79",
+      "distance": 5.92,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "P79",
+      "to": "P80",
+      "distance": 1.96,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "P80",
+      "to": "P81",
+      "distance": 1.27,
+      "ascent": 75,
+      "descent": 0
+    },
+    {
+      "from": "P81",
+      "to": "P82",
+      "distance": 0.92,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "P82",
+      "to": "P83",
+      "distance": 1.12,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "P83",
+      "to": "P84",
+      "distance": 1.86,
+      "ascent": 50,
+      "descent": 0
+    },
+    {
+      "from": "P84",
+      "to": "P85",
+      "distance": 4.27,
+      "ascent": 0,
+      "descent": 50
+    },
+    {
+      "from": "P85",
+      "to": "P86",
+      "distance": 1.21,
+      "ascent": 15,
+      "descent": 30
+    },
+    {
+      "from": "P86",
+      "to": "P87",
+      "distance": 1.28,
+      "ascent": 25,
+      "descent": 10
+    },
+    {
+      "from": "P87",
+      "to": "P88",
+      "distance": 3.26,
+      "ascent": 5,
+      "descent": 50
+    },
+    {
+      "from": "P88",
+      "to": "P89",
+      "distance": 1.68,
+      "ascent": 10,
+      "descent": 10
     },
 
 

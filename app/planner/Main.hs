@@ -7,11 +7,18 @@ import Camino.Camino
 import Graph.Graph
 import Camino.Planner
 import Camino.KML
-import Data.Text.Lazy (unpack)
+import Camino.Html
+import Camino.Config
 import qualified Data.Set as S
 import Options.Applicative
 import Data.List.Split
+import Text.Cassius
 import Text.XML
+import Data.Text.Lazy as T (concat)
+import Data.Text.Lazy.IO as TIO (writeFile)
+import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+import System.FilePath
+import System.Directory
 
 data Plan = Plan {
   camino :: String,
@@ -19,7 +26,9 @@ data Plan = Plan {
   begin :: String,
   end :: String,
   require :: String,
-  exclude :: String
+  exclude :: String,
+  config :: FilePath,
+  output :: FilePath
 }
 
 arguments :: Parser Plan
@@ -30,6 +39,8 @@ arguments =  Plan
     <*> (argument str (metavar "TO"))
     <*> (strOption (long "require" <> short 'r' <> value "" <> metavar "LOCATIONIDS" <> help "Require stopping at a comma-separated list of location ids"))
     <*> (strOption (long "exclude" <> short 'x' <> value "" <> metavar "LOCATIONIDS" <> help "Exclude stopping at a comma-separated list of location ids"))
+    <*> (strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG" <> help "Configuration file"))
+    <*> (strOption (long "output" <> short 'o' <> value "./plan" <> metavar "OUTPUTDIR" <> help "Output directory"))
 
 readCamino :: String -> IO Camino
 readCamino file = do
@@ -51,16 +62,25 @@ plan :: Plan -> IO ()
 plan opts = do
     camino' <- readCamino (camino opts)
     preferences' <- readPreferences (preferences opts)
+    config' <- readConfigFile (config opts)
+    let output' = output opts
     let begin' = vertex camino' (begin opts)
     let end' = vertex camino' (end opts)
     let required' = if require opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (require opts))
     let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (exclude opts))
     let preferences'' = normalisePreferences camino' (preferences' { preferenceRequired = required', preferenceExcluded = excluded' })
-    print preferences''
     let solution = planCamino preferences'' camino' begin' end'
-    putStr $ unpack $ showTrip preferences'' camino' solution
-    let kml = createCaminoDoc preferences' camino' solution
-    B.putStr $ renderLBS (def { rsPretty = True }) kml
+    createDirectoryIfMissing True output'
+    let kml = createCaminoDoc preferences'' camino' solution
+    let kmlFile = output' </> "camino.kml"
+    B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
+    let html = caminoHtml config' preferences'' camino' solution
+    let indexFile = output' </> "index.html"
+    B.writeFile indexFile (renderHtml html)
+    let css = caminoCss config' camino'
+    let cssFile = output' </> "camino.css"
+    TIO.writeFile cssFile $ T.concat (map renderCss css)
+
     
 main :: IO ()
 main = do

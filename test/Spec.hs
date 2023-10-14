@@ -1,5 +1,6 @@
 import Test.HUnit
 import CaminoSpec
+import ConfigSpec
 import WalkingSpec
 import PlannerSpec
 import GraphSpec
@@ -21,6 +22,14 @@ main = do
     let ep = eitherDecode pf :: Either String Preferences
     when (isLeft ep) $ putStrLn (show ep)
     let shortPreferences = fromRight (Preferences { }) ep
-    let tests = TestList [ TestLabel "Camino" testCamino, TestLabel "Walking" testWalking,  TestLabel "Graph" testGraph, TestLabel "Programming" testProgramming, TestLabel "Planner" (testPlanner shortPreferences lisbonPorto) ]
-    results <- runTestTT tests
+    results <- runTestTT (testList shortPreferences lisbonPorto)
     putStrLn $ show results
+
+testList prefs camino = TestList [ 
+    TestLabel "Config" testConfig, 
+    TestLabel "Camino" testCamino, 
+    TestLabel "Walking" testWalking, 
+    TestLabel "Graph" testGraph, 
+    TestLabel "Programming" testProgramming, 
+    TestLabel "Planner" (testPlanner prefs camino) 
+  ]

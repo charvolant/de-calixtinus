@@ -15,27 +15,29 @@ The legs run between two locations, each with possible accomodation and service 
 Generally, it is expected that these models will be read from JSON files.
 -}
 
-module Camino.KML where
-  
-import Control.Monad
+module Camino.KML (
+  createCaminoDoc
+) where
+
 import Camino.Camino
 import Camino.Planner
 import Camino.Html
 import Data.Text (Text, pack)
-import Data.Colour (Colour, AlphaColour)
-import Data.Colour.SRGB (sRGB24show, toSRGB24, RGB(..))
+import Data.Colour (Colour)
+import Data.Colour.SRGB (toSRGB24, RGB(..))
 import Data.Colour.Names (white)
 import qualified Data.Set as S
 import qualified Data.Map as M
-import Data.Maybe
-import Data.List
+import Data.List (find)
 import Text.Hamlet.XML
 import Text.XML
 import Text.Blaze.Html.Renderer.Text
 import Data.Text.Lazy (toStrict)
+import Data.Word (Word8)
 import Numeric (showHex)
 
-showHex2 x 
+showHex2 :: Word8 -> ShowS
+showHex2 x
   | x <= 0xf = ("0"++) . showHex x
   | otherwise = showHex x
 
@@ -90,7 +92,8 @@ lineKml (Just latlong1) (Just latlong2) = [xml|
     cstr = coords latlong1 <> " " <> coords latlong2 -- Required because the template removes spaces
 lineKml _ _ = []
 
-caminoLocationStyle stops waypoints location
+caminoLocationStyle :: Camino -> S.Set Location -> S.Set Location -> Location -> Text
+caminoLocationStyle _camino stops waypoints location
   | S.member location stops = "#stopUsed"
   | S.member location waypoints = "#waypointUsed"
   | otherwise = "#waypointUnused"
@@ -103,13 +106,14 @@ caminoLocationKml preferences camino trip stops waypoints location = [xml|
         #{toStrict $ renderHtml $ locationSummary preferences camino location}
         $maybe d <- day
           #{toStrict $ renderHtml $ daySummary preferences camino trip d}
-      <styleUrl>#{caminoLocationStyle stops waypoints location}
+      <styleUrl>#{caminoLocationStyle camino stops waypoints location}
       ^{pointKml $ locationPosition location}
   |]
   where
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
-caminoLegStyle camino stops waypoints leg =
+caminoLegStyle :: Camino -> S.Set Location -> S.Set Location -> Leg -> Text
+caminoLegStyle camino _stops waypoints leg =
   let
     from' = legFrom leg
     to' = legTo leg
@@ -131,7 +135,7 @@ createCaminoDoc :: Preferences -> Camino -> Maybe Trip -> Document
 createCaminoDoc preferences camino trip = Document (Prologue [] Nothing []) kml []
   where
     stops = maybe S.empty (S.fromList . tripStops) trip
-    waypoints = maybe S.empty (S.fromList . tripWaypoints) trip    
+    waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     ns = M.fromList [ ("xmlns", "http://www.opengis.net/kml/2.2"), ("xmlns:gx", "http://www.google.com/kml/ext/2.2") ]
     kml = Element "kml" ns
       [xml|

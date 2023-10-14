@@ -37,9 +37,14 @@ module Camino.Camino (
   accommodationType,
   accommodationServices,
   accommodationSleeping,
+  caminoBbox,
+  caminoLegRoute,
   caminoLocations,
+  caminoRoute,
   defaultPreferences,
+  defaultRoute,
   defaultSRS,
+  locationAccommodationTypes,
   placeholderLocation,
   normalisePreferences,
   boundsDistance,
@@ -52,10 +57,11 @@ module Camino.Camino (
 import GHC.Generics (Generic)
 import Data.Aeson
 import Data.Text (Text, unpack, pack)
-import Data.Colour (Colour, colourConvert)
-import Data.Colour.SRGB (sRGB24read, sRGB24show, toSRGB24)
+import Data.Colour (Colour)
+import Data.Colour.SRGB (sRGB24read, sRGB24show)
+import Data.Maybe (catMaybes)
 import qualified Data.Map as M (Map, (!), fromList, elems, (!), mapWithKey)
-import qualified Data.Set as S (Set, empty, map, fromList)
+import qualified Data.Set as S (Set, empty, map, fromList, member)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.List (find)
 import Graph.Graph
@@ -100,7 +106,7 @@ instance FromJSON Penance where
 
 instance ToJSON Penance where
     toJSON Reject = String "reject"
-    toJSON (Penance score) = Number $ fromFloatDigits score
+    toJSON (Penance score') = Number $ fromFloatDigits score'
 
 -- | Spatial reference system
 type SRS = String
@@ -284,6 +290,10 @@ placeholderLocation ident = Location {
     locationServices = [],
     locationAccommodation = []
   }
+
+-- | Get the accomodation types available at a location
+locationAccommodationTypes :: Location -> S.Set AccommodationType
+locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
     
 -- | A leg from one location to another.
 --   Legs form the edges of a camino graph.
@@ -399,6 +409,42 @@ caminoLocations :: Camino -- ^ The camino
   -> [Location] -- ^ The list of locations
 caminoLocations camino = M.elems $ locations camino
 
+-- | Get a bounding box for the camino
+caminoBbox :: Camino -- ^ The entire camino
+ -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
+caminoBbox camino = (LatLong (maximum lats) (minimum longs) defaultSRS, LatLong (minimum lats) (maximum longs) defaultSRS)
+  where
+    positions = catMaybes $ map locationPosition $ M.elems $ locations camino
+    lats = map latitude positions
+    longs = map longitude positions
+  
+
+-- | The default route for a camino
+defaultRoute :: Camino -> Route
+defaultRoute camino = Route { routeID = "default", routeName = "Default", routeLocations = S.empty, routePalette = palette camino }
+
+-- | Choose a route for a location
+--   If the location isn't on a specific route, then the default route is returned
+caminoRoute :: Camino -- ^ The camino being interrogated
+  -> Location -- ^ The location to test
+  -> Route -- ^ The route that the location is on
+caminoRoute camino location = let
+    route = find (\r -> S.member location (routeLocations r)) (routes camino)
+  in
+    maybe (defaultRoute camino) id route
+   
+-- | Choose a route for a leg
+--   If the leg isn't on a specific route, then the default route is returned
+caminoLegRoute :: Camino -- ^ The camino being interrogated
+  -> Leg -- ^ The location to test
+  -> Route -- ^ The route that the location is on
+caminoLegRoute camino leg = let
+    from' = legFrom leg
+    to' = legTo leg
+    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (routes camino)
+  in
+    maybe (defaultRoute camino) id route
+ 
 -- | An approximate level of fitness.
 -- 
 --   In the Tranter corrections, the levels of fitness are defined by

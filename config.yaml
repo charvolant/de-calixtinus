@@ -1,0 +1,9 @@
+web:
+  assets:
+      jQueryJs: https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js
+      bootstrapCss: https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css
+      bootstrapJs: https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js
+  icons:
+#      base: https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons
+      base: ../icons
+      kit: https://kit.fontawesome.com/0e144a9566.js

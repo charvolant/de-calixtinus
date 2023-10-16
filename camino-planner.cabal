@@ -30,6 +30,7 @@ library
       Camino.Html
       Camino.KML
       Camino.Planner
+      Camino.Preferences
       Camino.Walking
       Graph.Graph
       Graph.Programming

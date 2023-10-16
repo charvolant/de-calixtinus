@@ -3,8 +3,8 @@ module CaminoSpec(testCamino) where
 
 import Test.HUnit
 import Camino.Camino
-import Data.Map as M
 
+testCamino :: Test
 testCamino = TestList [
   TestLabel "Penance" testPenance
   ]

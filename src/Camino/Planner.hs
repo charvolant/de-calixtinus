@@ -15,18 +15,20 @@ module Camino.Planner where
 
 import Camino.Walking
 import Camino.Camino
+import Camino.Preferences
 import Graph.Programming()
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.Text.Lazy as LT
 import Data.List (intersperse)
 import Formatting
+import Data.Maybe (isJust, fromJust)
 
 -- | The metrics for a day, segement or complete trip
 data Metrics = Metrics {
     metricsDistance :: Float, -- ^ Actual distance in km
-    metricsTime :: Float, -- ^ Time taken in hours
-    metricsPerceivedDistance :: Float, -- ^ Perceived distance in km
+    metricsTime :: Maybe Float, -- ^ Time taken in hours
+    metricsPerceivedDistance :: Maybe Float, -- ^ Perceived distance in km (Nothing if the distance is too long)
     metricsAscent :: Float, -- ^ Ascent in metres
     metricsDescent :: Float, -- ^ Descent in metres
     metricsAccomodation :: Penance, -- ^ Accomondation penance in km-equivalent. This represents the distance you would be prepared to walk to avoid this accomodation
@@ -46,8 +48,8 @@ instance Ord Metrics where
 instance Semigroup Metrics where
   m1 <> m2 = Metrics {
     metricsDistance = metricsDistance m1 + metricsDistance m2,
-    metricsTime = metricsTime m1 + metricsTime m2,
-    metricsPerceivedDistance = metricsPerceivedDistance m1 + metricsPerceivedDistance m2,
+    metricsTime = (+) <$> metricsTime m1 <*> metricsTime m2,
+    metricsPerceivedDistance = (+) <$> metricsPerceivedDistance m1 <*> metricsPerceivedDistance m2,
     metricsAscent = metricsAscent m1 + metricsAscent m2,
     metricsDescent = metricsDescent m1 + metricsDescent m2,
     metricsAccomodation = metricsAccomodation m1 <> metricsAccomodation m2,
@@ -57,13 +59,13 @@ instance Semigroup Metrics where
     metricsMisc = metricsMisc m1 <> metricsMisc m2,
     metricsPenance = metricsPenance m1 <> metricsPenance m2
   }
-  
+
 instance Monoid Metrics where
-  mempty = Metrics 0.0 0.0 0.0 0.0 0.0 mempty mempty mempty mempty mempty mempty
+  mempty = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 mempty mempty mempty mempty mempty mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 0.0 0.0 0.0 0.0 mempty mempty mempty mempty Reject Reject
-  
+  invalid = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 mempty mempty mempty mempty Reject Reject
+
 -- | A day's stage
 type Day = Chain Location Leg Metrics
 
@@ -78,7 +80,7 @@ walking' n | n == "naismith" = naismith
 -- | Calculate the expected hours of walking, for a sequence of legs
 hours :: Preferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
-  -> Float -- ^ The hours equivalent
+  -> Maybe Float -- ^ The hours equivalent
 hours preferences legSeq = let
     baseHours = walking' (preferenceWalkingFunction preferences)
     simple = sum $ map (\l -> baseHours (legDistance l) (legAscent l) (legDescent l)) legSeq
@@ -104,7 +106,7 @@ totalDescent :: Preferences -- ^ The calculation preferences
 totalDescent _preferences legSeq = sum $ map legDescent legSeq
 
 -- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: Preferences -> [Leg] -> (Float, Float, Float, Float, Float, Float, Float)
+travelMetrics :: Preferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float)
 travelMetrics preferences legSeq =
   let
     normalSpeed = nominalSpeed Normal
@@ -113,9 +115,9 @@ travelMetrics preferences legSeq =
     distance = travel preferences legSeq
     ascent = totalAscent preferences legSeq
     descent = totalDescent preferences legSeq
-    perceivedDistance = normalSpeed * time
+    perceived = fmap (normalSpeed *) time
   in
-    (normalSpeed, actualSpeed, time, distance, perceivedDistance, ascent, descent)
+    (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent)
 
 -- | Default sleeping in the open option
 openSleeping :: Accommodation
@@ -143,6 +145,7 @@ accommodation preferences _camino legSeq = accommodation' preferences stop
     stop = legTo $ last legSeq
 
 
+adjustment :: PreferenceRange Float -> Float -> Float -> Penance
 adjustment range scale value
   | isOutOfRange range value = Reject
   | isOutOfBounds range value = Penance (scale * rangeDistance range value)
@@ -155,16 +158,16 @@ penance :: Preferences -- ^ The user preferences
   -> Metrics -- ^ The penance value
 penance preferences camino legSeq =
   let
-    (normalSpeed, actualSpeed, time, distance, perceivedDistance, ascent, descent) = travelMetrics preferences legSeq
-    timeAdjust = adjustment (preferenceTime preferences) normalSpeed time
-    distanceAdjust = adjustment (preferenceDistance preferences) 1.0 perceivedDistance
+    (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences legSeq
+    timeAdjust = maybe Reject (adjustment (preferenceTime preferences) normalSpeed) time
+    distanceAdjust = maybe Reject (adjustment (preferencePerceivedDistance preferences) normalSpeed) perceived
     accomodationAdjust = accommodation preferences camino legSeq -- accomodation penance
     dayCost = Penance actualSpeed -- One hour of travel not used
-    distanceCost = Penance perceivedDistance
+    distanceCost = maybe Reject Penance perceived
     total = distanceCost <> accomodationAdjust <> dayCost <> distanceAdjust <> timeAdjust
   in
     -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head legSeq) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last legSeq) ++ " = " ++ show totalPenance) totalPenance
-    Metrics distance time perceivedDistance ascent descent accomodationAdjust dayCost distanceAdjust timeAdjust mempty total
+    Metrics distance time perceived ascent descent accomodationAdjust dayCost distanceAdjust timeAdjust mempty total
 
 -- | Accept a day's stage as a possibility
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
@@ -173,7 +176,7 @@ dayAccept preferences _camino lseq =
   let
     time = hours preferences lseq
     distance = travel preferences lseq
-    inside = isInsideMaximum (preferenceDistance preferences) distance && isInsideMaximum (preferenceTime preferences) time
+    inside = isJust time && isInsideMaximum (preferenceDistance preferences) distance && isInsideMaximum (preferenceTime preferences) (fromJust time)
   in
    -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head lseq) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last lseq) ++ " distance= " ++ show distance ++ " time=" ++ show time ++ " inside=" ++ show inside) inside
    inside
@@ -243,19 +246,21 @@ showMetrics metrics = LT.pack $ show metrics
 
 showDay :: Preferences -> Camino -> Int -> Day -> LT.Text
 showDay preferences _camino dn (Chain _begin end links metrics) =
-  dayFormat dn chain distance perceivedDistance time ascent descent (showMetrics metrics)
+  dayFormat dn chain distance pdf timef ascent descent (showMetrics metrics)
   where
-    (_normalSpeed, _actualSpeed, time, distance, perceivedDistance, ascent, descent) = travelMetrics preferences links
+    (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences links
     locs = (map legFrom links) ++ [end]
     chain = LT.concat $ intersperse " -> " (map (LT.fromStrict . locationName) locs)
+    pdf = maybe "*" (format ((fixed 1) % "km")) perceived
+    timef = maybe "*" (format ((fixed 1) % "hr")) time
     dayFormat = format (
-        "  Day " % int % " "
-        % text % " "
-        % (fixed 1) % "km (feels like " % (fixed 1) % "km) "
-        % (fixed 1) % "hr "
-        % (fixed 0) % "m ascent "
-        % (fixed 0) % "m descent "
-        % "with penance " % text % "\n"
+        "  Day " % int
+        %+ text
+        %+ (fixed 1) % "km (feels like " % text % ")"
+        %+ text
+        %+ (fixed 0) % "m ascent"
+        %+ (fixed 0) % "m descent"
+        %+ "with penance " % text % "\n"
       )
 
 -- | Print a plan in comprehenisble form

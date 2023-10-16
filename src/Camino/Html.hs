@@ -15,10 +15,10 @@ module Camino.Html where
 
 import Camino.Camino
 import Camino.Config (Config, getConfigValue)
-import Camino.Planner (Trip(..), Day(..), Metrics(..), tripStops, tripWaypoints)
+import Camino.Planner (Trip, Day, Metrics(..), tripStops, tripWaypoints)
+import Camino.Preferences
 import Data.Colour
 import Data.Colour.SRGB (sRGB24show)
-import Graph.Programming (score)
 import Text.Hamlet
 import Text.Cassius
 import qualified Data.Text as T (intercalate, null, pack, Text)
@@ -26,8 +26,8 @@ import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.List (sortBy)
-import qualified Data.Text as T (Text, toUpper, take)
-import Data.Maybe (maybe, isJust)
+import qualified Data.Text as T (toUpper, take)
+import Data.Maybe (isJust)
 
 
 -- | Create a CSS-able colour
@@ -35,6 +35,7 @@ toCssColour :: Colour Double -- ^ The colour to display
  -> String -- ^ A #rrggbb colour triple
 toCssColour colour = sRGB24show colour
 
+partition' :: Eq t => (a -> t) -> [a] -> t -> [a] -> [(t, [a])]
 partition' _classifier [] cl segment = [(cl, reverse segment)]
 partition' classifier (s:source) cl segment = if cl' == cl then 
     partition' classifier source cl (s:segment) 
@@ -43,18 +44,18 @@ partition' classifier (s:source) cl segment = if cl' == cl then
   where cl' = classifier s
 
 metricsSummary :: Bool -> Config -> Preferences -> Camino -> Metrics -> Html
-metricsSummary long config preferences camino metrics = [shamlet| 
-    #{distance'} 
-    (feels like #{perceived'}) 
+metricsSummary long _config _preferences _camino metrics = [shamlet|
+    #{distance'}
+    (feels like #{perceived'})
     over #{time'}
     Ascent: #{ascent'}
     Descent: #{descent'}
     Penance: #{formatPenance $ metricsPenance metrics}
     $if long
-      (#{perceived'} 
-      + #{formatPenance $ metricsAccomodation metrics} 
-      + #{formatPenance $ metricsStop metrics} 
-      + #{formatPenance $ metricsDistanceAdjust metrics} 
+      (#{perceived'}
+      + #{formatPenance $ metricsAccomodation metrics}
+      + #{formatPenance $ metricsStop metrics}
+      + #{formatPenance $ metricsDistanceAdjust metrics}
       + #{formatPenance $ metricsTimeAdjust metrics}
       + #{formatPenance $ metricsMisc metrics})
   |]
@@ -63,14 +64,10 @@ metricsSummary long config preferences camino metrics = [shamlet|
      Reject -> "Rejected"
      Penance p -> format (fixed 1 % "km") p
    distance' = format (fixed 1 % "km") (metricsDistance metrics)
-   time' = format (fixed 0 % "hrs") (metricsTime metrics)
-   perceived' = format (fixed 1 % "km") (metricsPerceivedDistance metrics)
+   time' = maybe "*" (format (fixed 0 % "hrs")) (metricsTime metrics)
+   perceived' = maybe "*" (format (fixed 1 % "km")) (metricsPerceivedDistance metrics)
    ascent' = format (fixed 0 % "m") (metricsAscent metrics)
    descent' = format (fixed 0 % "m") (metricsDescent metrics)
-   rejected' = metricsPenance metrics
-   
-  
-  
 
 -- | Split a sorted list into a partition, based on some sort of partition function
 partition :: (Eq b) => (a -> b) -- ^ The classifier function, produces the element to split the list on
@@ -85,13 +82,13 @@ daySummary _preferences _camino _trip day = [shamlet|
     <p>#{T.intercalate ", " (map locationName ((map legFrom $ path day) ++ [finish day]))}
   |]
   where
-    time = format (fixed 1) (metricsTime $ score day)
+    time = maybe "*" (format (fixed 1)) (metricsTime $ score day)
     distance = format (fixed 1) (metricsDistance $ score day)
-    perceivedDistance = format (fixed 1) (metricsPerceivedDistance $ score day)
+    perceivedDistance = maybe "*" (format (fixed 1)) (metricsPerceivedDistance $ score day)
 
 
 tripSummary :: Preferences -> Camino -> Trip -> Html
-tripSummary preferences camino trip = [shamlet|
+tripSummary _preferences _camino trip = [shamlet|
     <h1>From #{locationName $ start trip} to #{locationName $ finish trip}
     <h2>Stages
     <ul>
@@ -114,39 +111,38 @@ locationSummary _preferences _camino location = [shamlet|
 caminoSleepingIcon :: Config -> Sleeping -> Html
 caminoSleepingIcon _ Shared = [shamlet| <i .sleeping .fa-solid .fa-bed title="Shared"> |]
 caminoSleepingIcon _ Single = [shamlet| <i .sleeping .fa-solid .fa-bed title="Single"> |]
-caminoSleepingIcon _ Double = [shamlet| 
+caminoSleepingIcon _ Double = [shamlet|
   <span title="Double">
     <i .sleeping .fa-solid .fa-bed>
     <sup>2
   |]
-caminoSleepingIcon _ DoubleWC = [shamlet| 
+caminoSleepingIcon _ DoubleWC = [shamlet|
   <span .sleeping title="Double with WC">
     <i .fa-solid .fa-bed>
     <sup>2+WC
   |]
-caminoSleepingIcon _ Triple = [shamlet| 
+caminoSleepingIcon _ Triple = [shamlet|
   <span title="Triple">
     <i .sleeping .fa-solid .fa-bed>
     <sup>3
   |]
-caminoSleepingIcon _ TripleWC = [shamlet| 
+caminoSleepingIcon _ TripleWC = [shamlet|
   <span .sleeping title="Triple with WC">
     <i .fa-solid .fa-bed>
     <sup>3+WC
   |]
-caminoSleepingIcon _ Quadruple = [shamlet| 
+caminoSleepingIcon _ Quadruple = [shamlet|
   <span title="Quadruple">
     <i .sleeping .fa-solid .fa-bed>
     <sup>4
   |]
-caminoSleepingIcon _ QuadrupleWC = [shamlet| 
+caminoSleepingIcon _ QuadrupleWC = [shamlet|
   <span .sleeping title="Quadruple with WC">
     <i .fa-solid .fa-bed>
-    <sup>4+WC 
+    <sup>4+WC
   |]
 caminoSleepingIcon _ Matress = [shamlet| <i .sleeping .fa-solid .fa-matress-pillow title="Matress"> |]
 caminoSleepingIcon _ SleepingBag = [shamlet| <i .sleeping .fa-solid .fa-tarp title="SleepingBag"> |]
-caminoSleepingIcon _ v = [shamlet| <span>#{show v} |]
 
 caminoAccommodationTypeIcon :: Config -> AccommodationType -> Html
 caminoAccommodationTypeIcon _ MunicipalAlbergue = [shamlet| <i  .accomodation .municipal-albergue .fa-solid .fa-house title="Municipal Albergue"> |]
@@ -155,7 +151,6 @@ caminoAccommodationTypeIcon _ GuestHouse = [shamlet| <i  .accomodation .guest-ho
 caminoAccommodationTypeIcon _ House = [shamlet| <i  .accomodation .house .fa-solid .fa-house-chimney-window title="House"> |]
 caminoAccommodationTypeIcon _ Hotel = [shamlet| <i  .accomodation .hotel .fa-solid .fa-hotel title="Hotel"> |]
 caminoAccommodationTypeIcon _ Camping = [shamlet| <i  .accomodation .camping .fa-solid .fa-tent title="Camping"> |]
-caminoAccommodationTypeIcon _ v = [shamlet| <span>#{show v} |]
 
 caminoServiceIcon :: Config -> Service -> Html
 caminoServiceIcon _ WiFi = [shamlet| <i  .service .fa-solid .fa-wifi title="WiFi"> |]
@@ -184,7 +179,6 @@ caminoServiceIcon _ Heating = [shamlet| <i  .service .fa-solid .fa-temperature-h
 caminoServiceIcon _ Prayer = [shamlet| <i  .service .fa-solid .fa-hands-praying title="Prayer"> |]
 caminoServiceIcon _ Train = [shamlet| <i  .service .fa-solid .fa-train title="Train"> |]
 caminoServiceIcon _ Bus = [shamlet| <i  .service .fa-solid .fa-bus-simple title="Bus"> |]
-caminoServiceIcon _ v = [shamlet| <span>#{show v} |]
 
 caminoAccommodationHtml :: Config -> Accommodation -> Html
 caminoAccommodationHtml _ (GenericAccommodation _type) = [shamlet| |]
@@ -202,10 +196,9 @@ caminoAccommodationHtml config (Accommodation name' type' services' sleeping') =
           $forall sleeping <- sleeping'
             ^{caminoSleepingIcon config sleeping}
  |]
-caminoAccommodationHtml _ v = [shamlet| <span>#{show v} |]
 
 locationLine :: Config -> Preferences -> Camino -> Location -> Html
-locationLine config preferences camino location = [shamlet|
+locationLine config _preferences _camino location = [shamlet|
     #{locationName location}
     <span .accomodation-types>
       $forall accomodation <- locationAccommodationTypes location
@@ -214,9 +207,9 @@ locationLine config preferences camino location = [shamlet|
       $forall service <- locationServices location
         ^{caminoServiceIcon config service}
   |]
-  
+
 caminoLocationHtml :: Config -> Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> Html
-caminoLocationHtml config preferences camino trip stops waypoints location = [shamlet|
+caminoLocationHtml config _preferences camino _trip stops waypoints location = [shamlet|
   <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .m-1>
     <div .row .card-title>
       <div .col>
@@ -263,16 +256,18 @@ caminoLocationsHtml config preferences camino trip = [shamlet|
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     
-preferenceRangeHtml :: (Show a) => PreferenceRange a -> Html
+preferenceRangeHtml :: (Real a) => PreferenceRange a -> Html
 preferenceRangeHtml range = [shamlet|
-    <span .text-danger>#{show $ rangeMinimum range} -
-    <span>#{show $ rangeLower range} -
-    <span .text-success .fw-bolder>#{show $ rangeTarget range} -
-    <span>#{show $ rangeUpper range} -
-    <span .text-danger>#{show $ rangeMaximum range}   
+    <span .text-danger>#{format (fixed 1) (rangeMinimum range)} -
+    <span>#{format (fixed 1)( rangeLower range)} -
+    <span .text-success .fw-bolder>#{format (fixed 1) (rangeTarget range)} -
+    <span>#{format (fixed 1) (rangeUpper range)} -
+    <span .text-danger>#{format (fixed 1) (rangeMaximum range)}
+    $maybe d <- rangeDerived range
+      <span .text-body-tertiary>#{d}
   |]
 preferencesHtml :: Preferences -> Camino -> Maybe Trip -> Html
-preferencesHtml preferences camino trip = [shamlet|
+preferencesHtml preferences _camino _trip = [shamlet|
   <div .container-fluid>
     <h2>Preferences</h2>
     <div .row>
@@ -284,6 +279,9 @@ preferencesHtml preferences camino trip = [shamlet|
     <div .row>
       <div .col>Distance Preferences (km)
       <div .col>^{preferenceRangeHtml $ preferenceDistance preferences}
+    <div .row>
+      <div .col>Perceived Distance Preferences (km)
+      <div .col>^{preferenceRangeHtml $ preferencePerceivedDistance preferences}
     <div .row>
       <div .col>Time Preferences (hours)
       <div .col>^{preferenceRangeHtml $ preferenceTime preferences}
@@ -304,13 +302,15 @@ preferencesHtml preferences camino trip = [shamlet|
     <div .row>
       <div .col>Excluded Stops
       <div .col>
+        <ul>
         $forall l <- preferenceExcluded preferences
-          <span>#{locationName l}
+          <li>
+            <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
   |]
-  where findAcc preferences ak = (preferenceAccommodation preferences) M.! ak
-  
+  where findAcc prefs ak = (preferenceAccommodation prefs) M.! ak
+
 caminoTripHtml :: Config -> Preferences -> Camino -> Trip -> Html
-caminoTripHtml config preferences camino trip = [shamlet| 
+caminoTripHtml config preferences camino trip = [shamlet|
   <div .container-fluid>
     <div .row .trip-summary>
       <div .col>
@@ -324,7 +324,7 @@ caminoTripHtml config preferences camino trip = [shamlet|
       <div .card>
         <h4>
           <a href="##{locationID $ start day}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ start day}
-          \   - 
+          \   -
           <a href="##{locationID $ finish day}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ finish day}
         <div .card-body>
           <ul>
@@ -342,16 +342,16 @@ caminoTripHtml config preferences camino trip = [shamlet|
           <p>
             ^{metricsSummary True config preferences camino $ score day}
   |]
-  
+
 caminoMapHtml :: Config -> Preferences -> Camino -> Maybe Trip -> Html
-caminoMapHtml config preferences camino trip = [shamlet| 
+caminoMapHtml _config _preferences _camino _trip = [shamlet|
   <div .container-fluid>
     <div .d-flex .justify-content-center>
       <div #map>
   |]
 
 caminoMapScript :: Config -> Preferences -> Camino -> Maybe Trip -> Html
-caminoMapScript config preferences camino trip = [shamlet| 
+caminoMapScript config preferences camino trip = [shamlet|
   <script>
     var stopUsedIcon = L.icon({
       iconUrl: '#{iconBase}/location-stop.png',
@@ -383,12 +383,12 @@ caminoMapScript config preferences camino trip = [shamlet|
         line = L.polyline([
           [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
           [#{maybe 0.0 latitude (locationPosition $ legTo leg)}, #{maybe 0.0 longitude (locationPosition $ legTo leg)}]
-       ], { 
+       ], {
           color: '#{toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino leg}',
           weight: #{chooseWidth leg},
           opacity: #{chooseOpacity leg}
        });
-       line.addTo(map);  
+       line.addTo(map);
   |]
   where
     (tl, br) = caminoBbox camino
@@ -402,23 +402,23 @@ caminoMapScript config preferences camino trip = [shamlet|
     chooseIcon location | S.member location stops = "stopUsedIcon" :: String
       | S.member location waypoints = "waypointUsedIcon" :: String
       | otherwise = "waypointUnusedIcon" :: String
-    
+
 paletteCss :: Config -> String -> Palette -> Css
-paletteCss config id palette = [cassius|
-.#{id}
+paletteCss _config ident pal = [cassius|
+.#{ident}
   h1
-    color: #{toCssColour $ paletteColour palette}
+    color: #{toCssColour $ paletteColour pal}
   h2
-    color: #{toCssColour $ paletteColour palette}
+    color: #{toCssColour $ paletteColour pal}
   h3
-    color: #{toCssColour $ paletteColour palette}
+    color: #{toCssColour $ paletteColour pal}
   h4
-    color: #{toCssColour $ paletteColour palette}
+    color: #{toCssColour $ paletteColour pal}
 
   |] undefined
 
 caminoBaseCss :: Config -> Camino -> Css
-caminoBaseCss config camino = [cassius|
+caminoBaseCss _config _camino = [cassius|
 #map
   width: 80%
   height: 800px

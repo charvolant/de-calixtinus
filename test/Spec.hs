@@ -8,7 +8,7 @@ import ProgrammingSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Camino.Camino
-import Data.Maybe (fromJust)
+import Camino.Preferences
 import Data.Either (fromRight, isLeft)
 import Control.Monad (when)
 
@@ -21,7 +21,7 @@ main = do
     pf <- B.readFile "short-preferences.json"
     let ep = eitherDecode pf :: Either String Preferences
     when (isLeft ep) $ putStrLn (show ep)
-    let shortPreferences = fromRight (Preferences { }) ep
+    let shortPreferences = fromRight (defaultPreferences) ep
     results <- runTestTT (testList shortPreferences lisbonPorto)
     putStrLn $ show results
 

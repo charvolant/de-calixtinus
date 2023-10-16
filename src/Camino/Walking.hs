@@ -23,13 +23,14 @@ let t = tobler 4.5 100 0 in
 -}
 module Camino.Walking (
   naismith, 
+  nominalSpeed,
+  perceivedDistance,
   tobler, 
-  tranter,
-  nominalSpeed
+  tranter
 ) where
 
 import Numeric.Tools.Interpolation
-import Data.Vector (fromList)
+import qualified Data.Vector as V (fromList, length)
 import Camino.Camino
 
 -- | Calculate the time taken to walk a distance using simple Naismith's rule
@@ -57,17 +58,14 @@ tobler distance ascent descent =
    in
      da / sa + dd / sd + df / sf
 
--- | The expected points for interpolation for Tranter's corrections
-tranterPoints :: UniformMesh
-tranterPoints = uniformMesh (0, 24) 25
-
--- | Value indicating impossible according to the corrections
-tranterImpossible :: Double
-tranterImpossible = 1000.0
+makeInterpolation' points = linearInterp $ tabulate mesh points 
+  where 
+    l = V.length points
+    mesh = uniformMesh (0.0, fromIntegral (l - 1)) l
 
 -- | Tranter corrections for fit people (15 mins for 1000ft climb over 1/2 mile)
-tranter15 = linearInterp $ tabulate tranterPoints tranter15' where
-  tranter15' = fromList [
+tranter15 = makeInterpolation' tranter15' where
+  tranter15' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
     0.5, -- 1 hours
     1.0, -- 2
@@ -95,8 +93,8 @@ tranter15 = linearInterp $ tabulate tranterPoints tranter15' where
     24 -- 24
     ]
 
-tranter20 = linearInterp $ tabulate tranterPoints tranter20' where 
-  tranter20' = fromList [
+tranter20 = makeInterpolation' tranter20' where 
+  tranter20' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
     0.625, -- 1 hours
     1.25, -- 2
@@ -117,15 +115,11 @@ tranter20 = linearInterp $ tabulate tranterPoints tranter20' where
     18.25, -- 17
     20, -- 18
     21.5, -- 19
-    23, -- 20
-    tranterImpossible, -- 21
-    tranterImpossible, -- 22
-    tranterImpossible, -- 23
-    tranterImpossible -- 24
+    23 -- 20
     ]
 
-tranter25 = linearInterp $ tabulate tranterPoints tranter25' where
-  tranter25' = fromList [
+tranter25 = makeInterpolation' tranter25' where
+  tranter25' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
     0.725, -- 1 hours
     1.5, -- 2
@@ -140,21 +134,11 @@ tranter25 = linearInterp $ tabulate tranterPoints tranter25' where
     14.125, -- 11 (odd inferred from table)
     15.0, -- 12
     16.25, -- 13
-    17.5, -- 14
-    tranterImpossible, -- 15
-    tranterImpossible, -- 16
-    tranterImpossible, -- 17
-    tranterImpossible, -- 18
-    tranterImpossible, -- 19
-    tranterImpossible, -- 20
-    tranterImpossible, -- 21
-    tranterImpossible, -- 22
-    tranterImpossible, -- 23
-    tranterImpossible -- 24
+    17.5 -- 14
     ]
 
-tranter30 = linearInterp $ tabulate tranterPoints tranter30' where
-  tranter30' = fromList [
+tranter30 = makeInterpolation' tranter30' where
+  tranter30' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
     1.0, -- 1 hours
     2.0, -- 2
@@ -164,26 +148,11 @@ tranter30 = linearInterp $ tabulate tranterPoints tranter30' where
     8.5, -- 6
     10.5, -- 7
     12.5, -- 8
-    14.5, -- 9
-    tranterImpossible, -- 10
-    tranterImpossible, -- 11
-    tranterImpossible, -- 12
-    tranterImpossible, -- 13
-    tranterImpossible, -- 14
-    tranterImpossible, -- 15
-    tranterImpossible, -- 16
-    tranterImpossible, -- 17
-    tranterImpossible, -- 18
-    tranterImpossible, -- 19
-    tranterImpossible, -- 20
-    tranterImpossible, -- 21
-    tranterImpossible, -- 22
-    tranterImpossible, -- 23
-    tranterImpossible -- 24
+    14.5 -- 9
     ]
 
-tranter40 = linearInterp $ tabulate tranterPoints tranter40' where
-  tranter40' = fromList [
+tranter40 = makeInterpolation' tranter40' where
+  tranter40' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
     1.25, -- 1 hours
     2.75, -- 2
@@ -191,53 +160,17 @@ tranter40 = linearInterp $ tabulate tranterPoints tranter40' where
     5.75, -- 4
     7.5, -- 5
     9.5, -- 6
-    11.5, -- 7
-    tranterImpossible, -- 8
-    tranterImpossible, -- 9
-    tranterImpossible, -- 10
-    tranterImpossible, -- 11
-    tranterImpossible, -- 12
-    tranterImpossible, -- 13
-    tranterImpossible, -- 14
-    tranterImpossible, -- 15
-    tranterImpossible, -- 16
-    tranterImpossible, -- 17
-    tranterImpossible, -- 18
-    tranterImpossible, -- 19
-    tranterImpossible, -- 20
-    tranterImpossible, -- 21
-    tranterImpossible, -- 22
-    tranterImpossible, -- 23
-    tranterImpossible -- 24
+    11.5 -- 7
     ]
 
-tranter50 = linearInterp $ tabulate tranterPoints tranter50' where
-  tranter50' = fromList [
+tranter50 = makeInterpolation' tranter50' where
+  tranter50' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
     1.625, -- 1 hours
     3.25, -- 2
     4.75, -- 3
     6.5, -- 4
-    8.5, -- 5
-    tranterImpossible, -- 6
-    tranterImpossible, -- 7
-    tranterImpossible, -- 8
-    tranterImpossible, -- 9
-    tranterImpossible, -- 10
-    tranterImpossible, -- 11
-    tranterImpossible, -- 12
-    tranterImpossible, -- 13
-    tranterImpossible, -- 14
-    tranterImpossible, -- 15
-    tranterImpossible, -- 16
-    tranterImpossible, -- 17
-    tranterImpossible, -- 18
-    tranterImpossible, -- 19
-    tranterImpossible, -- 20
-    tranterImpossible, -- 21
-    tranterImpossible, -- 22
-    tranterImpossible, -- 23
-    tranterImpossible -- 24
+    8.5 -- 5
     ]
 
 tranter' SuperFit = tranter15
@@ -251,15 +184,44 @@ tranter' VeryUnfit = tranter50
 -- | These corrections take account of fitness levels and fatigue
 tranter :: Fitness -- ^ The level of fitness of the person walking
   -> Float -- ^ The hours walked according to the base formula
-  -> Float -- ^ The actual hours corrected for fitness and fatigue
-tranter fitness hours = realToFrac $ (tranter' fitness) `at` (realToFrac hours)
+  -> Maybe Float -- ^ Either Just the actual hours corrected for fitness and fatigue or Nothing for out of range
+tranter fitness hours = let
+    interp = tranter' fitness
+    outRange = hours < tranterLower fitness || hours > tranterUpper fitness
+  in
+    if outRange then Nothing else Just (realToFrac $ interp `at` (realToFrac hours))
 
--- | Normal walking speed, based on fitness level
+-- | The minimum input value for a fitness
+tranterLower :: Fitness -> Float 
+tranterLower fitness = realToFrac $ meshLowerBound $ interpolationMesh $ tranter' fitness
+
+-- | The maximum input value for a fitness
+tranterUpper :: Fitness -> Float 
+tranterUpper fitness = realToFrac $ meshUpperBound $ interpolationMesh $ tranter' fitness
+
+-- | Normal walking speed, based on fitness level and a nomimal five hours of walking, adjusted slightly for sanity
 nominalSpeed :: Fitness -- ^ The level of fitness of the person walking
   -> Float -- ^ Nominal speed on level ground in km/hr
 nominalSpeed SuperFit = 6.0
-nominalSpeed VeryFit = 5.0
+nominalSpeed VeryFit = 5.5
 nominalSpeed Fit = 4.5
 nominalSpeed Normal = 4.0
 nominalSpeed Unfit = 3.5
 nominalSpeed VeryUnfit = 3.0
+
+-- | The perceived distance compared to the actual distance when walking over flat ground
+perceivedDistance :: Fitness -- ^ The fitness level
+ -> Float -- ^ The actual distance
+ -> Bool -- ^ If out of range, choose the upper boundary, otherwise choose the lower one
+ -> Float -- ^ 
+perceivedDistance fitness distance upper = let
+    normalSpeed = nominalSpeed Normal
+    baseHours = tobler distance 0.0 0.0
+    mlower = tranterLower fitness
+    mupper = tranterUpper fitness
+    baseHours' = if baseHours >= mlower && baseHours <= mupper then baseHours else if upper then mupper else mlower
+    modifiedHours = tranter fitness baseHours'
+  in
+    case modifiedHours of
+      Nothing -> error "Expecting min/max available"
+      Just hours -> if distance > pd then distance else pd where pd = hours * normalSpeed

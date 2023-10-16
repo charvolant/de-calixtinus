@@ -21,6 +21,7 @@ module Camino.KML (
 
 import Camino.Camino
 import Camino.Planner
+import Camino.Preferences
 import Camino.Html
 import Data.Text (Text, pack)
 import Data.Colour (Colour)

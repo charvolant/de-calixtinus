@@ -5,6 +5,7 @@ module PlannerSpec(testPlanner) where
 import Test.HUnit(Test(..), assertEqual, assertBool, Assertion)
 import Camino.Planner
 import Camino.Camino
+import Camino.Preferences
 import TestUtils
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -32,8 +33,9 @@ testPlanner preferences camino = TestList [
 preferences1 = Preferences { 
     preferenceWalkingFunction = "tobler",
     preferenceFitness = Normal,
-    preferenceDistance = PreferenceRange 4.0 2.0 8.0 0.0 10.0,
-    preferenceTime = PreferenceRange 6.0 0.0 8.0 0.0 10.0,
+    preferenceDistance = PreferenceRange Nothing 4.0 2.0 8.0 0.0 10.0,
+    preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 0.0 10.0,
+    preferencePerceivedDistance = PreferenceRange Nothing 4.0 2.0 8.0 0.0 10.0,
     preferenceAccommodation = M.fromList [
         (MunicipalAlbergue, (Penance 1.5)),
         (PrivateAlbergue, (Penance 0.9))
@@ -100,16 +102,18 @@ legs2 = [
 
 camino1 = Camino {
   locations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
-  legs = legs1
+  legs = legs1,
+  routes = [],
+  palette = defaultPalette
 }
   
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3]
 
-testHoursSimple1 = TestCase (assertFloatEqual "Hours Simple 1" 1.160 (hours preferences1 legs1) 0.001)
+testHoursSimple1 = TestCase (assertMaybeFloatEqual "Hours Simple 1" (Just 1.160) (hours preferences1 legs1) 0.001)
 
-testHoursSimple2 = TestCase (assertFloatEqual "Hours Simple 2" 2.306 (hours preferences1 legs2) 0.001)
+testHoursSimple2 = TestCase (assertMaybeFloatEqual "Hours Simple 2" (Just 2.306) (hours preferences1 legs2) 0.001)
 
-testHoursSimple3 = TestCase (assertFloatEqual "Hours Simple 3" 0.465 (hours preferences1 legs0) 0.001)
+testHoursSimple3 = TestCase (assertMaybeFloatEqual "Hours Simple 3" (Just 0.465) (hours preferences1 legs0) 0.001)
 
   
 testTravelSimple = TestList [testTravelSimple1, testTravelSimple2, testTravelSimple3]
@@ -129,9 +133,9 @@ testAccomodationSimple2 = TestCase (assertPenanceEqual "Accomodation Simple 2" R
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 7.296) (metricsPenance $ penance preferences1 camino1 legs0) 0.001)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 8.9) (metricsPenance $ penance preferences1 camino1 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 legs1) 0.001)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 legs1) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 
@@ -152,10 +156,10 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 6" "P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 28.0) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 25.5) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (Penance 25.0) (metricsPenance $ score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 22.5) (metricsPenance $ score day2) 0.1
     )

@@ -21,7 +21,6 @@ import Graph.Graph
 import Data.Aeson
 import Data.Maybe
 import Data.List (nub, find)
-import Debug.Trace (traceShowId, trace)
 
 -- | A measure that can be used to evaluate a programming solution.
 --   Scores follow the rules of an ordered monoid, with @mempty@ indicating a zero

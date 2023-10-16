@@ -5,6 +5,7 @@ import Camino.Walking
 import Camino.Camino
 import TestUtils
 
+testWalking :: Test
 testWalking = TestList [
   TestLabel "Naismith" testNaismith, 
   TestLabel "Tobler" testTobler, 
@@ -34,15 +35,19 @@ testTobler5 = TestCase $ assertFloatEqual "Large fall" 0.993 (tobler 5.0 0.0 500
 testTobler6 = TestCase $ assertFloatEqual "Mixed" 0.995 (tobler 5.0 50.0 50.0) 0.001
 
 testTranter = TestList [
-  testTranter1, testTranter2, testTranter3, testTranter4, testTranter5
+  testTranter1, testTranter2, testTranter3, testTranter4, testTranter5, testTranter6, testTranter7
   ]
 
-testTranter1 = TestCase $ assertFloatEqual "Tranter 15 1" 0.5 (tranter SuperFit 1.0) 0.001
+testTranter1 = TestCase $ assertMaybeFloatEqual "Tranter 15 1" (Just 0.5) (tranter SuperFit 1.0) 0.001
 
-testTranter2 = TestCase $ assertFloatEqual "Tranter 15 1.5" 0.75 (tranter SuperFit 1.5) 0.001
+testTranter2 = TestCase $ assertMaybeFloatEqual "Tranter 15 1.5" (Just 0.75) (tranter SuperFit 1.5) 0.001
 
-testTranter3 = TestCase $ assertFloatEqual "Tranter 15 7.5" 5.0 (tranter SuperFit 7.5) 0.001
+testTranter3 = TestCase $ assertMaybeFloatEqual "Tranter 15 7.5" (Just 5.0) (tranter SuperFit 7.5) 0.001
 
-testTranter4 = TestCase $ assertFloatEqual "Tranter 20 1.5" 0.9375 (tranter VeryFit 1.5) 0.001
+testTranter4 = TestCase $ assertMaybeFloatEqual "Tranter 20 1.5" (Just 0.9375) (tranter VeryFit 1.5) 0.001
 
-testTranter5 = TestCase $ assertFloatEqual "Tranter 25 9.0" 11.5 (tranter Fit 9.0) 0.001
+testTranter5 = TestCase $ assertMaybeFloatEqual "Tranter 25 9.0" (Just 11.5) (tranter Fit 9.0) 0.001
+
+testTranter6 = TestCase $ assertMaybeFloatEqual "Tranter 25 9.0" Nothing (tranter Fit (-1.0)) 0.001
+
+testTranter7 = TestCase $ assertMaybeFloatEqual "Tranter 25 9.0" Nothing (tranter Unfit 15.0) 0.001

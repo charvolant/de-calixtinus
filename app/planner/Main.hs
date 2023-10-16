@@ -4,6 +4,7 @@ module Main (main) where
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Camino.Camino
+import Camino.Preferences
 import Graph.Graph
 import Camino.Planner
 import Camino.KML

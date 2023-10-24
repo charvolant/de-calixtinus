@@ -129,7 +129,7 @@ instance ToJSON LatLong where
 data AccommodationType = MunicipalAlbergue -- ^ A hostel run by local volunteers
   | PrivateAlbergue -- ^ A hostel run as a local business
   | GuestHouse -- ^ A generic guesthouse
-  | House -- ^ An entire house for rent
+  | House -- ^ An entire house or aparment for rent
   | Hotel -- ^ A dedicated hotel
   | Camping -- ^ Camping (with a tent or without, depending on what carried)
   deriving (Generic, Show, Eq, Ord)
@@ -237,15 +237,28 @@ instance ToJSON Accommodation where
       object [ "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping' ]
     toJSON (GenericAccommodation type' ) =
       toJSON type'
-      
+ 
+-- | Sleeping/room arrangements available  
+data LocationType = Village -- ^ A village
+   | Town -- ^ A towen
+   | City -- ^ A city
+   | Bridge -- ^ A bridge
+   | Intersection -- ^ An intersection
+   | Poi -- ^ A generic point of interest
+   deriving (Show, Generic, Eq, Ord)
+ 
+instance FromJSON LocationType
+instance ToJSON LocationType
+     
 -- | A location, usually a city/town/village that marks the start and end points of a leg
 --   and which may have accomodation and other services available.
 --   Locations form the vertexes on the travel graph
 data Location = Location {
   locationID :: String,
   locationName :: Text,
+  locationType :: LocationType,
   locationPosition :: Maybe LatLong,
-  locationServices :: [Service],
+  locationServices :: S.Set Service,
   locationAccommodation :: [Accommodation]
 } deriving (Show)
 
@@ -255,15 +268,16 @@ instance FromJSON Location where
   parseJSON (Object v) = do
     id' <- v .: "id"
     name' <- v .: "name"
+    type' <- v .:? "type" .!= Poi
     position' <- v .:? "position"
     services' <- v .: "services"
     accommodation' <- v .: "accommodation"
-    return Location { locationID = id', locationName = name', locationPosition = position', locationServices = services', locationAccommodation = accommodation' }
+    return Location { locationID = id', locationName = name', locationType = type', locationPosition = position', locationServices = services', locationAccommodation = accommodation' }
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' services' accommodation' position') =
-      object [ "id" .= id', "name" .= name', "position" .= position', "services" .= services', "accommodation" .= accommodation' ]
+    toJSON (Location id' name' type' services' accommodation' position') =
+      object [ "id" .= id', "name" .= name', "type" .= type', "position" .= position', "services" .= services', "accommodation" .= accommodation' ]
 
 instance Vertex Location where
   identifier = locationID
@@ -279,15 +293,17 @@ placeholderLocation :: String -> Location
 placeholderLocation ident = Location {
     locationID = ident,
     locationName = pack ("Placeholder for " ++ ident),
+    locationType = Poi,
     locationPosition = Nothing,
-    locationServices = [],
+    locationServices = S.empty,
     locationAccommodation = []
   }
 
 -- | Get the accomodation types available at a location
+--   These are ordered into enumueration order
 locationAccommodationTypes :: Location -> S.Set AccommodationType
 locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
-    
+
 -- | A leg from one location to another.
 --   Legs form the edges of a camino graph.
 -- 

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="600"
+   height="600"
+   viewBox="0 0 600 600"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="shop.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     showguides="true"
+     inkscape:zoom="0.84096521"
+     inkscape:cx="269.33338"
+     inkscape:cy="307.97945"
+     inkscape:window-width="1544"
+     inkscape:window-height="1175"
+     inkscape:window-x="460"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid2"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="4"
+       spacingy="4"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+    <sodipodi:guide
+       position="0,560"
+       orientation="0,1"
+       id="guide3"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="0,40"
+       orientation="0,1"
+       id="guide4"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="40,600"
+       orientation="-1,0"
+       id="guide5"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="560,600"
+       orientation="-1,0"
+       id="guide6"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,600"
+       orientation="-1,0"
+       id="guide7"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,400"
+       orientation="0,1"
+       id="guide8"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="140,300"
+       orientation="0,1"
+       id="guide9"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="220,200"
+       orientation="0,1"
+       id="guide10"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="10"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1"
+       radius="20"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1"
+       radius="65"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect1"
+       style="fill:#000000;stroke:none;stroke-width:3.84308;stroke-linejoin:round;fill-opacity:1"
+       d="M 120 120 A 32.36068 32.36068 0 0 0 91.056641 137.88867 L 68.943359 182.11133 L 48.943359 222.11133 A 12.36068 12.36068 0 0 0 52.785156 237.29297 A 10.001 10.001 0 0 1 59.953125 233.56836 L 499.91797 230 A 10.001 10.001 0 0 1 508.94336 244.47266 L 468.94336 324.47266 A 10.001 10.001 0 0 1 460 330 C 457.01858 330 452.50564 332.82034 446.23242 337.82031 C 439.95923 342.82031 431.92566 350 420 350 C 408.07434 350 400.04077 342.82031 393.76758 337.82031 C 387.49436 332.82034 382.98142 330 380 330 C 377.01858 330 372.50564 332.82034 366.23242 337.82031 C 359.95923 342.82031 351.92566 350 340 350 C 328.07434 350 320.04077 342.82031 313.76758 337.82031 C 307.49436 332.82034 302.98142 330 300 330 C 297.01858 330 292.50564 332.82034 286.23242 337.82031 C 279.95923 342.82031 271.92566 350 260 350 C 248.07434 350 240.04077 342.82031 233.76758 337.82031 C 227.49436 332.82034 222.98142 330 220 330 C 217.01858 330 212.50564 332.82034 206.23242 337.82031 C 199.95923 342.82031 191.92566 350 180 350 C 168.07434 350 160.04077 342.82031 153.76758 337.82031 C 147.49436 332.82034 142.98142 330 140 330 C 137.01858 330 132.50564 332.82034 126.23242 337.82031 C 119.95923 342.82031 111.92566 350 100 350 C 88.218191 350 80.106058 343.09282 73.738281 338.12891 C 67.641117 333.37592 63.021892 330.45944 60 330.09766 L 60 500 A 20 20 0 0 0 80 520 L 380 520 L 380 400 C 380 388.92001 388.92001 380 400 380 L 460 380 C 471.07999 380 480 388.92001 480 400 L 480 520 L 520 520 A 20 20 0 0 0 540 500 L 540 260 A 20 20 0 0 1 560 240 L 548.94336 217.88867 L 508.94336 137.88867 A 32.36068 32.36068 0 0 0 480 120 L 120 120 z M 483.75391 250.13281 L 66.619141 253.51367 L 60 268.75781 L 60 310.02344 C 60.148513 310.02809 60.290537 310.00321 60.439453 310.00977 C 72.041936 310.52081 79.781171 317.47829 86.035156 322.35352 C 92.289143 327.22872 96.874734 330 100 330 C 102.98142 330 107.49436 327.17966 113.76758 322.17969 C 120.04077 317.17969 128.07434 310 140 310 C 151.92566 310 159.95923 317.17969 166.23242 322.17969 C 172.50564 327.17966 177.01858 330 180 330 C 182.98142 330 187.49436 327.17966 193.76758 322.17969 C 200.04077 317.17969 208.07434 310 220 310 C 231.92566 310 239.95923 317.17969 246.23242 322.17969 C 252.50564 327.17966 257.01858 330 260 330 C 262.98142 330 267.49436 327.17966 273.76758 322.17969 C 280.04077 317.17969 288.07434 310 300 310 C 311.92566 310 319.95923 317.17969 326.23242 322.17969 C 332.50564 327.17966 337.01858 330 340 330 C 342.98142 330 347.49436 327.17966 353.76758 322.17969 C 360.04077 317.17969 368.07434 310 380 310 C 391.92566 310 399.95923 317.17969 406.23242 322.17969 C 412.50564 327.17966 417.01858 330 420 330 C 422.98142 330 427.49436 327.17966 433.76758 322.17969 C 438.80004 318.16861 445.00544 312.81674 453.4043 310.83203 L 483.75391 250.13281 z " />
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

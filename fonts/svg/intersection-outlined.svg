@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="600"
+   height="600"
+   viewBox="0 0 600 600"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="intersection.svg"
+   inkscape:export-filename="location-intersection-used.png"
+   inkscape:export-xdpi="8.8615389"
+   inkscape:export-ydpi="8.8615389"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     showguides="true"
+     inkscape:zoom="0.84096521"
+     inkscape:cx="269.33338"
+     inkscape:cy="307.97945"
+     inkscape:window-width="1544"
+     inkscape:window-height="1175"
+     inkscape:window-x="380"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid2"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="4"
+       spacingy="4"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+    <sodipodi:guide
+       position="100,560"
+       orientation="0,1"
+       id="guide3"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="0,40"
+       orientation="0,1"
+       id="guide4"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="40,600"
+       orientation="-1,0"
+       id="guide5"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="560,600"
+       orientation="-1,0"
+       id="guide6"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,600"
+       orientation="-1,0"
+       id="guide7"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,400"
+       orientation="0,1"
+       id="guide8"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="200,300"
+       orientation="0,1"
+       id="guide9"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="0,200"
+       orientation="0,1"
+       id="guide10"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1"
+       radius="65"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1"
+       style="display:inline;fill:#dcdcdc;fill-opacity:1;stroke-width:24.9603;stroke-linejoin:round"
+       sodipodi:type="inkscape:offset"
+       inkscape:radius="0"
+       inkscape:original="M 248 80 L 248 184.43945 A 156 143.77324 0 0 0 153.32031 271.69727 L 40 271.69727 L 40 367.54688 L 153.32031 367.54688 A 156 143.77324 0 0 0 248 454.80469 L 248 560 L 352 560 L 352 454.80469 A 156 143.77324 0 0 0 446.67969 367.54688 L 560 367.54688 L 560 271.69727 L 447.0625 271.69727 A 156 143.77324 0 0 0 352 184.08594 L 352 80 L 248 80 z M 295.94531 102.82227 L 304.05469 102.82227 L 304.05469 122.73047 L 295.94531 122.73047 L 295.94531 102.82227 z M 295.94531 131.41016 L 304.05469 131.41016 L 304.05469 151.32031 L 295.94531 151.32031 L 295.94531 131.41016 z M 295.94531 160 L 304.05469 160 L 304.05469 179.9082 L 295.94531 179.9082 L 295.94531 160 z M 300 260.0957 A 65 59.90552 0 0 1 365 320.00195 A 65 59.90552 0 0 1 300 379.90625 A 65 59.90552 0 0 1 235 320.00195 A 65 59.90552 0 0 1 300 260.0957 z M 82.822266 315.94531 L 102.73047 315.94531 L 102.73047 324.05469 L 82.822266 324.05469 L 82.822266 315.94531 z M 111.41016 315.94531 L 131.32031 315.94531 L 131.32031 324.05469 L 111.41016 324.05469 L 111.41016 315.94531 z M 140 315.94531 L 159.9082 315.94531 L 159.9082 324.05469 L 140 324.05469 L 140 315.94531 z M 440.0918 315.94531 L 460 315.94531 L 460 324.05469 L 440.0918 324.05469 L 440.0918 315.94531 z M 468.67969 315.94531 L 488.58984 315.94531 L 488.58984 324.05469 L 468.67969 324.05469 L 468.67969 315.94531 z M 497.26953 315.94531 L 517.17773 315.94531 L 517.17773 324.05469 L 497.26953 324.05469 L 497.26953 315.94531 z M 295.94531 459.9668 L 304.05469 459.9668 L 304.05469 479.875 L 295.94531 479.875 L 295.94531 459.9668 z M 295.94531 488.55469 L 304.05469 488.55469 L 304.05469 508.46484 L 295.94531 508.46484 L 295.94531 488.55469 z M 295.94531 517.14453 L 304.05469 517.14453 L 304.05469 537.05273 L 295.94531 537.05273 L 295.94531 517.14453 z "
+       d="m 248,80 v 104.43945 a 156,143.77324 0 0 0 -94.67969,87.25782 H 40 v 95.84961 H 153.32031 A 156,143.77324 0 0 0 248,454.80469 V 560 H 352 V 454.80469 a 156,143.77324 0 0 0 94.67969,-87.25781 H 560 V 271.69727 H 447.0625 A 156,143.77324 0 0 0 352,184.08594 V 80 Z m 47.94531,22.82227 h 8.10938 v 19.9082 h -8.10938 z m 0,28.58789 h 8.10938 v 19.91015 h -8.10938 z m 0,28.58984 h 8.10938 v 19.9082 h -8.10938 z M 300,260.0957 a 65,59.90552 0 0 1 65,59.90625 65,59.90552 0 0 1 -65,59.9043 65,59.90552 0 0 1 -65,-59.9043 65,59.90552 0 0 1 65,-59.90625 z M 82.822266,315.94531 h 19.908204 v 8.10938 H 82.822266 Z m 28.587894,0 h 19.91015 v 8.10938 h -19.91015 z m 28.58984,0 h 19.9082 v 8.10938 H 140 Z m 300.0918,0 H 460 v 8.10938 h -19.9082 z m 28.58789,0 h 19.91015 v 8.10938 h -19.91015 z m 28.58984,0 h 19.9082 v 8.10938 h -19.9082 z M 295.94531,459.9668 h 8.10938 v 19.9082 h -8.10938 z m 0,28.58789 h 8.10938 v 19.91015 h -8.10938 z m 0,28.58984 h 8.10938 v 19.9082 h -8.10938 z"
+       inkscape:export-filename="location-intersection-unused.png"
+       inkscape:export-xdpi="11.725191"
+       inkscape:export-ydpi="11.725191" />
+    <path
+       id="path41"
+       style="fill:none;stroke-width:4;stroke-linejoin:round;stroke:#4d4d4d;stroke-opacity:1;stroke-dasharray:none"
+       d="M 248 80.09375 L 248 184.5332 A 156 143.77324 0 0 0 222.88086 195.16602 A 156 143.77324 0 0 0 200.19336 209.7168 A 156 143.77324 0 0 0 180.64648 227.73047 A 156 143.77324 0 0 0 164.85742 248.64062 A 156 143.77324 0 0 0 153.32031 271.79102 L 40 271.79102 L 40 367.64062 L 153.32031 367.64062 A 156 143.77324 0 0 0 164.85742 390.79102 A 156 143.77324 0 0 0 180.64648 411.70117 A 156 143.77324 0 0 0 200.19336 429.71484 A 156 143.77324 0 0 0 222.88086 444.26562 A 156 143.77324 0 0 0 248 454.89844 L 248 560.09375 L 352 560.09375 L 352 454.89844 A 156 143.77324 0 0 0 377.11914 444.26562 A 156 143.77324 0 0 0 399.80664 429.71484 A 156 143.77324 0 0 0 419.35352 411.70117 A 156 143.77324 0 0 0 435.14258 390.79102 A 156 143.77324 0 0 0 446.67969 367.64062 L 560 367.64062 L 560 271.79102 L 447.0625 271.79102 A 156 143.77324 0 0 0 435.51367 248.52344 A 156 143.77324 0 0 0 419.67383 227.51172 A 156 143.77324 0 0 0 400.04492 209.41992 A 156 143.77324 0 0 0 377.24609 194.82227 A 156 143.77324 0 0 0 352 184.17969 L 352 80.09375 L 248 80.09375 z M 300 260.18945 A 65 59.90552 0 0 1 306.37109 260.47852 A 65 59.90552 0 0 1 312.68164 261.33984 A 65 59.90552 0 0 1 318.86914 262.76953 A 65 59.90552 0 0 1 324.875 264.75 A 65 59.90552 0 0 1 330.64062 267.26367 A 65 59.90552 0 0 1 336.11328 270.28516 A 65 59.90552 0 0 1 341.23633 273.78711 A 65 59.90552 0 0 1 345.96289 277.73633 A 65 59.90552 0 0 1 350.24609 282.0918 A 65 59.90552 0 0 1 354.04492 286.81445 A 65 59.90552 0 0 1 357.32422 291.85547 A 65 59.90552 0 0 1 360.05273 297.16992 A 65 59.90552 0 0 1 362.20117 302.70508 A 65 59.90552 0 0 1 363.75195 308.4082 A 65 59.90552 0 0 1 364.6875 314.22461 A 65 59.90552 0 0 1 365 320.0957 A 65 59.90552 0 0 1 362.78516 335.59961 A 65 59.90552 0 0 1 356.29102 350.04883 A 65 59.90552 0 0 1 345.96094 362.45508 A 65 59.90552 0 0 1 332.5 371.97461 A 65 59.90552 0 0 1 316.82227 377.95898 A 65 59.90552 0 0 1 300 380 A 65 59.90552 0 0 1 283.17773 377.95898 A 65 59.90552 0 0 1 267.5 371.97461 A 65 59.90552 0 0 1 254.03906 362.45508 A 65 59.90552 0 0 1 243.70898 350.04883 A 65 59.90552 0 0 1 237.21484 335.59961 A 65 59.90552 0 0 1 235 320.0957 A 65 59.90552 0 0 1 237.21484 304.5918 A 65 59.90552 0 0 1 243.70898 290.14258 A 65 59.90552 0 0 1 254.03711 277.73633 A 65 59.90552 0 0 1 267.5 268.21484 A 65 59.90552 0 0 1 283.17578 262.23047 A 65 59.90552 0 0 1 300 260.18945 z " />
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

@@ -28,6 +28,9 @@ import qualified Data.Set as S
 import Data.List (sortBy)
 import qualified Data.Text as T (toUpper, take)
 import Data.Maybe (isJust)
+import Text.Blaze.Html (preEscapedToHtml)
+import Numeric
+import Data.Char (ord)
 
 
 -- | Create a CSS-able colour
@@ -104,89 +107,65 @@ locationSummary _preferences _camino location = [shamlet|
       <p>Accomodation: #{accommodation}
   |]
   where 
-    services = T.intercalate ", " (map (\s -> T.pack $ show s) (locationServices location))
+    services = T.intercalate ", " (map (\s -> T.pack $ show s) (S.toList $ locationServices location))
     accommodation = T.intercalate ", " (map (\a -> T.pack $ show $ accommodationType a) (locationAccommodation location))
 
 
 caminoSleepingIcon :: Config -> Sleeping -> Html
-caminoSleepingIcon _ Shared = [shamlet| <i .sleeping .fa-solid .fa-bed title="Shared"> |]
-caminoSleepingIcon _ Single = [shamlet| <i .sleeping .fa-solid .fa-bed title="Single"> |]
-caminoSleepingIcon _ Double = [shamlet|
-  <span title="Double">
-    <i .sleeping .fa-solid .fa-bed>
-    <sup>2
-  |]
-caminoSleepingIcon _ DoubleWC = [shamlet|
-  <span .sleeping title="Double with WC">
-    <i .fa-solid .fa-bed>
-    <sup>2+WC
-  |]
-caminoSleepingIcon _ Triple = [shamlet|
-  <span title="Triple">
-    <i .sleeping .fa-solid .fa-bed>
-    <sup>3
-  |]
-caminoSleepingIcon _ TripleWC = [shamlet|
-  <span .sleeping title="Triple with WC">
-    <i .fa-solid .fa-bed>
-    <sup>3+WC
-  |]
-caminoSleepingIcon _ Quadruple = [shamlet|
-  <span title="Quadruple">
-    <i .sleeping .fa-solid .fa-bed>
-    <sup>4
-  |]
-caminoSleepingIcon _ QuadrupleWC = [shamlet|
-  <span .sleeping title="Quadruple with WC">
-    <i .fa-solid .fa-bed>
-    <sup>4+WC
-  |]
-caminoSleepingIcon _ Matress = [shamlet| <i .sleeping .fa-solid .fa-matress-pillow title="Matress"> |]
-caminoSleepingIcon _ SleepingBag = [shamlet| <i .sleeping .fa-solid .fa-tarp title="SleepingBag"> |]
+caminoSleepingIcon _ Shared = [shamlet| <span .sleeping .ca-shared title="Shared"> |]
+caminoSleepingIcon _ Single = [shamlet| <span.sleeping .ca-bed-single title="Single"> |]
+caminoSleepingIcon _ Double = [shamlet| <span .sleeping ca-bed-double title="Double"> |]
+caminoSleepingIcon _ DoubleWC = [shamlet| <span .sleeping .ca-bed-double-wc title="Double with WC"> |]
+caminoSleepingIcon _ Triple = [shamlet| <span .sleeping .ca-bed-triple title="Triple"> |]
+caminoSleepingIcon _ TripleWC = [shamlet| <span .sleeping .ca-bed-triple-wc title="Triple with WC"> |]
+caminoSleepingIcon _ Quadruple = [shamlet| <span .sleeping .ca-bed-quadruple title="Quadruple"> |]
+caminoSleepingIcon _ QuadrupleWC = [shamlet| <span .sleeping .bed-quadruple-wc title="Quadruple with WC"> |]
+caminoSleepingIcon _ Matress = [shamlet| <span .sleeping .ca-matress title="Matress"> |]
+caminoSleepingIcon _ SleepingBag = [shamlet| <span .sleeping .ca-sleeping-bag title="SleepingBag"> |]
 
 caminoAccommodationTypeIcon :: Config -> AccommodationType -> Html
-caminoAccommodationTypeIcon _ MunicipalAlbergue = [shamlet| <i  .accomodation .municipal-albergue .fa-solid .fa-house title="Municipal Albergue"> |]
-caminoAccommodationTypeIcon _ PrivateAlbergue = [shamlet| <i  .accomodation .private-albergue .fa-solid .fa-house-chimney title="Private Albergue"> |]
-caminoAccommodationTypeIcon _ GuestHouse = [shamlet| <i  .accomodation .guest-house .fa-solid .fa-house-chimney-window title="Guest House"> |]
-caminoAccommodationTypeIcon _ House = [shamlet| <i  .accomodation .house .fa-solid .fa-house-chimney-window title="House"> |]
-caminoAccommodationTypeIcon _ Hotel = [shamlet| <i  .accomodation .hotel .fa-solid .fa-hotel title="Hotel"> |]
-caminoAccommodationTypeIcon _ Camping = [shamlet| <i  .accomodation .camping .fa-solid .fa-tent title="Camping"> |]
+caminoAccommodationTypeIcon _ MunicipalAlbergue = [shamlet| <span .accomodation .municipal-albergue .ca-albergue title="Municipal Albergue"> |]
+caminoAccommodationTypeIcon _ PrivateAlbergue = [shamlet| <span .accomodation .private-albergue .ca-albergue title="Private Albergue"> |]
+caminoAccommodationTypeIcon _ GuestHouse = [shamlet| <span .accomodation .guest-house .ca-guesthouse title="Guest House"> |]
+caminoAccommodationTypeIcon _ House = [shamlet| <span .accomodation .house .ca-house title="House"> |]
+caminoAccommodationTypeIcon _ Hotel = [shamlet| <span .accomodation .hotel .ca-hotel title="Hotel"> |]
+caminoAccommodationTypeIcon _ Camping = [shamlet| <span .accomodation .camping .ca-tent title="Camping"> |]
 
 caminoServiceIcon :: Config -> Service -> Html
-caminoServiceIcon _ WiFi = [shamlet| <i  .service .fa-solid .fa-wifi title="WiFi"> |]
-caminoServiceIcon _ Restaurant = [shamlet| <i  .service .fa-solid .fa-utensils title="Restaurant"> |]
-caminoServiceIcon _ Pharmacy = [shamlet| <i  .service .fa-solid .fa-mortar-pestle title="Pharmacy"> |]
-caminoServiceIcon _ Bank = [shamlet| <i  .service .fa-solid .fa-credit-card title="Bank"> |]
-caminoServiceIcon _ BicycleRepair = [shamlet| <i  .service .fa-solid .fa-bicycle title="Bicycle Repair"> |]
-caminoServiceIcon _ Groceries = [shamlet| <i  .service .fa-solid .fa-cart-shopping title="Groceries"> |]
-caminoServiceIcon _ Medical = [shamlet| <i  .service .fa-solid .fa-house-medical title="Medical"> |]
-caminoServiceIcon _ WashingMachine = [shamlet| <i  .service .fa-solid .fa-jug-detergent title="Washing Machine"> |]
-caminoServiceIcon _ Dryer = [shamlet| <i  .service .fa-solid .fa-fan title="Dryer"> |]
-caminoServiceIcon _ Handwash = [shamlet| <i  .service .fa-solid .fa-soap title="Hand Wash"> |]
-caminoServiceIcon _ Kitchen = [shamlet| <i  .service .fa-solid .fa-kitchen-set title="Kitchen"> |]
-caminoServiceIcon _ Breakfast = [shamlet| <i  .service .fa-solid .fa-mug-saucer title="Breakfast"> |]
-caminoServiceIcon _ Dinner = [shamlet| <i  .service .fa-solid .fa-bowl-food title="Dinner"> |]
-caminoServiceIcon _ Lockers = [shamlet| <i  .service .fa-solid .fa-toilet-portable title="Lockers"> |]
-caminoServiceIcon _ Accessible = [shamlet| <i .service .fa-solid .fa-accessible-icon title="Accessible"> |]
-caminoServiceIcon _ Stables = [shamlet| <i  .service .fa-solid .fa-horse-head title="Stables"> |]
-caminoServiceIcon _ Pets = [shamlet| <i  .service .fa-solid .fa-dog title="Pets Allowed"> |]
-caminoServiceIcon _ BicycleStorage = [shamlet| <i  .service .fa-solid .fa-bicycle title="Bicycle Storage"> |]
-caminoServiceIcon _ CampSite = [shamlet| <i  .service .fa-solid .fa-campground title="Camp Site"> |]
-caminoServiceIcon _ Bedlinen = [shamlet| <i  .service .fa-solid .fa-rug title="Bed-linen"> |]
-caminoServiceIcon _ Towels = [shamlet| <i  .service .fa-solid .fa-scroll title="Towels"> |]
-caminoServiceIcon _ Pool = [shamlet| <i  .service .fa-solid .fa-person-swimmingl title="Pool"> |]
-caminoServiceIcon _ Heating = [shamlet| <i  .service .fa-solid .fa-temperature-high title="Heating"> |]
-caminoServiceIcon _ Prayer = [shamlet| <i  .service .fa-solid .fa-hands-praying title="Prayer"> |]
-caminoServiceIcon _ Train = [shamlet| <i  .service .fa-solid .fa-train title="Train"> |]
-caminoServiceIcon _ Bus = [shamlet| <i  .service .fa-solid .fa-bus-simple title="Bus"> |]
+caminoServiceIcon _ WiFi = [shamlet| <span .service .ca-wifi title="WiFi"> |]
+caminoServiceIcon _ Restaurant = [shamlet| <span .service .ca-restaurant title="Restaurant"> |]
+caminoServiceIcon _ Pharmacy = [shamlet| <span .service .ca-pharmacy title="Pharmacy"> |]
+caminoServiceIcon _ Bank = [shamlet| <span .service .ca-bank title="Bank"> |]
+caminoServiceIcon _ BicycleRepair = [shamlet| <span .service .ca-bicycle-repair title="Bicycle Repair"> |]
+caminoServiceIcon _ Groceries = [shamlet| <span .service .ca-groceries title="Groceries"> |]
+caminoServiceIcon _ Medical = [shamlet| <span .service .ca-medical title="Medical"> |]
+caminoServiceIcon _ WashingMachine = [shamlet| <span .service .ca-washing-machine title="Washing Machine"> |]
+caminoServiceIcon _ Dryer = [shamlet| <span .service .ca-dryer title="Dryer"> |]
+caminoServiceIcon _ Handwash = [shamlet| <span .service .ca-hadwash title="Hand Wash"> |]
+caminoServiceIcon _ Kitchen = [shamlet| <span .service .ca-kitchen title="Kitchen"> |]
+caminoServiceIcon _ Breakfast = [shamlet| <span .service .ca-breakfast title="Breakfast"> |]
+caminoServiceIcon _ Dinner = [shamlet| <span .service .ca-dinner title="Dinner"> |]
+caminoServiceIcon _ Lockers = [shamlet| <span .service .ca-lockers title="Lockers"> |]
+caminoServiceIcon _ Accessible = [shamlet| <i .service .ca-accessible title="Accessible"> |]
+caminoServiceIcon _ Stables = [shamlet| <span .service .ca-stables title="Stables"> |]
+caminoServiceIcon _ Pets = [shamlet| <span .service .ca-pets title="Pets Allowed"> |]
+caminoServiceIcon _ BicycleStorage = [shamlet| <span .service .ca-bicycle-storage title="Bicycle Storage"> |]
+caminoServiceIcon _ CampSite = [shamlet| <span .service .ca-camping title="Camp Site"> |]
+caminoServiceIcon _ Bedlinen = [shamlet| <span .service .ca-bedlinen title="Bed-linen"> |]
+caminoServiceIcon _ Towels = [shamlet| <span .service .ca-towels title="Towels"> |]
+caminoServiceIcon _ Pool = [shamlet| <span .service .ca-pool title="Pool"> |]
+caminoServiceIcon _ Heating = [shamlet| <span .service .ca-heating title="Heating"> |]
+caminoServiceIcon _ Prayer = [shamlet| <span .service .ca-prayer title="Prayer"> |]
+caminoServiceIcon _ Train = [shamlet| <span .service .ca-train title="Train"> |]
+caminoServiceIcon _ Bus = [shamlet| <span .service .ca-bus title="Bus"> |]
 
 caminoAccommodationHtml :: Config -> Accommodation -> Html
 caminoAccommodationHtml _ (GenericAccommodation _type) = [shamlet| |]
 caminoAccommodationHtml config (Accommodation name' type' services' sleeping') = [shamlet|
   <div .card .accomodation>
     <h5>
-      #{name'}
       ^{caminoAccommodationTypeIcon config type'}
+      #{name'}
     <div .card-body>
       <div .row>
         <div .col>
@@ -350,24 +329,71 @@ caminoMapHtml _config _preferences _camino _trip = [shamlet|
       <div #map>
   |]
 
+caminoLocationIcon :: Config -> Preferences -> Camino -> S.Set Location -> S.Set Location -> Location -> String
+caminoLocationIcon _config _preferences _camino stops waypoints location
+  | S.member location stops = "iconStop"
+  | otherwise = "icon" ++ (show $ locationType location) ++ used
+    where
+      used = if S.member location waypoints then "Used" else "Unused"
+      
 caminoMapScript :: Config -> Preferences -> Camino -> Maybe Trip -> Html
 caminoMapScript config preferences camino trip = [shamlet|
   <script>
-    var stopUsedIcon = L.icon({
+    var iconStop = L.icon({
       iconUrl: '#{iconBase}/location-stop.png',
-      iconSize: [32, 32]
+      iconSize: [40, 40]
     });
-    var waypointUsedIcon = L.icon({
-      iconUrl: '#{iconBase}/location-waypoint-used.png',
-      iconSize: [24, 24]
+    var iconVillageUsed = L.icon({
+      iconUrl: '#{iconBase}/location-village-used.png',
+      iconSize: [16, 16]
     });
-    var waypointUnusedIcon = L.icon({
-      iconUrl: '#{iconBase}/location-waypoint-unused.png',
-      iconSize: [24, 24]
+    var iconVillageUnused = L.icon({
+      iconUrl: '#{iconBase}/location-village-unused.png',
+      iconSize: [16, 16]
+    });
+    var iconTownUsed = L.icon({
+      iconUrl: '#{iconBase}/location-town-used.png',
+      iconSize: [32, 20]
+    });
+    var iconTownUnused = L.icon({
+      iconUrl: '#{iconBase}/location-town-unused.png',
+      iconSize: [32, 20]
+    });
+    var iconCityUsed = L.icon({
+      iconUrl: '#{iconBase}/location-city-used.png',
+      iconSize: [32, 25]
+    });
+    var iconCityUnused = L.icon({
+      iconUrl: '#{iconBase}/location-city-unused.png',
+      iconSize: [32, 25]
+    });
+    var iconBridgeUsed = L.icon({
+      iconUrl: '#{iconBase}/location-bridge-used.png',
+      iconSize: [24, 9]
+    });
+    var iconBridgeUnused = L.icon({
+      iconUrl: '#{iconBase}/location-bridge-unused.png',
+      iconSize: [24, 9]
+    });
+    var iconIntersectionUsed = L.icon({
+      iconUrl: '#{iconBase}/location-intersection-used.png',
+      iconSize: [24, 22]
+    });
+    var iconIntersectionUnused = L.icon({
+      iconUrl: '#{iconBase}/location-intersection-unused.png',
+      iconSize: [24, 22]
+    });
+    var iconPoiUsed = L.icon({
+      iconUrl: '#{iconBase}/location-poi-used.png',
+      iconSize: [15, 20]
+    });
+    var iconPoiUnused = L.icon({
+      iconUrl: '#{iconBase}/location-poi-unused.png',
+      iconSize: [15, 20]
     });
     var map = L.map('map');
     map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('#{tiles}', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
@@ -375,7 +401,7 @@ caminoMapScript config preferences camino trip = [shamlet|
     var line;
     $forall location <- M.elems $ locations camino
       $maybe position <- locationPosition location
-        marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{chooseIcon location} } );
+        marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{caminoLocationIcon config preferences camino stops waypoints location} } );
         marker.bindTooltip(`#{locationLine config preferences camino location}`);
         marker.addTo(map);
     $forall leg <- legs camino
@@ -393,6 +419,7 @@ caminoMapScript config preferences camino trip = [shamlet|
   where
     (tl, br) = caminoBbox camino
     iconBase = getConfigValue "web.icons.base" "icons" config :: String
+    tiles = preEscapedToHtml $ (getConfigValue "web.map.tiles" "https://tile.openstreetmap.org/{z}/{x}/{y}.png" config :: String)
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     chooseWidth leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 6 :: Int
@@ -416,9 +443,73 @@ paletteCss _config ident pal = [cassius|
     color: #{toCssColour $ paletteColour pal}
 
   |] undefined
+  
+iconCss :: Config -> String -> Char -> Css
+iconCss _config ident ch = [cassius|
+.#{ident}::before
+  font-family: "Camino Icons"
+  font-weight: normal
+  line-height: 1
+  text-rendering: auto
+  content: "\#{hex $ ord ch}"
+|] undefined
+  where
+    hex c = showHex c ""
+
+iconList = [
+    ("ca-accessible", '\xe067'),
+    ("ca-albergue", '\xe010'),
+    ("ca-bank", '\xe042'),
+    ("ca-bed-double", '\xe022'),
+    ("ca-bed-double-wc", '\xe023'),
+    ("ca-bed-quadruple", '\xe026'),
+    ("ca-bed-quadruple-wc", '\xe027'),
+    ("ca-bed-single", '\xe020'),
+    ("ca-bed-triple", '\xe024'),
+    ("ca-bed-triple-wc", '\xe025'),
+    ("ca-bedlinen", '\xe06c'),
+    ("ca-breakfast", '\xe064'),
+    ("ca-bicycle-repair", '\xe045'),
+    ("ca-bicycle-storage", '\xe06a'),
+    ("ca-bus", '\xe047'),
+    ("ca-camping", '\xe019'),
+    ("ca-dinner", '\xe065'),
+    ("ca-dryer", '\xe062'),
+    ("ca-groceries", '\xe041'),
+    ("ca-guesthouse", '\xe012'),
+    ("ca-handwash", '\xe063'),
+    ("ca-heating", '\xe070'),
+    ("ca-hotel", '\xe013'),
+    ("ca-house", '\xe011'),
+    ("ca-kitchen", '\xe06b'),
+    ("ca-locker", '\xe066'),
+    ("ca-matress", '\xe028'),
+    ("ca-medical", '\xe044'),
+    ("ca-pets", '\xe069'),
+    ("ca-pharmacy", '\xe043'),
+    ("ca-pool", '\xe06e'),
+    ("ca-prayer", '\xe06f'),
+    ("ca-restaurant", '\xe040'),
+    ("ca-shared", '\xe021'),
+    ("ca-sleeping-bag", '\xe028'),
+    ("ca-stables", '\xe068'),
+    ("ca-tent", '\xe018'),
+    ("ca-towels", '\xe06d'),
+    ("ca-train", '\xe046'),
+    ("ca-washing-machine", '\xe061'),
+    ("ca-wifi", '\xe060')
+  ]
+  
+caminoIconCss :: Config -> Camino -> [Css]
+caminoIconCss config _camino = map (\(ident, ch) -> iconCss config ident ch) iconList
 
 caminoBaseCss :: Config -> Camino -> Css
-caminoBaseCss _config _camino = [cassius|
+caminoBaseCss config _camino = [cassius|
+@font-face
+  font-family: "Camino Icons"
+  font-weight: normal
+  font-style: normal
+  src: url(#{fontBase}/Camino-Icons.woff)
 #map
   width: 80%
   height: 800px
@@ -427,6 +518,8 @@ caminoBaseCss _config _camino = [cassius|
   color: #1964c0
 .accomodation
   color: #1964c0
+.accomodation.card
+  padding: 1ex
 .accomodation.municipal-albergue
   color: #f9b34a
 .distance-summary
@@ -476,21 +569,23 @@ caminoBaseCss _config _camino = [cassius|
   .card-title
     h4
       font-weight: bolder
-    h4::after
-      margin-left: 1ex
+    h4::before
+      margin-right: 0.5ex
       color: #f9b34a
-      font-family: "Font Awesome 6 Free"
-      font-weight: 900
-      font-size: smaller
-      content: "\f236"
+      font-family: "Camino Icons"
+      font-weight: normal
+      content: "\e020"
   |] undefined
+  where
+    fontBase = getConfigValue "web.fonts.base" "fonts" config :: String
 
 caminoCss :: Config -> Camino -> [Css]
-caminoCss config camino = base':default':routes'
+caminoCss config camino = (base':default':routes') ++ icons'
   where
     base' = caminoBaseCss config camino
     default' = paletteCss config "location-default" (palette camino)
     routes' = map (\r -> paletteCss config ("location-" ++ (routeID r)) (routePalette r)) (routes camino)
+    icons' = caminoIconCss config camino
   
 caminoHtml :: Config -> Preferences -> Camino -> Maybe Trip -> Html
 caminoHtml config preferences camino trip = [shamlet|
@@ -541,14 +636,12 @@ caminoHtml config preferences camino trip = [shamlet|
             <p .text-muted .my-2>...
       <script src="#{jQueryJs}">
       <script src="#{bootstrapJs}">
-      <script src="#{fontAwsomeKit}" crossorigin="anonymous">
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
       ^{caminoMapScript config preferences camino trip}
   |]
   where
     title = maybe "Camino" (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) trip
     iconBase = getConfigValue "web.icons.base" "icons" config :: String
-    fontAwsomeKit = getConfigValue "web.icons.kit" "kit.js" config :: String
     jQueryJs = getConfigValue "web.assets.jQueryJs" "jquery.js" config :: T.Text
     bootstrapCss = getConfigValue "web.assets.bootstrapCss" "bootstrap.css"  config :: T.Text
     bootstrapJs = getConfigValue "web.assets.bootstrapJs" "bootstrap.js" config :: T.Text

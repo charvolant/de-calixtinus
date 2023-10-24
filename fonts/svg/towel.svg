@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="600"
+   height="750"
+   viewBox="0 0 600 750"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="towel.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title2">Template</title>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     showguides="true"
+     inkscape:zoom="0.84096521"
+     inkscape:cx="274.08982"
+     inkscape:cy="303.81756"
+     inkscape:window-width="1528"
+     inkscape:window-height="996"
+     inkscape:window-x="828"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     inkscape:lockguides="true">
+    <inkscape:grid
+       id="grid2"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="4"
+       spacingy="4"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+    <sodipodi:guide
+       position="0,730"
+       orientation="0,1"
+       id="guide3"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="-40,-230"
+       orientation="0,1"
+       id="guide4"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="20,750"
+       orientation="-1,0"
+       id="guide5"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="580,750"
+       orientation="-1,0"
+       id="guide6"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,750"
+       orientation="-1,0"
+       id="guide7"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,550"
+       orientation="0,1"
+       id="guide8"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="0,450"
+       orientation="0,1"
+       id="guide9"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="0,-70"
+       orientation="0,1"
+       id="guide10"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="0,150"
+       orientation="0,1"
+       id="guide1"
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="300,350"
+       orientation="0,1"
+       id="guide2"
+       inkscape:label=""
+       inkscape:locked="true"
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect5"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20.572397,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1"
+       radius="20"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,1,1,0,6.7169639,0,1 @ F,0,0,1,0,6.7169639,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1 @ F,0,0,1,0,20,0,1"
+       radius="20"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1 @ F,0,0,1,0,64,0,1"
+       radius="65"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect1"
+       style="opacity:0.99;fill:#000000;stroke-width:25.6034;stroke-linecap:round;stroke-linejoin:round"
+       d="m 348.1455,176.88687 c -56.35764,-0.60093 -115.913,-4.78481 -148.71974,-1.27764 -10.93687,1.1692 -28.32218,6.28713 -38.15691,11.25285 -1.49258,0.75362 -2.96623,1.54377 -4.42633,2.36525 -9.62333,5.41422 -23.59812,16.76196 -30.19451,25.57821 -1.95548,2.61355 -3.90538,5.35258 -5.74683,8.05226 -6.21757,9.11533 -13.61028,25.4758 -16.50539,36.12684 -0.13256,0.48766 -0.26335,0.97427 -0.39221,1.45895 -2.83276,10.65457 4.95071,19.58914 15.99638,19.57665 12.557,-0.0142 26.69032,-0.0583 39.42826,-0.0642 C 170.78973,279.95072 180,280 180,280 c 0.17007,0.001 0.36148,-0.004 0.57211,-0.0154 10.7149,-0.56385 21.2608,8.85954 21.2782,19.87536 1.5e-4,0.0943 2.1e-4,0.18864 1.9e-4,0.28296 -0.002,11.0143 -10.56727,20.43072 -21.2875,19.87229 -0.31069,-0.0162 -9.51728,0.0261 -20.56294,0.009 -12.77871,-0.0195 -26.89052,-0.0803 -40.00112,-0.084 C 108.95378,319.9374 100,328.95431 100,340 l 0,200 a 20,20 45 0 0 20,20 h 24.36582 a 20,20 135 0 0 20,-20 V 380 c 0,-11.04569 2.48491,-29.99994 10.48857,-30 10.48857,10 10.48857,10 10.48857,10 v 220 a 20,20 45 0 0 20,20 H 480 a 20,20 135 0 0 20,-20 V 220 c 0,-11.04569 -6.93784,-26.04565 -17.17975,-29.99583 -21.79629,-8.40654 -56.44312,-12.23778 -94.67596,-12.96639 -11.04336,-0.21045 -28.95387,-0.0331 -39.99879,-0.15091 z"
+       sodipodi:nodetypes="scsscsssscccssscccs"
+       inkscape:path-effect="#path-effect5"
+       inkscape:original-d="M 368.14518,176.92969 C 292.27734,177.50098 203.59923,168.75002 180,180 c -15.21715,3.42495 -27.31591,11.28367 -40,20 -8.02212,5.51268 -25.5758,31.2896 -29.36004,40 -5.0741,11.67932 -11.12546,37.38671 -10.63996,40 21.08892,0.0982 58.07674,-0.1384 80,0 3.88998,0.0246 18.93777,-3.35287 20,0 2.45405,7.74602 2.4806,32.37502 0,40 -1.08288,3.32862 -16.10915,-0.0217 -20,0 -22.15982,0.12383 -56.09745,-0.18259 -80,0 v 240 h 64.36582 c 0,0 0,-133.33333 0,-200 0,-5.52285 4.69589,-10 10.48857,-10 5.79268,0 10.48857,4.47715 10.48857,10 0,80 0,240 0,240 H 500 V 200 C 481.64505,182.50004 427.1535,176.48535 368.14518,176.92969 Z"
+       transform="matrix(1.173913,0,0,1.173913,-27.826087,-104.34783)" />
+    <path
+       style="color:#000000;opacity:0.99;fill:#000000;stroke-width:1.17391;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       d="m 77.720618,42.391304 a 17.610457,17.610457 0 0 0 -14.763332,8.011041 c 0,0 -9.395932,14.440445 -18.700068,34.038888 C 34.953083,104.03969 25,128.79589 25,153.91304 c 0,46.81202 24.938774,100.9336 24.938774,100.9336 a 17.610457,17.610457 0 0 0 16.148183,10.58814 H 183.47826 a 17.608696,17.608696 0 0 0 17.6087,-17.60869 17.608696,17.608696 0 0 0 -17.6087,-17.6087 H 78.231912 c -6.327741,-17.2301 -18.014521,-52.17058 -18.014521,-76.30435 0,-14.78817 7.602948,-36.98744 15.854704,-54.369133 4.342761,-9.147694 8.451313,-16.585373 11.567171,-21.935211 H 512.17391 A 17.608696,17.608696 0 0 0 529.78261,60 17.608696,17.608696 0 0 0 512.17391,42.391304 Z"
+       id="path2" />
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Template</dc:title>
+        <dc:date>2023</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Doug Palmer</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>icon map symbol</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

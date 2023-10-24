@@ -141,7 +141,7 @@ caminoServiceIcon _ Groceries = [shamlet| <span .service .ca-groceries title="Gr
 caminoServiceIcon _ Medical = [shamlet| <span .service .ca-medical title="Medical"> |]
 caminoServiceIcon _ WashingMachine = [shamlet| <span .service .ca-washing-machine title="Washing Machine"> |]
 caminoServiceIcon _ Dryer = [shamlet| <span .service .ca-dryer title="Dryer"> |]
-caminoServiceIcon _ Handwash = [shamlet| <span .service .ca-hadwash title="Hand Wash"> |]
+caminoServiceIcon _ Handwash = [shamlet| <span .service .ca-handwash title="Hand Wash"> |]
 caminoServiceIcon _ Kitchen = [shamlet| <span .service .ca-kitchen title="Kitchen"> |]
 caminoServiceIcon _ Breakfast = [shamlet| <span .service .ca-breakfast title="Breakfast"> |]
 caminoServiceIcon _ Dinner = [shamlet| <span .service .ca-dinner title="Dinner"> |]

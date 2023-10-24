@@ -170,13 +170,10 @@
      id="layer1">
     <g
        id="path1"
-       transform="matrix(1.1053503,0,0,1.1053503,-29.486901,-0.45680006)">
+       transform="matrix(1.1053503,0,0,1.1053503,-29.486901,-0.45680006)"
+       style="fill:#000000;fill-opacity:1;stroke-width:0.99968309;stroke-dasharray:none;stroke:none;stroke-opacity:1">
       <path
-         style="color:#000000;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
-         d="M 77.292139,260 140,520 h 320 l 59.641,-260"
-         id="path3" />
-      <path
-         style="color:#000000;fill:#000000;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         style="color:#000000;fill:#000000;stroke-linecap:round;stroke-linejoin:round;fill-opacity:1;stroke-width:0.99968309;stroke-dasharray:none;stroke:none;stroke-opacity:1"
          d="m 525.23047,235.63281 a 25,25 0 0 0 -29.95703,18.77735 L 440.08594,495 H 159.6875 L 101.5957,254.13867 a 25,25 0 0 0 -30.166013,-18.4414 25,25 0 0 0 -18.441406,30.16406 l 62.708989,260 A 25.0025,25.0025 0 0 0 140,545 h 320 a 25.0025,25.0025 0 0 0 24.36719,-19.41016 l 59.64062,-260 a 25,25 0 0 0 -18.77734,-29.95703 z"
          id="path4" />
     </g>

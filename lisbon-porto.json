@@ -1316,6 +1316,126 @@
         }
       ]
     },
+    {
+      "id": "P110",
+      "name": "Urgueiras",
+      "type": "Village",
+      "position": { "latitude": 40.70430, "longitude": -8.47797 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P111",
+      "name": "Albergaria-a-Nova",
+      "type": "Village",
+      "position": { "latitude": 40.74353, "longitude": -8.490641 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Albergaria-a-Nova Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Lockers", "Restaurant", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Currais Mini Hostel & Suites",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Breakfast", "Dinner", "Lockers", "Restaurant", "BicycleStorage", "Accessible", "Stables", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Hostel A Loja do Cantoneiro",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Double", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+     {
+      "id": "P112",
+      "name": "Laginhas",
+      "type": "Village",
+      "position": { "latitude": 40.75560, "longitude": -8.489219 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P113",
+      "name": "Escusa",
+      "type": "Village",
+      "position": { "latitude": 40.76012, "longitude": -8.48900 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P114",
+      "name": "Outeirinho",
+      "type": "Village",
+      "position": { "latitude": 40.76580, "longitude": -8.48498 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casa Católico Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Pets", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P115",
+      "name": "Coche",
+      "type": "Village",
+      "position": { "latitude": 40.77148, "longitude": -8.48383 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P116",
+      "name": "Pinheiro da Bemposta",
+      "type": "Village",
+      "position": { "latitude": 40.78461, "longitude": -8.49200 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Watermill Moinho Garcia",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "BicycleStorage", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "P117",
+      "name": "Besteiros",
+      "type": "Village",
+      "position": { "latitude": 40.79890, "longitude": -8.48107 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P118",
+      "name": "Póvoa (Travaca)",
+      "type": "Village",
+      "position": { "latitude": 40.81590, "longitude": -8.48194 },
+      "services": [  ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P119",
+      "name": "Oliveira de Azeméis",
+      "type": "Town",
+      "position": { "latitude": 40.83930, "longitude": -8.47737 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Dighton",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "BicycleStorage", "Bedlinen", "Towels", "Accessible" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ]
+    },
 
     {
       "id": "F1",
@@ -2613,6 +2733,76 @@
       "distance": 5.20,
       "ascent": 25,
       "descent": 0
+    },
+    {
+      "from": "P109",
+      "to": "P110",
+      "distance": 1.72,
+      "ascent": 35,
+      "descent": 0
+    },
+    {
+      "from": "P110",
+      "to": "P111",
+      "distance": 5.04,
+      "ascent": 40,
+      "descent": 35
+    },
+    {
+      "from": "P111",
+      "to": "P112",
+      "distance": 1.89,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "P112",
+      "to": "P113",
+      "distance": 0.51,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "P113",
+      "to": "P114",
+      "distance": 0.61,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "P114",
+      "to": "P115",
+      "distance": 0.75,
+      "ascent": 15,
+      "descent": 10
+    },
+    {
+      "from": "P115",
+      "to": "P116",
+      "distance": 1.93,
+      "ascent": 15,
+      "descent": 35
+    },
+    {
+      "from": "P116",
+      "to": "P117",
+      "distance": 2.52,
+      "ascent": 75,
+      "descent": 0
+    },
+    {
+      "from": "P117",
+      "to": "P118",
+      "distance": 2.02,
+      "ascent": 5,
+      "descent": 85
+    },
+    {
+      "from": "P118",
+      "to": "P119",
+      "distance": 3.00,
+      "ascent": 105,
+      "descent": 40
     },
 
 

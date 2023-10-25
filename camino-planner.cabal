@@ -57,6 +57,7 @@ library
     , shakespeare
     , split
     , text
+    , text-icu >=0.8
     , vector
     , xml-conduit
     , xml-hamlet
@@ -89,6 +90,7 @@ executable camino-map-exe
     , shakespeare
     , split
     , text
+    , text-icu >=0.8
     , vector
     , xml-conduit
     , xml-hamlet
@@ -121,6 +123,7 @@ executable camino-planner-exe
     , shakespeare
     , split
     , text
+    , text-icu >=0.8
     , vector
     , xml-conduit
     , xml-hamlet
@@ -161,6 +164,7 @@ test-suite camino-planner-test
     , shakespeare
     , split
     , text
+    , text-icu >=0.8
     , vector
     , xml-conduit
     , xml-hamlet

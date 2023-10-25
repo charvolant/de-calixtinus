@@ -107,5 +107,6 @@
     <orderEntry type="library" name="zlib-0.6.3.0" level="project" />
     <orderEntry type="library" name="yaml-0.11.11.0" level="project" />
     <orderEntry type="library" name="libyaml-0.1.2" level="project" />
+    <orderEntry type="library" name="text-icu-0.8.0.2" level="project" />
   </component>
 </module>

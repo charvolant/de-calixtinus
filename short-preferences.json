@@ -1,8 +1,8 @@
 {
   "walking": "tobler",
   "fitness": "Unfit",
-  "distance": { "target": 20.0, "lower": 16.0, "upper":  22.0, "min": 8.0, "max": 26.0 },
-  "time": { "target": 5.0, "lower": 0.0, "upper":  6.0, "min": 0.0, "max": 8.0 },
+  "distance": { "target": 22.0, "lower": 16.0, "upper":  24.0, "min": 8.0, "max": 30.0 },
+  "time": { "target": 5.0, "lower": 0.0, "upper":  6.0, "min": 0.0, "max": 9.0 },
   "accomodation": {
     "MunicipalAlbergue": 1.0,
     "PrivateAlbergue": 0.5,

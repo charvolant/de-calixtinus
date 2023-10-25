@@ -21,17 +21,24 @@ import Data.Colour
 import Data.Colour.SRGB (sRGB24show)
 import Text.Hamlet
 import Text.Cassius
-import qualified Data.Text as T (intercalate, null, pack, Text)
+import qualified Data.Text as T (intercalate, null, pack, Text, Text)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.List (sortBy)
-import qualified Data.Text as T (toUpper, take)
+import qualified Data.Text as T (Text, toUpper, take, filter)
+import Data.Text.ICU.Char (Bool_(..), property)
+import Data.Text.ICU.Normalize (NormalizationMode(..), normalize)
 import Data.Maybe (isJust)
 import Text.Blaze.Html (preEscapedToHtml)
 import Numeric
 import Data.Char (ord)
 
+
+
+-- | Canonicalise text, removing accents and diacritics
+canonicalise :: T.Text -> T.Text
+canonicalise t = T.filter (not . property Diacritic) (normalize NFD t)
 
 -- | Create a CSS-able colour
 toCssColour :: Colour Double -- ^ The colour to display
@@ -46,38 +53,52 @@ partition' classifier (s:source) cl segment = if cl' == cl then
     (cl, reverse segment):(partition' classifier source cl' [s])
   where cl' = classifier s
 
-metricsSummary :: Bool -> Config -> Preferences -> Camino -> Metrics -> Html
-metricsSummary long _config _preferences _camino metrics = [shamlet|
-    #{distance'}
-    (feels like #{perceived'})
-    over #{time'}
-    Ascent: #{ascent'}
-    Descent: #{descent'}
-    Penance: #{formatPenance $ metricsPenance metrics}
-    $if long
-      (#{perceived'}
-      + #{formatPenance $ metricsAccomodation metrics}
-      + #{formatPenance $ metricsStop metrics}
-      + #{formatPenance $ metricsDistanceAdjust metrics}
-      + #{formatPenance $ metricsTimeAdjust metrics}
-      + #{formatPenance $ metricsMisc metrics})
-  |]
- where
-   formatPenance penance = case penance of
-     Reject -> "Rejected"
-     Penance p -> format (fixed 1 % "km") p
-   distance' = format (fixed 1 % "km") (metricsDistance metrics)
-   time' = maybe "*" (format (fixed 0 % "hrs")) (metricsTime metrics)
-   perceived' = maybe "*" (format (fixed 1 % "km")) (metricsPerceivedDistance metrics)
-   ascent' = format (fixed 0 % "m") (metricsAscent metrics)
-   descent' = format (fixed 0 % "m") (metricsDescent metrics)
-
 -- | Split a sorted list into a partition, based on some sort of partition function
 partition :: (Eq b) => (a -> b) -- ^ The classifier function, produces the element to split the list on
   -> [a] -- ^ The source list
   -> [(b, [a])] -- ^ A resulting list of category - elements that fit the category pairs
 partition _classifier [] = []
 partition classifier (s:source) = partition' classifier source (classifier s) [s]
+
+formatPenance :: Penance -> Html
+formatPenance Reject = [shamlet| <span .penance .rejected>Rejected |]
+formatPenance (Penance p) = [shamlet| <span .penance>#{format (fixed 1) p}km |]
+
+formatDistance :: (Real a) => Maybe a -> Html
+formatDistance Nothing = [shamlet| <span .distance .rejected>Rejected |]
+formatDistance (Just d) = [shamlet| <span .distance>#{format (fixed 1) d}km |]
+
+formatTime :: (Real a) => Maybe a -> Html
+formatTime Nothing = [shamlet| <span .time .rejected>Rejected |]
+formatTime (Just t) = [shamlet| <span .time>#{format (fixed 1) t}hrs |]
+
+formatHeight :: (Real a) => Maybe a -> Html
+formatHeight Nothing = [shamlet| <span .height .rejected>Rejected |]
+formatHeight (Just h) = [shamlet| <span .height>#{format (fixed 0) h}m |]
+
+penanceSummary :: Config -> Preferences -> Camino -> Metrics -> Html
+penanceSummary _config _preferences _camino metrics = [shamlet|
+   <div .penance-summary .dropdown title="Penance Summary">
+     <button .btn .btn-outline-primary .penance-summary .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
+       ^{formatPenance $ metricsPenance metrics}
+     <div .dropdown-menu>
+       <a .dropdown-item>Distance: ^{formatDistance $ metricsPerceivedDistance metrics}
+       <a .dropdown-item>Accomodation: ^{formatPenance $ metricsAccomodation metrics}
+       <a .dropdown-item>Day: ^{formatPenance $ metricsStop metrics}
+       <a .dropdown-item>Distance Penalty: ^{formatPenance $ metricsDistanceAdjust metrics}
+       <a .dropdown-item>Time Penality: ^{formatPenance $ metricsTimeAdjust metrics}
+       <a .dropdown-item>Other: ^{formatPenance $ metricsMisc metrics}
+   |]
+    
+metricsSummary :: Config -> Preferences -> Camino -> Metrics -> Html
+metricsSummary _config _preferences _camino metrics = [shamlet|
+    Distance: ^{formatDistance $ Just (metricsDistance metrics)}
+    (feels like ^{formatDistance $ metricsPerceivedDistance metrics})
+    over ^{formatTime $ metricsTime metrics}
+    Ascent: ^{formatHeight $ Just (metricsAscent metrics)}
+    Descent: ^{formatHeight $ Just (metricsDescent metrics)}
+    Penance: ^{formatPenance $ metricsPenance metrics}
+  |]
 
 daySummary :: Preferences -> Camino -> Maybe Trip -> Day -> Html
 daySummary _preferences _camino _trip day = [shamlet|
@@ -162,7 +183,7 @@ caminoServiceIcon _ Bus = [shamlet| <span .service .ca-bus title="Bus"> |]
 caminoAccommodationHtml :: Config -> Accommodation -> Html
 caminoAccommodationHtml _ (GenericAccommodation _type) = [shamlet| |]
 caminoAccommodationHtml config (Accommodation name' type' services' sleeping') = [shamlet|
-  <div .card .accomodation>
+  <div .card .accomodation .p-1>
     <h5>
       ^{caminoAccommodationTypeIcon config type'}
       #{name'}
@@ -189,18 +210,20 @@ locationLine config _preferences _camino location = [shamlet|
 
 caminoLocationHtml :: Config -> Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> Html
 caminoLocationHtml config _preferences camino _trip stops waypoints location = [shamlet|
-  <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .m-1>
+  <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .p-1 .m-1>
     <div .row .card-title>
       <div .col>
         <h4>
           #{locationName location}
-      <div .col .accomodation-types>
-        $forall accomodation <- locationAccommodationTypes location
-          ^{caminoAccommodationTypeIcon config accomodation}
-      <div .col .services>
-        $forall service <- locationServices location
-          ^{caminoServiceIcon config service}
     <div .card-body>
+      <div .row>
+        <div .col .services>
+          $forall service <- locationServices location
+            ^{caminoServiceIcon config service}
+      <div .row .mb-5>
+        <div .col .accomodation-types>
+          $forall accomodation <- locationAccommodationTypes location
+            ^{caminoAccommodationTypeIcon config accomodation}
       $forall accomodation <- locationAccommodation location
         ^{caminoAccommodationHtml config accomodation}
   |]
@@ -229,9 +252,9 @@ caminoLocationsHtml config preferences camino trip = [shamlet|
             ^{caminoLocationHtml config preferences camino trip stops waypoints loc}
   |]
   where
-    locationOrder a b = compare (locationName a) (locationName b)
+    locationOrder a b = compare (canonicalise $ locationName a) (canonicalise $ locationName b)
     locationsSorted = sortBy locationOrder (caminoLocations camino)
-    locationPartition = partition (\l -> T.toUpper $ T.take 1 $ locationName l) locationsSorted
+    locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationName l) locationsSorted
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     
@@ -298,14 +321,18 @@ caminoTripHtml config preferences camino trip = [shamlet|
           $forall l <- map finish $ path trip
             \  - #{locationName l}
         <p>
-          ^{metricsSummary False config preferences camino $ score trip}
+          ^{metricsSummary config preferences camino $ score trip}
     $forall day <- path trip
-      <div .card>
+      <div .card .day>
         <h4>
           <a href="##{locationID $ start day}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ start day}
           \   -
           <a href="##{locationID $ finish day}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ finish day}
+          ^{formatDistance $ Just (metricsDistance $ score day)}
+          ^{penanceSummary config preferences camino $ score day}
         <div .card-body>
+         <p>
+            ^{metricsSummary config preferences camino $ score day}
           <ul>
             <li>
               <div .location-summary>
@@ -318,9 +345,7 @@ caminoTripHtml config preferences camino trip = [shamlet|
                   <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
                   <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
                   <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
-          <p>
-            ^{metricsSummary True config preferences camino $ score day}
-  |]
+   |]
 
 caminoMapHtml :: Config -> Preferences -> Camino -> Maybe Trip -> Html
 caminoMapHtml _config _preferences _camino _trip = [shamlet|
@@ -514,6 +539,17 @@ caminoBaseCss config _camino = [cassius|
   width: 80%
   height: 800px
   padding: 1em
+a
+  text-decoration: none
+.day
+  h4
+    .distance
+      margin-left: 1em
+      font-size: initial
+    .penance-summary
+      margin-left: 1em
+      font-size: initial
+      display: inline-block
 .service
   color: #1964c0
 .accomodation
@@ -528,19 +564,13 @@ caminoBaseCss config _camino = [cassius|
   .leg-distance
     margin-left: 1em
   .leg-ascent
-    vertical-align: super
     font-size: smaller
   .leg-ascent::before
-    font-family: "Font Awesome 6 Free"
-    font-weight: 900
-    content: "\f106"
+    content: "\2191"
   .leg-descent
     font-size: smaller
-    veritcal-align: sub
   .leg-descent::before
-    font-family: "Font Awesome 6 Free"
-    font-weight: 900
-    content: "\f107"
+    content: "\2193"
 .location 
   .card-title 
     h4

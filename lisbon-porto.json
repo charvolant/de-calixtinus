@@ -605,7 +605,7 @@
     {
       "id": "P38",
       "name": "Pte. de Ceras",
-      "type": "Village",
+      "type": "Bridge",
       "position": { "latitude": 39.6972, "longitude": -8.3592 },
       "services": [ ],
       "accommodation": [  ]
@@ -613,7 +613,7 @@
     {
       "id": "P39",
       "name": "Escoural",
-      "type": "Village",
+      "type": "Poi",
       "position": { "latitude": 39.6998, "longitude": -8.3559 },
       "services": [ ],
       "accommodation": [  ]
@@ -813,7 +813,7 @@
     {
       "id": "P64",
       "name": "Fonte Coberta",
-      "type": "Village",
+      "type": "Poi",
       "position": { "latitude": 40.06932, "longitude": -8.46211 },
       "services": [ ],
       "accommodation": [  ]
@@ -908,7 +908,7 @@
     {
       "id": "P75",
       "name": "Qunita do Limoneiro",
-      "type": "Village",
+      "type": "Intersection",
       "position": { "latitude": 40.17535, "longitude": -8.45123 },
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -1004,7 +1004,7 @@
       "name": "Mala",
       "type": "Village",
       "position": { "latitude": 40.33570, "longitude": -8.46423 },
-      "services": [ "Restaurant", "Groceries" ],
+      "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1012,7 +1012,7 @@
       "name": "Lendiosa",
       "type": "Village",
       "position": { "latitude": 40.34608, "longitude": -8.46320 },
-      "services": [ "Restaurant" ],
+      "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1028,7 +1028,7 @@
       "name": "Mealhanda",
       "type": "Town",
       "position": { "latitude": 40.38071, "longitude": -8.44947 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
         {
           "name": "Hotel Oásis",
@@ -1133,7 +1133,7 @@
       "name": "São Jão de Azenha",
       "type": "Village",
       "position": { "latitude": 40.49522, "longitude": -8.45379 },
-      "services": [ ],
+      "services": [ "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1243,7 +1243,7 @@
       "name": "Pedaçães",
       "type": "Village",
       "position": { "latitude": 40.62791, "longitude": -8.47019 },
-      "services": [ "Restaurant" ],
+      "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1266,7 +1266,7 @@
       "name": "Lameiro",
       "type": "Village",
       "position": { "latitude": 40.64641, "longitude": -8.46581 },
-      "services": [ ],
+      "services": [ "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1329,7 +1329,7 @@
       "name": "Albergaria-a-Nova",
       "type": "Village",
       "position": { "latitude": 40.74353, "longitude": -8.490641 },
-      "services": [ "Restaurant", "Groceries" ],
+      "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
           "name": "Albergaria-a-Nova Pilgrims Hostel",
@@ -1372,7 +1372,7 @@
       "name": "Outeirinho",
       "type": "Village",
       "position": { "latitude": 40.76580, "longitude": -8.48498 },
-      "services": [ ],
+      "services": [ "Bus" ],
       "accommodation": [
         {
           "name": "Casa Católico Pilgrims Hostel",
@@ -1418,7 +1418,7 @@
       "name": "Póvoa (Travaca)",
       "type": "Village",
       "position": { "latitude": 40.81590, "longitude": -8.48194 },
-      "services": [  ],
+      "services": [ "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1449,7 +1449,7 @@
       "name": "Cucujães",
       "type": "Village",
       "position": { "latitude": 40.86643, "longitude": -8.49400 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Train" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Train", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1514,7 +1514,7 @@
       "name": "Malaposta",
       "type": "Village",
       "position": { "latitude": 40.94832, "longitude": -8.512145 },
-      "services": [ "Restaurant", "Groceries" ],
+      "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
           "name": "Hotel Feira Pedra Bela",
@@ -1529,7 +1529,7 @@
       "name": "Airas",
       "type": "Village",
       "position": { "latitude": 40.95678, "longitude": -8.51768 },
-      "services": [ "Restaurant" ],
+      "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Residêncial Solar das Airas",
@@ -1544,7 +1544,7 @@
       "name": "Souto Redondo",
       "type": "Village",
       "position": { "latitude": 40.96300, "longitude": -8.52218 },
-      "services": [ "Restaurant", "Groceries" ],
+      "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1568,7 +1568,7 @@
       "name": "Vergada (Mozelos)",
       "type": "Village",
       "position": { "latitude": 41.00530, "longitude": -8.54948 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1576,7 +1576,7 @@
       "name": "Goda",
       "type": "Village",
       "position": { "latitude": 41.00669, "longitude": -8.56318 },
-      "services": [ "Restaurant" ],
+      "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1584,7 +1584,7 @@
       "name": "Grijó",
       "type": "Town",
       "position": { "latitude": 41.02636, "longitude": -8.58077 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "São Salvador de Grijó Pilgrims Hostel",
@@ -1620,7 +1620,7 @@
       "name": "Perosinho",
       "type": "Village",
       "position": { "latitude": 41.06243, "longitude": -8.59778 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [ ]
     },
     {
@@ -1628,7 +1628,7 @@
       "name": "Rechousa",
       "type": "Town",
       "position": { "latitude": 41.09537, "longitude": -8.59869 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [ ]
     },
     {

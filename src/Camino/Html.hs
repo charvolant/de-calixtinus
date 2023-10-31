@@ -659,11 +659,12 @@ caminoHtml config preferences camino trip = [shamlet|
       <footer .text-ceter .py-4>
         <div .row .row-cols-1 .row-cols-lg-3>
           <div .col>
-            <p .text-muted .my-2>Copyright&nbsp;© 2023 Brand
+            <p .text-muted .my-2>
+              <a href="https://github.com/charvolant/camino-planner">The Camino Planner
           <div .col>
-            <p .text-muted .my-2>...
+            <p .text-muted .my-2>
           <div .col>
-            <p .text-muted .my-2>...
+            <p .text-muted .my-2>Example only
       <script src="#{jQueryJs}">
       <script src="#{bootstrapJs}">
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">

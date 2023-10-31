@@ -1436,6 +1436,217 @@
         }
       ]
     },
+    {
+      "id": "P120",
+      "name": "Santiago de Riba-Ul",
+      "type": "Village",
+      "position": { "latitude": 40.84963, "longitude": -8.48856 },
+      "services": [ "Restaurant", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P121",
+      "name": "Cucujães",
+      "type": "Village",
+      "position": { "latitude": 40.86643, "longitude": -8.49400 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P122",
+      "name": "Faria",
+      "type": "Village",
+      "position": { "latitude": 40.87930, "longitude": -8.49511 },
+      "services": [ "Restaurant", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P123",
+      "name": "São João de Madeira",
+      "type": "City",
+      "position": { "latitude": 40.89930, "longitude": -8.49252 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Acogida da Santa Casa da Misericórdia",
+          "type": "MunicipalAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Central Suites",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Tulip",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel AS São João de Madeira",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "P124",
+      "name": "Arrifana",
+      "type": "Village",
+      "position": { "latitude": 40.91383, "longitude": -8.49690 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P125",
+      "name": "Infestas",
+      "type": "Village",
+      "position": { "latitude": 40.92474, "longitude": -8.51079 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P126",
+      "name": "Malaposta",
+      "type": "Village",
+      "position": { "latitude": 40.94832, "longitude": -8.512145 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Hotel Feira Pedra Bela",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Bedlinen", "Towels", "Accessible", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "P127",
+      "name": "Airas",
+      "type": "Village",
+      "position": { "latitude": 40.95678, "longitude": -8.51768 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Residêncial Solar das Airas",
+          "type": "GuestHouse",
+          "services": [ ],
+          "sleeping": [ "Shared", "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "P128",
+      "name": "Souto Redondo",
+      "type": "Village",
+      "position": { "latitude": 40.96300, "longitude": -8.52218 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P129",
+      "name": "Ferradal",
+      "type": "Village",
+      "position": { "latitude": 40.97519, "longitude": -8.52659 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P130",
+      "name": "Lourosa",
+      "type": "Village",
+      "position": { "latitude": 40.98862, "longitude": -8.53635 },
+      "services": [ "Restaurant", "Groceries", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P131",
+      "name": "Vergada (Mozelos)",
+      "type": "Village",
+      "position": { "latitude": 41.00530, "longitude": -8.54948 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P132",
+      "name": "Goda",
+      "type": "Village",
+      "position": { "latitude": 41.00669, "longitude": -8.56318 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P133",
+      "name": "Grijó",
+      "type": "Town",
+      "position": { "latitude": 41.02636, "longitude": -8.58077 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "São Salvador de Grijó Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "Handwash", "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Residêncial Sobreiro Grosso",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ ]
+        },
+        {
+          "name": "Couto Rural",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "BicycleStorage", "Bedlinen", "Towels", "Pool"],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+
+      ]
+    },
+    {
+      "id": "P134",
+      "name": "Sergueiros",
+      "type": "Village",
+      "position": { "latitude": 41.05583, "longitude": -8.58833 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P135",
+      "name": "Perosinho",
+      "type": "Village",
+      "position": { "latitude": 41.06243, "longitude": -8.59778 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P136",
+      "name": "Rechousa",
+      "type": "Town",
+      "position": { "latitude": 41.09537, "longitude": -8.59869 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P137",
+      "name": "Vila Nova de Gaia",
+      "type": "City",
+      "position": { "latitude": 41.12256, "longitude": -8.60603 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [ "PrivateAlbergue", "Hotel" ]
+    },
+    {
+      "id": "P138",
+      "name": "Porto",
+      "type": "City",
+      "position": { "latitude": 41.14310, "longitude": -8.61098 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
+    },
 
     {
       "id": "F1",
@@ -2804,7 +3015,139 @@
       "ascent": 105,
       "descent": 40
     },
-
+    {
+      "from": "P119",
+      "to": "P120",
+      "distance": 2.29,
+      "ascent": 20,
+      "descent": 70
+    },
+    {
+      "from": "P120",
+      "to": "P121",
+      "distance": 2.70,
+      "ascent": 45,
+      "descent": 65
+    },
+    {
+      "from": "P121",
+      "to": "P122",
+      "distance": 1.60,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "P122",
+      "to": "P123",
+      "distance": 2.07,
+      "ascent": 70,
+      "descent": 0
+    },
+    {
+      "from": "P123",
+      "to": "P124",
+      "distance": 1.99,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "P124",
+      "to": "P125",
+      "distance": 2.36,
+      "ascent": 5,
+      "descent": 60
+    },
+    {
+      "from": "P125",
+      "to": "P126",
+      "distance": 2.71,
+      "ascent": 90,
+      "descent": 0
+    },
+    {
+      "from": "P126",
+      "to": "P127",
+      "distance": 1.25,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "P127",
+      "to": "P128",
+      "distance": 0.89,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "P128",
+      "to": "P129",
+      "distance": 1.44,
+      "ascent": 0,
+      "descent": 55
+    },
+    {
+      "from": "P129",
+      "to": "P130",
+      "distance": 2.51,
+      "ascent": 30,
+      "descent": 20
+    },
+    {
+      "from": "P130",
+      "to": "P131",
+      "distance": 1.52,
+      "ascent": 20,
+      "descent": 15
+    },
+    {
+      "from": "P131",
+      "to": "P132",
+      "distance": 1.28,
+      "ascent": 15,
+      "descent": 35
+    },
+    {
+      "from": "P132",
+      "to": "P133",
+      "distance": 3.62,
+      "ascent": 10,
+      "descent": 95
+    },
+    {
+      "from": "P133",
+      "to": "P134",
+      "distance": 3.60,
+      "ascent": 40,
+      "descent": 40
+    },
+    {
+      "from": "P134",
+      "to": "P135",
+      "distance": 1.19,
+      "ascent": 20,
+      "descent": 10
+    },
+    {
+      "from": "P135",
+      "to": "P136",
+      "distance": 4.17,
+      "ascent": 30,
+      "descent": 30
+    },
+    {
+      "from": "P136",
+      "to": "P137",
+      "distance": 4.20,
+      "ascent": 35,
+      "descent": 65
+    },
+    {
+      "from": "P137",
+      "to": "P138",
+      "distance": 1.70,
+      "ascent": 5,
+      "descent": 45
+    },
 
     {
       "from": "P20",

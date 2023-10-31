@@ -1,16 +1,140 @@
-# Camino Stage Planner
+# Camino Planner
 
-* Use dynamic programming to plan camino stages
+This is a program to help people plan walking stages on the Camino Santiago.
+You can supply a set of preferences in the form of fitness, preferred and hard
+limits on travel distance, accomodation etc. and the program will attempt to
+build a *globally* optimal set of stages for you.
+Globally, means that the program will try to find the best set of stages over the
+entire trip, stretching and squeezing as appropriate to try an limit the number of
+ludicrously long or disappointingly short stages.
+
+I started planning this program while walking the Camino Portugués.
+It's partially a learning exercise.
+I had always wanted to learn the [Haskell](https://www.haskell.org/) programming language properly but
+had never had that special project to make me grit through the difficulties of learning
+to program idiomatically.
+It turns out that this was sufficient motivation.
+
+## Usage
+
+To run the program, use
+
+```shell
+camino-planner-exe CAMINO PREFERENCES BEGIN END [-r REQUIRED] [-x EXCLUDED] [-c CONFIG] [-o OUTPUT]
+```
+
+| Argument | Description                                                                                  | Example | |
+| --- |----------------------------------------------------------------------------------------------| --- | --- | 
+| CAMINO | A camino description in JSON form                                                            | lisbon-porto.json | |
+| PREFERENCES | A preference file in JSON form                                                               | short-preferences.json | |
+| BEGIN | The identifier of the start point                                                            | P1 | Lisbon |
+| END | The identifier of the end point                                                              | P138 | Porto |
+| REQUIRED | An optional list, separated by commas, of places where you wish to stop for the night        | P78,F10 | Coimbra, Fátima |
+| EXCLUDED | An optional list, separated by commas, of places where you do not wish to stop for the night | P63 | Zambujal |
+| CONFIG | An optional configuration file for generating the appropriate HTML output, in YAML form      | config.yaml | |
+| OUTPUT | The optional output directory to write the HTML plan to                                      | ./plan | |                                                                     
+
+At the moment, you have to use the location identifiers when specifying start- and
+end-points, etc.
+You will need to open the camino file and note down the `id` value.
+
+By default, the planner will choose the quickest and easiest route.
+You can use the required stops option to control this.
+For example, if you want to visit Fátima add `-r F10` to the command.
+
+## Sources
+
+The Camino Planner needs data.
+In particular, the various waypoints, services, accomodation, distances, climbs,
+descents and what-have you need to be descibed in loving detail.
+The sample data has been collected by working through a number of sources.
+Most of these we used when walking the Camino ourselves.
+
+* The major source is the excellent **Buen Camino** app.
+  This app gives most of the information above in a useful form while walking the Camino.
+  It also updates dynamically and can be used to load multiple Camino routes.
+  You can get more information about this at the Apple Store, Google Play or at the
+  [app website](https://www.editorialbuencamino.com/) (Information used with permission.)
+* A secondary source is *The Camino Portugués* by Kat Davis (Cicerone, 2019), which we
+  used as a planning book.
+* Good-old [Google Maps](https://www.google.com/maps) was used to estimate total ascent and descent between
+  waypoints and fix suitable waypoint locations.
+  Google maps was also used to estimate train and bus stations.
+* The [Stingy Nomads](https://stingynomads.com/camino-fatima-walk-lisbon-porto/) aided us on 
+  our route to Fátima.
+* And, of course, we did our own stuff.
+
+### Beware
+
+This is intended to be a helpful tool for people planning their trip.
+Just because "Computer Says So!" doesn't mean it's a good idea.
+So use your own judgement.
+In particular, the planner doesn't really distinguish between an interesting place
+to stop, full of sights and entertainment, and a boring, dusty truckstop beside a
+major highway.
+Although I hasten to add that the truckstops we did stop at were wonderfully hospitable,
+so whatever floats your boat.
+
+I've done my best to be accurate about the data but ...
+if you're relying on something to be true, check with other sources, as well.
+Also, things change: places to stay come and go, temporarily shut down
+or get filled up; roads get blocked; on Sunday *everything* shuts down and you need
+to plan accordingly.
+This output from this program is no substitute for either careful planning or
+casual reslience in the face of adversity.
+
+## A Work in Progress
+
+The eventual aim is to have this with a nice front-end that allows users to
+enter preferences and get a nicely formatted plan.
+There's a bit of a way to go for that.
+
+### The TODO List
+
+* A full web site implementation
+* Start scoring stages (see the [design notes](#some-design-notes)) for
+  * Services available at the end-point and at accomodation (eg clothes washing facilities)
+  * Services available along the way (eg. an ATM somewhere during the day)
+  * Handling the Sunday famine]
+* Include points of interest
+  * And make allowance for breaks so that people can visit
+
+### Some design notes
+
+* Uses dynamic programming to plan camino stages
 * Inspired by TeX layout algorithm
-* Calculate *penetance* for each stage
-* Based on km travelled
-  * Use [Naismith's Rule](https://en.wikipedia.org/wiki/Naismith%27s_rule) to handle ascent and descent
-  * 1 hour for each 5km, 600m (reconsider this)
-  * Tranters corrections allow for fatigue and fitness
-  * Aitken 5km roads, 4km other surfaces
-  * Langmuir incluides descent
-
+* Calculate a *penetance* for each stage.
+  * "Penetance" is my own in-joke, following a comment by a hotel owner that we'd paid for all our sins at once
+    after a particularly miserable day.
+  * Penetance is used to optimise stages and essentially converts everything
+    into an equivalent of kilometres walked.
+    * Once you step outsisde your preferred distance band, additional penance will be
+      added to the stage's score.
+      * There are also hard maximum and minimum distances.
+    * Accomodation is, essentially, the number of extra kilometres you would walk to avoid a
+      particular style of accomodation.
+    * There is a "day cost" that factors in the business of having to stop of the night.
+      Reducing the day cost to zero will tend to make the program give you a lot of
+      short stages.
+      Making the day cost large will cause the program to try to extend the amount of
+      walking that you do each day.
+  * The program works to minimise total penetance but, if you're that sort of
+    pilgrim, it could be made to maximise penetance, instead.
+* Time is estimated from kilometres travelled
+  * [Naismith's Rule](https://en.wikipedia.org/wiki/Naismith%27s_rule) to handles the extra time taken for ascent and descent 
+    or, preferentially [Tobler's Hiking Function](https://en.wikipedia.org/wiki/Tobler%27s_hiking_function)
+  * [Tranter's corrections](https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections) allow for fatigue and fitness
+  * These are used to build a *percieved* distance travelled, taking into account
+   ascent, descent and building fatigue.
 ## Build Notes
+
+To build this program, you will need a haskell distribution and the
+[stack](https://docs.haskellstack.org/en/stable/) build tool.
+The easiest way to install all this is via [ghcup](https://www.haskell.org/ghcup/) system.
+
+Once you have that, `stack build` will build the programs.
+You will need to watch the log to determine where stack puts the resulting executable, 
+since it will be down a long rabbit-hole.
 
 ### Icons and Fonts
 

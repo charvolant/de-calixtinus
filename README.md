@@ -8,6 +8,10 @@ Globally, means that the program will try to find the best set of stages over th
 entire trip, stretching and squeezing as appropriate to try an limit the number of
 ludicrously long or disappointingly short stages.
 
+To see an example, based on someone unfit who wants to walk about 20km
+a day and wants to go to Fátima, Coimbra and Águeda, look 
+[here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/index.html)
+
 I started planning this program while walking the Camino Portugués.
 It's partially a learning exercise.
 I had always wanted to learn the [Haskell](https://www.haskell.org/) programming language properly but

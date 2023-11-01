@@ -14,7 +14,7 @@ Generate HTML descriptions of
 module Camino.Html where
 
 import Camino.Camino
-import Camino.Config (Config, getConfigValue)
+import Camino.Config (Config(..), AssetConfig(..), AssetType(..), MapConfig(..), getAssets, getAsset, getMap)
 import Camino.Planner (Trip, Day, Metrics(..), tripStops, tripWaypoints)
 import Camino.Preferences
 import Data.Colour
@@ -28,8 +28,8 @@ import qualified Data.Set as S
 import Data.List (sortBy)
 import qualified Data.Text as T (Text, toUpper, take, filter)
 import Data.Text.ICU.Char (Bool_(..), property)
-import Data.Text.ICU.Normalize (NormalizationMode(..), normalize)
-import Data.Maybe (isJust)
+import Data.Text.ICU.Normalize2 (NormalizationMode(..), normalize)
+import Data.Maybe (isJust, fromJust)
 import Text.Blaze.Html (preEscapedToHtml)
 import Numeric
 import Data.Char (ord)
@@ -315,13 +315,15 @@ caminoTripHtml :: Config -> Preferences -> Camino -> Trip -> Html
 caminoTripHtml config preferences camino trip = [shamlet|
   <div .container-fluid>
     <div .row .trip-summary>
-      <div .col>
+      <div .col-11>
         <p>
           #{locationName $ start trip}
           $forall l <- map finish $ path trip
             \  - #{locationName l}
         <p>
           ^{metricsSummary config preferences camino $ score trip}
+      <div .col-1>
+        <a .btn .btn-info href="camino.kml">KML
     $forall day <- path trip
       <div .card .day>
         <h4>
@@ -443,17 +445,14 @@ caminoMapScript config preferences camino trip = [shamlet|
   |]
   where
     (tl, br) = caminoBbox camino
-    iconBase = getConfigValue "web.icons.base" "icons" config :: String
-    tiles = preEscapedToHtml $ (getConfigValue "web.map.tiles" "https://tile.openstreetmap.org/{z}/{x}/{y}.png" config :: String)
+    iconBase = assetPath $ fromJust $ getAsset "icons" config
+    tiles = preEscapedToHtml $ mapTiles $ fromJust $ getMap Nothing config
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     chooseWidth leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 6 :: Int
       | otherwise = 3 :: Int
     chooseOpacity leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 1.0 :: Float
       | otherwise = 0.5 :: Float
-    chooseIcon location | S.member location stops = "stopUsedIcon" :: String
-      | S.member location waypoints = "waypointUsedIcon" :: String
-      | otherwise = "waypointUnusedIcon" :: String
 
 paletteCss :: Config -> String -> Palette -> Css
 paletteCss _config ident pal = [cassius|
@@ -481,6 +480,7 @@ iconCss _config ident ch = [cassius|
   where
     hex c = showHex c ""
 
+iconList :: [(String, Char)]
 iconList = [
     ("ca-accessible", '\xe067'),
     ("ca-albergue", '\xe010'),
@@ -528,13 +528,17 @@ iconList = [
 caminoIconCss :: Config -> Camino -> [Css]
 caminoIconCss config _camino = map (\(ident, ch) -> iconCss config ident ch) iconList
 
-caminoBaseCss :: Config -> Camino -> Css
-caminoBaseCss config _camino = [cassius|
+caminoFontCss :: AssetConfig -> Css
+caminoFontCss asset = [cassius|
 @font-face
-  font-family: "Camino Icons"
+  font-family: "#{assetId asset}"
   font-weight: normal
   font-style: normal
-  src: url(#{fontBase}/Camino-Icons.woff)
+  src: url(#{assetPath asset})
+|] undefined
+    
+caminoBaseCss :: Config -> Camino -> Css
+caminoBaseCss _config _camino = [cassius|
 #map
   width: 80%
   height: 800px
@@ -606,15 +610,14 @@ a
       font-weight: normal
       content: "\e020"
   |] undefined
-  where
-    fontBase = getConfigValue "web.fonts.base" "fonts" config :: String
 
 caminoCss :: Config -> Camino -> [Css]
-caminoCss config camino = (base':default':routes') ++ icons'
+caminoCss config camino = (base':default':routes') ++ fonts' ++ icons'
   where
     base' = caminoBaseCss config camino
     default' = paletteCss config "location-default" (palette camino)
     routes' = map (\r -> paletteCss config ("location-" ++ (routeID r)) (routePalette r)) (routes camino)
+    fonts' = map caminoFontCss (getAssets Font config)
     icons' = caminoIconCss config camino
   
 caminoHtml :: Config -> Preferences -> Camino -> Maybe Trip -> Html
@@ -625,8 +628,8 @@ caminoHtml config preferences camino trip = [shamlet|
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
       <title>#{title}
-      <link rel="stylesheet" href="#{bootstrapCss}">
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+      $forall c <- css
+        <link rel="stylesheet" href="#{assetPath c}">
       <link rel="stylesheet" href="camino.css">
     <body>
       <header>
@@ -665,14 +668,13 @@ caminoHtml config preferences camino trip = [shamlet|
             <p .text-muted .my-2>
           <div .col>
             <p .text-muted .my-2>Example only
-      <script src="#{jQueryJs}">
-      <script src="#{bootstrapJs}">
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
+      $forall s <- scripts
+        <script src="#{assetPath s}">
       ^{caminoMapScript config preferences camino trip}
   |]
   where
     title = maybe "Camino" (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) trip
-    iconBase = getConfigValue "web.icons.base" "icons" config :: String
-    jQueryJs = getConfigValue "web.assets.jQueryJs" "jquery.js" config :: T.Text
-    bootstrapCss = getConfigValue "web.assets.bootstrapCss" "bootstrap.css"  config :: T.Text
-    bootstrapJs = getConfigValue "web.assets.bootstrapJs" "bootstrap.js" config :: T.Text
+    css = getAssets Css config
+    scripts = getAssets JavaScript config
+    iconBase = assetPath $ fromJust $ getAsset "icons" config
+

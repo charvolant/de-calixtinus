@@ -4,62 +4,56 @@ module ConfigSpec(testConfig) where
 import Test.HUnit
 import Camino.Config
 import Data.Map as M
-import Data.Text
+import Data.Maybe (fromJust, isJust)
+import TestUtils
 
-testConfig1 = Config $ M.fromList [
-    ("foo", Value "True"),
-    ("bar", Value "Hello"),
-    ("baz", Config $ M.fromList [
-      ("foo", Value "100"),
-      ("bar", Value "10.1")
-    ])
-  ] 
+testConfig1 = Config {
+  configParent = Just defaultConfig,
+  configWeb = Web {
+    webAssets = [
+      Asset {
+        assetId = "foo",
+        assetType = Css,
+        assetPath = "bar/baz.css",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      }
+    ]
+  }
+}
 
-testConfig2 = readConfig "{ \
-   \    \"foo\": \"T\", \
-   \    \"bar\": \"Hello\", \
-   \    \"baz\": { \
-   \      \"foo\": \"100\", \
-   \      \"bar\": \"10.1\" \
-   \    } \
-   \  }"
 
 testConfig = TestList [
-  TestLabel "GetConfigValue" testGetConfigValue,
-  TestLabel "GetConfigValue" testReadConfig
+  TestLabel "GetAssets" testGetAssets,
+  TestLabel "GetAsset" testGetAsset
   ]
   
-testGetConfigValue = TestList [
-  testGetConfigValue1, testGetConfigValue2, testGetConfigValue3, testGetConfigValue4, testGetConfigValue5,
-  testGetConfigValue6
+testGetAssets = TestList [
+  testGetAssets1, testGetAssets2, testGetAssets3
+  ]
+
+testGetAssets1 = TestCase (assertEqual "getAssets 1" 3 (length $ getAssets JavaScript testConfig1))
+
+testGetAssets2 = TestCase (assertEqual "getAssets 2" 3 (length $ getAssets Css testConfig1))
+
+testGetAssets3 = TestCase (assertEqual "getAssets 3" 2 (length $ getAssets Css defaultConfig))
+
   
+testGetAsset = TestList [
+  testGetAsset1, testGetAsset2, testGetAsset3
   ]
 
-testGetConfigValue1 = TestCase (assertEqual "getConfigValue 1" True (getConfigValue "foo" False testConfig1))
+testGetAsset1 = TestCase (do
+    assertEqual "getAsset 1 1" True (isJust $ getAsset "leafletJs" testConfig1)
+    assertEqual "getAsset 1 2" "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" (assetPath $ fromJust $ getAsset "leafletJs" testConfig1)
+    )
 
-testGetConfigValue2 = TestCase (assertEqual "getConfigValue 2" "Hello" (getConfigValue "bar" "Nothing" testConfig1 :: String))
+testGetAsset2 = TestCase (do
+    assertEqual "getAsset 2 1" True (isJust $ getAsset "foo" testConfig1)
+    assertEqual "getAsset 2 2" "bar/baz.css" (assetPath $ fromJust $ getAsset "foo" testConfig1)
+    )
 
-testGetConfigValue3 = TestCase (assertEqual "getConfigValue 3" 100 (getConfigValue "baz.foo" 20 testConfig1 :: Int))
+testGetAsset3 = TestCase (
+    assertEqual "getAsset 3" False (isJust $ getAsset "foo" defaultConfig)
+    )
 
-testGetConfigValue4 = TestCase (assertEqual "getConfigValue 4" 10.1 (getConfigValue "baz.bar" 20 testConfig1 :: Double))
-
-testGetConfigValue5 = TestCase (assertEqual "getConfigValue 5" "10.1" (getConfigValue "baz.bar" "" testConfig1 :: Text))
-
-testGetConfigValue6 = TestCase (assertEqual "getConfigValue 6" "Whoops" (getConfigValue "baz.bar1" "Whoops" testConfig1 :: Text))
-
- 
-testReadConfig = TestList [
-  testReadConfig1, testReadConfig2, testReadConfig3, testReadConfig4, testReadConfig5, testReadConfig6
-  ]
-
-testReadConfig1 = TestCase (assertEqual "readConfig 1" True (getConfigValue "foo" False testConfig2))
-
-testReadConfig2 = TestCase (assertEqual "readConfig 2" "Hello" (getConfigValue "bar" "Nothing" testConfig2 :: String))
-
-testReadConfig3 = TestCase (assertEqual "readConfig 3" 100 (getConfigValue "baz.foo" 20 testConfig2 :: Int))
-
-testReadConfig4 = TestCase (assertEqual "readConfig 4" 10.1 (getConfigValue "baz.bar" 20 testConfig2 :: Double))
-
-testReadConfig5 = TestCase (assertEqual "readConfig 5" "10.1" (getConfigValue "baz.bar" "" testConfig2 :: Text))
-
-testReadConfig6 = TestCase (assertEqual "readConfig 6" "Whoops" (getConfigValue "baz.bar1" "Whoops" testConfig2 :: Text))

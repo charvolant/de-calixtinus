@@ -1249,9 +1249,17 @@
     {
       "id": "P106",
       "name": "Lamas do Vouga",
-      "type": "Bridge",
-      "position": { "latitude": 40.64074, "longitude": -8.46590 },
-      "services": [ "Restaurant" ],
+      "type": "Village",
+      "position": { "latitude": 40.636779, "longitude": -8.470623 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P107",
+      "name": "Lameiro",
+      "type": "Village",
+      "position": { "latitude": 40.64641, "longitude": -8.46581 },
+      "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Quinta da Mesa",
@@ -1260,14 +1268,6 @@
           "sleeping": [ "Double" ]
         }
       ]
-    },
-    {
-      "id": "P107",
-      "name": "Lameiro",
-      "type": "Village",
-      "position": { "latitude": 40.64641, "longitude": -8.46581 },
-      "services": [ "Bus" ],
-      "accommodation": [ ]
     },
     {
       "id": "P108",

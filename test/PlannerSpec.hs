@@ -48,7 +48,7 @@ location1 = Location {
     locationID = "A",
     locationName = "A",
     locationPosition = Nothing,
-    locationServices = [],
+    locationServices = S.empty,
     locationAccommodation = []
   }
 
@@ -56,7 +56,7 @@ location2 = Location {
     locationID = "B",
     locationName = "B",
     locationPosition = Nothing,
-    locationServices = [],
+    locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation MunicipalAlbergue,
       Accommodation "B2" PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
@@ -67,7 +67,7 @@ location3 = Location {
     locationID = "C",
     locationName = "C",
     locationPosition = Nothing,
-    locationServices = [],
+    locationServices = S.empty,
     locationAccommodation = [
       Accommodation "C1" Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
     ]  
@@ -78,7 +78,7 @@ location4 = Location {
     locationID = "D",
     locationName = "D",
     locationPosition = Nothing,
-    locationServices = [],
+    locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation MunicipalAlbergue
     ]  
@@ -156,10 +156,10 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 6" "P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 25.5) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 28.0) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (Penance 22.5) (metricsPenance $ score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 25.0) (metricsPenance $ score day2) 0.1
     )

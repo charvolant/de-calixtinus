@@ -1,80 +1,244 @@
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Camino.Config where
+module Camino.Config (
+  AssetConfig(..),
+  AssetType(..),
+  Config(..),
+  CrossOriginType(..),
+  MapConfig(..),
+  WebConfig(..),
 
+  defaultConfig,
+  getAsset,
+  getAssets,
+  getMap,
+  readConfigFile
+) where
 
+import GHC.Generics (Generic)
 import Data.Aeson
-import Data.Yaml as Y
-import qualified Data.Aeson.Key as K
-import qualified Data.Aeson.KeyMap as KM
-import Data.Either
-import Data.List.Split
 import qualified Data.Map as M
-import Data.Text (Text, pack, unpack, toUpper, take, null)
+import Data.Text (Text)
+import Data.Maybe (maybe)
+import Data.List (find)
+import Data.Yaml (decodeEither)
 import qualified Data.Text.Read as TR
-import Data.Aeson.Types (parseMaybe, unexpected)
 import qualified Data.ByteString as B (ByteString, readFile)
+import Data.Aeson.Types (unexpected)
 
--- A configuration object, either a value pair or a map from keynames to further config information
-data Config = Value Text | Config (M.Map String Config) deriving (Show)
+-- | Configuration for a map provider
+data MapConfig = Map {
+  mapId :: String, -- ^ The map source identifier
+  mapTiles :: Text -- ^ The template for map tiles
+} deriving (Show)
+
+instance FromJSON MapConfig where
+  parseJSON (Object v) = do
+    id' <- v .: "id"
+    tiles' <- v .: "tiles"
+    return $ Map id' tiles'
+  parseJSON v = unexpected v
+    
+instance ToJSON MapConfig where
+  toJSON (Map id' tiles') =
+    object [ "id" .= id', "tiles" .= tiles' ]
+    
+-- | The difference asset types
+data AssetType = JavaScript
+  | Css
+  | Font
+  | Icon
+  | Directory
+  deriving (Eq, Ord, Show, Generic)
+
+instance FromJSON AssetType
+instance ToJSON AssetType
+
+-- | The type of cross-origin support needed for the script
+data CrossOriginType = Unused
+  | Anonymous
+  | UseCredentials
+  deriving (Eq, Ord, Show, Generic)
+
+instance FromJSON CrossOriginType
+instance ToJSON CrossOriginType
+
+-- | Configuration for an external asset source
+data AssetConfig = Asset {
+  assetId :: String, -- ^ The asset identifier
+  assetType :: AssetType, -- ^ The type of asset
+  assetPath :: Text, -- ^ The path to the asset
+  assetIntegrity :: Maybe Text, -- ^ The integrity checksum for the asset
+  assetCrossOrigin :: CrossOriginType -- ^ How to handle cross-origin requests
+} deriving (Show)
+
+instance FromJSON AssetConfig where
+  parseJSON (Object v) = do
+    id' <- v .: "id"
+    type' <- v .: "type"
+    path' <- v .: "path"
+    integrity' <- v .:? "integrity"
+    cors' <- v .:? "crossorigin" .!= Unused
+    return $ Asset id' type' path' integrity' cors'
+  parseJSON v = unexpected v
+    
+instance ToJSON AssetConfig where
+  toJSON (Asset id' type' path' integrity' cors') =
+    object [ "id" .= id', "type" .= type', "path" .= path', "integrity" .= integrity', "crossorigin" .= cors' ]
+
+-- | Configuration for what's needed to set up web pages and other resources
+data WebConfig = Web {
+  webAssets :: [AssetConfig], -- ^ The assets needed to 
+  webMaps :: [MapConfig] -- ^ The sources of map tiles, with the default first
+} deriving (Show)
+
+instance FromJSON WebConfig where
+  parseJSON (Object v) = do
+    assets' <- v .:? "assets" .!= []
+    maps' <- v .:? "maps" .!= []
+    return $ Web assets' maps'
+  parseJSON v = unexpected v
+    
+instance ToJSON WebConfig where
+  toJSON (Web assets' maps') =
+    object [ "assets" .= assets', "maps" .= maps' ]
+   
+   
+-- | Configuration for what's needed to set up web pages and other resources
+data Config = Config {
+  configParent :: Maybe Config, -- ^ A parent configuration containing values that can over overridden by this configuration
+  configWeb :: WebConfig -- ^ Configuration for the web interface
+} deriving (Show)
+
+-- | The default configuration
+defaultConfig :: Config
+defaultConfig = Config {
+  configParent = Nothing,
+  configWeb = Web {
+    webAssets = [
+      Asset {
+        assetId = "jQueryJs",
+        assetType = JavaScript,
+        assetPath = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "bootstrapJs",
+        assetType = JavaScript,
+        assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "leafletJs",
+        assetType = JavaScript,
+        assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+        assetIntegrity = Just "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=",
+        assetCrossOrigin = Anonymous
+      },
+      Asset {
+        assetId = "bootstrapCss",
+        assetType = Css,
+        assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "leafletCss",
+        assetType = Css,
+        assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "icons",
+        assetType = Directory,
+        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "Camino Icons",
+        assetType = Font,
+        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/fonts/Camino-Icons.woff",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      }
+    ],
+    webMaps = [
+      Map {
+        mapId = "openStreetMap",
+        mapTiles = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+      },
+      Map {
+        mapId = "googleMaps",
+        mapTiles = "http://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
+      }
+    ]
+  }
+}
 
 instance FromJSON Config where
-  parseJSON (String v) = do
-    return $ Value v
   parseJSON (Object v) = do
-    return $ Config (M.fromList pairs)
-    where
-      fj v = let s = fromJSON v in case s of
-        Success v' -> v'
-        Error e -> error ("Unable to parse " ++ show v ++ " " ++ e)
-      kmap = KM.toList v
-      pairs = map (\(k, v) -> (K.toString k, fj v :: Config)) kmap
+    web' <- v .: "web"
+    return $ Config  (Just defaultConfig) web'
   parseJSON v = unexpected v
-
+    
 instance ToJSON Config where
-  toJSON (Value v) = String v
-  toJSON (Config vs) = object $ map (\(k, v) -> K.fromString k .= v) (M.toList vs)
+  toJSON (Config _parent' web') =
+    object [ "web" .= web' ]
 
-readConfig :: B.ByteString -> Config
-readConfig source = either (\e -> error $ "Can't read config " ++ show e) id (Y.decodeEither' source)
-
-readConfigFile :: FilePath -> IO Config
-readConfigFile path = do
-  file <- B.readFile path
-  return $ readConfig file
-
-getValue' [] (Value v) = Just v
-getValue' (key:keys) (Config vs) = let
-    cv = vs M.!? key
+getAssets' :: AssetType -> Config -> M.Map String AssetConfig
+getAssets' asset config = let
+    defaults = maybe M.empty (\p -> getAssets' asset p) (configParent config)
+    local = M.fromList $ map (\a -> (assetId a, a)) $ filter (\a -> asset == assetType a) $ webAssets $ configWeb config
   in
-    maybe Nothing (getValue' keys) cv
-getValue' _ _ = Nothing
+    M.union local defaults
 
-getConfigValue :: (Configurable c) => String -> c -> Config -> c
-getConfigValue key dflt config = let
-    mv = getValue' (splitOn "." key) config
+-- | Get a list of assets based on asset type
+--   If the configuration has a parent, then any parent assets are gathered from the parent
+--   and overwritten
+getAssets :: AssetType -- ^ The type of asset to retrieve
+  -> Config -- ^ The configuration
+  -> [AssetConfig] -- ^ The resulting list of assets
+getAssets asset config = M.elems $ getAssets' asset config
+
+-- | Get something recursively from the configurations
+getRecursive :: Maybe String -> (Config -> [b]) -> (b -> String) -> Config -> Maybe b
+getRecursive ident lister identifier config = let
+    parent = configParent config
+    items = lister config
+    result = case ident of
+      Nothing -> if null items then Nothing else Just (items !! 0)
+      (Just ident') -> find (\v -> ident' == identifier v) items
   in
-    maybe dflt convert mv
+    case result of
+      Nothing -> case parent of
+        Nothing -> Nothing
+        Just p -> getRecursive ident lister identifier p
+      r@(Just _) -> r
+      
+-- | Get an asset based on identifier
+--   If the configuration has a parent and the requisite asset is not present, then the parent is tried
+getAsset :: String -- ^ The asset identifier
+  -> Config -- ^ The configuration to query
+  -> Maybe AssetConfig -- ^ The asset, if found
+getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config 
 
--- | Something that can be read from a configuration
-class Configurable c where
-  -- Convert a config entry into a value
-  convert :: Text -> c
+-- | Get a map, optionally based on an identifier
+--   If the configuration has a parent and the requisite map is not present, then the parent is tried      
+getMap :: Maybe String -- ^ The map identifier, if Nothing then the first map is chosen
+  -> Config -- ^ The configuration
+  -> Maybe MapConfig -- ^ The resulting map configuration
+getMap ident config = getRecursive ident (webMaps . configWeb) mapId config
 
-instance Configurable Bool where
-  convert v = initial == "T" || initial == "t"
-    where
-      initial = if Data.Text.null v then "F" else Data.Text.take 1 v
-
-instance Configurable String where
-  convert = unpack
-
-instance Configurable Int where
-  convert v = either (\e -> error ("Can't convert " <> unpack v <> " to integer: " <> e)) fst (TR.decimal v)
-
-instance Configurable Double where
-  convert v = either (\e -> error ("Can't convert " <> unpack v <> " to double: " <> e)) fst (TR.double v)
-
-instance Configurable Text where
-  convert = id
+-- | Read a configuration from a YAML file
+--   The resulting configuration will have @defaultConfig@ as a parent.
+readConfigFile :: String -> IO Config
+readConfigFile file = do
+  cf <- B.readFile file
+  let decoded = decodeEither cf :: Either String Config
+  return $ case decoded of
+    Left msg -> error msg
+    Right config' -> config'

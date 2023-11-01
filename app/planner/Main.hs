@@ -1,7 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as B
+import qualified Data.Yaml as Y
 import Data.Aeson
 import Camino.Camino
 import Camino.Preferences
@@ -72,7 +74,7 @@ plan opts = do
     let preferences'' = normalisePreferences camino' (preferences' { preferenceRequired = required', preferenceExcluded = excluded' })
     let solution = planCamino preferences'' camino' begin' end'
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc preferences'' camino' solution
+    let kml = createCaminoDoc config' preferences'' camino' solution
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
     let html = caminoHtml config' preferences'' camino' solution

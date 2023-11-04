@@ -13,9 +13,11 @@ A camino consists of a graph of legs that can be assembled in various ways.
 The legs run between two locations, each with possible accomodation and service options.
 
 Generally, it is expected that these models will be read from JSON files.
+
+Note that XML-Hamlet remvoes path interpolation, so routes are not a thing here.
 -}
 
-module Camino.KML (
+module Camino.Display.KML (
   createCaminoDoc
 ) where
 
@@ -23,7 +25,8 @@ import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
-import Camino.Html
+import Camino.Display.Html
+import Camino.Display.Routes
 import Data.Maybe (fromJust)
 import Data.Text (Text, pack, toLower)
 import Data.Text.Lazy (toStrict)
@@ -114,14 +117,14 @@ caminoLocationStyle _camino stops waypoints location
   | S.member location waypoints = "#" <> (toLower $ pack $ show $ locationType location) <> "Used"
   | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "Unused"
   
-caminoLocationKml :: Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationKml preferences camino trip stops waypoints location = [xml|
+caminoLocationKml :: Config -> Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml config preferences camino trip stops waypoints location = [xml|
     <Placemark id="#{pack $ locationID location}">
       <name>#{locationName location}
       <description>
-        #{toStrict $ renderHtml $ locationSummary preferences camino location}
+        #{toStrict $ renderHtml $ (locationSummary preferences camino location) (renderCaminoRoute config)}
         $maybe d <- day
-          #{toStrict $ renderHtml $ daySummary preferences camino trip d}
+          #{toStrict $ renderHtml $ (daySummary preferences camino trip d) (renderCaminoRoute config)}
       <styleUrl>#{caminoLocationStyle camino stops waypoints location}
       ^{pointKml $ locationPosition location}
   |]
@@ -160,7 +163,7 @@ createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing [
             <name>#{locationName $ start t} to #{locationName $ finish t}
            ^{caminoStyles config camino}
           $forall location <- caminoLocations camino
-            ^{caminoLocationKml preferences camino trip stops waypoints location}
+            ^{caminoLocationKml config preferences camino trip stops waypoints location}
           $forall leg <- legs camino
             ^{caminoLegKml camino stops waypoints leg}
       |]

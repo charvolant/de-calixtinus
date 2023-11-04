@@ -28,7 +28,7 @@ import Data.Aeson.Types (unexpected)
 
 -- | Configuration for a map provider
 data MapConfig = Map {
-  mapId :: String, -- ^ The map source identifier
+  mapId :: Text, -- ^ The map source identifier
   mapTiles :: Text -- ^ The template for map tiles
 } deriving (Show)
 
@@ -65,7 +65,7 @@ instance ToJSON CrossOriginType
 
 -- | Configuration for an external asset source
 data AssetConfig = Asset {
-  assetId :: String, -- ^ The asset identifier
+  assetId :: Text, -- ^ The asset identifier
   assetType :: AssetType, -- ^ The type of asset
   assetPath :: Text, -- ^ The path to the asset
   assetIntegrity :: Maybe Text, -- ^ The integrity checksum for the asset
@@ -189,7 +189,7 @@ instance ToJSON Config where
   toJSON (Config _parent' web') =
     object [ "web" .= web' ]
 
-getAssets' :: AssetType -> Config -> M.Map String AssetConfig
+getAssets' :: AssetType -> Config -> M.Map Text AssetConfig
 getAssets' asset config = let
     defaults = maybe M.empty (\p -> getAssets' asset p) (configParent config)
     local = M.fromList $ map (\a -> (assetId a, a)) $ filter (\a -> asset == assetType a) $ webAssets $ configWeb config
@@ -205,7 +205,7 @@ getAssets :: AssetType -- ^ The type of asset to retrieve
 getAssets asset config = M.elems $ getAssets' asset config
 
 -- | Get something recursively from the configurations
-getRecursive :: Maybe String -> (Config -> [b]) -> (b -> String) -> Config -> Maybe b
+getRecursive :: Maybe Text -> (Config -> [b]) -> (b -> Text) -> Config -> Maybe b
 getRecursive ident lister identifier config = let
     parent = configParent config
     items = lister config
@@ -221,14 +221,14 @@ getRecursive ident lister identifier config = let
       
 -- | Get an asset based on identifier
 --   If the configuration has a parent and the requisite asset is not present, then the parent is tried
-getAsset :: String -- ^ The asset identifier
+getAsset :: Text -- ^ The asset identifier
   -> Config -- ^ The configuration to query
   -> Maybe AssetConfig -- ^ The asset, if found
 getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config 
 
 -- | Get a map, optionally based on an identifier
 --   If the configuration has a parent and the requisite map is not present, then the parent is tried      
-getMap :: Maybe String -- ^ The map identifier, if Nothing then the first map is chosen
+getMap :: Maybe Text -- ^ The map identifier, if Nothing then the first map is chosen
   -> Config -- ^ The configuration
   -> Maybe MapConfig -- ^ The resulting map configuration
 getMap ident config = getRecursive ident (webMaps . configWeb) mapId config

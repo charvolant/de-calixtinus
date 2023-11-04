@@ -8,7 +8,6 @@ import Graph.Graph
 import Camino.Planner
 import Data.Text.Lazy (pack, unpack, fromStrict)
 import Formatting
-import Camino.KML
 import Text.XML
 
 import Options.Applicative

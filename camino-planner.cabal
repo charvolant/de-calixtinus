@@ -27,8 +27,10 @@ library
   exposed-modules:
       Camino.Camino
       Camino.Config
-      Camino.Html
-      Camino.KML
+      Camino.Display.Css
+      Camino.Display.Html
+      Camino.Display.KML
+      Camino.Display.Routes
       Camino.Planner
       Camino.Preferences
       Camino.Walking

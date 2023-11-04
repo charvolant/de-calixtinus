@@ -240,39 +240,6 @@ planCamino preferences camino begin end =
     begin
     end
 
--- | Print a penance for a trip
-showMetrics :: Metrics -> LT.Text
-showMetrics metrics = LT.pack $ show metrics
-
-showDay :: Preferences -> Camino -> Int -> Day -> LT.Text
-showDay preferences _camino dn (Chain _begin end links metrics) =
-  dayFormat dn chain distance pdf timef ascent descent (showMetrics metrics)
-  where
-    (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences links
-    locs = (map legFrom links) ++ [end]
-    chain = LT.concat $ intersperse " -> " (map (LT.fromStrict . locationName) locs)
-    pdf = maybe "*" (format ((fixed 1) % "km")) perceived
-    timef = maybe "*" (format ((fixed 1) % "hr")) time
-    dayFormat = format (
-        "  Day " % int
-        %+ text
-        %+ (fixed 1) % "km (feels like " % text % ")"
-        %+ text
-        %+ (fixed 0) % "m ascent"
-        %+ (fixed 0) % "m descent"
-        %+ "with penance " % text % "\n"
-      )
-
--- | Print a plan in comprehenisble form
-showTrip :: Preferences -> Camino -> Maybe Trip -> LT.Text
-showTrip _preferences _camino Nothing = "Unable to find solution"
-showTrip preferences camino (Just (Chain begin end days metrics)) =
-  LT.concat ([header] ++ (zipWith (\i -> \d -> showDay preferences camino i d) [0..] days))
-  where
-    headerFormat = format ("From " % text % " to " % text % " with penance " % text % "\n")
-    header = headerFormat (LT.fromStrict $ locationName begin) (LT.fromStrict $ locationName end) (showMetrics metrics)
-
-
 -- | Get all the stops (ie start and finish locations) on a trip in order
 tripStops :: Trip -> [Location]
 tripStops trip = (start trip) : (map finish $ path trip)

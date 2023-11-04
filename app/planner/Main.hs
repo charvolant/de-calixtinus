@@ -3,7 +3,6 @@ module Main (main) where
 
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as B
-import qualified Data.Yaml as Y
 import Data.Aeson
 import Camino.Camino
 import Camino.Preferences
@@ -86,7 +85,7 @@ plan opts = do
     let css = caminoCss config' camino'
     let cssFile = output' </> "camino.css"
     TIO.writeFile cssFile $ T.concat (map (\c -> renderCss $ c renderer) css)
-    
+
 main :: IO ()
 main = do
     opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Plan a camino")

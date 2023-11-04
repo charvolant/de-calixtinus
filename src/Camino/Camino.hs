@@ -11,7 +11,7 @@ Stability   : experimental
 Portability : POSIX
 
 A camino consists of a graph of legs that can be assembled in various ways.
-The legs run between two locations, each with possible accomodation and service options.
+The legs run between two locations, each with possible accommodation and service options.
 
 Generally, it is expected that these models will be read from JSON files.
 -}
@@ -130,7 +130,7 @@ instance ToJSON LatLong where
 data AccommodationType = MunicipalAlbergue -- ^ A hostel run by local volunteers
   | PrivateAlbergue -- ^ A hostel run as a local business
   | GuestHouse -- ^ A generic guesthouse
-  | House -- ^ An entire house or aparment for rent
+  | House -- ^ An entire house or apartment for rent
   | Hotel -- ^ A dedicated hotel
   | Camping -- ^ Camping (with a tent or without, depending on what carried)
   deriving (Generic, Show, Eq, Ord)
@@ -142,14 +142,14 @@ instance FromJSONKey AccommodationType where
 instance ToJSONKey AccommodationType where
   toJSONKey = genericToJSONKey defaultJSONKeyOptions
 
--- | Services available in a location or accomodation
+-- | Services available in a location or accommodation
 data Service = WiFi -- ^ Wireless internet available
   | Restaurant -- ^ Bar and/or Restaurant
   | Pharmacy -- ^ Pharmacy
   | Bank -- ^ Banking facilities, including an automated teller machine
   | BicycleRepair -- ^ Bicycle repair shop
   | Groceries -- ^ Convenience store or supermarket
-  | Medical -- ^ Doctor, hospital or other heathcare
+  | Medical -- ^ Doctor, hospital or other healthcare
   | WashingMachine -- ^ Washing machine available
   | Dryer -- ^ Dryer or spin-dryer available
   | Handwash -- ^ Handwash laundry facilities
@@ -175,7 +175,7 @@ instance FromJSON Service
 instance ToJSON Service
 
 -- | Sleeping/room arrangements available  
-data Sleeping = Shared -- ^ Shared accomodation in a dormitory
+data Sleeping = Shared -- ^ Shared accommodation in a dormitory
   | Single -- ^ Single room
   | Double -- ^ Double room with shared bathroom
   | DoubleWC -- ^ Double room with a private bathroom
@@ -183,8 +183,8 @@ data Sleeping = Shared -- ^ Shared accomodation in a dormitory
   | TripleWC -- ^ Triple room with private bathroom
   | Quadruple -- ^ Room for 4 with shared bathroom
   | QuadrupleWC -- ^ Room for 4 room with private bathroom
-  | Matress -- ^ Matresses on the floor
-  | SleepingBag -- ^ Own sleeping bag and matress
+  | Mattress -- ^ Mattresses on the floor
+  | SleepingBag -- ^ Own sleeping bag and mattress
   deriving (Show, Generic, Eq, Ord)
 
 instance FromJSON Sleeping
@@ -192,8 +192,8 @@ instance ToJSON Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
-  Accommodation Text AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accomodation
-  | GenericAccommodation AccommodationType -- ^ Generic accomodation with default services, sleeping arrangements based on type
+  Accommodation Text AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accommodation
+  | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
   deriving (Show)
   
 accommodationName :: Accommodation -> Text
@@ -241,7 +241,7 @@ instance ToJSON Accommodation where
  
 -- | Sleeping/room arrangements available  
 data LocationType = Village -- ^ A village
-   | Town -- ^ A towen
+   | Town -- ^ A town
    | City -- ^ A city
    | Bridge -- ^ A bridge
    | Intersection -- ^ An intersection
@@ -300,8 +300,8 @@ placeholderLocation ident = Location {
     locationAccommodation = []
   }
 
--- | Get the accomodation types available at a location
---   These are ordered into enumueration order
+-- | Get the accommodation types available at a location
+--   These are ordered into enumeration order
 locationAccommodationTypes :: Location -> S.Set AccommodationType
 locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
 

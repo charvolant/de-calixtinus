@@ -30,7 +30,7 @@ module Camino.Walking (
 ) where
 
 import Numeric.Tools.Interpolation
-import qualified Data.Vector as V (fromList, length)
+import qualified Data.Vector as V (Vector, fromList, length)
 import Camino.Camino
 
 -- | Calculate the time taken to walk a distance using simple Naismith's rule
@@ -58,12 +58,14 @@ tobler distance ascent descent =
    in
      da / sa + dd / sd + df / sf
 
+makeInterpolation' :: V.Vector Double -> LinearInterp UniformMesh
 makeInterpolation' points = linearInterp $ tabulate mesh points 
   where 
     l = V.length points
     mesh = uniformMesh (0.0, fromIntegral (l - 1)) l
 
 -- | Tranter corrections for fit people (15 mins for 1000ft climb over 1/2 mile)
+tranter15 :: LinearInterp UniformMesh
 tranter15 = makeInterpolation' tranter15' where
   tranter15' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
@@ -93,6 +95,7 @@ tranter15 = makeInterpolation' tranter15' where
     24 -- 24
     ]
 
+tranter20 :: LinearInterp UniformMesh
 tranter20 = makeInterpolation' tranter20' where 
   tranter20' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
@@ -118,6 +121,7 @@ tranter20 = makeInterpolation' tranter20' where
     23 -- 20
     ]
 
+tranter25 :: LinearInterp UniformMesh
 tranter25 = makeInterpolation' tranter25' where
   tranter25' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
@@ -137,6 +141,7 @@ tranter25 = makeInterpolation' tranter25' where
     17.5 -- 14
     ]
 
+tranter30 :: LinearInterp UniformMesh
 tranter30 = makeInterpolation' tranter30' where
   tranter30' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
@@ -151,6 +156,7 @@ tranter30 = makeInterpolation' tranter30' where
     14.5 -- 9
     ]
 
+tranter40 :: LinearInterp UniformMesh
 tranter40 = makeInterpolation' tranter40' where
   tranter40' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
@@ -163,6 +169,7 @@ tranter40 = makeInterpolation' tranter40' where
     11.5 -- 7
     ]
 
+tranter50 :: LinearInterp UniformMesh
 tranter50 = makeInterpolation' tranter50' where
   tranter50' = V.fromList [
     0.0, -- 0 hours expected via naismith/tobler
@@ -173,6 +180,7 @@ tranter50 = makeInterpolation' tranter50' where
     8.5 -- 5
     ]
 
+tranter' :: Fitness -> LinearInterp UniformMesh
 tranter' SuperFit = tranter15
 tranter' VeryFit = tranter20
 tranter' Fit = tranter25

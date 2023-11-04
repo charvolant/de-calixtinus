@@ -5,7 +5,7 @@ You can supply a set of preferences in the form of fitness, preferred and hard
 limits on travel distance, accomodation etc. and the program will attempt to
 build a *globally* optimal set of stages for you.
 Globally, means that the program will try to find the best set of stages over the
-entire trip, stretching and squeezing as appropriate to try an limit the number of
+entire trip, stretching and squeezing as appropriate to try and limit the number of
 ludicrously long or disappointingly short stages.
 
 To see an example, based on someone unfit who wants to walk about 20km
@@ -49,8 +49,8 @@ For example, if you want to visit Fátima add `-r F10` to the command.
 ## Sources
 
 The Camino Planner needs data.
-In particular, the various waypoints, services, accomodation, distances, climbs,
-descents and what-have you need to be descibed in loving detail.
+In particular, the various waypoints, services, accommodation, distances, climbs,
+descents and what-have you need to be described in loving detail.
 The sample data has been collected by working through a number of sources.
 Most of these we used when walking the Camino ourselves.
 
@@ -63,7 +63,7 @@ Most of these we used when walking the Camino ourselves.
   used as a planning book.
 * Good-old [Google Maps](https://www.google.com/maps) was used to estimate total ascent and descent between
   waypoints and fix suitable waypoint locations.
-  Google maps was also used to estimate train and bus stations.
+  Google Maps was also used to estimate train and bus stations.
 * The [Stingy Nomads](https://stingynomads.com/camino-fatima-walk-lisbon-porto/) aided us on 
   our route to Fátima.
 * And, of course, we did our own stuff.
@@ -85,7 +85,7 @@ Also, things change: places to stay come and go, temporarily shut down
 or get filled up; roads get blocked; on Sunday *everything* shuts down and you need
 to plan accordingly.
 This output from this program is no substitute for either careful planning or
-casual reslience in the face of adversity.
+casual resilience in the face of adversity.
 
 ## A Work in Progress
 
@@ -95,11 +95,11 @@ There's a bit of a way to go for that.
 
 ### The TODO List
 
-* A full web site implementation
+* A full website implementation
 * Start scoring stages (see the [design notes](#some-design-notes)) for
-  * Services available at the end-point and at accomodation (eg clothes washing facilities)
+  * Services available at the end-point and at accommodation (eg clothes washing facilities)
   * Services available along the way (eg. an ATM somewhere during the day)
-  * Handling the Sunday famine]
+  * Handling the Sunday famine
 * Include points of interest
   * And make allowance for breaks so that people can visit
 
@@ -107,28 +107,28 @@ There's a bit of a way to go for that.
 
 * Uses dynamic programming to plan camino stages
 * Inspired by TeX layout algorithm
-* Calculate a *penetance* for each stage.
-  * "Penetance" is my own in-joke, following a comment by a hotel owner that we'd paid for all our sins at once
+* Calculate a *penance* for each stage.
+  * "Penance" is my own in-joke, following a comment by a hotel owner that we'd paid for all our sins at once
     after a particularly miserable day.
-  * Penetance is used to optimise stages and essentially converts everything
+  * Penance is used to optimise stages and essentially converts everything
     into an equivalent of kilometres walked.
-    * Once you step outsisde your preferred distance band, additional penance will be
+    * Once you step outside your preferred distance band, additional penance will be
       added to the stage's score.
       * There are also hard maximum and minimum distances.
-    * Accomodation is, essentially, the number of extra kilometres you would walk to avoid a
-      particular style of accomodation.
+    * Accommodation is, essentially, the number of extra kilometres you would walk to avoid a
+      particular style of accommodation.
     * There is a "day cost" that factors in the business of having to stop of the night.
       Reducing the day cost to zero will tend to make the program give you a lot of
       short stages.
       Making the day cost large will cause the program to try to extend the amount of
       walking that you do each day.
-  * The program works to minimise total penetance but, if you're that sort of
-    pilgrim, it could be made to maximise penetance, instead.
+  * The program works to minimise total penance but, if you're that sort of
+    pilgrim, it could be made to maximise penance, instead.
 * Time is estimated from kilometres travelled
   * [Naismith's Rule](https://en.wikipedia.org/wiki/Naismith%27s_rule) to handles the extra time taken for ascent and descent 
     or, preferentially [Tobler's Hiking Function](https://en.wikipedia.org/wiki/Tobler%27s_hiking_function)
   * [Tranter's corrections](https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections) allow for fatigue and fitness
-  * These are used to build a *percieved* distance travelled, taking into account
+  * These are used to build a *perceived* distance travelled, taking into account
    ascent, descent and building fatigue.
 ## Build Notes
 
@@ -149,7 +149,7 @@ which is used to generate the WOFF font.
 
 The SVG icons use a [template](fonts/svg/template.svg) with guides for a standard 
 80% above/20% below the line font.
-Hoqwever, it seems to be next to impossible to import the SVG in a way that doesn't produce
+However, it seems to be next to impossible to import the SVG in a way that doesn't produce
 overly small glyphs.
 The general procedure that works is:
 
@@ -166,7 +166,7 @@ The general procedure that works is:
 
 The `text-icu` package allows canonicalisation of unicode characters.
 This package depends on the [icu4c](https://icu.unicode.org/) library.
-For MacOS, you will need to have [brew](https://brew.sh/) installed and install the library
+For macOS, you will need to have [brew](https://brew.sh/) installed and install the library
 and the pkg-config cask.
 
 ```shell

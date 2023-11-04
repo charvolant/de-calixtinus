@@ -77,7 +77,7 @@ penanceSummary _preferences _camino metrics = [hamlet|
        ^{formatPenance $ metricsPenance metrics}
      <div .dropdown-menu>
        <a .dropdown-item>Distance: ^{formatDistance $ metricsPerceivedDistance metrics}
-       <a .dropdown-item>Accomodation: ^{formatPenance $ metricsAccomodation metrics}
+       <a .dropdown-item>Accommodation: ^{formatPenance $ metricsAccommodation metrics}
        <a .dropdown-item>Day: ^{formatPenance $ metricsStop metrics}
        <a .dropdown-item>Distance Penalty: ^{formatPenance $ metricsDistanceAdjust metrics}
        <a .dropdown-item>Time Penality: ^{formatPenance $ metricsTimeAdjust metrics}
@@ -142,7 +142,7 @@ caminoSleepingIcon Triple = [hamlet| <span .sleeping .ca-bed-triple title="Tripl
 caminoSleepingIcon TripleWC = [hamlet| <span .sleeping .ca-bed-triple-wc title="Triple with WC"> |]
 caminoSleepingIcon Quadruple = [hamlet| <span .sleeping .ca-bed-quadruple title="Quadruple"> |]
 caminoSleepingIcon QuadrupleWC = [hamlet| <span .sleeping .bed-quadruple-wc title="Quadruple with WC"> |]
-caminoSleepingIcon Matress = [hamlet| <span .sleeping .ca-matress title="Matress"> |]
+caminoSleepingIcon Mattress = [hamlet| <span .sleeping .ca-mattress title="Mattress"> |]
 caminoSleepingIcon SleepingBag = [hamlet| <span .sleeping .ca-sleeping-bag title="SleepingBag"> |]
 
 caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrl CaminoRoute

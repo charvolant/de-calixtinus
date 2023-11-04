@@ -13,7 +13,22 @@ Portability : POSIX
 Here is a longer description of this module, containing some
 commentary with @some markup@.
 -}
-module Graph.Programming where
+module Graph.Programming (
+  AcceptFunction,
+  Chain(..),
+  ChainGraph,
+  ChoiceFunction,
+  EvaluationFunction,
+  Score(..),
+
+  extend,
+  forwards,
+  constructTable,
+  passed,
+  paths,
+  program,
+  step
+) where
 
 import qualified Data.Map as M
 import qualified Data.Set as S

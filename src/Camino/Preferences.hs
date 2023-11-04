@@ -131,7 +131,7 @@ data Preferences = Preferences {
   preferenceDistance :: PreferenceRange Float, -- ^ The preferred distance range
   preferenceTime :: PreferenceRange Float, -- ^ The preferred time walking range
   preferencePerceivedDistance :: PreferenceRange Float, -- ^ The preferred distance range; if nothing then built from the distance range
-  preferenceAccommodation :: M.Map AccommodationType Penance, -- ^ Accommodation preferences (absence implies unacceptable accomodation)
+  preferenceAccommodation :: M.Map AccommodationType Penance, -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   preferenceRequired :: S.Set Location, -- ^ Locations that we must visit (end a day at)
   preferenceExcluded :: S.Set Location -- ^ Locations that we will not visit (end a day at, although passing through is OK)
 } deriving (Show)
@@ -143,10 +143,10 @@ instance FromJSON Preferences where
     distance' <- v .: "distance"
     time' <- v .: "time"
     perceived' <- v .:? "perceived" .!= perceivedDistanceRange fitness' distance'
-    accomodation' <- v .: "accomodation"
+    accommodation' <- v .: "accommodation"
     required' <- v .:? "required" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
-    let accomodation'' = M.mapWithKey (\_k -> \p -> p) accomodation'
+    let accommodation'' = M.mapWithKey (\_k -> \p -> p) accommodation'
     let required'' = S.map placeholderLocation required'
     let excluded'' = S.map placeholderLocation excluded'
     return Preferences {
@@ -155,19 +155,19 @@ instance FromJSON Preferences where
         preferenceDistance = distance',
         preferenceTime = time',
         preferencePerceivedDistance = perceived',
-        preferenceAccommodation = accomodation'',
+        preferenceAccommodation = accommodation'',
         preferenceRequired = required'',
         preferenceExcluded = excluded''
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON Preferences where
-  toJSON (Preferences walking' fitness' distance' time' perceived' accomodation' required' excluded') =
+  toJSON (Preferences walking' fitness' distance' time' perceived' accommodation' required' excluded') =
     let
       required'' = S.map locationID required'
       excluded'' = S.map locationID excluded'
     in
-      object [ "walking" .= walking', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "accomodation" .= accomodation', "required" .= required'', "excluded" .= excluded'']
+      object [ "walking" .= walking', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "accommodation" .= accommodation', "required" .= required'', "excluded" .= excluded'']
 
 -- | Normalise preferences to the correct locations, based on placeholders
 normalisePreferences :: Camino -- ^ The camino that contains the correct locations

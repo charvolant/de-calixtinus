@@ -41,6 +41,7 @@ class Edge e v => Graph g e v | g -> e, g -> v where
   targets :: g -> v -> S.Set v
   targets g v = S.fromList $ map target (outgoing g v)
 
+transitive :: Graph g e v => g -> (g -> v -> S.Set v) -> S.Set v -> S.Set v -> S.Set v
 transitive graph direction new seen
   | S.null new = seen
   | otherwise = let 

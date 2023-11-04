@@ -19,10 +19,8 @@ import GHC.Generics (Generic)
 import Data.Aeson
 import qualified Data.Map as M
 import Data.Text (Text)
-import Data.Maybe (maybe)
 import Data.List (find)
 import Data.Yaml (decodeEither)
-import qualified Data.Text.Read as TR
 import qualified Data.ByteString as B (ByteString, readFile)
 import Data.Aeson.Types (unexpected)
 
@@ -218,16 +216,16 @@ getRecursive ident lister identifier config = let
         Nothing -> Nothing
         Just p -> getRecursive ident lister identifier p
       r@(Just _) -> r
-      
+
 -- | Get an asset based on identifier
 --   If the configuration has a parent and the requisite asset is not present, then the parent is tried
 getAsset :: Text -- ^ The asset identifier
   -> Config -- ^ The configuration to query
   -> Maybe AssetConfig -- ^ The asset, if found
-getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config 
+getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config
 
 -- | Get a map, optionally based on an identifier
---   If the configuration has a parent and the requisite map is not present, then the parent is tried      
+--   If the configuration has a parent and the requisite map is not present, then the parent is tried
 getMap :: Maybe Text -- ^ The map identifier, if Nothing then the first map is chosen
   -> Config -- ^ The configuration
   -> Maybe MapConfig -- ^ The resulting map configuration

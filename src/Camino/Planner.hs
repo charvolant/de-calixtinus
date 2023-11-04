@@ -8,10 +8,22 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Create an optimal camino plan, based on the peferences
+Create an optimal camino plan, based on the preferences
 -}
 
-module Camino.Planner where
+module Camino.Planner (
+  Day,
+  Metrics(..),
+  Trip,
+
+  accommodation,
+  hours,
+  penance,
+  planCamino,
+  travel,
+  tripStops,
+  tripWaypoints
+) where
 
 import Camino.Walking
 import Camino.Camino
@@ -19,19 +31,16 @@ import Camino.Preferences
 import Graph.Programming()
 import qualified Data.Map as M
 import qualified Data.Set as S
-import qualified Data.Text.Lazy as LT
-import Data.List (intersperse)
-import Formatting
 import Data.Maybe (isJust, fromJust)
 
--- | The metrics for a day, segement or complete trip
+-- | The metrics for a day, segment or complete trip
 data Metrics = Metrics {
     metricsDistance :: Float, -- ^ Actual distance in km
     metricsTime :: Maybe Float, -- ^ Time taken in hours
     metricsPerceivedDistance :: Maybe Float, -- ^ Perceived distance in km (Nothing if the distance is too long)
     metricsAscent :: Float, -- ^ Ascent in metres
     metricsDescent :: Float, -- ^ Descent in metres
-    metricsAccomodation :: Penance, -- ^ Accomondation penance in km-equivalent. This represents the distance you would be prepared to walk to avoid this accomodation
+    metricsAccommodation :: Penance, -- ^ Accommodation penance in km-equivalent. This represents the distance you would be prepared to walk to avoid this accommodation
     metricsStop :: Penance, -- ^ Stop penance in km-equivalent. The represents the costs of stopping for the night in food, urge to get on, whatever
     metricsDistanceAdjust :: Penance, -- ^ Adjustments to distance cost in km-equivalent caused by going over/under target
     metricsTimeAdjust :: Penance, -- ^ Adjustments to time cost in km-equivalent caused by going over/under target
@@ -52,7 +61,7 @@ instance Semigroup Metrics where
     metricsPerceivedDistance = (+) <$> metricsPerceivedDistance m1 <*> metricsPerceivedDistance m2,
     metricsAscent = metricsAscent m1 + metricsAscent m2,
     metricsDescent = metricsDescent m1 + metricsDescent m2,
-    metricsAccomodation = metricsAccomodation m1 <> metricsAccomodation m2,
+    metricsAccommodation = metricsAccommodation m1 <> metricsAccommodation m2,
     metricsStop = metricsStop m1 <> metricsStop m2,
     metricsDistanceAdjust = metricsDistanceAdjust m1 <> metricsDistanceAdjust m2,
     metricsTimeAdjust = metricsTimeAdjust m1 <> metricsTimeAdjust m2,
@@ -125,7 +134,7 @@ openSleeping = GenericAccommodation Camping
 
 accommodation' :: Preferences -- ^ The calculation preferences
   -> Location -- ^ The location to stay at
-  -> Penance -- ^ Nothing if nothing is found, otherwise the penance value for the accomodation
+  -> Penance -- ^ Nothing if nothing is found, otherwise the penance value for the accommodation
 accommodation' preferences location =
   let
     ap = preferenceAccommodation preferences
@@ -135,11 +144,11 @@ accommodation' preferences location =
   in
     if null up then Reject else minimum up
 
--- | Calculate the accomodation penance, based on preferences
+-- | Calculate the accommodation penance, based on preferences
 accommodation :: Preferences -- ^ The calculation preferences
   -> Camino -- ^ The camino model
   -> [Leg] -- ^ The sequence of legs to use
-  -> Penance -- ^ Either nothing for no suitable accomodation or the
+  -> Penance -- ^ Either nothing for no suitable accommodation or the resulting penance
 accommodation preferences _camino legSeq = accommodation' preferences stop
   where
     stop = legTo $ last legSeq
@@ -161,13 +170,13 @@ penance preferences camino legSeq =
     (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences legSeq
     timeAdjust = maybe Reject (adjustment (preferenceTime preferences) normalSpeed) time
     distanceAdjust = maybe Reject (adjustment (preferencePerceivedDistance preferences) normalSpeed) perceived
-    accomodationAdjust = accommodation preferences camino legSeq -- accomodation penance
+    accommodationAdjust = accommodation preferences camino legSeq -- accommodation penance
     dayCost = Penance actualSpeed -- One hour of travel not used
     distanceCost = maybe Reject Penance perceived
-    total = distanceCost <> accomodationAdjust <> dayCost <> distanceAdjust <> timeAdjust
+    total = distanceCost <> accommodationAdjust <> dayCost <> distanceAdjust <> timeAdjust
   in
     -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head legSeq) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last legSeq) ++ " = " ++ show totalPenance) totalPenance
-    Metrics distance time perceived ascent descent accomodationAdjust dayCost distanceAdjust timeAdjust mempty total
+    Metrics distance time perceived ascent descent accommodationAdjust dayCost distanceAdjust timeAdjust mempty total
 
 -- | Accept a day's stage as a possibility
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
@@ -192,7 +201,7 @@ dayChoice :: Preferences -> Camino -> Day -> Day -> Day
 dayChoice _preferences _camino day1 day2 = if score day1 < score day2 then day1 else day2
 
 -- | Choose whether to accept an entire camino
---   Require no exlcuded stops
+--   Require no excluded stops
 caminoAccept :: Preferences -> Camino -> [Day] -> Bool
 caminoAccept _preferences _camino _days = True
 

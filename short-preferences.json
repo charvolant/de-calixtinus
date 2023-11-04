@@ -9,6 +9,6 @@
     "GuestHouse": 2.0,
     "House": 2.0,
     "Hotel": 2.5,
-    "Camping": 20.0
+    "Camping": "reject"
   }
 }

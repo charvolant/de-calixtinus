@@ -23,6 +23,7 @@ module Camino.Camino (
   LatLong(..),
   Leg(..),
   Location(..),
+  LocationType(..),
   Palette(..),
   Penance(..),
   Route(..),

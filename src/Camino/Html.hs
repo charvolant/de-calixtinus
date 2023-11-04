@@ -131,6 +131,13 @@ locationSummary _preferences _camino location = [shamlet|
     services = T.intercalate ", " (map (\s -> T.pack $ show s) (S.toList $ locationServices location))
     accommodation = T.intercalate ", " (map (\a -> T.pack $ show $ accommodationType a) (locationAccommodation location))
 
+caminoLocationTypeIcon :: Config -> LocationType -> Html
+caminoLocationTypeIcon _ Village = [shamlet| <span .location-type .ca-village title="Village"> |]
+caminoLocationTypeIcon _ Town = [shamlet| <span .location-type .ca-town title="Town"> |]
+caminoLocationTypeIcon _ City = [shamlet| <span .location-type .ca-city title="City"> |]
+caminoLocationTypeIcon _ Bridge = [shamlet| <span .location-type .ca-bridge title="Bridge"> |]
+caminoLocationTypeIcon _ Intersection = [shamlet| <span .location-type .ca-intersection title="Intersection"> |]
+caminoLocationTypeIcon _ _ = [shamlet| <span .location-type .ca-poi title="Locality"> |]
 
 caminoSleepingIcon :: Config -> Sleeping -> Html
 caminoSleepingIcon _ Shared = [shamlet| <span .sleeping .ca-shared title="Shared"> |]
@@ -183,18 +190,19 @@ caminoServiceIcon _ Bus = [shamlet| <span .service .ca-bus title="Bus"> |]
 caminoAccommodationHtml :: Config -> Accommodation -> Html
 caminoAccommodationHtml _ (GenericAccommodation _type) = [shamlet| |]
 caminoAccommodationHtml config (Accommodation name' type' services' sleeping') = [shamlet|
-  <div .card .accomodation .p-1>
+  <div .card .accomodation .m-1 .p-1>
     <h5>
       ^{caminoAccommodationTypeIcon config type'}
       #{name'}
     <div .card-body>
-      <div .row>
-        <div .col>
-          $forall service <- services'
-            ^{caminoServiceIcon config service}
-        <div .col>
-          $forall sleeping <- sleeping'
-            ^{caminoSleepingIcon config sleeping}
+      <div .container-fluid>
+        <div .row>
+          <div .col>
+            $forall service <- services'
+              ^{caminoServiceIcon config service}
+          <div .col>
+            $forall sleeping <- sleeping'
+              ^{caminoSleepingIcon config sleeping}
  |]
 
 locationLine :: Config -> Preferences -> Camino -> Location -> Html
@@ -210,22 +218,22 @@ locationLine config _preferences _camino location = [shamlet|
 
 caminoLocationHtml :: Config -> Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> Html
 caminoLocationHtml config _preferences camino _trip stops waypoints location = [shamlet|
-  <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .p-1 .m-1>
-    <div .row .card-title>
-      <div .col>
-        <h4>
-          #{locationName location}
+  <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .p-2 .mx-1 .mt-4>
+    <div .card-title>
+      <h4>
+        ^{caminoLocationTypeIcon config (locationType location)}
+        #{locationName location}
     <div .card-body>
-      <div .row>
-        <div .col .services>
-          $forall service <- locationServices location
-            ^{caminoServiceIcon config service}
-      <div .row .mb-5>
-        <div .col .accomodation-types>
-          $forall accomodation <- locationAccommodationTypes location
-            ^{caminoAccommodationTypeIcon config accomodation}
-      $forall accomodation <- locationAccommodation location
-        ^{caminoAccommodationHtml config accomodation}
+      <div .container-fluid>
+        <div .row .mb-4>
+          <div .col .services>
+            $forall service <- locationServices location
+              ^{caminoServiceIcon config service}
+          <div .col .accomodation-types>
+            $forall accomodation <- locationAccommodationTypes location
+              ^{caminoAccommodationTypeIcon config accomodation}
+        $forall accomodation <- locationAccommodation location
+          ^{caminoAccommodationHtml config accomodation}
   |]
   where
     route = caminoRoute camino location
@@ -266,44 +274,43 @@ preferenceRangeHtml range = [shamlet|
     <span>#{format (fixed 1) (rangeUpper range)} -
     <span .text-danger>#{format (fixed 1) (rangeMaximum range)}
     $maybe d <- rangeDerived range
-      <span .text-body-tertiary>#{d}
+      <p .text-body-tertiary .smaller>#{d}
   |]
-preferencesHtml :: Preferences -> Camino -> Maybe Trip -> Html
-preferencesHtml preferences _camino _trip = [shamlet|
+preferencesHtml :: Config -> Preferences -> Camino -> Maybe Trip -> Html
+preferencesHtml config preferences _camino _trip = [shamlet|
   <div .container-fluid>
     <h2>Preferences</h2>
     <div .row>
-      <div .col>Walking Estimate
-      <div.col>#{preferenceWalkingFunction preferences}
+      <div .col-3>Walking Estimate
+      <div .col .offset-1>#{preferenceWalkingFunction preferences}
     <div .row>
-      <div .col>Fitness
-      <div .col>#{show $ preferenceFitness preferences}
+      <div .col-3>Fitness
+      <div .col .offset-1>#{show $ preferenceFitness preferences}
     <div .row>
-      <div .col>Distance Preferences (km)
-      <div .col>^{preferenceRangeHtml $ preferenceDistance preferences}
+      <div .col-3>Distance Preferences (km)
+      <div .col .offset-1>^{preferenceRangeHtml $ preferenceDistance preferences}
     <div .row>
-      <div .col>Perceived Distance Preferences (km)
-      <div .col>^{preferenceRangeHtml $ preferencePerceivedDistance preferences}
+      <div .col-3>Perceived Distance Preferences (km)
+      <div .col .offset-1>^{preferenceRangeHtml $ preferencePerceivedDistance preferences}
     <div .row>
-      <div .col>Time Preferences (hours)
-      <div .col>^{preferenceRangeHtml $ preferenceTime preferences}
+      <div .col-3>Time Preferences (hours)
+      <div .col. .offset-1>^{preferenceRangeHtml $ preferenceTime preferences}
     <div .row>
-      <div .col>Accomondation Preferences
-      <div .col>
-        $forall ak <- M.keys $ preferenceAccommodation preferences
-          <div .row>
-            <div .col>#{show ak}
-            <div .col>#{show $ findAcc preferences ak}
+      <div .col-3>Accommodation Preferences
+      $forall ak <- M.keys $ preferenceAccommodation preferences
+        <div .row>
+          <div .col-1 .offset-3>^{caminoAccommodationTypeIcon config ak}
+          <div .col>^{formatPenance $ findAcc preferences ak}
     <div .row>
-      <div .col>Required Stops
-      <div .col>
+      <div .col-3>Required Stops
+      <div .col .offset-1>
         <ul>
         $forall l <- preferenceRequired preferences
           <li>
             <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
     <div .row>
-      <div .col>Excluded Stops
-      <div .col>
+      <div .col-3>Excluded Stops
+      <div .col .offset-1>
         <ul>
         $forall l <- preferenceExcluded preferences
           <li>
@@ -325,7 +332,7 @@ caminoTripHtml config preferences camino trip = [shamlet|
       <div .col-1>
         <a .btn .btn-info href="camino.kml">KML
     $forall day <- path trip
-      <div .card .day>
+      <div .card .day .p-1>
         <h4>
           <a href="##{locationID $ start day}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ start day}
           \   -
@@ -496,8 +503,10 @@ iconList = [
     ("ca-breakfast", '\xe064'),
     ("ca-bicycle-repair", '\xe045'),
     ("ca-bicycle-storage", '\xe06a'),
+    ("ca-bridge", '\xe004'),
     ("ca-bus", '\xe047'),
     ("ca-camping", '\xe019'),
+    ("ca-city", '\xe003'),
     ("ca-dinner", '\xe065'),
     ("ca-dryer", '\xe062'),
     ("ca-groceries", '\xe041'),
@@ -506,12 +515,14 @@ iconList = [
     ("ca-heating", '\xe070'),
     ("ca-hotel", '\xe013'),
     ("ca-house", '\xe011'),
+    ("ca-intersection", '\xe005'),
     ("ca-kitchen", '\xe06b'),
     ("ca-locker", '\xe066'),
     ("ca-matress", '\xe028'),
     ("ca-medical", '\xe044'),
     ("ca-pets", '\xe069'),
     ("ca-pharmacy", '\xe043'),
+    ("ca-poi", '\xe000'),
     ("ca-pool", '\xe06e'),
     ("ca-prayer", '\xe06f'),
     ("ca-restaurant", '\xe040'),
@@ -520,7 +531,9 @@ iconList = [
     ("ca-stables", '\xe068'),
     ("ca-tent", '\xe018'),
     ("ca-towels", '\xe06d'),
+    ("ca-town", '\xe002'),
     ("ca-train", '\xe046'),
+    ("ca-village", '\xe001'),
     ("ca-washing-machine", '\xe061'),
     ("ca-wifi", '\xe060')
   ]
@@ -603,8 +616,8 @@ a
   .card-title
     h4
       font-weight: bolder
-    h4::before
-      margin-right: 0.5ex
+    h4::after
+      margin-left: 1ex
       color: #f9b34a
       font-family: "Camino Icons"
       font-weight: normal
@@ -632,12 +645,12 @@ caminoHtml config preferences camino trip = [shamlet|
         <link rel="stylesheet" href="#{assetPath c}">
       <link rel="stylesheet" href="camino.css">
     <body>
-      <header>
-        <nav .navbar .navbar-expand-md .bg-body>
+      <header .p-2>
+        <nav .navbar .navbar-expand-md>
           <div .container-fluid>
             <a .navbar-brand href="#">
               <img width="64" height="64" src="#{iconBase}/tile-64.png" alt="Camino Planner">
-      <main>
+      <main .container-fluid .p-2>
         <h1>#{title}
         <div>
           <ul .nav .nav-tabs role="tablist">
@@ -658,8 +671,8 @@ caminoHtml config preferences camino trip = [shamlet|
             <div .tab-pane role="tabpanel" id="locations-tab">
               ^{caminoLocationsHtml config preferences camino trip}
             <div .tab-pane role="tabpanel" id="preferences-tab">
-              ^{preferencesHtml preferences camino trip}
-      <footer .text-ceter .py-4>
+              ^{preferencesHtml config preferences camino trip}
+      <footer .text-center .py-4 .px-2>
         <div .row .row-cols-1 .row-cols-lg-3>
           <div .col>
             <p .text-muted .my-2>

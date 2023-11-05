@@ -20,8 +20,8 @@ import Data.Aeson
 import qualified Data.Map as M
 import Data.Text (Text)
 import Data.List (find)
-import Data.Yaml (decodeEither)
-import qualified Data.ByteString as B (ByteString, readFile)
+import Data.Yaml (ParseException, decodeEither')
+import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
 
 -- | Configuration for a map provider
@@ -236,7 +236,7 @@ getMap ident config = getRecursive ident (webMaps . configWeb) mapId config
 readConfigFile :: String -> IO Config
 readConfigFile file = do
   cf <- B.readFile file
-  let decoded = decodeEither cf :: Either String Config
+  let decoded = decodeEither' cf :: Either ParseException Config
   return $ case decoded of
-    Left msg -> error msg
+    Left ex -> error $ show ex
     Right config' -> config'

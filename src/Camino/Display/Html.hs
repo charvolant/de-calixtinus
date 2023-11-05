@@ -14,10 +14,11 @@ Generate HTML descriptions of
 module Camino.Display.Html where
 
 import Camino.Camino
-import Camino.Config (Config(..), AssetConfig(..), AssetType(..), MapConfig(..), getAssets, getAsset, getMap)
+import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
 import Camino.Planner (Trip, Day, Metrics(..), tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Display.Css (toCssColour)
+import Camino.Display.I18n
 import Camino.Display.Routes
 import Text.Hamlet
 import qualified Data.Text as T (intercalate, null, pack, Text)
@@ -25,15 +26,10 @@ import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.List (sortBy)
-import qualified Data.Text as T (Text, toUpper, take, filter)
+import qualified Data.Text as T (toUpper, take, filter)
 import Data.Text.ICU.Char (Bool_(..), property)
 import Data.Text.ICU.Normalize2 (NormalizationMode(..), normalize)
-import Data.Maybe (isJust, fromJust)
-import Text.Blaze.Html (preEscapedToHtml)
-import Numeric
-import Data.Char (ord)
-
-
+import Data.Maybe (isJust)
 
 -- | Canonicalise text, removing accents and diacritics
 canonicalise :: T.Text -> T.Text
@@ -54,59 +50,37 @@ partition :: (Eq b) => (a -> b) -- ^ The classifier function, produces the eleme
 partition _classifier [] = []
 partition classifier (s:source) = partition' classifier source (classifier s) [s]
 
-formatPenance :: Penance -> HtmlUrl CaminoRoute
-formatPenance Reject = [hamlet| <span .penance .rejected>Rejected |]
-formatPenance (Penance p) = [hamlet| <span .penance>#{format (fixed 1) p}km |]
-
-formatDistance :: (Real a) => Maybe a -> HtmlUrl CaminoRoute
-formatDistance Nothing = [hamlet| <span .distance .rejected>Rejected |]
-formatDistance (Just d) = [hamlet| <span .distance>#{format (fixed 1) d}km |]
-
-formatTime :: (Real a) => Maybe a -> HtmlUrl CaminoRoute
-formatTime Nothing = [hamlet| <span .time .rejected>Rejected |]
-formatTime (Just t) = [hamlet| <span .time>#{format (fixed 1) t}hrs |]
-
-formatHeight :: (Real a) => Maybe a -> HtmlUrl CaminoRoute
-formatHeight Nothing = [hamlet| <span .height .rejected>Rejected |]
-formatHeight (Just h) = [hamlet| <span .height>#{format (fixed 0) h}m |]
-
-penanceSummary :: Preferences -> Camino -> Metrics -> HtmlUrl CaminoRoute
-penanceSummary _preferences _camino metrics = [hamlet|
-   <div .penance-summary .dropdown title="Penance Summary">
+penanceSummary :: Preferences -> Camino -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+penanceSummary _preferences _camino metrics = [ihamlet|
+   <div .penance-summary .dropdown title="_{PenanceSummaryTitle}">
      <button .btn .btn-outline-primary .penance-summary .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
-       ^{formatPenance $ metricsPenance metrics}
+       _{PenanceMsg (metricsPenance metrics)}
      <div .dropdown-menu>
-       <a .dropdown-item>Distance: ^{formatDistance $ metricsPerceivedDistance metrics}
-       <a .dropdown-item>Accommodation: ^{formatPenance $ metricsAccommodation metrics}
-       <a .dropdown-item>Day: ^{formatPenance $ metricsStop metrics}
-       <a .dropdown-item>Distance Penalty: ^{formatPenance $ metricsDistanceAdjust metrics}
-       <a .dropdown-item>Time Penality: ^{formatPenance $ metricsTimeAdjust metrics}
-       <a .dropdown-item>Other: ^{formatPenance $ metricsMisc metrics}
+       <a .dropdown-item>_{DistancePenanceMsg (metricsPerceivedDistance metrics)}
+       <a .dropdown-item>_{AccommodationPenanceMsg (metricsAccommodation metrics)}
+       <a .dropdown-item>_{StopPenanceMsg (metricsStop metrics)}
+       <a .dropdown-item>_{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
+       <a .dropdown-item>_{TimeAdjustMsg (metricsTimeAdjust metrics)}
+       <a .dropdown-item>_{MiscPenanceMsg (metricsMisc metrics)}
    |]
     
-metricsSummary :: Preferences -> Camino -> Metrics -> HtmlUrl CaminoRoute
-metricsSummary _preferences _camino metrics = [hamlet|
-    Distance: ^{formatDistance $ Just (metricsDistance metrics)}
-    (feels like ^{formatDistance $ metricsPerceivedDistance metrics})
-    over ^{formatTime $ metricsTime metrics}
-    Ascent: ^{formatHeight $ Just (metricsAscent metrics)}
-    Descent: ^{formatHeight $ Just (metricsDescent metrics)}
-    Penance: ^{formatPenance $ metricsPenance metrics}
+metricsSummary :: Preferences -> Camino -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+metricsSummary _preferences _camino metrics = [ihamlet|
+    _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
+    _{TimeMsg (metricsTime metrics)}
+    _{AscentMsg (metricsAscent metrics)}
+    _{DescentMsg (metricsDescent metrics)}
+    _{PenanceMsg (metricsPenance metrics)}
   |]
 
-daySummary :: Preferences -> Camino -> Maybe Trip -> Day -> HtmlUrl CaminoRoute
-daySummary _preferences _camino _trip day = [hamlet|
-    <p>#{locationName $ start day} to #{locationName $ finish day} #{time}hrs #{distance}km (feels like #{perceivedDistance}km)
+daySummary :: Preferences -> Camino -> Maybe Trip -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
+daySummary _preferences _camino _trip day = [ihamlet|
+    <p>_{DaySummaryMsg day}
     <p>#{T.intercalate ", " (map locationName ((map legFrom $ path day) ++ [finish day]))}
   |]
-  where
-    time = maybe "*" (format (fixed 1)) (metricsTime $ score day)
-    distance = format (fixed 1) (metricsDistance $ score day)
-    perceivedDistance = maybe "*" (format (fixed 1)) (metricsPerceivedDistance $ score day)
 
-
-tripSummary :: Preferences -> Camino -> Trip -> HtmlUrl CaminoRoute
-tripSummary _preferences _camino trip = [hamlet|
+tripSummary :: Preferences -> Camino -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+tripSummary _preferences _camino trip = [ihamlet|
     <h1>From #{locationName $ start trip} to #{locationName $ finish trip}
     <h2>Stages
     <ul>
@@ -114,76 +88,76 @@ tripSummary _preferences _camino trip = [hamlet|
       <ol>#{locationName $ start day} - #{locationName $ finish day}
   |]
 
-locationSummary :: Preferences -> Camino -> Location -> HtmlUrl CaminoRoute
-locationSummary _preferences _camino location = [hamlet|
+locationSummary :: Preferences -> Camino -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationSummary _preferences _camino location = [ihamlet|
     $if not $ T.null services
-      <p>Services: #{services}
+      <p>_{ServicesLabel} #{services}
     $if not $ T.null accommodation
-      <p>Accomodation: #{accommodation}
+      <p>_{AccommodationLabel} #{accommodation}
   |]
   where 
     services = T.intercalate ", " (map (\s -> T.pack $ show s) (S.toList $ locationServices location))
     accommodation = T.intercalate ", " (map (\a -> T.pack $ show $ accommodationType a) (locationAccommodation location))
 
-caminoLocationTypeIcon :: LocationType -> HtmlUrl CaminoRoute
-caminoLocationTypeIcon Village = [hamlet| <span .location-type .ca-village title="Village"> |]
-caminoLocationTypeIcon Town = [hamlet| <span .location-type .ca-town title="Town"> |]
-caminoLocationTypeIcon City = [hamlet| <span .location-type .ca-city title="City"> |]
-caminoLocationTypeIcon Bridge = [hamlet| <span .location-type .ca-bridge title="Bridge"> |]
-caminoLocationTypeIcon Intersection = [hamlet| <span .location-type .ca-intersection title="Intersection"> |]
-caminoLocationTypeIcon _ = [hamlet| <span .location-type .ca-poi title="Locality"> |]
+caminoLocationTypeIcon :: LocationType -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationTypeIcon Village = [ihamlet| <span .location-type .ca-village title="_{VillageTitle}"> |]
+caminoLocationTypeIcon Town = [ihamlet| <span .location-type .ca-town title="_{TownTitle}"> |]
+caminoLocationTypeIcon City = [ihamlet| <span .location-type .ca-city title="_{CityTitle}"> |]
+caminoLocationTypeIcon Bridge = [ihamlet| <span .location-type .ca-bridge title="_{BridgeTitle}"> |]
+caminoLocationTypeIcon Intersection = [ihamlet| <span .location-type .ca-intersection title="_{IntersectionTitle}"> |]
+caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
-caminoSleepingIcon :: Sleeping -> HtmlUrl CaminoRoute
-caminoSleepingIcon Shared = [hamlet| <span .sleeping .ca-shared title="Shared"> |]
-caminoSleepingIcon Single = [hamlet| <span.sleeping .ca-bed-single title="Single"> |]
-caminoSleepingIcon Double = [hamlet| <span .sleeping ca-bed-double title="Double"> |]
-caminoSleepingIcon DoubleWC = [hamlet| <span .sleeping .ca-bed-double-wc title="Double with WC"> |]
-caminoSleepingIcon Triple = [hamlet| <span .sleeping .ca-bed-triple title="Triple"> |]
-caminoSleepingIcon TripleWC = [hamlet| <span .sleeping .ca-bed-triple-wc title="Triple with WC"> |]
-caminoSleepingIcon Quadruple = [hamlet| <span .sleeping .ca-bed-quadruple title="Quadruple"> |]
-caminoSleepingIcon QuadrupleWC = [hamlet| <span .sleeping .bed-quadruple-wc title="Quadruple with WC"> |]
-caminoSleepingIcon Mattress = [hamlet| <span .sleeping .ca-mattress title="Mattress"> |]
-caminoSleepingIcon SleepingBag = [hamlet| <span .sleeping .ca-sleeping-bag title="SleepingBag"> |]
+caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoSleepingIcon Shared = [ihamlet| <span .sleeping .ca-shared title="_{SharedTitle}"> |]
+caminoSleepingIcon Single = [ihamlet| <span.sleeping .ca-bed-single title="_{SingleTitle}"> |]
+caminoSleepingIcon Double = [ihamlet| <span .sleeping ca-bed-double title="_{DoubleTitle}"> |]
+caminoSleepingIcon DoubleWC = [ihamlet| <span .sleeping .ca-bed-double-wc title="_{DoubleWcTitle}"> |]
+caminoSleepingIcon Triple = [ihamlet| <span .sleeping .ca-bed-triple title="_{TripleTitle}"> |]
+caminoSleepingIcon TripleWC = [ihamlet| <span .sleeping .ca-bed-triple-wc title="_{TripleWcTitle}"> |]
+caminoSleepingIcon Quadruple = [ihamlet| <span .sleeping .ca-bed-quadruple title="_{QuadrupleTitle}"> |]
+caminoSleepingIcon QuadrupleWC = [ihamlet| <span .sleeping .bed-quadruple-wc title="_{QuadrupleWcTitle}"> |]
+caminoSleepingIcon Mattress = [ihamlet| <span .sleeping .ca-mattress title="_{MattressTitle}"> |]
+caminoSleepingIcon SleepingBag = [ihamlet| <span .sleeping .ca-sleeping-bag title="_{SleepingBagTitle}"> |]
 
-caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrl CaminoRoute
-caminoAccommodationTypeIcon MunicipalAlbergue = [hamlet| <span .accomodation .municipal-albergue .ca-albergue title="Municipal Albergue"> |]
-caminoAccommodationTypeIcon PrivateAlbergue = [hamlet| <span .accomodation .private-albergue .ca-albergue title="Private Albergue"> |]
-caminoAccommodationTypeIcon GuestHouse = [hamlet| <span .accomodation .guest-house .ca-guesthouse title="Guest House"> |]
-caminoAccommodationTypeIcon House = [hamlet| <span .accomodation .house .ca-house title="House"> |]
-caminoAccommodationTypeIcon Hotel = [hamlet| <span .accomodation .hotel .ca-hotel title="Hotel"> |]
-caminoAccommodationTypeIcon Camping = [hamlet| <span .accomodation .camping .ca-tent title="Camping"> |]
+caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationTypeIcon MunicipalAlbergue = [ihamlet| <span .accomodation .municipal-albergue .ca-albergue title="_{MunicipalAlbergueTitle}"> |]
+caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accomodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
+caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accomodation .guest-house .ca-guesthouse title="_{GuestHouseTitle}"> |]
+caminoAccommodationTypeIcon House = [ihamlet| <span .accomodation .house .ca-house title="_{HouseTitle}"> |]
+caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accomodation .hotel .ca-hotel title="_{HotelTitle}"> |]
+caminoAccommodationTypeIcon Camping = [ihamlet| <span .accomodation .camping .ca-tent title="_{CampingTitle}"> |]
 
-caminoServiceIcon :: Service -> HtmlUrl CaminoRoute
-caminoServiceIcon WiFi = [hamlet| <span .service .ca-wifi title="WiFi"> |]
-caminoServiceIcon Restaurant = [hamlet| <span .service .ca-restaurant title="Restaurant"> |]
-caminoServiceIcon Pharmacy = [hamlet| <span .service .ca-pharmacy title="Pharmacy"> |]
-caminoServiceIcon Bank = [hamlet| <span .service .ca-bank title="Bank"> |]
-caminoServiceIcon BicycleRepair = [hamlet| <span .service .ca-bicycle-repair title="Bicycle Repair"> |]
-caminoServiceIcon Groceries = [hamlet| <span .service .ca-groceries title="Groceries"> |]
-caminoServiceIcon Medical = [hamlet| <span .service .ca-medical title="Medical"> |]
-caminoServiceIcon WashingMachine = [hamlet| <span .service .ca-washing-machine title="Washing Machine"> |]
-caminoServiceIcon Dryer = [hamlet| <span .service .ca-dryer title="Dryer"> |]
-caminoServiceIcon Handwash = [hamlet| <span .service .ca-handwash title="Hand Wash"> |]
-caminoServiceIcon Kitchen = [hamlet| <span .service .ca-kitchen title="Kitchen"> |]
-caminoServiceIcon Breakfast = [hamlet| <span .service .ca-breakfast title="Breakfast"> |]
-caminoServiceIcon Dinner = [hamlet| <span .service .ca-dinner title="Dinner"> |]
-caminoServiceIcon Lockers = [hamlet| <span .service .ca-lockers title="Lockers"> |]
-caminoServiceIcon Accessible = [hamlet| <i .service .ca-accessible title="Accessible"> |]
-caminoServiceIcon Stables = [hamlet| <span .service .ca-stables title="Stables"> |]
-caminoServiceIcon Pets = [hamlet| <span .service .ca-pets title="Pets Allowed"> |]
-caminoServiceIcon BicycleStorage = [hamlet| <span .service .ca-bicycle-storage title="Bicycle Storage"> |]
-caminoServiceIcon CampSite = [hamlet| <span .service .ca-camping title="Camp Site"> |]
-caminoServiceIcon Bedlinen = [hamlet| <span .service .ca-bedlinen title="Bed-linen"> |]
-caminoServiceIcon Towels = [hamlet| <span .service .ca-towels title="Towels"> |]
-caminoServiceIcon Pool = [hamlet| <span .service .ca-pool title="Pool"> |]
-caminoServiceIcon Heating = [hamlet| <span .service .ca-heating title="Heating"> |]
-caminoServiceIcon Prayer = [hamlet| <span .service .ca-prayer title="Prayer"> |]
-caminoServiceIcon Train = [hamlet| <span .service .ca-train title="Train"> |]
-caminoServiceIcon Bus = [hamlet| <span .service .ca-bus title="Bus"> |]
+caminoServiceIcon :: Service -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoServiceIcon WiFi = [ihamlet| <span .service .ca-wifi title="_{WiFiTitle}"> |]
+caminoServiceIcon Restaurant = [ihamlet| <span .service .ca-restaurant title="_{RestaurantTitle}"> |]
+caminoServiceIcon Pharmacy = [ihamlet| <span .service .ca-pharmacy title="_{PharmacyTitle}"> |]
+caminoServiceIcon Bank = [ihamlet| <span .service .ca-bank title="_{BankTitle}"> |]
+caminoServiceIcon BicycleRepair = [ihamlet| <span .service .ca-bicycle-repair title="_{BicycleRepairTitle}"> |]
+caminoServiceIcon Groceries = [ihamlet| <span .service .ca-groceries title="_{GroceriesTitle}"> |]
+caminoServiceIcon Medical = [ihamlet| <span .service .ca-medical title="_{MedicalTitle}"> |]
+caminoServiceIcon WashingMachine = [ihamlet| <span .service .ca-washing-machine title="_{WashingMachineTitle}"> |]
+caminoServiceIcon Dryer = [ihamlet| <span .service .ca-dryer title="_{DryerTitle}"> |]
+caminoServiceIcon Handwash = [ihamlet| <span .service .ca-handwash title="_{HandwashTitle}"> |]
+caminoServiceIcon Kitchen = [ihamlet| <span .service .ca-kitchen title="_{KitchenTitle}"> |]
+caminoServiceIcon Breakfast = [ihamlet| <span .service .ca-breakfast title="_{BreakfastTitle}"> |]
+caminoServiceIcon Dinner = [ihamlet| <span .service .ca-dinner title="_{DinnerTitle}"> |]
+caminoServiceIcon Lockers = [ihamlet| <span .service .ca-lockers title="_{LockersTitle}"> |]
+caminoServiceIcon Accessible = [ihamlet| <i .service .ca-accessible title="_{AccessibleTitle}"> |]
+caminoServiceIcon Stables = [ihamlet| <span .service .ca-stables title="_{StablesTitle}"> |]
+caminoServiceIcon Pets = [ihamlet| <span .service .ca-pets title="_{PetsTitle}"> |]
+caminoServiceIcon BicycleStorage = [ihamlet| <span .service .ca-bicycle-storage title="_{BicycleStorageTitle}"> |]
+caminoServiceIcon CampSite = [ihamlet| <span .service .ca-camping title="_{CampSiteTitle}"> |]
+caminoServiceIcon Bedlinen = [ihamlet| <span .service .ca-bedlinen title="BedlinenTitle"> |]
+caminoServiceIcon Towels = [ihamlet| <span .service .ca-towels title="_{TowelsTitle}"> |]
+caminoServiceIcon Pool = [ihamlet| <span .service .ca-pool title="_{PoolTitle}"> |]
+caminoServiceIcon Heating = [ihamlet| <span .service .ca-heating title="_{HeatingTitle}"> |]
+caminoServiceIcon Prayer = [ihamlet| <span .service .ca-prayer title="_{PrayerTitle}"> |]
+caminoServiceIcon Train = [ihamlet| <span .service .ca-train title="_{TrainTitle}"> |]
+caminoServiceIcon Bus = [ihamlet| <span .service .ca-bus title="_{BusTitle}"> |]
 
-caminoAccommodationHtml :: Accommodation -> HtmlUrl CaminoRoute
-caminoAccommodationHtml (GenericAccommodation _type) = [hamlet| |]
-caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [hamlet|
+caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationHtml (GenericAccommodation _type) = [ihamlet| |]
+caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [ihamlet|
   <div .card .accomodation .m-1 .p-1>
     <h5>
       ^{caminoAccommodationTypeIcon type'}
@@ -199,8 +173,8 @@ caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [hamle
               ^{caminoSleepingIcon sleeping}
  |]
 
-locationLine :: Preferences -> Camino -> Location -> HtmlUrl CaminoRoute
-locationLine _preferences _camino location = [hamlet|
+locationLine :: Preferences -> Camino -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLine _preferences _camino location = [ihamlet|
     #{locationName location}
     <span .accomodation-types>
       $forall accomodation <- locationAccommodationTypes location
@@ -210,8 +184,8 @@ locationLine _preferences _camino location = [hamlet|
         ^{caminoServiceIcon service}
   |]
 
-caminoLocationHtml :: Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> HtmlUrl CaminoRoute
-caminoLocationHtml _preferences camino _trip stops waypoints location = [hamlet|
+caminoLocationHtml :: Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationHtml _preferences camino _trip stops waypoints location = [ihamlet|
   <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .p-2 .mx-1 .mt-4>
     <div .card-title>
       <h4>
@@ -234,8 +208,8 @@ caminoLocationHtml _preferences camino _trip stops waypoints location = [hamlet|
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
     
-caminoLocationsHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrl CaminoRoute
-caminoLocationsHtml preferences camino trip = [hamlet|
+caminoLocationsHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationsHtml preferences camino trip = [ihamlet|
   <div .container-fluid>
     <div .row>
       <nav .navbar .navbar-expand-md>
@@ -260,8 +234,8 @@ caminoLocationsHtml preferences camino trip = [hamlet|
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     
-preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrl CaminoRoute
-preferenceRangeHtml range = [hamlet|
+preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
+preferenceRangeHtml range = [ihamlet|
     <span .text-danger>#{format (fixed 1) (rangeMinimum range)} -
     <span>#{format (fixed 1)( rangeLower range)} -
     <span .text-success .fw-bolder>#{format (fixed 1) (rangeTarget range)} -
@@ -271,40 +245,40 @@ preferenceRangeHtml range = [hamlet|
       <p .text-body-tertiary .smaller>#{d}
   |]
   
-preferencesHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrl CaminoRoute
-preferencesHtml preferences _camino _trip = [hamlet|
+preferencesHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+preferencesHtml preferences _camino _trip = [ihamlet|
   <div .container-fluid>
-    <h2>Preferences</h2>
+    <h2>_{PreferencesLabel}</h2>
     <div .row>
-      <div .col-3>Walking Estimate
+      <div .col-3>_{WalkingFunctionLabel}
       <div .col .offset-1>#{preferenceWalkingFunction preferences}
     <div .row>
-      <div .col-3>Fitness
+      <div .col-3>_{FitnessLabel}
       <div .col .offset-1>#{show $ preferenceFitness preferences}
     <div .row>
-      <div .col-3>Distance Preferences (km)
+      <div .col-3>_{DistancePreferencesLabel}
       <div .col .offset-1>^{preferenceRangeHtml $ preferenceDistance preferences}
     <div .row>
-      <div .col-3>Perceived Distance Preferences (km)
+      <div .col-3>_{DistancePreferencesPerceivedLabel}
       <div .col .offset-1>^{preferenceRangeHtml $ preferencePerceivedDistance preferences}
     <div .row>
-      <div .col-3>Time Preferences (hours)
+      <div .col-3>_{TimePreferencesLabel}
       <div .col. .offset-1>^{preferenceRangeHtml $ preferenceTime preferences}
     <div .row>
-      <div .col-3>Accommodation Preferences
+      <div .col-3>_{AccommodationPreferencesLabel}
       $forall ak <- M.keys $ preferenceAccommodation preferences
         <div .row>
           <div .col-1 .offset-3>^{caminoAccommodationTypeIcon ak}
-          <div .col>^{formatPenance $ findAcc preferences ak}
+          <div .col>_{PenanceFormatted (findAcc preferences ak)}
     <div .row>
-      <div .col-3>Required Stops
+      <div .col-3>_{RequiredStopsLabel}
       <div .col .offset-1>
         <ul>
         $forall l <- preferenceRequired preferences
           <li>
             <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
     <div .row>
-      <div .col-3>Excluded Stops
+      <div .col-3>_{ExcludedStopsLabel}
       <div .col .offset-1>
         <ul>
         $forall l <- preferenceExcluded preferences
@@ -313,8 +287,8 @@ preferencesHtml preferences _camino _trip = [hamlet|
   |]
   where findAcc prefs ak = (preferenceAccommodation prefs) M.! ak
 
-caminoTripHtml :: Preferences -> Camino -> Trip -> HtmlUrl CaminoRoute
-caminoTripHtml preferences camino trip = [hamlet|
+caminoTripHtml :: Preferences -> Camino -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoTripHtml preferences camino trip = [ihamlet|
   <div .container-fluid>
     <div .row .trip-summary>
       <div .col-11>
@@ -332,7 +306,7 @@ caminoTripHtml preferences camino trip = [hamlet|
           <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ start day}
           \   -
           <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ finish day}
-          ^{formatDistance $ Just (metricsDistance $ score day)}
+          _{DistanceFormatted (metricsDistance $ score day)}
           ^{penanceSummary preferences camino $ score day}
         <div .card-body>
          <p>
@@ -351,8 +325,8 @@ caminoTripHtml preferences camino trip = [hamlet|
                   <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
    |]
 
-caminoMapHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrl CaminoRoute
-caminoMapHtml _preferences _camino _trip = [hamlet|
+caminoMapHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapHtml _preferences _camino _trip = [ihamlet|
   <div .container-fluid>
     <div .d-flex .justify-content-center>
       <div #map>
@@ -365,8 +339,8 @@ caminoLocationIcon _preferences _camino stops waypoints location
     where
       used = if S.member location waypoints then "Used" else "Unused"
       
-caminoMapScript :: Preferences -> Camino -> Maybe Trip -> HtmlUrl CaminoRoute
-caminoMapScript preferences camino trip = [hamlet|
+caminoMapScript :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScript preferences camino trip = [ihamlet|
   <script>
     var iconStop = L.icon({
       iconUrl: '@{IconRoute "location-stop.png"}',
@@ -454,8 +428,8 @@ caminoMapScript preferences camino trip = [hamlet|
     chooseOpacity leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 1.0 :: Float
       | otherwise = 0.5 :: Float
   
-caminoHtml :: Config -> Preferences -> Camino -> Maybe Trip -> HtmlUrl CaminoRoute
-caminoHtml config preferences camino trip = [hamlet|
+caminoHtml :: Config -> Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoHtml config preferences camino trip = [ihamlet|
   $doctype 5
   <html>
     <head>
@@ -476,13 +450,13 @@ caminoHtml config preferences camino trip = [hamlet|
         <div>
           <ul .nav .nav-tabs role="tablist">
             <li .nav-item role="presentation">
-              <a .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">Map
+              <a .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
             <li .nav-item role="presentation">
-              <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">Plan
+              <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
             <li .nav-item role="presentation">
-              <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">Locations
+              <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
             <li .nav-item role="presentation">
-              <a .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">Preferences
+              <a .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
           <div .tab-content>
             <div .tab-pane .active role="tabpanel" id="map-tab">
               ^{caminoMapHtml preferences camino trip}

@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Camino.Camino
@@ -11,6 +10,7 @@ import Camino.Planner
 import Camino.Display.Css
 import Camino.Display.KML
 import Camino.Display.Html
+import Camino.Display.I18n
 import Camino.Display.Routes
 import Camino.Config
 import qualified Data.Set as S
@@ -73,7 +73,8 @@ plan opts = do
     let required' = if require opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (require opts))
     let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (exclude opts))
     let preferences'' = normalisePreferences camino' (preferences' { preferenceRequired = required', preferenceExcluded = excluded' })
-    let renderer = renderCaminoRoute config'
+    let router = renderCaminoRoute config'
+    let messages = renderCaminoMsg config'
     let solution = planCamino preferences'' camino' begin' end'
     createDirectoryIfMissing True output'
     let kml = createCaminoDoc config' preferences'' camino' solution
@@ -81,10 +82,10 @@ plan opts = do
     B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
     let html = caminoHtml config' preferences'' camino' solution
     let indexFile = output' </> "index.html"
-    B.writeFile indexFile (renderHtml (html renderer))
+    B.writeFile indexFile (renderHtml (html messages router))
     let css = caminoCss config' camino'
     let cssFile = output' </> "camino.css"
-    TIO.writeFile cssFile $ T.concat (map (\c -> renderCss $ c renderer) css)
+    TIO.writeFile cssFile $ T.concat (map (\c -> renderCss $ c router) css)
 
 main :: IO ()
 main = do

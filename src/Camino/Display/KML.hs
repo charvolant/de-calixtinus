@@ -26,6 +26,7 @@ import Camino.Config
 import Camino.Planner
 import Camino.Preferences
 import Camino.Display.Html
+import Camino.Display.I18n
 import Camino.Display.Routes
 import Data.Maybe (fromJust)
 import Data.Text (Text, pack, toLower)
@@ -122,13 +123,15 @@ caminoLocationKml config preferences camino trip stops waypoints location = [xml
     <Placemark id="#{pack $ locationID location}">
       <name>#{locationName location}
       <description>
-        #{toStrict $ renderHtml $ (locationSummary preferences camino location) (renderCaminoRoute config)}
+        #{toStrict $ renderHtml $ (locationSummary preferences camino location) message route}
         $maybe d <- day
-          #{toStrict $ renderHtml $ (daySummary preferences camino trip d) (renderCaminoRoute config)}
+          #{toStrict $ renderHtml $ (daySummary preferences camino trip d) message route}
       <styleUrl>#{caminoLocationStyle camino stops waypoints location}
       ^{pointKml $ locationPosition location}
   |]
   where
+    message = renderCaminoMsg config
+    route = renderCaminoRoute config
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
 caminoLegStyle :: Camino -> S.Set Location -> S.Set Location -> Leg -> Text

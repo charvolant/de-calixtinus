@@ -1,15 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-|
-Module      : Html
+Module      : Css
 Description : Produce Css styles for HTML and KML display
 Copyright   : (c) Doug Palmer, 2023
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
-
-Generate HTML descriptions of 
 -}
 module Camino.Display.Css (
   caminoCss,
@@ -22,7 +20,7 @@ import Camino.Display.Routes
 import Data.Char (ord)
 import Data.Colour
 import Data.Colour.SRGB
-import Data.Text (Text)
+import Data.Text ()
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
@@ -140,6 +138,8 @@ a
       margin-left: 1em
       font-size: initial
       display: inline-block
+.rejected
+  color: #c5321b
 .service
   color: #1964c0
 .accomodation

@@ -29,6 +29,7 @@ library
       Camino.Config
       Camino.Display.Css
       Camino.Display.Html
+      Camino.Display.I18n
       Camino.Display.KML
       Camino.Display.Routes
       Camino.Planner

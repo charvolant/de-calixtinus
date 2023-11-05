@@ -9,7 +9,7 @@ module Graph.Graph(
   available
 ) where
 
-import qualified Data.Set as S (Set, fromList, toList, intersection, union, difference, foldl, map, filter, empty, singleton, null, isSubsetOf)
+import qualified Data.Set as S (Set, fromList, toList, intersection, union, difference, filter, empty, singleton, null, isSubsetOf)
 
 -- | Something that can act as a vertex node on a graph
 class (Eq v, Ord v, Show v) => Vertex v where

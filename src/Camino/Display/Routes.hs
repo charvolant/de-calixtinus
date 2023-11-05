@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
 {-|
 Module      : Routes
 Description : Common URL routes for Html, Css and KML
@@ -10,12 +9,15 @@ Stability   : experimental
 Portability : POSIX
 
 -}
-module Camino.Display.Routes where
+module Camino.Display.Routes (
+  CaminoRoute(..),
+  
+  renderCaminoRoute
+) where
 
 import Camino.Camino
 import Camino.Config
 import Data.Text
-import Text.Hamlet (Html, Render, HtmlUrl)
 
 -- | Common Camino routes
 data CaminoRoute = AssetRoute Text -- ^ An identified font

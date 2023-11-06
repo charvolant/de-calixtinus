@@ -44,6 +44,8 @@ data CaminoMsg =
   | CampingTitle
   | CampSiteTitle
   | CityTitle
+  | DayServicesPenanceMsg Penance
+  | DayServicesPreferencesLabel
   | DaySummaryMsg Day
   | DescentMsg Float
   | DinnerTitle
@@ -98,6 +100,9 @@ data CaminoMsg =
   | SleepingBagTitle
   | StablesTitle
   | StopPenanceMsg Penance
+  | StopPreferencesLabel
+  | StopServicesPenanceMsg Penance
+  | StopServicesPreferencesLabel
   | TimeAdjustMsg Penance
   | TimeMsg (Maybe Float)
   | TimePenaltyLabel
@@ -156,8 +161,10 @@ renderCaminoMsgDefault _ BusTitle = "Bus"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CityTitle = "City"
+renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaySummaryMsg day) = [shamlet|
-  #{locationName $ start day} to #{locationName $ finish day} 
+  #{locationName $ start day} to #{locationName $ finish day}
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
   over ^{formatMaybeTime $ metricsTime metrics}
   |]
@@ -178,7 +185,7 @@ renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
-renderCaminoMsgDefault _ GuestHouseTitle = "GuestHouse"
+renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
@@ -216,6 +223,9 @@ renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
 renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
+renderCaminoMsgDefault _ StopServicesPreferencesLabel = "Missing Stop Services"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeTime time}|]
 renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"

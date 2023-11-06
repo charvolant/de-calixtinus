@@ -173,6 +173,10 @@ data Service = WiFi -- ^ Wireless internet available
 
 instance FromJSON Service
 instance ToJSON Service
+instance FromJSONKey Service where
+  fromJSONKey = genericFromJSONKey defaultJSONKeyOptions
+instance ToJSONKey Service where
+  toJSONKey = genericToJSONKey defaultJSONKeyOptions
 
 -- | Sleeping/room arrangements available  
 data Sleeping = Shared -- ^ Shared accommodation in a dormitory

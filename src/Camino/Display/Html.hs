@@ -59,6 +59,8 @@ penanceSummary _preferences _camino metrics = [ihamlet|
        <a .dropdown-item>_{DistancePenanceMsg (metricsPerceivedDistance metrics)}
        <a .dropdown-item>_{AccommodationPenanceMsg (metricsAccommodation metrics)}
        <a .dropdown-item>_{StopPenanceMsg (metricsStop metrics)}
+       <a .dropdown-item>_{StopServicesPenanceMsg (metricsStopServices metrics)}
+       <a .dropdown-item>_{DayServicesPenanceMsg (metricsDayServices metrics)}
        <a .dropdown-item>_{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
        <a .dropdown-item>_{TimeAdjustMsg (metricsTimeAdjust metrics)}
        <a .dropdown-item>_{MiscPenanceMsg (metricsMisc metrics)}
@@ -127,6 +129,15 @@ caminoAccommodationTypeIcon House = [ihamlet| <span .accomodation .house .ca-hou
 caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accomodation .hotel .ca-hotel title="_{HotelTitle}"> |]
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accomodation .camping .ca-tent title="_{CampingTitle}"> |]
 
+caminoAccommodationLabel :: Accommodation -> CaminoMsg
+caminoAccommodationLabel (GenericAccommodation MunicipalAlbergue) = MunicipalAlbergueTitle
+caminoAccommodationLabel (GenericAccommodation PrivateAlbergue) = PrivateAlbergueTitle
+caminoAccommodationLabel (GenericAccommodation GuestHouse) = GuestHouseTitle
+caminoAccommodationLabel (GenericAccommodation House) = HouseTitle
+caminoAccommodationLabel (GenericAccommodation Hotel) = HotelTitle
+caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
+caminoAccommodationLabel (Accommodation _type _name _services _sleeping) = AccommodationLabel -- Generally shouldn'ty be called
+
 caminoServiceIcon :: Service -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoServiceIcon WiFi = [ihamlet| <span .service .ca-wifi title="_{WiFiTitle}"> |]
 caminoServiceIcon Restaurant = [ihamlet| <span .service .ca-restaurant title="_{RestaurantTitle}"> |]
@@ -154,6 +165,22 @@ caminoServiceIcon Heating = [ihamlet| <span .service .ca-heating title="_{Heatin
 caminoServiceIcon Prayer = [ihamlet| <span .service .ca-prayer title="_{PrayerTitle}"> |]
 caminoServiceIcon Train = [ihamlet| <span .service .ca-train title="_{TrainTitle}"> |]
 caminoServiceIcon Bus = [ihamlet| <span .service .ca-bus title="_{BusTitle}"> |]
+
+caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
+    ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
+  |]
+caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping') = [ihamlet|
+    <span .accomodation>
+      <span .pr-4>
+        ^{caminoAccommodationTypeIcon type'} #{accommodationName a}
+      <span .p2-4>
+        $forall service <- services'
+           ^{caminoServiceIcon service}
+      <span>
+        $forall sleeping <- sleeping'
+          ^{caminoSleepingIcon sleeping}
+ |]
 
 caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml (GenericAccommodation _type) = [ihamlet| |]
@@ -271,6 +298,21 @@ preferencesHtml preferences _camino _trip = [ihamlet|
           <div .col-1 .offset-3>^{caminoAccommodationTypeIcon ak}
           <div .col>_{PenanceFormatted (findAcc preferences ak)}
     <div .row>
+      <div .col-3>_{StopPreferencesLabel}
+      <div .col .offset-1>_{PenanceFormatted (preferenceStop preferences)}
+    <div .row>
+      <div .col-3>_{StopServicesPreferencesLabel}
+      $forall sk <- M.keys $ preferenceStopServices preferences
+        <div .row>
+          <div .col-1 .offset-3>^{caminoServiceIcon sk}
+          <div .col>_{PenanceFormatted (findSs preferences sk)}
+    <div .row>
+      <div .col-3>_{DayServicesPreferencesLabel}
+      $forall sk <- M.keys $ preferenceDayServices preferences
+        <div .row>
+          <div .col-1 .offset-3>^{caminoServiceIcon sk}
+          <div .col>_{PenanceFormatted (findDs preferences sk)}
+    <div .row>
       <div .col-3>_{RequiredStopsLabel}
       <div .col .offset-1>
         <ul>
@@ -285,7 +327,10 @@ preferencesHtml preferences _camino _trip = [ihamlet|
           <li>
             <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
   |]
-  where findAcc prefs ak = (preferenceAccommodation prefs) M.! ak
+  where 
+    findAcc prefs ak = (preferenceAccommodation prefs) M.! ak
+    findSs prefs sk = (preferenceStopServices prefs) M.! sk
+    findDs prefs sk = (preferenceDayServices prefs) M.! sk
 
 caminoTripHtml :: Preferences -> Camino -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTripHtml preferences camino trip = [ihamlet|
@@ -311,7 +356,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
         <div .card-body>
          <p>
             ^{metricsSummary preferences camino $ score day}
-          <ul>
+         <ul>
             <li>
               <div .location-summary>
                 ^{locationLine preferences camino (start day)}
@@ -323,6 +368,9 @@ caminoTripHtml preferences camino trip = [ihamlet|
                   <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
                   <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
                   <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
+         $forall accom <- metricsAccommodationChoice $ score day
+            <p>
+              ^{caminoAccommodationSummaryHtml accom}
    |]
 
 caminoMapHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute

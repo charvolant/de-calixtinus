@@ -27,7 +27,7 @@ import Data.Aeson
 import Data.Text (Text)
 import Camino.Camino
 import Camino.Walking
-import qualified Data.Map as M (Map, (!), fromList, mapWithKey)
+import qualified Data.Map as M (Map, (!), fromList)
 import qualified Data.Set as S (Set, empty, map)
 
 -- | Acceptable range boundaries for various parameters.
@@ -131,7 +131,10 @@ data Preferences = Preferences {
   preferenceDistance :: PreferenceRange Float, -- ^ The preferred distance range
   preferenceTime :: PreferenceRange Float, -- ^ The preferred time walking range
   preferencePerceivedDistance :: PreferenceRange Float, -- ^ The preferred distance range; if nothing then built from the distance range
+  preferenceStop :: Penance, -- ^ The amount of penance associated with stopping for a day (larger will tend to increase legs, smaller the opposite)
   preferenceAccommodation :: M.Map AccommodationType Penance, -- ^ Accommodation preferences (absence implies unacceptable accommodation)
+  preferenceStopServices :: M.Map Service Penance, -- ^ Desired services at a stop (absence implies zero desire)
+  preferenceDayServices :: M.Map Service Penance, -- ^ Desired services during a day (absence implies zero desire)
   preferenceRequired :: S.Set Location, -- ^ Locations that we must visit (end a day at)
   preferenceExcluded :: S.Set Location -- ^ Locations that we will not visit (end a day at, although passing through is OK)
 } deriving (Show)
@@ -143,10 +146,12 @@ instance FromJSON Preferences where
     distance' <- v .: "distance"
     time' <- v .: "time"
     perceived' <- v .:? "perceived" .!= perceivedDistanceRange fitness' distance'
+    stop' <- v .: "stop"
     accommodation' <- v .: "accommodation"
+    sstop' <- v .: "services-stop"
+    sday' <- v .: "services-day"
     required' <- v .:? "required" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
-    let accommodation'' = M.mapWithKey (\_k -> \p -> p) accommodation'
     let required'' = S.map placeholderLocation required'
     let excluded'' = S.map placeholderLocation excluded'
     return Preferences {
@@ -155,19 +160,22 @@ instance FromJSON Preferences where
         preferenceDistance = distance',
         preferenceTime = time',
         preferencePerceivedDistance = perceived',
-        preferenceAccommodation = accommodation'',
+        preferenceAccommodation = accommodation',
+        preferenceStop = stop',
+        preferenceStopServices = sstop',
+        preferenceDayServices = sday',
         preferenceRequired = required'',
         preferenceExcluded = excluded''
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON Preferences where
-  toJSON (Preferences walking' fitness' distance' time' perceived' accommodation' required' excluded') =
+  toJSON (Preferences walking' fitness' distance' time' perceived' accommodation' stop' sstop' sday' required' excluded') =
     let
       required'' = S.map locationID required'
       excluded'' = S.map locationID excluded'
     in
-      object [ "walking" .= walking', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "accommodation" .= accommodation', "required" .= required'', "excluded" .= excluded'']
+      object [ "walking" .= walking', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "stop" .= stop', "accommodation" .= accommodation', "services-stop" .= sstop', "services-day" .= sday', "required" .= required'', "excluded" .= excluded'']
 
 -- | Normalise preferences to the correct locations, based on placeholders
 normalisePreferences :: Camino -- ^ The camino that contains the correct locations
@@ -210,6 +218,7 @@ defaultPreferences = let
           rangeMaximum = 10.0 
         },
         preferencePerceivedDistance = perceivedDistanceRange Normal distance,
+        preferenceStop = Penance 2.0,
         preferenceAccommodation = M.fromList [ 
           (MunicipalAlbergue, Penance 0.0), 
           (PrivateAlbergue, Penance 0.5), 
@@ -217,6 +226,15 @@ defaultPreferences = let
           (House, Penance 1.5),
           (Hotel, Penance 2.0),
           (Camping, Penance 5.0)
+        ],
+        preferenceStopServices = M.fromList [ 
+          (Restaurant, Penance 1.0), 
+          (Groceries, Penance 0.5)
+        ],
+        preferenceDayServices = M.fromList [ 
+          (Groceries, Penance 1.0),
+          (Pharmacy, Penance 0.5),
+          (Bank, Penance 0.5)
         ],
         preferenceRequired = S.empty,
         preferenceExcluded = S.empty

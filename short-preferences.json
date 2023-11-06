@@ -3,6 +3,7 @@
   "fitness": "Unfit",
   "distance": { "target": 20.0, "lower": 16.0, "upper":  24.0, "min": 8.0, "max": 28.0 },
   "time": { "target": 5.0, "lower": 0.0, "upper":  6.0, "min": 0.0, "max": 9.0 },
+  "stop": 2.0,
   "accommodation": {
     "MunicipalAlbergue": 1.0,
     "PrivateAlbergue": 0.5,
@@ -10,5 +11,14 @@
     "House": 2.0,
     "Hotel": 2.5,
     "Camping": "reject"
+  },
+  "services-stop": {
+    "Restaurant": 1.0,
+    "Groceries": 0.5
+  },
+  "services-day": {
+    "Groceries": 1.0,
+    "Pharmacy": 0.5,
+    "Bank": 0.5
   }
 }

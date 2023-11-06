@@ -36,10 +36,19 @@ preferences1 = Preferences {
     preferenceDistance = PreferenceRange Nothing 4.0 2.0 8.0 0.0 10.0,
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 0.0 10.0,
     preferencePerceivedDistance = PreferenceRange Nothing 4.0 2.0 8.0 0.0 10.0,
+    preferenceStop = Penance 0.5,
     preferenceAccommodation = M.fromList [
         (MunicipalAlbergue, (Penance 1.5)),
         (PrivateAlbergue, (Penance 0.9))
       ],
+    preferenceStopServices = M.fromList [
+      (Restaurant, (Penance 0.2)),
+      (Groceries, (Penance 0.3))
+    ],
+    preferenceDayServices = M.fromList [
+      (Pharmacy, (Penance 0.1)),
+      (Bank, (Penance 0.1))
+    ],
     preferenceRequired = S.empty,
     preferenceExcluded = S.empty
   }
@@ -83,6 +92,8 @@ location4 = Location {
       GenericAccommodation MunicipalAlbergue
     ]  
   }
+  
+services0 = S.fromList [ Restaurant, Groceries ]
 
 
 legs0 = [
@@ -126,14 +137,27 @@ testTravelSimple3 = TestCase (assertFloatEqual "Travel Simple 3" 2.0 (travel pre
 
 testAccomodationSimple = TestList [ testAccomodationSimple1, testAccomodationSimple2 ]
 
-testAccomodationSimple1 = TestCase (assertPenanceEqual "Accomodation Simple 1" (Penance 0.9) (accommodation preferences1 camino1 legs0) 0.001)
-
-testAccomodationSimple2 = TestCase (assertPenanceEqual "Accomodation Simple 2" Reject (accommodation preferences1 camino1 legs1) 0.001)
+testAccomodationSimple1 = let
+    (accom, serv, pen) = accommodation preferences1 camino1 legs0 services0
+  in
+    TestCase (do
+      assertEqual "Accomodation Simple 1 1" True (isJust accom)
+      assertEqual "Accomodation Simple 1 2" services0 serv
+      assertPenanceEqual "Accomodation Simple 1 3" (Penance 1.4) pen 0.001
+    )
+testAccomodationSimple2 = let
+    (accom, serv, pen) = accommodation preferences1 camino1 legs1 services0
+  in
+    TestCase (do
+      assertEqual "Accomodation Simple 2 1" True (isNothing accom)
+      assertEqual "Accomodation Simple 2 2" services0 serv
+      assertPenanceEqual "Accomodation Simple 2 3" Reject pen 0.001
+    )
 
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 8.9) (metricsPenance $ penance preferences1 camino1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 6.4) (metricsPenance $ penance preferences1 camino1 legs0) 0.1)
 
 testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 legs1) 0.1)
 
@@ -156,10 +180,10 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 6" "P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 28.0) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 26.5) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (Penance 25.0) (metricsPenance $ score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 23.5) (metricsPenance $ score day2) 0.1
     )

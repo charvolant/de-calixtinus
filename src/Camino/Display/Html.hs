@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-|
 Module      : Html
 Description : Produce HTML descriptions map of caminos and trips
@@ -14,7 +15,7 @@ Generate HTML descriptions of
 module Camino.Display.Html where
 
 import Camino.Camino
-import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
+import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkConfig(..), LinkI18n(..), LinkType(..), getAssets, getLinks)
 import Camino.Planner (Trip, Day, Metrics(..), tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Display.Css (toCssColour)
@@ -112,12 +113,12 @@ caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTi
 caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoSleepingIcon Shared = [ihamlet| <span .sleeping .ca-shared title="_{SharedTitle}"> |]
 caminoSleepingIcon Single = [ihamlet| <span.sleeping .ca-bed-single title="_{SingleTitle}"> |]
-caminoSleepingIcon Double = [ihamlet| <span .sleeping ca-bed-double title="_{DoubleTitle}"> |]
+caminoSleepingIcon Double = [ihamlet| <span .sleeping .ca-bed-double title="_{DoubleTitle}"> |]
 caminoSleepingIcon DoubleWC = [ihamlet| <span .sleeping .ca-bed-double-wc title="_{DoubleWcTitle}"> |]
 caminoSleepingIcon Triple = [ihamlet| <span .sleeping .ca-bed-triple title="_{TripleTitle}"> |]
 caminoSleepingIcon TripleWC = [ihamlet| <span .sleeping .ca-bed-triple-wc title="_{TripleWcTitle}"> |]
 caminoSleepingIcon Quadruple = [ihamlet| <span .sleeping .ca-bed-quadruple title="_{QuadrupleTitle}"> |]
-caminoSleepingIcon QuadrupleWC = [ihamlet| <span .sleeping .bed-quadruple-wc title="_{QuadrupleWcTitle}"> |]
+caminoSleepingIcon QuadrupleWC = [ihamlet| <span .sleeping .ca-bed-quadruple-wc title="_{QuadrupleWcTitle}"> |]
 caminoSleepingIcon Mattress = [ihamlet| <span .sleeping .ca-mattress title="_{MattressTitle}"> |]
 caminoSleepingIcon SleepingBag = [ihamlet| <span .sleeping .ca-sleeping-bag title="_{SleepingBagTitle}"> |]
 
@@ -275,7 +276,6 @@ preferenceRangeHtml range = [ihamlet|
 preferencesHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferencesHtml preferences _camino _trip = [ihamlet|
   <div .container-fluid>
-    <h2>_{PreferencesLabel}</h2>
     <div .row>
       <div .col-3>_{WalkingFunctionLabel}
       <div .col .offset-1>#{preferenceWalkingFunction preferences}
@@ -327,7 +327,7 @@ preferencesHtml preferences _camino _trip = [ihamlet|
           <li>
             <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
   |]
-  where 
+  where
     findAcc prefs ak = (preferenceAccommodation prefs) M.! ak
     findSs prefs sk = (preferenceStopServices prefs) M.! sk
     findDs prefs sk = (preferenceDayServices prefs) M.! sk
@@ -475,26 +475,63 @@ caminoMapScript preferences camino trip = [ihamlet|
       | otherwise = 3 :: Int
     chooseOpacity leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 1.0 :: Float
       | otherwise = 0.5 :: Float
-  
+
+layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
+ ->  T.Text -- ^ The page title
+ -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the head
+ -> HtmlUrlI18n CaminoMsg CaminoRoute -- ^ The body HTML
+ -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the foot (after the footer)
+ -> HtmlUrlI18n CaminoMsg CaminoRoute -- ^ The laid out HTML
+layoutHtml config title header body footer = [ihamlet|
+    $doctype 5
+     <html>
+       <head>
+         <meta charset="utf-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+         <title>#{title}
+         $forall c <- css
+           <link rel="stylesheet" href="#{assetPath c}">
+         <link rel="stylesheet" href="camino.css">
+         $maybe h <- header
+           ^{h}
+       <body>
+         <header .p-2>
+           <nav .navbar .navbar-expand-md>
+             <div .container-fluid>
+               <a .navbar-brand href="#">
+                 <img width="64" height="64" src="@{IconRoute "tile-64.png"}" alt="Camino Planner">
+               <h1>#{title}
+               <div .collapse .navbar-collapse .d-flex .justify-content-end #navcol-links">
+                 <ul .navbar-nav>
+                   $forall link <- headLinks
+                     <li .nav-item">
+                       <a .nav-item href="@{LinkRoute  link}">_{LinkLabel link}
+         <main .p-2>
+           ^{body}
+         <footer .text-center .py-4 .px-2>
+           <div .row .row-cols-1 .row-cols-lg-3>
+             <div .col>
+               <p .text-muted .my-2>
+                 <a href="https://github.com/charvolant/camino-planner">The Camino Planner
+             <div .col>
+               <p .text-muted .my-2>
+             <div .col>
+               <p .text-muted .my-2>Example only
+         $forall s <- scripts
+           <script src="#{assetPath s}">
+         $maybe f <- footer
+          ^{f}
+     |]
+     where
+       css = getAssets Css config
+       headLinks = getLinks Header config
+       scripts = getAssets JavaScript config
+
 caminoHtml :: Config -> Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoHtml config preferences camino trip = [ihamlet|
-  $doctype 5
-  <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-      <title>#{title}
-      $forall c <- css
-        <link rel="stylesheet" href="#{assetPath c}">
-      <link rel="stylesheet" href="camino.css">
-    <body>
-      <header .p-2>
-        <nav .navbar .navbar-expand-md>
-          <div .container-fluid>
-            <a .navbar-brand href="#">
-              <img width="64" height="64" src="@{IconRoute "tile-64.png"}" alt="Camino Planner">
+caminoHtml config preferences camino trip = let
+    title = maybe "Camino" (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) trip
+    body = [ihamlet|
       <main .container-fluid .p-2>
-        <h1>#{title}
         <div>
           <ul .nav .nav-tabs role="tablist">
             <li .nav-item role="presentation">
@@ -515,21 +552,15 @@ caminoHtml config preferences camino trip = [ihamlet|
               ^{caminoLocationsHtml preferences camino trip}
             <div .tab-pane role="tabpanel" id="preferences-tab">
               ^{preferencesHtml preferences camino trip}
-      <footer .text-center .py-4 .px-2>
-        <div .row .row-cols-1 .row-cols-lg-3>
-          <div .col>
-            <p .text-muted .my-2>
-              <a href="https://github.com/charvolant/camino-planner">The Camino Planner
-          <div .col>
-            <p .text-muted .my-2>
-          <div .col>
-            <p .text-muted .my-2>Example only
-      $forall s <- scripts
-        <script src="#{assetPath s}">
       ^{caminoMapScript preferences camino trip}
-  |]
-  where
-    title = maybe "Camino" (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) trip
-    css = getAssets Css config
-    scripts = getAssets JavaScript config
+    |]
+    foot = Just (caminoMapScript preferences camino trip)
+  in
+    layoutHtml config title Nothing body foot
 
+helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
+helpHtml config = let
+    title = "Help"
+    body = $(ihamletFile "templates/help/help-en.hamlet")
+  in
+    layoutHtml config title Nothing body Nothing

@@ -6,3 +6,10 @@ web:
     - id: "Camino Icons"
       type: Font
       path: ../fonts/Camino-Icons.woff
+  links:
+    - id: helpLink
+      type: Header
+      links:
+        - locale: ""
+          label: Help
+          path: "help-en.html"

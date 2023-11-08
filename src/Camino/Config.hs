@@ -5,12 +5,17 @@ module Camino.Config (
   AssetType(..),
   Config(..),
   CrossOriginType(..),
+  LinkConfig(..),
+  LinkI18n(..),
+  LinkType(..),
   MapConfig(..),
   WebConfig(..),
 
   defaultConfig,
   getAsset,
   getAssets,
+  getLink,
+  getLinks,
   getMap,
   readConfigFile
 ) where
@@ -20,6 +25,7 @@ import Data.Aeson
 import qualified Data.Map as M
 import Data.Text (Text)
 import Data.List (find)
+import Data.Maybe (catMaybes, listToMaybe)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
@@ -84,23 +90,70 @@ instance ToJSON AssetConfig where
   toJSON (Asset id' type' path' integrity' cors') =
     object [ "id" .= id', "type" .= type', "path" .= path', "integrity" .= integrity', "crossorigin" .= cors' ]
 
+-- | The functional type of link
+data LinkType = Header -- ^ The link is part of the heading menu
+  | Footer -- ^ The link is part of the footer
+  deriving (Eq, Ord, Show, Generic)
+
+instance FromJSON LinkType
+instance ToJSON LinkType
+
+-- | A locality-specific link
+data LinkI18n = LinkI18n {
+  linkLocale :: Text, -- ^ The language and optional localisation of the, eg "en" or "pt-BR". The empty string is the default match
+  linkLabel :: Text, -- ^ The localised link label
+  linkPath :: Text -- ^ The path to the link
+}  deriving (Show)
+
+instance FromJSON LinkI18n where
+  parseJSON (Object v) = do
+    locale' <- v .:? "locale" .!= ""
+    label' <- v .: "label"
+    path' <- v .: "path"
+    return $ LinkI18n locale' label' path'
+  parseJSON v = unexpected v
+  
+instance ToJSON LinkI18n where
+  toJSON (LinkI18n locale' label' path') =
+    object [ "locale" .= locale', "label" .= label', "path" .= path' ]
+
+-- | A link to an external, language-specific resource
+data LinkConfig = Link {
+  linkId :: Text, -- ^ The link identifier
+  linkType :: LinkType, -- ^ The type of link
+  links :: [LinkI18n] -- ^ The language-specific links. (Language matching is done
+} deriving (Show)
+
+instance FromJSON LinkConfig where
+  parseJSON (Object v) = do
+    id' <- v .: "id"
+    type' <- v .: "type"
+    links' <- v .: "links"
+    return $ Link id' type' links'
+  parseJSON v = unexpected v
+  
+instance ToJSON LinkConfig where
+  toJSON (Link id' type' links') =
+    object [ "id" .= id', "type" .= type', "links" .= links' ]
+
 -- | Configuration for what's needed to set up web pages and other resources
 data WebConfig = Web {
-  webAssets :: [AssetConfig], -- ^ The assets needed to 
+  webAssets :: [AssetConfig], -- ^ The assets needed to display the page properly
+  webLinks :: [LinkConfig], -- ^ Links to other pages
   webMaps :: [MapConfig] -- ^ The sources of map tiles, with the default first
 } deriving (Show)
 
 instance FromJSON WebConfig where
   parseJSON (Object v) = do
     assets' <- v .:? "assets" .!= []
+    links' <- v .:? "links" .!= []
     maps' <- v .:? "maps" .!= []
-    return $ Web assets' maps'
+    return $ Web assets' links' maps'
   parseJSON v = unexpected v
     
 instance ToJSON WebConfig where
-  toJSON (Web assets' maps') =
-    object [ "assets" .= assets', "maps" .= maps' ]
-   
+  toJSON (Web assets' links' maps') =
+    object [ "assets" .= assets', "links" .= links', "maps" .= maps' ]
    
 -- | Configuration for what's needed to set up web pages and other resources
 data Config = Config {
@@ -164,6 +217,19 @@ defaultConfig = Config {
         assetCrossOrigin = Unused
       }
     ],
+    webLinks = [
+      Link {
+        linkId = "helpLink",
+        linkType = Header,
+        links = [
+          LinkI18n {
+            linkLocale = "",
+            linkLabel = "Help",
+            linkPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/help/help-en.html"
+          }
+        ]
+      }
+    ],
     webMaps = [
       Map {
         mapId = "openStreetMap",
@@ -223,6 +289,51 @@ getAsset :: Text -- ^ The asset identifier
   -> Config -- ^ The configuration to query
   -> Maybe AssetConfig -- ^ The asset, if found
 getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config
+
+findVariant :: (LinkI18n -> Bool) -> LinkConfig -> Maybe LinkI18n
+findVariant variant link = find variant (links link)
+
+-- Get a map of id onto localised variant
+getLinks'' :: (LinkConfig -> Bool) -> (LinkI18n -> Bool) -> Config -> M.Map Text LinkI18n
+getLinks'' select variant config = let
+  defaults = maybe M.empty (\p -> getLinks'' select variant p) (configParent config)
+  local = filter select (webLinks $ configWeb config)
+  local' = M.fromList $ catMaybes $ map (\l -> let 
+      ml = find variant (links l) 
+    in 
+      case ml of 
+        Nothing -> Nothing
+        (Just il) -> Just (linkId l, il)
+    ) local
+  in
+    M.union local' defaults
+
+-- Try in locale order
+getLinks' ::  (LinkConfig -> Bool) -> [Text] -> Config -> [LinkI18n]
+getLinks' select locales config = M.elems $ foldr (\lo -> \e -> M.union e (getLinks'' select (\l -> linkLocale l == lo) config)) M.empty locales
+
+-- | Get a specific link, based on an identifier and a list of locales
+getLink :: Text -- ^ The link identifier
+  -> [Text] -- ^ The locale list
+  -> Config -- ^ The configuration to query
+  -> Maybe LinkI18n -- ^ The internactionalised link
+getLink ident locales config = listToMaybe $ getLinks' (\l -> linkId l == ident) locales config
+
+-- | Get links, based on a link type
+--   The resulting links are in the order specifiedin the configuration, from parent to child
+getLinks :: LinkType -- ^ The link type
+  -> Config -- ^ The configuration to query
+  -> [LinkConfig] -- ^ The links to use
+getLinks lt config = let
+    makeMap list = M.fromList $ map (\l -> (linkId l, l)) list
+    defaults = maybe [] (getLinks lt) (configParent config)
+    defaultMap = makeMap defaults
+    updates = filter (\l -> linkType l == lt) (webLinks $ configWeb config)
+    updateMap = makeMap updates
+    newLinks = filter (\l -> not $ M.member (linkId l) defaultMap) updates
+    defaultsWithReplace = map (\l -> maybe l id (M.lookup (linkId l) updateMap)) defaults
+  in
+    defaultsWithReplace ++ newLinks
 
 -- | Get a map, optionally based on an identifier
 --   If the configuration has a parent and the requisite map is not present, then the parent is tried

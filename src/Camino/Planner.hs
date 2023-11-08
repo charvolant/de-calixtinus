@@ -207,7 +207,7 @@ penance :: Preferences -- ^ The user preferences
   -> Metrics -- ^ The penance value
 penance preferences camino day =
   let
-    (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences day
+    (normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences day
     timeAdjust = maybe Reject (adjustment (preferenceTime preferences) normalSpeed) time
     distanceAdjust = maybe Reject (adjustment (preferencePerceivedDistance preferences) normalSpeed) perceived
     stopMissing = missingStopServices preferences camino day

@@ -131,7 +131,7 @@ caminoLocationKml config preferences camino trip stops waypoints location = [xml
   |]
   where
     message = renderCaminoMsg config
-    route = renderCaminoRoute config
+    route = renderCaminoRoute config ["en", ""]
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
 caminoLegStyle :: Camino -> S.Set Location -> S.Set Location -> Leg -> Text

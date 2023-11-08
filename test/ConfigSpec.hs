@@ -18,6 +18,27 @@ testConfig1 = Config {
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       }
+    ],
+    webLinks = []
+  }
+}
+
+testConfig2 = Config {
+  configParent = Just defaultConfig,
+  configWeb = Web {
+    webAssets = [],
+    webLinks = [
+      Link {
+        linkId = "foo",
+        linkType = Header,
+        links = [
+          LinkI18n {
+            linkLocale = "fr",
+            linkLabel = "Feu",
+            linkPath = "foo-fr.html"
+          }
+        ]
+      }
     ]
   }
 }
@@ -25,7 +46,8 @@ testConfig1 = Config {
 
 testConfig = TestList [
   TestLabel "GetAssets" testGetAssets,
-  TestLabel "GetAsset" testGetAsset
+  TestLabel "GetAsset" testGetAsset,
+  TestLabel "GetLinks" testGetLinks
   ]
   
 testGetAssets = TestList [
@@ -56,4 +78,14 @@ testGetAsset2 = TestCase (do
 testGetAsset3 = TestCase (
     assertEqual "getAsset 3" False (isJust $ getAsset "foo" defaultConfig)
     )
+
+
+  
+testGetLinks = TestList [
+  testGetLinks1, testGetLinks2
+  ]
+
+testGetLinks1 = TestCase (assertEqual "getLinks 1" 1 (length $ getLinks Header testConfig1))
+
+testGetLinks2 = TestCase (assertEqual "getLinks 2" 2 (length $ getLinks Header testConfig2))
 

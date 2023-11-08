@@ -25,6 +25,7 @@ import Camino.Config
 import Camino.Planner
 import Data.Text
 import Formatting
+import Text.Blaze.Html (toHtml)
 import Text.Hamlet
 
 -- | Message placeholders for the camino
@@ -69,6 +70,7 @@ data CaminoMsg =
   | HouseTitle
   | IntersectionTitle
   | KitchenTitle
+  | LinkLabel LinkConfig
   | LocationsLabel
   | LockersTitle
   | MapLabel
@@ -124,25 +126,25 @@ thinSpace :: Text
 thinSpace = "\x2009"
 
 formatPenance :: Penance -> Html
-formatPenance Reject = [shamlet|<span .penance .rejected title="Rejected">#{rejectSymbol}|]
-formatPenance (Penance p) = [shamlet|<span .penance>#{format (fixed 1) p}#{thinSpace}km|]
+formatPenance Reject = [shamlet|<span .penance .rejected title="Rejected">#{rejectSymbol}</span>|]
+formatPenance (Penance p) = [shamlet|<span .penance>#{format (fixed 1) p}#{thinSpace}km</span>|]
 
 formatDistance :: (Real a) => a -> Html
-formatDistance d = [shamlet|<span .distance>#{format (fixed 1) d}km|]
+formatDistance d = [shamlet|<span .distance>#{format (fixed 1) d}#{thinSpace}km</span>|]
 
 formatMaybeDistance :: (Real a) => Maybe a -> Html
-formatMaybeDistance Nothing = [shamlet|<span .distance .rejected title="Rejected">#{rejectSymbol}|]
+formatMaybeDistance Nothing = [shamlet|<span .distance .rejected title="Rejected">#{rejectSymbol}</span>|]
 formatMaybeDistance (Just d) = formatDistance d
 
 formatTime :: (Real a) => a -> Html
-formatTime t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs|]
+formatTime t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs</span>|]
 
 formatMaybeTime :: (Real a) => Maybe a -> Html
-formatMaybeTime Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}|]
+formatMaybeTime Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}</span>|]
 formatMaybeTime (Just t) = formatTime t
 
 formatHeight :: (Real a) => a -> Html
-formatHeight h = [shamlet|<span .height>#{format (fixed 0) h}#{thinSpace}m|]
+formatHeight h = [shamlet|<span .height>#{format (fixed 0) h}#{thinSpace}m</span>|]
 
 -- | Default English translation
 renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
@@ -188,6 +190,7 @@ renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
+renderCaminoMsgDefault config (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident ["en", ""] config) where ident = linkId link
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
 renderCaminoMsgDefault _ HouseTitle = "House"
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"

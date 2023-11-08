@@ -1,0 +1,562 @@
+<nav .navbar .navbar-expand-md .bg-body>
+  <div .container-fluid>
+    <button data-bs-toggle="collapse" .navbar-toggler data-bs-target="#help-menu">
+      <span .visually-hidden>Toggle navigation
+      <span .navbar-toggler-icon>
+    <div .collapse .navbar-collapse #help-menu">
+      <ul .navbar-nav>
+         <li .nav-item>
+          <a .nav-link .active href="#services-help">Services
+        <li .nav-item>
+          <a .nav-link .active href="#location-help">Location
+        <li .nav-item>
+          <a .nav-link .active href="#accommodation-help">Accommodation
+        <li .nav-item>
+          <a .nav-link .active href="#penance-help">Penance
+        <li .nav-item>
+          <a .nav-link .active href="#preferences-help">Preferences
+       <li .nav-item>
+          <a .nav-link .active href="#glossary-help">Glossary
+
+<h2 #services-help>Services
+
+Services are provided either by the towns and villages that you walk through or the accommodation
+that you use when you stop.
+Services in locations are usually for general use (if they are open).
+Services in accommodation are usually only for the use of the guests.
+
+<table .table .table-striped>
+  <caption>Services
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Service
+  <tbody>
+    <tr>
+      <td>^{caminoServiceIcon WiFi}
+      <td>WiFi available
+    <tr>
+      <td>^{caminoServiceIcon Restaurant}
+      <td>Restaurant or Café
+    <tr>
+      <td>^{caminoServiceIcon Pharmacy}
+      <td>Pharmacy
+    <tr>
+      <td>^{caminoServiceIcon Bank}
+      <td>Banking facilities or an automated teller machine
+    <tr>
+      <td>^{caminoServiceIcon BicycleRepair}
+      <td>Bicycle repair shop
+    <tr>
+      <td>^{caminoServiceIcon Groceries}
+      <td>Convenience store or supermarket
+    <tr>
+      <td>^{caminoServiceIcon Medical}
+      <td>Doctor, hospital or other healthcare
+    <tr>
+      <td>^{caminoServiceIcon WashingMachine}
+      <td>Washing machine available
+    <tr>
+      <td>^{caminoServiceIcon Dryer}
+      <td>Dryer or spin-dryer available
+    <tr>
+      <td>^{caminoServiceIcon Handwash}
+      <td>Handwash laundry facilities
+    <tr>
+      <td>^{caminoServiceIcon Kitchen}
+      <td>Kitchen facilities
+    <tr>
+      <td>^{caminoServiceIcon Breakfast}
+      <td>Breakfast available
+    <tr>
+      <td>^{caminoServiceIcon Dinner}
+      <td>Dinner available
+    <tr>
+      <td>^{caminoServiceIcon Lockers}
+      <td>Lockers or cabinets
+    <tr>
+      <td>^{caminoServiceIcon Accessible}
+      <td>Accessible for people with disabilities
+    <tr>
+      <td>^{caminoServiceIcon Stables}
+      <td>Stabling for horses available
+    <tr>
+      <td>^{caminoServiceIcon Pets}
+      <td>Pets allowed
+    <tr>
+      <td>^{caminoServiceIcon BicycleStorage}
+      <td>Bicycle storage available
+    <tr>
+      <td>^{caminoServiceIcon CampSite}
+      <td>Camping sites available
+    <tr>
+      <td>^{caminoServiceIcon Bedlinen}
+      <td>Bedlinen provided
+    <tr>
+      <td>^{caminoServiceIcon Towels}
+      <td>Towels provided
+    <tr>
+      <td>^{caminoServiceIcon Pool}
+      <td>Swimming pool available
+    <tr>
+      <td>^{caminoServiceIcon Heating}
+      <td>Heated building
+    <tr>
+      <td>^{caminoServiceIcon Prayer}
+      <td>Community prayer/liturgy 
+    <tr>
+      <td>^{caminoServiceIcon Train}
+      <td>Train station
+    <tr>
+      <td>^{caminoServiceIcon Bus}
+      <td>Bus stop
+
+<h2 #location-help>Locations
+
+<table .table .table-striped>
+  <caption>Location Types
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Location Type
+       <th scope="col">Comments
+  <tbody>
+    <tr>
+        <td>^{caminoLocationTypeIcon Village}
+        <td>Village
+        <td>A smaller locality with limited services and accommodation
+    <tr>
+       <td>^{caminoLocationTypeIcon Town}
+       <td>Town
+       <td>A larger locality with most services and a variety of accommmodation usually available
+    <tr>
+       <td>^{caminoLocationTypeIcon City}
+       <td>City
+       <td>A large urban area with multiple options for services and accommodation
+    <tr>
+       <td>^{caminoLocationTypeIcon Bridge}
+       <td>Bridge
+       <td>A bridge acting as a waypoint
+    <tr>
+       <td>^{caminoLocationTypeIcon Intersection}
+       <td>Intersection
+       <td>A road intersection
+    <tr>
+       <td>^{caminoLocationTypeIcon Poi}
+       <td>Locality
+       <td>An unspecified waypoint
+
+
+<h2 #accommodation-help>Accomodation
+
+<table .table .table-striped>
+  <caption>Accomodation Types
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Accomodation Type
+       <th scope="col">Comments
+  <tbody>
+    <tr>
+        <td>^{caminoAccommodationTypeIcon MunicipalAlbergue}
+        <td>Municipal Albergue
+        <td>
+            An albergue (pilgrim hostel) usually run by volunteers for pilgrims only.
+            Municipal albergues are generally inexpensive, have limited services and usually only allow one night's stay.
+            Municipal albergues are often not bookable but simply accept pilgrims until full.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon PrivateAlbergue}
+        <td>Private Albergue
+        <td>
+            An albergue run as a private business.
+            Private albergues usually offer more services than municipal albergues, allow more than one nights stay and are bookable.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon GuestHouse}
+        <td>Guesthouse
+        <td>
+            A guesthouse, quinta, casa, bed-and-breakfast, pensione or similar
+    <tr>
+        <td>^{caminoAccommodationTypeIcon House}
+        <td>House Rental
+        <td>
+            An entire house or unit, available for rental
+    <tr>
+        <td>^{caminoAccommodationTypeIcon Hotel}
+        <td>Hotel
+        <td>
+            A commercial hotel, usually with multiple services and accomodation options.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon Camping}
+        <td>Camping
+        <td>
+            Camping by the side of the Camino, using your own resources.
+
+
+<table .table .table-striped>
+  <caption>Sleeping Arrangements
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Sleeping Arrangements
+       <th scope="col">Comments
+  <tbody>
+    <tr>
+        <td>^{caminoSleepingIcon Shared}
+        <td>Shared
+        <td>
+            Shared sleeping, usually in bunk beds
+    <tr>
+        <td>^{caminoSleepingIcon Single}
+        <td>Single
+        <td>
+            A private single room
+    <tr>
+        <td>^{caminoSleepingIcon Double}
+        <td>Double
+        <td>
+            A private double room
+    <tr>
+        <td>^{caminoSleepingIcon DoubleWC}
+        <td>Double with Bathroom
+        <td>
+            A double room with a private bathroom
+    <tr>
+        <td>^{caminoSleepingIcon Triple}
+        <td>Triple
+        <td>
+            A private triple room
+    <tr>
+        <td>^{caminoSleepingIcon TripleWC}
+        <td>Triple with Bathroom
+        <td>
+            A triple room with a private bathroom
+    <tr>
+        <td>^{caminoSleepingIcon Quadruple}
+        <td>Quadruple
+        <td>
+            A private quadruple room
+    <tr>
+        <td>^{caminoSleepingIcon QuadrupleWC}
+        <td>Quadruple with Bathroom
+        <td>
+            A quadruple room with a private bathroom
+    <tr>
+        <td>^{caminoSleepingIcon Mattress}
+        <td>Mattress
+        <td>
+            A matress on the floor in a shared space
+    <tr>
+        <td>^{caminoSleepingIcon SleepingBag}
+        <td>Sleeping Bag
+        <td>
+            Your own sleeping bag and mattress
+
+<h2 #penance-help>Penance
+
+<p>
+  "Penance" is a catch-all term for how hard walking a stage of the Camino is going to be.
+  The name comes from a joke about the purpose of walking the Camino.
+  The Camino Planner attempts to divide the entire trip into day-stages that minimise the
+  total amount of penance accumulated during the journey.
+<p>
+  The root measure of penance is how many kilometres you have walked.
+  Other aspects of the trip, such as accommodation preferences and the like are converted into
+  kilometre-equivalents and added to the base walking distance.
+  As a general rule, think of the other penance values in terms of,
+  "I would walk ... extra kilometres in the day to ensure this service or avoid this stop"
+<p>
+  In addition, penance can result in a flat-out "no fun, not doing this" rejection.
+  This is indicted by the _{PenanceFormatted Reject} symbol.
+
+<h3>How Penance is Calculated
+
+<p>
+  Penance is calculated by using the user's preferences to score a day's walk.
+  The basic procedure is as follows:
+
+<ol>
+  <li>
+    Each leg of the walk contains a distance and an ascent and descent.
+    The raw time taken to walk this leg is calculated by either:
+    <ul>
+      <li>
+        Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
+      <li>
+        Tobler's rule, which combines distance, ascent and descent.
+  <li>
+    The time taken for each leg is added together and then Tranter's corrections are applied.
+    These corrections adjust for the fitness of the person walking and the effects of fatigue as the day wears on.
+  <li>
+    The resulting time is converted into a <em>perceived distance</em>, essentially the distance an untiring
+    person of normal fitness, walking on flat ground, would walk in the same time.
+    The perceived distance forms the basis of the penance score.
+  <li>
+    A user can express preferences in terms of a distance range and time range.
+    Once the distance or time is outside the normal lower and upper bounds of the range, additional penance is
+    calculated to indicate either a heartbreakingly long day or a pathetically short walk.
+    There are also hard maximum and minimum limits, which will case the day to be rejected as a possible stage.
+  <li>
+    A stop penance is added.
+    This represents the business of settling down for the night, paying for accommodation, food costs and the like.
+    The stop penance encourages the planner not to divide the walk into many short stages.
+  <li>
+    The user can express preferences for services available in the stop location, in terms of added penance
+    if the services are not present.
+  <li>
+    The user can express preferences for services available throughout the day, again in terms of added penance
+    if the services are not present somewhere along the route, including the start and end locations.
+  <li>
+    The user can express preferences for certain types of accommodation and the most preferred (least penance)
+    accomodation is chosen.
+    In addition, accommodation can sometimes be chosen to fill out missing services from the surrounding location.
+    For example, a hotel with a restaurant may be chosen if one is desired but not present at the stop.
+  <li>
+    The final penance is then the combination of penance from the perceived walking distance,
+    distance and time penalties, stop, accommodation and missing services.
+
+<h2 #preferences-help>Preferences
+
+<p>
+  Preferences describe how much effort and discomfort a pilgrim is willing to bear.
+  The Camino Planner then attempts to build a staged plan for the pilgrim, trying to minimise the number of
+  long and miserable or short and frustrating days the pilgrim has to walk.
+  The preference elements are as follows:
+
+<table .table .table-striped>
+  <caption>Preferences
+  <thead>
+    <tr>
+       <th scope="col">Preference
+       <th scope="col">Description
+  <tbody>
+    <tr>
+      <td>Walking Time Estimation
+      <td>
+          The function used to estimate the time spent walking a particular distance, taking hills into account.
+          The two possible values are:
+          <dl>
+            <dt>naismith
+            <dd>Use Naismith's rule
+            <dt>tobler
+            <dd>Use Tobler's rule. Tobler's rule is more sophisticated than Naismith's rule and is used by default.
+    <tr>
+       <td>Fitness
+       <td>
+           The overall fitness of the walker.
+           Both Naismith's and Tobler's rules assume a walker capable of a sustained 5km/hr on flat ground.
+           This is often too much for people and the fitness levels take this into account.
+           The possible fitness levels are:
+           <table .table .table-striped>
+             <thead>
+               <tr>
+                 <th scope="col">Fitness
+                 <th scope="col">Nominal Speed (km/hr)<sup>1</sup>
+                 <th scope="col">Maximum Time (hrs)<sup>2</sup>
+                 <th scope="col">Climb Time (mins)<sup>3</sup>
+                 <th scope="col">Comments
+             <tbody>
+               <tr>
+                 <td>Super Fit
+                 <td>6.0
+                 <td>24
+                 <td>15
+                 <td>
+               <tr>
+                 <td>Very Fit
+                 <td>5.5
+                 <td>23
+                 <td>20
+                 <td>
+               <tr>
+                 <td>Fit
+                 <td>4.5
+                 <td>17.5
+                 <td>25
+                 <td>
+               <tr>
+                 <td>Normal
+                 <td>4.0
+                 <td>14.5
+                 <td>30
+                 <td>
+               <tr>
+                 <td>Unfit
+                 <td>3.5
+                 <td>11.5
+                 <td>40
+                 <td>This is often the "realistic" option
+               <tr>
+                 <td>Very Unfit
+                 <td>3.0
+                 <td>8.5
+                 <td>50
+                 <td>
+             <tbody>
+               <tr>
+                 <td colspan="5" .fw-lighter><sup>1</sup> Based on average over five hours walking
+               <tr>
+                 <td colspan="5" ..fw-lighter><sup>2</sup> The maximum feasible -- but hardly recommended -- time spent walking
+               <tr>
+                 <td colspan="5" .fw-lighter><sup>3</sup> How fitness is determined. The time it takes to climb 1000 feet over half a mile
+    <tr>
+      <td>Distance Preferences
+      <td>
+        The preference range (<a href="#preference-range-help">see below</a>) for the actual distance travelled,
+        without regard to slope or fatigue.
+        This is the range most commonly specified, since it's the easiest to think about, and corresponds to the
+        the "you can expect to walk about 20km a day" advice that you will often see.
+    <tr>
+      <td>Perceived Distance Preferences
+      <td>
+        The preference range (<a href="#preference-range-help">see below</a>) for the perceived distance travelled.
+        Generally, this is automatically calculated from the distance preferences and fitness level and need not be
+        explicitly specified.
+    <tr>
+      <td>Time Preferences
+      <td>
+        The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
+    <tr>
+      <td>Accommodation Preferences
+      <td>
+        A table of penance costs for staying at a particular type of accomodation.
+        Any accommodation type not listed here will be rejected.
+    <tr>
+      <td>Stop Cost
+      <td>
+        The penance associated with stopping for the day.
+        This value captures the costs involved in finding a place to stay, meals, washing and all the other
+        things you do at the end of the day.
+        A small value will encourage the planner to split things into more, smaller days.
+        Conversely, a large value will encourange the planner to choose fewer, longer days.
+    <tr>
+      <td>Missing Stop Services
+      <td>
+        A list of the services, either in the location you are staying or in the accommodation that you choose,
+        that you would like to be present in the place that you stop for the day.
+        Each service is associated with the penance added if that service is <em>not</em> available.
+        For example, you may really want there to be a restaurant at the end of the day, so that you can eat.
+        These services are not limited to the sort of thing publicly available; if you include Bedlinen
+        as one of the services, then the planner will preferentially choose stops where there is accommodation
+        with supplied bedlinen available.
+    <tr>
+      <td>Missing Day Services
+      <td>
+        A list of the services that you would like to be present somewhere along the day's route, including
+        the start and end locations.
+        Each service is associated with the penance added if that service is <em>not</em> available.
+        For example, sometime during the day, you would like to pass a pharmacy and a bank, in case you need
+        to take care of blisters or get some money out.
+    <tr>
+      <td>Required Stops
+      <td>
+        A list of stops where you want the planner to ensure that you finish there at the end of a day.
+        For example, you may wish to ensure that you stop at Coímbra at the end of the day, so that you can
+        explore the city the next day.
+        You can use required stops to choose alternative routes.
+        If multiple routes are available, the planner will tend to choose the shortest route, which is almost
+        always the main Camino trail.
+        For example, the side-pilgrimage to Fátima is avoided by default.
+        If you include Fátima in the required stops, the planner will route towards Fátima and then back to
+        the main Camino.
+    <tr>
+      <td>Excluded Stops
+      <td>
+        A list of the stops where you want the planner to ensure that you <em>don't</em> finish there at
+        the end of a day.
+        You can use this if you know that a particular stop is not practical for some reason or you simply
+        wish to avoid repeating a bad experience.
+
+<h3 #preference-range-help>Preference Ranges
+
+<p>
+  Preferences for things like distance and time come in the form of ranges, with five components:
+
+<table .table .table-striped>
+  <caption>Preference Range
+  <thead>
+    <tr>
+      <th scope="col">Component
+      <th scope="col">Description
+  <tbody>
+    <tr>
+      <td>Target
+      <td>
+        The middle value of the preference range and the ideal target value.
+    <tr>
+      <td>Lower
+      <td>
+        The lower bound for the preference range.
+        Between the lower and upper bounds, any value is acceptable.
+    <tr>
+      <td>Upper
+      <td>
+        The upper bound for the preference range.
+    <tr>
+      <td>Miniumum
+      <td>
+        The minimum acceptable value.
+        Anything less than the minimum will be rejected.
+    <tr>
+      <td>Maximum
+      <td>
+        The maximum acceptable value.
+        Anything above the maximum will be rejected.
+
+ <p>
+   An example preference range for distance walked is
+   <span .text-danger>12.0
+   - 16.0 -
+   <span .text-success .fw-bolder>20.0
+   - 24.0 -
+   <span .text-danger>28.0
+   This means that the target is 20km, with an acceptable range of 16-24km.
+   The absolute minimum is 12km and the absolute maximum is 28km.
+
+<p>
+  When calculating
+  <a href="#penance-help">penance
+  anything between the lower and upper bound is acceptable.
+  Between the lower and minimum bounds, similarly for between the upper and maximum bounds, an additional penance is applied.
+  Outside the minimum and maximum values will result in a rejection.
+
+<h2 #glossary-help>Glossary
+
+<dl>
+  <dt>Day
+  <dd>
+    A day's walking, sometimes also called a stage.
+    A day will start from the last day's end, pass through a number locations and stop at a final location.
+  <dt>Location
+  <dd>
+    A waypoint on the Camino.
+    A location is usually a village, town or city but it may be some other landmark, such as a bridge.
+    Locations usually have services and accommodation available.
+    <a href="#location-help">More
+  <dt>Perceived Distance
+  <dd>
+    How long a chunk of walking <em>feels</em> like.
+    Climbing up or down steep hills is harder than walking on flat ground.
+    As you continue walking, you will fatigue, and the later stages feel longer and harder.
+    Perceived distance is how long something would feel like if you were walking on flat ground and never tired.
+  <dt>Penance
+  <dd>
+    The scoring system used by the Camino Planner.
+    Every preference in terms of how far you walk, what sort of accommodation you would like to stay in,
+    what sort of services you would like to use throughout the day and so on is converted into a "penance"
+    measured in terms of kilometres walked.
+    <a href="#penance-help">More
+  <dt>Preferences
+  <dd>
+    Your preferences as a walker in terms of how far and how long you would like to walk each day,
+    what sort of services you will need along the way, what sort of accommodation you would prefer to stay in
+    at the end of the day, and so on.
+    <a href="#preferences-help">More
+  <dt>Service
+  <dd>
+    Something that you might need to use, such as an ATM for getting cash, a restaurant for eating or a washing machine.
+    Locations and accommodation provide services.
+    <a href="#services-help">More
+  <dt>Stop
+  <dd>
+    The final point of a day's walking, where you would expect to find accomodation, washing facilities, etc.
+

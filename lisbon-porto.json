@@ -1647,6 +1647,965 @@
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
     },
+    {
+      "id": "P139",
+      "name": "Padrão da Légua",
+      "type": "City",
+      "position": { "latitude": 41.19297, "longitude": -8.63375 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P140",
+      "name": "Araújo",
+      "type": "Town",
+      "position": { "latitude": 41.21976, "longitude": -8.637469 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P141",
+      "name": "Ponte de Moreira",
+      "type": "Bridge",
+      "position": { "latitude": 41.23600, "longitude": -8.64681 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P142",
+      "name": "Moreira da Maia",
+      "type": "Town",
+      "position": { "latitude": 41.24546, "longitude": -8.64859 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "AirPorto Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "Kitchen", "Breakfast" ],
+          "sleeping": [ "Shared" , "Double"]
+        },
+        {
+          "name": "Hotel Residencial Puma",
+          "type": "Hotel",
+          "services": [ ],
+          "sleeping": [ ]
+        },
+        {
+          "name": "Stay Hotel Porto Aeroporto",
+          "type": "Hotel",
+          "services": [ ],
+          "sleeping": [ ]
+        }
+     ]
+    },
+    {
+      "id": "P143",
+      "name": "Vilar do Pinheiro",
+      "type": "Village",
+      "position": { "latitude": 41.26964, "longitude": -8.66434 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P144",
+      "name": "Mosteiró",
+      "type": "Village",
+      "position": { "latitude": 41.27881, "longitude": -8.67106 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "Casa dos Caminhos",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Prayer", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" , "Double"]
+        }
+       ]
+    },
+    {
+      "id": "P145",
+      "name": "Vilar (Vila do Conde)",
+      "type": "Village",
+      "position": { "latitude": 41.28916, "longitude": -8.67474 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P146",
+      "name": "Gião",
+      "type": "Village",
+      "position": { "latitude": 41.30797, "longitude": -8.67913 },
+      "services": [  ],
+      "accommodation": [
+        {
+          "name": "Casa Mindela Guesthouse",
+          "type": "GuestHouse",
+          "services": [ ],
+          "sleeping": [ ]
+        }
+      ]
+    },
+    {
+      "id": "P147",
+      "name": "Vairão",
+      "type": "Village",
+      "position": { "latitude": 41.32570, "longitude": -8.67378 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P148",
+      "name": "Monasterio de Vairão",
+      "type": "Poi",
+      "position": { "latitude": 41.33283, "longitude": -8.66901 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Mosteiro de Vairão Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" , "Double"]
+        }
+      ]
+    },
+    {
+      "id": "P149",
+      "name": "Vilarinho",
+      "type": "Town",
+      "position": { "latitude": 41.33814, "longitude": -8.682257 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Casa da Laura Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" , "Double", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Casa Familia Vidal Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Restaurant", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" , "Single" ]
+        }
+      ]
+    },
+    {
+      "id": "P150",
+      "name": "Bagunte",
+      "type": "Village",
+      "position": { "latitude": 41.34849, "longitude": -8.67869 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P151",
+      "name": "Santagões",
+      "type": "Village",
+      "position": { "latitude": 41.36350, "longitude": -8.68208 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P152",
+      "name": "Junqueira",
+      "type": "Village",
+      "position": { "latitude": 41.37991,  "longitude": -8.67949 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P153",
+      "name": "São Miguel de Arcos",
+      "type": "Village",
+      "position": {"latitude": 41.39548, "longitude": -8.66710},
+      "services": ["Restaurant"],
+      "accommodation": [
+        {
+          "name": "Hotel Villa D'Arcos",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" , "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Quinta São Miguel de Arcos",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared" , "DoubleWC", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "P154",
+      "name": "São Pedro de Rates",
+      "type": "Village",
+      "position": {"latitude": 41.42524, "longitude": -8.66699 },
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "São Pedro de Rates Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "Handwash", "Heating", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa da Vila Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Accessible", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P155",
+      "name": "Courel",
+      "type": "Village",
+      "position": { "latitude": 41.44763, "longitude": -8.65190 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P156",
+      "name": "Pedra Furada",
+      "type": "Village",
+      "position": { "latitude": 41.46789, "longitude": -8.63657 },
+      "services": [ "Restaurant", "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "O Palhuço Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "CampSite", "Pets", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P157",
+      "name": "Silgueiros (Pereira)",
+      "type": "Village",
+      "position": { "latitude": 41.48497, "longitude": -8.63133 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P158",
+      "name": "Carvalhal",
+      "type": "Village",
+      "position": { "latitude": 41.50849, "longitude": -8.63623 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P159",
+      "name": "Barcelinhos",
+      "type": "Town",
+      "position": { "latitude": 41.52796, "longitude": -8.62219 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Amigos da Montanha Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage", "Lockers" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Diora Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Breakfast", "BicycleStorage", "Lockers", "Accessible", "Stables", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa das Pombas",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "P160",
+      "name": "Barcelos",
+      "type": "Town",
+      "position": { "latitude": 41.53470, "longitude": -8.62165 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "Cidade de Barcelos Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Heating" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa de Ana Guesthouse",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Kitchen" ,"Breakfast", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "In Barcelos Hostel and Guest House",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels"],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Quadruple" ]
+        },
+        {
+          "name": "Kuarenta&Um Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels"],
+          "sleeping": [ "Shared", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Residencial Solar da Estação",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Towels"],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Bagoeira",
+          "type": "Hotel",
+          "services": [ ],
+          "sleeping": [  ]
+        }
+      ]
+    },
+    {
+      "id": "P161",
+      "name": "Vila Boa",
+      "type": "Village",
+      "position": { "latitude": 41.55543, "longitude": -8.62018 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Alojamento Flora",
+          "type": "PrivateAlbergue",
+          "services": [  ],
+          "sleeping": [ ]
+        }
+      ]
+    },
+    {
+      "id": "P162",
+      "name": "Ribeira (Lijó)",
+      "type": "Village",
+      "position": { "latitude": 41.56544, "longitude": -8.61775 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa de São Sebastião",
+          "type": "PrivateAlbergue",
+          "services": [ "Kitchen", "Breakfast" ],
+          "sleeping": [ ]
+        }
+      ]
+    },
+    {
+      "id": "P163",
+      "name": "Portela de Tamel",
+      "type": "Village",
+      "position": { "latitude": 41.60194, "longitude": -8.62883 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Albergue Muncicipal de Barcelos 'Casa da Recoleta'",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P164",
+      "name": "Aborim",
+      "type": "Village",
+      "position": { "latitude": 41.61139, "longitude": -8.63605 },
+      "services": [ "Restaurant", "Groceries", "Bank", "Train" ],
+      "accommodation": [
+        {
+          "name": "Albergaria Casa de Santiago",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P165",
+      "name": "Ponte das Tábuas",
+      "type": "Bridge",
+      "position": { "latitude": 41.63223, "longitude": -8.64242 },
+      "services": [ "Restaurant", "Groceries", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P166",
+      "name": "Balugães",
+      "type": "Village",
+      "position": { "latitude": 41.64396, "longitude": -8.63915 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casas do Rio",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Dinner", "Breakfast", "Lockers", "Restaurant", "BicycleStorage" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Quinta rural da Cancela",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Heating", "Dinner", "Breakfast", "Lockers", "Restaurant", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "P167",
+      "name": "Poiares",
+      "type": "Village",
+      "position": { "latitude": 41.653870, "longitude": -8.63104 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P168",
+      "name": "Corgo",
+      "type": "Village",
+      "position": { "latitude": 41.66856, "longitude": -8.62482 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa da Fernanda Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "Dinner", "Breakfast", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P169",
+      "name": "Valinhas",
+      "type": "Village",
+      "position": { "latitude": 41.67380, "longitude": -8.61822 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Estábulo de Valinhas",
+          "type": "MunicipalAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P170",
+      "name": "Igreja",
+      "type": "Village",
+      "position": { "latitude": 41.68244, "longitude": -8.61580 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa Sagres Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Pets", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "P171",
+      "name": "Alto de Albergaria",
+      "type": "Poi",
+      "position": { "latitude": 41.68897, "longitude": -8.62136 },
+      "services": [ "BicycleRepair" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P172",
+      "name": "Arribão",
+      "type": "Village",
+      "position": { "latitude": 41.71461, "longitude": -8.61978 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P173",
+      "name": "Sobreiro",
+      "type": "Village",
+      "position": { "latitude": 41.72775, "longitude": -8.62401 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "O Caminheiro Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Pets" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P174",
+      "name": "Nabais",
+      "type": "Village",
+      "position": { "latitude": 41.73277, "longitude": -8.62341 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Hotel Pinheiro Manso",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "P175",
+      "name": "Anta",
+      "type": "Village",
+      "position": { "latitude": 41.74301, "longitude": -8.61932 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P176",
+      "name": "Bouça",
+      "type": "Village",
+      "position": { "latitude": 41.74717, "longitude": -8.61450 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P177",
+      "name": "Paço",
+      "type": "Village",
+      "position": { "latitude": 41.75118, "longitude": -8.61067 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P178",
+      "name": "Barros (Correlhã)",
+      "type": "Village",
+      "position": { "latitude": 41.75505, "longitude": -8.60538 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P179",
+      "name": "Ponte de Lima",
+      "type": "Town",
+      "position": { "latitude": 41.76877, "longitude": -8.58437 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "Youth Hostel of Ponte de Lima",
+          "type": "MunicipalAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Alojamiento Mercearia da Vila",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa da Travessa",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Vila de Ponte Guest House",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Breakfast", "BicycleStorage" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Alojamiento Terraço da Vila",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "ARC'otel",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Old Village Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Heating", "Kitchen", "WiFi", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Merim Apartments",
+          "type": "House",
+          "services": [ "Heating",  "WiFi", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Império do Norte",
+          "type": "Hotel",
+          "services": [ "WashingMachine", "Heating", "Breakfast", "WiFi", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "InLima Hotel & Spa",
+          "type": "Hotel",
+          "services": [ ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "P180",
+      "name": "Álém da Ponte",
+      "type": "Town",
+      "position": { "latitude": 41.76976, "longitude": -8.58917 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa do Arnado Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P181",
+      "name": "Sabadão",
+      "type": "Village",
+      "position": { "latitude": 41.77836, "longitude": -8.59296 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P182",
+      "name": "Arcozelo",
+      "type": "Village",
+      "position": { "latitude": 41.79280, "longitude": -8.59266 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P183",
+      "name": "Riba Rio",
+      "type": "Village",
+      "position": { "latitude": 41.80758, "longitude": -8.59750 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Oasis do Caminho",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Dinner", "Breakfast", "Restaurant", "Accessible", "Pets", "CampSite", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P184",
+      "name": "Arco",
+      "type": "Village",
+      "position": { "latitude": 41.82364, "longitude": -8.59647 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P185",
+      "name": "Codeçal",
+      "type": "Village",
+      "position": { "latitude": 41.829204, "longitude": -8.59586 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P186",
+      "name": "Labruja",
+      "type": "Village",
+      "position": { "latitude": 41.840789, "longitude": -8.60084 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casa sa Valada Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "Dinner", "Breakfast", "BicycleStorage" ],
+          "sleeping": [ "Shared", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "O Conforto Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Quinta Labruja",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "P187",
+      "name": "Bandeira",
+      "type": "Village",
+      "position": { "latitude": 41.844825, "longitude": -8.60075 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P188",
+      "name": "Alto da Portela Grande",
+      "type": "Poi",
+      "position": { "latitude": 41.86235, "longitude": -8.60816 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P189",
+      "name": "Cabanas (Aqualonga)",
+      "type": "Village",
+      "position": { "latitude": 41.87322, "longitude":  -8.616185 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P190",
+      "name": "Aqualonga",
+      "type": "Village",
+      "position": { "latitude": 41.88401, "longitude": -8.62016 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P191",
+      "name": "São Roque",
+      "type": "Village",
+      "position": { "latitude": 41.88919, "longitude": -8.62620 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Constantino Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P192",
+      "name": "Rubiães",
+      "type": "Village",
+      "position": { "latitude": 41.89959, "longitude": -8.62463 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "São Pedro de Rubiães Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Kitchen", "Restaurant" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Niho Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Quinta das Leiras",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa das Lages",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Dinner", "Breakfast", "Restaurant", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa São Sebastiao",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Repouso do Peregrino Boarding House",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Breakfast", "Restaurant", "Pets", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "P193",
+      "name": "Ponte Nova (Cossourado)",
+      "type": "Bridge",
+      "position": { "latitude": 41.90416,  "longitude": -8.62638 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P194",
+      "name": "Pecene",
+      "type": "Village",
+      "position": { "latitude": 41.92715, "longitude": -8.62681 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casa da Capela",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "P195",
+      "name": "São Bento da Porta Aberta",
+      "type": "Village",
+      "position": { "latitude": 41.93158, "longitude": -8.62834 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P196",
+      "name": "Gontumil",
+      "type": "Village",
+      "position": { "latitude": 41.94182, "longitude": -8.63085 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P197",
+      "name": "Pereira (Fontoura)",
+      "type": "Village",
+      "position": { "latitude": 41.95131, "longitude": -8.63379 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P198",
+      "name": "Bárrio (Fontoura)",
+      "type": "Village",
+      "position": { "latitude": 41.95460, "longitude": -8.63386 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "PilgerPause Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa da Quinta do Cruzeiro",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Pets" ,"Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "P199",
+      "name": "Paços",
+      "type": "Village",
+      "position": { "latitude": 41.97479, "longitude": -8.63386 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Qunta Estrada Romana Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "CampSite","Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "name": "Pedreira",
+      "type": "Village",
+      "position": { "latitude": 41.98815, "longitude": -8.63527 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Rural Accommodation Quinta do Caminho",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Pets" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "P201",
+      "name": "Gandra",
+      "type": "Village",
+      "position": { "latitude": 42.00356, "longitude": -8.63742 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P202",
+      "name": "Arão",
+      "type": "Village",
+      "position": { "latitude": 42.01397, "longitude": -8.64305 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "P203",
+      "name": "Valença do Minho",
+      "type": "Town",
+      "position": { "latitude": 42.02535, "longitude": -8.64577 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "São Teotónio Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Pets" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostel Bulwark",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Portas do Sol Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Residencial São Gião",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hotel Lara",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant" ,"Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Alojamento da Vila",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Val Flores",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Valença do Minho",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Lockers", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
 
     {
       "id": "F1",
@@ -3147,6 +4106,461 @@
       "distance": 1.70,
       "ascent": 5,
       "descent": 45
+    },
+    {
+      "from": "P138",
+      "to": "P139",
+      "distance": 6.68,
+      "ascent": 85,
+      "descent": 50
+    },
+    {
+      "from": "P139",
+      "to": "P140",
+      "distance": 2.78,
+      "ascent": 0,
+      "descent": 30
+    },
+    {
+      "from": "P140",
+      "to": "P141",
+      "distance": 2.37,
+      "ascent": 0,
+      "descent": 40
+    },
+     {
+      "from": "P141",
+      "to": "P142",
+      "distance": 1.32,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "P142",
+      "to": "P143",
+      "distance": 3.44,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "P143",
+      "to": "P144",
+      "distance": 1.89,
+      "ascent": 0,
+      "descent": 40
+    },
+    {
+      "from": "P144",
+      "to": "P145",
+      "distance": 1.13,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "P145",
+      "to": "P146",
+      "distance": 2.73,
+      "ascent": 20,
+      "descent": 10
+    },
+    {
+      "from": "P146",
+      "to": "P147",
+      "distance": 1.99,
+      "ascent": 45,
+      "descent": 5
+    },
+    {
+      "from": "P147",
+      "to": "P148",
+      "distance": 1.07,
+      "ascent": 0,
+      "descent": 40
+    },
+    {
+      "from": "P148",
+      "to": "P149",
+      "distance": 1.55,
+      "ascent": 20,
+      "descent": 15
+    },
+    {
+      "from": "P149",
+      "to": "P150",
+      "distance": 2.03,
+      "ascent": 0,
+      "descent": 20
+    },
+    {
+      "from": "P150",
+      "to": "P151",
+      "distance": 1.50,
+      "ascent": 55,
+      "descent": 40
+    },
+    {
+      "from": "P151",
+      "to": "P152",
+      "distance": 2.05,
+      "ascent": 25,
+      "descent": 25
+    },
+    {
+      "from": "P152",
+      "to": "P153",
+      "distance": 2.74,
+      "ascent": 10,
+      "descent": 25
+    },
+    {
+      "from": "P153",
+      "to": "P154",
+      "distance": 3.41,
+      "ascent": 35,
+      "descent": 15
+    },
+    {
+      "from": "P154",
+      "to": "P155",
+      "distance": 2.90,
+      "ascent": 55,
+      "descent": 25
+    },
+    {
+      "from": "P155",
+      "to": "P156",
+      "distance": 3.39,
+      "ascent": 40,
+      "descent": 20
+    },
+    {
+      "from": "P156",
+      "to": "P157",
+      "distance": 3.30,
+      "ascent": 30,
+      "descent": 30
+    },
+    {
+      "from": "P157",
+      "to": "P158",
+      "distance": 2.38,
+      "ascent": 10,
+      "descent": 80
+    },
+    {
+      "from": "P158",
+      "to": "P159",
+      "distance": 3.00,
+      "ascent": 10,
+      "descent": 45
+    },
+    {
+      "from": "P159",
+      "to": "P160",
+      "distance": 0.86,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "P160",
+      "to": "P161",
+      "distance": 2.90,
+      "ascent": 35,
+      "descent": 10
+    },
+    {
+      "from": "P161",
+      "to": "P162",
+      "distance": 2.17,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "P162",
+      "to": "P163",
+      "distance": 4.56,
+      "ascent": 140,
+      "descent": 10
+    },
+    {
+      "from": "P163",
+      "to": "P164",
+      "distance": 1.34,
+      "ascent": 5,
+      "descent": 60
+    },
+    {
+      "from": "P164",
+      "to": "P165",
+      "distance": 3.18,
+      "ascent": 0,
+      "descent": 70
+    },
+    {
+      "from": "P165",
+      "to": "P166",
+      "distance": 2.22,
+      "ascent": 40,
+      "descent": 0
+    },
+    {
+      "from": "P166",
+      "to": "P167",
+      "distance": 1.26,
+      "ascent": 5,
+      "descent": 30
+    },
+    {
+      "from": "P167",
+      "to": "P168",
+      "distance": 2.01,
+      "ascent": 35,
+      "descent": 5
+    },
+    {
+      "from": "P166",
+      "to": "P169",
+      "distance": 0.95,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "P169",
+      "to": "P170",
+      "distance": 1.27,
+      "ascent": 35,
+      "descent": 10
+    },
+    {
+      "from": "P170",
+      "to": "P171",
+      "distance": 1.28,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "P171",
+      "to": "P172",
+      "distance": 2.71,
+      "ascent": 5,
+      "descent": 110
+    },
+    {
+      "from": "P172",
+      "to": "P173",
+      "distance": 1.71,
+      "ascent": 10,
+      "descent": 35
+    },
+    {
+      "from": "P173",
+      "to": "P174",
+      "distance": 0.32,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "P174",
+      "to": "P175",
+      "distance": 1.80,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "P175",
+      "to": "P176",
+      "distance": 0.53,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "P176",
+      "to": "P177",
+      "distance": 0.47,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "P177",
+      "to": "P178",
+      "distance": 0.84,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "P178",
+      "to": "P179",
+      "distance": 2.14,
+      "ascent": 15,
+      "descent": 10
+    },
+    {
+      "from": "P179",
+      "to": "P180",
+      "distance": 0.45,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "P180",
+      "to": "P181",
+      "distance": 1.28,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "P181",
+      "to": "P182",
+      "distance": 1.38,
+      "ascent": 20,
+      "descent": 10
+    },
+    {
+      "from": "P182",
+      "to": "P183",
+      "distance": 2.28,
+      "ascent": 30,
+      "descent": 25
+    },
+    {
+      "from": "P183",
+      "to": "P184",
+      "distance": 2.46,
+      "ascent": 30,
+      "descent": 0
+    },
+    {
+      "from": "P184",
+      "to": "P185",
+      "distance": 0.54,
+      "ascent": 20,
+      "descent": 5
+    },
+    {
+      "from": "P185",
+      "to": "P186",
+      "distance": 1.37,
+      "ascent": 80,
+      "descent": 0
+    },
+    {
+      "from": "P186",
+      "to": "P187",
+      "distance": 0.71,
+      "ascent": 25,
+      "descent": 10
+    },
+    {
+      "from": "P187",
+      "to": "P188",
+      "distance": 2.34,
+      "ascent": 235,
+      "descent": 0
+    },
+    {
+      "from": "P188",
+      "to": "P189",
+      "distance": 1.59,
+      "ascent": 0,
+      "descent": 110
+    },
+    {
+      "from": "P189",
+      "to": "P190",
+      "distance": 1.33,
+      "ascent": 0,
+      "descent": 65
+    },
+    {
+      "from": "P190",
+      "to": "P191",
+      "distance": 0.93,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "P191",
+      "to": "P192",
+      "distance": 1.23,
+      "ascent": 0,
+      "descent": 55
+    },
+    {
+      "from": "P192",
+      "to": "P193",
+      "distance": 1.19,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "P193",
+      "to": "P194",
+      "distance": 2.51,
+      "ascent": 110,
+      "descent": 15
+    },
+    {
+      "from": "P194",
+      "to": "P195",
+      "distance": 0.66,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "P195",
+      "to": "P196",
+      "distance": 1.36,
+      "ascent": 0,
+      "descent": 95
+    },
+    {
+      "from": "P196",
+      "to": "P197",
+      "distance": 1.17,
+      "ascent": 0,
+      "descent": 90
+    },
+    {
+      "from": "P197",
+      "to": "P198",
+      "distance": 0.69,
+      "ascent": 0,
+      "descent": 25
+    },
+    {
+      "from": "P198",
+      "to": "P199",
+      "distance": 2.4,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "P199",
+      "to": "P200",
+      "distance": 1.19,
+      "ascent": 15,
+      "descent": 35
+    },
+    {
+      "from": "P200",
+      "to": "P201",
+      "distance": 2.25,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "P201",
+      "to": "P202",
+      "distance": 1.39,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "P202",
+      "to": "P203",
+      "distance": 2.72,
+      "ascent": 35,
+      "descent": 0
     },
 
     {

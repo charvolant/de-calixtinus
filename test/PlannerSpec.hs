@@ -97,18 +97,18 @@ services0 = S.fromList [ Restaurant, Groceries ]
 
 
 legs0 = [
-  Leg { legFrom = location1, legTo = location2, legDistance = 2.0, legAscent = 100, legDescent = 50 }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legNotes = Nothing }
   ]
 
 legs1 = [
-  Leg { legFrom = location1, legTo = location2, legDistance = 2.0, legAscent = 100, legDescent = 50 },
-  Leg { legFrom = location2, legTo = location3, legDistance = 3.5, legAscent = 0, legDescent = 350 }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legNotes = Nothing },
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legNotes = Nothing }
   ]
   
 legs2 = [
-  Leg { legFrom = location1, legTo = location2, legDistance = 2.0, legAscent = 100, legDescent = 50 },
-  Leg { legFrom = location2, legTo = location3, legDistance = 3.5, legAscent = 0, legDescent = 350 },
-  Leg { legFrom = location3, legTo = location4, legDistance = 4.5, legAscent = 200, legDescent = 0 }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legNotes = Nothing },
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legNotes = Nothing },
+  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legNotes = Nothing }
   ]
 
 camino1 = Camino {
@@ -120,11 +120,11 @@ camino1 = Camino {
   
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3]
 
-testHoursSimple1 = TestCase (assertMaybeFloatEqual "Hours Simple 1" (Just 1.160) (hours preferences1 legs1) 0.001)
+testHoursSimple1 = TestCase (assertMaybeFloatEqual "Hours Simple 1" (Just 1.160) (walkingHours preferences1 legs1) 0.001)
 
-testHoursSimple2 = TestCase (assertMaybeFloatEqual "Hours Simple 2" (Just 2.306) (hours preferences1 legs2) 0.001)
+testHoursSimple2 = TestCase (assertMaybeFloatEqual "Hours Simple 2" (Just 2.313) (walkingHours preferences1 legs2) 0.001)
 
-testHoursSimple3 = TestCase (assertMaybeFloatEqual "Hours Simple 3" (Just 0.465) (hours preferences1 legs0) 0.001)
+testHoursSimple3 = TestCase (assertMaybeFloatEqual "Hours Simple 3" (Just 0.465) (walkingHours preferences1 legs0) 0.001)
 
   
 testTravelSimple = TestList [testTravelSimple1, testTravelSimple2, testTravelSimple3]

@@ -41,7 +41,8 @@ paletteCss ident pal = [cassius|
     color: #{toCssColour $ paletteColour pal}
   h4
     color: #{toCssColour $ paletteColour pal}
-
+  h5
+    color: #{toCssColour $ paletteColour pal}
   |]
   
 iconCss :: String -> Char -> Render CaminoRoute -> Css
@@ -76,8 +77,10 @@ iconList = [
     ("ca-bus", '\xe047'),
     ("ca-camping", '\xe019'),
     ("ca-city", '\xe003'),
+    ("ca-cycling", '\xe081'),
     ("ca-dinner", '\xe065'),
     ("ca-dryer", '\xe062'),
+    ("ca-ferry", '\xe082'),
     ("ca-groceries", '\xe041'),
     ("ca-guesthouse", '\xe012'),
     ("ca-handwash", '\xe063'),
@@ -89,6 +92,8 @@ iconList = [
     ("ca-lockers", '\xe066'),
     ("ca-mattress", '\xe028'),
     ("ca-medical", '\xe044'),
+    ("ca-monastery", '\xe006'),
+    ("ca-peak", '\xe007'),
     ("ca-pets", '\xe069'),
     ("ca-pharmacy", '\xe043'),
     ("ca-poi", '\xe000'),
@@ -103,6 +108,7 @@ iconList = [
     ("ca-town", '\xe002'),
     ("ca-train", '\xe046'),
     ("ca-village", '\xe001'),
+    ("ca-walking", '\xe080'),
     ("ca-washing-machine", '\xe061'),
     ("ca-wifi", '\xe060')
   ]
@@ -148,10 +154,16 @@ a
   padding: 1ex
 .accomodation.municipal-albergue
   color: #f9b34a
-.distance-summary
+.location-tooltip
+  .leg-to
+    font-size: smaller
+.leg-summary
   display: inline-block
   margin-left: 1em
-  .leg-distance
+.leg-to
+  display: block
+.leg-line
+  .leg-type
     margin-left: 1em
   .leg-ascent
     font-size: smaller
@@ -161,9 +173,15 @@ a
     font-size: smaller
   .leg-descent::before
     content: "\2193"
+  .leg-notes
+    font-size: smaller
+.leg-used
+  color: black
+.leg-unused
+  color: gray
 .location 
-  .card-title 
-    h4
+  .accordion-header
+    h5
       display: inline-block
     .accomodation-types
       display: inline-block
@@ -182,19 +200,23 @@ a
     display: inline-block
     margin-left: 0,5ex
 .location-waypoint
-  .card-title
-    h4
+  .accordion-header
+    h5
       font-weight: bolder
 .location-stop
-  .card-title
-    h4
+  .accordion-header
+    h5
       font-weight: bolder
-    h4::after
+    h5::after
       margin-left: 1ex
       color: #f9b34a
       font-family: "Camino Icons"
       font-weight: normal
       content: "\e020"
+.aside
+  background-color: #d0f8ff
+  border-radius: 1ex   
+  font-size: small
   |]
 
 caminoCss :: Config -> Camino -> [Render CaminoRoute -> Css]

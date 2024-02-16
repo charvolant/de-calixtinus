@@ -22,6 +22,7 @@ module Camino.Camino (
   Fitness(..),
   LatLong(..),
   Leg(..),
+  LegType(..),
   Location(..),
   LocationType(..),
   Palette(..),
@@ -40,6 +41,7 @@ module Camino.Camino (
   caminoLegRoute,
   caminoLocations,
   caminoRoute,
+  defaultLegType,
   defaultPalette,
   defaultRoute,
   defaultSRS,
@@ -243,12 +245,14 @@ instance ToJSON Accommodation where
     toJSON (GenericAccommodation type' ) =
       toJSON type'
  
--- | Sleeping/room arrangements available  
+-- | The type of location 
 data LocationType = Village -- ^ A village
    | Town -- ^ A town
    | City -- ^ A city
+   | Monastery -- ^ A monastery/convent
    | Bridge -- ^ A bridge
    | Intersection -- ^ An intersection
+   | Peak -- ^ A peak or lookout
    | Poi -- ^ A generic point of interest
    deriving (Show, Generic, Eq, Ord)
  
@@ -309,6 +313,21 @@ placeholderLocation ident = Location {
 locationAccommodationTypes :: Location -> S.Set AccommodationType
 locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
 
+ 
+-- | The type of transport available on a leg
+data LegType = Road -- ^ Walk or cycle on a road or suitable path
+   | Trail -- ^ Walking only path
+   | CyclePath -- ^ Cycling only route
+   | Ferry -- ^ Boat transfer
+   deriving (Show, Generic, Eq, Ord)
+ 
+instance FromJSON LegType
+instance ToJSON LegType
+
+-- | The assumed leg type
+defaultLegType :: LegType
+defaultLegType = Road
+
 -- | A leg from one location to another.
 --   Legs form the edges of a camino graph.
 -- 
@@ -316,35 +335,54 @@ locationAccommodationTypes location = S.fromList $ map accommodationType (locati
 --   These are usually assumed to be relatively lumpy and are grouped together for
 --   time calculations
 data Leg = Leg {
+  legType :: LegType, -- ^ The type of leg
   legFrom :: Location, -- ^ The start location
   legTo :: Location, -- ^ The end location
   legDistance :: Float, -- ^ The distance between the start and end in kilometres
+  legTime :: Maybe Float, -- ^ An explicit time associated with the leg
   legAscent :: Float, -- ^ The total ascent on the leg in metres
-  legDescent :: Float -- ^ The total descent on the leg in metres
+  legDescent :: Float, -- ^ The total descent on the leg in metres
+  legPenance :: Maybe Penance, -- ^ Any additional penance associated with the leg
+  legNotes :: Maybe Text -- ^ Additional notes about the leg
 } deriving (Show)
 
 instance FromJSON Leg where
     parseJSON (Object v) = do
+      type' <- v .:? "type" .!= defaultLegType
       from' <- v .: "from"
       to' <- v .: "to"
       distance' <- v .: "distance"
+      time' <- v .:? "time" .!= Nothing
       ascent' <- v .: "ascent"
       descent' <- v .: "descent"
-      return Leg { legFrom = from', legTo = to', legDistance = distance', legAscent = ascent', legDescent = descent' }
+      penance' <- v .:? "penance" .!= Nothing
+      notes' <- v .:? "notes" .!= Nothing
+      
+      return Leg { legType = type', legFrom = from', legTo = to', legDistance = distance', legTime = time',  legAscent = ascent', legDescent = descent', legPenance = penance', legNotes = notes' }
     parseJSON v = error ("Unable to parse leg object " ++ show v)
 
 instance ToJSON Leg where
-    toJSON (Leg from' to' distance' ascent' descent') =
-      object [ "from" .= locationID from', "to" .= locationID to', "distance" .= distance', "ascent" .= ascent', "descent" .= descent' ]
+    toJSON (Leg type' from' to' distance' time' ascent' descent' penance' notes') =
+      object [ "type" .= (if type' == defaultLegType then Nothing else Just type'), "from" .= locationID from', "to" .= locationID to', "distance" .= distance', "time" .= time', "ascent" .= ascent', "descent" .= descent', "penance" .= penance', "notes" .= notes' ]
 
 instance Edge Leg Location where
   source = legFrom
   target = legTo
+
+instance Eq Leg where
+  a == b = legType a == legType b && legFrom a == legFrom b && legTo a == legTo b && legDistance a == legDistance b
+  
+instance Ord Leg where
+  a `compare` b
+    | legType a /= legType b = legType a `compare` legType b
+    | legFrom a /= legFrom b = legFrom a `compare` legFrom b
+    | legTo a /= legTo b = legTo a `compare` legTo b
+    | otherwise = legDistance a `compare` legDistance b
   
 -- | Ensure a leg has locations mapped correctly
 normaliseLeg :: M.Map String Location -> Leg -> Leg
-normaliseLeg locs (Leg from to distance ascent descent) =
-  Leg { legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDistance = distance, legAscent = ascent, legDescent = descent }
+normaliseLeg locs (Leg type' from to distance time ascent descent penance notes) =
+  Leg { legType = type', legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDistance = distance, legTime = time, legAscent = ascent, legDescent = descent, legPenance = penance, legNotes = notes }
 
 -- | A palette, graphical styles to use for displaying information
 data Palette = Palette {

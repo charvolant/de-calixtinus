@@ -2,4 +2,5 @@
 *~
 /.idea/
 /out/
+/plan/
 /stack.yaml.lock

@@ -17,12 +17,15 @@ module Camino.Planner (
   Trip,
 
   accommodation,
-  hours,
+  hasNonWalking,
+  nonWalkingHours,
   penance,
   planCamino,
   travel,
+  tripLegs,
   tripStops,
-  tripWaypoints
+  tripWaypoints,
+  walkingHours
 ) where
 
 import Camino.Walking
@@ -31,7 +34,7 @@ import Camino.Preferences
 import Graph.Programming()
 import qualified Data.Map as M
 import qualified Data.Set as S
-import Data.Maybe (isJust, fromJust, maybeToList)
+import Data.Maybe (isJust, fromJust, fromMaybe, mapMaybe, maybeToList)
 
 -- | The metrics for a day, segment or complete trip
 data Metrics = Metrics {
@@ -87,20 +90,35 @@ type Day = Chain Location Leg Metrics
 -- | A complete camino
 type Trip = Chain Location Day Metrics
 
-walking' :: String -> (Float -> Float -> Float -> Float)
-walking' n | n == "naismith" = naismith
+walking :: String -> (Float -> Float -> Float -> Float)
+walking n | n == "naismith" = naismith
   | n == "tobler" = tobler
-  | otherwise = error ("Planner.walking': bad argument " ++ n)
+  | otherwise = error ("Planner.walking: bad argument " ++ n)
 
 -- | Calculate the expected hours of walking, for a sequence of legs
-hours :: Preferences -- ^ The calculation preferences
+walkingHours :: Preferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Maybe Float -- ^ The hours equivalent
-hours preferences day = let
-    baseHours = walking' (preferenceWalkingFunction preferences)
+walkingHours preferences day = let
+    baseHours = walking (preferenceWalkingFunction preferences)
     simple = sum $ map (\l -> baseHours (legDistance l) (legAscent l) (legDescent l)) day
   in
     tranter (preferenceFitness preferences) simple
+
+-- | Calculate the expected non-walking hours, for a sequence of legs
+--   Usually associated with something like a ferry
+nonWalkingHours :: Preferences -- ^ The calculation preferences
+  -> [Leg] -- ^ The sequence of legs to use
+  -> Maybe Float -- ^ The hours equivalent
+nonWalkingHours preferences day = 
+  Just $ sum $ map (\l -> fromMaybe 0.0 (legTime l)) day
+  
+-- | Does this sequence of legs have a non-walking component?
+hasNonWalking ::  Preferences -- ^ The calculation preferences
+  -> [Leg] -- ^ The sequence of legs to use
+  -> Bool -- ^ The hours equivalent
+hasNonWalking preferences day =
+  any (\l -> legDistance l <= 0.0 && isJust (legTime l)) day
 
 -- | Calculate the total distance covered by a sequence of legs
 travel :: Preferences -- ^ The calculation preferences
@@ -120,19 +138,27 @@ totalDescent :: Preferences -- ^ The calculation preferences
   -> Float -- ^ The total distance covered by the sequence
 totalDescent _preferences day = sum $ map legDescent day
 
+-- | Calculate any additional penance associated with these legs
+travelAdditional :: Preferences -- ^ The calculation preferences
+  -> [Leg] -- ^ The sequence of legs to use
+  -> Penance -- ^ The total additional penance
+travelAdditional _preferences day = mconcat $ mapMaybe legPenance day
+
 -- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: Preferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float)
+travelMetrics :: Preferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Bool)
 travelMetrics preferences day =
   let
     normalSpeed = nominalSpeed Normal
     actualSpeed = nominalSpeed $ preferenceFitness preferences
-    time = hours preferences day
+    walkingTime = walkingHours preferences day
+    otherTime = nonWalkingHours preferences day
     distance = travel preferences day
     ascent = totalAscent preferences day
     descent = totalDescent preferences day
-    perceived = fmap (normalSpeed *) time
+    perceived = fmap (normalSpeed *) walkingTime
+    nonWalking = hasNonWalking preferences day
   in
-    (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent)
+    (normalSpeed, actualSpeed, (+) <$> walkingTime <*> otherTime, distance, perceived, ascent, descent, nonWalking)
 
 -- | Work out what services are missing from the desired stop list
 missingStopServices :: Preferences -- ^ The calculation preferences
@@ -207,9 +233,11 @@ penance :: Preferences -- ^ The user preferences
   -> Metrics -- ^ The penance value
 penance preferences camino day =
   let
-    (normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent) = travelMetrics preferences day
-    timeAdjust = maybe Reject (adjustment (preferenceTime preferences) normalSpeed) time
-    distanceAdjust = maybe Reject (adjustment (preferencePerceivedDistance preferences) normalSpeed) perceived
+    (normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, nonWalking) = travelMetrics preferences day
+    timePreferences = (if nonWalking then withoutLower else id) (preferenceTime preferences)
+    distancePreferences = (if nonWalking then withoutLower else id) (preferencePerceivedDistance preferences)
+    timeAdjust = maybe Reject (adjustment timePreferences normalSpeed) time
+    distanceAdjust = maybe Reject (adjustment distancePreferences normalSpeed) perceived 
     stopMissing = missingStopServices preferences camino day
     (accom, stopMissing', accommodationAdjust) = accommodation preferences camino day stopMissing -- preferred accommodation penance
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
@@ -217,7 +245,8 @@ penance preferences camino day =
     dayMissingCost = missingServicePenance (preferenceStopServices preferences) dayMissing
     stopCost = preferenceStop preferences
     distanceCost = maybe Reject Penance perceived
-    total = distanceCost <> accommodationAdjust <> stopCost <> distanceAdjust <> timeAdjust <> stopMissingCost <> dayMissingCost
+    misc = travelAdditional preferences day
+    total = distanceCost <> accommodationAdjust <> stopCost <> distanceAdjust <> timeAdjust <> stopMissingCost <> dayMissingCost <> misc
   in
     -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head legSeq) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last legSeq) ++ " = " ++ show totalPenance) totalPenance
     Metrics 
@@ -233,7 +262,7 @@ penance preferences camino day =
       dayMissingCost 
       distanceAdjust 
       timeAdjust 
-      mempty 
+      misc
       total
 
 -- | Accept a day's stage as a possibility
@@ -241,7 +270,7 @@ penance preferences camino day =
 dayAccept :: Preferences -> Camino -> [Leg] -> Bool
 dayAccept preferences _camino day =
   let
-    time = hours preferences day
+    time = walkingHours preferences day
     distance = travel preferences day
     inside = isJust time && isInsideMaximum (preferenceDistance preferences) distance && isInsideMaximum (preferenceTime preferences) (fromJust time)
   in
@@ -314,3 +343,7 @@ tripStops trip = (start trip) : (map finish $ path trip)
 -- | Get all the waypoints on a trip in order
 tripWaypoints :: Trip -> [Location]
 tripWaypoints trip = foldr (\c -> \w -> w ++ map legTo (path c)) [start trip] (path trip)
+
+-- | Get all the legs actually used by a trip
+tripLegs :: Trip -> [Leg]
+tripLegs trip = foldr (\c -> \w -> w ++ path c) [] (path trip)

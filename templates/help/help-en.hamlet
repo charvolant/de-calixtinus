@@ -5,113 +5,301 @@
       <span .navbar-toggler-icon>
     <div .collapse .navbar-collapse #help-menu">
       <ul .navbar-nav>
+        <li .nav-item>
+          <a .nav-link .active href="#map-help">Map
+        <li .nav-item>
+          <a .nav-link .active href="#plan-help">Plan
+        <li .nav-item>
+          <a .nav-link .active href="#location-help">Locations
+        <li .nav-item>
+          <a .nav-link .active href="#preferences-help">Preferences
          <li .nav-item>
           <a .nav-link .active href="#services-help">Services
         <li .nav-item>
-          <a .nav-link .active href="#location-help">Location
-        <li .nav-item>
           <a .nav-link .active href="#accommodation-help">Accommodation
         <li .nav-item>
-          <a .nav-link .active href="#penance-help">Penance
+          <a .nav-link .active href="travel-help">Travel
         <li .nav-item>
-          <a .nav-link .active href="#preferences-help">Preferences
+          <a .nav-link .active href="#penance-help">Penance
        <li .nav-item>
           <a .nav-link .active href="#glossary-help">Glossary
 
-<h2 #services-help>Services
+<h2 #map-help>Map
 
-Services are provided either by the towns and villages that you walk through or the accommodation
-that you use when you stop.
-Services in locations are usually for general use (if they are open).
-Services in accommodation are usually only for the use of the guests.
+<p>
+  The map shows a scrollable, zoomable route map.
+  Waypoints along the route are shown as yellow icons based on the <a href="#location-help">location type</a>.
+  Stops are shown as white icons.
+  Unused waypoints are shown as grey icons.
 
-<table .table .table-striped>
-  <caption>Services
-  <thead>
-    <tr>
-       <th scope="col">Icon
-       <th scope="col">Service
-  <tbody>
-    <tr>
-      <td>^{caminoServiceIcon WiFi}
-      <td>WiFi available
-    <tr>
-      <td>^{caminoServiceIcon Restaurant}
-      <td>Restaurant or Café
-    <tr>
-      <td>^{caminoServiceIcon Pharmacy}
-      <td>Pharmacy
-    <tr>
-      <td>^{caminoServiceIcon Bank}
-      <td>Banking facilities or an automated teller machine
-    <tr>
-      <td>^{caminoServiceIcon BicycleRepair}
-      <td>Bicycle repair shop
-    <tr>
-      <td>^{caminoServiceIcon Groceries}
-      <td>Convenience store or supermarket
-    <tr>
-      <td>^{caminoServiceIcon Medical}
-      <td>Doctor, hospital or other healthcare
-    <tr>
-      <td>^{caminoServiceIcon WashingMachine}
-      <td>Washing machine available
-    <tr>
-      <td>^{caminoServiceIcon Dryer}
-      <td>Dryer or spin-dryer available
-    <tr>
-      <td>^{caminoServiceIcon Handwash}
-      <td>Handwash laundry facilities
-    <tr>
-      <td>^{caminoServiceIcon Kitchen}
-      <td>Kitchen facilities
-    <tr>
-      <td>^{caminoServiceIcon Breakfast}
-      <td>Breakfast available
-    <tr>
-      <td>^{caminoServiceIcon Dinner}
-      <td>Dinner available
-    <tr>
-      <td>^{caminoServiceIcon Lockers}
-      <td>Lockers or cabinets
-    <tr>
-      <td>^{caminoServiceIcon Accessible}
-      <td>Accessible for people with disabilities
-    <tr>
-      <td>^{caminoServiceIcon Stables}
-      <td>Stabling for horses available
-    <tr>
-      <td>^{caminoServiceIcon Pets}
-      <td>Pets allowed
-    <tr>
-      <td>^{caminoServiceIcon BicycleStorage}
-      <td>Bicycle storage available
-    <tr>
-      <td>^{caminoServiceIcon CampSite}
-      <td>Camping sites available
-    <tr>
-      <td>^{caminoServiceIcon Bedlinen}
-      <td>Bedlinen provided
-    <tr>
-      <td>^{caminoServiceIcon Towels}
-      <td>Towels provided
-    <tr>
-      <td>^{caminoServiceIcon Pool}
-      <td>Swimming pool available
-    <tr>
-      <td>^{caminoServiceIcon Heating}
-      <td>Heated building
-    <tr>
-      <td>^{caminoServiceIcon Prayer}
-      <td>Community prayer/liturgy 
-    <tr>
-      <td>^{caminoServiceIcon Train}
-      <td>Train station
-    <tr>
-      <td>^{caminoServiceIcon Bus}
-      <td>Bus stop
+<p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    The links are shown as straight lines.
+    The actual route may be considerably more wriggly.
+    You will need to use a proper map or navigation app to work out where the path is actually taking you.
+
+  The links between waypoints are shown as line between waypoints.
+  Links are coloured to show which route variant is being used, with Camino yellow for the main Camino route.
+  Links used in the plan are thicker than the unused links.
+
+<p>
+  If you mouse over one of the location icons, you will see a summary of the location.
+  An example summary is
+
+<div .card .location-tooltip .container-fluid .border-info .m-2 .p-1>
+  <div .row>
+    <div .col>
+      Pontecesures
+      <span .accomodation-types>
+        <span .accomodation .municipal-albergue .ca-albergue>
+        <span .accomodation .hotel .ca-hotel>
+      <span .services">
+        <span .service .ca-restaurant>
+        <span .service .ca-pharmacy>
+        <span .service .ca-bank>
+        <span .service .ca-groceries>
+        <span .service .ca-medical>
+        <span .service .ca-train>
+        <span .service .ca-bus>
+  <div .row>
+    <div .col .leg-to .leg-line .leg-used .offset-1>
+      Padrón
+      <span .leg-type>
+      <span .leg-distance>3.1km
+      <span .leg-ascent>5m
+      <span .leg-descent>30m
+    <div .row>
+      <div .col .leg-to .leg-line .leg-unused .offset-1>
+        Herbón
+        <span .leg-type>
+        <span .leg-distance>3.6km
+        <span .leg-ascent>30m
+        <span .leg-descent>60m
+
+<p>
+  The first line is a summary of the location.
+  The first element is the name of the town.
+  Following the name is a list of the types of <a href="#accomodation-help">accomodation</a> available -
+  a municipal pilgrims albergue and one or more hotels.
+  The accomodation is followed by the <a href="#services-help">services</a>
+  that are reasonably accessible in that location -
+  restaurants or cafés, pharmacies, banks, groceries or supermarkets, medical assistance, a train station and bus stations.
+
+<p>
+  Below the first line are <a href="#travel-help">links</a> to the next waypoint.
+  The first line says that the next leg of the route is to Padrón, 3.1 kilometers away with a total ascent of 5 metres
+  and a total descent of 30 metres.
+  The second line shows an unused leg to Herbón; the planner has chosen to prefer the Padrón over Herbón.
+
+<p>
+  If you click on the location, you will be scrolled to a more detailed location description
+  on the Location tab.
+
+<h2 #plan-help>Plan
+
+<p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    The planner attempts to break things into stages of acceptable
+    <a href="#penance-help">
+      <em>penance.
+    Penance is a measure of how hard the stage feels like, based on the
+    <a href="preferences-help">preferences
+    given in the preferences tab.
+    The planner then attempts to minimise the total amount of penance for the entire trip.
+
+  The plan tab shows the suggested route.
+  The plan is broken into days, each day showing a start and stop point and the waypoints for the day.
+  An example day is
+
+<div .card .day .m-2 .p-1 .border-info>
+  <h4>
+    <a href="#">Vila Franca de Xira
+     -
+    <a href="#">Azambuja
+    <span .distance">19.4km
+    <div .penance-summary .dropdown>
+      <button .btn .btn-outline-primary .penance-summary .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
+        Penance
+        <span .penance>24.7km
+      <div .dropdown-menu>
+        <a .dropdown-item>
+          Distance
+          <span .distance>22.2km
+        <a .dropdown-item>
+          Accomodation
+          <span .penance>0.5km
+        <a .dropdown-item>
+          Stop
+          <span .penance>2.0km
+        <a .dropdown-item>
+          Missing Services (Stop)
+          <span .penance>0.0km
+        <a .dropdown-item>
+          Missing Services (Day)
+          <span .penance>0.0km
+        <a .dropdown-item>
+          Distance Adjustment
+          <span .penance>0.0km
+       <a .dropdown-item>
+          Time Adjustment
+          <span .penance>0.0km
+       <a .dropdown-item>
+          Other
+          <span .penance>0.0km
+  <div .card-body>
+    <p>
+      Distance
+      <span .distance">19.4km
+      (feels like <span .distance">22.2km</span>)
+      over <span class="time">5.5hrs</span>
+      Ascent <span class="height">25m</span>
+      Descent <span class="height">25m</span>
+      Penance <span class="penance">24.7km</span>
+    <ul>
+      <li>
+        <div .location-summary>
+          Vila Franca de Xira
+          <span .accomodation-types>
+            <span .accomodation .private-albergue .ca-albergue>
+            <span .accomodation .guest-house .ca-guesthouse>
+            <span .accomodation .hotel .ca-hotel>
+          <span .services>
+            <span .service .ca-restaurant>
+            <span .service .ca-pharmacy>
+            <span .service .ca-bank>
+            <span .service .ca-bicycle-repair>
+            <span .service .ca-groceries>
+            <span .service .ca-medical>
+            <span .service .ca-train>
+            <span .service .ca-bus>
+      <li>
+        <div .location-summary>
+          Estación de Carregado
+          <span .accomodation-types>
+            <span .accomodation .private-albergue .ca-albergue>
+          <span .services>
+            <span .service .ca-restaurant>
+            <span .service .ca-groceries>
+            <span .service .ca-train>
+            <span .service .ca-bus>
+          <div .leg-summary .leg-line>
+            <span .leg-type>
+            <span .leg-distance>7.3km
+            <span .leg-ascent>5m
+            <span .leg-descent>5m
+      <li>
+        <div .location-summary>
+          Vila Nova de Rainha
+          <span .accomodation-types>
+          <span .services>
+            <span .service .ca-restaurant>
+            <span .service .ca-bank>
+            <span .service .ca-groceries>
+            <span .service .ca-train>
+          <div .leg-summary .leg-line>
+            <span .leg-type>
+            <span .leg-distance>4.7km
+            <span .leg-ascent>5m
+            <span .leg-descent>5m
+      <li>
+        ...
+
+<p>
+  The top line shows the start and end points for the day, the total distance travelled and the
+  <a href="#penance-help">penance
+  score for the day.
+  Clicking on either of the locations will take you to a more detailed description of the location in
+  the <a hre="#location-help">locations</a> tab.
+  Clicking on the penance score will show a more detailed breakdown of the total penance for the day.
+
+<p>
+  The following lines give the waypoints for the day.
+  Each waypoint summarises the location in terms of the accomodation and services available.
+  The amount of
+  <a href="#travel-help">travel
+  needed to get to that waypoint is given after the location summary.
+
+<p>
+  In the above example, it takes 7.3 kilometres, with 5 metres ascent and descent to reach
+  Estación de Carregado from Vila Franca de Xira.
+  It then takes 4.7 kilometres, again with 5 metres ascent and descent to reach Vila Nova de Rainha from
+  Estación de Carregado
+
 
 <h2 #location-help>Locations
+
+<p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    The locations are initially shown collapsed, so that you can easily scroll through them.
+    Click on the line to fully open the location detail.
+
+  The locations tab shows a list of the location found on the
+  <a href="#map-help">map
+  and listed in the
+  <a href="#plan-help">plan
+  An example location is
+
+<div .card ..border .border-info .m-2 .p-2>
+  <div .accordion .container-fluid>
+    <div .row>
+      <div .accordion-item .location-default .location-stop .location #P119">
+        <div .accordion-header>
+          <div .row>
+            <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-P119" aria-expanded="false" aria-controls="location-body-P119">
+              <h5 .col-6>
+                <span .location-type .ca-town">
+                Oliveira de Azeméis
+              <div .col .services>
+                <span .service .ca-restaurant">
+                <span .service .ca-bank">
+                <span .service .ca-bicycle-repair">
+                <span .service .ca-groceries">
+                <span .service .ca-medical">
+                <span .service .ca-trail">
+                <span .service .ca-bus">
+              <div .col .accomodation-types>
+                <span .accomodation .hotel .ca-hotel>
+          <div .accordion-collapse .collapse" #location-body-P119 aria-labelledby="location-heading-P119" data-parent="#locations">
+            <div .accordion-body .container-fluid>
+              <div .row>
+                <div .col>
+                  <h6>Accommodation
+              <div .row .accomodation>
+                <div .offset-1 .col-5>
+                  <span .accomodation .hotel .ca-hotel>
+                  Hotel Dighton
+                <div .col-4>
+                  <span .service .ca-wifi>
+                  <span .service .ca-restaurant>
+                  <span .service .ca-breakfast>
+                  <span .service .ca-accessible>
+                  <span .service .ca-bicycle-storage>
+                  <span .service .ca-bedlinen>
+                  <span .service .ca-towels>
+                  <span .service .ca-heating>
+                <div .col-2>
+                  <span .sleeping .ca-bed-single>
+                  <span .sleeping .ca-bed-double-wc>
+                  <span .sleeping .ca-bed-triple>
+                  <span .sleeping .ca-bed-quadruple>
+              <div .row>
+                <div .col>
+                  <h6>Route
+              <div .row>
+                <div .col .leg-to .leg-line .leg-used .offset-1">
+                  <a href="#">Santiago de Riba-Ul
+                  <span .leg-type>
+                  <span .leg-distance>2.3km
+                  <span .leg-ascent>20m
+                  <span  .leg-descent>70m
+
+<p>
+  The first element on the header is an icon showing the type of location, followed by the name.
+  The location type is a very rough indicator of the type of location.
+  The exact line between what is a village, a town or a city is not well-defined, monsteries are often attached
+  to villages and a point of interest could be almost anything.
+  If this location is a stop point at the end of a day's walk, a bed icon is shown after the location name.
+  The possible icons are show below:
 
 <table .table .table-striped>
   <caption>Location Types
@@ -142,177 +330,63 @@ Services in accommodation are usually only for the use of the guests.
        <td>Intersection
        <td>A road intersection
     <tr>
+       <td>^{caminoLocationTypeIcon Monastery}
+       <td>Monastery
+       <td>A monastery, often with a hospice attached
+    <tr>
+       <td>^{caminoLocationTypeIcon Peak}
+       <td>Peak
+       <td>A peak or lookout
+    <tr>
        <td>^{caminoLocationTypeIcon Poi}
        <td>Locality
        <td>An unspecified waypoint
 
-
-<h2 #accommodation-help>Accomodation
-
-<table .table .table-striped>
-  <caption>Accomodation Types
-  <thead>
-    <tr>
-       <th scope="col">Icon
-       <th scope="col">Accomodation Type
-       <th scope="col">Comments
-  <tbody>
-    <tr>
-        <td>^{caminoAccommodationTypeIcon MunicipalAlbergue}
-        <td>Municipal Albergue
-        <td>
-            An albergue (pilgrim hostel) usually run by volunteers for pilgrims only.
-            Municipal albergues are generally inexpensive, have limited services and usually only allow one night's stay.
-            Municipal albergues are often not bookable but simply accept pilgrims until full.
-    <tr>
-        <td>^{caminoAccommodationTypeIcon PrivateAlbergue}
-        <td>Private Albergue
-        <td>
-            An albergue run as a private business.
-            Private albergues usually offer more services than municipal albergues, allow more than one nights stay and are bookable.
-    <tr>
-        <td>^{caminoAccommodationTypeIcon GuestHouse}
-        <td>Guesthouse
-        <td>
-            A guesthouse, quinta, casa, bed-and-breakfast, pensione or similar
-    <tr>
-        <td>^{caminoAccommodationTypeIcon House}
-        <td>House Rental
-        <td>
-            An entire house or unit, available for rental
-    <tr>
-        <td>^{caminoAccommodationTypeIcon Hotel}
-        <td>Hotel
-        <td>
-            A commercial hotel, usually with multiple services and accomodation options.
-    <tr>
-        <td>^{caminoAccommodationTypeIcon Camping}
-        <td>Camping
-        <td>
-            Camping by the side of the Camino, using your own resources.
-
-
-<table .table .table-striped>
-  <caption>Sleeping Arrangements
-  <thead>
-    <tr>
-       <th scope="col">Icon
-       <th scope="col">Sleeping Arrangements
-       <th scope="col">Comments
-  <tbody>
-    <tr>
-        <td>^{caminoSleepingIcon Shared}
-        <td>Shared
-        <td>
-            Shared sleeping, usually in bunk beds
-    <tr>
-        <td>^{caminoSleepingIcon Single}
-        <td>Single
-        <td>
-            A private single room
-    <tr>
-        <td>^{caminoSleepingIcon Double}
-        <td>Double
-        <td>
-            A private double room
-    <tr>
-        <td>^{caminoSleepingIcon DoubleWC}
-        <td>Double with Bathroom
-        <td>
-            A double room with a private bathroom
-    <tr>
-        <td>^{caminoSleepingIcon Triple}
-        <td>Triple
-        <td>
-            A private triple room
-    <tr>
-        <td>^{caminoSleepingIcon TripleWC}
-        <td>Triple with Bathroom
-        <td>
-            A triple room with a private bathroom
-    <tr>
-        <td>^{caminoSleepingIcon Quadruple}
-        <td>Quadruple
-        <td>
-            A private quadruple room
-    <tr>
-        <td>^{caminoSleepingIcon QuadrupleWC}
-        <td>Quadruple with Bathroom
-        <td>
-            A quadruple room with a private bathroom
-    <tr>
-        <td>^{caminoSleepingIcon Mattress}
-        <td>Mattress
-        <td>
-            A matress on the floor in a shared space
-    <tr>
-        <td>^{caminoSleepingIcon SleepingBag}
-        <td>Sleeping Bag
-        <td>
-            Your own sleeping bag and mattress
-
-<h2 #penance-help>Penance
+<p>
+  The next element shows the
+  <a href="#services-help">services
+  that the location offers.
+  These are services that are publically available, generally shop, cafés and the like and within
+  relatively easy reach of a pilgrim.
 
 <p>
-  "Penance" is a catch-all term for how hard walking a stage of the Camino is going to be.
-  The name comes from a joke about the purpose of walking the Camino.
-  The Camino Planner attempts to divide the entire trip into day-stages that minimise the
-  total amount of penance accumulated during the journey.
-<p>
-  The root measure of penance is how many kilometres you have walked.
-  Other aspects of the trip, such as accommodation preferences and the like are converted into
-  kilometre-equivalents and added to the base walking distance.
-  As a general rule, think of the other penance values in terms of,
-  "I would walk ... extra kilometres in the day to ensure this service or avoid this stop"
-<p>
-  In addition, penance can result in a flat-out "no fun, not doing this" rejection.
-  This is indicted by the _{PenanceFormatted Reject} symbol.
+  The next element shows the types of
+  <a href="#accommodation-help">accomodation
+  that the location offers.
+  There is usually a more detailed list of accomodation options available if you open the location.
 
-<h3>How Penance is Calculated
+<h3 #location-detail-help>Location Detail
 
 <p>
-  Penance is calculated by using the user's preferences to score a day's walk.
-  The basic procedure is as follows:
+  If you open the location by clicking on the name line, you will get more detail on the
+  location.
 
-<ol>
-  <li>
-    Each leg of the walk contains a distance and an ascent and descent.
-    The raw time taken to walk this leg is calculated by either:
-    <ul>
-      <li>
-        Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
-      <li>
-        Tobler's rule, which combines distance, ascent and descent.
-  <li>
-    The time taken for each leg is added together and then Tranter's corrections are applied.
-    These corrections adjust for the fitness of the person walking and the effects of fatigue as the day wears on.
-  <li>
-    The resulting time is converted into a <em>perceived distance</em>, essentially the distance an untiring
-    person of normal fitness, walking on flat ground, would walk in the same time.
-    The perceived distance forms the basis of the penance score.
-  <li>
-    A user can express preferences in terms of a distance range and time range.
-    Once the distance or time is outside the normal lower and upper bounds of the range, additional penance is
-    calculated to indicate either a heartbreakingly long day or a pathetically short walk.
-    There are also hard maximum and minimum limits, which will case the day to be rejected as a possible stage.
-  <li>
-    A stop penance is added.
-    This represents the business of settling down for the night, paying for accommodation, food costs and the like.
-    The stop penance encourages the planner not to divide the walk into many short stages.
-  <li>
-    The user can express preferences for services available in the stop location, in terms of added penance
-    if the services are not present.
-  <li>
-    The user can express preferences for services available throughout the day, again in terms of added penance
-    if the services are not present somewhere along the route, including the start and end locations.
-  <li>
-    The user can express preferences for certain types of accommodation and the most preferred (least penance)
-    accomodation is chosen.
-    In addition, accommodation can sometimes be chosen to fill out missing services from the surrounding location.
-    For example, a hotel with a restaurant may be chosen if one is desired but not present at the stop.
-  <li>
-    The final penance is then the combination of penance from the perceived walking distance,
-    distance and time penalties, stop, accommodation and missing services.
+<p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    Large cities and towns may have tens or hundreds of different accomodation options.
+    Rather than list them all, just the general types of accommodation available are listed.
+    You will need to then use a different source to chose the particular place you want to stay.
+    For the purposes of
+    <a href="#penance-help">penance
+    calculations, generic accommodation types are given assumed services and sleep options.
+
+  If there are any specific accommodation options, there will be a list of venues shown.
+  These give the name of the venue and describe the specific
+  <a href="#services-help">services
+  and
+  <a href="#accommodation-help">sleeping arrangements
+  available.
+  Accommodation is generally what is available either before, after or within a shortish walk
+  of the main Camino route.
+  Be prepared for some extra walking to get there.
+
+<p>
+  The routes list gives what
+  <a href="#travel-help"> travel
+  legs lead out of the location and on to the next location.
+  Clicking on the location name will take you to the next location.
+  There is usually only one leg available, unless the path forks into alternative routes or
+  large scale variants.
 
 <h2 #preferences-help>Preferences
 
@@ -320,6 +394,8 @@ Services in accommodation are usually only for the use of the guests.
   Preferences describe how much effort and discomfort a pilgrim is willing to bear.
   The Camino Planner then attempts to build a staged plan for the pilgrim, trying to minimise the number of
   long and miserable or short and frustrating days the pilgrim has to walk.
+  The preferences tab shows the preferences for the calculated
+  <a href="#plan-hel">plan.
   The preference elements are as follows:
 
 <table .table .table-striped>
@@ -518,6 +594,306 @@ Services in accommodation are usually only for the use of the guests.
   anything between the lower and upper bound is acceptable.
   Between the lower and minimum bounds, similarly for between the upper and maximum bounds, an additional penance is applied.
   Outside the minimum and maximum values will result in a rejection.
+
+<h2 #services-help>Services
+
+<p>
+  Services are provided either by the towns and villages that you walk through or the accommodation
+  that you use when you stop.
+  Services in locations are usually for general use (if they are open).
+  Services in accommodation are usually only for the use of the guests.
+
+<table .table .table-striped>
+  <caption>Services
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Service
+  <tbody>
+    <tr>
+      <td>^{caminoServiceIcon WiFi}
+      <td>WiFi available
+    <tr>
+      <td>^{caminoServiceIcon Restaurant}
+      <td>Restaurant or Café
+    <tr>
+      <td>^{caminoServiceIcon Pharmacy}
+      <td>Pharmacy
+    <tr>
+      <td>^{caminoServiceIcon Bank}
+      <td>Banking facilities or an automated teller machine
+    <tr>
+      <td>^{caminoServiceIcon BicycleRepair}
+      <td>Bicycle repair shop
+    <tr>
+      <td>^{caminoServiceIcon Groceries}
+      <td>Convenience store or supermarket
+    <tr>
+      <td>^{caminoServiceIcon Medical}
+      <td>Doctor, hospital or other healthcare
+    <tr>
+      <td>^{caminoServiceIcon WashingMachine}
+      <td>Washing machine available
+    <tr>
+      <td>^{caminoServiceIcon Dryer}
+      <td>Dryer or spin-dryer available
+    <tr>
+      <td>^{caminoServiceIcon Handwash}
+      <td>Handwash laundry facilities
+    <tr>
+      <td>^{caminoServiceIcon Kitchen}
+      <td>Kitchen facilities
+    <tr>
+      <td>^{caminoServiceIcon Breakfast}
+      <td>Breakfast available
+    <tr>
+      <td>^{caminoServiceIcon Dinner}
+      <td>Dinner available
+    <tr>
+      <td>^{caminoServiceIcon Lockers}
+      <td>Lockers or cabinets
+    <tr>
+      <td>^{caminoServiceIcon Accessible}
+      <td>Accessible for people with disabilities
+    <tr>
+      <td>^{caminoServiceIcon Stables}
+      <td>Stabling for horses available
+    <tr>
+      <td>^{caminoServiceIcon Pets}
+      <td>Pets allowed
+    <tr>
+      <td>^{caminoServiceIcon BicycleStorage}
+      <td>Bicycle storage available
+    <tr>
+      <td>^{caminoServiceIcon CampSite}
+      <td>Camping sites available
+    <tr>
+      <td>^{caminoServiceIcon Bedlinen}
+      <td>Bedlinen provided
+    <tr>
+      <td>^{caminoServiceIcon Towels}
+      <td>Towels provided
+    <tr>
+      <td>^{caminoServiceIcon Pool}
+      <td>Swimming pool available
+    <tr>
+      <td>^{caminoServiceIcon Heating}
+      <td>Heated building
+    <tr>
+      <td>^{caminoServiceIcon Prayer}
+      <td>Community prayer/liturgy 
+    <tr>
+      <td>^{caminoServiceIcon Train}
+      <td>Train station
+    <tr>
+      <td>^{caminoServiceIcon Bus}
+      <td>Bus stop
+
+<h2 #accommodation-help>Accomodation
+
+<table .table .table-striped>
+  <caption>Accomodation Types
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Accomodation Type
+       <th scope="col">Comments
+  <tbody>
+    <tr>
+        <td>^{caminoAccommodationTypeIcon MunicipalAlbergue}
+        <td>Municipal Albergue
+        <td>
+            An albergue (pilgrim hostel) usually run by volunteers for pilgrims only.
+            Municipal albergues are generally inexpensive, have limited services and usually only allow one night's stay.
+            Municipal albergues are often not bookable but simply accept pilgrims until full.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon PrivateAlbergue}
+        <td>Private Albergue
+        <td>
+            An albergue run as a private business.
+            Private albergues usually offer more services than municipal albergues, allow more than one nights stay and are bookable.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon GuestHouse}
+        <td>Guesthouse
+        <td>
+            A guesthouse, quinta, casa, bed-and-breakfast, pensione or similar
+    <tr>
+        <td>^{caminoAccommodationTypeIcon House}
+        <td>House Rental
+        <td>
+            An entire house or unit, available for rental
+    <tr>
+        <td>^{caminoAccommodationTypeIcon Hotel}
+        <td>Hotel
+        <td>
+            A commercial hotel, usually with multiple services and accomodation options.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon Camping}
+        <td>Camping
+        <td>
+            Camping by the side of the Camino, using your own resources.
+
+
+<table .table .table-striped>
+  <caption>Sleeping Arrangements
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Sleeping Arrangements
+       <th scope="col">Comments
+  <tbody>
+    <tr>
+        <td>^{caminoSleepingIcon Shared}
+        <td>Shared
+        <td>
+            Shared sleeping, usually in bunk beds
+    <tr>
+        <td>^{caminoSleepingIcon Single}
+        <td>Single
+        <td>
+            A private single room
+    <tr>
+        <td>^{caminoSleepingIcon Double}
+        <td>Double
+        <td>
+            A private double room
+    <tr>
+        <td>^{caminoSleepingIcon DoubleWC}
+        <td>Double with Bathroom
+        <td>
+            A double room with a private bathroom
+    <tr>
+        <td>^{caminoSleepingIcon Triple}
+        <td>Triple
+        <td>
+            A private triple room
+    <tr>
+        <td>^{caminoSleepingIcon TripleWC}
+        <td>Triple with Bathroom
+        <td>
+            A triple room with a private bathroom
+    <tr>
+        <td>^{caminoSleepingIcon Quadruple}
+        <td>Quadruple
+        <td>
+            A private quadruple room
+    <tr>
+        <td>^{caminoSleepingIcon QuadrupleWC}
+        <td>Quadruple with Bathroom
+        <td>
+            A quadruple room with a private bathroom
+    <tr>
+        <td>^{caminoSleepingIcon Mattress}
+        <td>Mattress
+        <td>
+            A matress on the floor in a shared space
+    <tr>
+        <td>^{caminoSleepingIcon SleepingBag}
+        <td>Sleeping Bag
+        <td>
+            Your own sleeping bag and mattress
+
+<h2 #travel-help>Travel
+
+<p>
+  Almost all legs on the trip are roads or paths that will allow either walking or cycling.
+  An icon beside the distance indicates that the leg will either allow only one of a particular type of travel
+  or is something special, like a ferry connection.
+
+<table .table .table-striped>
+  <caption>Travel Type
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Travel Type
+       <th scope="col">Comments
+  <tbody>
+    <tr>
+        <td>
+        <td>Road/Path
+        <td>
+            The default, a road or path that is suitable for both walkers and cyclists
+    <tr>
+        <td>^{caminoLegTypeIcon Trail}
+        <td>Trail
+        <td>
+            A trail that is only suitable for walkers
+    <tr>
+        <td>^{caminoLegTypeIcon CyclePath}
+        <td>Cycle Path
+        <td>
+            A cycle path that is only usable by cyclists
+     <tr>
+         <td>^{caminoLegTypeIcon Ferry}
+         <td>Ferry
+         <td>
+             A ferry connection.
+             Ferry connections do not usually have a distance but have, instead, a ferry time measured
+             in hours.
+             Ferries usually operate according to a schedule and may require booking.
+
+<h2 #penance-help>Penance
+
+<p>
+  "Penance" is a catch-all term for how hard walking a stage of the Camino is going to be.
+  The name comes from a joke about the purpose of walking the Camino.
+  The Camino Planner attempts to divide the entire trip into day-stages that minimise the
+  total amount of penance accumulated during the journey.
+<p>
+  The root measure of penance is how many kilometres you have walked.
+  Other aspects of the trip, such as accommodation preferences and the like are converted into
+  kilometre-equivalents and added to the base walking distance.
+  As a general rule, think of the other penance values in terms of,
+  "I would walk ... extra kilometres in the day to ensure this service or avoid this stop"
+<p>
+  In addition, penance can result in a flat-out "no fun, not doing this" rejection.
+  This is indicted by the _{PenanceFormatted Reject} symbol.
+
+<h3>How Penance is Calculated
+
+<p>
+  Penance is calculated by using the user's preferences to score a day's walk.
+  The basic procedure is as follows:
+
+<ol>
+  <li>
+    Each leg of the walk contains a distance and an ascent and descent.
+    The raw time taken to walk this leg is calculated by either:
+    <ul>
+      <li>
+        Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
+      <li>
+        Tobler's rule, which combines distance, ascent and descent.
+  <li>
+    The time taken for each leg is added together and then Tranter's corrections are applied.
+    These corrections adjust for the fitness of the person walking and the effects of fatigue as the day wears on.
+  <li>
+    The resulting time is converted into a <em>perceived distance</em>, essentially the distance an untiring
+    person of normal fitness, walking on flat ground, would walk in the same time.
+    The perceived distance forms the basis of the penance score.
+  <li>
+    A user can express preferences in terms of a distance range and time range.
+    Once the distance or time is outside the normal lower and upper bounds of the range, additional penance is
+    calculated to indicate either a heartbreakingly long day or a pathetically short walk.
+    There are also hard maximum and minimum limits, which will case the day to be rejected as a possible stage.
+  <li>
+    A stop penance is added.
+    This represents the business of settling down for the night, paying for accommodation, food costs and the like.
+    The stop penance encourages the planner not to divide the walk into many short stages.
+  <li>
+    The user can express preferences for services available in the stop location, in terms of added penance
+    if the services are not present.
+  <li>
+    The user can express preferences for services available throughout the day, again in terms of added penance
+    if the services are not present somewhere along the route, including the start and end locations.
+  <li>
+    The user can express preferences for certain types of accommodation and the most preferred (least penance)
+    accomodation is chosen.
+    In addition, accommodation can sometimes be chosen to fill out missing services from the surrounding location.
+    For example, a hotel with a restaurant may be chosen if one is desired but not present at the stop.
+  <li>
+    The final penance is then the combination of penance from the perceived walking distance,
+    distance and time penalties, stop, accommodation and missing services.
 
 <h2 #glossary-help>Glossary
 

@@ -45,6 +45,7 @@ data CaminoMsg =
   | CampingTitle
   | CampSiteTitle
   | CityTitle
+  | CyclePathTitle
   | DayServicesPenanceMsg Penance
   | DayServicesPreferencesLabel
   | DaySummaryMsg Day
@@ -62,6 +63,7 @@ data CaminoMsg =
   | DryerTitle
   | ExcludedStopsLabel
   | FitnessLabel
+  | FerryTitle
   | GroceriesTitle
   | GuestHouseTitle
   | HandwashTitle
@@ -70,6 +72,7 @@ data CaminoMsg =
   | HouseTitle
   | IntersectionTitle
   | KitchenTitle
+  | LegPenanceMsg Penance
   | LinkLabel LinkConfig
   | LocationsLabel
   | LockersTitle
@@ -77,8 +80,10 @@ data CaminoMsg =
   | MattressTitle
   | MedicalTitle
   | MiscPenanceMsg Penance
+  | MonasteryTitle
   | MunicipalAlbergueTitle
   | OtherLabel
+  | PeakTitle
   | PenanceFormatted Penance
   | PenanceMsg Penance
   | PenanceReject
@@ -96,6 +101,8 @@ data CaminoMsg =
   | QuadrupleWcTitle
   | RequiredStopsLabel
   | RestaurantTitle
+  | RoadTitle
+  | RouteLabel
   | ServicesLabel
   | SharedTitle
   | SingleTitle
@@ -111,6 +118,7 @@ data CaminoMsg =
   | TimePreferencesLabel
   | TowelsTitle
   | TownTitle
+  | TrailTitle
   | TrainTitle
   | TripleTitle
   | TripleWcTitle
@@ -163,6 +171,7 @@ renderCaminoMsgDefault _ BusTitle = "Bus"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CityTitle = "City"
+renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaySummaryMsg day) = [shamlet|
@@ -186,6 +195,7 @@ renderCaminoMsgDefault _ DoubleWcTitle = "Double with WC"
 renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
+renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
@@ -195,14 +205,17 @@ renderCaminoMsgDefault _ HotelTitle = "Hotel"
 renderCaminoMsgDefault _ HouseTitle = "House"
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
+renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
 renderCaminoMsgDefault _ MapLabel = "Map"
 renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
 renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
 renderCaminoMsgDefault _ MunicipalAlbergueTitle = "Municipal Albergue"
 renderCaminoMsgDefault _ OtherLabel = "Other"
+renderCaminoMsgDefault _ PeakTitle = "Peak"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
 renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ PenanceReject = "Rejected"
@@ -220,6 +233,8 @@ renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
+renderCaminoMsgDefault _ RoadTitle = "Road/path"
+renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ ServicesLabel = "Services"
 renderCaminoMsgDefault _ SharedTitle = "Shared"
 renderCaminoMsgDefault _ SingleTitle = "Single"
@@ -235,6 +250,7 @@ renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
 renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
 renderCaminoMsgDefault _ TowelsTitle = "Towels"
 renderCaminoMsgDefault _ TownTitle = "Town"
+renderCaminoMsgDefault _ TrailTitle = "Trail (walkers only)"
 renderCaminoMsgDefault _ TrainTitle = "Train"
 renderCaminoMsgDefault _ TripleTitle = "Triple"
 renderCaminoMsgDefault _ TripleWcTitle = "Triple with WC"

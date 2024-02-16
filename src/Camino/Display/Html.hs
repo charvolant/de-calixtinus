@@ -16,21 +16,22 @@ module Camino.Display.Html where
 
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkConfig(..), LinkI18n(..), LinkType(..), getAssets, getLinks)
-import Camino.Planner (Trip, Day, Metrics(..), tripStops, tripWaypoints)
+import Camino.Planner (Trip, Day, Metrics(..), tripLegs, tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Display.Css (toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
+import Graph.Graph (outgoing)
 import Text.Hamlet
 import qualified Data.Text as T (intercalate, null, pack, Text)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
-import Data.List (sortBy)
+import qualified Data.List as L
 import qualified Data.Text as T (toUpper, take, filter)
 import Data.Text.ICU.Char (Bool_(..), property)
 import Data.Text.ICU.Normalize2 (NormalizationMode(..), normalize)
-import Data.Maybe (isJust)
+import Data.Maybe (fromJust, isJust)
 
 -- | Canonicalise text, removing accents and diacritics
 canonicalise :: T.Text -> T.Text
@@ -50,6 +51,15 @@ partition :: (Eq b) => (a -> b) -- ^ The classifier function, produces the eleme
   -> [(b, [a])] -- ^ A resulting list of category - elements that fit the category pairs
 partition _classifier [] = []
 partition classifier (s:source) = partition' classifier source (classifier s) [s]
+
+-- | Include a label row if some values are non-empty
+conditionalLabel :: CaminoMsg -> [a] -> HtmlUrlI18n CaminoMsg CaminoRoute
+conditionalLabel label values = [ihamlet|
+  $if not $ null values
+    <div .row>
+      <div .col>
+        <h6>_{label}
+  |]
 
 penanceSummary :: Preferences -> Camino -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
 penanceSummary _preferences _camino metrics = [ihamlet|
@@ -108,7 +118,15 @@ caminoLocationTypeIcon Town = [ihamlet| <span .location-type .ca-town title="_{T
 caminoLocationTypeIcon City = [ihamlet| <span .location-type .ca-city title="_{CityTitle}"> |]
 caminoLocationTypeIcon Bridge = [ihamlet| <span .location-type .ca-bridge title="_{BridgeTitle}"> |]
 caminoLocationTypeIcon Intersection = [ihamlet| <span .location-type .ca-intersection title="_{IntersectionTitle}"> |]
+caminoLocationTypeIcon Monastery = [ihamlet| <span .location-type .ca-monastery title="_{MonasteryTitle}"> |]
+caminoLocationTypeIcon Peak = [ihamlet| <span .location-type .ca-peak title="_{PeakTitle}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
+
+caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLegTypeIcon Trail = [ihamlet| <span .leg-type .ca-walking title="_{TrailTitle}"> |]
+caminoLegTypeIcon CyclePath = [ihamlet| <span .leg-type .ca-cycling title="_{CyclePathTitle}"> |]
+caminoLegTypeIcon Ferry = [ihamlet| <span .leg-type .ca-ferry title="_{FerryTitle}"> |]
+caminoLegTypeIcon _ = [ihamlet| <span .leg-type title="_{RoadTitle}"> |]
 
 caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoSleepingIcon Shared = [ihamlet| <span .sleeping .ca-shared title="_{SharedTitle}"> |]
@@ -154,7 +172,7 @@ caminoServiceIcon Kitchen = [ihamlet| <span .service .ca-kitchen title="_{Kitche
 caminoServiceIcon Breakfast = [ihamlet| <span .service .ca-breakfast title="_{BreakfastTitle}"> |]
 caminoServiceIcon Dinner = [ihamlet| <span .service .ca-dinner title="_{DinnerTitle}"> |]
 caminoServiceIcon Lockers = [ihamlet| <span .service .ca-lockers title="_{LockersTitle}"> |]
-caminoServiceIcon Accessible = [ihamlet| <i .service .ca-accessible title="_{AccessibleTitle}"> |]
+caminoServiceIcon Accessible = [ihamlet| <span .service .ca-accessible title="_{AccessibleTitle}"> |]
 caminoServiceIcon Stables = [ihamlet| <span .service .ca-stables title="_{StablesTitle}"> |]
 caminoServiceIcon Pets = [ihamlet| <span .service .ca-pets title="_{PetsTitle}"> |]
 caminoServiceIcon BicycleStorage = [ihamlet| <span .service .ca-bicycle-storage title="_{BicycleStorageTitle}"> |]
@@ -186,19 +204,16 @@ caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping')
 caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml (GenericAccommodation _type) = [ihamlet| |]
 caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [ihamlet|
-  <div .card .accomodation .m-1 .p-1>
-    <h5>
+  <div .row .accomodation>
+    <div .offset-1 .col-5>
       ^{caminoAccommodationTypeIcon type'}
       #{name'}
-    <div .card-body>
-      <div .container-fluid>
-        <div .row>
-          <div .col>
-            $forall service <- services'
-              ^{caminoServiceIcon service}
-          <div .col>
-            $forall sleeping <- sleeping'
-              ^{caminoSleepingIcon sleeping}
+    <div .col-4>
+      $forall service <- services'
+        ^{caminoServiceIcon service}
+    <div .col-2>
+      $forall sleeping <- sleeping'
+        ^{caminoSleepingIcon sleeping}
  |]
 
 locationLine :: Preferences -> Camino -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -212,26 +227,73 @@ locationLine _preferences _camino location = [ihamlet|
         ^{caminoServiceIcon service}
   |]
 
-caminoLocationHtml :: Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationHtml _preferences camino _trip stops waypoints location = [ihamlet|
-  <div id="#{locationID location}" class="location-#{routeID route}" :isStop:.border-primary :isStop:.location-stop :isWaypoint:.border-primary-subtle :isWaypoint:.location-waypoint .location .card .p-2 .mx-1 .mt-4>
-    <div .card-title>
-      <h4>
-        ^{caminoLocationTypeIcon (locationType location)}
-        #{locationName location}
-    <div .card-body>
-      <div .container-fluid>
-        <div .row .mb-4>
+legLine :: Preferences -> Camino -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+legLine _preferences _camino leg = [ihamlet|
+    ^{caminoLegTypeIcon (legType leg)}
+    $if legDistance leg > 0
+      <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
+    $if legAscent leg > 0
+      <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
+    $if legDescent leg > 0
+      <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
+    $if isJust $ legTime leg
+      <span .leg-time>#{format (fixed 1 % "hrs") (fromJust $ legTime leg)}
+    $if isJust $ legPenance leg
+      <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
+    $if isJust $ legNotes leg
+      <span .leg-notes>#{fromJust $ legNotes leg}
+  |]
+
+locationLegLine :: Preferences -> Bool -> Camino -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLegLine preferences showLink camino leg = [ihamlet|
+   $if showLink
+     <a href="##{locationID $ legTo leg}">
+       #{locationName $ legTo leg}
+   $else
+     #{locationName $ legTo leg}
+   ^{legLine preferences camino leg}
+ |]
+
+locationLegs :: Preferences -> Bool -> Camino -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLegs preferences showLink camino used location = [ihamlet|
+  $forall leg <- usedLegs
+    <div .row>
+      <div .col .leg-to .leg-line .leg-used .offset-1>
+        ^{locationLegLine preferences showLink camino leg}
+  $forall leg <- unusedLegs
+      <div .row>
+        <div .col .leg-to .leg-line .leg-unused .offset-1>
+          ^{locationLegLine preferences showLink camino leg}
+ |]
+  where
+    outgoingLegs = outgoing camino location
+    (usedLegs, unusedLegs) = L.partition (\l -> S.member l used) outgoingLegs
+
+caminoLocationHtml :: Preferences -> Camino -> Maybe Trip -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationHtml preferences camino _trip containerId stops waypoints used location = [ihamlet|
+  <div id="#{lid}" .accordion-item .location-#{routeID route} :isStop:.location-stop :isWaypoint:.location-waypoint .location>
+    <div .accordion-header>
+      <div .row>
+        <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
+          <h5 .col-6>
+            ^{caminoLocationTypeIcon (locationType location)}
+            #{locationName location}
           <div .col .services>
-            $forall service <- locationServices location
-              ^{caminoServiceIcon service}
+             $forall service <- locationServices location
+                ^{caminoServiceIcon service}
           <div .col .accomodation-types>
-            $forall accomodation <- locationAccommodationTypes location
-              ^{caminoAccommodationTypeIcon accomodation}
+             $forall accomodation <- locationAccommodationTypes location
+                 ^{caminoAccommodationTypeIcon accomodation}
+    <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
+      <div .accordion-body .container-fluid>
+        ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accomodation <- locationAccommodation location
           ^{caminoAccommodationHtml accomodation}
+        ^{conditionalLabel RouteLabel (outgoing camino location)}
+        ^{locationLegs preferences True camino used location}
   |]
   where
+    lid = locationID location
     route = caminoRoute camino location
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
@@ -251,16 +313,18 @@ caminoLocationsHtml preferences camino trip = [ihamlet|
                   <a .dropdown-item href="##{locationID loc}">#{locationName loc}
     <div .row>
       <div .col>
-        $forall loc <- locationsSorted
-          <div .row>
-            ^{caminoLocationHtml preferences camino trip stops waypoints loc}
+        <div #locations .accordion .container-fluid>
+          $forall loc <- locationsSorted
+            <div .row>
+              ^{caminoLocationHtml preferences camino trip "locations" stops waypoints usedLegs loc}
   |]
   where
     locationOrder a b = compare (canonicalise $ locationName a) (canonicalise $ locationName b)
-    locationsSorted = sortBy locationOrder (caminoLocations camino)
+    locationsSorted = L.sortBy locationOrder (caminoLocations camino)
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationName l) locationsSorted
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
+    usedLegs = maybe (S.fromList $ legs camino) (S.fromList . tripLegs) trip
     
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml range = [ihamlet|
@@ -364,10 +428,8 @@ caminoTripHtml preferences camino trip = [ihamlet|
               <li>
                 <div .location-summary>
                   ^{locationLine preferences camino (legTo leg)}
-                <div .distance-summary>
-                  <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
-                  <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
-                  <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
+                <div .leg-summary .leg-line>
+                  ^{legLine preferences camino leg}
          $forall accom <- metricsAccommodationChoice $ score day
             <p>
               ^{caminoAccommodationSummaryHtml accom}
@@ -381,25 +443,36 @@ caminoMapHtml _preferences _camino _trip = [ihamlet|
   |]
 
 caminoLocationIcon :: Preferences -> Camino -> S.Set Location -> S.Set Location -> Location -> String
-caminoLocationIcon _preferences _camino stops waypoints location
-  | S.member location stops = "iconStop"
-  | otherwise = "icon" ++ (show $ locationType location) ++ used
-    where
-      used = if S.member location waypoints then "Used" else "Unused"
-      
+caminoLocationIcon _preferences _camino stops waypoints location =
+  "icon" ++ (show $ locationType location) ++ (status location)
+   where
+    status location
+     | S.member location stops = "Stop"
+     | S.member location waypoints = "Used"
+     | otherwise = "Unused"
+
+caminoMapTooltip :: Preferences -> Camino -> Maybe Trip -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapTooltip preferences camino trip usedLegs location = [ihamlet|
+  <div .location-tooltip .container-fluid>
+    <div .row>
+      <div .col>
+        ^{locationLine preferences camino location}
+    ^{locationLegs preferences False camino usedLegs location}
+  |]
+
 caminoMapScript :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScript preferences camino trip = [ihamlet|
   <script>
-    var iconStop = L.icon({
-      iconUrl: '@{IconRoute "location-stop.png"}',
-      iconSize: [40, 40]
-    });
     var iconVillageUsed = L.icon({
       iconUrl: '@{IconRoute "location-village-used.png"}',
       iconSize: [16, 16]
     });
     var iconVillageUnused = L.icon({
       iconUrl: '@{IconRoute "location-village-unused.png"}',
+      iconSize: [16, 16]
+    });
+    var iconVillageStop = L.icon({
+      iconUrl: '@{IconRoute "location-village-stop.png"}',
       iconSize: [16, 16]
     });
     var iconTownUsed = L.icon({
@@ -410,12 +483,20 @@ caminoMapScript preferences camino trip = [ihamlet|
       iconUrl: '@{IconRoute "location-town-unused.png"}',
       iconSize: [32, 20]
     });
+    var iconTownStop = L.icon({
+      iconUrl: '@{IconRoute "location-town-stop.png"}',
+      iconSize: [32, 20]
+    });
     var iconCityUsed = L.icon({
       iconUrl: '@{IconRoute "location-city-used.png"}',
       iconSize: [32, 25]
     });
     var iconCityUnused = L.icon({
       iconUrl: '@{IconRoute "location-city-unused.png"}',
+      iconSize: [32, 25]
+    });
+    var iconCityStop = L.icon({
+      iconUrl: '@{IconRoute "location-city-stop.png"}',
       iconSize: [32, 25]
     });
     var iconBridgeUsed = L.icon({
@@ -426,6 +507,10 @@ caminoMapScript preferences camino trip = [ihamlet|
       iconUrl: '@{IconRoute "location-bridge-unused.png"}',
       iconSize: [24, 9]
     });
+    var iconBridgeStop = L.icon({
+      iconUrl: '@{IconRoute "location-bridge-stop.png"}',
+      iconSize: [24, 9]
+    });
     var iconIntersectionUsed = L.icon({
       iconUrl: '@{IconRoute "location-intersection-used.png"}',
       iconSize: [24, 22]
@@ -433,6 +518,34 @@ caminoMapScript preferences camino trip = [ihamlet|
     var iconIntersectionUnused = L.icon({
       iconUrl: '@{IconRoute "location-intersection-unused.png"}',
       iconSize: [24, 22]
+    });
+    var iconIntersectionStop = L.icon({
+      iconUrl: '@{IconRoute "location-intersection-stop.png"}',
+      iconSize: [24, 22]
+    });
+    var iconMonasteryUsed = L.icon({
+      iconUrl: '@{IconRoute "location-monastery-used.png"}',
+      iconSize: [20, 20]
+    });
+    var iconMonasteryUnused = L.icon({
+      iconUrl: '@{IconRoute "location-monastery-unused.png"}',
+      iconSize: [20, 20]
+    });
+    var iconMonasteryStop = L.icon({
+      iconUrl: '@{IconRoute "location-monastery-stop.png"}',
+      iconSize: [20, 20]
+    });
+    var iconPeakUsed = L.icon({
+      iconUrl: '@{IconRoute "location-peak-used.png"}',
+      iconSize: [20, 18]
+    });
+    var iconPeakUnused = L.icon({
+      iconUrl: '@{IconRoute "location-peak-unused.png"}',
+      iconSize: [20, 18]
+    });
+    var iconPeakStop = L.icon({
+      iconUrl: '@{IconRoute "location-peak-stop.png"}',
+      iconSize: [20, 18]
     });
     var iconPoiUsed = L.icon({
       iconUrl: '@{IconRoute "location-poi-used.png"}',
@@ -442,7 +555,11 @@ caminoMapScript preferences camino trip = [ihamlet|
       iconUrl: '@{IconRoute "location-poi-unused.png"}',
       iconSize: [15, 20]
     });
-    var map = L.map('map');
+    var iconPoiStop = L.icon({
+      iconUrl: '@{IconRoute "location-poi-stop.png"}',
+      iconSize: [15, 20]
+    });
+   var map = L.map('map');
     map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
     L.tileLayer('@{MapTileRoute}', {
         maxZoom: 19,
@@ -453,27 +570,29 @@ caminoMapScript preferences camino trip = [ihamlet|
     $forall location <- M.elems $ locations camino
       $maybe position <- locationPosition location
         marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{caminoLocationIcon preferences camino stops waypoints location} } );
-        marker.bindTooltip(`^{locationLine preferences camino location}`);
+        marker.bindTooltip(`^{caminoMapTooltip preferences camino trip usedLegs location}`);
         marker.addTo(map);
+        marker.on('click', function(e) { $('#locations-toggle').tab('show'); $("##{locationID location}").get(0).scrollIntoView({behavior: 'smooth'}); } );
     $forall leg <- legs camino
       $if isJust (locationPosition $ legFrom leg) && isJust (locationPosition $ legTo leg)
         line = L.polyline([
           [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
           [#{maybe 0.0 latitude (locationPosition $ legTo leg)}, #{maybe 0.0 longitude (locationPosition $ legTo leg)}]
-       ], {
-          color: '#{toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino leg}',
-          weight: #{chooseWidth leg},
-          opacity: #{chooseOpacity leg}
-       });
-       line.addTo(map);
+        ], {
+           color: '#{toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino leg}',
+           weight: #{chooseWidth leg},
+           opacity: #{chooseOpacity leg}
+        });
+        line.addTo(map);
   |]
   where
     (tl, br) = caminoBbox camino
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
-    chooseWidth leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 6 :: Int
+    usedLegs = maybe S.empty (S.fromList . tripLegs) trip
+    chooseWidth leg | S.member leg usedLegs = 6 :: Int
       | otherwise = 3 :: Int
-    chooseOpacity leg | S.member (legFrom leg) waypoints && S.member (legTo leg) waypoints = 1.0 :: Float
+    chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
       | otherwise = 0.5 :: Float
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.

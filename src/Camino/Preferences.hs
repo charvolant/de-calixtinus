@@ -20,7 +20,9 @@ module Camino.Preferences (
   isOutOfBounds,
   isOutOfRange,
   normalisePreferences,
-  rangeDistance
+  rangeDistance,
+  withoutLower,
+  withoutUpper
 ) where
 
 import Data.Aeson
@@ -66,6 +68,18 @@ instance (FromJSON a) => FromJSON (PreferenceRange a) where
 instance (ToJSON a) => ToJSON (PreferenceRange a) where
   toJSON (PreferenceRange derived targ low up mini maxi) =
     object [ "derived" .= derived, "target" .= targ, "lower" .= low, "upper" .= up, "min" .= mini, "max" .= maxi]
+
+-- | Create a preference range without a lower bound (set to zero)
+withoutLower :: (Num a) => PreferenceRange a -- ^ The source preference
+  -> PreferenceRange a -- ^ The same preference without a lower bound
+withoutLower (PreferenceRange derived target _lower upper _mini maxi) =
+  PreferenceRange derived target 0 upper 0 maxi
+
+-- | Create a preference range without an upp bound (set to 1 million)
+withoutUpper :: (Num a) => PreferenceRange a -- ^ The source preference
+  -> PreferenceRange a -- ^ The same preference without an upper bound
+withoutUpper (PreferenceRange derived target lower _upper mini _maxi) =
+  PreferenceRange derived target lower 1000000 mini 1000000
 
 -- | Is a value at or below the absolute maximum in the preference range?
 isInsideMaximum :: (Ord a) => PreferenceRange a -- ^ The preference range

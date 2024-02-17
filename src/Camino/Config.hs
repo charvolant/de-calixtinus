@@ -203,6 +203,13 @@ defaultConfig = Config {
         assetCrossOrigin = Unused
       },
       Asset {
+        assetId = "caminoCss",
+        assetType = Css,
+        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/static/camino.css",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
         assetId = "icons",
         assetType = Directory,
         assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons",

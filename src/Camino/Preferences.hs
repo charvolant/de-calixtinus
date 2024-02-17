@@ -197,7 +197,7 @@ normalisePreferences :: Camino -- ^ The camino that contains the correct locatio
   -> Preferences -- ^ The preferences with locations updated
 normalisePreferences camino preferences =
   let
-    locs = locations camino
+    locs = caminoLocations camino
   in
     preferences {
       preferenceRequired = S.map (\l -> locs M.! (locationID l)) (preferenceRequired preferences),

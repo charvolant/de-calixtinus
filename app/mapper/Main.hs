@@ -44,4 +44,4 @@ main :: IO ()
 main = do
     opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Plan a camino graph")
     camino' <- readCamino (camino opts)
-    mapM_ printLocation (locations camino')
+    mapM_ printLocation (caminoLocations camino')

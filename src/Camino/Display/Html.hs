@@ -286,6 +286,15 @@ caminoLocationHtml preferences camino _trip containerId stops waypoints used loc
                  ^{caminoAccommodationTypeIcon accomodation}
     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
+        $if (isJust $ locationDescription location) || (isJust $ locationHref location)
+          <div .row>
+            <div .col>
+              $maybe d <- locationDescription location
+                #{d}
+            <div .col-1 .float-end>
+              $maybe href <- locationHref location
+                  <a href="#{href}">
+                    <span .link-out .text-info title="_{LinkOut (locationName location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accomodation <- locationAccommodation location
           ^{caminoAccommodationHtml accomodation}
@@ -320,11 +329,11 @@ caminoLocationsHtml preferences camino trip = [ihamlet|
   |]
   where
     locationOrder a b = compare (canonicalise $ locationName a) (canonicalise $ locationName b)
-    locationsSorted = L.sortBy locationOrder (caminoLocations camino)
+    locationsSorted = L.sortBy locationOrder (caminoLocationList camino)
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationName l) locationsSorted
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
-    usedLegs = maybe (S.fromList $ legs camino) (S.fromList . tripLegs) trip
+    usedLegs = maybe (S.fromList $ caminoLegs camino) (S.fromList . tripLegs) trip
     
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml range = [ihamlet|
@@ -436,8 +445,16 @@ caminoTripHtml preferences camino trip = [ihamlet|
    |]
 
 caminoMapHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapHtml _preferences _camino _trip = [ihamlet|
+caminoMapHtml _preferences camino _trip = [ihamlet|
   <div .container-fluid>
+    <div .row>
+      <div .col>
+        #{caminoDescription camino}
+    <ul>
+      $forall r <- caminoRoutes camino
+        <li>
+          <span style="color: #{toCssColour $ paletteColour $ routePalette r}">#{routeName r}
+          #{routeDescription r}
     <div .d-flex .justify-content-center>
       <div #map>
   |]
@@ -452,7 +469,7 @@ caminoLocationIcon _preferences _camino stops waypoints location =
      | otherwise = "Unused"
 
 caminoMapTooltip :: Preferences -> Camino -> Maybe Trip -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapTooltip preferences camino trip usedLegs location = [ihamlet|
+caminoMapTooltip preferences camino _trip usedLegs location = [ihamlet|
   <div .location-tooltip .container-fluid>
     <div .row>
       <div .col>
@@ -567,13 +584,13 @@ caminoMapScript preferences camino trip = [ihamlet|
     }).addTo(map);
     var marker;
     var line;
-    $forall location <- M.elems $ locations camino
+    $forall location <- M.elems $ caminoLocations camino
       $maybe position <- locationPosition location
         marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{caminoLocationIcon preferences camino stops waypoints location} } );
         marker.bindTooltip(`^{caminoMapTooltip preferences camino trip usedLegs location}`);
         marker.addTo(map);
         marker.on('click', function(e) { $('#locations-toggle').tab('show'); $("##{locationID location}").get(0).scrollIntoView({behavior: 'smooth'}); } );
-    $forall leg <- legs camino
+    $forall leg <- caminoLegs camino
       $if isJust (locationPosition $ legFrom leg) && isJust (locationPosition $ legTo leg)
         line = L.polyline([
           [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
@@ -610,7 +627,6 @@ layoutHtml config title header body footer = [ihamlet|
          <title>#{title}
          $forall c <- css
            <link rel="stylesheet" href="#{assetPath c}">
-         <link rel="stylesheet" href="camino.css">
          $maybe h <- header
            ^{h}
        <body>

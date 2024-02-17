@@ -74,6 +74,7 @@ data CaminoMsg =
   | KitchenTitle
   | LegPenanceMsg Penance
   | LinkLabel LinkConfig
+  | LinkOut Text
   | LocationsLabel
   | LockersTitle
   | MapLabel
@@ -206,6 +207,7 @@ renderCaminoMsgDefault _ HouseTitle = "House"
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
 renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (LinkOut name) = [shamlet|More information on #{name}|]
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
 renderCaminoMsgDefault _ MapLabel = "Map"

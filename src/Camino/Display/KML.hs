@@ -85,10 +85,10 @@ caminoStyles config camino =
     kmlStyle "intersectionUnused" 1 0.5 white (Just (iconBase <> "/location-intersection-unused.png")) ++
     kmlStyle "poiUsed" 1 1 white (Just (iconBase <> "/location-poi-used.png")) ++
     kmlStyle "poiUnused" 1 0.5 white (Just (iconBase <> "/location-poi-unused.png")) ++
-    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (routes camino) ++
-    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (routes camino) ++
-    kmlStyle "defaultUsed" 8 1 (paletteColour $ palette camino) Nothing ++
-    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ palette camino) Nothing
+    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino) ++
+    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino) ++
+    kmlStyle "defaultUsed" 8 1 (paletteColour $ routePalette $ defaultRoute camino) Nothing ++
+    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ routePalette $ defaultRoute camino) Nothing
   where
     iconBase = assetPath $ fromJust $ getAsset "icons" config
 
@@ -140,7 +140,7 @@ caminoLegStyle camino _stops waypoints leg =
     from' = legFrom leg
     to' = legTo leg
     used = if (S.member from' waypoints) && (S.member to' waypoints) then "Used" else "Unused"
-    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (routes camino)
+    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino)
   in
     pack $ "#" ++ maybe "default" routeID route ++ used
 
@@ -165,9 +165,9 @@ createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing [
           $maybe t <- trip
             <name>#{locationName $ start t} to #{locationName $ finish t}
            ^{caminoStyles config camino}
-          $forall location <- caminoLocations camino
+          $forall location <- caminoLocationList camino
             ^{caminoLocationKml config preferences camino trip stops waypoints location}
-          $forall leg <- legs camino
+          $forall leg <- caminoLegs camino
             ^{caminoLegKml camino stops waypoints leg}
       |]
 

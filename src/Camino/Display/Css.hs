@@ -217,13 +217,17 @@ a
   background-color: #d0f8ff
   border-radius: 1ex   
   font-size: small
+.link-out
+  font-size: large
+.link-out::before
+  content: "\2139"
   |]
 
 caminoCss :: Config -> Camino -> [Render CaminoRoute -> Css]
 caminoCss config camino = (base':default':routes') ++ fonts' ++ icons'
   where
     base' = caminoBaseCss camino
-    default' = paletteCss "location-default" (palette camino)
-    routes' = map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (routes camino)
+    default' = paletteCss "location-default" (routePalette $ defaultRoute camino)
+    routes' = map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes camino)
     fonts' = map caminoFontCss (getAssets Font config)
     icons' = caminoIconCss camino

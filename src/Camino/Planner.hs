@@ -110,14 +110,14 @@ walkingHours preferences day = let
 nonWalkingHours :: Preferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Maybe Float -- ^ The hours equivalent
-nonWalkingHours preferences day = 
+nonWalkingHours _preferences day =
   Just $ sum $ map (\l -> fromMaybe 0.0 (legTime l)) day
-  
+
 -- | Does this sequence of legs have a non-walking component?
 hasNonWalking ::  Preferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Bool -- ^ The hours equivalent
-hasNonWalking preferences day =
+hasNonWalking _preferences day =
   any (\l -> legDistance l <= 0.0 && isJust (legTime l)) day
 
 -- | Calculate the total distance covered by a sequence of legs
@@ -237,7 +237,7 @@ penance preferences camino day =
     timePreferences = (if nonWalking then withoutLower else id) (preferenceTime preferences)
     distancePreferences = (if nonWalking then withoutLower else id) (preferencePerceivedDistance preferences)
     timeAdjust = maybe Reject (adjustment timePreferences normalSpeed) time
-    distanceAdjust = maybe Reject (adjustment distancePreferences normalSpeed) perceived 
+    distanceAdjust = maybe Reject (adjustment distancePreferences normalSpeed) perceived
     stopMissing = missingStopServices preferences camino day
     (accom, stopMissing', accommodationAdjust) = accommodation preferences camino day stopMissing -- preferred accommodation penance
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'

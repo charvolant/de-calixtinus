@@ -1,8 +1,12 @@
 {
+  "id": "P",
+  "name": "Caminho Português",
+  "description": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the Frwnch route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
   "locations": [
     {
       "id": "P1",
       "name": "Lisbon",
+      "href": "https://en.wikipedia.org/wiki/Lisbon",
       "type": "City",
       "position": { "latitude":  38.7098, "longitude": -9.1333 },
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
@@ -1642,6 +1646,7 @@
     {
       "id": "P138",
       "name": "Porto",
+      "href": "https://en.wikipedia.org/wiki/Porto",
       "type": "City",
       "position": { "latitude": 41.14310, "longitude": -8.61098 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
@@ -7146,34 +7151,67 @@
   ],
   "routes": [
     {
-      "id": "Fatima",
-      "name": "Fátima",
-      "locations": [ 
+      "id": "RP",
+      "name": "Caminho Português",
+      "description": "The main Camino route starting in Lisbon and following the inland route",
+      "palette": {
+        "colour": "fec953"
+      },
+      "default": true
+    },
+    {
+      "id": "RFT",
+      "name": "Fátima - Tomar",
+      "description": "A variant pilgrimage including the Fátima shrine and returning to the main route at Tomar",
+      "locations": [
         "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
-        "F11", "F12", "F13", "F14", "F15", "F16", "F17", "F18", "F19", "F20",
+        "F11", "F12", "F13", "F14", "F15"
+      ],
+      "exclusions": [
+        "P21", "P22", "P23", "P24", "P25", "P26", "P27", "P28", "P29", "P30", "P31"
+      ],
+       "palette": {
+        "colour": "2a78ff"
+      }
+    },
+    {
+      "id": "RFT",
+      "name": "Fátima - Ansião",
+      "description": "A variant pilgrimage including the Fátima shrine and returning to the main route near Ansião",
+      "locations": [
+        "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10",
+        "F11", "F16", "F17", "F18", "F19", "F20",
         "F21", "F22", "F23", "F24", "F25", "F26", "F27", "F28", "F29", "F30",
         "F31", "F32", "F33", "F35", "F36", "F37", "F38", "F39", "F40",
         "F41", "F42", "F43", "F44", "F45", "F46", "F47", "F48", "F49", "F50",
         "F51", "F52", "F53", "F54"
+      ],
+      "exclusions": [
+        "P21", "P22", "P23", "P24", "P25", "P26", "P27", "P28", "P29", "P30",
+        "P31", "P32", "P33", "P34", "P35", "P36", "P37", "P38", "P39", "P40",
+        "P41", "P42", "P43", "P44", "P45", "P46", "P47", "P48", "P49", "P50",
+        "P51"
       ],
       "palette": {
         "colour": "2a78ff"
       }
     },
     {
-      "id": "Spiritual",
+      "id": "RS",
       "name": "Variante Espiritual",
+      "description": "The Spiritual Variant of the main route that follows the last part of the journey of the remains of the Apostle St.James. The variant ends with a boat trip up the Río Ulla",
       "locations": [
         "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10",
         "E11", "E12", "E13", "E14", "E15", "E16", "E17", "E18", "E19", "E20",
         "E21", "E22"
       ],
+      "exclusions": [
+        "P239", "P240", "P241", "P242", "P243", "P244", "P245", "P246", "P247", "P248",
+        "P249", "P250", "P251", "P252", "P253", "P254", "P255", "P256", "P257"
+      ],
       "palette": {
-        "colour": "0077fb"
+        "colour": "f00810"
       }
     }
-  ],
-  "palette": {
-    "colour": "fec953"
-  }
+  ]
 }

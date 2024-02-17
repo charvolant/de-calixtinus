@@ -1,5 +1,8 @@
 web:
   assets:
+    - id: caminoCss
+      type: Css
+      path: camino.css
     - id: icons
       type: Directory
       path: ../icons

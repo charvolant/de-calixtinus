@@ -32,7 +32,8 @@ data Plan = Plan {
   preferences :: String,
   begin :: String,
   end :: String,
-  require :: String,
+  routes :: String,
+  stops :: String,
   exclude :: String,
   config :: FilePath,
   output :: FilePath,
@@ -45,11 +46,12 @@ arguments =  Plan
     <*> (argument str (metavar "PREFERENCES-FILE"))
     <*> (argument str (metavar "FROM"))
     <*> (argument str (metavar "TO"))
-    <*> (strOption (long "require" <> short 'r' <> value "" <> metavar "LOCATIONIDS" <> help "Require stopping at a comma-separated list of location ids"))
+    <*> (strOption (long "routes" <> short 'r' <> value "" <> metavar "ROUTEIDS" <> help "Use the following comma-separated route variants - the default is always used"))
+    <*> (strOption (long "stops" <> short 's' <> value "" <> metavar "LOCATIONIDS" <> help "Require stopping at a comma-separated list of location ids"))
     <*> (strOption (long "exclude" <> short 'x' <> value "" <> metavar "LOCATIONIDS" <> help "Exclude stopping at a comma-separated list of location ids"))
     <*> (strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG" <> help "Configuration file"))
     <*> (strOption (long "output" <> short 'o' <> value "./plan" <> metavar "OUTPUTDIR" <> help "Output directory"))
-    <*> (switch (long "static" <> short 's' <> help "Generate static files"))
+    <*> (switch (long "static" <> short 'z' <> help "Generate static files"))
 
 readCamino :: String -> IO Camino
 readCamino file = do
@@ -85,22 +87,25 @@ plan :: Plan -> IO ()
 plan opts = do
     camino' <- readCamino (camino opts)
     preferences' <- readPreferences (preferences opts)
+    let preferences'' = normalisePreferences camino' preferences'
     config' <- readConfigFile (config opts)
     let output' = output opts
     let begin' = vertex camino' (begin opts)
     let end' = vertex camino' (end opts)
-    let required' = if require opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (require opts))
+    let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholderRoute (splitOn "," (routes opts))
+    let preferences''' = normalisePreferences camino' (preferences'' { preferenceRoutes = routes' })
+    let stops' = if stops opts == "" then (recommendedStops preferences''' camino') else S.fromList $ map placeholderLocation (splitOn "," (stops opts))
     let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (exclude opts))
-    let preferences'' = normalisePreferences camino' (preferences' { preferenceRequired = required', preferenceExcluded = excluded' })
+    let preferences'''' = normalisePreferences camino' (preferences''' { preferenceRoutes = routes', preferenceStops = stops', preferenceExcluded = excluded' })
     let static' = static opts
     let router = renderCaminoRoute config' ["en", ""]
     let messages = renderCaminoMsg config'
-    let solution = planCamino preferences'' camino' begin' end'
+    let solution = planCamino preferences'''' camino' begin' end'
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences'' camino' solution
+    let kml = createCaminoDoc config' preferences'''' camino' solution
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
-    let html = caminoHtml config' preferences'' camino' solution
+    let html = caminoHtml config' preferences'''' camino' solution
     let indexFile = output' </> "index.html"
     B.writeFile indexFile (renderHtml (html messages router))
     when static' (createCss config' camino' router output')

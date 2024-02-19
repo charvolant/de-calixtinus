@@ -221,13 +221,17 @@ a
   font-size: large
 .link-out::before
   content: "\2139"
+.map-key
+  font-size: small
+.map-key-icon
+  width: 16px;
   |]
 
 caminoCss :: Config -> Camino -> [Render CaminoRoute -> Css]
 caminoCss config camino = (base':default':routes') ++ fonts' ++ icons'
   where
     base' = caminoBaseCss camino
-    default' = paletteCss "location-default" (routePalette $ defaultRoute camino)
+    default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute camino)
     routes' = map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes camino)
     fonts' = map caminoFontCss (getAssets Font config)
     icons' = caminoIconCss camino

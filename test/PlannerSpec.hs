@@ -49,7 +49,7 @@ preferences1 = Preferences {
       (Pharmacy, (Penance 0.1)),
       (Bank, (Penance 0.1))
     ],
-    preferenceRequired = S.empty,
+    preferenceStops = S.empty,
     preferenceExcluded = S.empty
   }
 

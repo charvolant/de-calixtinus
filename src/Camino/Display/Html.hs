@@ -23,12 +23,11 @@ import Camino.Display.I18n
 import Camino.Display.Routes
 import Graph.Graph (outgoing)
 import Text.Hamlet
-import qualified Data.Text as T (intercalate, null, pack, Text)
+import qualified Data.Text as T (concat, filter, intercalate, null, pack, take, Text, toLower, toUpper)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.List as L
-import qualified Data.Text as T (toUpper, take, filter)
 import Data.Text.ICU.Char (Bool_(..), property)
 import Data.Text.ICU.Normalize2 (NormalizationMode(..), normalize)
 import Data.Maybe (fromJust, isJust)
@@ -112,6 +111,14 @@ locationSummary _preferences _camino location = [ihamlet|
     services = T.intercalate ", " (map (\s -> T.pack $ show s) (S.toList $ locationServices location))
     accommodation = T.intercalate ", " (map (\a -> T.pack $ show $ accommodationType a) (locationAccommodation location))
 
+caminoLocationTypeMapIcon :: LocationType -> Bool -> Bool -> CaminoRoute
+caminoLocationTypeMapIcon lt stop waypoint =
+  let
+    name = T.toLower $ T.pack $ show lt
+    style = if stop then "stop" else if waypoint then "used" else "unused"
+  in
+    IconRoute (T.concat ["location-", name, "-", style, ".png"])
+
 caminoLocationTypeIcon :: LocationType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationTypeIcon Village = [ihamlet| <span .location-type .ca-village title="_{VillageTitle}"> |]
 caminoLocationTypeIcon Town = [ihamlet| <span .location-type .ca-town title="_{TownTitle}"> |]
@@ -121,6 +128,17 @@ caminoLocationTypeIcon Intersection = [ihamlet| <span .location-type .ca-interse
 caminoLocationTypeIcon Monastery = [ihamlet| <span .location-type .ca-monastery title="_{MonasteryTitle}"> |]
 caminoLocationTypeIcon Peak = [ihamlet| <span .location-type .ca-peak title="_{PeakTitle}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
+
+caminoLocationTypeLabel :: LocationType -> CaminoMsg
+caminoLocationTypeLabel Village = VillageTitle
+caminoLocationTypeLabel Town = TownTitle
+caminoLocationTypeLabel City = CityTitle
+caminoLocationTypeLabel Bridge = BridgeTitle
+caminoLocationTypeLabel Intersection = IntersectionTitle
+caminoLocationTypeLabel Monastery = MonasteryTitle
+caminoLocationTypeLabel Peak = PeakTitle
+caminoLocationTypeLabel Poi = PoiTitle
+caminoLocationTypeLabel _ = PoiTitle
 
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLegTypeIcon Trail = [ihamlet| <span .leg-type .ca-walking title="_{TrailTitle}"> |]
@@ -322,6 +340,12 @@ caminoLocationsHtml preferences camino trip = [ihamlet|
                   <a .dropdown-item href="##{locationID loc}">#{locationName loc}
     <div .row>
       <div .col>
+        <div .mt-2 .p-2>
+          <h2>#{caminoName camino}
+          <p>
+            #{caminoDescription camino}
+    <div .row>
+      <div .col>
         <div #locations .accordion .container-fluid>
           $forall loc <- locationsSorted
             <div .row>
@@ -347,7 +371,7 @@ preferenceRangeHtml range = [ihamlet|
   |]
   
 preferencesHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-preferencesHtml preferences _camino _trip = [ihamlet|
+preferencesHtml preferences camino _trip = [ihamlet|
   <div .container-fluid>
     <div .row>
       <div .col-3>_{WalkingFunctionLabel}
@@ -386,19 +410,28 @@ preferencesHtml preferences _camino _trip = [ihamlet|
           <div .col-1 .offset-3>^{caminoServiceIcon sk}
           <div .col>_{PenanceFormatted (findDs preferences sk)}
     <div .row>
+      <div .col-3>_{RouteLabel}
+      <div .col .offset-1>
+        <ul>
+          <li>
+            #{routeName $ caminoDefaultRoute camino}
+          $forall r <- preferenceRoutes preferences
+            <li>
+              #{routeName r}
+    <div .row>
       <div .col-3>_{RequiredStopsLabel}
       <div .col .offset-1>
         <ul>
-        $forall l <- preferenceRequired preferences
-          <li>
-            <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
+          $forall l <- preferenceStops preferences
+            <li>
+              <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
     <div .row>
       <div .col-3>_{ExcludedStopsLabel}
       <div .col .offset-1>
         <ul>
-        $forall l <- preferenceExcluded preferences
-          <li>
-            <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
+          $forall l <- preferenceExcluded preferences
+            <li>
+              <a href="##{locationID l}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName l}
   |]
   where
     findAcc prefs ak = (preferenceAccommodation prefs) M.! ak
@@ -448,24 +481,41 @@ caminoMapHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg Ca
 caminoMapHtml _preferences camino _trip = [ihamlet|
   <div .container-fluid>
     <div .row>
-      <div .col>
-        #{caminoDescription camino}
-    <ul>
-      $forall r <- caminoRoutes camino
-        <li>
-          <span style="color: #{toCssColour $ paletteColour $ routePalette r}">#{routeName r}
-          #{routeDescription r}
-    <div .d-flex .justify-content-center>
-      <div #map>
+      <div .col .d-flex .justify-content-center>
+        <div #map>
+      <div .col-2>
+        <div .card .mt-2 .p-1>
+          <div .card-body>
+            <table .map-key>
+              <thead>
+                <tr>
+                  <th colspan="4">_{KeyLabel}
+              <tbody>
+                $forall r <- caminoRoutes camino
+                  <tr>
+                    <td>
+                    <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
+                    <td>
+                    <td>#{routeName r}
+                $forall lt <- [Bridge, City, Intersection, Monastery, Peak, Poi, Town, Village]
+                  <tr>
+                    <td>
+                      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
+                    <td>
+                      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
+                    <td>
+                      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
+                    <td>
+                      _{caminoLocationTypeLabel lt}
   |]
 
 caminoLocationIcon :: Preferences -> Camino -> S.Set Location -> S.Set Location -> Location -> String
 caminoLocationIcon _preferences _camino stops waypoints location =
   "icon" ++ (show $ locationType location) ++ (status location)
    where
-    status location
-     | S.member location stops = "Stop"
-     | S.member location waypoints = "Used"
+    status loc
+     | S.member loc stops = "Stop"
+     | S.member loc waypoints = "Used"
      | otherwise = "Unused"
 
 caminoMapTooltip :: Preferences -> Camino -> Maybe Trip -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute

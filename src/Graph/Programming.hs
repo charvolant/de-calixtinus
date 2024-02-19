@@ -117,6 +117,9 @@ type EvaluationFunction e s = [e] -> s
 -- | Choose a preferred chain out of two possibilities
 type ChoiceFunction v e s = Chain v e s -> Chain v e s -> Chain v e s
 
+-- | Choose whether a vertex is usable
+type SelectFunction v = v -> Bool
+
 -- Extend a stage with a new edge
 extend :: (Edge e v, Score s) => AcceptFunction e -> EvaluationFunction e s -> Chain v e s -> e -> Maybe (Chain v e s)
 extend accept evaluate chain edg =
@@ -169,13 +172,13 @@ constructTable' graph choice accept eval reachable current =
     if length current == length update then update else constructTable' graph choice accept eval reachable update
 
 -- | Construct a table of stages from vertices that lead from/to a begin/end point
-constructTable :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> v -> v -> ChainGraph v e s
-constructTable graph choice accept eval begin end =
+constructTable :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> SelectFunction v -> v -> v -> ChainGraph v e s
+constructTable graph choice accept eval select begin end =
   let
     origin = [Chain begin begin [] mempty]
     succs = (successors graph begin) `S.union` (S.singleton begin)
     preds = (predecessors graph end) `S.union` (S.singleton end)
-    reachable = succs `S.intersection` preds
+    reachable = S.filter select (succs `S.intersection` preds)
   in
     fromChains $ constructTable' graph choice accept eval reachable origin
 
@@ -187,12 +190,13 @@ program :: (Graph g e v, Score s1, Score s2) => g -- ^ The graph to traverse
   -> ChoiceFunction v e s2 -- ^ The choice function for chains
   -> AcceptFunction e -- ^ The acceptance function for chains
   -> EvaluationFunction e s2 -- ^ The evaluation function for chains
+  -> SelectFunction v  -- ^ The function that determines which vertices can be used
   -> v -- ^ The start vertex
   -> v -- ^ The finish vertex
   -> Maybe (Chain v (Chain v e s2) s1) -- ^ A program that splits the traversal into a sequence of chains
-program graph programChoice programAccept programEval chainChoice chainAccept chainEval begin end =
+program graph programChoice programAccept programEval chainChoice chainAccept chainEval select begin end =
   let
-    table = constructTable graph chainChoice chainAccept chainEval begin end
-    programs = constructTable table programChoice programAccept programEval begin end
+    table = constructTable graph chainChoice chainAccept chainEval select begin end
+    programs = constructTable table programChoice programAccept programEval select begin end
   in
     edge programs begin end

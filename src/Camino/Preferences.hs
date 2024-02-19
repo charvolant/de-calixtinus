@@ -14,12 +14,14 @@ module Camino.Preferences (
   PreferenceRange(..),
   Preferences(..),
 
+  allowedLocations,
   boundsDistance,
   defaultPreferences,
   isInsideMaximum,
   isOutOfBounds,
   isOutOfRange,
   normalisePreferences,
+  recommendedStops,
   rangeDistance,
   withoutLower,
   withoutUpper
@@ -30,8 +32,8 @@ import Data.Text (Text)
 import Camino.Camino
 import Camino.Walking
 import qualified Data.Map as M (Map, (!), fromList)
-import qualified Data.Set as S (Set, empty, map)
-
+import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, member, union, unions)
+import Debug.Trace
 -- | Acceptable range boundaries for various parameters.
 -- 
 --   Ranges have a target value, /preferred/ lower and upper bound and a /hard/ minimum and maximum.
@@ -149,7 +151,8 @@ data Preferences = Preferences {
   preferenceAccommodation :: M.Map AccommodationType Penance, -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   preferenceStopServices :: M.Map Service Penance, -- ^ Desired services at a stop (absence implies zero desire)
   preferenceDayServices :: M.Map Service Penance, -- ^ Desired services during a day (absence implies zero desire)
-  preferenceRequired :: S.Set Location, -- ^ Locations that we must visit (end a day at)
+  preferenceRoutes :: S.Set Route, -- ^ Routes to use
+  preferenceStops :: S.Set Location, -- ^ Locations that we must visit (end a day at)
   preferenceExcluded :: S.Set Location -- ^ Locations that we will not visit (end a day at, although passing through is OK)
 } deriving (Show)
 
@@ -164,9 +167,11 @@ instance FromJSON Preferences where
     accommodation' <- v .: "accommodation"
     sstop' <- v .: "services-stop"
     sday' <- v .: "services-day"
-    required' <- v .:? "required" .!= S.empty
+    routes' <- v .:? "routes" .!= S.empty
+    stops' <- v .:? "stops" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
-    let required'' = S.map placeholderLocation required'
+    let routes'' = S.map placeholderRoute routes'
+    let stops'' = S.map placeholderLocation stops'
     let excluded'' = S.map placeholderLocation excluded'
     return Preferences {
         preferenceWalkingFunction = walking',
@@ -178,31 +183,60 @@ instance FromJSON Preferences where
         preferenceStop = stop',
         preferenceStopServices = sstop',
         preferenceDayServices = sday',
-        preferenceRequired = required'',
+        preferenceRoutes = routes'',
+        preferenceStops = stops'',
         preferenceExcluded = excluded''
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON Preferences where
-  toJSON (Preferences walking' fitness' distance' time' perceived' accommodation' stop' sstop' sday' required' excluded') =
+  toJSON (Preferences walking' fitness' distance' time' perceived' accommodation' stop' sstop' sday' routes' stops' excluded') =
     let
-      required'' = S.map locationID required'
+      routes'' = S.map routeID routes'
+      stops'' = S.map locationID stops'
       excluded'' = S.map locationID excluded'
     in
-      object [ "walking" .= walking', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "stop" .= stop', "accommodation" .= accommodation', "services-stop" .= sstop', "services-day" .= sday', "required" .= required'', "excluded" .= excluded'']
+      object [ "walking" .= walking', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "stop" .= stop', "accommodation" .= accommodation', "services-stop" .= sstop', "services-day" .= sday', "routes" .= routes'', "stops" .= stops'', "excluded" .= excluded'']
 
--- | Normalise preferences to the correct locations, based on placeholders
+-- | Normalise preferences to the correct locations and routes, based on placeholders
 normalisePreferences :: Camino -- ^ The camino that contains the correct locations
   -> Preferences -- ^ The preferences with placeholders
   -> Preferences -- ^ The preferences with locations updated
 normalisePreferences camino preferences =
   let
     locs = caminoLocations camino
+    routes = M.fromList $ map (\r -> (routeID r, r)) (caminoRoutes camino)
   in
     preferences {
-      preferenceRequired = S.map (\l -> locs M.! (locationID l)) (preferenceRequired preferences),
+      preferenceRoutes = S.map (\r -> routes M.! (routeID r)) (preferenceRoutes preferences),
+      preferenceStops = S.map (\l -> locs M.! (locationID l)) (preferenceStops preferences),
       preferenceExcluded = S.map (\l -> locs M.! (locationID l)) (preferenceExcluded preferences)
     }
+    
+-- | Work out what locations are acceptable in a camino, based on the chosen routes.
+--   The default route is always included, followed by the routes specified in the preferences.
+--   The routes are worked through in order (with the default route always first).
+--   That way, locations can be included by one route and then excluded by a ltere route
+allowedLocations :: Preferences -- ^ The preferences (normalised, see `normalisePreferences`)
+  -> Camino -- ^ The base camino definition
+  -> S.Set Location -- ^ The allowed locations
+allowedLocations preferences camino =
+  let
+    usedRoutes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
+    routes = filter (\r -> S.member r usedRoutes) (caminoRoutes camino)
+  in
+    foldl (\allowed -> \route -> (allowed `S.union` routeLocations route) `S.difference` routeExclusions route) S.empty routes
+
+-- | Generate a set of recommended stops, based on the selected routes
+recommendedStops :: Preferences -- ^ The preferences (normalised, see `normalisePreferences`)
+  -> Camino -- ^ The base camino definition
+  -> S.Set Location -- ^ The allowed locations
+recommendedStops preferences camino =
+  let
+    routes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
+    baseStops = trace (show $ S.map routeID routes) (S.unions (S.map routeStops routes))
+  in
+    trace (show $ S.map locationID baseStops) (baseStops `S.intersection` allowedLocations preferences camino)
 
 -- | The default preference set.
 -- | This provides an overridable skeleton containing values that cover the suggested legs for a walker of normal fitness.
@@ -250,6 +284,7 @@ defaultPreferences = let
           (Pharmacy, Penance 0.5),
           (Bank, Penance 0.5)
         ],
-        preferenceRequired = S.empty,
+        preferenceRoutes = S.empty,
+        preferenceStops = S.empty,
         preferenceExcluded = S.empty
       } 

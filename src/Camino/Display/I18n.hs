@@ -71,6 +71,7 @@ data CaminoMsg =
   | HotelTitle
   | HouseTitle
   | IntersectionTitle
+  | KeyLabel
   | KitchenTitle
   | LegPenanceMsg Penance
   | LinkLabel LinkConfig
@@ -109,6 +110,7 @@ data CaminoMsg =
   | SingleTitle
   | SleepingBagTitle
   | StablesTitle
+  | StopLabel
   | StopPenanceMsg Penance
   | StopPreferencesLabel
   | StopServicesPenanceMsg Penance
@@ -123,9 +125,11 @@ data CaminoMsg =
   | TrainTitle
   | TripleTitle
   | TripleWcTitle
+  | UnusedLabel
   | VillageTitle
   | WalkingFunctionLabel
   | WashingMachineTitle
+  | WaypointLabel
   | WiFiTitle
 
 rejectSymbol :: Text
@@ -205,6 +209,7 @@ renderCaminoMsgDefault config (LinkLabel link) = toHtml $ maybe ident linkLabel 
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
 renderCaminoMsgDefault _ HouseTitle = "House"
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
+renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
 renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (LinkOut name) = [shamlet|More information on #{name}|]
@@ -242,6 +247,7 @@ renderCaminoMsgDefault _ SharedTitle = "Shared"
 renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
+renderCaminoMsgDefault _ StopLabel = "Stop"
 renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
@@ -256,9 +262,11 @@ renderCaminoMsgDefault _ TrailTitle = "Trail (walkers only)"
 renderCaminoMsgDefault _ TrainTitle = "Train"
 renderCaminoMsgDefault _ TripleTitle = "Triple"
 renderCaminoMsgDefault _ TripleWcTitle = "Triple with WC"
+renderCaminoMsgDefault _ UnusedLabel = "Unused"
 renderCaminoMsgDefault _ VillageTitle = "Village"
 renderCaminoMsgDefault _ WalkingFunctionLabel = "Walking Time Estimation"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
+renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
 
 -- | Convert a message placeholder into actual HTML

@@ -87,8 +87,8 @@ caminoStyles config camino =
     kmlStyle "poiUnused" 1 0.5 white (Just (iconBase <> "/location-poi-unused.png")) ++
     foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino) ++
     foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino) ++
-    kmlStyle "defaultUsed" 8 1 (paletteColour $ routePalette $ defaultRoute camino) Nothing ++
-    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ routePalette $ defaultRoute camino) Nothing
+    kmlStyle "defaultUsed" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino) Nothing ++
+    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ routePalette $ caminoDefaultRoute camino) Nothing
   where
     iconBase = assetPath $ fromJust $ getAsset "icons" config
 

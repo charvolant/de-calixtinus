@@ -9,7 +9,7 @@ entire trip, stretching and squeezing as appropriate to try and limit the number
 ludicrously long or disappointingly short stages.
 
 To see an example, based on someone unfit who wants to walk about 20km
-a day and wants to go to Fátima, Coimbra and Águeda, look 
+a day and wants to go to via the Fátima-Ansião and Spiritual Variant routes, look 
 [here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/index.html)
 
 I started planning this program while walking the Camino Portugués.
@@ -24,19 +24,20 @@ It turns out that this was sufficient motivation.
 To run the program, use
 
 ```shell
-camino-planner-exe CAMINO PREFERENCES BEGIN END [-r REQUIRED] [-x EXCLUDED] [-c CONFIG] [-o OUTPUT]
+camino-planner-exe CAMINO PREFERENCES BEGIN END [-r ROUTES] [-s STOPS] [-x EXCLUDED] [-c CONFIG] [-o OUTPUT]
 ```
 
-| Argument | Description                                                                                  | Example | |
-| --- |----------------------------------------------------------------------------------------------| --- | --- | 
-| CAMINO | A camino description in JSON form                                                            | lisbon-porto.json | |
-| PREFERENCES | A preference file in JSON form                                                               | short-preferences.json | |
-| BEGIN | The identifier of the start point                                                            | P1 | Lisbon |
-| END | The identifier of the end point                                                              | P138 | Porto |
-| REQUIRED | An optional list, separated by commas, of places where you wish to stop for the night        | P78,F10 | Coimbra, Fátima |
-| EXCLUDED | An optional list, separated by commas, of places where you do not wish to stop for the night | P63 | Zambujal |
-| CONFIG | An optional configuration file for generating the appropriate HTML output, in YAML form      | config.yaml | |
-| OUTPUT | The optional output directory to write the HTML plan to                                      | ./plan | |                                                                     
+| Argument    | Description                                                                                                                                             | Example                |                  |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|------------------| 
+| CAMINO      | A camino description in JSON form                                                                                                                       | lisbon-porto.json      |                  |
+| PREFERENCES | A preference file in JSON form                                                                                                                          | short-preferences.json |                  |
+| BEGIN       | The identifier of the start point                                                                                                                       | P1                     | Lisbon           |
+| END         | The identifier of the end point                                                                                                                         | P284                   | Santiago         |
+| ROUTES      | An optional list, separated by commas, of variant routes that you wish to use. The default main route is always used.                                   | RS                     | Spritual Variant |
+| STOPS       | An optional list, separated by commas, of places where you wish to stop for the night. If absent, the standard stops from the selected routes are used. | P78,F10                | Coimbra, Fátima  |
+| EXCLUDED    | An optional list, separated by commas, of places where you do not wish to stop for the night                                                            | P63                    | Zambujal         |
+| CONFIG      | An optional configuration file for generating the appropriate HTML output, in YAML form                                                                 | config.yaml            |                  |
+| OUTPUT      | The optional output directory to write the HTML plan to                                                                                                 | ./plan                 |                  |                                                                     
 
 At the moment, you have to use the location identifiers when specifying start- and
 end-points, etc.
@@ -130,6 +131,7 @@ There's a bit of a way to go for that.
   * [Tranter's corrections](https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections) allow for fatigue and fitness
   * These are used to build a *perceived* distance travelled, taking into account
    ascent, descent and building fatigue.
+ 
 ## Build Notes
 
 To build this program, you will need a haskell distribution and the

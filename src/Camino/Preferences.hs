@@ -33,7 +33,8 @@ import Camino.Camino
 import Camino.Walking
 import qualified Data.Map as M (Map, (!), fromList)
 import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, member, union, unions)
-import Debug.Trace
+-- import Debug.Trace
+
 -- | Acceptable range boundaries for various parameters.
 -- 
 --   Ranges have a target value, /preferred/ lower and upper bound and a /hard/ minimum and maximum.
@@ -212,7 +213,7 @@ normalisePreferences camino preferences =
       preferenceStops = S.map (\l -> locs M.! (locationID l)) (preferenceStops preferences),
       preferenceExcluded = S.map (\l -> locs M.! (locationID l)) (preferenceExcluded preferences)
     }
-    
+
 -- | Work out what locations are acceptable in a camino, based on the chosen routes.
 --   The default route is always included, followed by the routes specified in the preferences.
 --   The routes are worked through in order (with the default route always first).
@@ -234,9 +235,9 @@ recommendedStops :: Preferences -- ^ The preferences (normalised, see `normalise
 recommendedStops preferences camino =
   let
     routes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
-    baseStops = trace (show $ S.map routeID routes) (S.unions (S.map routeStops routes))
+    baseStops = S.unions (S.map routeStops routes)
   in
-    trace (show $ S.map locationID baseStops) (baseStops `S.intersection` allowedLocations preferences camino)
+    baseStops `S.intersection` allowedLocations preferences camino
 
 -- | The default preference set.
 -- | This provides an overridable skeleton containing values that cover the suggested legs for a walker of normal fitness.

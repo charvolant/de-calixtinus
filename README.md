@@ -9,8 +9,11 @@ entire trip, stretching and squeezing as appropriate to try and limit the number
 ludicrously long or disappointingly short stages.
 
 To see an example, based on someone unfit who wants to walk about 20km
-a day and wants to go to via the Fátima-Ansião and Spiritual Variant routes, look 
+a day and wants to go to via Fátima-Ansião, most of the Coastal/Littoral 
+routes and then transfer to Tui, look 
 [here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/index.html)
+(This route happens to correspond to the route the author took, although the planner comes
+up with some different stages to the ones we chose.)
 
 I started planning this program while walking the Camino Portugués.
 It's partially a learning exercise.

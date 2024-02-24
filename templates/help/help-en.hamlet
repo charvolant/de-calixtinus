@@ -713,10 +713,21 @@
             An albergue run as a private business.
             Private albergues usually offer more services than municipal albergues, allow more than one nights stay and are bookable.
     <tr>
+        <td>^{caminoAccommodationTypeIcon Hostel}
+        <td>Hostel
+        <td>
+            A hostel not oriented towards pilgrims, for example a youth hostel.
+    <tr>
         <td>^{caminoAccommodationTypeIcon GuestHouse}
         <td>Guesthouse
         <td>
             A guesthouse, quinta, casa, bed-and-breakfast, pensione or similar
+    <tr>
+        <td>^{caminoAccommodationTypeIcon HomeStay}
+        <td>Home Stay
+        <td>
+            An AirB&B, farm stay or similar
+    <tr>
     <tr>
         <td>^{caminoAccommodationTypeIcon House}
         <td>House Rental
@@ -727,6 +738,13 @@
         <td>Hotel
         <td>
             A commercial hotel, usually with multiple services and accomodation options.
+    <tr>
+        <td>^{caminoAccommodationTypeIcon CampGround}
+        <td>Camp Ground
+        <td>
+            A managed camping ground.
+            Camp grounds will usually have toilet facilities and showers and may offer other services,
+            such as clothes washing facilities or cafés.
     <tr>
         <td>^{caminoAccommodationTypeIcon Camping}
         <td>Camping
@@ -796,6 +814,54 @@
 <h2 #travel-help>Travel
 
 <p>
+  A travel leg shows how far the next location is an, roughly, how much effort is involved.
+  A typical travel leg looks like:
+
+<div .row .m-2>
+  <div .col .leg-to .leg-line .leg-used .offset-1>
+    <a href="#">A Guarda</a>
+    <span .leg-type title="Road/path">
+    <span .leg-distance>3.1km
+    <span .leg-ascent>50m
+    <span .leg-descent>5m
+
+<p>
+  This means that the next destination is A Guarda, which is 3.1km away.
+  There is a total ascent (climb upwards) of 50m and a total descent (climb downwards) of 5m.
+  The ascent and descent are totals and may represent several climbs and descents, the totals are fed into the
+  <href="#help-penance">penance
+  calculations to give a more accurate estimate of the effort expended which travelling.
+  Ascent and descent are not shown if they are negligible.
+
+<p>
+  In some cases, there are additional elements.
+  In the following example, there is an additional penance attached to choosing this route, probably because,
+  as the notes say, it passes through an industrial area and there is another option.
+
+<div .row .m-2>
+  <div .col .leg-to .leg-line .leg-unused .offset-1>
+    <a href="#">O Porriño
+    <span .leg-type title="Road/path">
+    <span .leg-distance">7.3km
+    <span .leg-ascent>20m
+    <span .leg-descent>20m
+    <span .leg-penance>+<span .penance>2.0km</span>
+    <span .leg-notes>Via industrial area
+
+<p>
+  Non-walking routes may be presented a little differently, since the distance travelled is not
+  really a good measure of effort.
+  In the following example, a ferry transfer, the time taken is given, rather than the distance, along with
+  an explicit penance measure.
+
+<div .row .m-2>
+  <div .col .leg-to .leg-line .leg-unused .offset-1>
+    <a href="#">Pontecesures
+    <span .leg-type .ca-ferry title="Ferry">
+    <span .leg-time>2.5hrs
+    <span .leg-penance>+<span .penance>2.0km</span>
+
+<p>
   Almost all legs on the trip are roads or paths that will allow either walking or cycling.
   An icon beside the distance indicates that the leg will either allow only one of a particular type of travel
   or is something special, like a ferry connection.
@@ -831,6 +897,13 @@
              Ferry connections do not usually have a distance but have, instead, a ferry time measured
              in hours.
              Ferries usually operate according to a schedule and may require booking.
+     <tr>
+         <td>^{caminoLegTypeIcon Boat}
+         <td>Boat or canoe
+         <td>
+             A boat or canoe connection.
+             These connections are usually rowed or paddled and represent as much effort as walking.
+             Boat connections usually operate according to a schedule and may require booking.
 
 <h2 #penance-help>Penance
 

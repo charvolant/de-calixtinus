@@ -24,6 +24,7 @@ instance Graph TestGraph TestEdge TestVertex where
   incoming (TestGraph edges) a = filter (\e -> a == target e) edges
   outgoing (TestGraph edges) a = filter (\e -> a == source e) edges
   edge (TestGraph edges) a b = find (\e -> source e == a && target e == b) edges
+  subgraph (TestGraph edges) vs = TestGraph (filter (\e -> S.member (source e) vs && S.member (target e) vs) edges)
   
 graph1 = TestGraph [
   Edge 1 2,
@@ -73,7 +74,7 @@ testSuccessors4 = TestCase (assertEqual "Successors 4" [Vertex 2, Vertex 3, Vert
 
 testSuccessors5 = TestCase (assertEqual "Successors 5" [Vertex 1, Vertex 2, Vertex 3, Vertex 4, Vertex 5, Vertex 6] (S.toList $ successors graph1 (Vertex 4)))
 
-testPredecessors = TestList [testPredecessors1, testPredecessors2, testPredecessors3, testPredecessors4, testPredecessors5]
+testPredecessors = TestList [testPredecessors1, testPredecessors2, testPredecessors3, testPredecessors4, testPredecessors5, testPredecessors6]
 
 testPredecessors1 = TestCase (assertEqual "Predecessors 1" [Vertex 1] (S.toList $ predecessors graph2 (Vertex 2)))
 

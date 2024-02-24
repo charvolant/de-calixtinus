@@ -297,9 +297,6 @@ getAsset :: Text -- ^ The asset identifier
   -> Maybe AssetConfig -- ^ The asset, if found
 getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config
 
-findVariant :: (LinkI18n -> Bool) -> LinkConfig -> Maybe LinkI18n
-findVariant variant link = find variant (links link)
-
 -- Get a map of id onto localised variant
 getLinks'' :: (LinkConfig -> Bool) -> (LinkI18n -> Bool) -> Config -> M.Map Text LinkI18n
 getLinks'' select variant config = let

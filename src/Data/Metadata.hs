@@ -25,8 +25,6 @@ module Data.Metadata (
   statementValue
 ) where
 
-
-import GHC.Generics (Generic)
 import Data.Aeson
 import Data.List (find)
 import Data.Maybe (fromJust)
@@ -97,9 +95,9 @@ statementLabel statement =
     url = case statement of
       (RawStatement term _) -> term
       (Statement term _) -> T.pack $ (uriToString id term) ""
-    break = dropWhile T.null (T.split (\c -> c == '#' || c == '/') url)
+    broken = dropWhile T.null (T.split (\c -> c == '#' || c == '/') url)
   in
-    if length break == 0 then url else last break
+    if length broken == 0 then url else last broken
 
 statementValue :: Statement -> T.Text
 statementValue (RawStatement _term value) = value

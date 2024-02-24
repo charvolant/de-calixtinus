@@ -4,7 +4,9 @@ module ProgrammingSpec(testProgramming) where
 import Test.HUnit(Test(..), assertEqual, assertBool)
 import Graph.Graph
 import Graph.Programming
+import Data.Either
 import Data.Maybe
+import qualified Data.List as L
 import qualified Data.Map as M
 import qualified Data.Set as S
 
@@ -36,6 +38,8 @@ instance Graph TestGraph TestEdge TestVertex where
   vertex _g a = Vertex (read a)
   incoming (TestGraph edges) a = filter (\e -> a == target e) edges
   outgoing (TestGraph edges) a = filter (\e -> a == source e) edges
+  edge (TestGraph edges) a b = L.find (\e -> source e == a && target e == b) edges
+  subgraph (TestGraph edges) vs = TestGraph (filter (\e -> S.member (source e) vs && S.member (target e) vs) edges)
   
   
 graph1 = TestGraph [
@@ -385,8 +389,8 @@ testProgram1 =
     optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 3)
   in
     TestCase (do
-      assertBool "Program 1 1" (isJust optimal)
-      let accepted = fromJust optimal
+      assertBool "Program 1 1" (isRight optimal)
+      let accepted = fromRight (error "Bad route") optimal
       assertEqual "Program 1 2" (Vertex 1) (start accepted)
       assertEqual "Program 1 3" (Vertex 3) (finish accepted)
       assertEqual "Program 1 4" 1 (length $ path accepted)
@@ -398,8 +402,8 @@ testProgram2 =
     optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 4)
   in
     TestCase (do
-      assertBool "Program 2 1" (isJust optimal)
-      let accepted = fromJust optimal
+      assertBool "Program 2 1" (isRight optimal)
+      let accepted = fromRight (error "Bad route") optimal
       assertEqual "Program 2 2" (Vertex 1) (start accepted)
       assertEqual "Program 2 3" (Vertex 4) (finish accepted)
       assertEqual "Program 2 4" 1 (length $ path accepted)
@@ -411,8 +415,8 @@ testProgram3 =
     optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      assertBool "Program 3 1" (isJust optimal)
-      let accepted = fromJust optimal
+      assertBool "Program 3 1" (isRight optimal)
+      let accepted = fromRight (error "Bad route") optimal
       assertEqual "Program 3 2" (Vertex 1) (start accepted)
       assertEqual "Program 3 3" (Vertex 6) (finish accepted)
       assertEqual "Program 3 4" 2 (length $ path accepted)

@@ -9,7 +9,9 @@ import Camino.Preferences
 import TestUtils
 import qualified Data.Map as M
 import qualified Data.Set as S
+import Data.Either
 import Data.Maybe
+import Data.Metadata
 import Graph.Graph (vertex, identifier)
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
@@ -49,6 +51,7 @@ preferences1 = Preferences {
       (Pharmacy, (Penance 0.1)),
       (Bank, (Penance 0.1))
     ],
+    preferenceRoutes = S.empty,
     preferenceStops = S.empty,
     preferenceExcluded = S.empty
   }
@@ -56,6 +59,9 @@ preferences1 = Preferences {
 location1 = Location {
     locationID = "A",
     locationName = "A",
+    locationType = Poi,
+    locationDescription = Nothing,
+    locationHref = Nothing,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = []
@@ -64,6 +70,9 @@ location1 = Location {
 location2 = Location {
     locationID = "B",
     locationName = "B",
+    locationType = Poi,
+    locationDescription = Nothing,
+    locationHref = Nothing,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
@@ -75,6 +84,9 @@ location2 = Location {
 location3 = Location {
     locationID = "C",
     locationName = "C",
+    locationType = Poi,
+    locationDescription = Nothing,
+    locationHref = Nothing,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
@@ -86,6 +98,9 @@ location3 = Location {
 location4 = Location {
     locationID = "D",
     locationName = "D",
+    locationType = Poi,
+    locationDescription = Nothing,
+    locationHref = Nothing,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
@@ -111,9 +126,22 @@ legs2 = [
   Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legNotes = Nothing }
   ]
 
-route1 = Route { routeID = "R1", routeName = "R1", routeLocations = S.fromList [location1, location2, location3], routeExclusions = S.empty, routePalette = defaultPalette }
+route1 = Route { 
+  routeID = "R1", 
+  routeName = "R1", 
+  routeDescription = "Route 1",
+  routeLocations = S.fromList [location1, location2, location3], 
+  routeInclusions = S.empty,
+  routeExclusions = S.empty, 
+  routeStops = S.empty,
+  routePalette = defaultPalette 
+}
 
 camino1 = Camino {
+  caminoId = "Test",
+  caminoName = "Test",
+  caminoDescription = "Test camino",
+  caminoMetadata = defaultMetadata,
   caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
   caminoLegs = legs1,
   caminoRoutes = [route1],
@@ -140,7 +168,7 @@ testTravelSimple3 = TestCase (assertFloatEqual "Travel Simple 3" 2.0 (travel pre
 testAccomodationSimple = TestList [ testAccomodationSimple1, testAccomodationSimple2 ]
 
 testAccomodationSimple1 = let
-    (accom, serv, pen) = accommodation preferences1 camino1 legs0 services0
+    (accom, serv, pen) = accommodation preferences1 camino1 legs0 services0 False
   in
     TestCase (do
       assertEqual "Accomodation Simple 1 1" True (isJust accom)
@@ -148,7 +176,7 @@ testAccomodationSimple1 = let
       assertPenanceEqual "Accomodation Simple 1 3" (Penance 1.4) pen 0.001
     )
 testAccomodationSimple2 = let
-    (accom, serv, pen) = accommodation preferences1 camino1 legs1 services0
+    (accom, serv, pen) = accommodation preferences1 camino1 legs1 services0 False
   in
     TestCase (do
       assertEqual "Accomodation Simple 2 1" True (isNothing accom)
@@ -159,9 +187,9 @@ testAccomodationSimple2 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 6.4) (metricsPenance $ penance preferences1 camino1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 6.4) (metricsPenance $ penance preferences1 camino1 location3 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 legs1) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 location4 legs1) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 
@@ -172,8 +200,8 @@ testPlanCamino1 preferences camino =
     mroute = planCamino preferences camino begin end
   in
     TestCase (do
-      assertBool "Plan Camino 1 1" (isJust mroute)
-      let route = fromJust mroute
+      assertBool "Plan Camino 1 1" (isRight mroute)
+      let route = fromRight (error "Bad route") mroute
       assertEqual "Plan Camino 1 2" begin (start route)
       assertEqual "Plan Camino 1 3" end (finish route)
       assertEqual "Plan Camino 1 4" 2 (length $ path route)

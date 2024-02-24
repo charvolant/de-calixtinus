@@ -180,6 +180,7 @@ caminoAccommodationLabel (GenericAccommodation House) = HouseTitle
 caminoAccommodationLabel (GenericAccommodation Hotel) = HotelTitle
 caminoAccommodationLabel (GenericAccommodation CampGround) = CampGroundTitle
 caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
+caminoAccommodationLabel _ = AccommodationLabel
 
 caminoServiceIcon :: Service -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoServiceIcon WiFi = [ihamlet| <span .service .ca-wifi title="_{WiFiTitle}"> |]

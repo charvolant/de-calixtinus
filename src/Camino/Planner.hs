@@ -17,11 +17,13 @@ module Camino.Planner (
   Trip,
 
   accommodation,
+  daysLabel,
   hasNonWalking,
   nonWalkingHours,
   penance,
   planCamino,
   travel,
+  tripLabel,
   tripLegs,
   tripStops,
   tripWaypoints,
@@ -99,10 +101,6 @@ isLastDay end day = (legTo $ last day) == end
 -- | Get the locations associated with a day
 dayLocations :: [Leg] -> [Location]
 dayLocations day = (legFrom $ head day) : (map legTo day)
-
--- | Check to see if a day is permitted
-allowedDay :: S.Set Location -> [Leg] -> Bool
-allowedDay allowed day = (S.member (legTo $ head day) allowed) && all (\l -> S.member (legTo l) allowed) day
 
 walking :: String -> (Float -> Float -> Float -> Float)
 walking n | n == "naismith" = naismith
@@ -231,7 +229,7 @@ accommodation :: Preferences -- ^ The calculation preferences
   -> (Maybe Accommodation, S.Set Service, Penance) -- ^ Either nothing for no suitable accommodation or the resulting penance
 accommodation preferences _camino day services allowNone = 
   let
-    acc@(accom, missing, penance) = accommodation' preferences services (legTo $ last day)
+    acc@(accom, missing, _penance) = accommodation' preferences services (legTo $ last day)
   in
     if isNothing accom && allowNone then
       (Nothing, missing, Penance 10.0)

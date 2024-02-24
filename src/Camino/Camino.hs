@@ -51,13 +51,14 @@ module Camino.Camino (
 
 import GHC.Generics (Generic)
 import Data.Aeson
-import Data.Text (Text, unpack, pack)
+import Data.Text (Text, append, unpack, pack)
 import Data.Colour (Colour)
 import Data.Colour.Names
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Maybe (catMaybes, fromJust)
-import qualified Data.Map as M (Map, (!), fromList, elems)
-import qualified Data.Set as S (Set, difference, empty, map, fromList, member, union, unions)
+import Data.Metadata
+import qualified Data.Map as M (Map, (!), filter, fromList, elems)
+import qualified Data.Set as S (Set, difference, empty, intersection, map, fromList, member, union, unions)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.List (find)
 import Graph.Graph
@@ -129,12 +130,15 @@ instance ToJSON LatLong where
   toJSON (LatLong latitude' longitude' srs') = object [ "latitude" .= latitude', "longitude" .= longitude', "srs" .= (if srs' == defaultSRS then Nothing else Just srs') ]
 
 -- | Broad accommodation types
-data AccommodationType = MunicipalAlbergue -- ^ A hostel run by local volunteers
-  | PrivateAlbergue -- ^ A hostel run as a local business
+data AccommodationType = MunicipalAlbergue -- ^ A pilgrims hostel run by local volunteers
+  | PrivateAlbergue -- ^ A hostel run as a local business, oriented towards pilgrims
+  | Hostel -- ^ A generic hostel
   | GuestHouse -- ^ A generic guesthouse
+  | HomeStay -- ^ Rural accomodation, Quinta, Air B&B room etc.
   | House -- ^ An entire house or apartment for rent
   | Hotel -- ^ A dedicated hotel
-  | Camping -- ^ Camping (with a tent or without, depending on what carried)
+  | CampGround -- ^ A dedicated camping ground with services
+  | Camping -- ^ Roadside camping (with a tent or without, depending on what carried)
   deriving (Generic, Show, Eq, Ord)
 
 instance FromJSON AccommodationType
@@ -169,8 +173,8 @@ data Service = WiFi -- ^ Wireless internet available
   | Pool -- ^ Swimming pool available
   | Heating -- ^ Heated building
   | Prayer -- ^ Community prayer/liturgy 
-  | Train -- ^ Train station
-  | Bus -- ^ Bus station
+  | Train -- ^ Train station (or tram or subway)
+  | Bus -- ^ Bus stop
   deriving (Show, Generic, Eq, Ord)
 
 instance FromJSON Service
@@ -214,19 +218,25 @@ accommodationServices :: Accommodation -> S.Set Service
 accommodationServices (Accommodation _name _type services' _sleeping) = services'
 accommodationServices (GenericAccommodation MunicipalAlbergue) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation PrivateAlbergue) = S.fromList [ Handwash, WiFi, Bedlinen, Towels ]
-accommodationServices (GenericAccommodation GuestHouse) = S.fromList [ WiFi, Breakfast, Bedlinen, Towels ]
+accommodationServices (GenericAccommodation Hostel) = S.fromList [ WiFi, Kitchen, Bedlinen, Towels ]
+accommodationServices (GenericAccommodation GuestHouse) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
+accommodationServices (GenericAccommodation HomeStay) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation House) = S.fromList [ WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hotel) = S.fromList [ WiFi, Breakfast, Dinner, Restaurant, Bedlinen, Towels ]
-accommodationServices (GenericAccommodation _) = S.empty
+accommodationServices (GenericAccommodation CampGround) = S.fromList [ Handwash ]
+accommodationServices (GenericAccommodation Camping) = S.empty
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
 accommodationSleeping (Accommodation _name _type _services sleeping') = sleeping'
 accommodationSleeping (GenericAccommodation MunicipalAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation PrivateAlbergue) = S.fromList [ Shared ]
+accommodationSleeping (GenericAccommodation Hostel) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation GuestHouse) = S.fromList [ Single, Double ]
+accommodationSleeping (GenericAccommodation HomeStay) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation House) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation Hotel) = S.fromList [ DoubleWC ]
-accommodationSleeping (GenericAccommodation _) = S.fromList [ SleepingBag ]
+accommodationSleeping (GenericAccommodation CampGround) = S.fromList [ SleepingBag ]
+accommodationSleeping (GenericAccommodation Camping) = S.fromList [ SleepingBag ]
 
 instance FromJSON Accommodation where
    parseJSON t@(String _v) = do
@@ -329,6 +339,7 @@ data LegType = Road -- ^ Walk or cycle on a road or suitable path
    | Trail -- ^ Walking only path
    | CyclePath -- ^ Cycling only route
    | Ferry -- ^ Boat transfer
+   | Boat -- ^ Self-powered boat or canoe
    deriving (Show, Generic, Eq, Ord)
  
 instance FromJSON LegType
@@ -421,6 +432,7 @@ data Route = Route {
   routeName :: Text, -- ^ The route name
   routeDescription :: Text, -- ^ The route description
   routeLocations :: S.Set Location, -- ^ The locations along the route
+  routeInclusions :: S.Set Location, -- ^ The locations on other routes that should eb put back in if they have been excluded by another route
   routeExclusions :: S.Set Location, -- ^ The locations on other routes that are eliminated by this route
   routeStops :: S.Set Location, -- ^ The suggested stops for the route
   routePalette :: Palette
@@ -432,30 +444,34 @@ instance FromJSON Route where
       name' <- v .: "name"
       description' <- v .: "description"
       locations' <- v .:? "locations" .!= S.empty
+      inclusions' <- v .:? "inclusions" .!= S.empty
       exclusions' <- v .:? "exclusions" .!= S.empty
       stops' <- v .:? "stops" .!= S.empty
       palette' <- v .: "palette"
-      return Route { routeID = id', routeName = name', routeDescription = description', routeLocations = locations', routeExclusions = exclusions', routeStops = stops', routePalette = palette' }
+      return Route { routeID = id', routeName = name', routeDescription = description', routeLocations = locations', routeInclusions = inclusions', routeExclusions = exclusions', routeStops = stops', routePalette = palette' }
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' locations' exclusions' stops' palette') =
-      object [ "id" .= id', "name" .= name', "description" .= description', "locations" .= S.map locationID locations', "exclusions" .= S.map locationID exclusions', "stops" .= S.map locationID stops', "palette" .= palette' ]
+    toJSON (Route id' name' description' locations' inclusions' exclusions' stops' palette') =
+      object [ "id" .= id', "name" .= name', "description" .= description', "locations" .= S.map locationID locations', "inclusions" .=  S.map locationID inclusions', "exclusions" .= S.map locationID exclusions', "stops" .= S.map locationID stops', "palette" .= palette' ]
 
 
 instance Eq Route where
   a == b = routeID a == routeID b
-  
+
 instance Ord Route where
   a `compare` b = routeID a `compare` routeID b
 
 -- | Ensure that the route locations are mapped properly
 normaliseRoute :: M.Map String Location -> Route -> Route
 normaliseRoute locs route = route {
-    routeLocations = S.map (\l -> locs M.! locationID l) (routeLocations route),
-    routeExclusions = S.map (\l -> locs M.! locationID l) (routeExclusions route),
+    routeLocations = remap (routeLocations route),
+    routeInclusions = remap (routeInclusions route),
+    routeExclusions = remap (routeExclusions route),
     routeStops = S.map (\l -> locs M.! locationID l) (routeStops route)
-  }
+  } 
+  where
+    remap = S.map (\l -> locs M.! locationID l)
 
 -- | Create a placeholder for a route
 placeholderRoute :: String -> Route
@@ -464,6 +480,7 @@ placeholderRoute ident = Route {
     routeName = pack ("Placeholder for " ++ ident),
     routeDescription = "",
     routeLocations = S.empty,
+    routeInclusions = S.empty,
     routeExclusions = S.empty,
     routeStops = S.empty,
     routePalette = defaultPalette
@@ -475,6 +492,7 @@ data Camino = Camino {
   caminoId :: String,
   caminoName :: Text,
   caminoDescription :: Text,
+  caminoMetadata :: Metadata,
   caminoLocations :: M.Map String Location, -- ^ The camino locations
   caminoLegs :: [Leg], -- ^ The legs between locations
   caminoRoutes :: [Route], -- ^ Named sub-routes
@@ -486,6 +504,7 @@ instance FromJSON Camino where
     id' <- v .: "id"
     name' <- v .: "name"
     description' <- v .: "description"
+    metadata' <- v .:? "metadata" .!= defaultMetadata
     locs <- v .: "locations"
     let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
     legs' <- v .: "legs"
@@ -497,19 +516,30 @@ instance FromJSON Camino where
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes''
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
     let routes''' = defaultRoute''' : otherRoutes
-    return Camino { caminoId = id', caminoName = name', caminoDescription = description', caminoLocations = locMap, caminoLegs = legs'', caminoRoutes = routes''', caminoDefaultRoute = defaultRoute''' }
+    return Camino { caminoId = id', caminoName = name', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locMap, caminoLegs = legs'', caminoRoutes = routes''', caminoDefaultRoute = defaultRoute''' }
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' locations' legs' routes' defaultRoute') =
-    object [ "id" .= id', "name" .= name', "description" .= description', "locations" .= (M.elems locations'), "legs" .= legs', "routes" .= routes', "defaultRoute" .= routeID defaultRoute' ]
+  toJSON (Camino id' name' description' metadata' locations' legs' routes' defaultRoute') =
+    object [ "id" .= id', "name" .= name', "description" .= description', "metadata" .= metadata', "locations" .= (M.elems locations'), "legs" .= legs', "routes" .= routes', "defaultRoute" .= routeID defaultRoute' ]
 
 instance Graph Camino Leg Location where
   vertex camino vid = (caminoLocations camino) M.! vid
   edge camino loc1 loc2 = find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
+  subgraph (Camino id' name' description' metadata' locations' legs' routes' defaultRoute') allowed  = 
+    let
+      id'' = id' ++ "'"
+      name'' = name' `append` " subgraph"
+      locations'' = M.filter (\l -> S.member l allowed) locations'
+      legs'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) legs'
+      routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeInclusions = routeInclusions r `S.intersection` allowed, routeExclusions = routeExclusions r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
+      defaultRoute'' = fromJust $ find (\r -> routeID r == routeID defaultRoute') routes'
+    in
+      Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoRoutes = routes'', caminoDefaultRoute = defaultRoute'' }
+
 
 -- | Get a list of locations for the camino
 caminoLocationList :: Camino -- ^ The camino
@@ -536,28 +566,30 @@ defaultRouteLocations locations routes =
     routeLocs = S.unions $ map routeLocations routes
   in
     allLocs `S.difference` routeLocs
-    
+
 -- | Choose a route for a location
 --   If the location isn't on a specific route, then the default route is returned
 caminoRoute :: Camino -- ^ The camino being interrogated
   -> Location -- ^ The location to test
   -> Route -- ^ The route that the location is on
 caminoRoute camino location = let
-    route = find (\r -> S.member location (routeLocations r)) (caminoRoutes camino)
+    dflt = (caminoDefaultRoute camino)
+    route = find (\r -> r /= dflt && S.member location (routeLocations r)) (caminoRoutes camino)
   in
-    maybe (caminoDefaultRoute camino) id route
-   
+    maybe dflt id route
+
 -- | Choose a route for a leg
 --   If the leg isn't on a specific route, then the default route is returned
 caminoLegRoute :: Camino -- ^ The camino being interrogated
   -> Leg -- ^ The location to test
   -> Route -- ^ The route that the location is on
 caminoLegRoute camino leg = let
+    dflt = caminoDefaultRoute camino
     from' = legFrom leg
     to' = legTo leg
-    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino)
+    route = find (\r -> r /= dflt && (S.member from' (routeLocations r) || S.member to' (routeLocations r))) (caminoRoutes camino)
   in
-    maybe (caminoDefaultRoute camino) id route
+    maybe dflt id route
  
 -- | An approximate level of fitness.
 -- 

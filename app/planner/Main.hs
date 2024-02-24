@@ -20,7 +20,7 @@ import Data.List.Split
 import Text.Cassius
 import Text.Hamlet
 import Text.XML
-import qualified Data.Text as ST (Text)
+import qualified Data.Text as ST (Text, unpack)
 import qualified Data.Text.Lazy as T (concat)
 import qualified Data.Text.Lazy.IO as TIO (writeFile)
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
@@ -101,11 +101,12 @@ plan opts = do
     let router = renderCaminoRoute config' ["en", ""]
     let messages = renderCaminoMsg config'
     let solution = planCamino preferences'''' camino' begin' end'
+    let solution' = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just solution
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences'''' camino' solution
+    let kml = createCaminoDoc config' preferences'''' camino' solution'
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
-    let html = caminoHtml config' preferences'''' camino' solution
+    let html = caminoHtml config' preferences'''' camino' solution'
     let indexFile = output' </> "index.html"
     B.writeFile indexFile (renderHtml (html messages router))
     when static' (createCss config' camino' router output')

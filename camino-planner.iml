@@ -108,5 +108,8 @@
     <orderEntry type="library" name="yaml-0.11.11.0" level="project" />
     <orderEntry type="library" name="libyaml-0.1.2" level="project" />
     <orderEntry type="library" name="text-icu-0.8.0.2" level="project" />
+    <orderEntry type="library" name="network-uri-2.6.4.2" level="project" />
+    <orderEntry type="library" name="th-compat-0.1.4" level="project" />
+    <orderEntry type="library" name="raw-strings-qq-1.1" level="project" />
   </component>
 </module>

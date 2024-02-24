@@ -75,18 +75,23 @@ iconList = [
     ("ca-bicycle-storage", '\xe06a'),
     ("ca-bridge", '\xe004'),
     ("ca-bus", '\xe047'),
+    ("ca-campground", '\xe019'),
     ("ca-camping", '\xe019'),
     ("ca-city", '\xe003'),
     ("ca-cycling", '\xe081'),
     ("ca-dinner", '\xe065'),
     ("ca-dryer", '\xe062'),
     ("ca-ferry", '\xe082'),
+    ("ca-globe", '\xe090'),
     ("ca-groceries", '\xe041'),
     ("ca-guesthouse", '\xe012'),
     ("ca-handwash", '\xe063'),
     ("ca-heating", '\xe070'),
+    ("ca-homestay", '\xe011'),
+    ("ca-hostel", '\xe012'),
     ("ca-hotel", '\xe013'),
     ("ca-house", '\xe011'),
+    ("ca-information", '\xe091'),
     ("ca-intersection", '\xe005'),
     ("ca-kitchen", '\xe06b'),
     ("ca-lockers", '\xe066'),
@@ -100,6 +105,7 @@ iconList = [
     ("ca-pool", '\xe06e'),
     ("ca-prayer", '\xe06f'),
     ("ca-restaurant", '\xe040'),
+    ("ca-rowing", '\xe083'),
     ("ca-shared", '\xe021'),
     ("ca-sleeping-bag", '\xe028'),
     ("ca-stables", '\xe068'),
@@ -215,12 +221,10 @@ a
       content: "\e020"
 .aside
   background-color: #d0f8ff
-  border-radius: 1ex   
+  border-radius: 1ex
   font-size: small
-.link-out
-  font-size: large
-.link-out::before
-  content: "\2139"
+.link-map::before
+  content: "\e090"
 .map-key
   font-size: small
 .map-key-icon

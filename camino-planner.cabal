@@ -35,6 +35,7 @@ library
       Camino.Planner
       Camino.Preferences
       Camino.Walking
+      Data.Metadata
       Graph.Graph
       Graph.Programming
   other-modules:
@@ -43,8 +44,7 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures
   build-depends:
-      HUnit ==1.6.*
-    , aeson >=2
+      aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
@@ -54,6 +54,7 @@ library
     , directory
     , filepath
     , formatting
+    , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
@@ -75,8 +76,7 @@ executable camino-map-exe
       app/mapper
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      HUnit ==1.6.*
-    , aeson >=2
+      aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
@@ -87,6 +87,7 @@ executable camino-map-exe
     , directory
     , filepath
     , formatting
+    , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
@@ -108,8 +109,7 @@ executable camino-planner-exe
       app/planner
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      HUnit ==1.6.*
-    , aeson >=2
+      aeson >=2
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
@@ -120,6 +120,7 @@ executable camino-planner-exe
     , directory
     , filepath
     , formatting
+    , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
     , scientific
@@ -140,6 +141,7 @@ test-suite camino-planner-test
       CaminoSpec
       ConfigSpec
       GraphSpec
+      MetadataSpec
       PlannerSpec
       ProgrammingSpec
       TestUtils
@@ -161,8 +163,10 @@ test-suite camino-planner-test
     , directory
     , filepath
     , formatting
+    , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , raw-strings-qq
     , scientific
     , shakespeare
     , split

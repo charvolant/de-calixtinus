@@ -2,6 +2,56 @@
   "id": "P",
   "name": "Caminho Português",
   "description": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the French route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Caminho Português"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Camino Portuguese"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2024-10-20"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "Kat Davis, The Camino Portugués (Cicerone, 2019)"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://stingynomads.com/"
+      }
+    ]
+  },
   "locations": [
     {
       "id": "P1",
@@ -2559,7 +2609,7 @@
       "name": "Valença do Minho",
       "type": "Town",
       "position": { "latitude": 42.02535, "longitude": -8.64577 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
         {
           "name": "São Teotónio Pilgrims Hostel",
@@ -2616,7 +2666,7 @@
       "name": "Tui",
       "type": "Town",
       "position": { "latitude": 42.04640, "longitude": -8.64456 },
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
         {
           "name": "Pilgrims Hostel in Tui",
@@ -4527,8 +4577,1654 @@
       "position": { "latitude": 42.56467, "longitude": -8.83447  },
       "services": [ ],
       "accommodation": [ ]
+    },
+
+    {
+      "id": "C2",
+      "name": "Custóias",
+      "type": "Town",
+      "position": { "latitude": 41.20237, "longitude": -8.64145 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C3",
+      "name": "Carvalhas",
+      "type": "Village",
+      "position": { "latitude": 41.22166, "longitude": -8.65282 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C4",
+      "name": "Pedras Rubras",
+      "type": "Town",
+      "position": { "latitude": 41.240683, "longitude": -8.66562 },
+      "services": [ "Restaurant", "Groceries", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "AirPorto Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "Kitchen", "Breakfast" ],
+          "sleeping": [ "Shared", "Double" ]
+        },
+        {
+          "name": "Aeroporto Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "name": "Vila Nova da Telha",
+      "type": "Village",
+      "position": { "latitude": 41.25651, "longitude": -8.67701 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C6",
+      "name": "Aveleda",
+      "type": "Village",
+      "position": { "latitude": 41.27118, "longitude": -8.69198 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C7",
+      "name": "Labruge (Inland)",
+      "type": "Village",
+      "position": { "latitude": 41.28027, "longitude": -8.70242 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train" ],
+      "accommodation": [
+        {
+          "name": "S. Tiago de Labruge Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa da Praia Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Handwash", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C8",
+      "name": "Modivas - Vila Chã",
+      "type": "Village",
+      "position": { "latitude": 41.29618, "longitude": -8.70736 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "S. Mamede de Vila Chã Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Café Confeitaria Sandra",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C9",
+      "name": "Mindelo",
+      "type": "Village",
+      "position": { "latitude": 41.31351, "longitude": -8.71978 },
+      "services": [ "Restaurant", "Groceries", "Bank", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C10",
+      "name": "Areia (Árvore)",
+      "type": "Town",
+      "position": { "latitude": 41.33257, "longitude": -8.73097 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C11",
+      "name": "Azurara",
+      "type": "Village",
+      "position": { "latitude": 41.35036, "longitude": -8.73899 },
+      "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Villa C Boutique Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C12",
+      "name": "Vila do Conde",
+      "type": "Town",
+      "position": { "latitude": 41.35948, "longitude": -8.74681 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Santa Clara Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Laranjal Guesthouse",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "HI Vila do Conde - Pousada de Juventude",
+          "type": "Hostel",
+          "services": [ "WiFi", "Heating", "Accessible", "Lockers" ],
+          "sleeping": [ "Shared", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Santana Hotel & Spa",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C13",
+      "name": "Póvoa de Varzim",
+      "type": "City",
+      "position": { "latitude": 41.38079, "longitude": -8.76613 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "S. José de Ribamar Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostel Sardines & Friends",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Lockers", "Pets", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Quadruple" ]
+        },
+        {
+          "name": "Hotel Luso Brasileiro",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Grande Hotel da Póvoa",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Axis Vermar Conference & Beach Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single" ,"DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C14",
+      "name": "A Ver-o-Mar",
+      "type": "Village",
+      "position": { "latitude": 41.40490, "longitude": -8.77906 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Hotel Santo André",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C15",
+      "name": "Aguçadoura",
+      "type": "Village",
+      "position": { "latitude": 41.42907, "longitude": -8.78365 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Aguçadoura",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Accessible", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "C16",
+      "name": "Estela",
+      "type": "Poi",
+      "position": { "latitude": 41.45919, "longitude":-8.77003 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C17",
+      "name": "Apúlia",
+      "type": "Village",
+      "position": { "latitude": 41.48179, "longitude": -8.77220 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "Santiago da Costa Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "Quadruple" ]
+        },
+        {
+          "name": "Aplúlia Praia Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ]
+        }
+      ]
+    },
+    {
+      "id": "C18",
+      "name": "Fão",
+      "type": "Village",
+      "position": { "latitude": 41.51244, "longitude": -8.77351 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Do Alto Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Quadruple" ]
+        },
+        {
+          "name": "The Spot Hostel Ofir",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC",  "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Tukaza Guesthouse",
+          "type": "GuestHouse",
+          "services": [ "WashingMachine", "Dryer", "Heating", "Kitchen" ],
+          "sleeping": [ "Single", "Double", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C19",
+      "name": "Esposende",
+      "type": "Town",
+      "position": { "latitude": 41.53112, "longitude": -8.78027 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Sleep&Go",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Dinner", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Clube Pinhal da Foz",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Esposende Guesthouse",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Kitchen", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Eleven Hostel",
+          "type": "Hostel",
+          "services": [ "WiFi", "WashingMachine", "Kitchen" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Inn Esposende Sports Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC", "QuadrupleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C20",
+      "name": "Marinhas",
+      "type": "Village",
+      "position": { "latitude": 41.54857, "longitude": -8.78290 },
+      "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "São Miguel Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Ramiro Cato",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Handwash", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Casa do Avô Grande",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Kitchen", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa by Anita Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Prayer", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hostel Costa Selvagem",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "Pets", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        }
+       ]
+    },
+    {
+      "id": "C21",
+      "name": "Mar",
+      "type": "Village",
+      "position": { "latitude": 41.57816, "longitude": -8.78501 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C22",
+      "name": "Belinho",
+      "type": "Village",
+      "position": { "latitude": 41.58874, "longitude": -8.78366 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C23",
+      "name": "Antas",
+      "type": "Village",
+      "position": { "latitude": 41.60734, "longitude": -8.78159 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Antas Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C24",
+      "name": "Castelo do Neiva",
+      "type": "Village",
+      "position": { "latitude": 41.61692, "longitude": -8.78878 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Domus Nausti Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "AL Santiago",
+          "type": "House",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "C25",
+      "name": "São Romão de Neiva",
+      "type": "Monastery",
+      "position": { "latitude": 41.63938, "longitude": -8.77717 },
+      "services": [  ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C26",
+      "name": "Chafé",
+      "type": "Village",
+      "position": { "latitude": 41.64948, "longitude": -8.78172 },
+      "services": [ "Restaurant", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Casa do Campo do Forno",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Restaurant" ],
+          "sleeping": [ "Double", "DoubleWC"  ]
+        },
+        {
+          "name": "Casa da Reina",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Accessible", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C27",
+      "name": "Vila Nova de Anha",
+      "type": "Village",
+      "position": { "latitude": 41.66398, "longitude": -8.79451 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Casa da Carolina",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "CampSite", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "C28",
+      "name": "Darque",
+      "type": "Village",
+      "position": { "latitude": 41.68067, "longitude": -8.80692  },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train" ],
+      "accommodation": [
+        "GuestHouse",
+        "Hotel"
+      ]
+    },
+    {
+      "id": "C29",
+      "name": "Viana do Castelo",
+      "type": "City",
+      "position": { "latitude": 41.69682, "longitude": -8.82324 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "São João da Cruz dos Caminhos Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage", "Prayer", "Bedlinen" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Santa Luzia Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Prayer", "Bedlinen" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Pousada da Juventude",
+          "type": "Hostel",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Avenida Central Apartments",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "Kitchen", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Dona Emília Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Breakfast", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double", "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Fábrica do Chocolate",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double", "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Margarida da Praça",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Jardim",
+          "type": "Hotel",
+          "services": [ "WiFi", "Breakfast", "Accessible", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Hotel Rali Viana",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C30",
+      "name": "Areosa",
+      "type": "Village",
+      "position": { "latitude": 41.72067, "longitude": -8.85306  },
+      "services": [ "Train" ],
+      "accommodation": [
+        {
+          "name": "Quinta da Boa Viagem",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Restaurant", "Accessible", "Pets", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C31",
+      "name": "Carreço",
+      "type": "Village",
+      "position": { "latitude": 41.75475, "longitude": -8.86146 },
+      "services": [ "Restaurant", "Groceries", "Medical", "Train" ],
+      "accommodation": [
+        {
+          "name": "Casa do Sãrdao Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa do Adro Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Restaurant", "BicycleStorage", "Bedlinen", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Casa do Nato",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen",  "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Double", "Quadruple" ]
+        },
+        {
+          "name": "CasaRada",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "C32",
+      "name": "Afife",
+      "type": "Village",
+      "position": { "latitude": 41.77342, "longitude": -8.84678 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casa de Santa Ana",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C33",
+      "name": "Ãncora",
+      "type": "Village",
+      "position": { "latitude": 41.80327, "longitude": -8.85231 },
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Vivenda Atlantico Country Lodge",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double", "DoubleWC" ]
+        },
+        {
+          "name": "Martins Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C34",
+      "name": "Vila Praia de Ãncora",
+      "type": "Town",
+      "position": { "latitude": 41.81481, "longitude": -8.86441 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Quinta da Quinhas - Alojamento DiverMinho",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Quadruple" ]
+        },
+        {
+          "name": "Apartmentos Turísticos Vila Praia",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "Kitchen", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Albergaria Quim Barreiros",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Meira",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C35",
+      "name": "Moledo",
+      "type": "Village",
+      "position": { "latitude": 41.84463, "longitude": -8.86713 },
+      "services": [ "Restaurant", "Groceries", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C36",
+      "name": "Caminha",
+      "type": "Town",
+      "position": { "latitude": 41.87632, "longitude": -8.83473 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train" ],
+      "accommodation": [
+        {
+          "name": "Caminha Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Santiago Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Heating", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Bom Caminha",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Lockers","BicycleStorage", "Pets", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        },
+        {
+          "name": "Olá Vida Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Residencial Arca Nova",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Kitchen", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Residencial Galo D'Ouro",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Porta do Sol",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels", "Pool", "Bank" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Muralha de Caminha",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Design & Wine Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels", "Bank", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+     {
+      "id": "C37",
+      "name": "Caminha Ferry",
+      "type": "Poi",
+      "position": { "latitude": 41.87867, "longitude": -8.83637  },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C38",
+      "name": "A Pasaxe (Camposancos)",
+      "type": "Village",
+      "position": { "latitude": 41.88896, "longitude": -8.85074 },
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Camping Santa Tecla",
+          "type": "CampGround",
+          "services": [ "WiFi", "Restaurant", "Pool" ],
+          "sleeping": [ "SleepingBag" ]
+        }
+      ]
+    },
+    {
+      "id": "C39",
+      "name": "A Guarda",
+      "type": "Town",
+      "position": { "latitude": 41.90322, "longitude": -8.87437 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "A Guarda Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "O Peirao Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostal del Mar",
+          "type": "PrivateAlbergue",
+          "services": [ "Heating", "Pets", "Bedlinen" ],
+          "sleeping": [ "Shared", "Single", "Double", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Hotel Celta",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Bruselas",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Monumento Convento de San Benito",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Hotel Vila da Guarda",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Eli Mar",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C40",
+      "name": "Portecelo",
+      "type": "Village",
+      "position": { "latitude": 41.95203, "longitude": -8.88239 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Loft As Casetas",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "C41",
+      "name": "Oia",
+      "type": "Town",
+      "position": { "latitude": 42.00299, "longitude": -8.87681 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Arrabal",
+          "type": "GuestHouse",
+          "services": [ "WiFi","Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Casa Carola",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Casa Puertas",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel A Raiña",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C42",
+      "name": "O Serrallo (Viladesuso)",
+      "type": "Village",
+      "position": { "latitude": 42.03394, "longitude": -8.88186 },
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Da Estrela Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Alojamiento Camino Portuués Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Costa Verde",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Hotel Glasgow",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C43",
+      "name": "O Porto (Mougás)",
+      "type": "Village",
+      "position": { "latitude": 42.05113, "longitude": -8.88465 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Aguncheiro Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "C44",
+      "name": "Pedra Rubia",
+      "type": "Village",
+      "position": { "latitude": 42.06639, "longitude": -8.89251 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel O Peñasco",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Dinner", "Breakfast", "Restaurant", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Camping O Muiño",
+          "type": "CampGround",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "SleepingBag" ]
+        }
+      ]
+    },
+    {
+      "id": "C45",
+      "name": "As Mariñas",
+      "type": "Village",
+      "position": { "latitude": 42.09691, "longitude": -8.89364 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Camping Mougás",
+          "type": "CampGround",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "BicycleStorage", "Bedlinen", "Pool" ],
+          "sleeping": [ "SleepingBag" ]
+        }
+       ]
+    },
+    {
+      "id": "C46",
+      "name": "O Cabreiro",
+      "type": "Village",
+      "position": { "latitude": 42.10557, "longitude": -8.88470 },
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C47",
+      "name": "O Sinal",
+      "type": "Village",
+      "position": { "latitude": 42.10789, "longitude": -8.87713 },
+      "services": [ "Restaurant"  ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C48",
+      "name": "Percibilleira",
+      "type": "Bridge",
+      "position": { "latitude": 42.11428, "longitude": -8.86258 },
+      "services": [  ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C49",
+      "name": "Baiona",
+      "type": "Town",
+      "position": { "latitude": 42.11833, "longitude": -8.85423 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Estela do Mar Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostel Baionamar",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Mosquito Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Pension Santa Marta Playa",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Hotel Paza de Mendoza",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Pinzón",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Bayona",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Anunciada",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "BicycleStorage", "Prayer", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Carabela la Pinta",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Hotel Tres Carabelas",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C50",
+      "name": "Sabarís",
+      "type": "Town",
+      "position": {"latitude": 42.11011, "longitude": -8.82226},
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Bus"],
+      "accommodation": [
+        {
+          "name": "Playa de Sabaris Pilgrims Hostel",
+          "type": "PrivateAlbergue",
+          "services": [
+            "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage",
+            "Bedlinen", "Towels"
+          ],
+          "sleeping": ["Shared"]
+        },
+        {
+          "name": "Hotel Arce",
+          "type": "Hotel",
+          "services": ["WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
+        },
+        {
+          "name": "Vasco da Gama Hotel",
+          "type": "Hotel",
+          "services": [
+            "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Restaurant", "BicycleStorage", "Bedlinen",
+            "Towels"
+          ],
+          "sleeping": ["DoubleWC", "TripleWC"]
+        },
+        {
+          "name": "Hotel Avenida",
+          "type": "Hotel",
+          "services": ["WiFi", "Heating", "Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
+        }
+      ]
+    },
+    {
+      "id": "C51",
+      "name": "A Ramallosa",
+      "type": "Town",
+      "position": {"latitude": 42.11762, "longitude": -8.81104 },
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Medical", "Bus"],
+      "accommodation": [
+        {
+          "name": "Pazo Pías Hostel-Hospice",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Miramar",
+          "type": "Hotel",
+          "services": ["WiFi", "WashingMachine", "Dryer", "Heating", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels"],
+          "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C52",
+      "name": "Nigrán",
+      "type": "Town",
+      "position": {"latitude": 42.13872, "longitude": -8.80714 },
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Bus"],
+      "accommodation": [
+        {
+          "name": "La Chica Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Pets", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double", "DoubleWC" ]
+        },
+        {
+          "name": "El Retiro Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Nigrán Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double" ]
+        },
+        {
+          "name": "Vinotel 7 Uvas",
+          "type": "Hotel",
+          "services": ["WiFi", "Handwash", "Heating", "Dinner", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels"],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Val Convention",
+          "type": "Hotel",
+          "services": ["WiFi", "Handwash", "Heating", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "Bedlinen", "Towels"],
+          "sleeping": [ "Single", "DoubleWC", "QuadrupleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C53",
+      "name": "Priegue",
+      "type": "Village",
+      "position": {"latitude": 42.15955, "longitude": -8.80094  },
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bus"],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C54",
+      "name": "Saiáns",
+      "type": "Village",
+      "position": {"latitude": 42.16681, "longitude": -8.80136 },
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "San Xurxo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "C55",
+      "name": "Oia",
+      "type": "Bridge",
+      "position": {"latitude": 42.18203, "longitude": -8.78785 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C56",
+      "name": "Coruxo",
+      "type": "Town",
+      "position": {"latitude": 42.19316, "longitude": -8.77304 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C57",
+      "name": "Vigo",
+      "type": "Town",
+      "position": {"latitude": 42.23922, "longitude": -8.72637 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Vigo Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Real 4 Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Continental Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "A Pedra Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Buenos Aires Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Kaps Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Puerta del Sol",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Puerta Gamboa",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Junquera",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Compostela",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C58",
+      "name": "Senda da Agua (Teis)",
+      "type": "Poi",
+      "position": {"latitude": 42.25297, "longitude": -8.67856 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C59",
+      "name": "Senda da Agua (Chapela)",
+      "type": "Poi",
+      "position": {"latitude": 42.25996, "longitude": -8.66897 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C60",
+      "name": "Senda da Agua (Transmañó)",
+      "type": "Poi",
+      "position": {"latitude": 42.27701, "longitude": -8.65879 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C61",
+      "name": "Cedeira",
+      "type": "Village",
+      "position": {"latitude": 42.27663, "longitude": -8.62567 },
+      "services": [  ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C62",
+      "name": "Santo André de Comesaña",
+      "type": "Village",
+      "position": {"latitude": 42.19957, "longitude": -8.75424 },
+      "services": [ "Restaurant", "Pharmacy" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C63",
+      "name": "Matamá",
+      "type": "Village",
+      "position": {"latitude": 42.20058, "longitude": -8.73918 },
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Hotel O'Pazo",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "C64",
+      "name": "Vigo (Parque de Casterelos)",
+      "type": "Village",
+      "position": {"latitude": 42.21165, "longitude": -8.73222 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "C65",
+      "name": "San Xose Obreiro",
+      "type": "Village",
+      "position": {"latitude": 42.22486, "longitude": -8.71188 },
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Vigo Los Galeones",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+
+    {
+      "id": "L1",
+      "name": "Porto (coast)",
+      "type": "Poi",
+      "position": {"latitude": 41.14051, "longitude": -8.61650 },
+      "services": [ "Restaurant", "Train", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "L2",
+      "name": "Foz do Douro",
+      "type": "Town",
+      "position": {"latitude": 41.14970, "longitude": -8.67592 },
+      "services": [ "Restaurant", "Pharmacy", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Suites Foz O Porto",
+          "type": "House",
+          "services": [ "Heating", "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Residencial Porto Foz",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Boa Vista",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "name": "Nevogilde",
+      "type": "Town",
+      "position": {"latitude": 41.16786, "longitude": -8.68781 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "L4",
+      "name": "Matosinhos",
+      "type": "Town",
+      "position": {"latitude": 41.18781, "longitude": -8.69313 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy",  "Medical", "BicycleRepair", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "A Casa Vermelha Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Handwash", "Heating", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Pensão Central Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Breakfast", "BicycleStorage", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Fishtail Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Lockers", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Oportocean Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Restaurant", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hotel Senhor de Matosinhos",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Sea Porto Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Accessible", "Bedlinen", "Towels", "Bank" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "O Valentim Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "L5",
+      "name": "Leça de Palmeira",
+      "type": "Town",
+      "position": {"latitude": 41.19403, "longitude": -8.70746 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Residencial Luso Brasileira",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Bank" ],
+          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Holiday Inn Express Porto Exponor",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "L6",
+      "name": "Perafita",
+      "type": "Village",
+      "position": {"latitude": 41.21960, "longitude": -8.71404 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Velha",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels"],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Holiday Inn Express Porto Exponor",
+          "type": "Hotel",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "L7",
+      "name": "Lavra",
+      "type": "Village",
+      "position": {"latitude": 41.24284, "longitude": -8.72639 },
+      "services": [ "Restaurant", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Camping Orbitur Lavra",
+          "type": "CampGround",
+          "services": [ ],
+          "sleeping": [ "SleepingBag", "Single" ]
+        }
+      ]
+    },
+    {
+      "id": "L8",
+      "name": "Labruge (coastal)",
+      "type": "Village",
+      "position": { "latitude": 41.27471, "longitude": -8.72750 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "S. Tiago de Labruge Pilgrims Hostel",
+          "type": "MunicipalAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa da Praia Guest House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Handwash", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "L9",
+      "name": "Vila Chá",
+      "type": "Village",
+      "position": { "latitude": 41.29322, "longitude": -8.73393 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "S. Mamede de Vila Chá Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Café Confeitaria Sandra",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant" ],
+          "sleeping": ["Shared", "Single", "Double", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "L10",
+      "name": "Mindelho (coastal)",
+      "type": "Village",
+      "position": { "latitude": 41.31076, "longitude": -8.74003 },
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "L11",
+      "name": "Ávore",
+      "type": "Village",
+      "position": { "latitude": 41.33043, "longitude": -8.73866 },
+      "services": [ "Restaurant", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Ávore Camping",
+          "type": "CampGround",
+          "services": [ "Restaurant" ],
+          "sleeping": [ "SleepingBag" ]
+        }
+      ]
+    },
+
+    {
+      "id": "T1",
+      "name": "Seixas",
+      "type": "Village",
+      "position": { "latitude": 41.89631, "longitude": -8.81894 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T2",
+      "name": "Lanhelas",
+      "type": "Village",
+      "position": { "latitude": 41.90781, "longitude": -8.79072 },
+      "services": [ "Restaurant", "Groceries", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T3",
+      "name": "Gondarém",
+      "type": "Village",
+      "position": { "latitude": 41.91668, "longitude": -8.76107 },
+      "services": [ "Restaurant", "Train" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T4",
+      "name": "Vila Nova de Cerveira",
+      "type": "Town",
+      "position": { "latitude": 41.94695, "longitude": -8.74035 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "HI Vila Nova de Cerveira",
+          "type": "Hostel",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Restaurant", "Lockers", "Accessible", "Bedlinen" ],
+          "sleeping": [ "Shared", "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Hotel Minho Belo",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "Bedlinen", "Bank", "Pool" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "T5",
+      "name": "Lovelhe",
+      "type": "Village",
+      "position": { "latitude": 41.95439, "longitude": -8.73215 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T6",
+      "name": "Reboreda",
+      "type": "Village",
+      "position": { "latitude": 41.95858, "longitude": -8.72752 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T7",
+      "name": "São Pedro da Torre",
+      "type": "Village",
+      "position": { "latitude": 41.98998, "longitude": -8.66673 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Train" ],
+      "accommodation": [
+        {
+          "name": "Alvorada Medieval",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Restaurant", "Lockers", "Accessible", "Bedlinen", "Bank", "Pool" ],
+          "sleeping": [ "Shared", "DoubleWC", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "T8",
+      "name": "Ponte Rodo-Ferroviária de Valença jetty",
+      "type": "Poi",
+      "position": { "latitude": 42.03713, "longitude": -8.64375 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T9",
+      "name": "Touguinha",
+      "type": "Village",
+      "position": { "latitude": 41.37183, "longitude": -8.71586 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T10",
+      "name": "Aerodromo Povóa de Varzim",
+      "type": "Poi",
+      "position": { "latitude": 41.44825, "longitude": -8.70577 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T11",
+      "name": "Lagoa Negra",
+      "type": "Village",
+      "position": { "latitude": 41.46561, "longitude": -8.73103 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "T12",
+      "name": "Fonte Boa",
+      "type": "Village",
+      "position": { "latitude": 41.49999, "longitude": -8.73962 },
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
     }
   ],
+
   "legs": [
     {
       "from": "P1",
@@ -7146,8 +8842,682 @@
       "distance": 0,
       "ascent": 0,
       "descent": 0
-    }
+    },
 
+
+    {
+      "from": "P139",
+      "to": "C2",
+      "distance": 1.35,
+      "ascent": 5,
+      "descent": 15
+    },
+    {
+      "from": "C2",
+      "to": "C3",
+      "distance": 2.58,
+      "ascent": 10,
+      "descent": 60
+    },
+    {
+      "from": "C3",
+      "to": "C4",
+      "distance": 2.13,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "C4",
+      "to": "C5",
+      "distance": 2.14,
+      "ascent": 0,
+      "descent": 25
+    },
+    {
+      "from": "C5",
+      "to": "C6",
+      "distance": 2.37,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "C6",
+      "to": "C7",
+      "distance": 1.98,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "C7",
+      "to": "C8",
+      "distance": 2.21,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "C8",
+      "to": "C9",
+      "distance": 2.04,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "C9",
+      "to": "C10",
+      "distance": 2.40,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "C10",
+      "to": "C11",
+      "distance": 1.45,
+      "ascent": 15,
+      "descent": 30
+    },
+    {
+      "from": "C11",
+      "to": "C12",
+      "distance": 1.40,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "C12",
+      "to": "C13",
+      "distance": 3.37,
+      "ascent": 5,
+      "descent": 20
+    },
+    {
+      "from": "C13",
+      "to": "C14",
+      "distance": 3.33,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "C14",
+      "to": "C15",
+      "distance": 3.72,
+      "ascent": 10,
+      "descent": 5,
+      "notes": "No water until Apúlia"
+    },
+    {
+      "from": "C15",
+      "to": "C16",
+      "distance": 4.11,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "C16",
+      "to": "C17",
+      "distance": 2.70,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "C17",
+      "to": "C18",
+      "distance": 3.83,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "C18",
+      "to": "C19",
+      "distance": 2.64,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "C19",
+      "to": "C20",
+      "distance": 4.36,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "C20",
+      "to": "C21",
+      "distance": 2.47,
+      "ascent": 40,
+      "descent": 10
+    },
+    {
+      "from": "C21",
+      "to": "C22",
+      "distance": 1.28,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "C22",
+      "to": "C23",
+      "distance": 2.26,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "C23",
+      "to": "C24",
+      "distance": 1.48,
+      "ascent": 60,
+      "descent": 50
+    },
+    {
+      "from": "C24",
+      "to": "C25",
+      "distance": 4.28,
+      "ascent": 70,
+      "descent": 55
+    },
+    {
+      "from": "C25",
+      "to": "C26",
+      "distance": 1.46,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "C26",
+      "to": "C27",
+      "distance": 2.42,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "C27",
+      "to": "C28",
+      "distance": 2.53,
+      "ascent": 35,
+      "descent": 55
+    },
+    {
+      "from": "C28",
+      "to": "C29",
+      "distance": 2.73,
+      "ascent": 10,
+      "descent": 20
+    },
+    {
+      "from": "C29",
+      "to": "C30",
+      "distance": 5.01,
+      "ascent": 55,
+      "descent": 30
+    },
+    {
+      "from": "C30",
+      "to": "C31",
+      "distance": 3.65,
+      "ascent": 65,
+      "descent": 10
+    },
+    {
+      "from": "C31",
+      "to": "C32",
+      "distance": 3.99,
+      "ascent": 70,
+      "descent": 75
+    },
+    {
+      "from": "C32",
+      "to": "C33",
+      "distance": 3.31,
+      "ascent": 15,
+      "descent": 60
+    },
+    {
+      "from": "C33",
+      "to": "C34",
+      "distance": 2.69,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "C34",
+      "to": "C35",
+      "distance": 4.86,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "C35",
+      "to": "C36",
+      "distance": 3.82,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "C36",
+      "to": "C37",
+      "distance": 0.4,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "type": "Ferry",
+      "from": "C37",
+      "to": "C38",
+      "time": 0.5,
+      "penance": 1.0,
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "notes": "Via ferry or water taxi"
+    },
+    {
+      "from": "C38",
+      "to": "C39",
+      "distance": 3.09,
+      "ascent": 50,
+      "descent": 5
+    },
+    {
+      "from": "C39",
+      "to": "C40",
+      "distance": 6.76,
+      "ascent": 40,
+      "descent": 50
+    },
+    {
+      "from": "C40",
+      "to": "C41",
+      "distance": 6.29,
+      "ascent": 10,
+      "descent": 40
+    },
+    {
+      "from": "C41",
+      "to": "C42",
+      "distance": 3.66,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "C42",
+      "to": "C43",
+      "distance": 2.80,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "C43",
+      "to": "C44",
+      "distance": 1.75,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "C44",
+      "to": "C45",
+      "distance": 2.59,
+      "ascent": 10,
+      "descent": 15
+    },
+    {
+      "from": "C45",
+      "to": "C46",
+      "distance": 3.40,
+      "ascent": 90,
+      "descent": 25
+    },
+    {
+      "from": "C46",
+      "to": "C47",
+      "distance": 0.96,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "C47",
+      "to": "C48",
+      "distance": 1.84,
+      "ascent": 60,
+      "descent": 20
+    },
+    {
+      "from": "C48",
+      "to": "C49",
+      "distance": 1.56,
+      "ascent": 0,
+      "descent": 70
+    },
+    {
+      "from": "C49",
+      "to": "C50",
+      "distance": 3.19,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "C50",
+      "to": "C51",
+      "distance": 1.45,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "C51",
+      "to": "C52",
+      "distance": 3.80,
+      "ascent": 50,
+      "descent": 35
+    },
+    {
+      "from": "C52",
+      "to": "C53",
+      "distance": 3.92,
+      "ascent": 120,
+      "descent": 5
+    },
+    {
+      "from": "C53",
+      "to": "C54",
+      "distance": 0.90,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "C54",
+      "to": "C55",
+      "distance": 2.63,
+      "ascent": 0,
+      "descent": 75
+    },
+    {
+      "from": "C55",
+      "to": "C56",
+      "distance": 1.35,
+      "ascent": 0,
+      "descent": 25
+    },
+    {
+      "from": "C56",
+      "to": "C57",
+      "distance": 8.81,
+      "ascent": 50,
+      "descent": 55
+    },
+    {
+      "from": "C57",
+      "to": "C58",
+      "distance": 5.15,
+      "ascent": 150,
+      "descent": 20
+    },
+    {
+      "from": "C58",
+      "to": "C59",
+      "distance": 1.69,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "C59",
+      "to": "C60",
+      "distance": 3.54,
+      "ascent": 65,
+      "descent": 70
+    },
+    {
+      "from": "C60",
+      "to": "C61",
+      "distance": 3.67,
+      "ascent": 60,
+      "descent": 120
+    },
+    {
+      "from": "C61",
+      "to": "P223",
+      "distance": 2.35,
+      "ascent": 0,
+      "descent": 85
+    },
+    {
+      "from": "C56",
+      "to": "C62",
+      "distance": 2.76,
+      "ascent": 25,
+      "descent": 20
+    },
+    {
+      "from": "C62",
+      "to": "C63",
+      "distance": 1.57,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "C63",
+      "to": "C64",
+      "distance": 2.23,
+      "ascent": 0,
+      "descent": 65
+    },
+    {
+      "from": "C64",
+      "to": "C65",
+      "distance": 3.2,
+      "ascent": 70,
+      "descent": 5
+    },
+    {
+      "from": "C65",
+      "to": "C58",
+      "distance": 5.1,
+      "ascent": 90,
+      "descent": 15
+    },
+
+    {
+      "from": "P138",
+      "to": "L1",
+      "distance": 0.42,
+      "ascent": 0,
+      "descent": 60
+    },
+    {
+      "from": "L1",
+      "to": "L2",
+      "distance": 4.97,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "L2",
+      "to": "L3",
+      "distance": 2.32,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "L3",
+      "to": "L4",
+      "distance": 2.71,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "L4",
+      "to": "L5",
+      "distance": 2.36,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "L5",
+      "to": "L6",
+      "distance": 3.67,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "L6",
+      "to": "L7",
+      "distance": 3.13,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "L7",
+      "to": "L8",
+      "distance": 4.20,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "L8",
+      "to": "L9",
+      "distance": 2.18,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "L9",
+      "to": "L10",
+      "distance": 2.13,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "L10",
+      "to": "L11",
+      "distance": 2.38,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "L11",
+      "to": "C11",
+      "distance": 0.84,
+      "ascent": 5,
+      "descent": 5
+    },
+
+    {
+      "from": "C36",
+      "to": "T1",
+      "distance": 3.02,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "T1",
+      "to": "T2",
+      "distance": 3.39,
+      "ascent": 30,
+      "descent": 10
+    },
+    {
+      "from": "T2",
+      "to": "T3",
+      "distance": 3.74,
+      "ascent": 60,
+      "descent": 50
+    },
+    {
+      "from": "T3",
+      "to": "T4",
+      "distance": 4.65,
+      "ascent": 20,
+      "descent": 35
+    },
+    {
+      "from": "T4",
+      "to": "T5",
+      "distance": 1.55,
+      "ascent": 25,
+      "descent": 0
+    },
+    {
+      "from": "T5",
+      "to": "T6",
+      "distance": 1.26,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "T6",
+      "to": "T7",
+      "distance": 6.70,
+      "ascent": 30,
+      "descent": 65
+    },
+    {
+      "from": "T7",
+      "to": "P203",
+      "distance": 6.70,
+      "ascent": 50,
+      "descent": 15
+    },
+
+    {
+      "from": "C37",
+      "to": "T8",
+      "type": "Boat",
+      "time": 6.0,
+      "distance": 0.0,
+      "ascent": 0,
+      "descent": 0,
+      "penance": 20.0,
+      "notes": "Via Camino by Boat"
+    },
+    {
+      "from": "T8",
+      "to": "P204",
+      "distance": 2.1,
+      "ascent": 50,
+      "descent": 5
+    },
+
+    {
+      "from": "C12",
+      "to": "T9",
+      "distance": 3.3,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "T9",
+      "to": "P152",
+      "distance": 3.8,
+      "ascent": 65,
+      "descent": 25
+    },
+
+
+     {
+      "from": "P154",
+      "to": "T10",
+      "distance": 4.7,
+      "ascent": 25,
+      "descent": 25
+    },
+    {
+      "from": "T10",
+      "to": "T11",
+      "distance": 3.3,
+      "ascent": 5,
+      "descent": 35
+    },
+    {
+      "from": "T11",
+      "to": "T12",
+      "distance": 4.1,
+      "ascent": 5,
+      "descent": 20
+    },
+    {
+      "from": "T12",
+      "to": "C18",
+      "distance": 3.3,
+      "ascent": 5,
+      "descent": 20
+    }
   ],
   "routes": [
     {
@@ -7223,6 +9593,161 @@
       ],
       "palette": {
         "colour": "f00810"
+      }
+    },
+    {
+      "id": "RC",
+      "name": "Coastal Route",
+      "description": "An alternative to the central route from Porto, the coastal route follows the Atlantic coast from Porto into Spain",
+      "locations": [
+               "C2",  "C3",  "C4",  "C5",  "C6",  "C7",  "C8",  "C9",  "C10",
+        "C11", "C12", "C13", "C14", "C15", "C16", "C17", "C18", "C19", "C20",
+        "C21", "C22", "C23", "C24", "C25", "C26", "C27", "C28", "C29", "C30",
+        "C31", "C32", "C33", "C34", "C35", "C36", "C37", "C38", "C39", "C40",
+        "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C50",
+        "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60",
+        "C61", "C62", "C63", "C64", "C65"
+      ],
+      "exclusions": [
+        "P140", "P141", "P142", "P143", "P144", "P145", "P146", "P147", "P148", "P149",
+        "P150", "P151", "P152", "P153", "P154", "P155", "P156", "P157", "P158", "P159",
+        "P160", "P161", "P162", "P163", "P164", "P165", "P166", "P167", "P168", "P169",
+        "P170", "P171", "P172", "P173", "P174", "P175", "P176", "P177", "P178", "P179",
+        "P180", "P181", "P182", "P183", "P184", "P185", "P186", "P187", "P188", "P189",
+        "P190", "P191", "P192", "P193", "P194", "P195", "P196", "P197", "P198", "P199",
+        "P200", "P201", "P202", "P203", "P204", "P205", "P206", "P207", "P208", "P209",
+        "P210", "P211", "P212", "P213", "P214", "P215", "P216", "P217", "P218", "P219",
+        "P220", "P221", "P222"
+      ],
+      "stops": [
+        "C13", "C36"
+      ],
+      "palette": {
+        "colour": "60e8f0"
+      }
+    },
+    {
+      "id": "RL",
+      "name": "Littoral Route",
+      "description": "A variation on the coastal route that follows the coastline from Porto to Vila do Conde",
+      "locations": [
+        "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10",
+        "L11"
+      ],
+      "exclusions": [
+              "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10",
+        "P139"
+      ],
+      "stops": [
+      ],
+      "palette": {
+        "colour": "30e0f0"
+      }
+    },
+    {
+      "id": "RT1",
+      "name": "Coastal - Central (Vila do Conde)",
+      "description": "A transfer from the coastal route to the central route from Vila do Conde to São Pedro do Rates.",
+      "locations": [
+        "T9"
+      ],
+      "inclusions": [
+                        "P152", "P153", "P154", "P155", "P156", "P157", "P158", "P159",
+        "P160", "P161", "P162", "P163", "P164", "P165", "P166", "P167", "P168", "P169",
+        "P170", "P171", "P172", "P173", "P174", "P175", "P176", "P177", "P178", "P179",
+        "P180", "P181", "P182", "P183", "P184", "P185", "P186", "P187", "P188", "P189",
+        "P190", "P191", "P192", "P193", "P194", "P195", "P196", "P197", "P198", "P199",
+        "P200", "P201", "P202", "P203", "P204", "P205", "P206", "P207", "P208", "P209",
+        "P210", "P211", "P212", "P213", "P214", "P215", "P216", "P217", "P218", "P219",
+        "P220", "P221", "P222"
+      ],
+      "exclusions": [
+                      "C13", "C14", "C15", "C16", "C17", "C18", "C19", "C20",
+        "C21", "C22", "C23", "C24", "C25", "C26", "C27", "C28", "C29", "C30",
+        "C31", "C32", "C33", "C34", "C35", "C36", "C37", "C38", "C39", "C40",
+        "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C50",
+        "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60",
+        "C61", "C62", "C63", "C64", "C65"
+      ],
+      "stops": [ ],
+      "palette": {
+        "colour": "f09860"
+      }
+    },
+    {
+      "id": "RT2",
+      "name": "Central - Coastal (São Pedro de Rates - Fão)",
+      "description": "A transfer from the central route to the coastal route from São Pedro de Rates to Fão.",
+      "locations": [
+        "T10", "T11", "T12"
+      ],
+      "inclusions": [
+                                                         "C18", "C19", "C20",
+        "C21", "C22", "C23", "C24", "C25", "C26", "C27", "C28", "C29", "C30",
+        "C31", "C32", "C33", "C34", "C35", "C36", "C37", "C38", "C39", "C40",
+        "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C50",
+        "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60",
+        "C61", "C62", "C63", "C64", "C65"
+      ],
+      "exclusions": [
+                                                "P155", "P156", "P157", "P158", "P159",
+        "P160", "P161", "P162", "P163", "P164", "P165", "P166", "P167", "P168", "P169",
+        "P170", "P171", "P172", "P173", "P174", "P175", "P176", "P177", "P178", "P179",
+        "P180", "P181", "P182", "P183", "P184", "P185", "P186", "P187", "P188", "P189",
+        "P190", "P191", "P192", "P193", "P194", "P195", "P196", "P197", "P198", "P199",
+        "P200", "P201", "P202", "P203", "P204", "P205", "P206", "P207", "P208", "P209",
+        "P210", "P211", "P212", "P213", "P214", "P215", "P216", "P217", "P218", "P219",
+        "P220", "P221", "P222"
+      ],
+      "stops": [ ],
+      "palette": {
+        "colour": "f09860"
+      }
+    },
+    {
+      "id": "RT3",
+      "name": "Coastal - Central (Minho)",
+      "description": "A transfer from the coastal route to the central route from Carminha to Valença do Minho, traveling along the Minho river bordering Portugal and Spain.",
+      "locations": [
+        "T1", "T2", "T3", "T4", "T5", "T6", "T7"
+       ],
+      "inclusions": [
+        "P203", "P204", "P205", "P206", "P207", "P208", "P209",
+        "P210", "P211", "P212", "P213", "P214", "P215", "P216", "P217", "P218", "P219",
+        "P220", "P221", "P222"
+      ],
+      "exclusions": [
+        "C37", "C38", "C39", "C40",
+        "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C50",
+        "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60",
+        "C61", "C62", "C63", "C64", "C65"
+      ],
+      "stops": [ ],
+      "palette": {
+        "colour": "f09860"
+      }
+    },
+    {
+      "id": "RT4",
+      "name": "Coastal - Central (Minho by Boat)",
+      "description": "A transfer from the coastal route to the central route from Carminha to Valença do Minho, Via Camino by Boat along the Minho river",
+      "locations": [
+        "T8"
+      ],
+      "inclusions": [
+        "P204", "P205", "P206", "P207", "P208", "P209",
+        "P210", "P211", "P212", "P213", "P214", "P215", "P216", "P217", "P218", "P219",
+        "P220", "P221", "P222"
+      ],
+      "exclusions": [
+        "C38", "C39", "C40",
+        "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C50",
+        "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60",
+        "C61", "C62", "C63", "C64", "C65"
+      ],
+      "stops": [ ],
+      "palette": {
+        "colour": "f09860"
       }
     }
   ],

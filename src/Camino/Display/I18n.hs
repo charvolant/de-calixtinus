@@ -30,7 +30,8 @@ import Text.Hamlet
 
 -- | Message placeholders for the camino
 data CaminoMsg =
-  AccessibleTitle
+    AboutLabel
+  | AccessibleTitle
   | AccommodationLabel
   | AccommodationPenanceMsg Penance
   | AccommodationPreferencesLabel
@@ -39,9 +40,11 @@ data CaminoMsg =
   | BedlinenTitle
   | BicycleRepairTitle
   | BicycleStorageTitle
+  | BoatTitle
   | BreakfastTitle
   | BridgeTitle
   | BusTitle
+  | CampGroundTitle
   | CampingTitle
   | CampSiteTitle
   | CityTitle
@@ -68,8 +71,12 @@ data CaminoMsg =
   | GuestHouseTitle
   | HandwashTitle
   | HeatingTitle
+  | HomeStayTitle
+  | HostelTitle
   | HotelTitle
   | HouseTitle
+  | InformationLabel
+  | InformationDescription
   | IntersectionTitle
   | KeyLabel
   | KitchenTitle
@@ -105,8 +112,10 @@ data CaminoMsg =
   | RestaurantTitle
   | RoadTitle
   | RouteLabel
+  | RoutesLabel
   | ServicesLabel
   | SharedTitle
+  | ShowOnMapTitle
   | SingleTitle
   | SleepingBagTitle
   | StablesTitle
@@ -143,10 +152,10 @@ formatPenance Reject = [shamlet|<span .penance .rejected title="Rejected">#{reje
 formatPenance (Penance p) = [shamlet|<span .penance>#{format (fixed 1) p}#{thinSpace}km</span>|]
 
 formatDistance :: (Real a) => a -> Html
-formatDistance d = [shamlet|<span .distance>#{format (fixed 1) d}#{thinSpace}km</span>|]
+formatDistance d = [shamlet|<span .distance>#{format (fixed 1) d}#{thinSpace}km</span>#|]
 
 formatMaybeDistance :: (Real a) => Maybe a -> Html
-formatMaybeDistance Nothing = [shamlet|<span .distance .rejected title="Rejected">#{rejectSymbol}</span>|]
+formatMaybeDistance Nothing = [shamlet|<span .distance .rejected title="Rejected">#{rejectSymbol}</span>#|]
 formatMaybeDistance (Just d) = formatDistance d
 
 formatTime :: (Real a) => a -> Html
@@ -161,6 +170,7 @@ formatHeight h = [shamlet|<span .height>#{format (fixed 0) h}#{thinSpace}m</span
 
 -- | Default English translation
 renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
+renderCaminoMsgDefault _ AboutLabel = "About"
 renderCaminoMsgDefault _ AccessibleTitle = "Accessible"
 renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accomodation ^{formatPenance penance'}|]
@@ -170,9 +180,11 @@ renderCaminoMsgDefault _ BankTitle = "Bank"
 renderCaminoMsgDefault _ BedlinenTitle = "Bedlinen"
 renderCaminoMsgDefault _ BicycleRepairTitle = "Bicycle Repair"
 renderCaminoMsgDefault _ BicycleStorageTitle = "Bicycle Storage"
+renderCaminoMsgDefault _ BoatTitle = "Boat/Canoe (paddled)"
 renderCaminoMsgDefault _ BreakfastTitle = "Breakfast"
 renderCaminoMsgDefault _ BridgeTitle = "Bridge"
 renderCaminoMsgDefault _ BusTitle = "Bus"
+renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CityTitle = "City"
@@ -206,8 +218,12 @@ renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault config (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident ["en", ""] config) where ident = linkId link
+renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
+renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
 renderCaminoMsgDefault _ HouseTitle = "House"
+renderCaminoMsgDefault _ InformationLabel = "Information"
+renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
 renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
@@ -242,8 +258,10 @@ renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
+renderCaminoMsgDefault _ RoutesLabel = "Routes"
 renderCaminoMsgDefault _ ServicesLabel = "Services"
 renderCaminoMsgDefault _ SharedTitle = "Shared"
+renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
 renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"

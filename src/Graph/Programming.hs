@@ -36,6 +36,7 @@ import Graph.Graph
 import Data.Aeson
 import Data.Maybe
 import Data.List (nub, find)
+-- import Debug.Trace
 
 -- | A measure that can be used to evaluate a programming solution.
 --   Scores follow the rules of an ordered monoid, with @mempty@ indicating a zero
@@ -89,24 +90,15 @@ instance (Edge e v, Score s) => Graph (ChainGraph v e s) (Chain v e s) v where
   edge graph begin end = do
     out <- M.lookup begin (forwards graph)
     M.lookup end out
+  subgraph graph vs = 
+    let
+      sub accessor = M.fromList $ map (\v -> (v, M.filterWithKey (\k -> \_c -> S.member k vs) (accessor graph M.! v))) (filter (\k -> S.member k vs) (M.keys $ accessor graph))
+      forwards' = sub forwards
+      reverses' = sub reverses
+    in
+        ChainGraph forwards' reverses'
   sources graph vx = let out = M.lookup vx (reverses graph) in if isNothing out then S.empty else M.keysSet (fromJust out)
   targets graph vx = let out = M.lookup vx (forwards graph) in if isNothing out then S.empty else M.keysSet (fromJust out)
-
--- | Construct a chain graph from a list of chains
-fromChains :: (Edge e v, Score s) => [Chain v e s] -> ChainGraph v e s
-fromChains chains =
-  let
-     chains' = filter (\c -> start c /= finish c) chains
-     starts = nub $ map start chains'
-     finishes = nub $ map finish chains'
-  in ChainGraph {
-    forwards = M.fromList $ map (\s -> (s,
-          M.fromList $ map (\c -> (finish c, c)) $ filter (\c -> start c == s) chains')
-        ) starts,
-    reverses = M.fromList $ map (\s -> (s,
-          M.fromList $ map (\c -> (start c, c)) $ filter (\c -> finish c == s) chains')
-        ) finishes
-  }
 
 -- | Accept a sequence of elements as a possible part
 type AcceptFunction e = [e] -> Bool
@@ -119,6 +111,23 @@ type ChoiceFunction v e s = Chain v e s -> Chain v e s -> Chain v e s
 
 -- | Choose whether a vertex is usable
 type SelectFunction v = v -> Bool
+
+
+-- | Construct a chain graph from a list of chains
+fromChains :: (Edge e v, Score s) => EvaluationFunction e s -> [Chain v e s] -> ChainGraph v e s
+fromChains evaluate chains  =
+  let
+     chains' = filter (\c -> start c /= finish c && evaluate (path c) /= invalid) chains
+     starts = nub $ map start chains'
+     finishes = nub $ map finish chains'
+  in ChainGraph {
+    forwards = M.fromList $ map (\s -> (s,
+          M.fromList $ map (\c -> (finish c, c)) $ filter (\c -> start c == s) chains')
+        ) starts,
+    reverses = M.fromList $ map (\s -> (s,
+          M.fromList $ map (\c -> (start c, c)) $ filter (\c -> finish c == s) chains')
+        ) finishes
+  }
 
 -- Extend a stage with a new edge
 extend :: (Edge e v, Score s) => AcceptFunction e -> EvaluationFunction e s -> Chain v e s -> e -> Maybe (Chain v e s)
@@ -179,8 +188,29 @@ constructTable graph choice accept eval select begin end =
     succs = (successors graph begin) `S.union` (S.singleton begin)
     preds = (predecessors graph end) `S.union` (S.singleton end)
     reachable = S.filter select (succs `S.intersection` preds)
+    sg = subgraph graph reachable
+    result = fromChains eval (constructTable' sg choice accept eval reachable origin)
   in
-    fromChains $ constructTable' graph choice accept eval reachable origin
+    -- trace ("Reachable = " ++ (show $ S.map identifier reachable) ++ " subgraph " ++ graphSummary sg reachable) result
+    result
+
+findBreak' :: (Graph g e v) => g -> v -> v -> S.Set v -> S.Set v -> v
+findBreak' chain begin end visited horizon =
+  let 
+    missing' = S.toList $ S.filter (null . (outgoing chain)) horizon
+    visited' = visited `S.union` horizon
+    next' = (S.unions $ S.map (targets chain) horizon) `S.difference` visited'
+  in
+    if S.member end visited then
+      end
+    else if not $ null missing' then
+      head missing'
+    else
+      findBreak' chain begin end visited' next'
+
+-- | Find the break in a chain where things can't continue      
+findBreak :: (Graph g e v) => g -> v -> v -> v
+findBreak chain begin end = findBreak' chain begin end S.empty (S.singleton begin)
 
 -- | Construct a program consisting of a chain of chains that gives the optimal value for traversing the graph from begin to end
 program :: (Graph g e v, Score s1, Score s2) => g -- ^ The graph to traverse
@@ -193,10 +223,11 @@ program :: (Graph g e v, Score s1, Score s2) => g -- ^ The graph to traverse
   -> SelectFunction v  -- ^ The function that determines which vertices can be used
   -> v -- ^ The start vertex
   -> v -- ^ The finish vertex
-  -> Maybe (Chain v (Chain v e s2) s1) -- ^ A program that splits the traversal into a sequence of chains
+  -> Either v (Chain v (Chain v e s2) s1) -- ^ A program that splits the traversal into a sequence of chains
 program graph programChoice programAccept programEval chainChoice chainAccept chainEval select begin end =
   let
     table = constructTable graph chainChoice chainAccept chainEval select begin end
     programs = constructTable table programChoice programAccept programEval select begin end
+    route = edge programs begin end
   in
-    edge programs begin end
+    maybe (Left $ findBreak table begin end) Right route

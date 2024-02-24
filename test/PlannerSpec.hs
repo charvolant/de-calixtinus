@@ -111,11 +111,13 @@ legs2 = [
   Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legNotes = Nothing }
   ]
 
+route1 = Route { routeID = "R1", routeName = "R1", routeLocations = S.fromList [location1, location2, location3], routeExclusions = S.empty, routePalette = defaultPalette }
+
 camino1 = Camino {
-  locations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
-  legs = legs1,
-  routes = [],
-  palette = defaultPalette
+  caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
+  caminoLegs = legs1,
+  caminoRoutes = [route1],
+  caminoDefaultRoute = route1
 }
   
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3]

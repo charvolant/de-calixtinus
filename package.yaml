@@ -28,8 +28,8 @@ dependencies:
 - text-icu >= 0.8
 - formatting
 - bytestring
-- HUnit == 1.6.*
 - vector
+- network-uri
 - numeric-tools == 0.2.*
 - scientific
 - optparse-applicative
@@ -88,3 +88,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - camino-planner
+    - HUnit == 1.6.*
+    - raw-strings-qq
+

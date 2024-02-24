@@ -31,6 +31,7 @@ import qualified Data.List as L
 import Data.Text.ICU.Char (Bool_(..), property)
 import Data.Text.ICU.Normalize2 (NormalizationMode(..), normalize)
 import Data.Maybe (fromJust, isJust)
+import Data.Metadata
 
 -- | Canonicalise text, removing accents and diacritics
 canonicalise :: T.Text -> T.Text
@@ -138,12 +139,12 @@ caminoLocationTypeLabel Intersection = IntersectionTitle
 caminoLocationTypeLabel Monastery = MonasteryTitle
 caminoLocationTypeLabel Peak = PeakTitle
 caminoLocationTypeLabel Poi = PoiTitle
-caminoLocationTypeLabel _ = PoiTitle
 
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLegTypeIcon Trail = [ihamlet| <span .leg-type .ca-walking title="_{TrailTitle}"> |]
 caminoLegTypeIcon CyclePath = [ihamlet| <span .leg-type .ca-cycling title="_{CyclePathTitle}"> |]
 caminoLegTypeIcon Ferry = [ihamlet| <span .leg-type .ca-ferry title="_{FerryTitle}"> |]
+caminoLegTypeIcon Boat = [ihamlet| <span .leg-type .ca-rowing title="_{BoatTitle}"> |]
 caminoLegTypeIcon _ = [ihamlet| <span .leg-type title="_{RoadTitle}"> |]
 
 caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -161,19 +162,24 @@ caminoSleepingIcon SleepingBag = [ihamlet| <span .sleeping .ca-sleeping-bag titl
 caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationTypeIcon MunicipalAlbergue = [ihamlet| <span .accomodation .municipal-albergue .ca-albergue title="_{MunicipalAlbergueTitle}"> |]
 caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accomodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
+caminoAccommodationTypeIcon Hostel = [ihamlet| <span .accomodation .hostel .ca-hostel title="_{HostelTitle}"> |]
 caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accomodation .guest-house .ca-guesthouse title="_{GuestHouseTitle}"> |]
+caminoAccommodationTypeIcon HomeStay = [ihamlet| <span .accomodation .home-stay .ca-homestay title="_{HomeStayTitle}"> |]
 caminoAccommodationTypeIcon House = [ihamlet| <span .accomodation .house .ca-house title="_{HouseTitle}"> |]
 caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accomodation .hotel .ca-hotel title="_{HotelTitle}"> |]
+caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accomodation .camp-ground .ca-campground title="_{CampGroundTitle}"> |]
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accomodation .camping .ca-tent title="_{CampingTitle}"> |]
 
 caminoAccommodationLabel :: Accommodation -> CaminoMsg
 caminoAccommodationLabel (GenericAccommodation MunicipalAlbergue) = MunicipalAlbergueTitle
 caminoAccommodationLabel (GenericAccommodation PrivateAlbergue) = PrivateAlbergueTitle
+caminoAccommodationLabel (GenericAccommodation Hostel) = HostelTitle
 caminoAccommodationLabel (GenericAccommodation GuestHouse) = GuestHouseTitle
+caminoAccommodationLabel (GenericAccommodation HomeStay) = HomeStayTitle
 caminoAccommodationLabel (GenericAccommodation House) = HouseTitle
 caminoAccommodationLabel (GenericAccommodation Hotel) = HotelTitle
+caminoAccommodationLabel (GenericAccommodation CampGround) = CampGroundTitle
 caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
-caminoAccommodationLabel (Accommodation _type _name _services _sleeping) = AccommodationLabel -- Generally shouldn'ty be called
 
 caminoServiceIcon :: Service -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoServiceIcon WiFi = [ihamlet| <span .service .ca-wifi title="_{WiFiTitle}"> |]
@@ -302,17 +308,19 @@ caminoLocationHtml preferences camino _trip containerId stops waypoints used loc
           <div .col .accomodation-types>
              $forall accomodation <- locationAccommodationTypes location
                  ^{caminoAccommodationTypeIcon accomodation}
-    <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
-      <div .accordion-body .container-fluid>
-        $if (isJust $ locationDescription location) || (isJust $ locationHref location)
-          <div .row>
+     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
+       <div .accordion-body .container-fluid>
+         <div .row>
             <div .col>
               $maybe d <- locationDescription location
                 #{d}
             <div .col-1 .float-end>
+              $maybe pos <- locationPosition location
+                <button .btn .btn-primary onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
+                  <span .ca-globe title="_{ShowOnMapTitle}">
               $maybe href <- locationHref location
-                  <a href="#{href}">
-                    <span .link-out .text-info title="_{LinkOut (locationName location)}">
+                <a .btn .btn-primary href="#{href}">
+                    <span .ca-information title="_{LinkOut (locationName location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accomodation <- locationAccommodation location
           ^{caminoAccommodationHtml accomodation}
@@ -338,12 +346,6 @@ caminoLocationsHtml preferences camino trip = [ihamlet|
               <ul .dropdown-menu>
                 $forall loc <- locs
                   <a .dropdown-item href="##{locationID loc}">#{locationName loc}
-    <div .row>
-      <div .col>
-        <div .mt-2 .p-2>
-          <h2>#{caminoName camino}
-          <p>
-            #{caminoDescription camino}
     <div .row>
       <div .col>
         <div #locations .accordion .container-fluid>
@@ -530,6 +532,18 @@ caminoMapTooltip preferences camino _trip usedLegs location = [ihamlet|
 caminoMapScript :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScript preferences camino trip = [ihamlet|
   <script>
+    var map = L.map('map');
+
+    function showLocationDescription(id) {
+      \$('#locations-toggle').tab('show');
+      \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
+    }
+
+    function showLocationOnMap(lat, lng) {
+      \$('#map-toggle').tab('show');
+      map.fitBounds([ [lat + 0.01, lng - 0.01], [lat - 0.01, lng + 0.01] ]);
+    }
+
     var iconVillageUsed = L.icon({
       iconUrl: '@{IconRoute "location-village-used.png"}',
       iconSize: [16, 16]
@@ -626,7 +640,6 @@ caminoMapScript preferences camino trip = [ihamlet|
       iconUrl: '@{IconRoute "location-poi-stop.png"}',
       iconSize: [15, 20]
     });
-   var map = L.map('map');
     map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
     L.tileLayer('@{MapTileRoute}', {
         maxZoom: 19,
@@ -639,7 +652,7 @@ caminoMapScript preferences camino trip = [ihamlet|
         marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{caminoLocationIcon preferences camino stops waypoints location} } );
         marker.bindTooltip(`^{caminoMapTooltip preferences camino trip usedLegs location}`);
         marker.addTo(map);
-        marker.on('click', function(e) { $('#locations-toggle').tab('show'); $("##{locationID location}").get(0).scrollIntoView({behavior: 'smooth'}); } );
+        marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
     $forall leg <- caminoLegs camino
       $if isJust (locationPosition $ legFrom leg) && isJust (locationPosition $ legTo leg)
         line = L.polyline([
@@ -657,10 +670,34 @@ caminoMapScript preferences camino trip = [ihamlet|
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     usedLegs = maybe S.empty (S.fromList . tripLegs) trip
-    chooseWidth leg | S.member leg usedLegs = 6 :: Int
-      | otherwise = 3 :: Int
+    chooseWidth leg | S.member leg usedLegs = 7 :: Int
+      | otherwise = 5 :: Int
     chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
       | otherwise = 0.5 :: Float
+
+aboutHtml :: Preferences -> Camino -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+aboutHtml _prefernces camino _trip = [ihamlet|
+  <div .container-fluid>
+    <h2>#{caminoName camino}
+    <div .row>
+      <div .col>
+        #{caminoDescription camino}
+    <h3>_{RoutesLabel}
+    $forall route <- caminoRoutes camino
+      <div .row>
+        <div .col>
+          <span style="color: #{toCssColour $ paletteColour $ routePalette route}">#{routeName route}
+          #{routeDescription route}
+    <h2>_{InformationLabel}
+    <p>_{InformationDescription}
+    $with metadata <- caminoMetadata camino
+      $forall statement <- metadataStatements metadata
+        <div .row>
+          <div .col-1>
+            <a href="#{show $ statementTerm statement}">#{statementLabel statement}
+          <div .col>
+            #{statementValue statement}
+  |]
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
  ->  T.Text -- ^ The page title
@@ -720,13 +757,15 @@ caminoHtml config preferences camino trip = let
         <div>
           <ul .nav .nav-tabs role="tablist">
             <li .nav-item role="presentation">
-              <a .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
+              <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
             <li .nav-item role="presentation">
               <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
             <li .nav-item role="presentation">
               <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
             <li .nav-item role="presentation">
               <a .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
+            <li .nav-item role="presentation">
+              <a .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
           <div .tab-content>
             <div .tab-pane .active role="tabpanel" id="map-tab">
               ^{caminoMapHtml preferences camino trip}
@@ -737,6 +776,8 @@ caminoHtml config preferences camino trip = let
               ^{caminoLocationsHtml preferences camino trip}
             <div .tab-pane role="tabpanel" id="preferences-tab">
               ^{preferencesHtml preferences camino trip}
+            <div .tab-pane role="tabpanel" id="about-tab">
+              ^{aboutHtml preferences camino trip}
       ^{caminoMapScript preferences camino trip}
     |]
     foot = Just (caminoMapScript preferences camino trip)

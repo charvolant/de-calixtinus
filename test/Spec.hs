@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 import Test.HUnit
 import CaminoSpec
 import ConfigSpec
@@ -5,28 +6,32 @@ import WalkingSpec
 import PlannerSpec
 import GraphSpec
 import ProgrammingSpec
+import MetadataSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
+import Data.Map
 import Camino.Camino
 import Camino.Preferences
 import Data.Either (fromRight, isLeft)
 import Control.Monad (when)
+import Data.Metadata (defaultMetadata)
 
 main :: IO ()
 main = do
-    cf <- B.readFile "lisbon-porto.json"
+    cf <- B.readFile "camino-portuguese.json"
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
-    let lisbonPorto = fromRight (Camino { }) ec
+    let camino = fromRight (Camino { caminoId = "Test", caminoName = "Test", caminoDescription = "", caminoMetadata = defaultMetadata, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoDefaultRoute = placeholderRoute "X" }) ec
     pf <- B.readFile "short-preferences.json"
     let ep = eitherDecode pf :: Either String Preferences
     when (isLeft ep) $ putStrLn (show ep)
     let shortPreferences = fromRight (defaultPreferences) ep
-    results <- runTestTT (testList shortPreferences lisbonPorto)
+    results <- runTestTT (testList shortPreferences camino)
     putStrLn $ show results
 
 testList prefs camino = TestList [ 
-    TestLabel "Config" testConfig, 
+    TestLabel "Metadata" testMetadata,
+    TestLabel "Config" testConfig,
     TestLabel "Camino" testCamino, 
     TestLabel "Walking" testWalking, 
     TestLabel "Graph" testGraph, 

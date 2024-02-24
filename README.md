@@ -163,6 +163,8 @@ The general procedure that works is:
 6. Use `Element > Transformations > Transform ...` with a `Scale Uniformly` of 150%
 7. Use `Metrics > Auto-Width ...` with a separation of 10 to set widths
 8. Use `Metrics > Set Both Bearings ...` with bearings of 5
+
+Leaving the "action" icons, such as the globe and information symbol unscaled seems sensible.
   
 ### text-icu
 

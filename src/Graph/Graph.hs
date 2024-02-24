@@ -6,10 +6,13 @@ module Graph.Graph(
   
   successors,
   predecessors,
-  available
+  available,
+  graphSummary
 ) where
 
-import qualified Data.Set as S (Set, fromList, toList, intersection, union, difference, filter, empty, singleton, null, isSubsetOf)
+import qualified Data.List as L
+import qualified Data.Set as S
+-- import Debug.Trace
 
 -- | Something that can act as a vertex node on a graph
 class (Eq v, Ord v, Show v) => Vertex v where
@@ -34,6 +37,8 @@ class Edge e v => Graph g e v | g -> e, g -> v where
   -- | Get the single edge, if it exists, between two vertices
   --   If multiple edges exist, a consistent single edge is returned
   edge :: g -> v -> v -> Maybe e
+  -- | Construct a subgraph containing only the given vertices
+  subgraph :: g -> S.Set v -> g
   -- | Get the preceding vertices in a graph
   sources :: g -> v -> S.Set v
   sources g v = S.fromList $ map source (incoming g v)
@@ -75,5 +80,25 @@ available graph reach visited =
     active = foldl (\a -> \v -> a `S.union` (targets graph v)) S.empty visited
     next = active `S.difference` visited
     trigger v = ((sources graph v) `S.intersection` reach) `S.isSubsetOf` visited
+    triggered = (S.filter trigger next) `S.intersection` reach
   in
-     (S.filter trigger next) `S.intersection` reach
+     -- trace ("Available from " ++ (show $ S.map identifier visited) ++ " triggered=" ++ (show $ S.map identifier triggered)) triggered
+     triggered 
+
+-- | Generate a summary of the graph as a string
+graphSummary :: (Graph g e v) => g -- ^ The graph to summarise
+  -> S.Set v -- ^ The set of vertices to summarise
+  -> String -- ^ The graph summary
+graphSummary graph vertices = 
+  "[" 
+  ++ (L.intercalate ", " 
+    (map (\v -> 
+      (identifier v) 
+      ++ "<-" 
+      ++ (L.intercalate "," (map (identifier . source) (incoming graph v)))
+      ++ "->" 
+      ++ (L.intercalate "," (map (identifier . target) (outgoing graph v)))
+    ) (S.toList vertices)
+    )
+  )
+  ++ "]"

@@ -64,7 +64,7 @@ chains1 = [
   ]
 
 accept1 :: Edge e _v => AcceptFunction e
-accept1 seq = length seq < 3
+accept1 aseq = length aseq < 3
 
 accept2 :: Edge e _v => AcceptFunction e
 accept2 _seq = True
@@ -77,6 +77,8 @@ pevaluate1 eseq = sum $ map score eseq
 
 choice1 :: (Edge e v) => ChoiceFunction v e Int
 choice1 s1 s2 = if score s1 < score s2 then s1 else s2
+
+select1 _v = True
 
 testProgramming = TestList [
   TestLabel "Extend" testExtend,
@@ -274,7 +276,7 @@ testConstructTable = TestList [testConstructTable1, testConstructTable2, testCon
 
 testConstructTable1 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertEqual "ConstructTable 1 1" 10 (chainGraphSize chains)
@@ -293,7 +295,7 @@ testConstructTable1 =
 
 testConstructTable2 =
   let
-    chains = constructTable graph1 choice1 accept2 evaluate1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertEqual "ConstructTable 2 1" 14 (chainGraphSize chains)
@@ -317,7 +319,7 @@ testConstructTable2 =
 
 testConstructTable3 =
   let
-    chains = constructTable graph2 choice1 accept2 evaluate1 (Vertex 1) (Vertex 4)
+    chains = constructTable graph2 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 4)
   in
     TestCase (do
       assertEqual "ConstructTable 2 1" 3 (chainGraphSize chains)
@@ -332,7 +334,7 @@ testChainGraph = TestList [testChainGraph1, testChainGraph2, testChainGraph3, te
 
 testChainGraph1 =
   let
-    chains = constructTable graph1 choice1 accept2 evaluate1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertEqual "ChainGraph 1 1" (Vertex 5) (vertex chains "5")
@@ -341,7 +343,7 @@ testChainGraph1 =
 
 testChainGraph2 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       let incoming1 = incoming chains (Vertex 4)
@@ -355,7 +357,7 @@ testChainGraph2 =
 
 testChainGraph3 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       let outgoing1 = outgoing chains (Vertex 1)
@@ -368,7 +370,7 @@ testChainGraph3 =
 
 testChainGraph4 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       let sources1 = sources chains (Vertex 4)
@@ -380,7 +382,7 @@ testProgram = TestList [testProgram1, testProgram2, testProgram3]
 
 testProgram1 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 3)
+    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 3)
   in
     TestCase (do
       assertBool "Program 1 1" (isJust optimal)
@@ -393,7 +395,7 @@ testProgram1 =
    
 testProgram2 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 4)
+    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 4)
   in
     TestCase (do
       assertBool "Program 2 1" (isJust optimal)
@@ -406,7 +408,7 @@ testProgram2 =
 
 testProgram3 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 (Vertex 1) (Vertex 6)
+    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertBool "Program 3 1" (isJust optimal)

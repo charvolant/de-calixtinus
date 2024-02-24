@@ -7,9 +7,12 @@
   "accommodation": {
     "MunicipalAlbergue": 1.0,
     "PrivateAlbergue": 0.5,
+    "Hostel": 1.0,
+    "HomeStay": 1.0,
     "GuestHouse": 2.0,
     "House": 2.0,
     "Hotel": 2.5,
+    "CampGround": 4.0,
     "Camping": "reject"
   },
   "services-stop": {

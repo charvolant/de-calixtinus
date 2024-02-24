@@ -24,6 +24,7 @@ module Camino.Preferences (
   recommendedStops,
   rangeDistance,
   withoutLower,
+  withoutRange,
   withoutUpper
 ) where
 
@@ -83,6 +84,12 @@ withoutUpper :: (Num a) => PreferenceRange a -- ^ The source preference
   -> PreferenceRange a -- ^ The same preference without an upper bound
 withoutUpper (PreferenceRange derived target lower _upper mini _maxi) =
   PreferenceRange derived target lower 1000000 mini 1000000
+
+-- | Create a preference range without a minimum and maximum
+withoutRange :: (Num a) => PreferenceRange a -- ^ The source rpeferences
+  -> PreferenceRange a -- ^ The same rrange without minimum and maximum
+withoutRange (PreferenceRange derived target lower upper _mini _maxi) =
+  PreferenceRange derived target lower upper 0 1000000
 
 -- | Is a value at or below the absolute maximum in the preference range?
 isInsideMaximum :: (Ord a) => PreferenceRange a -- ^ The preference range
@@ -226,7 +233,7 @@ allowedLocations preferences camino =
     usedRoutes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
     routes = filter (\r -> S.member r usedRoutes) (caminoRoutes camino)
   in
-    foldl (\allowed -> \route -> (allowed `S.union` routeLocations route) `S.difference` routeExclusions route) S.empty routes
+    foldl (\allowed -> \route -> (allowed `S.union` routeLocations route `S.union` routeInclusions route) `S.difference` routeExclusions route) S.empty routes
 
 -- | Generate a set of recommended stops, based on the selected routes
 recommendedStops :: Preferences -- ^ The preferences (normalised, see `normalisePreferences`)

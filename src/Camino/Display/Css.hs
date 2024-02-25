@@ -160,6 +160,10 @@ a
   padding: 1ex
 .accomodation.municipal-albergue
   color: #f9b34a
+.accomodation.hostel
+  color: #2ab472
+.accomodation.home-stay
+  color: #ff395c
 .location-tooltip
   .leg-to
     font-size: smaller

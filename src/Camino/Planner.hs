@@ -262,13 +262,13 @@ penance preferences camino end day =
     -- If there is no accomodation within this leg, then accept any distance. If not walking or the last day, then skip lower bounds
     atEnd = isLastDay end day
     accomodationFree = isAccomodationFree preferences day
-    rangeFilter = (if accomodationFree then withoutUpper else id) . (if nonWalking || atEnd then withoutLower else id)
+    rangeFilter = (if accomodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if nonWalking then withoutLower else id)
     timePreferences = rangeFilter $ preferenceTime preferences
     distancePreferences = rangeFilter $ preferencePerceivedDistance preferences
     timeAdjust = maybe Reject (adjustment timePreferences normalSpeed) time
     distanceAdjust = maybe Reject (adjustment distancePreferences normalSpeed) perceived
     stopMissing = missingStopServices preferences camino day
-    (accom, stopMissing', accommodationAdjust) = accommodation preferences camino day stopMissing (atEnd || accomodationFree) -- preferred accommodation penance
+    (accom, stopMissing', accommodationAdjust) = accommodation preferences camino day stopMissing atEnd -- preferred accommodation penance
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
     dayMissing = missingDayServices preferences camino accom day
     dayMissingCost = missingServicePenance (preferenceStopServices preferences) dayMissing

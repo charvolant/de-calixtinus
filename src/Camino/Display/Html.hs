@@ -364,11 +364,11 @@ caminoLocationsHtml preferences camino trip = [ihamlet|
     
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml range = [ihamlet|
-    <span .text-danger>#{format (fixed 1) (rangeMinimum range)} -
+    <span .text-danger>#{maybe "." (format (fixed 1)) (rangeMinimum range)} -
     <span>#{format (fixed 1)( rangeLower range)} -
     <span .text-success .fw-bolder>#{format (fixed 1) (rangeTarget range)} -
     <span>#{format (fixed 1) (rangeUpper range)} -
-    <span .text-danger>#{format (fixed 1) (rangeMaximum range)}
+    <span .text-danger>#{maybe "." (format (fixed 1)) (rangeMaximum range)}
     $maybe d <- rangeDerived range
       <p .text-body-tertiary .smaller>#{d}
   |]

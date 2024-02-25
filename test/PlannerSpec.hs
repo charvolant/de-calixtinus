@@ -35,9 +35,9 @@ testPlanner preferences camino = TestList [
 preferences1 = Preferences { 
     preferenceWalkingFunction = "tobler",
     preferenceFitness = Normal,
-    preferenceDistance = PreferenceRange Nothing 4.0 2.0 8.0 0.0 10.0,
-    preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 0.0 10.0,
-    preferencePerceivedDistance = PreferenceRange Nothing 4.0 2.0 8.0 0.0 10.0,
+    preferenceDistance = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0),
+    preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
+    preferencePerceivedDistance = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0),
     preferenceStop = Penance 0.5,
     preferenceAccommodation = M.fromList [
         (MunicipalAlbergue, (Penance 1.5)),
@@ -187,7 +187,7 @@ testAccomodationSimple2 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 6.4) (metricsPenance $ penance preferences1 camino1 location3 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.6) (metricsPenance $ penance preferences1 camino1 location3 legs0) 0.1)
 
 testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 location4 legs1) 0.1)
 

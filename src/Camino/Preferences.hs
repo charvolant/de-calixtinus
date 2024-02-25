@@ -15,7 +15,6 @@ module Camino.Preferences (
   Preferences(..),
 
   allowedLocations,
-  boundsDistance,
   defaultPreferences,
   isInsideMaximum,
   isOutOfBounds,
@@ -24,8 +23,8 @@ module Camino.Preferences (
   recommendedStops,
   rangeDistance,
   withoutLower,
-  withoutRange,
-  withoutUpper
+  withoutMaximum,
+  withoutMinimum
 ) where
 
 import Data.Aeson
@@ -47,8 +46,8 @@ data PreferenceRange a = PreferenceRange {
   rangeTarget :: a, -- ^ The preferred target for a range
   rangeLower :: a, -- ^ The preferred lower bound for a range
   rangeUpper :: a, -- ^ The preferred upper bound for a range
-  rangeMinimum :: a, -- ^ The /hard/ lower bound for a range
-  rangeMaximum :: a -- ^ The /hard/ upper bound for a range
+  rangeMinimum :: Maybe a, -- ^ The /hard/ lower bound for a range
+  rangeMaximum :: Maybe a -- ^ The /hard/ upper bound for a range
 } deriving (Show)
 
 instance (FromJSON a) => FromJSON (PreferenceRange a) where
@@ -57,8 +56,8 @@ instance (FromJSON a) => FromJSON (PreferenceRange a) where
     target' <- v .: "target"
     lower' <- v .: "lower"
     upper' <- v .: "upper"
-    minimum' <- v .: "min"
-    maximum' <- v .: "max"
+    minimum' <- v .:? "min" .!= Nothing
+    maximum' <- v .:? "max" .!= Nothing
     return PreferenceRange { 
       rangeDerived = derived', 
       rangeTarget = target', 
@@ -73,37 +72,38 @@ instance (ToJSON a) => ToJSON (PreferenceRange a) where
   toJSON (PreferenceRange derived targ low up mini maxi) =
     object [ "derived" .= derived, "target" .= targ, "lower" .= low, "upper" .= up, "min" .= mini, "max" .= maxi]
 
--- | Create a preference range without a lower bound (set to zero)
+
+-- | Create a preference range without a lower bound
 withoutLower :: (Num a) => PreferenceRange a -- ^ The source preference
   -> PreferenceRange a -- ^ The same preference without a lower bound
 withoutLower (PreferenceRange derived target _lower upper _mini maxi) =
-  PreferenceRange derived target 0 upper 0 maxi
+  PreferenceRange derived target 0 upper Nothing maxi
 
--- | Create a preference range without an upp bound (set to 1 million)
-withoutUpper :: (Num a) => PreferenceRange a -- ^ The source preference
+-- | Create a preference range without a minimum
+withoutMinimum :: PreferenceRange a -- ^ The source preference
+  -> PreferenceRange a -- ^ The same preference without a minimum
+withoutMinimum (PreferenceRange derived target lower upper _mini maxi) =
+  PreferenceRange derived target lower upper Nothing maxi
+
+-- | Create a preference range without a maximum
+withoutMaximum :: PreferenceRange a -- ^ The source preference
   -> PreferenceRange a -- ^ The same preference without an upper bound
-withoutUpper (PreferenceRange derived target lower _upper mini _maxi) =
-  PreferenceRange derived target lower 1000000 mini 1000000
-
--- | Create a preference range without a minimum and maximum
-withoutRange :: (Num a) => PreferenceRange a -- ^ The source rpeferences
-  -> PreferenceRange a -- ^ The same rrange without minimum and maximum
-withoutRange (PreferenceRange derived target lower upper _mini _maxi) =
-  PreferenceRange derived target lower upper 0 1000000
+withoutMaximum (PreferenceRange derived target lower upper mini _maxi) =
+  PreferenceRange derived target lower upper mini Nothing
 
 -- | Is a value at or below the absolute maximum in the preference range?
 isInsideMaximum :: (Ord a) => PreferenceRange a -- ^ The preference range
   -> a -- ^ The value to test
   -> Bool -- ^ True if we haven't exceeded the maximum
 isInsideMaximum (PreferenceRange _derived _target _lower _upper _mini maxi) value =
-  value <= maxi
+  maybe True (value <=) maxi
 
 -- | Is a value outside the preference range?
 isOutOfRange :: (Ord a) => PreferenceRange a -- ^ The preference range
   -> a -- ^ The value to test
   -> Bool -- ^ True if out of range
 isOutOfRange (PreferenceRange _derived _target _lower _upper mini maxi) value =
-  value < mini || value > maxi
+  maybe False (value <) mini || maybe False (value >) maxi
 
 -- | Is a value outside the preference bounds?
 isOutOfBounds :: (Ord a) => PreferenceRange a -- ^ The preference range
@@ -114,37 +114,21 @@ isOutOfBounds (PreferenceRange _dervived _target lower upper _minimum _maximum) 
 
 -- | Get the normalised distance to the outer range of a value
 -- 
---   If the value is less than the target, the result is a value from 0 to 1
---   where 0 is at the target and 1 is at the minimum.
---   Conversely, if the value is more than the target, the result is a value from 0 to 1
---   where 0 is at the target and 1 is at the maximum.
+-- The scale of the range is from the target to the lower or upper bounds, with 0 being at the bound and 1 being a scale away
 rangeDistance :: (Ord a, Fractional a) => PreferenceRange a -> a -> a
-rangeDistance (PreferenceRange _derived targ _lower _upper mini maxi) value
-  | value < targ = (targ - value) / (targ - mini)
-  | otherwise = (value - targ) / (maxi - targ)
-  
--- | Get the normalised distance to the bounds of a value
--- 
---   If the value is less than the target, the result is a value from 0 to 1
---   where 0 is at the target and 1 is at the lower bound.
---   Conversely, if the value is more than the target, the result is a value from 0 to 1
---   where 0 is at the target and 1 is at the upper bound.
-boundsDistance :: (Ord a, Fractional a) => PreferenceRange a -- ^ The preference range
-  -> a -- ^ The actual value
-  -> a -- ^ The normalised distance
-boundsDistance (PreferenceRange _derived targ lower upper _minimum _maximum) value
-  | value < targ = (targ - value) / (targ - lower)
-  | otherwise = (value - targ) / (upper - targ)
+rangeDistance (PreferenceRange _derived targ lower upper _mini _maxi) value
+  | value < targ = ((targ - value) / (targ - lower)) - 1
+  | otherwise = ((value - targ) / (upper - targ)) - 1
   
 
 -- | Convert a normal distance range into a perceived distance range      
 perceivedDistanceRange :: Fitness -> PreferenceRange Float -> PreferenceRange Float
 perceivedDistanceRange fitness range = let
-    mini' = perceivedDistance fitness (rangeMinimum range) False
+    mini' = fmap (\v -> perceivedDistance fitness v False) (rangeMinimum range)
     lower' = perceivedDistance fitness (rangeLower range) False
     target' = perceivedDistance fitness (rangeTarget range) True  
     upper' = perceivedDistance fitness (rangeUpper range) True
-    maxi' = perceivedDistance fitness (rangeMaximum range) True
+    maxi' = fmap (\v -> perceivedDistance fitness v True) (rangeMaximum range)
   in
     PreferenceRange (Just "Derived from distance preferences") target' lower' upper' mini' maxi'
     
@@ -257,8 +241,8 @@ defaultPreferences = let
        rangeTarget = 20.0, 
        rangeLower = 16.0, 
        rangeUpper = 28.0, 
-       rangeMinimum = 8.0, 
-       rangeMaximum = 34.0 
+       rangeMinimum = Just 8.0, 
+       rangeMaximum = Just 34.0 
       }
     in
       Preferences {
@@ -270,8 +254,8 @@ defaultPreferences = let
           rangeTarget = 6.0, 
           rangeLower = 5.0, 
           rangeUpper = 8.0, 
-          rangeMinimum = 0.0, 
-          rangeMaximum = 10.0 
+          rangeMinimum = Nothing, 
+          rangeMaximum = Just 10.0 
         },
         preferencePerceivedDistance = perceivedDistanceRange Normal distance,
         preferenceStop = Penance 2.0,

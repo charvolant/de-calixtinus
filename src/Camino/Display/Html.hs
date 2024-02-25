@@ -713,6 +713,7 @@ layoutHtml config title header body footer = [ihamlet|
          <meta charset="utf-8">
          <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
          <title>#{title}
+         <link rel="icon" type="image/x-icon" href="@{IconRoute "favicon.ico"}">
          $forall c <- css
            <link rel="stylesheet" href="#{assetPath c}">
          $maybe h <- header

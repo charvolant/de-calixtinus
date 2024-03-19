@@ -1,5 +1,17 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-|
+Module      : Config
+Description : Configuration data for generating camino display
+Copyright   : (c) Doug Palmer, 2023
+License     : MIT
+Maintainer  : doug@charvolant.org
+Stability   : experimental
+Portability : POSIX
+
+The configuration can be read from a YAML file and overlay a default configuration.
+-}
+
 module Camino.Config (
   AssetConfig(..),
   AssetType(..),
@@ -8,6 +20,7 @@ module Camino.Config (
   LinkConfig(..),
   LinkI18n(..),
   LinkType(..),
+  Locale,
   MapConfig(..),
   WebConfig(..),
 
@@ -16,6 +29,8 @@ module Camino.Config (
   getAssets,
   getLink,
   getLinks,
+  getLocalisedLink,
+  getLocalisedLinks,
   getMap,
   readConfigFile
 ) where
@@ -24,11 +39,15 @@ import GHC.Generics (Generic)
 import Data.Aeson
 import qualified Data.Map as M
 import Data.Text (Text)
-import Data.List (find)
+import Data.List (find, elemIndex)
 import Data.Maybe (catMaybes, listToMaybe)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
+import Debug.Trace
+
+-- | A locale description
+type Locale = Text
 
 -- | Configuration for a map provider
 data MapConfig = Map {
@@ -49,6 +68,7 @@ instance ToJSON MapConfig where
     
 -- | The difference asset types
 data AssetType = JavaScript
+  | JavaScriptEarly
   | Css
   | Font
   | Icon
@@ -93,6 +113,7 @@ instance ToJSON AssetConfig where
 -- | The functional type of link
 data LinkType = Header -- ^ The link is part of the heading menu
   | Footer -- ^ The link is part of the footer
+  | Embedded -- ^ The link is embedded
   deriving (Eq, Ord, Show, Generic)
 
 instance FromJSON LinkType
@@ -100,7 +121,7 @@ instance ToJSON LinkType
 
 -- | A locality-specific link
 data LinkI18n = LinkI18n {
-  linkLocale :: Text, -- ^ The language and optional localisation of the, eg "en" or "pt-BR". The empty string is the default match
+  linkLocale :: Locale, -- ^ The language and optional localisation of the, eg "en" or "pt-BR". The empty string is the default match
   linkLabel :: Text, -- ^ The localised link label
   linkPath :: Text -- ^ The path to the link
 }  deriving (Show)
@@ -117,6 +138,12 @@ instance ToJSON LinkI18n where
   toJSON (LinkI18n locale' label' path') =
     object [ "locale" .= locale', "label" .= label', "path" .= path' ]
 
+-- | Return True if the second link is more specific than the first link
+moreSpecific :: [Locale] -> LinkI18n -> LinkI18n -> Bool
+moreSpecific locales a b = pos a > pos b
+  where
+    pos x = maybe (length locales) id (elemIndex (linkLocale x) locales)
+    
 -- | A link to an external, language-specific resource
 data LinkConfig = Link {
   linkId :: Text, -- ^ The link identifier
@@ -136,6 +163,12 @@ instance ToJSON LinkConfig where
   toJSON (Link id' type' links') =
     object [ "id" .= id', "type" .= type', "links" .= links' ]
 
+-- | Select a localised link from a link configuration
+-- | The link with the locale closest to the start of the locale list is chosen, otherwise the first link is returned as a default
+getLocalisedLink ::  [Locale] -> LinkConfig -> LinkI18n
+getLocalisedLink locales link = 
+    foldl (\current -> \candidate -> if moreSpecific locales current candidate then candidate else current) (head $ links link) (links link)
+    
 -- | Configuration for what's needed to set up web pages and other resources
 data WebConfig = Web {
   webAssets :: [AssetConfig], -- ^ The assets needed to display the page properly
@@ -168,44 +201,44 @@ defaultConfig = Config {
   configWeb = Web {
     webAssets = [
       Asset {
-        assetId = "jQueryJs",
-        assetType = JavaScript,
+        assetId = "jquery-js",
+        assetType = JavaScriptEarly,
         assetPath = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
       Asset {
-        assetId = "bootstrapJs",
-        assetType = JavaScript,
+        assetId = "bootstrap-js",
+        assetType = JavaScriptEarly,
         assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
       Asset {
-        assetId = "leafletJs",
-        assetType = JavaScript,
+        assetId = "leaflet-js",
+        assetType = JavaScriptEarly,
         assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
         assetIntegrity = Just "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=",
         assetCrossOrigin = Anonymous
       },
       Asset {
-        assetId = "bootstrapCss",
+        assetId = "bootstrap-css",
         assetType = Css,
         assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
       Asset {
-        assetId = "leafletCss",
+        assetId = "leaflet-css",
         assetType = Css,
         assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
       Asset {
-        assetId = "caminoCss",
+        assetId = "camino-css",
         assetType = Css,
-        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/static/camino.css",
+        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/static/css/camino.css",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
@@ -225,17 +258,6 @@ defaultConfig = Config {
       }
     ],
     webLinks = [
-      Link {
-        linkId = "helpLink",
-        linkType = Header,
-        links = [
-          LinkI18n {
-            linkLocale = "",
-            linkLabel = "Help",
-            linkPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/help/help-en.html"
-          }
-        ]
-      }
     ],
     webMaps = [
       Map {
@@ -302,7 +324,7 @@ getLinks'' :: (LinkConfig -> Bool) -> (LinkI18n -> Bool) -> Config -> M.Map Text
 getLinks'' select variant config = let
   defaults = maybe M.empty (\p -> getLinks'' select variant p) (configParent config)
   local = filter select (webLinks $ configWeb config)
-  local' = M.fromList $ catMaybes $ map (\l -> let 
+  local' = M.fromList $ catMaybes $ map (\l -> let
       ml = find variant (links l) 
     in 
       case ml of 
@@ -314,13 +336,16 @@ getLinks'' select variant config = let
 
 -- Try in locale order
 getLinks' ::  (LinkConfig -> Bool) -> [Text] -> Config -> [LinkI18n]
-getLinks' select locales config = M.elems $ foldr (\lo -> \e -> M.union e (getLinks'' select (\l -> linkLocale l == lo) config)) M.empty locales
+getLinks' select locales config = let
+    base = getLinks'' select (\l -> let ll = linkLocale l in (ll == "" || ll == "*")) config
+  in
+    M.elems $ foldr (\lo -> \e -> M.union e (getLinks'' select (\l -> linkLocale l == lo) config)) base locales
 
 -- | Get a specific link, based on an identifier and a list of locales
 getLink :: Text -- ^ The link identifier
   -> [Text] -- ^ The locale list
   -> Config -- ^ The configuration to query
-  -> Maybe LinkI18n -- ^ The internactionalised link
+  -> Maybe LinkI18n -- ^ The internationalised link
 getLink ident locales config = listToMaybe $ getLinks' (\l -> linkId l == ident) locales config
 
 -- | Get links, based on a link type
@@ -338,6 +363,14 @@ getLinks lt config = let
     defaultsWithReplace = map (\l -> maybe l id (M.lookup (linkId l) updateMap)) defaults
   in
     defaultsWithReplace ++ newLinks
+
+
+-- | Get localised links, based on a link type
+getLocalisedLinks :: LinkType -- ^ The link type
+  -> Config -- ^ The configuration to query
+  -> [Locale] -- ^ The locale choices
+  -> [LinkI18n] -- ^ The links to use
+getLocalisedLinks lt config locales = map (getLocalisedLink locales) (getLinks lt config)
 
 -- | Get a map, optionally based on an identifier
 --   If the configuration has a parent and the requisite map is not present, then the parent is tried

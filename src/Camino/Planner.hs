@@ -21,6 +21,7 @@ module Camino.Planner (
   hasNonWalking,
   nonWalkingHours,
   penance,
+  openSleeping,
   planCamino,
   travel,
   tripLabel,
@@ -102,62 +103,62 @@ isLastDay end day = (legTo $ last day) == end
 dayLocations :: [Leg] -> [Location]
 dayLocations day = (legFrom $ head day) : (map legTo day)
 
-walking :: String -> (Float -> Float -> Float -> Float)
-walking n | n == "naismith" = naismith
-  | n == "tobler" = tobler
-  | otherwise = error ("Planner.walking: bad argument " ++ n)
+travelFunction :: Travel -> (Float -> Float -> Float -> Float)
+travelFunction Walking = tobler
+travelFunction Walking_Naismith  = naismith
+travelFunction Cycling = error "Cycling has not yet been implemented"
 
 -- | Calculate the expected hours of walking, for a sequence of legs
-walkingHours :: Preferences -- ^ The calculation preferences
+walkingHours :: TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Maybe Float -- ^ The hours equivalent
 walkingHours preferences day = let
-    baseHours = walking (preferenceWalkingFunction preferences)
+    baseHours = travelFunction (preferenceTravelFunction preferences)
     simple = sum $ map (\l -> baseHours (legDistance l) (legAscent l) (legDescent l)) day
   in
     tranter (preferenceFitness preferences) simple
 
 -- | Calculate the expected non-walking hours, for a sequence of legs
 --   Usually associated with something like a ferry
-nonWalkingHours :: Preferences -- ^ The calculation preferences
+nonWalkingHours :: TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Maybe Float -- ^ The hours equivalent
 nonWalkingHours _preferences day =
   Just $ sum $ map (\l -> fromMaybe 0.0 (legTime l)) day
 
 -- | Does this sequence of legs have a non-walking component?
-hasNonWalking ::  Preferences -- ^ The calculation preferences
+hasNonWalking ::  TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Bool -- ^ The hours equivalent
 hasNonWalking _preferences day =
   any (\l -> legDistance l <= 0.0 && isJust (legTime l)) day
 
 -- | Calculate the total distance covered by a sequence of legs
-travel :: Preferences -- ^ The calculation preferences
+travel :: TravelPreferences -- ^ The calculation preferences
   -> [Leg]-- ^ The sequence of legs to use
   -> Float -- ^ The total distance covered by the sequence
 travel _preferences day = sum $ map legDistance day
 
 -- | Calculate the total ascent of a sequence of legs
-totalAscent :: Preferences -- ^ The calculation preferences
+totalAscent :: TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Float -- ^ The total distance covered by the sequence
 totalAscent _preferences day = sum $ map legAscent day
 
 -- | Calculate the total descent of a sequence of legs
-totalDescent :: Preferences -- ^ The calculation preferences
+totalDescent :: TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Float -- ^ The total distance covered by the sequence
 totalDescent _preferences day = sum $ map legDescent day
 
 -- | Calculate any additional penance associated with these legs
-travelAdditional :: Preferences -- ^ The calculation preferences
+travelAdditional :: TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Penance -- ^ The total additional penance
 travelAdditional _preferences day = mconcat $ mapMaybe legPenance day
 
 -- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: Preferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Bool)
+travelMetrics :: TravelPreferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Bool)
 travelMetrics preferences day =
   let
     normalSpeed = nominalSpeed Normal
@@ -173,14 +174,14 @@ travelMetrics preferences day =
     (normalSpeed, actualSpeed, (+) <$> walkingTime <*> otherTime, distance, perceived, ascent, descent, nonWalking)
 
 -- | Work out what services are missing from the desired stop list
-missingStopServices :: Preferences -- ^ The calculation preferences
+missingStopServices :: TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The camino model
   -> [Leg] -- ^ The sequence of legs to use
   -> S.Set Service -- ^ The list of desired but missing services from the stop location
 missingStopServices preferences _camino day = (M.keysSet $ preferenceStopServices preferences) `S.difference` (locationServices $ legTo $ last day)
 
 -- | Work out what services are missing from the desired day list
-missingDayServices :: Preferences -- ^ The calculation preferences
+missingDayServices :: TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The camino model
   -> Maybe Accommodation -- ^ The chosen accomodation
   -> [Leg] -- ^ The sequence of legs to use
@@ -204,7 +205,7 @@ accommodation'' accPrefs servPrefs services accom = let
   in
     (Just accom, missing, foldl (<>) base mprefs)
     
-accommodation' :: Preferences -- ^ The calculation preferences
+accommodation' :: TravelPreferences -- ^ The calculation preferences
   -> S.Set Service -- ^ Any services not provided by the location
   -> Location -- ^ The location to stay at
   -> (Maybe Accommodation, S.Set Service, Penance) -- ^ Nothing if nothing is found, otherwise the penance value for the accommodation
@@ -221,7 +222,7 @@ accommodation' preferences services location =
 -- | Calculate the accommodation penance, based on preferences
 --   If there are missing services at the stop, then the suggested accommodation will be tested to see 
 --   whether it offers the required services
-accommodation :: Preferences -- ^ The calculation preferences
+accommodation :: TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The camino model
   -> [Leg] -- ^ The sequence of legs to use
   -> S.Set Service -- ^ The services that, ideally, should be provided by the accomodation
@@ -238,7 +239,7 @@ accommodation preferences _camino day services allowNone =
 
 
 -- Does this leg have no acceptable accommodation (except possibly at the start and end)
-isAccomodationFree :: Preferences -> [Leg] -> Bool
+isAccomodationFree :: TravelPreferences -> [Leg] -> Bool
 isAccomodationFree preferences day = all (\l -> let (acc, _, _) = accommodation' preferences S.empty (legFrom l) in isNothing acc) (tail day)
 
 missingServicePenance :: M.Map Service Penance -> S.Set Service -> Penance
@@ -251,26 +252,25 @@ adjustment range scale value
   | otherwise = mempty
 
 -- | Calculate the total penance implicit in a sequence of legs
-penance :: Preferences -- ^ The user preferences
-  -> Camino -- ^ The camino travelled
-  -> Location -- ^ The end point
+penance :: TravelPreferences -- ^ The travel preferences
+  -> CaminoPreferences -- ^ The camino travelled
   -> [Leg] -- ^ The sequence of legs
   -> Metrics -- ^ The penance value
-penance preferences camino end day =
+penance preferences camino day =
   let
     (normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, nonWalking) = travelMetrics preferences day
     -- If there is no accomodation within this leg, then accept any distance. If not walking or the last day, then skip lower bounds
-    atEnd = isLastDay end day
+    atEnd = isLastDay (preferenceFinish camino) day
     accomodationFree = isAccomodationFree preferences day
     rangeFilter = (if accomodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if nonWalking then withoutLower else id)
     timePreferences = rangeFilter $ preferenceTime preferences
     distancePreferences = rangeFilter $ preferencePerceivedDistance preferences
     timeAdjust = maybe Reject (adjustment timePreferences normalSpeed) time
     distanceAdjust = maybe Reject (adjustment distancePreferences normalSpeed) perceived
-    stopMissing = missingStopServices preferences camino day
-    (accom, stopMissing', accommodationAdjust) = accommodation preferences camino day stopMissing atEnd -- preferred accommodation penance
+    stopMissing = missingStopServices preferences (preferenceCamino camino) day
+    (accom, stopMissing', accommodationAdjust) = accommodation preferences (preferenceCamino camino) day stopMissing atEnd -- preferred accommodation penance
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
-    dayMissing = missingDayServices preferences camino accom day
+    dayMissing = missingDayServices preferences (preferenceCamino camino) accom day
     dayMissingCost = missingServicePenance (preferenceStopServices preferences) dayMissing
     stopCost = preferenceStop preferences
     distanceCost = maybe Reject Penance perceived
@@ -298,10 +298,10 @@ penance preferences camino end day =
 -- | Accept a day's stage as a possibility
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits and allo locations are part of the selected routes.
 --   Or if there is no acceptable accommodation available.
-dayAccept :: Preferences -> Camino -> Location -> [Leg] -> Bool
-dayAccept preferences _camino end day =
+dayAccept :: TravelPreferences -> CaminoPreferences -> [Leg] -> Bool
+dayAccept preferences camino day =
   let
-    atEnd = isLastDay end day
+    atEnd = isLastDay (preferenceFinish camino) day
     accommodationFree = isAccomodationFree preferences day
     time = walkingHours preferences day
     distance = travel preferences day
@@ -313,16 +313,16 @@ dayAccept preferences _camino end day =
 
 -- | Evaluate a day's stage for penance
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
-dayEvaluate :: Preferences -> Camino -> Location -> [Leg] -> Metrics
+dayEvaluate :: TravelPreferences -> CaminoPreferences -> [Leg] -> Metrics
 dayEvaluate = penance
 
 -- | Choose a day's stage based on minimum penance
-dayChoice :: Preferences -> Camino -> Day -> Day -> Day
+dayChoice :: TravelPreferences -> CaminoPreferences -> Day -> Day -> Day
 dayChoice _preferences _camino day1 day2 = if score day1 < score day2 then day1 else day2
 
 -- | Choose whether to accept an entire camino
 --   Refuse any day that has a rejection in the intermediate points
-caminoAccept :: Preferences -> Camino -> [Day] -> Bool
+caminoAccept :: TravelPreferences -> CaminoPreferences -> [Day] -> Bool
 caminoAccept _preferences _camino days = 
   let
     middle = if length days < 3 then [] else tail (init days)
@@ -332,13 +332,13 @@ caminoAccept _preferences _camino days =
 -- | Evaluate a complete camino 
 --   Currently, the sum of all day scores
 --   Refuse any camino that doesn't include all required stops and exclude all excluded stops
-caminoEvaluate :: Preferences -> Camino -> Location -> [Day] -> Metrics
-caminoEvaluate preferences _camino end days =
+caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
+caminoEvaluate preferences camino days =
   let
     final = finish $ last days
-    waypoints = if final == end then preferenceStops preferences else foldl (S.union) S.empty (map passed days)
-    requiredOk = S.null (S.difference (preferenceStops preferences `S.intersection` waypoints) (S.fromList $ map finish days))
-    excludedOk = not $ any (\d -> S.member (finish d) (preferenceExcluded preferences)) days
+    waypoints = if final == (preferenceFinish camino) then preferenceStops camino else foldl (S.union) S.empty (map passed days)
+    requiredOk = S.null (S.difference (preferenceStops camino `S.intersection` waypoints) (S.fromList $ map finish days))
+    excludedOk = not $ any (\d -> S.member (finish d) (preferenceExcluded camino)) days
     total = mconcat $  map score days
     evaluation = if not requiredOk || not excludedOk then invalid else total
   in
@@ -348,10 +348,10 @@ caminoEvaluate preferences _camino end days =
 -- | Choose a camino stage.
 --   First check that one or the other has passed through a required stop.
 --   Otherwise based on minimum penance
-caminoChoice :: Preferences -> Camino -> Trip -> Trip -> Trip
-caminoChoice preferences _camino trip1 trip2 =
+caminoChoice :: TravelPreferences -> CaminoPreferences -> Trip -> Trip -> Trip
+caminoChoice _preferences camino trip1 trip2 =
   let 
-    req = preferenceStops preferences
+    req = preferenceStops camino
     via1 = req `S.intersection` (S.fromList $ map finish $ path trip1)
     via2 = req `S.intersection` (S.fromList $ map finish $ path trip2)
     c1 = S.size via1
@@ -378,21 +378,21 @@ caminoChoice preferences _camino trip1 trip2 =
     selection
 
 -- | Plan a camino based on the stated preferences
-planCamino :: Preferences -> Camino -> Location -> Location -> Either Location Trip
-planCamino preferences camino begin end = 
+planCamino :: TravelPreferences -> CaminoPreferences -> Either Location Trip
+planCamino preferences camino  = 
   program 
-    camino
+    (preferenceCamino camino)
     (caminoChoice preferences camino)
     (caminoAccept preferences camino)
-    (caminoEvaluate preferences camino end)
+    (caminoEvaluate preferences camino)
     (dayChoice preferences camino)
-    (dayAccept preferences camino end)
-    (dayEvaluate preferences camino end)
+    (dayAccept preferences camino)
+    (dayEvaluate preferences camino)
     (\l -> S.member l allowed)
-    begin
-    end
+    (preferenceStart camino)
+    (preferenceFinish camino)
   where
-    allowed = allowedLocations preferences camino
+    allowed = allowedLocations camino
 
 -- | Get all the stops (ie start and finish locations) on a trip in order
 tripStops :: Trip -> [Location]

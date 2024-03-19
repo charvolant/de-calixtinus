@@ -1,4 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-|
+Module      : Main
+Description : Generate a map of locations for use during development
+Copyright   : (c) Doug Palmer, 2023
+License     : MIT
+Maintainer  : doug@charvolant.org
+Stability   : experimental
+Portability : POSIX
+-}
 module Main (main) where
 
 import qualified Data.ByteString.Lazy as B
@@ -8,25 +17,18 @@ import Graph.Graph
 import Camino.Planner
 import Data.Text.Lazy (pack, unpack, fromStrict)
 import Formatting
+import System.FilePath
 import Text.XML
 
 import Options.Applicative
 
 data Map = Map {
-  camino :: String
+  camino :: FilePath
 }
 
 arguments :: Parser Map
 arguments =  Map
     <$> (argument str (metavar "CAMINO-FILE"))
-
-readCamino :: String -> IO Camino
-readCamino file = do
-  cf <- B.readFile file
-  let decoded = eitherDecode cf :: Either String Camino
-  return $ case decoded of
-    Left msg -> error msg
-    Right camino' -> camino'
 
 printLocation :: Location -> IO ()
 printLocation l = do

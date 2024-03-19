@@ -1,0 +1,58 @@
+<h2 #range-help>Distance and Time Preference Ranges
+
+<p>
+  Distance and time preferences are expressed as ranges.
+  These ranges are used to help calculate the "penance" score for a proposed day's stage and put hard limits on
+  how far and how long each day is to be.
+  (See the general help for more information on penance.)
+  The five values in the range are:
+
+<table .table .table-striped>
+  <caption>Range Types
+  <thead>
+    <tr>
+       <th scope="col">Position
+       <th scope="col">Description
+  <tbody>
+    <tr>
+        <td .text-danger>Minimum
+        <td>The absolute minimum that is acceptable.
+            A day's stage calculated by the planning system will, generally, be at least this distance or time.
+    <tr>
+        <td>Lower
+        <td>The lower bound of acceptability.
+            This is the minimum distance or time that you would wish to walk.
+    <tr>
+        <td .text-success>Target
+        <td>The target
+            This is the distance or time that you wish to walk each day.
+    <tr>
+        <td>Upper
+        <td>The target
+            This is the maximum distance or time that you would wish to walk.
+    <tr>
+        <td .text-danger>Maximum
+        <td>The absolute maximum that is acceptable.
+            A day's stage calculated by the planning system will, generally, be at most this distance or time.
+
+<p>
+  Generally, once the distance/time strays outside the upper or lower bounds, the planner will start adding
+  penalties to the day's penance score.
+  These penalties will tend to steer the planner away from over-long (or short) days.
+
+<h3 #distance-help>Distance
+
+<p>
+  The distance range is pre-populated with values derived from the travel type and level of fitness that you have supplied.
+  The target is based on how far you can get in roughly five hours of walking
+
+<h3 #time-help>Time
+
+<p>
+  The time range is pre-populated with values derived from the travel type and level of fitness that you have supplied.
+  The target is five to six hours, depending on fitness levels.
+  This target allows for rests, lunch, diversions and other activities.
+  The actual time taken each day will be somewhat longer.
+
+<p>
+  It is generally a good idea to leave the minimum and lower bounds at zero and let the distance range control minimums.

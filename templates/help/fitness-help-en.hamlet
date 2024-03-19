@@ -1,0 +1,150 @@
+<h2 #travel-help>Travel Types
+
+<p>
+  The travel type is a broad description of how you intend to travel the Camino.
+  The type is used to estimate the amount of time it will take you to walk a (possibly hilly) segment of the way.
+  The type is also used to help provide defaults for the sort of services you might need along the way and the daily distance traveled.
+  Generally, people either walk or use a bicycle.
+
+<table .table .table-striped>
+  <caption>Travel Types
+  <thead>
+    <tr>
+       <th scope="col">Icon
+       <th scope="col">Travel Type
+       <th scope="col">Description
+  <tbody>
+    <tr>
+        <td>^{caminoTravelIcon Walking}
+        <td>_{caminoTravelMsg Walking}
+        <td>Walking the Camino.
+            This option uses Tobler's rule to calculate the time taken to travel a given distance.
+            Tobler's rule takes account of the need to slow down on steep descents.
+            This is the default travel type.
+    <tr>
+        <td>^{caminoTravelIcon Walking_Naismith}
+        <td>_{caminoTravelMsg Walking_Naismith}
+        <td>Walking the Camino for powerful walkers.
+            This option uses Naismith's rule to calculate the time taken to travel a given distance.
+            Naismith was surveyor who spent most of his time walking and had a very consistent stride.
+            It assumes that you are fit enough to not slow up when descending a slope.
+    <tr>
+        <td>^{caminoTravelIcon Cycling}
+        <td>_{caminoTravelMsg Cycling}
+        <td>Cycling the Camino.
+            The functions for this travel mode are not yet written.
+
+<h2 #fitness-help>Fitness
+
+<p>
+  Fitness is a broad estimate of how long you can keep up a consistent walking or cycling pace.
+  Most legs on the Camino take five to eight hours and you can get pretty tired and footsore along the way.
+  The fitness level allows the planner to make allowances for the inevitable slowing of pace as you weary.
+  See
+  <a href="#estimating-fitness">below
+  for information on how to estimate fitness.
+
+<p>
+  <em>Beware of over-estimating your fitness.</em>
+  "Normal" fitness is someone in their 20s or 30s who has trained for long walks.
+
+<table .table .table-striped>
+  <caption>Fitness Levels
+  <thead>
+    <tr>
+       <th scope="col">Fitness Level
+       <th scope="col">Description
+  <tbody>
+    <tr>
+        <td>_{caminoFitnessMsg SuperFit}
+        <td>Very, very fit, world-class athlete level.
+    <tr>
+        <td>_{caminoFitnessMsg VeryFit}
+        <td>Very fit, athlete level.
+    <tr>
+        <td>_{caminoFitnessMsg Fit}
+        <td>The fitness level of an experienced long-distance walker.
+    <tr>
+        <td>_{caminoFitnessMsg Normal}
+        <td>The fitness level of a consistent long-distance walker.
+    <tr>
+        <td>_{caminoFitnessMsg Unfit}
+        <td>An average walker who has trained for the Camino.
+            Consider this level if you have doubts about whether you're up to the normal level.
+   <tr>
+        <td>_{caminoFitnessMsg VeryUnfit}
+        <td>An average walker without much training.
+
+<h3 #estimating-fitness>Estimating Fitness
+
+<p>
+  The planner uses as set of corrections, called Tranter's corrections, to account for fitness levels.
+  The standard definition for fitness levels is the amount of time it takes to climb 1000 feet (300m) over half a mile (800m).
+  For example, using the following table, if it took you 25 minutes to climb 1000 feet, you would be classified as fit.
+  Another way to estimate fitness is to measure the time you can walk at a nominal 5km/hr (or 3mi/hr) before noticeably tiring.
+
+<table .table .table-striped>
+ <thead>
+   <tr>
+     <th scope="col">Fitness
+     <th scope="col">Climb Time (mins)<sup>1</sup>
+     <th scope="col">Tiring Time (hours)<sup>2</sup>
+     <th scope="col">Nominal Speed (km/hr)<sup>3</sup>
+     <th scope="col">Maximum Time (hrs)<sup>4</sup>
+ <tbody>
+   <tr>
+     <td>Super Fit
+     <td>15
+     <td>20
+     <td>6.0
+     <td>24
+   <tr>
+     <td>Very Fit
+     <td>20
+     <td>10
+     <td>5.5
+     <td>23
+   <tr>
+     <td>Fit
+     <td>25
+     <td>8.0
+     <td>4.5
+     <td>17.5
+   <tr>
+     <td>Normal
+     <td>30
+     <td>5.0
+     <td>4.0
+     <td>14.5
+   <tr>
+     <td>Unfit
+     <td>40
+     <td>3.5
+     <td>3.5
+     <td>11.5
+    <tr>
+     <td>Very Unfit
+     <td>50
+     <td>2.0
+     <td>3.0
+     <td>8.5
+ <tfoot>
+   <tr>
+     <td colspan="4" .fw-lighter><sup>1</sup> How fitness is determined. The time it takes to climb 1000 feet over half a mile
+   <tr>
+     <td colspan="4" .fw-lighter><sup>2</sup> How fitness is determined. The time you can walk at 5km/hr before noticeably slowing.
+   <tr>
+     <td colspan="4" .fw-lighter><sup>3</sup> Based on average over five hours walking
+   <tr>
+     <td colspan="4" .fw-lighter><sup>4</sup> The maximum feasible -- but hardly recommended -- time spent walking
+
+<h2>Further Information
+
+<ul>
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule">Naismith's rule
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/Tobler%27s_hiking_function">Tobler's hiking function
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections">Tranter's corrections
+    (Used to account for fatigue and fitness.)

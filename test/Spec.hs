@@ -23,9 +23,9 @@ main = do
     when (isLeft ec) $ putStrLn (show ec)
     let camino = fromRight (Camino { caminoId = "Test", caminoName = "Test", caminoDescription = "", caminoMetadata = defaultMetadata, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoDefaultRoute = placeholderRoute "X" }) ec
     pf <- B.readFile "short-preferences.json"
-    let ep = eitherDecode pf :: Either String Preferences
+    let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)
-    let shortPreferences = fromRight (defaultPreferences) ep
+    let shortPreferences = fromRight (defaultTravelPreferences Walking Normal) ep
     results <- runTestTT (testList shortPreferences camino)
     putStrLn $ show results
 

@@ -1,0 +1,57 @@
+<h2 #services-help>Accommodation and Services Preferences
+
+<p>
+  Accommodation and services preferences allow you to tell the planner what sort of comforts you want at
+  day's-end and what sort of services you want during the day.
+  These preferences are expressed in kilometres walked.
+  As a general rule, read the kilometre values as
+  "I would rather walk an extra <em>x</em> kilometres than stay in this type of accommodation",
+  "I would walk an extra <em>y</em> kilometres to ensure that I have this available when I stop walking for the day" or
+  "I would walk an extra <em>z</em> kilometres to ensure that I have access to this sometime during the day".
+
+<h3 #stop-help>Day's-end Cost
+
+<p>
+  The day's-end cost is an extra distance tacked on to each day to represent the business of finding and paying
+  for your accommodation, shopping, sorting out bedding and the like.
+
+<p>
+  If you set the cost to zero, the planner will tend to choose lots of short stages over longer distances, since you've
+  essentially said that you don't mind stopping for the night.
+  As you raise this cost, the planner will tend to choose longer and longer stages, reducing the total number of days
+  you spend walking.
+
+<h3 #accomodation-help>Accommodation Preferences
+
+<p>
+  The accommodation preferences indicate how willing you are to stay in a particular type of accommodation.
+  The higher the value, the less willing you are to use that style.
+  You can use this section to indicate that you would prefer to be comfortable (hotels, guest houses etc have lower values)
+  or prefer to be more medieval (albergues and hostels have lower values).
+
+<p>
+  The "reject" or _{PenanceFormatted Reject} symbol indicates that you do not wish to use that accommodation type at all.
+  By default, camping by the roadside is set to reject.
+
+<h3 #stop-service-help>Preferred Services at Day's End
+
+<p>
+  The day's end services indicate the services that you would like to be present when you finish walking for the day.
+  These services can either be present in the location (eg. a restaurant or pharmacy) or in the accommodation that
+  you choose (eg. a washing machine or a restaurant).
+  A closest-fit accommodation choice is used to determine what services are available; if a restaurant or ATM
+  is not present in the town, it may be supplied by a hotel.
+
+<p>
+  Penance costs for missing services are additive.
+  Beware of creating too many conditions, since the planner will tend to keep you walking until all your desires
+  are fulfilled, leading to long stages, footsore pilgrims and loss of temper.
+  In most cases, the penance associated with a service will be set to <code>--</code> or nothing.
+
+<h3 #stop-service-help>Preferred Services During the Day
+
+<p>
+  The day's end services indicate the services that you would like to be present somewhere along the way each day.
+  These services are generally things you might need sometime during the day (eg. a bank or ATM so that you have cash)
+  but which can be visited when convenient.
+  Like the day's-end costs, these are additive, so be judicious.

@@ -1,0 +1,102 @@
+#map
+  width: 80%
+  height: 800px
+  padding: 1em
+a
+  text-decoration: none
+.day
+  h4
+    .distance
+      margin-left: 1em
+      font-size: initial
+    .penance-summary
+      margin-left: 1em
+      font-size: initial
+      display: inline-block
+.rejected
+  color: #c5321b
+.service
+  color: #{toCssColour caminoBlue}
+.accomodation
+  color: #{toCssColour caminoBlue}
+.accomodation.card
+  padding: 1ex
+.accomodation.municipal-albergue
+  color: #{toCssColour caminoYellow}
+.accomodation.hostel
+  color: #2ab472
+.accomodation.home-stay
+  color: #ff395c
+.location-tooltip
+  .leg-to
+    font-size: smaller
+.leg-summary
+  display: inline-block
+  margin-left: 1em
+.leg-to
+  display: block
+.leg-line
+  .leg-type
+    margin-left: 1em
+  .leg-ascent
+    font-size: smaller
+  .leg-ascent::before
+    content: "\2191"
+  .leg-descent
+    font-size: smaller
+  .leg-descent::before
+    content: "\2193"
+  .leg-notes
+    font-size: smaller
+.leg-used
+  color: black
+.leg-unused
+  color: gray
+.location
+  .accordion-header
+    h5
+      display: inline-block
+    .accomodation-types
+      display: inline-block
+      margin-left: 2em
+    .services
+      display: inline-block
+      margin-left: 2em
+.location-summary
+  display: inline-block
+  .accomodation-types
+    font-size: smaller
+    display: inline-block
+    margin-left: 1ex
+  .services
+    font-size: smaller
+    display: inline-block
+    margin-left: 0.5ex
+.location-waypoint
+  .accordion-header
+    h5
+      font-weight: bolder
+.location-stop
+  .accordion-header
+    h5
+      font-weight: bolder
+    h5::after
+      margin-left: 1ex
+      color: #f9b34a
+      font-family: "Camino Icons"
+      font-weight: normal
+      content: "\e020"
+.travel
+  color: #{toCssColour caminoBlue}
+.travel.travel-walking-naismith
+  color: #506890
+.aside
+  background-color: #d0f8ff
+  border-radius: 1ex
+  font-size: small
+.link-map::before
+  content: "\e090"
+.map-key
+  font-size: small
+.map-key-icon
+  width: 16px

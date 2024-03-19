@@ -70,7 +70,7 @@ kmlStyle identifier width alpha color icon = [xml|
           <Icon>#{ic}
   |]
 
-caminoStyles :: Config -> Camino -> [Node]
+caminoStyles :: Config -> CaminoPreferences -> [Node]
 caminoStyles config camino =
     kmlStyle "stopUsed" 1 1 white (Just (iconBase <> "/location-stop.png")) ++
     kmlStyle "villageUsed" 1 1 white (Just (iconBase <> "/location-village-used.png")) ++
@@ -85,11 +85,12 @@ caminoStyles config camino =
     kmlStyle "intersectionUnused" 1 0.5 white (Just (iconBase <> "/location-intersection-unused.png")) ++
     kmlStyle "poiUsed" 1 1 white (Just (iconBase <> "/location-poi-used.png")) ++
     kmlStyle "poiUnused" 1 0.5 white (Just (iconBase <> "/location-poi-unused.png")) ++
-    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino) ++
-    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino) ++
-    kmlStyle "defaultUsed" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino) Nothing ++
-    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ routePalette $ caminoDefaultRoute camino) Nothing
+    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino') ++
+    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino') ++
+    kmlStyle "defaultUsed" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino') Nothing ++
+    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ routePalette $ caminoDefaultRoute camino') Nothing
   where
+    camino' = preferenceCamino camino
     iconBase = assetPath $ fromJust $ getAsset "icons" config
 
 
@@ -112,13 +113,13 @@ lineKml (Just latlong1) (Just latlong2) = [xml|
     cstr = coords latlong1 <> " " <> coords latlong2 -- Required because the template removes spaces
 lineKml _ _ = []
 
-caminoLocationStyle :: Camino -> S.Set Location -> S.Set Location -> Location -> Text
+caminoLocationStyle :: CaminoPreferences -> S.Set Location -> S.Set Location -> Location -> Text
 caminoLocationStyle _camino stops waypoints location
   | S.member location stops = "#stopUsed"
   | S.member location waypoints = "#" <> (toLower $ pack $ show $ locationType location) <> "Used"
   | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "Unused"
   
-caminoLocationKml :: Config -> Preferences -> Camino -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationKml config preferences camino trip stops waypoints location = [xml|
     <Placemark id="#{pack $ locationID location}">
       <name>#{locationName location}
@@ -134,17 +135,18 @@ caminoLocationKml config preferences camino trip stops waypoints location = [xml
     route = renderCaminoRoute config ["en", ""]
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
-caminoLegStyle :: Camino -> S.Set Location -> S.Set Location -> Leg -> Text
+caminoLegStyle :: CaminoPreferences -> S.Set Location -> S.Set Location -> Leg -> Text
 caminoLegStyle camino _stops waypoints leg =
   let
+    camino' = preferenceCamino camino
     from' = legFrom leg
     to' = legTo leg
     used = if (S.member from' waypoints) && (S.member to' waypoints) then "Used" else "Unused"
-    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino)
+    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino')
   in
     pack $ "#" ++ maybe "default" routeID route ++ used
 
-caminoLegKml :: Camino -> S.Set Location -> S.Set Location -> Leg -> [Node]
+caminoLegKml :: CaminoPreferences -> S.Set Location -> S.Set Location -> Leg -> [Node]
 caminoLegKml camino stops waypoints leg = [xml|
     <Placemark>
       <name>#{(pack $ show $ legDistance leg) <> "km"}
@@ -153,9 +155,10 @@ caminoLegKml camino stops waypoints leg = [xml|
   |]
 
 -- Create a KML document of a camino
-createCaminoDoc :: Config -> Preferences -> Camino -> Maybe Trip -> Document
+createCaminoDoc :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> Document
 createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing []) kml []
   where
+    camino' = preferenceCamino camino
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     ns = M.fromList [ ("xmlns", "http://www.opengis.net/kml/2.2"), ("xmlns:gx", "http://www.google.com/kml/ext/2.2") ]
@@ -165,9 +168,9 @@ createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing [
           $maybe t <- trip
             <name>#{locationName $ start t} to #{locationName $ finish t}
            ^{caminoStyles config camino}
-          $forall location <- caminoLocationList camino
+          $forall location <- caminoLocationList camino'
             ^{caminoLocationKml config preferences camino trip stops waypoints location}
-          $forall leg <- caminoLegs camino
+          $forall leg <- caminoLegs camino'
             ^{caminoLegKml camino stops waypoints leg}
       |]
 

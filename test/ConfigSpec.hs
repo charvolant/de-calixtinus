@@ -19,7 +19,8 @@ testConfig1 = Config {
         assetCrossOrigin = Unused
       }
     ],
-    webLinks = []
+    webLinks = [],
+    webMaps = []
   }
 }
 
@@ -39,7 +40,8 @@ testConfig2 = Config {
           }
         ]
       }
-    ]
+    ],
+    webMaps = []
   }
 }
 
@@ -54,7 +56,7 @@ testGetAssets = TestList [
   testGetAssets1, testGetAssets2, testGetAssets3
   ]
 
-testGetAssets1 = TestCase (assertEqual "getAssets 1" 3 (length $ getAssets JavaScript testConfig1))
+testGetAssets1 = TestCase (assertEqual "getAssets 1" 0 (length $ getAssets JavaScript testConfig1))
 
 testGetAssets2 = TestCase (assertEqual "getAssets 2" 4 (length $ getAssets Css testConfig1))
 
@@ -66,8 +68,8 @@ testGetAsset = TestList [
   ]
 
 testGetAsset1 = TestCase (do
-    assertEqual "getAsset 1 1" True (isJust $ getAsset "leafletJs" testConfig1)
-    assertEqual "getAsset 1 2" "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" (assetPath $ fromJust $ getAsset "leafletJs" testConfig1)
+    assertEqual "getAsset 1 1" True (isJust $ getAsset "leaflet-js" testConfig1)
+    assertEqual "getAsset 1 2" "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" (assetPath $ fromJust $ getAsset "leaflet-js" testConfig1)
     )
 
 testGetAsset2 = TestCase (do
@@ -85,7 +87,7 @@ testGetLinks = TestList [
   testGetLinks1, testGetLinks2
   ]
 
-testGetLinks1 = TestCase (assertEqual "getLinks 1" 1 (length $ getLinks Header testConfig1))
+testGetLinks1 = TestCase (assertEqual "getLinks 1" 0 (length $ getLinks Header testConfig1))
 
-testGetLinks2 = TestCase (assertEqual "getLinks 2" 2 (length $ getLinks Header testConfig2))
+testGetLinks2 = TestCase (assertEqual "getLinks 2" 1 (length $ getLinks Header testConfig2))
 

@@ -48,6 +48,7 @@ data CaminoMsg =
   | CampingTitle
   | CampSiteTitle
   | CityTitle
+  | CyclingTitle
   | CyclePathTitle
   | DayServicesPenanceMsg Penance
   | DayServicesPreferencesLabel
@@ -65,12 +66,14 @@ data CaminoMsg =
   | DoubleWcTitle
   | DryerTitle
   | ExcludedStopsLabel
-  | FitnessLabel
   | FerryTitle
+  | FitnessLabel
+  | FitTitle
   | GroceriesTitle
   | GuestHouseTitle
   | HandwashTitle
   | HeatingTitle
+  | HelpLabel
   | HomeStayTitle
   | HostelTitle
   | HotelTitle
@@ -91,6 +94,7 @@ data CaminoMsg =
   | MiscPenanceMsg Penance
   | MonasteryTitle
   | MunicipalAlbergueTitle
+  | NormalTitle
   | OtherLabel
   | PeakTitle
   | PenanceFormatted Penance
@@ -124,6 +128,7 @@ data CaminoMsg =
   | StopPreferencesLabel
   | StopServicesPenanceMsg Penance
   | StopServicesPreferencesLabel
+  | SuperFitTitle
   | TimeAdjustMsg Penance
   | TimeMsg (Maybe Float)
   | TimePenaltyLabel
@@ -132,11 +137,18 @@ data CaminoMsg =
   | TownTitle
   | TrailTitle
   | TrainTitle
+  | TravelLabel
+  | TripFinishLabel
+  | TripStartLabel
   | TripleTitle
   | TripleWcTitle
+  | UnfitTitle
   | UnusedLabel
+  | VeryFitTitle
+  | VeryUnfitTitle
   | VillageTitle
-  | WalkingFunctionLabel
+  | WalkingNaismithTitle
+  | WalkingTitle
   | WashingMachineTitle
   | WaypointLabel
   | WiFiTitle
@@ -188,6 +200,7 @@ renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CityTitle = "City"
+renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
@@ -211,12 +224,14 @@ renderCaminoMsgDefault _ DoubleTitle = "Double"
 renderCaminoMsgDefault _ DoubleWcTitle = "Double with WC"
 renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
-renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
+renderCaminoMsgDefault _ FitnessLabel = "Fitness"
+renderCaminoMsgDefault _ FitTitle = "Fit"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
+renderCaminoMsgDefault _ HelpLabel = "Help"
 renderCaminoMsgDefault config (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident ["en", ""] config) where ident = linkId link
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
 renderCaminoMsgDefault _ HostelTitle = "Hostel"
@@ -237,6 +252,7 @@ renderCaminoMsgDefault _ MedicalTitle = "Medical"
 renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
 renderCaminoMsgDefault _ MunicipalAlbergueTitle = "Municipal Albergue"
+renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
 renderCaminoMsgDefault _ PeakTitle = "Peak"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
@@ -270,6 +286,7 @@ renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenan
 renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
 renderCaminoMsgDefault _ StopServicesPreferencesLabel = "Missing Stop Services"
+renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeTime time}|]
 renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
@@ -278,11 +295,18 @@ renderCaminoMsgDefault _ TowelsTitle = "Towels"
 renderCaminoMsgDefault _ TownTitle = "Town"
 renderCaminoMsgDefault _ TrailTitle = "Trail (walkers only)"
 renderCaminoMsgDefault _ TrainTitle = "Train"
+renderCaminoMsgDefault _ TravelLabel = "Travel Estimation"
+renderCaminoMsgDefault _ TripFinishLabel = "Trip Finish"
+renderCaminoMsgDefault _ TripStartLabel = "Trip Start"
 renderCaminoMsgDefault _ TripleTitle = "Triple"
 renderCaminoMsgDefault _ TripleWcTitle = "Triple with WC"
+renderCaminoMsgDefault _ UnfitTitle = "Unfit"
 renderCaminoMsgDefault _ UnusedLabel = "Unused"
+renderCaminoMsgDefault _ VeryFitTitle = "Very fit"
+renderCaminoMsgDefault _ VeryUnfitTitle = "Very unfit"
 renderCaminoMsgDefault _ VillageTitle = "Village"
-renderCaminoMsgDefault _ WalkingFunctionLabel = "Walking Time Estimation"
+renderCaminoMsgDefault _ WalkingTitle = "Walking"
+renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (Naismith's rule)"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"

@@ -1,4 +1,14 @@
 {-# LANGUAGE FunctionalDependencies #-}
+{-|
+Module      : Graph
+Description : Abstract graph model
+Copyright   : (c) Doug Palmer, 2023
+License     : MIT
+Maintainer  : doug@charvolant.org
+Stability   : experimental
+Portability : POSIX
+-}
+
 module Graph.Graph(
   Vertex(..),
   Edge(..),

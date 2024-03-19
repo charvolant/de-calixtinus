@@ -1,0 +1,4 @@
+const helpModal = new bootstrap.Modal('#help-dialog');
+function showHelpPopup() {
+  helpModal.show();
+}

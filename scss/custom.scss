@@ -1,0 +1,8 @@
+// Customisation of bootstrap for De Calixtinus based on the common colours of the Camino Santiago
+// To compile use `sass ./scss/custom.scss ./static/css/bootstrap-dc.css` in the base directory
+// Use the `--watch` option to compile on changes
+
+$blue: #1964c0;
+$body-bg: #faf8f0;
+
+@import "../../bootstrap-5.3.3/scss/bootstrap";

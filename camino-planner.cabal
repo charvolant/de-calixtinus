@@ -6,13 +6,13 @@ cabal-version: 1.12
 
 name:           camino-planner
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/camino-planner#readme>
-homepage:       https://github.com/githubuser/camino-planner#readme
-bug-reports:    https://github.com/githubuser/camino-planner/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
-license:        BSD3
+description:    Please see the README on GitHub at <https://github.com/charvolant/camino-planner#readme>
+homepage:       https://github.com/charvolant/camino-planner#readme
+bug-reports:    https://github.com/charvolant/camino-planner/issues
+author:         Doug Palmer
+maintainer:     doug@charvolant.org
+copyright:      2023 Doug Palmer
+license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/camino-planner
+  location: https://github.com/charvolant/camino-planner
 
 library
   exposed-modules:
@@ -32,8 +32,15 @@ library
       Camino.Display.I18n
       Camino.Display.KML
       Camino.Display.Routes
+      Camino.Display.Static
       Camino.Planner
       Camino.Preferences
+      Camino.Server.Application
+      Camino.Server.Fields
+      Camino.Server.Forms
+      Camino.Server.Foundation
+      Camino.Server.Settings
+      Camino.Util
       Camino.Walking
       Data.Metadata
       Graph.Graph
@@ -48,10 +55,13 @@ library
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
+    , blaze-markup
     , bytestring
     , colour
     , containers
+    , data-default-class
     , directory
+    , file-embed
     , filepath
     , formatting
     , network-uri
@@ -60,12 +70,17 @@ library
     , scientific
     , shakespeare
     , split
+    , template-haskell
     , text
     , text-icu >=0.8
     , vector
+    , warp
     , xml-conduit
     , xml-hamlet
     , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
   default-language: Haskell2010
 
 executable camino-map-exe
@@ -80,11 +95,14 @@ executable camino-map-exe
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
+    , blaze-markup
     , bytestring
     , camino-planner
     , colour
     , containers
+    , data-default-class
     , directory
+    , file-embed
     , filepath
     , formatting
     , network-uri
@@ -93,12 +111,17 @@ executable camino-map-exe
     , scientific
     , shakespeare
     , split
+    , template-haskell
     , text
     , text-icu >=0.8
     , vector
+    , warp
     , xml-conduit
     , xml-hamlet
     , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
   default-language: Haskell2010
 
 executable camino-planner-exe
@@ -113,11 +136,14 @@ executable camino-planner-exe
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
+    , blaze-markup
     , bytestring
     , camino-planner
     , colour
     , containers
+    , data-default-class
     , directory
+    , file-embed
     , filepath
     , formatting
     , network-uri
@@ -126,12 +152,99 @@ executable camino-planner-exe
     , scientific
     , shakespeare
     , split
+    , template-haskell
     , text
     , text-icu >=0.8
     , vector
+    , warp
     , xml-conduit
     , xml-hamlet
     , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
+  default-language: Haskell2010
+
+executable camino-server-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_camino_planner
+  hs-source-dirs:
+      app/server
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=2
+    , aeson-pretty
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , camino-planner
+    , colour
+    , containers
+    , data-default-class
+    , directory
+    , file-embed
+    , filepath
+    , formatting
+    , network-uri
+    , numeric-tools ==0.2.*
+    , optparse-applicative
+    , scientific
+    , shakespeare
+    , split
+    , template-haskell
+    , text
+    , text-icu >=0.8
+    , vector
+    , warp
+    , xml-conduit
+    , xml-hamlet
+    , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
+  default-language: Haskell2010
+
+executable generate-static-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_camino_planner
+  hs-source-dirs:
+      app/generate-static
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=2
+    , aeson-pretty
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , camino-planner
+    , colour
+    , containers
+    , data-default-class
+    , directory
+    , file-embed
+    , filepath
+    , formatting
+    , network-uri
+    , numeric-tools ==0.2.*
+    , optparse-applicative
+    , scientific
+    , shakespeare
+    , split
+    , template-haskell
+    , text
+    , text-icu >=0.8
+    , vector
+    , warp
+    , xml-conduit
+    , xml-hamlet
+    , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
   default-language: Haskell2010
 
 test-suite camino-planner-test
@@ -156,11 +269,14 @@ test-suite camino-planner-test
     , aeson-pretty
     , base >=4.7 && <5
     , blaze-html
+    , blaze-markup
     , bytestring
     , camino-planner
     , colour
     , containers
+    , data-default-class
     , directory
+    , file-embed
     , filepath
     , formatting
     , network-uri
@@ -170,10 +286,15 @@ test-suite camino-planner-test
     , scientific
     , shakespeare
     , split
+    , template-haskell
     , text
     , text-icu >=0.8
     , vector
+    , warp
     , xml-conduit
     , xml-hamlet
     , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
   default-language: Haskell2010

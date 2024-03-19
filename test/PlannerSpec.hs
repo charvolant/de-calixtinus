@@ -23,7 +23,7 @@ assertPenanceEqual msg Reject actual _precision =
 assertPenanceEqual msg (Penance expected) (Penance actual) precision =
   assertBool (msg ++ " expected penance value " ++ show expected ++ " but got " ++ show actual) (abs (expected - actual) < precision)
 
-testPlanner :: Preferences -> Camino -> Test
+testPlanner :: TravelPreferences -> Camino -> Test
 testPlanner preferences camino = TestList [
   TestLabel "Hours Simple" testHoursSimple,
   TestLabel "Travel Simple" testTravelSimple,
@@ -32,8 +32,8 @@ testPlanner preferences camino = TestList [
   TestLabel "Plan Camino" (testPlanCamino preferences camino)
   ]
 
-preferences1 = Preferences { 
-    preferenceWalkingFunction = "tobler",
+preferences1 = TravelPreferences {
+    preferenceTravelFunction = Walking,
     preferenceFitness = Normal,
     preferenceDistance = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0),
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
@@ -50,10 +50,7 @@ preferences1 = Preferences {
     preferenceDayServices = M.fromList [
       (Pharmacy, (Penance 0.1)),
       (Bank, (Penance 0.1))
-    ],
-    preferenceRoutes = S.empty,
-    preferenceStops = S.empty,
-    preferenceExcluded = S.empty
+    ]
   }
 
 location1 = Location {
@@ -147,6 +144,15 @@ camino1 = Camino {
   caminoRoutes = [route1],
   caminoDefaultRoute = route1
 }
+
+cpreferences1 = CaminoPreferences {
+  preferenceCamino = camino1,
+  preferenceRoutes = S.singleton route1,
+  preferenceStart = location1,
+  preferenceFinish = location3,
+  preferenceStops = S.empty,
+  preferenceExcluded = S.empty
+}
   
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3]
 
@@ -187,33 +193,39 @@ testAccomodationSimple2 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.6) (metricsPenance $ penance preferences1 camino1 location3 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.6) (metricsPenance $ penance preferences1 cpreferences1 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" Reject (metricsPenance $ penance preferences1 camino1 location4 legs1) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 15.6) (metricsPenance $ penance preferences1 cpreferences1 legs1) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 
 testPlanCamino1 preferences camino =
   let
-    begin = vertex camino "P1"
-    end = vertex camino "P12"
-    mroute = planCamino preferences camino begin end
+    cpreferences = CaminoPreferences {
+      preferenceCamino = camino,
+      preferenceRoutes = S.singleton $ caminoDefaultRoute camino,
+      preferenceStart = (caminoLocations camino) M.! "P-P1",
+      preferenceFinish = (caminoLocations camino) M.! "P-P12",
+      preferenceStops = S.empty,
+      preferenceExcluded = S.empty
+    }
+    mroute = planCamino preferences cpreferences
   in
     TestCase (do
       assertBool "Plan Camino 1 1" (isRight mroute)
       let route = fromRight (error "Bad route") mroute
-      assertEqual "Plan Camino 1 2" begin (start route)
-      assertEqual "Plan Camino 1 3" end (finish route)
+      assertEqual "Plan Camino 1 2" (preferenceStart cpreferences) (start route)
+      assertEqual "Plan Camino 1 3" (preferenceFinish cpreferences) (finish route)
       assertEqual "Plan Camino 1 4" 2 (length $ path route)
       -- assertPenanceEqual "Plan Camino 1 5" (Penance 0) (score route) 0.01
       let day1 = path route !! 0
-      assertEqual "Plan Camino 1 6" "P1" (identifier $ start day1)
-      assertEqual "Plan Camino 1 7" "P7" (identifier $ finish day1)
+      assertEqual "Plan Camino 1 6" "P-P1" (identifier $ start day1)
+      assertEqual "Plan Camino 1 7" "P-P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
       assertPenanceEqual "Plan Camino 1 9" (Penance 26.5) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
-      assertEqual "Plan Camino 1 10" "P7" (identifier $ start day2)
-      assertEqual "Plan Camino 1 11" "P12" (identifier $ finish day2)
+      assertEqual "Plan Camino 1 10" "P-P7" (identifier $ start day2)
+      assertEqual "Plan Camino 1 11" "P-P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
       assertPenanceEqual "Plan Camino 1 13" (Penance 23.5) (metricsPenance $ score day2) 0.1
     )

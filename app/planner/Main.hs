@@ -1,4 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-|
+Module      : Main
+Description : Generate a camino plan and output it as a collection of static files
+Copyright   : (c) Doug Palmer, 2023
+License     : MIT
+Maintainer  : doug@charvolant.org
+Stability   : experimental
+Portability : POSIX
+-}
 module Main (main) where
 
 import qualified Data.ByteString.Lazy as B
@@ -36,8 +45,7 @@ data Plan = Plan {
   stops :: String,
   exclude :: String,
   config :: FilePath,
-  output :: FilePath,
-  static :: Bool
+  output :: FilePath
 }
 
 arguments :: Parser Plan
@@ -51,69 +59,38 @@ arguments =  Plan
     <*> (strOption (long "exclude" <> short 'x' <> value "" <> metavar "LOCATIONIDS" <> help "Exclude stopping at a comma-separated list of location ids"))
     <*> (strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG" <> help "Configuration file"))
     <*> (strOption (long "output" <> short 'o' <> value "./plan" <> metavar "OUTPUTDIR" <> help "Output directory"))
-    <*> (switch (long "static" <> short 'z' <> help "Generate static files"))
 
-readCamino :: String -> IO Camino
-readCamino file = do
-  cf <- B.readFile file
-  let decoded = eitherDecode cf :: Either String Camino
-  return $ case decoded of
-    Left msg -> error msg
-    Right camino' -> camino'
-
-readPreferences :: String -> IO Preferences
+readPreferences :: String -> IO TravelPreferences
 readPreferences file = do
   cf <- B.readFile file
-  let decoded = eitherDecode cf :: Either String Preferences
+  let decoded = eitherDecode cf :: Either String TravelPreferences
   return $ case decoded of
     Left msg -> error msg
     Right prefs' -> prefs'
-
-createCss :: Config -> Camino -> (CaminoRoute -> [(ST.Text, ST.Text)] -> ST.Text) -> String -> IO ()
-createCss config camino router output = let
-    css = caminoCss config camino
-    cssFile = output </> "camino.css"
-  in
-    TIO.writeFile cssFile $ T.concat (map (\c -> renderCss $ c router) css)
-
-createHelp :: Config -> (CaminoRoute -> [(ST.Text, ST.Text)] -> ST.Text) -> (CaminoMsg -> Html) -> String -> IO ()
-createHelp config router messages output = let
-    help = helpHtml config
-    helpFile = output </> "help-en.html"
-  in
-    B.writeFile helpFile (renderHtml (help messages router))
 
 plan :: Plan -> IO ()
 plan opts = do
     camino' <- readCamino (camino opts)
     preferences' <- readPreferences (preferences opts)
-    let preferences'' = normalisePreferences camino' preferences'
     config' <- readConfigFile (config opts)
     let output' = output opts
     let begin' = vertex camino' (begin opts)
     let end' = vertex camino' (end opts)
     let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholderRoute (splitOn "," (routes opts))
-    let preferences''' = normalisePreferences camino' (preferences'' { preferenceRoutes = routes' })
-    let stops' = if stops opts == "" then (recommendedStops preferences''' camino') else S.fromList $ map placeholderLocation (splitOn "," (stops opts))
+    let stops' = if stops opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (stops opts))
     let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (exclude opts))
-    let preferences'''' = normalisePreferences camino' (preferences''' { preferenceRoutes = routes', preferenceStops = stops', preferenceExcluded = excluded' })
-    let static' = static opts
+    let caminoPrefs' = normalisePreferences [camino'] $ CaminoPreferences camino' begin' end' routes' stops' excluded'
     let router = renderCaminoRoute config' ["en", ""]
     let messages = renderCaminoMsg config'
-    let solution = planCamino preferences'''' camino' begin' end'
+    let solution = planCamino preferences' caminoPrefs'
     let solution' = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just solution
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences'''' camino' solution'
+    let kml = createCaminoDoc config' preferences' caminoPrefs' solution'
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
-    let html = caminoHtml config' preferences'''' camino' solution'
+    let html = caminoHtml config' preferences' caminoPrefs' solution'
     let indexFile = output' </> "index.html"
     B.writeFile indexFile (renderHtml (html messages router))
-    when static' (createCss config' camino' router output')
-    when static' (createHelp config' router messages output')
-    let css = caminoCss config' camino'
-    let cssFile = output' </> "camino.css"
-    TIO.writeFile cssFile $ T.concat (map (\c -> renderCss $ c router) css)
 
 main :: IO ()
 main = do

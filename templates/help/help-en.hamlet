@@ -18,7 +18,7 @@
         <li .nav-item>
           <a .nav-link .active href="#accommodation-help">Accommodation
         <li .nav-item>
-          <a .nav-link .active href="travel-help">Travel
+          <a .nav-link .active href="#travel-help">Travel
         <li .nav-item>
           <a .nav-link .active href="#penance-help">Penance
        <li .nav-item>

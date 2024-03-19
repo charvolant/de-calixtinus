@@ -1,0 +1,7 @@
+<div .container-fluid>
+  <div .row>
+    <div .col>
+      <p>_{MsgHomeText}
+  <div .row .justify-content-center>
+    <div .col-1>
+      <a .btn .btn-primary href="@{PreferencesR}">_{MsgStartLabel}

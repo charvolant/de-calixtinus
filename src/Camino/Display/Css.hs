@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-|
 Module      : Css
 Description : Produce Css styles for HTML and KML display
@@ -24,7 +25,15 @@ import Data.Text ()
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
-  
+
+-- The traditional blue file colour. Used as a primary darkish colour
+caminoBlue :: Colour Double
+caminoBlue = sRGB24read "1964c0"
+
+-- The traditional blue file colour. Used as a primary darkish colour
+caminoYellow :: Colour Double
+caminoYellow = sRGB24read "f9b34a"
+
 -- | Create a CSS-able colour
 toCssColour :: Colour Double -- ^ The colour to display
  -> String -- ^ A #rrggbb colour triple
@@ -87,6 +96,8 @@ iconList = [
     ("ca-guesthouse", '\xe012'),
     ("ca-handwash", '\xe063'),
     ("ca-heating", '\xe070'),
+    ("ca-heating", '\xe070'),
+    ("ca-help", '\xe092'),
     ("ca-homestay", '\xe011'),
     ("ca-hostel", '\xe012'),
     ("ca-hotel", '\xe013'),
@@ -119,8 +130,8 @@ iconList = [
     ("ca-wifi", '\xe060')
   ]
   
-caminoIconCss :: Camino -> [Render CaminoRoute -> Css]
-caminoIconCss _camino = map (\(ident, ch) -> iconCss ident ch) iconList
+caminoIconCss :: [Render CaminoRoute -> Css]
+caminoIconCss = map (\(ident, ch) -> iconCss ident ch) iconList
 
 caminoFontCss :: AssetConfig -> Render CaminoRoute -> Css
 caminoFontCss asset = [cassius|
@@ -132,114 +143,15 @@ caminoFontCss asset = [cassius|
 |]
   where
     ident = assetId asset
-    
-caminoBaseCss :: Camino -> Render CaminoRoute -> Css
-caminoBaseCss _camino = [cassius|
-#map
-  width: 80%
-  height: 800px
-  padding: 1em
-a
-  text-decoration: none
-.day
-  h4
-    .distance
-      margin-left: 1em
-      font-size: initial
-    .penance-summary
-      margin-left: 1em
-      font-size: initial
-      display: inline-block
-.rejected
-  color: #c5321b
-.service
-  color: #1964c0
-.accomodation
-  color: #1964c0
-.accomodation.card
-  padding: 1ex
-.accomodation.municipal-albergue
-  color: #f9b34a
-.accomodation.hostel
-  color: #2ab472
-.accomodation.home-stay
-  color: #ff395c
-.location-tooltip
-  .leg-to
-    font-size: smaller
-.leg-summary
-  display: inline-block
-  margin-left: 1em
-.leg-to
-  display: block
-.leg-line
-  .leg-type
-    margin-left: 1em
-  .leg-ascent
-    font-size: smaller
-  .leg-ascent::before
-    content: "\2191"
-  .leg-descent
-    font-size: smaller
-  .leg-descent::before
-    content: "\2193"
-  .leg-notes
-    font-size: smaller
-.leg-used
-  color: black
-.leg-unused
-  color: gray
-.location 
-  .accordion-header
-    h5
-      display: inline-block
-    .accomodation-types
-      display: inline-block
-      margin-left: 2em
-    .services
-      display: inline-block
-      margin-left: 2em
-.location-summary
-  display: inline-block
-  .accomodation-types
-    font-size: smaller
-    display: inline-block
-    margin-left: 1ex
-  .services
-    font-size: smaller
-    display: inline-block
-    margin-left: 0,5ex
-.location-waypoint
-  .accordion-header
-    h5
-      font-weight: bolder
-.location-stop
-  .accordion-header
-    h5
-      font-weight: bolder
-    h5::after
-      margin-left: 1ex
-      color: #f9b34a
-      font-family: "Camino Icons"
-      font-weight: normal
-      content: "\e020"
-.aside
-  background-color: #d0f8ff
-  border-radius: 1ex
-  font-size: small
-.link-map::before
-  content: "\e090"
-.map-key
-  font-size: small
-.map-key-icon
-  width: 16px;
-  |]
 
-caminoCss :: Config -> Camino -> [Render CaminoRoute -> Css]
-caminoCss config camino = (base':default':routes') ++ fonts' ++ icons'
+caminoBaseCss :: Render CaminoRoute -> Css
+caminoBaseCss = $(cassiusFile "templates/css/base.cassius")
+
+caminoCss :: Config -> [Camino] -> [Render CaminoRoute -> Css]
+caminoCss config caminos = (base':default':routes') ++ fonts' ++ icons'
   where
-    base' = caminoBaseCss camino
-    default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute camino)
-    routes' = map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes camino)
+    base' = caminoBaseCss
+    default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute (head caminos))
+    routes' = concat $ map (\c -> map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes c)) caminos
     fonts' = map caminoFontCss (getAssets Font config)
-    icons' = caminoIconCss camino
+    icons' = caminoIconCss

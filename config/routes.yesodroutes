@@ -1,0 +1,3 @@
+/ HomeR GET
+/preferences PreferencesR GET POST
+/help HelpR GET

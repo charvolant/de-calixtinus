@@ -22,11 +22,11 @@ dctermsDescription = fromJust $ parseURI "http://purl.org/dc/terms/source"
 
 namespace1 = Namespace "dc:" "http://purl.org/dc/elements/1.1/"
 
-statement1 = Statement dcTitle "A test title"
+statement1 = Statement dcTitle "A test title" (Just "en")
 
-statement2 = Statement dcCreated "2024-02-10"
+statement2 = Statement dcCreated "2024-02-10" Nothing
 
-statement3 = Statement dcCreated "2024-02-11"
+statement3 = Statement dcCreated "2024-02-11" Nothing
 
 testMetadata1 = Metadata {
   metadataNamespaces = [ namespace1 ],
@@ -91,8 +91,8 @@ testRead1 =
   let
     mmetadata = eitherDecode json1 :: Either String Metadata
     metadata = either error id mmetadata
-    getTerm (Statement term _value) = term
-    getValue (Statement _term value) = value
+    getTerm (Statement term _value _lang) = term
+    getValue (Statement _term value _lang) = value
   in
     TestCase (do
       assertEqual "Read 1 1" 1 (Prelude.length $ metadataNamespaces metadata)

@@ -51,6 +51,7 @@ module Camino.Camino (
   , locationAccommodationTypes
   , locationTypeEnumeration
   , normaliseCamino
+  , normaliseLocation
   , normaliseRoutes
   , placeholderCamino
   , placeholderLocation
@@ -70,7 +71,7 @@ import Data.Colour.Names
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Maybe (catMaybes, fromJust)
 import Data.Metadata
-import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems)
+import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, lookup)
 import qualified Data.Set as S (Set, difference, empty, intersection, map, fromList, member, union, unions)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.List (find)
@@ -357,6 +358,12 @@ placeholderLocation ident = Location {
     , locationServices = S.empty
     , locationAccommodation = []
   }
+
+-- | Normalise the location against a camino
+normaliseLocation :: Camino -- ^ The camino to normalise against
+ -> Location -- ^ The source location
+ -> Location -- ^ The normalised location
+normaliseLocation camino location = maybe location id (M.lookup (locationID location) (caminoLocations camino))
 
 -- | Get the accommodation types available at a location
 --   These are ordered into enumeration order

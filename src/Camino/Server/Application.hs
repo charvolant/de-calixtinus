@@ -160,10 +160,11 @@ stepPage' title top bottom step prev next widget enctype = do
     [whamlet|
       <div .container-fluid>
         <div .row .m-5>
+          <div .col-1>
+            ^{embedded}
           <div .col>
             <p>
               _{top}
-              ^{embedded}
         <div .row .justify-content-center>
           <div .col-10>
             <form .container-fluid method=post action=@{PreferencesR} enctype="#{enctype}">
@@ -187,7 +188,7 @@ stepPage RangeStep widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing
 stepPage ServicesStep widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing ServicesStep RangeStep CaminoStep widget enctype
 stepPage CaminoStep widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing CaminoStep ServicesStep RoutesStep widget enctype
 stepPage RoutesStep widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing RoutesStep CaminoStep StartStep widget enctype
-stepPage StartStep widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StartStep RoutesStep StopsStep widget enctype
+stepPage StartStep widget enctype = stepPage' MsgStartTitle MsgStartText Nothing StartStep RoutesStep StopsStep widget enctype
 stepPage StopsStep widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StopsStep StartStep ShowStep widget enctype
 stepPage ShowStep widget enctype =
     defaultLayout $ do
@@ -198,6 +199,9 @@ helpPopup' :: PreferenceStep -> [Lang] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRou
 helpPopup' FitnessStep _ = Just $(ihamletFile "templates/help/fitness-help-en.hamlet")
 helpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
 helpPopup' ServicesStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+helpPopup' RoutesStep _ = Just $(ihamletFile "templates/help/routes-help-en.hamlet")
+helpPopup' StartStep _ = Just $(ihamletFile "templates/help/start-help-en.hamlet")
+helpPopup' StopsStep _ = Just $(ihamletFile "templates/help/stops-help-en.hamlet")
 helpPopup' _ _ = Nothing
 
 helpPopup :: PreferenceStep -> Handler (Widget, Widget)
@@ -215,7 +219,7 @@ helpPopup step = do
       )
     Just help -> (
            [whamlet|
-            <a href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
+            <a .btn .border-info-subtle .bg-info-subtle .text-primary href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
               <span .ca-help>
            |]
         , $(widgetFile "help-popup")

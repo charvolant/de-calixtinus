@@ -29,8 +29,6 @@ module Camino.Server.Forms (
   , chooseStartForm
   , chooseStopsForm
   , defaultPreferenceData
-  , renderBootstrap5
-  , storedIDForm
   , travelPreferencesFrom
 ) where
 
@@ -156,9 +154,7 @@ instance (Show a, Read a) => PathPiece (PreferenceRange a) where
     ]
 
 data PreferenceData = PreferenceData {
-    prefPrevTravel :: Travel -- ^ The previous travel mode (to detect changes)
-  , prefTravel :: Travel -- ^ The travel mode
-  , prefPrevFitness :: Fitness -- ^ The previous fitness level (to detect changes)
+    prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
@@ -166,9 +162,7 @@ data PreferenceData = PreferenceData {
   , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accomodation type preferences
   , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
   , prefDayServices :: M.Map Service Penance -- ^ The during-day service preferences
-  , prefPrevCamino :: Camino -- ^ The previous camino (to detect changes)
   , prefCamino :: Camino -- ^ The camino to travel
-  , prefPrevRoutes :: S.Set Camino.Camino.Route -- ^ The previously chosen routes (to detect changes)
   , prefRoutes :: S.Set Camino.Camino.Route -- ^ The chosen routes
   , prefStart :: Location -- ^ The start location
   , prefFinish :: Location -- ^ The finish location
@@ -199,9 +193,7 @@ instance FromJSON PreferenceData where
       let stops'' = S.map placeholderLocation stops'
       let excluded'' = S.map placeholderLocation excluded'
       return PreferenceData {
-          prefPrevTravel = travel'
-        , prefTravel = travel'
-        , prefPrevFitness = fitness'
+          prefTravel = travel'
         , prefFitness = fitness'
         , prefDistance = distance'
         , prefTime = time'
@@ -209,9 +201,7 @@ instance FromJSON PreferenceData where
         , prefAccommodation = accommodation'
         , prefStopServices = stopServices'
         , prefDayServices = dayServices'
-        , prefPrevCamino = camino''
         , prefCamino = camino''
-        , prefPrevRoutes = routes''
         , prefRoutes = routes''
         , prefStart = start''
         , prefFinish = finish''
@@ -248,9 +238,7 @@ defaultPreferenceData master = let
     dcp = defaultCaminoPreferences camino'
   in
     PreferenceData {
-        prefPrevTravel = travel'
-      , prefTravel = travel'
-      , prefPrevFitness = fitness'
+        prefTravel = travel'
       , prefFitness = fitness'
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
@@ -258,9 +246,7 @@ defaultPreferenceData master = let
       , prefAccommodation = preferenceAccommodation dtp
       , prefStopServices = preferenceStopServices dtp
       , prefDayServices = preferenceDayServices dtp
-      , prefPrevCamino = camino'
       , prefCamino = camino'
-      , prefPrevRoutes = preferenceRoutes dcp
       , prefRoutes = preferenceRoutes dcp
       , prefStart = preferenceStart dcp
       , prefFinish = preferenceFinish dcp
@@ -331,8 +317,12 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewPrevRoutes :: FieldView CaminoApp
   , resRoutes :: FormResult (S.Set Camino.Camino.Route)
   , viewRoutes :: FieldView CaminoApp
+  , resPrevStart :: FormResult Location 
+  , viewPrevStart :: FieldView CaminoApp
   , resStart :: FormResult Location 
   , viewStart :: FieldView CaminoApp
+  , resPrevFinish :: FormResult Location 
+  , viewPrevFinish :: FieldView CaminoApp
   , resFinish :: FormResult Location 
   , viewFinish :: FieldView CaminoApp
   , resStops :: FormResult (S.Set Location)
@@ -384,7 +374,9 @@ defaultPreferenceFields master prefs = do
     (cRes, cView) <- mreq (parsingHiddenField (pack . caminoId) (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
     (ropRes, ropView) <- mreq (parsingHiddenField (S.map (pack . routeID)) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
     (roRes, roView) <- mreq (parsingHiddenField (S.map (pack . routeID)) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
+    (sapRes, sapView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefStart <$> prefs)
     (saRes, saView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefStart <$> prefs)
+    (fnpRes, fnpView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefFinish <$> prefs)
     (fnRes, fnView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefFinish <$> prefs)
     (spRes, spView) <- mreq (parsingHiddenField (S.map (pack . locationID)) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
     (exRes, exView) <- mreq (parsingHiddenField (S.map (pack . locationID)) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
@@ -417,8 +409,12 @@ defaultPreferenceFields master prefs = do
       , viewPrevRoutes = ropView
       , resRoutes = roRes
       , viewRoutes = roView
+      , resPrevStart = sapRes
+      , viewPrevStart = sapView
       , resStart = saRes
       , viewStart = saView
+      , resPrevFinish = fnpRes
+      , viewPrevFinish = fnpView
       , resFinish = fnRes
       , viewFinish = fnView
       , resStops = spRes
@@ -433,7 +429,9 @@ changed _ _ = False
 
 makePreferenceData :: CaminoApp -> PreferenceDataFields -> FormResult PreferenceData
 makePreferenceData master fields = let
-    changedTravel = (changed (resPrevTravel fields) (resTravel fields)) || (changed (resPrevFitness fields) (resFitness fields))
+    travel' = resTravel fields
+    fitness' = resFitness fields
+    changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness')
     dtp = defaultTravelPreferences <$> resTravel fields <*> resFitness fields
     distance' = if changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if changedTravel then preferenceTime <$> dtp else resTime fields
@@ -449,23 +447,21 @@ makePreferenceData master fields = let
     changedRoutes = changed (S.map routeID <$> resPrevRoutes fields) (S.map routeID <$> routes')
     start' = if changedRoutes then preferenceStart <$> dcp' else resStart fields
     finish' = if changedRoutes then preferenceFinish <$> dcp' else resFinish fields
-    stops' = if changedRoutes then recommendedStops <$> dcp' else resStops fields
-    excluded' = if changedRoutes then preferenceExcluded <$> dcp' else resExcluded fields
+    dcp'' = withStartFinish <$> dcp' <*> start' <*> finish'
+    changedStart = changedRoutes || changed (locationID <$> resPrevStart fields) (locationID <$> start') || changed (locationID <$> resPrevFinish fields) (locationID <$> finish')
+    stops' = if changedStart then recommendedStops <$> dcp'' else resStops fields
+    excluded' = if changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
   in
     PreferenceData
-      <$> resPrevTravel fields
-      <*> resTravel fields
-      <*> resPrevFitness fields
-      <*> resFitness fields
+      <$> travel'
+      <*> fitness'
       <*> distance'
       <*> time'
       <*> stop'
       <*> accommodation'
       <*> stopServices'
       <*> dayServices'
-      <*> (normaliseCamino (caminoAppCaminos master) <$> resPrevCamino fields)
       <*> camino'
-      <*> resPrevRoutes fields
       <*> routes'
       <*> start'
       <*> finish'
@@ -515,7 +511,9 @@ chooseFitnessForm prefs extra = do
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
       ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
@@ -565,7 +563,9 @@ chooseRangeForm prefs extra = do
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
       ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
@@ -636,7 +636,9 @@ chooseServicesForm prefs extra = do
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
       ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
@@ -677,7 +679,9 @@ chooseCaminoForm prefs extra = do
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
       ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
@@ -720,7 +724,9 @@ chooseRoutesForm prefs extra = do
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
       ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
@@ -742,7 +748,9 @@ chooseStartForm prefs extra = do
     render <- getMessageRender
     let camino = prefCamino <$> prefs
     let routes = prefRoutes <$> prefs
-    let cprefs = withRoutes <$> (defaultCaminoPreferences <$> camino) <*> routes
+    let start = prefStart <$> prefs
+    let finish = prefFinish <$> prefs
+    let cprefs = CaminoPreferences <$> camino <*> start <*> finish <*> routes <*> pure S.empty <*> pure S.empty
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
@@ -753,10 +761,8 @@ chooseStartForm prefs extra = do
     let rfinishes = maybe [] suggestedFinishes cprefs
     let startOptions = makeOptions render (pack . locationID) locationName rstarts stops
     let finishOptions = makeOptions render (pack . locationID) locationName rfinishes stops
-    let chosenStart = prefStart <$> prefs
-    let chosenFinish = prefFinish <$> prefs
-    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) chosenStart
-    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) chosenFinish
+    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start
+    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStart = stRes,
@@ -793,6 +799,8 @@ chooseStartForm prefs extra = do
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
     |]
@@ -805,14 +813,17 @@ chooseStopsForm prefs extra = do
     render <- getMessageRender
     let camino = prefCamino <$> prefs
     let routes = prefRoutes <$> prefs
+    let start = prefStart <$> prefs
+    let finish = prefFinish <$> prefs
     let cprefs = withRoutes <$> (defaultCaminoPreferences <$> camino) <*> routes
+    let cprefs' = withStartFinish <$> cprefs <*> start <*> finish
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
-    let possibleStops = reachableLocations <$> cprefs
+    let possibleStops = reachableLocations <$> cprefs'
     let allowedStops = permittedStops <$> prefs <*> possibleStops
     let sortKey l = canonicalise $ locationName l
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
-    let recommended = maybe S.empty recommendedStops cprefs
+    let recommended = maybe S.empty recommendedStops cprefs'
     let (suggested, other) = Data.List.partition (\l -> S.member l recommended) stops
     let mkOptions locs = map (\l -> (pack $ locationID l, locationName l, l)) locs
     let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . locationName) other))
@@ -857,43 +868,9 @@ chooseStopsForm prefs extra = do
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
       ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
     |]
     return (res, widget)
-
-storedIDForm :: CaminoApp -> Maybe Text -> Html -> MForm Handler (FormResult Text, Widget)
-storedIDForm master stored extra = do
-  (idRes, idView) <- mreq hiddenField "" stored
-  let widget = [whamlet|#{extra} ^{fvInput idView}|]
-  return (idRes, widget)
-
-validCaminoID :: CaminoApp -> Camino -> Bool
-validCaminoID master camino = any (\c -> caminoId camino == caminoId c) (caminoAppCaminos master)
-
--- | Render the given form using Bootstrap v5 conventions.
-renderBootstrap5 :: Monad m => FormRender m a
-renderBootstrap5 aform fragment = do
-    (res, views') <- aFormToForm aform
-    let views = views' []
-        has (Just _) = True
-        has Nothing  = False
-        widget = [whamlet|
-            #{fragment}
-            $forall view <- views
-              <div .mb-3 .row :fvRequired view:.required :not $ fvRequired view:.optional :has $ fvErrors view:.has-error>
-                <label .form-label :Blaze.null (fvLabel view):.sr-only for=#{fvId view}>#{fvLabel view}
-                ^{fvInput view}
-                ^{helpWidget view}
-       |]
-    return (res, widget)
-
-
--- | (Internal) Render a help widget for tooltips and errors.
-helpWidget :: FieldView site -> WidgetFor site ()
-helpWidget view = [whamlet|
-    $maybe tt <- fvTooltip view
-      <fiv .form-text>#{tt}
-    $maybe err <- fvErrors view
-      <span .form-text .error-block>#{err}
-|]

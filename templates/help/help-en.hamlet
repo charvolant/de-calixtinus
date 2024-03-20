@@ -406,74 +406,68 @@
        <th scope="col">Description
   <tbody>
     <tr>
-      <td>Walking Time Estimation
+      <td>Walking Type
       <td>
-          The function used to estimate the time spent walking a particular distance, taking hills into account.
-          The two possible values are:
-          <dl>
-            <dt>naismith
-            <dd>Use Naismith's rule
-            <dt>tobler
-            <dd>Use Tobler's rule. Tobler's rule is more sophisticated than Naismith's rule and is used by default.
+          The function used to estimate the time spent walking (or cycling) a particular distance, taking hills into account.
+
+        <table .table .table-striped>
+          <caption>Travel Types
+          <thead>
+            <tr>
+               <th scope="col">Icon
+               <th scope="col">Travel Type
+               <th scope="col">Description
+          <tbody>
+            <tr>
+                <td>^{caminoTravelIcon Walking}
+                <td>_{caminoTravelMsg Walking}
+                <td>Walking the Camino, using a time estimation that includes steep descents. (The default)
+            <tr>
+                <td>^{caminoTravelIcon Walking_Naismith}
+                <td>_{caminoTravelMsg Walking_Naismith}
+                <td>Walking the Camino for powerful walkers.
+                    This option uses Naismith's rule to calculate the time taken to travel a given distance.
+                    Naismith was surveyor who spent most of his time walking and had a very consistent stride.
+                    It assumes that you are fit enough to not slow up when descending a slope.
+            <tr>
+                <td>^{caminoTravelIcon Cycling}
+                <td>_{caminoTravelMsg Cycling}
+                <td>Cycling the Camino.
+                    The functions for this travel mode are not yet written.
     <tr>
        <td>Fitness
        <td>
            The overall fitness of the walker.
-           Both Naismith's and Tobler's rules assume a walker capable of a sustained 5km/hr on flat ground.
+           The general travel rules assume a walker capable of a sustained 5km/hr on flat ground.
            This is often too much for people and the fitness levels take this into account.
            The possible fitness levels are:
-           <table .table .table-striped>
-             <thead>
-               <tr>
-                 <th scope="col">Fitness
-                 <th scope="col">Nominal Speed (km/hr)<sup>1</sup>
-                 <th scope="col">Maximum Time (hrs)<sup>2</sup>
-                 <th scope="col">Climb Time (mins)<sup>3</sup>
-                 <th scope="col">Comments
-             <tbody>
-               <tr>
-                 <td>Super Fit
-                 <td>6.0
-                 <td>24
-                 <td>15
-                 <td>
-               <tr>
-                 <td>Very Fit
-                 <td>5.5
-                 <td>23
-                 <td>20
-                 <td>
-               <tr>
-                 <td>Fit
-                 <td>4.5
-                 <td>17.5
-                 <td>25
-                 <td>
-               <tr>
-                 <td>Normal
-                 <td>4.0
-                 <td>14.5
-                 <td>30
-                 <td>
-               <tr>
-                 <td>Unfit
-                 <td>3.5
-                 <td>11.5
-                 <td>40
-                 <td>This is often the "realistic" option
-               <tr>
-                 <td>Very Unfit
-                 <td>3.0
-                 <td>8.5
-                 <td>50
-                 <td>
-             <tbody>
-               <tr>
-                 <td colspan="5" .fw-lighter><sup>1</sup> Based on average over five hours walking
-               <tr>
-                 <td colspan="5" ..fw-lighter><sup>2</sup> The maximum feasible -- but hardly recommended -- time spent walking
-               <tr>
-                 <td colspan="5" .fw-lighter><sup>3</sup> How fitness is determined. The time it takes to climb 1000 feet over half a mile
+
+          <table .table .table-striped>
+            <caption>Fitness Levels
+            <thead>
+              <tr>
+                 <th scope="col">Fitness Level
+                 <th scope="col">Description
+            <tbody>
+              <tr>
+                  <td>_{caminoFitnessMsg SuperFit}
+                  <td>Very, very fit, world-class athlete level.
+              <tr>
+                  <td>_{caminoFitnessMsg VeryFit}
+                  <td>Very fit, athlete level.
+              <tr>
+                  <td>_{caminoFitnessMsg Fit}
+                  <td>The fitness level of an experienced long-distance walker.
+              <tr>
+                  <td>_{caminoFitnessMsg Normal}
+                  <td>The fitness level of a consistent long-distance walker.
+              <tr>
+                  <td>_{caminoFitnessMsg Unfit}
+                  <td>An average walker who has trained for the Camino.
+                      (The default for most people.)
+             <tr>
+                  <td>_{caminoFitnessMsg VeryUnfit}
+                  <td>An average walker without much training.
     <tr>
       <td>Distance Preferences
       <td>
@@ -492,11 +486,6 @@
       <td>
         The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
     <tr>
-      <td>Accommodation Preferences
-      <td>
-        A table of penance costs for staying at a particular type of accomodation.
-        Any accommodation type not listed here will be rejected.
-    <tr>
       <td>Stop Cost
       <td>
         The penance associated with stopping for the day.
@@ -504,6 +493,11 @@
         things you do at the end of the day.
         A small value will encourage the planner to split things into more, smaller days.
         Conversely, a large value will encourange the planner to choose fewer, longer days.
+    <tr>
+      <td>Accommodation Preferences
+      <td>
+        A table of penance costs for staying at a particular type of accomodation.
+        Any accommodation type not listed here will be rejected.
     <tr>
       <td>Missing Stop Services
       <td>
@@ -523,17 +517,27 @@
         For example, sometime during the day, you would like to pass a pharmacy and a bank, in case you need
         to take care of blisters or get some money out.
     <tr>
+      <td>Route
+      <td>
+        The route variants that you wish to use.
+        The main Camino route is always included, but you may wish to choose variants, such as the
+        Spiritual Variant or the Coastal Route for the Portguese Camino.
+    <tr>
+      <td>Trip Start
+      <td>
+        The start point for the plan.
+        This is usually a well-known start point to begin with but may change if you wish to re-plan
+        along the way.
+    <tr>
+      <td>Trip Finish
+      <td>
+        The end point for the plan.
+    <tr>
       <td>Required Stops
       <td>
         A list of stops where you want the planner to ensure that you finish there at the end of a day.
         For example, you may wish to ensure that you stop at Coímbra at the end of the day, so that you can
         explore the city the next day.
-        You can use required stops to choose alternative routes.
-        If multiple routes are available, the planner will tend to choose the shortest route, which is almost
-        always the main Camino trail.
-        For example, the side-pilgrimage to Fátima is avoided by default.
-        If you include Fátima in the required stops, the planner will route towards Fátima and then back to
-        the main Camino.
     <tr>
       <td>Excluded Stops
       <td>

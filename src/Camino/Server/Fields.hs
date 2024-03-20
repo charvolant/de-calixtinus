@@ -319,7 +319,7 @@ clickSelectionField categories = Field
   $maybe err <- merr
     <div .alert .alert-danger>#{err}
   <input id="#{theId}-value" type="hidden" name=#{name} value="#{chosenKeys}">
-  <div .row .mb-5 .border .border-primary style="min-height: 1.5rem;" id="#{theId}-selected">
+  <div .row .mb-1 .border .border-primary style="min-height: 1.5rem;" id="#{theId}-selected">
     $forall sel <- chosen
       <div .col-3 .col-md-2>
         <a href="#" onclick="remove_#{theId}(#{getIndex sel});">#{getLabel sel}
@@ -391,12 +391,12 @@ extendedSelectionField categories = Field
       in [whamlet|
 $maybe err <- merr
   <div .alert .alert-danger>#{err}
-<select id=#{theId} name=#{name} value=#{chosenKey}>
+<select .form-select id=#{theId} name=#{name} value=#{chosenKey}>
   $forall (category, opts) <- categories
     $if not (null opts)
       <optgroup label=#{category}>
         $forall (key, label, _) <- opts
-          <option value=#{key}>#{label}
+          <option value=#{key} :key == chosenKey:selected>#{label}
 |]
 
     , fieldEnctype = UrlEncoded

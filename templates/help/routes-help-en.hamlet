@@ -1,0 +1,18 @@
+<h2 #route-help>Route Selection
+
+<p>
+  Routes are variants on a traditional Camino route.
+  They allow you to tailor the Camino so that, for example, you can take the Coastal route on the Camino Portuguese
+  or make a side-trip to Fátima.
+
+<p>
+  There is a default route that is always selected.
+  This route is the traditional Camino route.
+
+<p>
+  Other routes can be selected as desired.
+  Well, more or less.
+  Some routes are mutually exclusive.
+  Other routes are variants of variants.
+  If you select these routes, the other required routes or exclusive routes will be greyed-out and set as required.
+  If you unselect the route, the other routes will become available again.

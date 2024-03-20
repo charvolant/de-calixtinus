@@ -31,6 +31,8 @@ ServicesText: Select the cost for stopping at the end of the day and the desired
 ServicesTitle: Select the Day's Travel Preferences
 StartLabel: Start!
 StartLocationLabel: Trip Start
+StartText: Select the start location and finish location for your trip.
+StartTitle: Start and Finish Points
 StopPreferencesLabel: Day's-end Cost
 StopServicePreferencesLabel: Preferred Services at Day's End
 StopsLabel: Locations to stop at

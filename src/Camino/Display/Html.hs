@@ -538,7 +538,7 @@ caminoMapHtml _preferences camino _trip = [ihamlet|
     <div .row>
       <div .col .d-flex .justify-content-center>
         <div #map>
-      <div .col-2>
+      <div .col-2 .col-md-3 .col-sm-4 .col-xs-12>
         <div .card .mt-2 .p-1>
           <div .card-body>
             <table .map-key>

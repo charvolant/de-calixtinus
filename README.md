@@ -48,7 +48,7 @@ You will need to open the camino file and note down the `id` value.
 
 By default, the planner will choose the quickest and easiest route.
 You can use the required stops option to control this.
-For example, if you want to visit Fátima add `-r F10` to the command.
+For example, if you want to visit Fátima add `-s F10` to the command.
 
 ## Sources
 
@@ -101,8 +101,8 @@ There's a bit of a way to go for that.
 
 * A full website implementation
 * Start scoring stages (see the [design notes](#some-design-notes)) for
-  * Services available at the end-point and at accommodation (eg clothes washing facilities)
-  * Services available along the way (eg. an ATM somewhere during the day)
+  * ~~Services available at the end-point and at accommodation (eg clothes washing facilities)~~
+  * ~~Services available along the way (eg. an ATM somewhere during the day)~~
   * Handling the Sunday famine
 * Include points of interest
   * And make allowance for breaks so that people can visit
@@ -182,3 +182,16 @@ brew install icu4c
 ```
 
 See https://hackage.haskell.org/package/text-icu
+
+### Customised Bootstrap
+
+The customised bootstrap is the basic Bootstrap 5.3 with some colour adjustments.
+The background has been made "older-looking" and the blue changed to the
+blue found on the Camino tiles.
+To create the customised boostrap, you will need `scss`, usually installed with `npm`.
+You will also need the [bootstrap source](https://getbootstrap.com/docs/5.3/getting-started/download/) in a separate directory.
+After that, you can run the following in the project directory
+
+```shell
+sass ./scss/custom.scss ./static/css/bootstrap-dc.css
+```

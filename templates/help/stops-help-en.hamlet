@@ -1,0 +1,28 @@
+<h2 #stops-help>Required and Excluded Stops
+
+<p>
+  You can choose to ensure that the planner is required to stop at particular locations along the way.
+  For example, you probably want to ensure that you stop in Porto, rather than breeze through it.
+
+<p>
+  Similarly, you may wish to ensure that you <em>don't</em> stop at particular locations.
+  For example, you may know that the albergue in that location is shut.
+
+<p>
+  In both cases, there are lists of place names.
+  Clicking on a place name will put it into the list at the top of the field.
+  Similarly, clicking on a name in the selected list will remove it.
+  <em>All</em> the locations chosen will be included in the plan as being nightly stops.
+
+<p>
+  <div .aside .col-4 .m-1 .p-1 .float-end>
+    Selecting required stops is not foolproof.
+    If the planner is having trouble creating a plan, it may be because you have a required stop that is
+    unsuitable for some reason.
+
+  The planner tries to make sure that you have sensible options.
+  Only places between your start and finish points are included and only
+  those locations that have suitable accommodation are included as options.
+  The default is that camping by the roadside is considered to be unacceptable
+  and that limits the number of places where you might stop for the night.
+

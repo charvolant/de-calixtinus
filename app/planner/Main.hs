@@ -77,18 +77,26 @@ plan opts = do
     let begin' = vertex camino' (begin opts)
     let end' = vertex camino' (end opts)
     let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholderRoute (splitOn "," (routes opts))
-    let stops' = if stops opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (stops opts))
+    let stops' =  if stops opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (stops opts))
     let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (exclude opts))
-    let caminoPrefs' = normalisePreferences [camino'] $ CaminoPreferences camino' begin' end' routes' stops' excluded'
+    let caminoPrefs' = withRoutes (defaultCaminoPreferences camino') routes'
+    let caminoPrefs'' = normalisePreferences [camino'] $ caminoPrefs' {
+       preferenceStart = begin',
+       preferenceFinish = end'
+    }
+    let caminoPrefs''' = normalisePreferences [camino'] $ caminoPrefs'' {
+       preferenceStops = if S.null stops' then recommendedStops caminoPrefs'' else stops',
+       preferenceExcluded = excluded'
+    }
     let router = renderCaminoRoute config' ["en", ""]
     let messages = renderCaminoMsg config'
-    let solution = planCamino preferences' caminoPrefs'
+    let solution = planCamino preferences' caminoPrefs'''
     let solution' = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just solution
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences' caminoPrefs' solution'
+    let kml = createCaminoDoc config' preferences' caminoPrefs''' solution'
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True }) kml)
-    let html = caminoHtml config' preferences' caminoPrefs' solution'
+    let html = caminoHtml config' preferences' caminoPrefs''' solution'
     let indexFile = output' </> "index.html"
     B.writeFile indexFile (renderHtml (html messages router))
 

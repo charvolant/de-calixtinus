@@ -39,6 +39,7 @@ module Camino.Preferences (
   , withoutMaximum
   , withoutMinimum
   , withRoutes
+  , withStartFinish
 ) where
 
 import Data.Aeson
@@ -48,7 +49,7 @@ import Camino.Camino
 import Camino.Util
 import Camino.Walking
 import qualified Data.Map as M (Map, (!), fromList)
-import qualified Data.Set as S (Set, difference, empty, fromList, insert, intersection, map, member, singleton, union, unions)
+import qualified Data.Set as S (Set, delete, difference, empty, fromList, insert, intersection, map, member, singleton, union, unions)
 import Graph.Graph (successors, predecessors)
 -- import Debug.Trace
 
@@ -279,6 +280,21 @@ withRoutes preferences routes = let
   in
     CaminoPreferences camino' start' finish' routes' stops' excluded'
 
+
+-- | Update with a new start and finish and, if necessary, stops etc normalised
+withStartFinish :: CaminoPreferences -> Location -> Location -> CaminoPreferences
+withStartFinish preferences start finish = let
+    camino' = preferenceCamino preferences
+    routes' = preferenceRoutes preferences
+    start' = normaliseLocation camino' start
+    finish' = normaliseLocation camino' finish
+    prefs' = preferences { preferenceStart = start', preferenceFinish = finish' }
+    allowed = caminoRouteLocations (preferenceCamino preferences) routes'
+    stops' = preferenceStops prefs' `S.intersection` allowed
+    excluded' = preferenceExcluded prefs' `S.intersection` allowed
+  in
+    CaminoPreferences camino' start' finish' routes' stops' excluded'
+
 -- | The list of routes selected, in camino order
 selectedRoutes :: CaminoPreferences -- ^ The preference set
   -> [Route] -- ^ The selected routes, including the default route in route order
@@ -310,7 +326,7 @@ recommendedStops preferences =
     routes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
     baseStops = S.unions (S.map routeStops routes)
   in
-    baseStops `S.intersection` reachableLocations preferences
+    S.delete (preferenceStart preferences) $ S.delete (preferenceFinish preferences) $ baseStops `S.intersection` reachableLocations preferences
 
 -- | Create a suggested range for distances, based on the travel mode and fitness level.
 --   Derived from estimated time limits plus some sanity.

@@ -38,6 +38,7 @@
 <p>
   Generally, once the distance/time strays outside the upper or lower bounds, the planner will start adding
   penalties to the day's penance score.
+  A minor penalty is added for being away from the target.
   These penalties will tend to steer the planner away from over-long (or short) days.
 
 <h3 #distance-help>Distance

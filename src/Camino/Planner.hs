@@ -245,11 +245,13 @@ isAccomodationFree preferences day = all (\l -> let (acc, _, _) = accommodation'
 missingServicePenance :: M.Map Service Penance -> S.Set Service -> Penance
 missingServicePenance prefs services = mconcat $ map (\s -> M.findWithDefault mempty s prefs) $ S.toList services
 
-adjustment :: PreferenceRange Float -> Float -> Float -> Penance
-adjustment range scale value
+boundsAdjustement = 2.0
+
+adjustment :: PreferenceRange Float -> Float -> Float -> Float -> Penance
+adjustment range bscale rscale value
   | isOutOfRange range value = Reject
-  | isOutOfBounds range value = Penance (scale * rangeDistance range value)
-  | otherwise = mempty
+  | isOutOfBounds range value = Penance (rscale * rangeDistance range value) <> Penance boundsAdjustement
+  | otherwise = if bd < 0.25 then mempty else Penance (bscale * bd) where bd = boundsDistance range value -- Allow "close enough" to the target
 
 -- | Calculate the total penance implicit in a sequence of legs
 penance :: TravelPreferences -- ^ The travel preferences
@@ -258,15 +260,15 @@ penance :: TravelPreferences -- ^ The travel preferences
   -> Metrics -- ^ The penance value
 penance preferences camino day =
   let
-    (normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, nonWalking) = travelMetrics preferences day
+    (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent, nonWalking) = travelMetrics preferences day
     -- If there is no accomodation within this leg, then accept any distance. If not walking or the last day, then skip lower bounds
     atEnd = isLastDay (preferenceFinish camino) day
     accomodationFree = isAccomodationFree preferences day
     rangeFilter = (if accomodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if nonWalking then withoutLower else id)
     timePreferences = rangeFilter $ preferenceTime preferences
     distancePreferences = rangeFilter $ preferencePerceivedDistance preferences
-    timeAdjust = maybe Reject (adjustment timePreferences normalSpeed) time
-    distanceAdjust = maybe Reject (adjustment distancePreferences normalSpeed) perceived
+    timeAdjust = maybe Reject (adjustment timePreferences 0.0 normalSpeed) time
+    distanceAdjust = maybe Reject (adjustment distancePreferences boundsAdjustement normalSpeed) perceived
     stopMissing = missingStopServices preferences (preferenceCamino camino) day
     (accom, stopMissing', accommodationAdjust) = accommodation preferences (preferenceCamino camino) day stopMissing atEnd -- preferred accommodation penance
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'

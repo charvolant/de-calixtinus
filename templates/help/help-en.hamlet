@@ -950,7 +950,8 @@
     The perceived distance forms the basis of the penance score.
   <li>
     A user can express preferences in terms of a distance range and time range.
-    Once the distance or time is outside the normal lower and upper bounds of the range, additional penance is
+    A small amount of additional penance is added for being away from the target distance.
+    Once the distance or time is outside the normal lower and upper bounds of the range, more penance is
     calculated to indicate either a heartbreakingly long day or a pathetically short walk.
     There are also hard maximum and minimum limits, which will case the day to be rejected as a possible stage.
   <li>

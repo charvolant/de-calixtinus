@@ -16,6 +16,7 @@ module Camino.Preferences (
   , TravelPreferences(..)
 
   , allowedLocations
+  , boundsDistance
   , defaultCaminoPreferences
   , defaultTravelPreferences
   , isInsideMaximum
@@ -139,6 +140,15 @@ isOutOfBounds :: (Ord a) => PreferenceRange a -- ^ The preference range
   -> Bool -- ^ True if out of bounds
 isOutOfBounds (PreferenceRange _dervived _target lower upper _minimum _maximum) value =
   value < lower || value > upper
+
+
+-- | Get the normalised distance to the outer bounds of a value
+-- 
+-- The scale of the range is from the target to the lower or upper bounds, with 0 being at the target and 1 being at the target
+boundsDistance :: (Ord a, Fractional a) => PreferenceRange a -> a -> a
+boundsDistance (PreferenceRange _derived targ lower upper _mini _maxi) value
+  | value < targ = ((targ - value) / (targ - lower))
+  | otherwise = ((value - targ) / (upper - targ))
 
 -- | Get the normalised distance to the outer range of a value
 -- 
@@ -335,10 +345,10 @@ recommendedStops preferences =
 suggestedDistanceRange :: Travel -- ^ The method of travel
   -> Fitness -- ^ The fitness level
   -> PreferenceRange Float -- ^ The suggested distance ranges
-suggestedDistanceRange Walking SuperFit = PreferenceRange Nothing 30.0 26.0 36.0 (Just 8.0) (Just 44.0)
+suggestedDistanceRange Walking SuperFit = PreferenceRange Nothing 30.0 26.0 34.0 (Just 8.0) (Just 44.0)
 suggestedDistanceRange Walking VeryFit = PreferenceRange Nothing 28.0 24.0 32.0 (Just 8.0) (Just 40.0)
-suggestedDistanceRange Walking Fit = PreferenceRange Nothing 24.0 20.0 30.0 (Just 8.0) (Just 36.0)
-suggestedDistanceRange Walking Normal = PreferenceRange Nothing 20.0 18.0 26.0 (Just 8.0) (Just 34.0)
+suggestedDistanceRange Walking Fit = PreferenceRange Nothing 24.0 20.0 28.0 (Just 8.0) (Just 36.0)
+suggestedDistanceRange Walking Normal = PreferenceRange Nothing 20.0 18.0 24.0 (Just 8.0) (Just 34.0)
 suggestedDistanceRange Walking Unfit = PreferenceRange Nothing 20.0 16.0 24.0 (Just 8.0) (Just 28.0)
 suggestedDistanceRange Walking VeryUnfit = PreferenceRange Nothing 12.0 6.0 16.0 (Just 3.0) (Just 18.0)
 suggestedDistanceRange Walking_Naismith f = suggestedDistanceRange Walking f

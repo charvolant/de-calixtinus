@@ -77,6 +77,7 @@ library
     , warp
     , xml-conduit
     , xml-hamlet
+    , xml-types
     , yaml
     , yesod
     , yesod-core
@@ -118,6 +119,7 @@ executable camino-map-exe
     , warp
     , xml-conduit
     , xml-hamlet
+    , xml-types
     , yaml
     , yesod
     , yesod-core
@@ -159,6 +161,7 @@ executable camino-planner-exe
     , warp
     , xml-conduit
     , xml-hamlet
+    , xml-types
     , yaml
     , yesod
     , yesod-core
@@ -200,6 +203,7 @@ executable camino-server-exe
     , warp
     , xml-conduit
     , xml-hamlet
+    , xml-types
     , yaml
     , yesod
     , yesod-core
@@ -241,6 +245,7 @@ executable generate-static-exe
     , warp
     , xml-conduit
     , xml-hamlet
+    , xml-types
     , yaml
     , yesod
     , yesod-core
@@ -293,6 +298,7 @@ test-suite camino-planner-test
     , warp
     , xml-conduit
     , xml-hamlet
+    , xml-types
     , yaml
     , yesod
     , yesod-core

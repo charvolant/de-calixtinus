@@ -52,6 +52,7 @@ data CaminoMsg =
   | CyclePathTitle
   | DayServicesPenanceMsg Penance
   | DayServicesPreferencesLabel
+  | DaysMsg Int
   | DaySummaryMsg Day
   | DescentMsg Float
   | DinnerTitle
@@ -173,6 +174,9 @@ formatMaybeDistance (Just d) = formatDistance d
 formatTime :: (Real a) => a -> Html
 formatTime t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs</span>|]
 
+formatDays :: Int -> Html
+formatDays d = [shamlet|<span .days>#{format int d}#{thinSpace}days</span>#|]
+
 formatMaybeTime :: (Real a) => Maybe a -> Html
 formatMaybeTime Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}</span>|]
 formatMaybeTime (Just t) = formatTime t
@@ -204,6 +208,7 @@ renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
+renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
 renderCaminoMsgDefault _ (DaySummaryMsg day) = [shamlet|
   #{locationName $ start day} to #{locationName $ finish day}
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})

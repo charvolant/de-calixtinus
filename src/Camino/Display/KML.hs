@@ -18,25 +18,30 @@ Note that XML-Hamlet remvoes path interpolation, so routes are not a thing here.
 -}
 
 module Camino.Display.KML (
-  createCaminoDoc
+    createCaminoDoc
+  , useCDATA
 ) where
 
 import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
+import Camino.Display.Css
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Data.Maybe (fromJust)
-import Data.Text (Text, pack, toLower)
+import Data.Text (Text, isPrefixOf, pack, toLower)
 import Data.Text.Lazy (toStrict)
 import Data.Colour (Colour)
 import Data.Colour.SRGB (toSRGB24, RGB(..))
 import Data.Colour.Names (white)
 import qualified Data.Set as S
 import qualified Data.Map as M
-import Data.List (find)
+import Data.List (find, singleton)
+import Data.XML.Types (Content(..))
+import Text.Cassius
+import Text.Hamlet
 import Text.Hamlet.XML
 import Text.XML
 import Text.Blaze.Html.Renderer.Text
@@ -56,39 +61,53 @@ toARGB alpha colour = pack $ (showHex2 a' . showHex2 b' . showHex2 g' . showHex2
     a' = floor (alpha * 255)
     RGB r' g' b' = toSRGB24 colour
 
-
-kmlStyle :: String -> Double -> Double -> Colour Double -> Maybe Text -> [Node]
-kmlStyle identifier width alpha color icon = [xml|
-    <Style id="#{pack identifier}">
+kmlRouteStyle :: Text -> Double -> Double -> Colour Double -> [Node]
+kmlRouteStyle identifier width alpha color = [xml|
+    <Style id="#{identifier}">
       <LineStyle>
         <color>#{toARGB alpha color}
         <width>#{pack $ show width}
       <PolyStyle>
         <color>#{toARGB alpha color}
-      $maybe ic <- icon
-        <IconStyle>
-          <Icon>#{ic}
   |]
+
+
+kmlLocationStyle :: Config -> Text -> Text -> [Node]
+kmlLocationStyle config identifier icon = [xml|
+    <Style id="#{identifier}">
+      <BalloonStyle>
+        <text>
+          ^{layout}
+      <IconStyle>
+        <Icon>#{icon}
+  |]
+  where
+    router = renderCaminoRoute config [""]
+    css = getAsset "camino-css" config
+    layout = singleton $ NodeContent $ toStrict $ renderHtml $ [hamlet|
+          <html>
+            <head>
+              $maybe c <- css
+                <link rel="stylesheet" href="#{assetPath c}">
+            <body>
+              \$[description]    
+    |] router
+
+locationStyles :: Config -> LocationType -> Text -> [Node]
+locationStyles config locType iconBase = let
+    name = toLower $ pack $ show locType
+  in
+    kmlLocationStyle config (name <> "-stop") (iconBase <> "/location-" <> name <> "-stop.png") ++
+    kmlLocationStyle config (name <> "-used") (iconBase <> "/location-" <> name <> "-used.png") ++
+    kmlLocationStyle config (name <> "-unused") (iconBase <> "/location-" <> name <> "-unused.png")
 
 caminoStyles :: Config -> CaminoPreferences -> [Node]
 caminoStyles config camino =
-    kmlStyle "stopUsed" 1 1 white (Just (iconBase <> "/location-stop.png")) ++
-    kmlStyle "villageUsed" 1 1 white (Just (iconBase <> "/location-village-used.png")) ++
-    kmlStyle "villageUnused" 1 0.5 white (Just (iconBase <> "/location-village-unused.png")) ++
-    kmlStyle "townUsed" 1 1 white (Just (iconBase <> "/location-town-used.png")) ++
-    kmlStyle "townUnused" 1 0.5 white (Just (iconBase <> "/location-town-unused.png")) ++
-    kmlStyle "cityUsed" 1 1 white (Just (iconBase <> "/location-city-used.png")) ++
-    kmlStyle "cityUnused" 1 0.5 white (Just (iconBase <> "/location-city-unused.png")) ++
-    kmlStyle "bridgeUsed" 1 1 white (Just (iconBase <> "/location-bridge-used.png")) ++
-    kmlStyle "bridgeUnused" 1 0.5 white (Just (iconBase <> "/location-bridge-unused.png")) ++
-    kmlStyle "intersectionUsed" 1 1 white (Just (iconBase <> "/location-intersection-used.png")) ++
-    kmlStyle "intersectionUnused" 1 0.5 white (Just (iconBase <> "/location-intersection-unused.png")) ++
-    kmlStyle "poiUsed" 1 1 white (Just (iconBase <> "/location-poi-used.png")) ++
-    kmlStyle "poiUnused" 1 0.5 white (Just (iconBase <> "/location-poi-unused.png")) ++
-    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Used") 8 1 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino') ++
-    foldr (\r -> \k -> k ++ kmlStyle (routeID r ++ "Unused") 4 0.5 (paletteColour $ routePalette r) Nothing) [] (caminoRoutes camino') ++
-    kmlStyle "defaultUsed" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino') Nothing ++
-    kmlStyle "defaultUnused" 4 0.5 (paletteColour $ routePalette $ caminoDefaultRoute camino') Nothing
+    foldr (\t -> \k -> k ++ locationStyles config t iconBase) [] locationTypeEnumeration ++
+    foldr (\r -> \k -> k ++ kmlRouteStyle (pack (routeID r <> "-used")) 8 1 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
+    foldr (\r -> \k -> k ++ kmlRouteStyle (pack (routeID r <> "-unused")) 4 0.5 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
+    kmlRouteStyle "default-used" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino') ++
+    kmlRouteStyle "default-unused" 4 0.5 (paletteColour $ routePalette $ caminoDefaultRoute camino')
   where
     camino' = preferenceCamino camino
     iconBase = assetPath $ fromJust $ getAsset "icons" config
@@ -115,25 +134,46 @@ lineKml _ _ = []
 
 caminoLocationStyle :: CaminoPreferences -> S.Set Location -> S.Set Location -> Location -> Text
 caminoLocationStyle _camino stops waypoints location
-  | S.member location stops = "#stopUsed"
-  | S.member location waypoints = "#" <> (toLower $ pack $ show $ locationType location) <> "Used"
-  | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "Unused"
-  
-caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationKml config preferences camino trip stops waypoints location = [xml|
-    <Placemark id="#{pack $ locationID location}">
-      <name>#{locationName location}
-      <description>
-        #{toStrict $ renderHtml $ (locationSummary preferences camino location) message route}
-        $maybe d <- day
-          #{toStrict $ renderHtml $ (daySummary preferences camino trip d) message route}
-      <styleUrl>#{caminoLocationStyle camino stops waypoints location}
-      ^{pointKml $ locationPosition location}
-  |]
+  | S.member location stops = "#" <> (toLower $ pack $ show $ locationType location) <> "-stop"
+  | S.member location waypoints = "#" <> (toLower $ pack $ show $ locationType location) <> "-used"
+  | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "-unused"
+
+
+caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
+  <div>
+    <h4>#{locationName location}
+      $maybe href <- locationHref location
+        <a style="float: right;" href="#{href}">
+          <span .ca-information title="_{LinkOut (locationName location)}">
+    $maybe d <- locationDescription location
+      <div>#{d}
+    <div>
+      <div style="display: inline-block;" .services>
+        $forall service <- locationServices location
+          ^{caminoServiceIcon service}
+      <div style="display: inline-block; margin-left: 2em;" .accomodation-types>
+          $forall accomodation <- locationAccommodationTypes location
+            ^{caminoAccommodationTypeIcon accomodation}
+    $maybe d <- day
+      <div style="margin-top: 1ex;">
+        ^{daySummary preferences camino trip d}
+|] message route)
   where
     message = renderCaminoMsg config
     route = renderCaminoRoute config ["en", ""]
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
+    css = getAssets Css config
+
+caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml config preferences camino trip stops waypoints location = [xml|
+    <Placemark id="#{pack $ locationID location}">
+      <name>#{locationName location}
+      <description>^{caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints location}
+      <styleUrl>#{caminoLocationStyle camino stops waypoints location}
+      ^{pointKml $ locationPosition location}
+  |]
+
 
 caminoLegStyle :: CaminoPreferences -> S.Set Location -> S.Set Location -> Leg -> Text
 caminoLegStyle camino _stops waypoints leg =
@@ -141,7 +181,7 @@ caminoLegStyle camino _stops waypoints leg =
     camino' = preferenceCamino camino
     from' = legFrom leg
     to' = legTo leg
-    used = if (S.member from' waypoints) && (S.member to' waypoints) then "Used" else "Unused"
+    used = if (S.member from' waypoints) && (S.member to' waypoints) then "-used" else "-unused"
     route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino')
   in
     pack $ "#" ++ maybe "default" routeID route ++ used
@@ -154,6 +194,13 @@ caminoLegKml camino stops waypoints leg = [xml|
       ^{lineKml (locationPosition $ legFrom leg) (locationPosition $ legTo leg)}
   |]
 
+-- | Use CDATA to rander some text.
+--   Used to ensure the inner HTML in the description element is encased in CDATA as KML requires
+useCDATA :: Content -> Bool
+useCDATA (ContentEntity _) = False
+useCDATA (ContentText v) = isPrefixOf "<html>" v || isPrefixOf "<div>" v
+
+
 -- Create a KML document of a camino
 createCaminoDoc :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> Document
 createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing []) kml []
@@ -162,12 +209,13 @@ createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing [
     stops = maybe S.empty (S.fromList . tripStops) trip
     waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
     ns = M.fromList [ ("xmlns", "http://www.opengis.net/kml/2.2"), ("xmlns:gx", "http://www.google.com/kml/ext/2.2") ]
+    divider = " - "
     kml = Element "kml" ns
       [xml|
         <Document>
           $maybe t <- trip
-            <name>#{locationName $ start t} to #{locationName $ finish t}
-           ^{caminoStyles config camino}
+            <name>#{locationName $ start t}#{divider}#{locationName $ finish t}
+          ^{caminoStyles config camino}
           $forall location <- caminoLocationList camino'
             ^{caminoLocationKml config preferences camino trip stops waypoints location}
           $forall leg <- caminoLegs camino'

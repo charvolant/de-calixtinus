@@ -57,10 +57,12 @@ penanceSummary _preferences _camino metrics = [ihamlet|
        <a .dropdown-item>_{MiscPenanceMsg (metricsMisc metrics)}
    |]
     
-metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-metricsSummary _preferences _camino metrics = [ihamlet|
+metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
+metricsSummary _preferences _camino metrics days = [ihamlet|
     _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
     _{TimeMsg (metricsTime metrics)}
+    $maybe d <- days
+      (_{DaysMsg d}) #
     _{AscentMsg (metricsAscent metrics)}
     _{DescentMsg (metricsDescent metrics)}
     _{PenanceMsg (metricsPenance metrics)}
@@ -497,15 +499,13 @@ caminoTripHtml :: TravelPreferences -> CaminoPreferences -> Trip -> HtmlUrlI18n 
 caminoTripHtml preferences camino trip = [ihamlet|
   <div .container-fluid>
     <div .row .trip-summary>
-      <div .col-11>
+      <div .col>
         <p>
           #{locationName $ start trip}
           $forall l <- map finish $ path trip
             \  - #{locationName l}
         <p>
-          ^{metricsSummary preferences camino $ score trip}
-      <div .col-1>
-        <a .btn .btn-info href="@{KMLRoute}">KML
+          ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}
     $forall day <- path trip
       <div .card .day .p-1>
         <h4>
@@ -516,7 +516,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
           ^{penanceSummary preferences camino $ score day}
         <div .card-body>
          <p>
-            ^{metricsSummary preferences camino $ score day}
+            ^{metricsSummary preferences camino (score day) Nothing}
          <ul>
             <li>
               <div .location-summary>

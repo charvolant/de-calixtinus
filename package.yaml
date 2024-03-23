@@ -50,6 +50,7 @@ dependencies:
   - template-haskell
   - file-embed
   - warp
+  - xml-types
 
 ghc-options:
   - -Wall

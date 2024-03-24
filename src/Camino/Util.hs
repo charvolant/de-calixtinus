@@ -16,8 +16,10 @@ module Camino.Util (
   , listUnions
   , partition
   , selectFromList
+  , toFileName
 ) where
 
+import Data.Char (isLetter)
 import qualified Data.Set as S
 import qualified Data.Text as T
 import Data.Text.ICU.Char (Bool_(..), property)
@@ -87,3 +89,7 @@ categorise' _ = "..."
 -- | Divide text entries into alhpabetic groups
 categorise :: T.Text -> T.Text 
 categorise v = categorise' $ T.head $ canonicalise $ T.toUpper $ T.take 1 v
+
+-- | Convert a piece of text into something that will pass muster as a file name
+toFileName :: T.Text -> T.Text
+toFileName v = T.filter isLetter $ canonicalise v

@@ -1,3 +1,5 @@
 / HomeR GET
 /preferences PreferencesR GET POST
+/plan PlanR POST
+/planKml PlanKmlR POST
 /help HelpR GET

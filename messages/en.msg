@@ -21,6 +21,10 @@ InvalidCamino: Invalid camino
 InvalidStep: Invalid preferences step
 MoreInformation: More Information
 NextLabel: Next
+PlanKmlLabel: Plan (KML)
+PlanKmlTitle: Generate a plan as a KML file suitable for Google Earth
+PlanLabel: Plan
+PlanTitle: Generate a plan and display it
 RangeTitle: Distance and Time Preferences
 RangeText: Select the ranges that you will accept for both distance travelled over a day (in km) and time takens (in hours). The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RequiredStopsLabel: Required Stops
@@ -32,6 +36,8 @@ SelectFitness: Select a fitness level
 SelectTravel: Select a travel type
 ServicesText: Select the cost for stopping at the end of the day and the desired accomodation and services at the end of the day and throughout the day. All preferences are measured in kilometres of walking and represent the amount you would walk extra to avoid a type of accomodation or get a service.
 ServicesTitle: Select the Day's Travel Preferences
+ShowPreferencesText: If you are happy with these preferences, you can generate a plan. Otherwise, use the Back button to change your choices.
+ShowPreferencesTitle: Review Preferences
 StartLabel: Start!
 StartLocationLabel: Trip Start
 StartText: Select the start location and finish location for your trip.

@@ -21,6 +21,7 @@ module Camino.Server.Forms (
     PreferenceData(..)
 
   , caminoPreferencesFrom
+  , confirmPreferencesForm
   , chooseCaminoForm
   , chooseFitnessForm
   , chooseRangeForm
@@ -872,5 +873,37 @@ chooseStopsForm prefs extra = do
       ^{fvInput (viewStart fields)}
       ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
+    |]
+    return (res, widget)
+    
+
+-- | Form to ensure preferences have been confirmed
+confirmPreferencesForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+confirmPreferencesForm prefs extra = do
+    master <- getYesod
+    fields <- defaultPreferenceFields master prefs
+    let res = makePreferenceData master fields
+    let widget = [whamlet|
+      #{extra}
+      ^{fvInput (viewPrevTravel fields)}
+      ^{fvInput (viewTravel fields)}
+      ^{fvInput (viewPrevFitness fields)}
+      ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewDistance fields)}
+      ^{fvInput (viewTime fields)}
+      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewAccommodation fields)}
+      ^{fvInput (viewStopServices fields)}
+      ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPrevCamino fields)}
+      ^{fvInput (viewCamino fields)}
+      ^{fvInput (viewPrevRoutes fields)}
+      ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
+      ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
+      ^{fvInput (viewFinish fields)}
+      ^{fvInput (viewStops fields)}
+      ^{fvInput (viewExcluded fields)}
     |]
     return (res, widget)

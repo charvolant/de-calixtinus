@@ -418,8 +418,8 @@ preferenceRangeHtml range = [ihamlet|
       <p .text-body-tertiary .smaller>#{d}
   |]
   
-preferencesHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-preferencesHtml preferences camino _trip = [ihamlet|
+preferencesHtml :: Bool -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+preferencesHtml link preferences camino _trip = [ihamlet|
   <div .container-fluid>
     <div .row>
       <div .col-4>_{TravelLabel}
@@ -459,35 +459,50 @@ preferencesHtml preferences camino _trip = [ihamlet|
         <div .col>_{PenanceFormatted (findDs preferences sk)}
     <div .row>
       <div .col-4>_{RouteLabel}
-      <div .col-4>
-        <ul .list-group .list-group-flush>
+      <div .col>
+        <ul .bar-separated-list>
           $forall r <- selectedRoutes camino
-            <li .list-group-item>
-              <a href="##{routeID r}" data-toggle="tab" onclick="showRouteDescription('#{routeID r}')">#{routeName r}
+            <li>
+              $if link
+                <a href="##{routeID r}" data-toggle="tab" onclick="showRouteDescription('#{routeID r}')">#{routeName r}
+              $else
+                #{routeName r}
     <div .row>
       <div .col-4>_{TripStartLabel}
-      <div .col-4>
+      <div .col>
         $with start <- preferenceStart camino
-          <a href="##{locationID start}" data-toggle="tab" onclick="showLocationDescription('#{locationID start}')">#{locationName start}
+          $if link
+            <a href="##{locationID start}" data-toggle="tab" onclick="showLocationDescription('#{locationID start}')">#{locationName start}
+          $else
+            #{locationName start}
     <div .row>
       <div .col-4>_{TripFinishLabel}
-      <div .col-4>
+      <div .col>
         $with finish <- preferenceFinish camino
-          <a href="##{locationID finish}" data-toggle="tab" onclick="showLocationDescription('#{locationID finish}')">#{locationName finish}
+          $if link
+            <a href="##{locationID finish}" data-toggle="tab" onclick="showLocationDescription('#{locationID finish}')">#{locationName finish}
+          $else
+            #{locationName finish}
     <div .row>
       <div .col-4>_{RequiredStopsLabel}
-      <div .col-4>
-        <ul>
+      <div .col>
+        <ul .bar-separated-list>
           $forall l <- preferenceStops camino
-            <li .list-group .list-group-flush>
-              <a .list-group-item href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+            <li>
+              $if link
+                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+              $else
+                #{locationName l}
     <div .row>
       <div .col-4>_{ExcludedStopsLabel}
-      <div .col-4>
-        <ul .list-group .list-group-flush>
+      <div .col>
+        <ul .bar-separated-list>
           $forall l <- preferenceExcluded camino
             <li>
-              <a .list-group-item href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+              $if link
+                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+              $else
+                #{locationName l}
   |]
   where
     accommodationTypes = accommodationTypeEnumeration
@@ -855,7 +870,7 @@ caminoHtmlBase config preferences camino trip = let
             <div .tab-pane role="tabpanel" id="locations-tab">
               ^{caminoLocationsHtml preferences camino trip}
             <div .tab-pane role="tabpanel" id="preferences-tab">
-              ^{preferencesHtml preferences camino trip}
+              ^{preferencesHtml True preferences camino trip}
             <div .tab-pane role="tabpanel" id="about-tab">
               ^{aboutHtml preferences camino trip}
             <div .tab-pane role="tabpanel" id="key-tab">

@@ -100,3 +100,15 @@ a
   font-size: small
 .map-key-icon
   width: 16px
+.bar-separated-list
+  list-style-type: none
+  padding: 0
+  margin: 0
+.bar-separated-list li
+  display: inline
+  padding-left: 1ex
+  padding-right: 1ex
+.bar-separated-list li:first-child
+  padding-left: 0
+.bar-separated-list li:not(:first-child)
+  border-left: thin solid gray

@@ -1,0 +1,20 @@
+<div .container-fluid>
+  <div .row .m-5>
+    <div .col>
+      <p>
+        _{MsgShowPreferencesText}
+  <div .row .m-5>
+    <div .col>
+      ^{(preferencesHtml False preferences camino Nothing) messages router}
+  <div .row .justify-content-center>
+    <div .col-10>
+      <form .container-fluid method=post enctype="#{enctype}">
+        ^{widget}
+        <input type=hidden name="_step" value="ShowPreferencesStep">
+        <div .row .justify-content-between>
+          <div .col-auto .me-auto>
+            <button type="submit" name="_next" formaction="@{PreferencesR}" value="StopsStep" .btn .btn-secondary>_{MsgBackLabel}
+          <div .col-auto>
+            <button type="submit" name="_generate" formaction="@{PlanR}" .btn .btn-primary title="_{MsgPlanTitle}">_{MsgPlanLabel}
+          <div .col-auto>
+            <button type="submit" name="_generate" formaction="@{PlanKmlR}" .btn .btn-primary title="_{MsgPlanKmlTitle}">_{MsgPlanKmlLabel}

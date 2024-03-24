@@ -30,6 +30,7 @@ import Camino.Preferences
 import Camino.Util
 import Camino.Display.Html
 import Camino.Display.I18n
+import Camino.Display.KML
 import Camino.Display.Routes
 import Camino.Server.Fields
 import Camino.Server.Forms
@@ -51,6 +52,7 @@ import Text.Julius (RawJS(..))
 import Text.Blaze (ToMarkup (toMarkup))
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Text.Read (readMaybe)
+import Text.XML
 import Yesod
 import Yesod.Form.Functions
 import Debug.Trace
@@ -67,7 +69,7 @@ data PreferenceStep =
   | RoutesStep
   | StartStep
   | StopsStep
-  | ShowStep
+  | ShowPreferencesStep
   deriving (Eq, Ord, Enum, Bounded, Show, Read)
 
 homeP :: Handler Html
@@ -88,7 +90,7 @@ getHelpR = do
     toWidget ((helpWidget langs) messages router)
 
 -- | Help for the languages that we have
-helpWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute    
+helpWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpWidget [] = helpWidget ["en"]
 helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
 helpWidget (_:other) = helpWidget other
@@ -96,13 +98,40 @@ helpWidget (_:other) = helpWidget other
 getHomeR :: Handler Html
 getHomeR = homeP
 
+postPlanR :: Handler Html
+postPlanR = do
+  ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
+  case result of
+      FormSuccess prefs -> do
+         encodeToSession "preference-data" prefs
+         planPage prefs
+      FormFailure errs -> do
+        setMessage [shamlet|
+          $forall err <- errs
+            <div .text-danger>#{err}
+        |]
+        stepPage ShowPreferencesStep Nothing widget enctype
+      _ ->
+        getHomeR
+
+postPlanKmlR :: Handler TypedContent
+postPlanKmlR = do
+  ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
+  case result of
+      FormSuccess prefs -> do
+         encodeToSession "preference-data" prefs
+         planKml prefs
+      _ ->
+        invalidArgs ["Bad preferences data"]
+
+
 getPreferencesR :: Handler Html
 getPreferencesR = do
     master <- getYesod
     prefs <- decodeFromSession "preference-data"
     let prefs' = Just $ maybe (defaultPreferenceData master) id prefs
     ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm prefs'
-    stepPage FitnessStep widget enctype
+    stepPage FitnessStep Nothing widget enctype
 
 postPreferencesR :: Handler Html
 postPreferencesR = do
@@ -118,34 +147,19 @@ postPreferencesR = do
     Just step'' ->
       nextStep step'' next'
 
-nextStep :: PreferenceStep -> PreferenceStep -> Handler Html
-nextStep StopsStep ShowStep = do
-      ((result, widget), enctype) <- runFormPost $ (stepForm StopsStep) Nothing
-      case result of
-          FormSuccess prefs -> do
-             encodeToSession "preference-data" prefs
-             planPage prefs
-          FormFailure errs -> do
-            setMessage [shamlet|
-              $forall err <- errs
-                <div .text-danger>#{err}
-            |]
-            stepPage StopsStep widget enctype
-          _ ->
-            getHomeR
 nextStep step next = do
       ((result, widget), enctype) <- runFormPost $ (stepForm step) Nothing
       case result of
           FormSuccess prefs -> do
              encodeToSession "preference-data" prefs
-             (widget', enctype') <- generateFormPost $ (stepForm next) (Just $ prefs)
-             stepPage next widget' enctype'
+             (widget', enctype') <- generateFormPost $ (stepForm next) (Just prefs)
+             stepPage next (Just prefs) widget' enctype'
           FormFailure errs -> do
             setMessage [shamlet|
               $forall err <- errs
                 <div .text-danger>#{err}
             |]
-            stepPage step widget enctype
+            stepPage step Nothing widget enctype
           _ ->
             getHomeR
 
@@ -157,48 +171,36 @@ stepForm CaminoStep prefs = chooseCaminoForm prefs
 stepForm RoutesStep prefs = chooseRoutesForm prefs
 stepForm StartStep prefs = chooseStartForm prefs
 stepForm StopsStep prefs = chooseStopsForm prefs
+stepForm ShowPreferencesStep prefs = confirmPreferencesForm prefs
 
 stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> PreferenceStep -> Widget -> Enctype -> Handler Html
 stepPage' title top bottom step prev next widget enctype = do
   (embedded, help) <- helpPopup step
   defaultLayout $ do
     setTitleI title
-    [whamlet|
-      <div .container-fluid>
-        <div .row .m-5>
-          <div .col>
-            <p>
-              ^{embedded}
-              _{top}
-        <div .row .justify-content-center>
-          <div .col-10>
-            <form .container-fluid method=post action=@{PreferencesR} enctype="#{enctype}">
-              ^{widget}
-              <input type=hidden name="_step" value="#{show step}">
-              <div .row .justify-content-between>
-                <div .col-auto .col-me-auto>
-                  <button name="_next" value="#{show prev}" .btn .btn-secondary>_{MsgBackLabel}
-                <div .col-auto>
-                  <button name="_next" value="#{show next}" .btn .btn-primary>_{MsgNextLabel}
-        $maybe bot <- bottom
-          <div .row .m-5>
-            <div .col>
-              <p>_{bot}
-        ^{help}
-    |]
+    $(widgetFile "step")
 
-stepPage :: PreferenceStep -> Widget -> Enctype -> Handler Html
-stepPage FitnessStep widget enctype = stepPage' MsgFitnessTitle MsgFitnessText (Just MsgFitnessBottom) FitnessStep FitnessStep RangeStep widget enctype
-stepPage RangeStep widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing RangeStep FitnessStep ServicesStep widget enctype
-stepPage ServicesStep widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing ServicesStep RangeStep CaminoStep widget enctype
-stepPage CaminoStep widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing CaminoStep ServicesStep RoutesStep widget enctype
-stepPage RoutesStep widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing RoutesStep CaminoStep StartStep widget enctype
-stepPage StartStep widget enctype = stepPage' MsgStartTitle MsgStartText Nothing StartStep RoutesStep StopsStep widget enctype
-stepPage StopsStep widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StopsStep StartStep ShowStep widget enctype
-stepPage ShowStep widget enctype =
+stepPage :: PreferenceStep -> Maybe PreferenceData -> Widget -> Enctype -> Handler Html
+stepPage FitnessStep _ widget enctype = stepPage' MsgFitnessTitle MsgFitnessText (Just MsgFitnessBottom) FitnessStep FitnessStep RangeStep widget enctype
+stepPage RangeStep _ widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing RangeStep FitnessStep ServicesStep widget enctype
+stepPage ServicesStep _ widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing ServicesStep RangeStep CaminoStep widget enctype
+stepPage CaminoStep _ widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing CaminoStep ServicesStep RoutesStep widget enctype
+stepPage RoutesStep _ widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing RoutesStep CaminoStep StartStep widget enctype
+stepPage StartStep _ widget enctype = stepPage' MsgStartTitle MsgStartText Nothing StartStep RoutesStep StopsStep widget enctype
+stepPage StopsStep _ widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StopsStep StartStep ShowPreferencesStep widget enctype
+stepPage ShowPreferencesStep (Just prefs) widget enctype = let
+    preferences = travelPreferencesFrom prefs
+    camino = caminoPreferencesFrom prefs
+  in
     defaultLayout $ do
-      setTitleI MsgFitnessTitle
-      widget
+      master <- getYesod
+      langs <- languages
+      let config = caminoAppConfig master
+      let router = renderCaminoRoute config langs
+      let messages = renderCaminoMsg config
+      setTitleI MsgShowPreferencesTitle
+      $(widgetFile "show-preferences")
+stepPage ShowPreferencesStep _ widget enctype = stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing ShowPreferencesStep StopsStep ShowPreferencesStep widget enctype
 
 helpPopup' :: PreferenceStep -> [Lang] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
 helpPopup' FitnessStep _ = Just $(ihamletFile "templates/help/fitness-help-en.hamlet")
@@ -256,6 +258,31 @@ planPage prefs = do
     defaultLayout $ do
       setTitle [shamlet|#{locationName (preferenceStart cprefs)} - #{locationName (preferenceFinish cprefs)}|]
       (toWidget html)
+
+-- | The MIME type for KML
+kmlType :: ContentType
+kmlType = "application/vnd.google-earth.kml+xml"
+
+-- | Generate a file name for this
+kmlFileName :: CaminoPreferences -> Maybe Trip -> Text
+kmlFileName camino Nothing = (toFileName $ caminoName $ preferenceCamino camino) <> ".kml"
+kmlFileName camino (Just trip) = (toFileName $ caminoName $ preferenceCamino camino) <> "-" <> (toFileName $ locationName $ start trip) <> "-" <> (toFileName $ locationName $ finish trip) <> ".kml"
+
+planKml :: PreferenceData -> Handler TypedContent
+planKml prefs = do
+    master <- getYesod
+    langs <- languages
+    let tprefs = travelPreferencesFrom prefs
+    let cprefs = caminoPreferencesFrom prefs
+    let trip = planCamino tprefs cprefs
+    let trip' = either (const Nothing) Just trip
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config langs
+    let messages = renderCaminoMsg config
+    let kml = createCaminoDoc config tprefs cprefs trip'
+    let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
+    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs trip' <> "\"")
+    return $ TypedContent kmlType (toContent result)
 
 runCaminoApp :: CaminoApp -> IO ()
 runCaminoApp app = warp (caminoAppPort app) app

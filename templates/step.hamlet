@@ -1,0 +1,21 @@
+<div .container-fluid>
+  <div .row .m-5>
+    <div .col>
+      <p>
+        ^{embedded}
+        _{top}
+  <div .row .justify-content-center>
+    <div .col-10>
+      <form .container-fluid method=post action=@{PreferencesR} enctype="#{enctype}">
+        ^{widget}
+        <input type=hidden name="_step" value="#{show step}">
+        <div .row .justify-content-between>
+          <div .col-auto .col-me-auto>
+            <button type="submit" name="_next" value="#{show prev}" .btn .btn-secondary>_{MsgBackLabel}
+          <div .col-auto>
+            <button type="submit" name="_next" value="#{show next}" .btn .btn-primary>_{MsgNextLabel}
+  $maybe bot <- bottom
+    <div .row .m-5>
+      <div .col>
+        <p>_{bot}
+  ^{help}

@@ -345,11 +345,11 @@ recommendedStops preferences =
 suggestedDistanceRange :: Travel -- ^ The method of travel
   -> Fitness -- ^ The fitness level
   -> PreferenceRange Float -- ^ The suggested distance ranges
-suggestedDistanceRange Walking SuperFit = PreferenceRange Nothing 30.0 26.0 34.0 (Just 8.0) (Just 44.0)
-suggestedDistanceRange Walking VeryFit = PreferenceRange Nothing 28.0 24.0 32.0 (Just 8.0) (Just 40.0)
-suggestedDistanceRange Walking Fit = PreferenceRange Nothing 24.0 20.0 28.0 (Just 8.0) (Just 36.0)
-suggestedDistanceRange Walking Normal = PreferenceRange Nothing 20.0 18.0 24.0 (Just 8.0) (Just 34.0)
-suggestedDistanceRange Walking Unfit = PreferenceRange Nothing 20.0 16.0 24.0 (Just 8.0) (Just 28.0)
+suggestedDistanceRange Walking SuperFit = PreferenceRange Nothing 30.0 26.0 34.0 (Just 12.0) (Just 44.0)
+suggestedDistanceRange Walking VeryFit = PreferenceRange Nothing 28.0 24.0 32.0 (Just 12.0) (Just 40.0)
+suggestedDistanceRange Walking Fit = PreferenceRange Nothing 24.0 20.0 28.0 (Just 12.0) (Just 36.0)
+suggestedDistanceRange Walking Normal = PreferenceRange Nothing 20.0 18.0 22.0 (Just 12.0) (Just 34.0)
+suggestedDistanceRange Walking Unfit = PreferenceRange Nothing 20.0 18.0 22.0 (Just 10.0) (Just 28.0)
 suggestedDistanceRange Walking VeryUnfit = PreferenceRange Nothing 12.0 6.0 16.0 (Just 3.0) (Just 18.0)
 suggestedDistanceRange Walking_Naismith f = suggestedDistanceRange Walking f
 suggestedDistanceRange Cycling SuperFit = PreferenceRange Nothing 150.0 100.0 175.0 (Just 20.0) (Just 225.0)

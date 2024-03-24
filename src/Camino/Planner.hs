@@ -245,13 +245,11 @@ isAccomodationFree preferences day = all (\l -> let (acc, _, _) = accommodation'
 missingServicePenance :: M.Map Service Penance -> S.Set Service -> Penance
 missingServicePenance prefs services = mconcat $ map (\s -> M.findWithDefault mempty s prefs) $ S.toList services
 
-boundsAdjustement = 2.0
-
 adjustment :: PreferenceRange Float -> Float -> Float -> Float -> Penance
 adjustment range bscale rscale value
   | isOutOfRange range value = Reject
-  | isOutOfBounds range value = Penance (rscale * rangeDistance range value) <> Penance boundsAdjustement
-  | otherwise = if bd < 0.25 then mempty else Penance (bscale * bd) where bd = boundsDistance range value -- Allow "close enough" to the target
+  | isOutOfBounds range value = Penance (rscale * rangeDistance range value)
+  | otherwise = Penance (bscale * boundsDistance range value)
 
 -- | Calculate the total penance implicit in a sequence of legs
 penance :: TravelPreferences -- ^ The travel preferences
@@ -268,7 +266,7 @@ penance preferences camino day =
     timePreferences = rangeFilter $ preferenceTime preferences
     distancePreferences = rangeFilter $ preferencePerceivedDistance preferences
     timeAdjust = maybe Reject (adjustment timePreferences 0.0 normalSpeed) time
-    distanceAdjust = maybe Reject (adjustment distancePreferences boundsAdjustement normalSpeed) perceived
+    distanceAdjust = maybe Reject (adjustment distancePreferences 0.0 normalSpeed) perceived
     stopMissing = missingStopServices preferences (preferenceCamino camino) day
     (accom, stopMissing', accommodationAdjust) = accommodation preferences (preferenceCamino camino) day stopMissing atEnd -- preferred accommodation penance
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'

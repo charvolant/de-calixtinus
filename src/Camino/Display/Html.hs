@@ -460,9 +460,9 @@ preferencesHtml preferences camino _trip = [ihamlet|
     <div .row>
       <div .col-4>_{RouteLabel}
       <div .col-4>
-        <ul>
+        <ul .list-group .list-group-flush>
           $forall r <- selectedRoutes camino
-            <li>
+            <li .list-group-item>
               <a href="##{routeID r}" data-toggle="tab" onclick="showRouteDescription('#{routeID r}')">#{routeName r}
     <div .row>
       <div .col-4>_{TripStartLabel}
@@ -479,15 +479,15 @@ preferencesHtml preferences camino _trip = [ihamlet|
       <div .col-4>
         <ul>
           $forall l <- preferenceStops camino
-            <li>
-              <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+            <li .list-group .list-group-flush>
+              <a .list-group-item href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
     <div .row>
       <div .col-4>_{ExcludedStopsLabel}
       <div .col-4>
-        <ul>
+        <ul .list-group .list-group-flush>
           $forall l <- preferenceExcluded camino
             <li>
-              <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+              <a .list-group-item href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
   |]
   where
     accommodationTypes = accommodationTypeEnumeration
@@ -533,35 +533,36 @@ caminoTripHtml preferences camino trip = [ihamlet|
    |]
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapHtml _preferences camino _trip = [ihamlet|
+caminoMapHtml _preferences _camino _trip = [ihamlet|
   <div .container-fluid>
     <div .row>
       <div .col .d-flex .justify-content-center>
         <div #map>
-      <div .col-2 .col-md-3 .col-sm-4 .col-xs-12>
-        <div .card .mt-2 .p-1>
-          <div .card-body>
-            <table .map-key>
-              <thead>
-                <tr>
-                  <th colspan="4">_{KeyLabel}
-              <tbody>
-                $forall r <- caminoRoutes camino'
-                  <tr>
-                    <td>
-                    <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
-                    <td>
-                    <td>#{routeName r}
-                $forall lt <- locationTypeEnumeration
-                  <tr>
-                    <td>
-                      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
-                    <td>
-                      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
-                    <td>
-                      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
-                    <td>
-                      _{caminoLocationTypeLabel lt}
+  |]
+
+caminoMapKeyHtml :: TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapKeyHtml _preferences camino = [ihamlet|
+<div #map-key .card>
+  <div .card-body>
+    <h2 .card-title>_{MapLabel}
+    <table .table-striped>
+      <tbody>
+        $forall r <- caminoRoutes camino'
+          <tr>
+            <td>
+            <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
+            <td>
+            <td>#{routeName r}
+        $forall lt <- locationTypeEnumeration
+          <tr>
+            <td>
+              <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
+            <td>
+              <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
+            <td>
+              <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
+            <td>
+              _{caminoLocationTypeLabel lt}
   |]
   where
     camino' = preferenceCamino camino
@@ -818,6 +819,10 @@ layoutHtml config title header body footer = [ihamlet|
        scriptsHeader = getAssets JavaScriptEarly config
        scriptsFooter = getAssets JavaScript config
 
+
+keyHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
+keyHtml config preferences camino = $(ihamletFile "templates/help/key-en.hamlet")
+
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpHtml config = $(ihamletFile "templates/help/help-en.hamlet")
 
@@ -840,7 +845,7 @@ caminoHtmlBase config preferences camino trip = let
             <li .nav-item role="presentation">
               <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
             <li .nav-item role="presentation">
-              <a #help-toggle .nav-link role="tab" data-bs-toggle="tab" href="#help-tab">_{HelpLabel}
+              <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
           <div .tab-content>
             <div .tab-pane .active role="tabpanel" id="map-tab">
               ^{caminoMapHtml preferences camino trip}
@@ -853,8 +858,8 @@ caminoHtmlBase config preferences camino trip = let
               ^{preferencesHtml preferences camino trip}
             <div .tab-pane role="tabpanel" id="about-tab">
               ^{aboutHtml preferences camino trip}
-            <div .tab-pane role="tabpanel" id="help-tab">
-              ^{helpHtml config}
+            <div .tab-pane role="tabpanel" id="key-tab">
+              ^{keyHtml config preferences camino}
       ^{caminoMapScript preferences camino trip}
     |]
   in

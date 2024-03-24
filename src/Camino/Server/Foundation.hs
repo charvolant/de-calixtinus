@@ -63,6 +63,7 @@ instance Yesod CaminoApp where
     let headLinks = C.getLocalisedLinks C.Header config langs
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
+    let helpLabel = render MsgHelpLabel
     pc <- widgetToPageContent widget
     withUrlRenderer [hamlet|
       $doctype 5
@@ -84,14 +85,16 @@ instance Yesod CaminoApp where
               <div .container-fluid>
                 <a .navbar-brand href="#">
                 $maybe icons <- C.getAsset "icons" config
-                  <a href="@{HomeR}">
-                    <img .g-5 width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgCaminoPlannerLabel}">
+                  <a .m-2 href="@{HomeR}">
+                    <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgCaminoPlannerLabel}">
                 <h1>#{pageTitle pc}
                 <div .collapse .navbar-collapse .d-flex .justify-content-end #navcol-links">
                   <ul .navbar-nav>
                     $forall link <- headLinks
-                      <li .nav-item">
+                      <li .nav-item>
                         <a .nav-item href="#{C.linkPath link}">#{C.linkLabel link}
+                    <li .nav-item>
+                      <a .nav-item href=@{HelpR}>#{helpLabel}
             $maybe msg <- message
               <div>#{msg}
           <main .p-2>

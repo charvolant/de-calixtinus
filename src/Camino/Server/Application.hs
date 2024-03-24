@@ -85,7 +85,13 @@ getHelpR = do
   let messages = renderCaminoMsg config
   defaultLayout $ do
     setTitleI MsgHelpTitle
-    toWidget ($(ihamletFile "templates/help/help-en.hamlet") messages router)
+    toWidget ((helpWidget langs) messages router)
+
+-- | Help for the languages that we have
+helpWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute    
+helpWidget [] = helpWidget ["en"]
+helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
+helpWidget (_:other) = helpWidget other
 
 getHomeR :: Handler Html
 getHomeR = homeP
@@ -160,10 +166,9 @@ stepPage' title top bottom step prev next widget enctype = do
     [whamlet|
       <div .container-fluid>
         <div .row .m-5>
-          <div .col-1>
-            ^{embedded}
           <div .col>
             <p>
+              ^{embedded}
               _{top}
         <div .row .justify-content-center>
           <div .col-10>
@@ -219,7 +224,7 @@ helpPopup step = do
       )
     Just help -> (
            [whamlet|
-            <a .btn .border-info-subtle .bg-info-subtle .text-primary href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
+            <a .fs-2 .text-primary href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
               <span .ca-help>
            |]
         , $(widgetFile "help-popup")

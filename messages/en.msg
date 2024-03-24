@@ -12,8 +12,11 @@ FitnessText: To begin with, choose the way you intend to travel. Then choose the
 FitnessBottom: Be careful with fitness. Normal is normal for a young walker with plenty of training; someone who can walk three hours at 5km/hr without tiring. If you have any doubts, choose Unfit.
 FitnessTitle: Travel Style and Fitness
 ForbiddenStopsLabel: Forbidden Stops
+HelpLabel: Help
 HelpTitle: Help
-HomeText: Welcome to De Calixtinus. If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accomodation, food etc. To begin, press the Start button below.
+HomeText1: Welcome to De Calixtinus.
+HomeText2: If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accomodation, food etc. The panner is designed to give you a globally optimal set of stages, stretching some a bit and reducing others, to give you the best overall trip. It does this by minimising "penance" a name that started off as a joke but captures the total effort for a day, including climbs and descents, acoomodation, sources of food and other things.
+HomeText3: To begin, press the Start button below.
 InvalidCamino: Invalid camino
 InvalidStep: Invalid preferences step
 MoreInformation: More Information

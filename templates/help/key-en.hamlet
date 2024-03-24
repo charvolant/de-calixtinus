@@ -1,0 +1,318 @@
+<nav .navbar .navbar-expand-md .bg-body>
+  <div .container-fluid>
+    <button data-bs-toggle="collapse" .navbar-toggler data-bs-target="#help-menu">
+      <span .visually-hidden>Toggle navigation
+      <span .navbar-toggler-icon>
+    <div .collapse .navbar-collapse #help-menu">
+      <ul .navbar-nav>
+        <li .nav-item>
+          <a .nav-link .active href="#map-key">Map
+        <li .nav-item>
+          <a .nav-link .active href="#location-help">Locations
+        <li .nav-item>
+          <a .nav-link .active href="#services-help">Services
+        <li .nav-item>
+          <a .nav-link .active href="#accommodation-help">Accommodation
+        <li .nav-item>
+          <a .nav-link .active href="#travel-help">Travel
+
+^{caminoMapKeyHtml preferences camino}
+
+<div #location-help .card>
+  <div .card-body>
+    <h2 .card-title>Locations
+    <table .table .table-striped>
+      <caption>Location Types
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Location Type
+           <th scope="col">Comments
+      <tbody>
+        <tr>
+            <td>^{caminoLocationTypeIcon Village}
+            <td>Village
+            <td>A smaller locality with limited services and accommodation
+        <tr>
+           <td>^{caminoLocationTypeIcon Town}
+           <td>Town
+           <td>A larger locality with most services and a variety of accommmodation usually available
+        <tr>
+           <td>^{caminoLocationTypeIcon City}
+           <td>City
+           <td>A large urban area with multiple options for services and accommodation
+        <tr>
+           <td>^{caminoLocationTypeIcon Bridge}
+           <td>Bridge
+           <td>A bridge acting as a waypoint
+        <tr>
+           <td>^{caminoLocationTypeIcon Intersection}
+           <td>Intersection
+           <td>A road intersection
+        <tr>
+           <td>^{caminoLocationTypeIcon Monastery}
+           <td>Monastery
+           <td>A monastery, often with a hospice attached
+        <tr>
+           <td>^{caminoLocationTypeIcon Peak}
+           <td>Peak
+           <td>A peak or lookout
+        <tr>
+           <td>^{caminoLocationTypeIcon Poi}
+           <td>Locality
+           <td>An unspecified waypoint
+
+<div #services-help .card>
+  <div .card-body>
+    <h2 .card-title>Services
+    <table .table .table-striped>
+      <caption>Services
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Service
+      <tbody>
+        <tr>
+          <td>^{caminoServiceIcon WiFi}
+          <td>WiFi available
+        <tr>
+          <td>^{caminoServiceIcon Restaurant}
+          <td>Restaurant or Café
+        <tr>
+          <td>^{caminoServiceIcon Pharmacy}
+          <td>Pharmacy
+        <tr>
+          <td>^{caminoServiceIcon Bank}
+          <td>Banking facilities or an automated teller machine
+        <tr>
+          <td>^{caminoServiceIcon BicycleRepair}
+          <td>Bicycle repair shop
+        <tr>
+          <td>^{caminoServiceIcon Groceries}
+          <td>Convenience store or supermarket
+        <tr>
+          <td>^{caminoServiceIcon Medical}
+          <td>Doctor, hospital or other healthcare
+        <tr>
+          <td>^{caminoServiceIcon WashingMachine}
+          <td>Washing machine available
+        <tr>
+          <td>^{caminoServiceIcon Dryer}
+          <td>Dryer or spin-dryer available
+        <tr>
+          <td>^{caminoServiceIcon Handwash}
+          <td>Handwash laundry facilities
+        <tr>
+          <td>^{caminoServiceIcon Kitchen}
+          <td>Kitchen facilities
+        <tr>
+          <td>^{caminoServiceIcon Breakfast}
+          <td>Breakfast available
+        <tr>
+          <td>^{caminoServiceIcon Dinner}
+          <td>Dinner available
+        <tr>
+          <td>^{caminoServiceIcon Lockers}
+          <td>Lockers or cabinets
+        <tr>
+          <td>^{caminoServiceIcon Accessible}
+          <td>Accessible for people with disabilities
+        <tr>
+          <td>^{caminoServiceIcon Stables}
+          <td>Stabling for horses available
+        <tr>
+          <td>^{caminoServiceIcon Pets}
+          <td>Pets allowed
+        <tr>
+          <td>^{caminoServiceIcon BicycleStorage}
+          <td>Bicycle storage available
+        <tr>
+          <td>^{caminoServiceIcon CampSite}
+          <td>Camping sites available
+        <tr>
+          <td>^{caminoServiceIcon Bedlinen}
+          <td>Bedlinen provided
+        <tr>
+          <td>^{caminoServiceIcon Towels}
+          <td>Towels provided
+        <tr>
+          <td>^{caminoServiceIcon Pool}
+          <td>Swimming pool available
+        <tr>
+          <td>^{caminoServiceIcon Heating}
+          <td>Heated building
+        <tr>
+          <td>^{caminoServiceIcon Prayer}
+          <td>Community prayer/liturgy
+        <tr>
+          <td>^{caminoServiceIcon Train}
+          <td>Train station
+        <tr>
+          <td>^{caminoServiceIcon Bus}
+          <td>Bus stop
+
+<div #accommodation-help .card>
+  <div .card-body>
+    <h2 .card-title>Accomodation
+    <table .table .table-striped>
+      <caption>Accomodation Types
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Accomodation Type
+           <th scope="col">Comments
+      <tbody>
+        <tr>
+            <td>^{caminoAccommodationTypeIcon MunicipalAlbergue}
+            <td>Municipal Albergue
+            <td>
+                An albergue (pilgrim hostel) usually run by volunteers for pilgrims only.
+                Municipal albergues are generally inexpensive, have limited services and usually only allow one night's stay.
+                Municipal albergues are often not bookable but simply accept pilgrims until full.
+        <tr>
+            <td>^{caminoAccommodationTypeIcon PrivateAlbergue}
+            <td>Private Albergue
+            <td>
+                An albergue run as a private business.
+                Private albergues usually offer more services than municipal albergues, allow more than one nights stay and are bookable.
+        <tr>
+            <td>^{caminoAccommodationTypeIcon Hostel}
+            <td>Hostel
+            <td>
+                A hostel not oriented towards pilgrims, for example a youth hostel.
+        <tr>
+            <td>^{caminoAccommodationTypeIcon GuestHouse}
+            <td>Guesthouse
+            <td>
+                A guesthouse, quinta, casa, bed-and-breakfast, pensione or similar
+        <tr>
+            <td>^{caminoAccommodationTypeIcon HomeStay}
+            <td>Home Stay
+            <td>
+                An AirB&B, farm stay or similar
+        <tr>
+        <tr>
+            <td>^{caminoAccommodationTypeIcon House}
+            <td>House Rental
+            <td>
+                An entire house or unit, available for rental
+        <tr>
+            <td>^{caminoAccommodationTypeIcon Hotel}
+            <td>Hotel
+            <td>
+                A commercial hotel, usually with multiple services and accomodation options.
+        <tr>
+            <td>^{caminoAccommodationTypeIcon CampGround}
+            <td>Camp Ground
+            <td>
+                A managed camping ground.
+                Camp grounds will usually have toilet facilities and showers and may offer other services,
+                such as clothes washing facilities or cafés.
+        <tr>
+            <td>^{caminoAccommodationTypeIcon Camping}
+            <td>Camping
+            <td>
+                Camping by the side of the Camino, using your own resources.
+
+
+    <table .table .table-striped>
+      <caption>Sleeping Arrangements
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Sleeping Arrangements
+           <th scope="col">Comments
+      <tbody>
+        <tr>
+            <td>^{caminoSleepingIcon Shared}
+            <td>Shared
+            <td>
+                Shared sleeping, usually in bunk beds
+        <tr>
+            <td>^{caminoSleepingIcon Single}
+            <td>Single
+            <td>
+                A private single room
+        <tr>
+            <td>^{caminoSleepingIcon Double}
+            <td>Double
+            <td>
+                A private double room
+        <tr>
+            <td>^{caminoSleepingIcon DoubleWC}
+            <td>Double with Bathroom
+            <td>
+                A double room with a private bathroom
+        <tr>
+            <td>^{caminoSleepingIcon Triple}
+            <td>Triple
+            <td>
+                A private triple room
+        <tr>
+            <td>^{caminoSleepingIcon TripleWC}
+            <td>Triple with Bathroom
+            <td>
+                A triple room with a private bathroom
+        <tr>
+            <td>^{caminoSleepingIcon Quadruple}
+            <td>Quadruple
+            <td>
+                A private quadruple room
+        <tr>
+            <td>^{caminoSleepingIcon QuadrupleWC}
+            <td>Quadruple with Bathroom
+            <td>
+                A quadruple room with a private bathroom
+        <tr>
+            <td>^{caminoSleepingIcon Mattress}
+            <td>Mattress
+            <td>
+                A matress on the floor in a shared space
+        <tr>
+            <td>^{caminoSleepingIcon SleepingBag}
+            <td>Sleeping Bag
+            <td>
+                Your own sleeping bag and mattress
+
+<div #travel-help .card>
+  <div .card-body>
+    <h2 .card-title>Travel
+    <table .table .table-striped>
+      <caption>Travel Type
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Travel Type
+           <th scope="col">Comments
+      <tbody>
+        <tr>
+            <td>
+            <td>Road/Path
+            <td>
+                The default, a road or path that is suitable for both walkers and cyclists
+        <tr>
+            <td>^{caminoLegTypeIcon Trail}
+            <td>Trail
+            <td>
+                A trail that is only suitable for walkers
+        <tr>
+            <td>^{caminoLegTypeIcon CyclePath}
+            <td>Cycle Path
+            <td>
+                A cycle path that is only usable by cyclists
+         <tr>
+             <td>^{caminoLegTypeIcon Ferry}
+             <td>Ferry
+             <td>
+                 A ferry connection.
+                 Ferry connections do not usually have a distance but have, instead, a ferry time measured
+                 in hours.
+                 Ferries usually operate according to a schedule and may require booking.
+         <tr>
+             <td>^{caminoLegTypeIcon Boat}
+             <td>Boat or canoe
+             <td>
+                 A boat or canoe connection.
+                 These connections are usually rowed or paddled and represent as much effort as walking.
+                 Boat connections usually operate according to a schedule and may require booking.
+

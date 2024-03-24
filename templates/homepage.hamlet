@@ -1,7 +1,9 @@
 <div .container-fluid>
   <div .row>
     <div .col>
-      <p>_{MsgHomeText}
+      <p .lead>_{MsgHomeText1}
+      <p>_{MsgHomeText2}
+      <p>_{MsgHomeText3}
   <div .row .justify-content-center>
     <div .col-1>
       <a .btn .btn-primary href="@{PreferencesR}">_{MsgStartLabel}

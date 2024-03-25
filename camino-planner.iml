@@ -193,5 +193,11 @@
     <orderEntry type="library" name="unliftio-0.2.25.0" level="project" />
     <orderEntry type="library" name="basement-0.0.16" level="project" />
     <orderEntry type="library" name="QuickCheck-2.14.2" level="project" />
+    <orderEntry type="library" name="yesod-static-1.6.1.0" level="project" />
+    <orderEntry type="library" name="cryptonite-conduit-0.2.2" level="project" />
+    <orderEntry type="library" name="hjsmin-0.2.0.4" level="project" />
+    <orderEntry type="library" name="mime-types-0.1.0.9" level="project" />
+    <orderEntry type="library" name="wai-app-static-3.1.7.4" level="project" />
+    <orderEntry type="library" name="language-javascript-0.7.1.0" level="project" />
   </component>
 </module>

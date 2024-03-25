@@ -31,13 +31,16 @@ import Data.Yaml.Aeson (decodeEither)
 import Language.Haskell.TH.Syntax  (Exp, Name, Q)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Yesod
-import Yesod.Default.Util (WidgetFileSettings, widgetFileNoReload, widgetFileReload)
+import Yesod.Default.Util (WidgetFileSettings, addStaticContentExternal, widgetFileNoReload, widgetFileReload)
+import Yesod.Static (Static)
 import Debug.Trace
 
 data CaminoApp = CaminoApp {
-  caminoAppPort :: Int,
-  caminoAppConfig :: C.Config,
-  caminoAppCaminos :: [Camino]
+    caminoAppPort :: Int
+  , caminoAppDevel :: Bool
+  , caminoAppStatic :: Static
+  , caminoAppConfig :: C.Config
+  , caminoAppCaminos :: [Camino]
 }
 
 mkYesodData "CaminoApp" $(parseRoutesFile "config/routes.yesodroutes")

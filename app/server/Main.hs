@@ -16,16 +16,21 @@ import Camino.Server.Foundation
 import Control.Monad (when)
 import Options.Applicative
 import System.FilePath
+import Yesod.Static
 
 data Server = Server {
-  config :: FilePath,
-  port :: Int,
-  caminos :: [FilePath]
+    config :: FilePath
+  , staticDir :: FilePath
+  , devel :: Bool
+  , port :: Int
+  , caminos :: [FilePath]
 }
 
 arguments :: Parser Server
 arguments = Server
     <$> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
+    <*> option auto (long "static" <> short 's' <> value "./static" <> metavar "DIR" <> showDefault <> help "The  directory holding static files")
+    <*> flag False True (long "devel" <> short 'd' <> help "True if in development mode")
     <*> option auto (long "port" <> short 'p' <> value 3000 <> metavar "PORT" <> showDefault <> help "The port to listen on")
     <*> some (argument str (metavar "CAMINO-FILE"))
 
@@ -34,4 +39,5 @@ main = do
   opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "De Calixtinus")
   caminos' <- mapM readCamino (caminos opts)
   config' <- readConfigFile (config opts)
-  runCaminoApp (CaminoApp (port opts) config' caminos')
+  static' <- (if devel opts then staticDevel else static) (staticDir opts)
+  runCaminoApp (CaminoApp (port opts) (devel opts) static' config' caminos')

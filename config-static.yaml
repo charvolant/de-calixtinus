@@ -1,0 +1,14 @@
+web:
+  assets:
+    - id: bootstrap-css
+      type: Css
+      path: /static/css/bootstrap-dc.css
+    - id: camino-css
+      type: Css
+      path: /static/css/camino.css
+    - id: icons
+      type: Directory
+      path: /static/icons
+    - id: "Camino Icons"
+      type: Font
+      path: /static/fonts/Camino-Icons.woff

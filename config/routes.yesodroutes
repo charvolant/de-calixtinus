@@ -3,3 +3,4 @@
 /plan PlanR POST
 /planKml PlanKmlR POST
 /help HelpR GET
+/static StaticR Static caminoAppStatic

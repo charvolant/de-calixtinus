@@ -180,10 +180,18 @@ and the pkg-config cask.
 
 ```shell
 brew install pkg-config
-brew install icu4c
+brew install icu4c@73
 ```
 
 See https://hackage.haskell.org/package/text-icu
+
+If the underlying icu4c library changes version, you may need to unregisteer the library and
+rebuild, using
+
+```shell
+stack exec -- ghc-pkg unregister --force text-icu
+stack build
+```
 
 ### Customised Bootstrap
 

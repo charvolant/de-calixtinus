@@ -45,6 +45,7 @@ dependencies:
   - yesod
   - yesod-core
   - yesod-form
+  - yesod-static
   - data-default-class
   - blaze-markup
   - template-haskell

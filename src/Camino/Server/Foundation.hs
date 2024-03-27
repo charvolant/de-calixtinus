@@ -89,7 +89,7 @@ instance Yesod CaminoApp where
                 <a .navbar-brand href="#">
                 $maybe icons <- C.getAsset "icons" config
                   <a .m-2 href="@{HomeR}">
-                    <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgCaminoPlannerLabel}">
+                    <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgAppName}">
                 <h1>#{pageTitle pc}
                 <div .collapse .navbar-collapse .d-flex .justify-content-end #navcol-links">
                   <ul .navbar-nav>
@@ -106,7 +106,7 @@ instance Yesod CaminoApp where
             <div .row .row-cols-1 .row-cols-lg-3>
               <div .col>
                 <p .text-muted .my-2>
-                  <a href="https://github.com/charvolant/de-calixtinus">#{render MsgCaminoPlannerLabel}
+                  <a href="https://github.com/charvolant/de-calixtinus">#{render MsgAppName}
               <div .col>
                 <p .text-muted .my-2>
               <div .col>

@@ -12,4 +12,4 @@ web:
       path: https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/icons
     - id: "Camino Icons"
       type: Font
-      path: https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff
+      path: ../fonts/Camino-Icons.woff

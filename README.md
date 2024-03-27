@@ -1,4 +1,4 @@
-# Camino Planner
+# De Calixtinus
 
 This is a program to help people plan walking stages on the Camino Santiago.
 You can supply a set of preferences in the form of fitness, preferred and hard
@@ -26,7 +26,21 @@ It turns out that this was sufficient motivation.
 
 ## Usage
 
-To run the program, use
+To run the web server, use
+
+```shell
+camino-server-exe [-c CONFIG] [-s STATIC] [-d] [-p PORT] CAMINO ...
+```
+
+
+| Argument  | Description                                                                             | Example                |
+|-----------|-----------------------------------------------------------------------------------------|------------------------|
+| CAMINO    | A list of camino descriptions in JSON form                                              | camino-portuguese.json |
+| -c CONFIG | An optional configuration file for generating the appropriate HTML output, in YAML form | config.yaml            |
+| -s STATIC | The location of static (asset) files, such as CSS, fonts and icons                      | ./static               |                                                                     
+| -d        | Use debug mode                                                                          |               |                                                                     
+
+To run the simple planner, use
 
 ```shell
 camino-planner-exe CAMINO PREFERENCES BEGIN END [-r ROUTES] [-s STOPS] [-x EXCLUDED] [-c CONFIG] [-o OUTPUT]
@@ -34,7 +48,7 @@ camino-planner-exe CAMINO PREFERENCES BEGIN END [-r ROUTES] [-s STOPS] [-x EXCLU
 
 | Argument    | Description                                                                                                                                             | Example                |                  |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|------------------| 
-| CAMINO      | A camino description in JSON form                                                                                                                       | lisbon-porto.json      |                  |
+| CAMINO      | A camino description in JSON form                                                                                                                       | camino-portuguese.json |                  |
 | PREFERENCES | A preference file in JSON form                                                                                                                          | short-preferences.json |                  |
 | BEGIN       | The identifier of the start point                                                                                                                       | P1                     | Lisbon           |
 | END         | The identifier of the end point                                                                                                                         | P284                   | Santiago         |

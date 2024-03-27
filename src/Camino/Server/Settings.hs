@@ -10,6 +10,6 @@ widgetFileSettings :: WidgetFileSettings
 widgetFileSettings = def
 
 widgetFile :: String -> Q Exp
-widgetFile = (if True then widgetFileReload else widgetFileNoReload) widgetFileSettings
+widgetFile = (if False then widgetFileReload else widgetFileNoReload) widgetFileSettings
 
 

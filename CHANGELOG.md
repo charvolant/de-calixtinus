@@ -1,4 +1,4 @@
-# Changelog for `camino-planner`
+# Changelog for `de-calixtinus`
 
 All notable changes to this project will be documented in this file.
 

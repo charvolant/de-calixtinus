@@ -1,0 +1,7 @@
+webservers:
+  hosts:
+    de-calixtinus.org
+  vars:
+    acme_account_email: doug@charvolant.org
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: /Users/doug/.ssh/LightsailDefaultKey-ap-southeast-2.pem

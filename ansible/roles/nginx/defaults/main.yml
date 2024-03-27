@@ -1,0 +1,3 @@
+# The name of the nginx package to install.
+nginx_package_name: "nginx"
+server_name: "de-calixtinus.org"

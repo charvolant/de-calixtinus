@@ -238,21 +238,21 @@ defaultConfig = Config {
       Asset {
         assetId = "camino-css",
         assetType = Css,
-        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/static/css/camino.css",
+        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/css/camino.css",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
       Asset {
         assetId = "icons",
         assetType = Directory,
-        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/icons",
+        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/icons",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },
       Asset {
         assetId = "Camino Icons",
         assetType = Font,
-        assetPath = "https://camino-planner.s3.ap-southeast-2.amazonaws.com/fonts/Camino-Icons.woff",
+        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       }

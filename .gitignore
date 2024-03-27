@@ -4,3 +4,6 @@
 /out/
 /plan/
 /stack.yaml.lock
+/ansible/inventory.yml
+/client_session_key.aes
+/de-calixtinus.iml

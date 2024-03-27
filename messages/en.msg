@@ -1,7 +1,6 @@
 AccommodationPreferencesLabel: Accommodation Preferences
 AppName: De Calixtinus
 BackLabel: Back
-CaminoPlannerLabel: The Camino Planner
 CaminoText: Select the Camino you wish to walk from the following options. Many caminos have variations and alternative routes that you can choose on the next screen.
 CaminoTitle: Select Camino
 DayServicePreferencesLabel: Preferred Services during Day

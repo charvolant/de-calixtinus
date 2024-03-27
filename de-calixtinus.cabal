@@ -4,11 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           camino-planner
+name:           de-calixtinus
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/charvolant/camino-planner#readme>
-homepage:       https://github.com/charvolant/camino-planner#readme
-bug-reports:    https://github.com/charvolant/camino-planner/issues
+description:    Please see the README on GitHub at <https://github.com/charvolant/de-calixtinus#readme>
+homepage:       https://github.com/charvolant/de-calixtinus#readme
+bug-reports:    https://github.com/charvolant/de-calixtinus/issues
 author:         Doug Palmer
 maintainer:     doug@charvolant.org
 copyright:      2023 Doug Palmer
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/charvolant/camino-planner
+  location: https://github.com/charvolant/de-calixtinus
 
 library
   exposed-modules:
@@ -46,7 +46,7 @@ library
       Graph.Graph
       Graph.Programming
   other-modules:
-      Paths_camino_planner
+      Paths_de_calixtinus
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures
@@ -88,7 +88,7 @@ library
 executable camino-map-exe
   main-is: Main.hs
   other-modules:
-      Paths_camino_planner
+      Paths_de_calixtinus
   hs-source-dirs:
       app/mapper
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
@@ -99,10 +99,10 @@ executable camino-map-exe
     , blaze-html
     , blaze-markup
     , bytestring
-    , camino-planner
     , colour
     , containers
     , data-default-class
+    , de-calixtinus
     , directory
     , file-embed
     , filepath
@@ -131,7 +131,7 @@ executable camino-map-exe
 executable camino-planner-exe
   main-is: Main.hs
   other-modules:
-      Paths_camino_planner
+      Paths_de_calixtinus
   hs-source-dirs:
       app/planner
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
@@ -142,10 +142,10 @@ executable camino-planner-exe
     , blaze-html
     , blaze-markup
     , bytestring
-    , camino-planner
     , colour
     , containers
     , data-default-class
+    , de-calixtinus
     , directory
     , file-embed
     , filepath
@@ -174,7 +174,7 @@ executable camino-planner-exe
 executable camino-server-exe
   main-is: Main.hs
   other-modules:
-      Paths_camino_planner
+      Paths_de_calixtinus
   hs-source-dirs:
       app/server
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
@@ -185,10 +185,10 @@ executable camino-server-exe
     , blaze-html
     , blaze-markup
     , bytestring
-    , camino-planner
     , colour
     , containers
     , data-default-class
+    , de-calixtinus
     , directory
     , file-embed
     , filepath
@@ -217,7 +217,7 @@ executable camino-server-exe
 executable generate-static-exe
   main-is: Main.hs
   other-modules:
-      Paths_camino_planner
+      Paths_de_calixtinus
   hs-source-dirs:
       app/generate-static
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
@@ -228,10 +228,10 @@ executable generate-static-exe
     , blaze-html
     , blaze-markup
     , bytestring
-    , camino-planner
     , colour
     , containers
     , data-default-class
+    , de-calixtinus
     , directory
     , file-embed
     , filepath
@@ -257,7 +257,7 @@ executable generate-static-exe
     , yesod-static
   default-language: Haskell2010
 
-test-suite camino-planner-test
+test-suite de-calixtinus-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
@@ -269,7 +269,7 @@ test-suite camino-planner-test
       ProgrammingSpec
       TestUtils
       WalkingSpec
-      Paths_camino_planner
+      Paths_de_calixtinus
   hs-source-dirs:
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
@@ -281,10 +281,10 @@ test-suite camino-planner-test
     , blaze-html
     , blaze-markup
     , bytestring
-    , camino-planner
     , colour
     , containers
     , data-default-class
+    , de-calixtinus
     , directory
     , file-embed
     , filepath

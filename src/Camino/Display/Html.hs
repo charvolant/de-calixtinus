@@ -818,7 +818,7 @@ layoutHtml config title header body footer = [ihamlet|
            <div .row .row-cols-1 .row-cols-lg-3>
              <div .col>
                <p .text-muted .my-2>
-                 <a href="https://github.com/charvolant/camino-planner">The Camino Planner
+                 <a href="https://github.com/charvolant/de-calixtinus">De Calixtinus
              <div .col>
                <p .text-muted .my-2>
              <div .col>

@@ -29,7 +29,7 @@ data Server = Server {
 arguments :: Parser Server
 arguments = Server
     <$> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
-    <*> option auto (long "static" <> short 's' <> value "./static" <> metavar "DIR" <> showDefault <> help "The  directory holding static files")
+    <*> strOption (long "static" <> short 's' <> value "./static" <> metavar "DIR" <> showDefault <> help "The directory holding static files")
     <*> flag False True (long "devel" <> short 'd' <> help "True if in development mode")
     <*> option auto (long "port" <> short 'p' <> value 3000 <> metavar "PORT" <> showDefault <> help "The port to listen on")
     <*> some (argument str (metavar "CAMINO-FILE"))

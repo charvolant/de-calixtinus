@@ -10,7 +10,7 @@ Stability   : experimental
 Portability : POSIX
 
 A camino consists of a graph of legs that can be assembled in various ways.
-The legs run between two locations, each with possible accomodation and service options.
+The legs run between two locations, each with possible accommodation and service options.
 
 Generally, it is expected that these models will be read from JSON files.
 
@@ -152,9 +152,9 @@ caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints lo
       <div style="display: inline-block;" .services>
         $forall service <- locationServices location
           ^{caminoServiceIcon service}
-      <div style="display: inline-block; margin-left: 2em;" .accomodation-types>
-          $forall accomodation <- locationAccommodationTypes location
-            ^{caminoAccommodationTypeIcon accomodation}
+      <div style="display: inline-block; margin-left: 2em;" .accommodation-types>
+          $forall accommodation <- locationAccommodationTypes location
+            ^{caminoAccommodationTypeIcon accommodation}
     $maybe d <- day
       <div style="margin-top: 1ex;">
         ^{daySummary preferences camino trip d}

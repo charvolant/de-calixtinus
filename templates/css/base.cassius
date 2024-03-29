@@ -17,15 +17,15 @@ a
   color: #c5321b
 .service
   color: #{toCssColour caminoBlue}
-.accomodation
+.accommodation
   color: #{toCssColour caminoBlue}
-.accomodation.card
+.accommodation.card
   padding: 1ex
-.accomodation.municipal-albergue
+.accommodation.municipal-albergue
   color: #{toCssColour caminoYellow}
-.accomodation.hostel
+.accommodation.hostel
   color: #2ab472
-.accomodation.home-stay
+.accommodation.home-stay
   color: #ff395c
 .location-tooltip
   .leg-to
@@ -56,7 +56,7 @@ a
   .accordion-header
     h5
       display: inline-block
-    .accomodation-types
+    .accommodation-types
       display: inline-block
       margin-left: 2em
     .services
@@ -64,7 +64,7 @@ a
       margin-left: 2em
 .location-summary
   display: inline-block
-  .accomodation-types
+  .accommodation-types
     font-size: smaller
     display: inline-block
     margin-left: 1ex

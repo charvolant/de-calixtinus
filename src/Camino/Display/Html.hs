@@ -142,15 +142,15 @@ caminoSleepingIcon Mattress = [ihamlet| <span .sleeping .ca-mattress title="_{Ma
 caminoSleepingIcon SleepingBag = [ihamlet| <span .sleeping .ca-sleeping-bag title="_{SleepingBagTitle}"> |]
 
 caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoAccommodationTypeIcon MunicipalAlbergue = [ihamlet| <span .accomodation .municipal-albergue .ca-albergue title="_{MunicipalAlbergueTitle}"> |]
-caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accomodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
-caminoAccommodationTypeIcon Hostel = [ihamlet| <span .accomodation .hostel .ca-hostel title="_{HostelTitle}"> |]
-caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accomodation .guest-house .ca-guesthouse title="_{GuestHouseTitle}"> |]
-caminoAccommodationTypeIcon HomeStay = [ihamlet| <span .accomodation .home-stay .ca-homestay title="_{HomeStayTitle}"> |]
-caminoAccommodationTypeIcon House = [ihamlet| <span .accomodation .house .ca-house title="_{HouseTitle}"> |]
-caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accomodation .hotel .ca-hotel title="_{HotelTitle}"> |]
-caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accomodation .camp-ground .ca-campground title="_{CampGroundTitle}"> |]
-caminoAccommodationTypeIcon Camping = [ihamlet| <span .accomodation .camping .ca-tent title="_{CampingTitle}"> |]
+caminoAccommodationTypeIcon MunicipalAlbergue = [ihamlet| <span .accommodation .municipal-albergue .ca-albergue title="_{MunicipalAlbergueTitle}"> |]
+caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accommodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
+caminoAccommodationTypeIcon Hostel = [ihamlet| <span .accommodation .hostel .ca-hostel title="_{HostelTitle}"> |]
+caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accommodation .guest-house .ca-guesthouse title="_{GuestHouseTitle}"> |]
+caminoAccommodationTypeIcon HomeStay = [ihamlet| <span .accommodation .home-stay .ca-homestay title="_{HomeStayTitle}"> |]
+caminoAccommodationTypeIcon House = [ihamlet| <span .accommodation .house .ca-house title="_{HouseTitle}"> |]
+caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accommodation .hotel .ca-hotel title="_{HotelTitle}"> |]
+caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accommodation .camp-ground .ca-campground title="_{CampGroundTitle}"> |]
+caminoAccommodationTypeIcon Camping = [ihamlet| <span .accommodation .camping .ca-tent title="_{CampingTitle}"> |]
 
 caminoAccommodationTypeMsg :: AccommodationType -> CaminoMsg
 caminoAccommodationTypeMsg MunicipalAlbergue = MunicipalAlbergueTitle
@@ -257,7 +257,7 @@ caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
     ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
   |]
 caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping') = [ihamlet|
-    <span .accomodation>
+    <span .accommodation>
       <span .pr-4>
         ^{caminoAccommodationTypeIcon type'} #{accommodationName a}
       <span .p2-4>
@@ -271,7 +271,7 @@ caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping')
 caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml (GenericAccommodation _type) = [ihamlet| |]
 caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [ihamlet|
-  <div .row .accomodation>
+  <div .row .accommodation>
     <div .offset-1 .col-5>
       ^{caminoAccommodationTypeIcon type'}
       #{name'}
@@ -286,9 +286,9 @@ caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [ihaml
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
     #{locationName location}
-    <span .accomodation-types>
-      $forall accomodation <- locationAccommodationTypes location
-        ^{caminoAccommodationTypeIcon accomodation}
+    <span .accommodation-types>
+      $forall accommodation <- locationAccommodationTypes location
+        ^{caminoAccommodationTypeIcon accommodation}
     <span .services>
       $forall service <- locationServices location
         ^{caminoServiceIcon service}
@@ -349,9 +349,9 @@ caminoLocationHtml preferences camino _trip containerId stops waypoints used loc
           <div .col .services>
              $forall service <- locationServices location
                 ^{caminoServiceIcon service}
-          <div .col .accomodation-types>
-             $forall accomodation <- locationAccommodationTypes location
-                 ^{caminoAccommodationTypeIcon accomodation}
+          <div .col .accommodation-types>
+             $forall accommodation <- locationAccommodationTypes location
+                 ^{caminoAccommodationTypeIcon accommodation}
      <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
        <div .accordion-body .container-fluid>
          <div .row>
@@ -366,8 +366,8 @@ caminoLocationHtml preferences camino _trip containerId stops waypoints used loc
                 <a .btn .btn-primary href="#{href}">
                     <span .ca-information title="_{LinkOut (locationName location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
-        $forall accomodation <- locationAccommodation location
-          ^{caminoAccommodationHtml accomodation}
+        $forall accommodation <- locationAccommodation location
+          ^{caminoAccommodationHtml accommodation}
         ^{conditionalLabel RouteLabel (outgoing camino' location)}
         ^{locationLegs preferences True camino used location}
   |]

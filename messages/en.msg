@@ -39,7 +39,7 @@ RoutesTitle: Select Routes
 SelectCamino: Select a camino
 SelectFitness: Select a fitness level
 SelectTravel: Select a travel type
-ServicesText: Select the cost for stopping at the end of the day and the desired accomodation and services at the end of the day and throughout the day. All preferences are measured in kilometres of walking and represent the amount you would walk extra to avoid a type of accomodation or get a service.
+ServicesText: Select the cost for stopping at the end of the day and the desired accommodation and services at the end of the day and throughout the day. All preferences are measured in kilometres of walking and represent the amount you would walk extra to avoid a type of accommodation or get a service.
 ServicesTitle: Select the Day's Travel Preferences
 ShowPreferencesText: If you are happy with these preferences, you can generate a plan. Otherwise, use the Back button to change your choices.
 ShowPreferencesTitle: Review Preferences

@@ -57,7 +57,7 @@ data PreferenceData = PreferenceData {
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
   , prefStop :: Penance -- ^ The stop cost
-  , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accomodation type preferences
+  , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accommodation type preferences
   , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
   , prefDayServices :: M.Map Service Penance -- ^ The during-day service preferences
   , prefCamino :: Camino -- ^ The camino to travel
@@ -110,7 +110,7 @@ instance FromJSON PreferenceData where
 
 instance ToJSON PreferenceData where
     toJSON prefs =
-      object [ 
+      object [
           "travel" .= prefTravel prefs
         , "fitness" .= prefFitness prefs
         , "distance" .= prefDistance prefs
@@ -176,7 +176,7 @@ caminoPreferencesFrom prefs = CaminoPreferences {
   , preferenceExcluded = prefExcluded prefs
 }
 
--- | Find stops that do not have rejected accomodation
+-- | Find stops that do not have rejected accommodation
 permittedStops :: PreferenceData -> S.Set Location -> S.Set Location
 permittedStops prefs locs = let
     accommodation = prefAccommodation prefs
@@ -198,7 +198,7 @@ instance RenderMessage CaminoApp CaminoMsg where
 
 instance Yesod CaminoApp where
   approot = ApprootMaster caminoAppRoot
-  
+
   defaultLayout :: Widget -> Handler Html
   defaultLayout widget = do
     master <- getYesod
@@ -273,7 +273,7 @@ checkNotice = do
   notice <- lookupCookie noticeCookie
   return $ maybe False ( == "Accept") notice
 
--- | Set the notice, based on the 
+-- | Set the notice, based on the
 setNotice :: Bool -> Handler ()
 setNotice accept =
   if accept then do
@@ -281,7 +281,7 @@ setNotice accept =
     setCookie cookie
   else
     deleteCookie noticeCookie "/"
-  
+
 decodePreferences :: Handler (Maybe PreferenceData)
 decodePreferences = do
   saved <- lookupCookie preferencesCookie

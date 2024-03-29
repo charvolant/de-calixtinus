@@ -21,7 +21,7 @@
   As you raise this cost, the planner will tend to choose longer and longer stages, reducing the total number of days
   you spend walking.
 
-<h3 #accomodation-help>Accommodation Preferences
+<h3 #accommodation-help>Accommodation Preferences
 
 <p>
   The accommodation preferences indicate how willing you are to stay in a particular type of accommodation.

@@ -28,7 +28,7 @@ module Camino.Preferences (
   , recommendedStops
   , rangeDistance
   , selectedRoutes
-  , suggestedAccomodation
+  , suggestedAccommodation
   , suggestedDayServices
   , suggestedDistanceRange
   , suggestedFinishes
@@ -360,10 +360,10 @@ suggestedDistanceRange Cycling Unfit = PreferenceRange Nothing 50.0 30.0 80.0 (J
 suggestedDistanceRange Cycling VeryUnfit = PreferenceRange Nothing 30.0 20.0 40.0 (Just 10.0) (Just 50.0)
 
 -- | Create a suggested penance map for accommodation type, based on travel type and fitness level
-suggestedAccomodation :: Travel -- ^ The style of travel
+suggestedAccommodation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
-  -> M.Map AccommodationType Penance -- ^ The suggested accomodation map
-suggestedAccomodation _ SuperFit = M.fromList [
+  -> M.Map AccommodationType Penance -- ^ The suggested accommodation map
+suggestedAccommodation _ SuperFit = M.fromList [
     (MunicipalAlbergue, Penance 0.0),
     (PrivateAlbergue, Penance 1.0),
     (Hostel, Penance 1.0),
@@ -374,8 +374,8 @@ suggestedAccomodation _ SuperFit = M.fromList [
     (CampGround, Penance 2.0),
     (Camping, Penance 5.0)
   ]
-suggestedAccomodation t VeryFit = suggestedAccomodation t SuperFit
-suggestedAccomodation _ Fit = M.fromList [
+suggestedAccommodation t VeryFit = suggestedAccommodation t SuperFit
+suggestedAccommodation _ Fit = M.fromList [
     (MunicipalAlbergue, Penance 0.0),
     (PrivateAlbergue, Penance 0.5),
     (Hostel, Penance 0.5),
@@ -386,9 +386,9 @@ suggestedAccomodation _ Fit = M.fromList [
     (CampGround, Penance 3.0),
     (Camping, Reject)
   ]
-suggestedAccomodation t Normal = suggestedAccomodation t Fit
-suggestedAccomodation t Unfit = suggestedAccomodation t Fit
-suggestedAccomodation t VeryUnfit = suggestedAccomodation t Fit
+suggestedAccommodation t Normal = suggestedAccommodation t Fit
+suggestedAccommodation t Unfit = suggestedAccommodation t Fit
+suggestedAccommodation t VeryUnfit = suggestedAccommodation t Fit
 
 -- | Create a suggested penance map for stop services, based on travel type and fitness level
 suggestedStopServices :: Travel -- ^ The style of travel
@@ -469,7 +469,7 @@ defaultTravelPreferences travel fitness = let
         preferenceTime = suggestedTimeRange travel fitness,
         preferencePerceivedDistance = perceivedDistanceRange fitness distance,
         preferenceStop = Penance 2.0,
-        preferenceAccommodation = suggestedAccomodation travel fitness,
+        preferenceAccommodation = suggestedAccommodation travel fitness,
         preferenceStopServices = suggestedStopServices travel fitness,
         preferenceDayServices = suggestedDayServices travel fitness
       }

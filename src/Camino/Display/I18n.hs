@@ -189,7 +189,7 @@ renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
 renderCaminoMsgDefault _ AboutLabel = "About"
 renderCaminoMsgDefault _ AccessibleTitle = "Accessible"
 renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
-renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accomodation ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ BankTitle = "Bank"

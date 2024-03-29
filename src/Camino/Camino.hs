@@ -148,7 +148,7 @@ data AccommodationType = MunicipalAlbergue -- ^ A pilgrims hostel run by local v
   | PrivateAlbergue -- ^ A hostel run as a local business, oriented towards pilgrims
   | Hostel -- ^ A generic hostel
   | GuestHouse -- ^ A generic guesthouse
-  | HomeStay -- ^ Rural accomodation, Quinta, Air B&B room etc.
+  | HomeStay -- ^ Rural accommodation, Quinta, Air B&B room etc.
   | House -- ^ An entire house or apartment for rent
   | Hotel -- ^ A dedicated hotel
   | CampGround -- ^ A dedicated camping ground with services
@@ -275,7 +275,7 @@ instance FromJSON Accommodation where
      services' <- v .: "services"
      sleeping' <- v .: "sleeping"
      return $ Accommodation name' type' services' sleeping'
-   parseJSON v = error ("Unable to parse accomodation object " ++ show v)
+   parseJSON v = error ("Unable to parse accommodation object " ++ show v)
 instance ToJSON Accommodation where
     toJSON (Accommodation name' type' services' sleeping') =
       object [ "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping' ]
@@ -305,7 +305,7 @@ locationTypeEnumeration = [minBound .. maxBound]
 type URL = Text
 
 -- | A location, usually a city/town/village that marks the start and end points of a leg
---   and which may have accomodation and other services available.
+--   and which may have accommodation and other services available.
 --   Locations form the vertexes on the travel graph
 data Location = Location {
     locationID :: String

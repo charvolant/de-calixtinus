@@ -2,7 +2,7 @@
 
 This is a program to help people plan walking stages on the Camino Santiago.
 You can supply a set of preferences in the form of fitness, preferred and hard
-limits on travel distance, accomodation etc. and the program will attempt to
+limits on travel distance, accommodation etc. and the program will attempt to
 build a *globally* optimal set of stages for you.
 Globally, means that the program will try to find the best set of stages over the
 entire trip, stretching and squeezing as appropriate to try and limit the number of

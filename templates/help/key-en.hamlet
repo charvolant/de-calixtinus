@@ -153,13 +153,13 @@
 
 <div #accommodation-help .card>
   <div .card-body>
-    <h2 .card-title>Accomodation
+    <h2 .card-title>Accommodation
     <table .table .table-striped>
-      <caption>Accomodation Types
+      <caption>Accommodation Types
       <thead>
         <tr>
            <th scope="col">Icon
-           <th scope="col">Accomodation Type
+           <th scope="col">Accommodation Type
            <th scope="col">Comments
       <tbody>
         <tr>
@@ -200,7 +200,7 @@
             <td>^{caminoAccommodationTypeIcon Hotel}
             <td>Hotel
             <td>
-                A commercial hotel, usually with multiple services and accomodation options.
+                A commercial hotel, usually with multiple services and accommodation options.
         <tr>
             <td>^{caminoAccommodationTypeIcon CampGround}
             <td>Camp Ground

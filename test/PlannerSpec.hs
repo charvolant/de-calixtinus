@@ -27,7 +27,7 @@ testPlanner :: TravelPreferences -> Camino -> Test
 testPlanner preferences camino = TestList [
   TestLabel "Hours Simple" testHoursSimple,
   TestLabel "Travel Simple" testTravelSimple,
-  TestLabel "Accomodation Simple" testAccomodationSimple,
+  TestLabel "Accommodation Simple" testAccommodationSimple,
   TestLabel "Penance Simple" testPenanceSimple,
   TestLabel "Plan Camino" (testPlanCamino preferences camino)
   ]
@@ -171,23 +171,23 @@ testTravelSimple2 = TestCase (assertFloatEqual "Travel Simple 2" 10.0 (travel pr
 
 testTravelSimple3 = TestCase (assertFloatEqual "Travel Simple 3" 2.0 (travel preferences1 legs0) 0.001)
 
-testAccomodationSimple = TestList [ testAccomodationSimple1, testAccomodationSimple2 ]
+testAccommodationSimple = TestList [ testAccommodationSimple1, testAccommodationSimple2 ]
 
-testAccomodationSimple1 = let
+testAccommodationSimple1 = let
     (accom, serv, pen) = accommodation preferences1 camino1 legs0 services0 False
   in
     TestCase (do
-      assertEqual "Accomodation Simple 1 1" True (isJust accom)
-      assertEqual "Accomodation Simple 1 2" services0 serv
-      assertPenanceEqual "Accomodation Simple 1 3" (Penance 1.4) pen 0.001
+      assertEqual "Accommodation Simple 1 1" True (isJust accom)
+      assertEqual "Accommodation Simple 1 2" services0 serv
+      assertPenanceEqual "Accommodation Simple 1 3" (Penance 1.4) pen 0.001
     )
-testAccomodationSimple2 = let
+testAccommodationSimple2 = let
     (accom, serv, pen) = accommodation preferences1 camino1 legs1 services0 False
   in
     TestCase (do
-      assertEqual "Accomodation Simple 2 1" True (isNothing accom)
-      assertEqual "Accomodation Simple 2 2" services0 serv
-      assertPenanceEqual "Accomodation Simple 2 3" Reject pen 0.001
+      assertEqual "Accommodation Simple 2 1" True (isNothing accom)
+      assertEqual "Accommodation Simple 2 2" services0 serv
+      assertPenanceEqual "Accommodation Simple 2 3" Reject pen 0.001
     )
 
 

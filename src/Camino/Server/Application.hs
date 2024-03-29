@@ -134,7 +134,6 @@ aboutWidget (_:other) = aboutWidget other
 getHomeR :: Handler Html
 getHomeR = do
   accept <- checkNotice
-  traceM ("Accepted = " ++ show accept)
   if accept then
     homeP
   else

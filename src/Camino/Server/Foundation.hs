@@ -42,7 +42,8 @@ import Yesod.Static (Static)
 import Debug.Trace
 
 data CaminoApp = CaminoApp {
-    caminoAppPort :: Int
+    caminoAppRoot :: Text
+  , caminoAppPort :: Int
   , caminoAppDevel :: Bool
   , caminoAppStatic :: Static
   , caminoAppConfig :: C.Config
@@ -196,6 +197,8 @@ instance RenderMessage CaminoApp CaminoMsg where
     renderMessage master _langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) msg
 
 instance Yesod CaminoApp where
+  approot = ApprootMaster caminoAppRoot
+  
   defaultLayout :: Widget -> Handler Html
   defaultLayout widget = do
     master <- getYesod

@@ -26,19 +26,25 @@ It turns out that this was sufficient motivation.
 
 ## Usage
 
+### Web Server
 To run the web server, use
 
 ```shell
-camino-server-exe [-c CONFIG] [-s STATIC] [-d] [-p PORT] CAMINO ...
+camino-server-exe [-c CONFIG] [-s STATIC] [-d] [-r ROOT] [-p PORT] CAMINO ...
 ```
 
-
-| Argument  | Description                                                                             | Example                |
+| Argument  | Description                                                                             | Example/default        |
 |-----------|-----------------------------------------------------------------------------------------|------------------------|
 | CAMINO    | A list of camino descriptions in JSON form                                              | camino-portuguese.json |
-| -c CONFIG | An optional configuration file for generating the appropriate HTML output, in YAML form | config.yaml            |
+| -c CONFIG | An optional configuration file for generating the appropriate HTML output, in YAML form | ./config.yaml          |
 | -s STATIC | The location of static (asset) files, such as CSS, fonts and icons                      | ./static               |                                                                     
-| -d        | Use debug mode                                                                          |               |                                                                     
+| -r ROOT   | The root URL for links.                                                                 | 3000                   |                                                                     
+| -p PORT   | The port to listen on                                                                   | http://localhost:3000  |                                                                     
+| -d        | Use debug mode                                                                          |                        |                                                                     
+
+If you are using something like nginx as a front-end, you will need to set the root so that links are correctly generated.
+
+### Planner 
 
 To run the simple planner, use
 

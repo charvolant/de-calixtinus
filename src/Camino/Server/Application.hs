@@ -78,6 +78,24 @@ homeP =
     setTitleI MsgAppName
     $(widgetFile "homepage")
 
+noticeP :: Handler Html
+noticeP = do
+  master <- getYesod
+  langs <- languages
+  let config = caminoAppConfig master
+  let router = renderCaminoRoute config langs
+  let messages = renderCaminoMsg config
+  (widget, enctype) <- generateFormPost $ acceptNoticeForm (Just False)
+  defaultLayout $ do
+    let notice = (noticeWidget langs) messages router
+    setTitleI MsgAppName
+    $(widgetFile "notice")
+    
+noticeWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
+noticeWidget [] = noticeWidget ["en"]
+noticeWidget ("en":_) = $(ihamletFile "templates/notice/notice-en.hamlet")
+noticeWidget (_:other) = noticeWidget other
+
 getHelpR :: Handler Html
 getHelpR = do
   master <- getYesod
@@ -96,14 +114,41 @@ helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
 helpWidget (_:other) = helpWidget other
 
 getHomeR :: Handler Html
-getHomeR = homeP
+getHomeR = do
+  accept <- checkNotice
+  traceM ("Accepted = " ++ show accept)
+  if accept then
+    homeP
+  else
+    noticeP
+
+postNoticeR :: Handler Html
+postNoticeR = do  
+  render <- getMessageRender
+  ((result, widget), enctype) <- runFormPost $ (acceptNoticeForm) Nothing
+  case result of
+      FormSuccess accept -> do
+         setNotice accept
+         if accept then
+           redirect HomeR
+         else do
+           setMessage [shamlet|<div .alert .alert-danger>#{render MsgAcceptDisclaimerRequired}|]
+           noticeP
+      FormFailure errs -> do
+        setMessage [shamlet|
+          $forall err <- errs
+            <div .alert .alert-danger>#{err}
+        |]
+        noticeP
+      _ ->
+        getHomeR
 
 postPlanR :: Handler Html
 postPlanR = do
   ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
   case result of
       FormSuccess prefs -> do
-         encodeToSession "preference-data" prefs
+         encodePreferences prefs
          planPage prefs
       FormFailure errs -> do
         setMessage [shamlet|
@@ -119,7 +164,7 @@ postPlanKmlR = do
   ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
   case result of
       FormSuccess prefs -> do
-         encodeToSession "preference-data" prefs
+         encodePreferences prefs
          planKml prefs
       _ ->
         invalidArgs ["Bad preferences data"]
@@ -128,7 +173,7 @@ postPlanKmlR = do
 getPreferencesR :: Handler Html
 getPreferencesR = do
     master <- getYesod
-    prefs <- decodeFromSession "preference-data"
+    prefs <- decodePreferences
     let prefs' = Just $ maybe (defaultPreferenceData master) id prefs
     ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm prefs'
     stepPage FitnessStep Nothing widget enctype
@@ -137,8 +182,6 @@ postPreferencesR :: Handler Html
 postPreferencesR = do
   step <- lookupPostParam "_step"
   next <- lookupPostParam "_next"
-  params <- getPostParams
-  -- traceM ("Params = " ++ show params)
   let step' = maybe Nothing (readMaybe . unpack) step
   let next' = maybe FitnessStep id $ maybe Nothing (readMaybe . unpack) next
   case step' of
@@ -151,7 +194,6 @@ nextStep step next = do
       ((result, widget), enctype) <- runFormPost $ (stepForm step) Nothing
       case result of
           FormSuccess prefs -> do
-             encodeToSession "preference-data" prefs
              (widget', enctype') <- generateFormPost $ (stepForm next) (Just prefs)
              stepPage next (Just prefs) widget' enctype'
           FormFailure errs -> do

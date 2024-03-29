@@ -59,6 +59,7 @@ library
     , bytestring
     , colour
     , containers
+    , cookie
     , data-default-class
     , directory
     , file-embed
@@ -101,6 +102,7 @@ executable camino-map-exe
     , bytestring
     , colour
     , containers
+    , cookie
     , data-default-class
     , de-calixtinus
     , directory
@@ -144,6 +146,7 @@ executable camino-planner-exe
     , bytestring
     , colour
     , containers
+    , cookie
     , data-default-class
     , de-calixtinus
     , directory
@@ -187,6 +190,7 @@ executable camino-server-exe
     , bytestring
     , colour
     , containers
+    , cookie
     , data-default-class
     , de-calixtinus
     , directory
@@ -230,6 +234,7 @@ executable generate-static-exe
     , bytestring
     , colour
     , containers
+    , cookie
     , data-default-class
     , de-calixtinus
     , directory
@@ -283,6 +288,7 @@ test-suite de-calixtinus-test
     , bytestring
     , colour
     , containers
+    , cookie
     , data-default-class
     , de-calixtinus
     , directory

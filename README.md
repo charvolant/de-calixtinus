@@ -219,3 +219,14 @@ After that, you can run the following in the project directory
 ```shell
 sass ./scss/custom.scss ./static/css/bootstrap-dc.css
 ```
+
+### Stack can't build 
+
+It appears that the yesod build will sometimes fail due to
+problems parsing some UTF-8 encoded files.
+This manifests as an error of the form 
+*happy: src/Language/JavaScript/Parser/Grammar7.y: hGetContents: invalid argument (invalid byte sequence)*
+Ensure that the `LANG` environment variable is set with a suitable encoding
+`export LANG=C.UTF-8` or `export LANG=en_US.UTF-8`
+
+See https://stackoverflow.com/questions/70803989/cannot-compile-yesod-hgetcontents-invalid-argument

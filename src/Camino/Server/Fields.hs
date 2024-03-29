@@ -16,6 +16,7 @@ A collection of fields for yesod forms that display data in ways that fit the Ca
 
 module Camino.Server.Fields (
     clickSelectionField
+  , extendedCheckboxField
   , extendedRadioFieldList
   , extendedSelectionField
   , implyingCheckListField
@@ -96,6 +97,32 @@ extendedRadioFieldList :: (Eq a, RenderMessage site FormMessage) =>
   -> [(Text, msg, a, Maybe msg)] -- ^ The possible options for the radio list, with a key (identifier), label, value and optional description
   -> Field (HandlerFor site) a -- ^ The resulting field
 extendedRadioFieldList render options = extendedRadioFieldList' (renderOptions render options)
+   
+-- | Create a checkbox with additional explanation
+extendedCheckboxField :: (RenderMessage site FormMessage) => 
+     (msg -> Html) -- ^ The render function. Because basically composing monads makes my brain drop out
+  -> msg -- ^ The label associated with the checkbox
+  -> Maybe msg -- ^ The possible options for the radio list, with a key (identifier), label, value and optional description
+  -> Field (HandlerFor site) Bool -- ^ The resulting field
+extendedCheckboxField render label mexp = Field
+    { fieldParse = \e _ -> return $ checkBoxParser e
+    , fieldView  = \theId name attrs val _ -> [whamlet|
+        <div .form-check>
+          <input .form-check-input id=#{theId} *{attrs} type=checkbox name=#{name} value=yes :showVal id val:checked>
+          <label .form-check-label for="#{theId}">^{render label}
+          $maybe exp <- mexp
+           <div .form-text>^{render exp}
+|]
+    , fieldEnctype = UrlEncoded
+    }
+    where
+        checkBoxParser [] = Right $ Just False
+        checkBoxParser (x:_) = case x of
+            "yes" -> Right $ Just True
+            "on" -> Right $ Just True
+            _     -> Right $ Just False
+
+        showVal = either (\_ -> False)
 
 
 -- | Create a field that handles preference ranges

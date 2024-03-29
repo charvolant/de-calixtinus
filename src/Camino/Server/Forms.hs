@@ -20,6 +20,7 @@ The preferences gathering forms use a common data element and pass data via hidd
 module Camino.Server.Forms (
     PreferenceData(..)
 
+  , acceptNoticeForm
   , caminoPreferencesFrom
   , confirmPreferencesForm
   , chooseCaminoForm
@@ -153,140 +154,6 @@ instance (Show a, Read a) => PathPiece (PreferenceRange a) where
       min',
       max'
     ]
-
-data PreferenceData = PreferenceData {
-    prefTravel :: Travel -- ^ The travel mode
-  , prefFitness :: Fitness -- ^ The fitness level
-  , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
-  , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
-  , prefStop :: Penance -- ^ The stop cost
-  , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accomodation type preferences
-  , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
-  , prefDayServices :: M.Map Service Penance -- ^ The during-day service preferences
-  , prefCamino :: Camino -- ^ The camino to travel
-  , prefRoutes :: S.Set Camino.Camino.Route -- ^ The chosen routes
-  , prefStart :: Location -- ^ The start location
-  , prefFinish :: Location -- ^ The finish location
-  , prefStops :: S.Set Location -- ^ Any explcit stops
-  , prefExcluded :: S.Set Location -- ^ Any explicit exclusions
-} deriving (Show)
-
-instance FromJSON PreferenceData where
-   parseJSON (Object v) = do
-      travel' <- v .: "travel"
-      fitness' <- v .: "fitness"
-      distance' <- v .: "distance"
-      time' <- v .: "time"
-      stop' <- v .: "stop"
-      accommodation' <- v .: "accommodation"
-      stopServices' <- v .: "stop-services"
-      dayServices' <- v .: "day-services"
-      camino' <- v .: "camino"
-      routes' <- v .: "routes"
-      start' <- v .: "start"
-      finish' <- v .: "finish"
-      stops' <- v .: "stops"
-      excluded' <- v .: "excluded"
-      let camino'' = placeholderCamino camino'
-      let routes'' = S.map placeholderRoute routes'
-      let start'' = placeholderLocation start'
-      let finish'' = placeholderLocation finish'
-      let stops'' = S.map placeholderLocation stops'
-      let excluded'' = S.map placeholderLocation excluded'
-      return PreferenceData {
-          prefTravel = travel'
-        , prefFitness = fitness'
-        , prefDistance = distance'
-        , prefTime = time'
-        , prefStop = stop'
-        , prefAccommodation = accommodation'
-        , prefStopServices = stopServices'
-        , prefDayServices = dayServices'
-        , prefCamino = camino''
-        , prefRoutes = routes''
-        , prefStart = start''
-        , prefFinish = finish''
-        , prefStops = stops''
-        , prefExcluded = excluded''
-      }
-   parseJSON v = error ("Unable to parse preferences data object " ++ show v)
-
-instance ToJSON PreferenceData where
-    toJSON prefs =
-      object [ 
-          "travel" .= prefTravel prefs
-        , "fitness" .= prefFitness prefs
-        , "distance" .= prefDistance prefs
-        , "time" .= prefTime prefs
-        , "stop" .= prefStop prefs
-        , "accommodation" .= prefAccommodation prefs
-        , "stop-services" .= prefStopServices prefs
-        , "day-services" .= prefDayServices prefs
-        , "camino" .= (caminoId $ prefCamino prefs)
-        , "routes" .= (S.map routeID (prefRoutes prefs))
-        , "start" .= (locationID $ prefStart prefs)
-        , "finish" .= (locationID $ prefFinish prefs)
-        , "stops" .= (S.map locationID (prefStops prefs))
-        , "excluded" .= (S.map locationID (prefExcluded prefs))
-      ]
-
-defaultPreferenceData :: CaminoApp -> PreferenceData
-defaultPreferenceData master = let
-    travel' = Walking
-    fitness' = Unfit
-    dtp = defaultTravelPreferences travel' fitness'
-    camino' = head $ caminoAppCaminos master
-    dcp = defaultCaminoPreferences camino'
-  in
-    PreferenceData {
-        prefTravel = travel'
-      , prefFitness = fitness'
-      , prefDistance = preferenceDistance dtp
-      , prefTime = preferenceTime dtp
-      , prefStop = preferenceStop dtp
-      , prefAccommodation = preferenceAccommodation dtp
-      , prefStopServices = preferenceStopServices dtp
-      , prefDayServices = preferenceDayServices dtp
-      , prefCamino = camino'
-      , prefRoutes = preferenceRoutes dcp
-      , prefStart = preferenceStart dcp
-      , prefFinish = preferenceFinish dcp
-      , prefStops = preferenceStops dcp
-      , prefExcluded = preferenceExcluded dcp
-    }
-
-travelPreferencesFrom :: PreferenceData -> TravelPreferences
-travelPreferencesFrom prefs = TravelPreferences {
-    preferenceTravelFunction = prefTravel prefs
-  , preferenceFitness = prefFitness prefs
-  , preferenceDistance = prefDistance prefs
-  , preferencePerceivedDistance = perceivedDistanceRange (prefFitness prefs) (prefDistance prefs)
-  , preferenceTime = prefTime prefs
-  , preferenceStop = prefStop prefs
-  , preferenceAccommodation = prefAccommodation prefs
-  , preferenceStopServices = prefStopServices prefs
-  , preferenceDayServices = prefDayServices prefs
-}
-
-
-caminoPreferencesFrom :: PreferenceData -> CaminoPreferences
-caminoPreferencesFrom prefs = CaminoPreferences {
-    preferenceCamino = prefCamino prefs
-  , preferenceStart = prefStart prefs
-  , preferenceFinish = prefFinish prefs
-  , preferenceRoutes = prefRoutes prefs
-  , preferenceStops = prefStops prefs
-  , preferenceExcluded = prefExcluded prefs
-}
-
--- | Find stops that do not have rejected accomodation
-permittedStops :: PreferenceData -> S.Set Location -> S.Set Location
-permittedStops prefs locs = let
-    accommodation = prefAccommodation prefs
-    allowed ac = maybe mempty id (M.lookup ac accommodation) /= Reject
-    campingAllowed = allowed Camping -- Anything goes
-  in
-    S.filter (\l -> any (allowed . accommodationType) (locationAccommodation l)) locs
 
 -- Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
@@ -907,3 +774,14 @@ confirmPreferencesForm prefs extra = do
       ^{fvInput (viewExcluded fields)}
     |]
     return (res, widget)
+
+acceptNoticeForm :: Maybe Bool -> Html -> MForm Handler (FormResult Bool, Widget)
+acceptNoticeForm accept extra = do
+  master <- getYesod
+  render <- getMessageRender
+  (res, acceptView) <- mreq (extendedCheckboxField (\m -> toHtml $ render m) MsgAcceptDisclaimerLabel Nothing) "" accept
+  let widget = [whamlet|
+    #{extra}
+    ^{fvInput acceptView}
+  |]
+  return (res, widget)

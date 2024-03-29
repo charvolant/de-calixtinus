@@ -1,0 +1,12 @@
+<div .container-fluid>
+  <div .row .m-5>
+    <div .col>
+      <p>
+        ^{notice}
+  <div .row .justify-content-center>
+    <div .col-10>
+      <form .container-fluid action="@{NoticeR}" method=post enctype="#{enctype}">
+        ^{widget}
+        <div .row>
+          <div .col-auto>
+            <button type="submit" .btn .btn-primary>_{MsgAcceptLabel}

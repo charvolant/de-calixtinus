@@ -1,8 +1,9 @@
 # Ansible Notes
 
-# Installing letsencrypt
+# Installing SSL certificate
 
-I'm not too sure how to get this going via ansible, so currently, here are the manual steps
+The `nginx` role should automatically install a certificate from letsencrypt if needed.
+But if things go wrong
 
 1. Ensure nginx is running via `systemctl status nginx` If it's not, use `systemctl start nginx`
 2. Install certbot for nginx `sudo yum install certbot-nginx`

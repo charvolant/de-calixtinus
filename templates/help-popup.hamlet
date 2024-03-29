@@ -3,8 +3,8 @@
     <div .modal-content>
       <div class="modal-header">
         <h5 class="modal-title">_{MsgHelpTitle}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="_{MsgCloseLabel}"></button>
       <div #help-dialog-contents .modal-body>
         ^{help}
       <div .modal-footer>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">_{MsgCloseLabel}</button>

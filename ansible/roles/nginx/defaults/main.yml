@@ -1,3 +1,10 @@
+# Contact for cetificate creation. Override this in your inventory.yml
+acme_account_email: INVALID
+# The name of the cerbot package to install
+certbot_package_name: "certbot"
+# Force creation of certificates
+force_certificate: false
 # The name of the nginx package to install.
 nginx_package_name: "nginx"
+# The server name. Override this in you inventory.yaml
 server_name: "de-calixtinus.org"

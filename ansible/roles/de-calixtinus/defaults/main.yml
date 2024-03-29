@@ -1,0 +1,6 @@
+dcx_dir: /opt/de-calixtinus
+dcx_dist_bucket: camino-planner
+dcx_log_dir: /var/log/de-calixtinus
+dcx_user: dcx
+dcx_group: dcx
+dcx_version: 0.1

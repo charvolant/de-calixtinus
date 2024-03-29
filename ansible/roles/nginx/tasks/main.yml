@@ -1,9 +1,42 @@
+- name: Check if certificate exisits
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/live/{{ server_name }}"
+  register: certificate
+
 - name: Ensure nginx is installed
-  yum:
+  ansible.builtin.yum:
     name: "{{ nginx_package_name }}"
     state: present
 
-- name: Set up nginx configuration
-  template:
+- name: Ensure certbot-nginx is installed
+  ansible.builtin.yum:
+    name: "{{ certbot_package_name }}"
+    state: present
+
+# The following steps are run if there is no certificate in evidence
+- name: Set up nginx configuration (port 80)
+  ansible.builtin.template:
+    src: templates/nginx-80.conf.j2
+    dest: /etc/nginx/nginx.conf
+  when: not certificate.stat.exists or force_certificate
+
+- name: Restart nginx on port 80
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+  when: not certificate.stat.exists or force_certificate
+
+- name: Ask for a certificate
+  ansible.builtin.shell:
+    cmd: "/usr/bin/certbot --non-interactive --nginx --agree-tos --keep-until-expiring --email {{ acme_account_email }} -d {{ server_name }}"
+  when: not certificate.stat.exists or force_certificate
+
+- name: Set up nginx configuration (SSL)
+  ansible.builtin.template:
     src: templates/nginx.conf.j2
     dest: /etc/nginx/nginx.conf
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted

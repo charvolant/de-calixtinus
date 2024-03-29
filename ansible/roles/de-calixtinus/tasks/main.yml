@@ -1,0 +1,67 @@
+- name: Create de-calixtinus group
+  ansible.builtin.group:
+    name: "{{ dcx_group }}"
+    state: present
+
+- name: Create de-calixtinus user
+  ansible.builtin.user:
+    name: "{{ dcx_user }}"
+    groups: "{{ dcx_group }}"
+    comment: "User for de-calixtinus server"
+    state: present
+
+- name: Ensure archiving tools are present
+  yum:
+    name:
+      - gzip
+      - tar
+      - libicu
+    state: present
+
+- name: Get distribution from s3
+  ansible.builtin.get_url:
+    url: "https://{{ dcx_dist_bucket }}.s3.ap-southeast-2.amazonaws.com/build/de-calixtinus-{{ dcx_version }}.tar.gz"
+    dest: /tmp/de-calixtinus.tar.gz
+    force: true
+
+- name: Create the install directory
+  ansible.builtin.file:
+    path: "{{ dcx_dir }}"
+    owner: "{{ dcx_user }}"
+    group: "{{ dcx_group }}"
+    state: directory
+
+- name: Install distribution
+  ansible.builtin.unarchive:
+    src: /tmp/de-calixtinus.tar.gz
+    dest: "{{ dcx_dir }}"
+    owner: "{{ dcx_user }}"
+    group: "{{ dcx_group }}"
+    copy: false
+
+- name: Ensure executable files are executable
+  ansible.builtin.file:
+    path: "{{ dcx_dir }}/bin/{{ item }}"
+    mode: ug+x
+  loop:
+    - camino-server-exe
+    - camino-planner-exe
+    - camino-map-exe
+    - generate-static-exe
+
+- name: Create the log directory
+  ansible.builtin.file:
+    path: "{{ dcx_log_dir }}"
+    owner: "{{ dcx_user }}"
+    group: "{{ dcx_group }}"
+    state: directory
+
+- name: Create systemd services
+  ansible.builtin.template:
+    src: templates/de-calixtinus.service.j2
+    dest: /usr/lib/systemd/system/de-calixtinus.service
+
+- name: Start service
+  ansible.builtin.systemd:
+    name: de-calixtinus
+    state: started

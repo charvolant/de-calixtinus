@@ -1,0 +1,13 @@
+/var/log/de-calixtinus/*.log {
+    create 0640 {{ dcx_user }} {{ dcx_group }}
+    daily
+    rotate 10
+    missingok
+    notifempty
+    compress
+    delaycompress
+    sharedscripts
+    postrotate
+        systemctl restart de-calixtinus
+    endscript
+}

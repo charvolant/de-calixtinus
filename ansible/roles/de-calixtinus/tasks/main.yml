@@ -56,12 +56,26 @@
     group: "{{ dcx_group }}"
     state: directory
 
+- name: Create the run directory
+  ansible.builtin.file:
+    path: "{{ dcx_run_dir }}"
+    owner: "{{ dcx_user }}"
+    group: "{{ dcx_group }}"
+    state: directory
+
 - name: Create systemd services
   ansible.builtin.template:
     src: templates/de-calixtinus.service.j2
     dest: /usr/lib/systemd/system/de-calixtinus.service
 
-- name: Start service
+- name: Create log rotation
+  ansible.builtin.template:
+    src: templates/de-calixtinus.logrotate.j2
+    dest: /etc/logrotate.d/de-calixtinus
+
+- name: Enable and start service
   ansible.builtin.systemd:
     name: de-calixtinus
-    state: started
+    daemon_reload: true
+    enabled: true
+    state: restarted

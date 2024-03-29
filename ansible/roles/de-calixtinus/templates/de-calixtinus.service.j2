@@ -9,6 +9,7 @@ Type=simple
 User={{ dcx_user }}
 StandardOutput=append:{{ dcx_log_dir }}/access.log
 StandardError=append:{{ dcx_log_dir }}/error.log
+WorkingDirectory={{ dcx_run_dir }}
 ExecStart={{ dcx_dir}}/bin/camino-server-exe -c {{ dcx_dir}}/lib/config-static.yaml -s {{ dcx_dir}}/lib/static -r https://{{ server_name }} -p 3000 {{ dcx_dir}}/lib/camino-portuguese.json
 Restart=no
 

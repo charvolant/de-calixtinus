@@ -113,6 +113,24 @@ helpWidget [] = helpWidget ["en"]
 helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
 helpWidget (_:other) = helpWidget other
 
+
+getAboutR :: Handler Html
+getAboutR = do
+  master <- getYesod
+  langs <- languages
+  let config = caminoAppConfig master
+  let router = renderCaminoRoute config langs
+  let messages = renderCaminoMsg config
+  defaultLayout $ do
+    setTitleI MsgAboutTitle
+    toWidget ((aboutWidget langs) messages router)
+
+-- | About text for the languages that we have
+aboutWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
+aboutWidget [] = aboutWidget ["en"]
+aboutWidget ("en":_) = $(ihamletFile "templates/about/about-en.hamlet")
+aboutWidget (_:other) = aboutWidget other
+
 getHomeR :: Handler Html
 getHomeR = do
   accept <- checkNotice

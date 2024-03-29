@@ -1,3 +1,5 @@
+AboutLabel: About De Calixtinus
+AboutTitle: De Calixtinus
 AcceptLabel: Accept
 AccommodationPreferencesLabel: Accommodation Preferences
 AcceptDisclaimerLabel: I accept use of cookies and testing status
@@ -51,6 +53,6 @@ StopsLabel: Locations to stop at
 StopsText: Select locations where you must stop at the end of a day and locations that you do not wish to stop at.
 StopsTitle: Required and Excluded Stops
 SuggestedLabel: Suggested
-TestMessage: Example only for testing
+TestMessage: Currently under testing, see the About page
 TimePreferencesLabel: Time Preferences
 

@@ -1,0 +1,124 @@
+<h2>About De Calixtinus
+
+<p>
+  De Calixtinus is a tool for planning a pilgrimage along the Camino Santiago (Way of St James),
+  a pilgrimage that that runs from numerous start points to Santiago de Compostella in North-West Spain.
+  The tool allows you to express preferences for how far you want to walk each day, the sort of accommodation
+  that you would prefer to stay in at the end of the day's travel, whether you will need food or clothes washing
+  facilities at the end of the day, whether there is any particular place where you want to stop at so that you
+  can go sightseeing at the end of the day and so on.
+
+<p>
+  Once you have described your preferences, De Calixtinus will attempt to build you a globally optimised set of
+  stages, reflecting those preferences.
+  The <em>globally optimised</em> bit is important.
+  The tool will stretch some days a bit and squeeze others to ensure that you have the best possible Camino,
+  in terms of your preferences, that is possible.
+  It is possible that a stage many days in advance will cause a change in a previous day's walking, as the planner
+  attempts to improve the entire experience.
+
+<p>
+  The idea for De Calixtinus came when the author (Doug) and his partner (Alison) were walking the Portuguese Camino in 2023.
+  We'd done our homework and planned things out with the help of guidebooks.
+  But I turned 60 on the Camino and Alison is not that far behind.
+  We were pretty good at the normal stages of 20-24km but once we hit 28km we were exhausted and by 30km we
+  were a very, very sad sight.
+  So, while I was walking, I started to think about how to plan an optimal route.
+
+<p>
+  I took inspiration, oddly enough, from the <a href="https://www.tug.org/">TeX</a> typography system.
+  TeX has an absolutely stellar paragraph layout system that builds justified paragraphs by optimising the
+  amount of extra whitespace inserted between words to produce the most aesthetic paragraph possible.
+  Breaking a paragraph into lines and splitting a Camino into stages are, computationally speaking, not
+  that far apart and it provided a model for how to plan a Camino using a mathematical optimisation technique called
+  <a href="https://en.wikipedia.org/wiki/Dynamic_programming">dynamic programming</a>.
+
+<p>
+  I'd also always wanted to learn the <a href="https://www.haskell.org/">Haskell</a> programming language.
+  However, learning Haskell is quite the uphill struggle and I needed a self-contained project that would
+  motivate me to push myself to learn the new concepts that underly Haskell.
+  It turns out that this was the project I was looking for.
+
+<h2>What's all this about Penance?
+
+<p>
+  Penance started as an in-joke while we were walking the Camino.
+  It came after a particularly miserable night where we hadn't made it to the next town.
+  No problem, we had sleeping mats and sleeping bags, so we proceeded to make camp next to the track we were following.
+  First came the mosquitoes.
+  The mosquitoes were driven away by the arrival of a thunderstorm that filled our beds with water.
+  Once that was over, the mosquitoes came back.
+  With nothing better to do, we started walking and trudged into our destination in the wee hours of the morning, with
+  everything shut except for the dogs announcing our arrival.
+  When we finally managed to get checked in to where we were staying, having been cold, wet and miserable for something
+  like twelve hours, our host commented that we'd paid for all our sins in one go.
+
+<p>
+  Dynamic programming requires a single measure to optimise and I started thinking of using "penance" as the
+  name of the measure that I was optimsing.
+  Walking on the Camino, you want to minimise the penance you pay.
+  (Or maximise, if you're that sort of pilgrim, but I haven't implemented that yet.)
+
+<p>
+  The base unit of penance is the distance you walk or cycle each day, with adjustments made for things like
+  hill climbing and fitness levels.
+  If a day is particularly short or long, an additional amount of discomfort penance is added.
+  After that, preferences in terms of the type of accommodation you want at the end of the day are expressed in
+  terms of "I would walk an extra <em>x</em> kilometres to avoid having to stay here."
+  Similarly, the services you want at day's end (eg a place to eat or lockers for your valuables) are expressed
+  in terms of "I would walk an extra <em>y</em> kilometres to get this."
+  All of this is added together to get the cost for the entire day, expressed in kilometres-equivalent of walking.
+
+<h2>Why De Calixtinus?
+
+<p>
+  Book V of the <a href="https://en.wikipedia.org/wiki/Codex_Calixtinus">Codex Calixtinus</a> is a guide book compiled in the
+  12th century, intended as a guide for pilgrims attempting the Camino Santiago.
+  <em>De Calixtinus</em> means "of Calixtinus" and seemed like a rather nice way of reflecting that the planner
+  is basically yet another guide to the Way.
+
+<p>
+  However, I promise that the author of the program doesn't have the same down on the Navareese that the author
+  of the codex does.
+
+<h2>Camino Options
+
+<p>
+  Currently, there is only source data for the Camino Portuguese, the one we walked.
+  Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
+  over 9,000 lines of JSON.
+  More routes are planned.
+
+<h2>Source Code
+
+<p>
+  This is an open-source project.
+  The code is available on GitHub <a href="https://github.com/charvolant/de-calixtinus">here</a> under the
+  permissive <a href="https://opensource.org/license/mit">MIT licence</a>.
+
+<h2>Sources of Data
+
+<p>
+  The major source is the excellent <strong>Buen Camino</strong> app.
+  This app gives most of the information above in a useful form while walking the Camino.
+  It also updates dynamically and can be used to load multiple Camino routes.
+  You can get more information about this at the Apple Store, Google Play or at the
+  <a href="https://www.editorialbuencamino.com/">app website</a>.
+  My heartfelt thanks to Editorial Buen Camino, who gave me permission to use thier data.
+
+<p>
+ A secondary source is <cite>The Camino Portugués</cite> by Kat Davis (Cicerone, 2019), which we
+  used as a planning book.
+
+<p>
+  Good-old Google Maps was used to estimate total ascent and descent between
+  waypoints and fix suitable waypoint locations.
+  Google Maps was also used to estimate train and bus stations.
+
+<p>
+  The <a href="https://stingynomads.com/camino-fatima-walk-lisbon-porto/">Stingy Nomads</a> aided us on
+  our route to Fátima.
+
+<p>
+  And, of course, we did our own stuff.
+

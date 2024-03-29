@@ -3,5 +3,6 @@
 /plan PlanR POST
 /planKml PlanKmlR POST
 /notice NoticeR POST
+/about AboutR GET
 /help HelpR GET
 /static StaticR Static caminoAppStatic

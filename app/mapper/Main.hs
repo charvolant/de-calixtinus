@@ -10,15 +10,9 @@ Portability : POSIX
 -}
 module Main (main) where
 
-import qualified Data.ByteString.Lazy as B
-import Data.Aeson
 import Camino.Camino
-import Graph.Graph
-import Camino.Planner
 import Data.Text.Lazy (pack, unpack, fromStrict)
 import Formatting
-import System.FilePath
-import Text.XML
 
 import Options.Applicative
 

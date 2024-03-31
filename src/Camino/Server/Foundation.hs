@@ -27,10 +27,12 @@ import qualified Data.Set as S
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
+import Data.Time.Clock (DiffTime, addUTCTime, getCurrentTime, secondsToDiffTime)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Web.Cookie
 import Yesod
 import Yesod.Static (Static)
+import Debug.Trace
 
 data CaminoApp = CaminoApp {
     caminoAppRoot :: Text
@@ -254,8 +256,14 @@ instance Yesod CaminoApp where
 noticeCookie :: Text
 noticeCookie = "de-calixtinus-notice"
 
+noticeAge :: DiffTime
+noticeAge = secondsToDiffTime $ 182 * 24 * 60 * 60 -- About half a year in seconds
+
 preferencesCookie :: Text
 preferencesCookie = "de-calixtinue-preferences"
+
+preferencesAge :: DiffTime
+preferencesAge = secondsToDiffTime $ 91 * 24 * 60 * 60 -- About a quarter of a year in seconds
 
 -- | Check to see if the notice has been accepted
 checkNotice :: Handler Bool
@@ -267,7 +275,15 @@ checkNotice = do
 setNotice :: Bool -> Handler ()
 setNotice accept =
   if accept then do
-    let cookie  = defaultSetCookie { setCookieName = encodeUtf8 noticeCookie, setCookieValue = "Accept" }
+    let cookie  = defaultSetCookie { 
+        setCookieName = encodeUtf8 noticeCookie
+      , setCookieValue = "Accept"
+      , setCookiePath = Just "/"
+      , setCookieMaxAge = Just noticeAge 
+      , setCookieSecure = True
+      , setCookieSameSite = Just sameSiteStrict
+    }
+    traceM ("Notice cookie = " ++ show cookie)
     setCookie cookie
   else
     deleteCookie noticeCookie "/"
@@ -280,5 +296,12 @@ decodePreferences = do
 encodePreferences :: PreferenceData -> Handler ()
 encodePreferences preferences = do
   let enc = LB.toStrict $ encode preferences
-  let cookie = defaultSetCookie { setCookieName = encodeUtf8 preferencesCookie, setCookieValue = enc }
+  let cookie = defaultSetCookie { 
+      setCookieName = encodeUtf8 preferencesCookie
+    , setCookieValue = enc
+    , setCookiePath = Just "/"
+    , setCookieMaxAge = Just preferencesAge
+    , setCookieSecure = True
+    , setCookieSameSite = Just sameSiteStrict
+  }
   setCookie cookie

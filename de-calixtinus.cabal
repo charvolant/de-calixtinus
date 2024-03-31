@@ -74,6 +74,7 @@ library
     , template-haskell
     , text
     , text-icu >=0.8
+    , time
     , vector
     , warp
     , xml-conduit
@@ -118,6 +119,7 @@ executable camino-map-exe
     , template-haskell
     , text
     , text-icu >=0.8
+    , time
     , vector
     , warp
     , xml-conduit
@@ -162,6 +164,7 @@ executable camino-planner-exe
     , template-haskell
     , text
     , text-icu >=0.8
+    , time
     , vector
     , warp
     , xml-conduit
@@ -206,6 +209,7 @@ executable camino-server-exe
     , template-haskell
     , text
     , text-icu >=0.8
+    , time
     , vector
     , warp
     , xml-conduit
@@ -250,6 +254,7 @@ executable generate-static-exe
     , template-haskell
     , text
     , text-icu >=0.8
+    , time
     , vector
     , warp
     , xml-conduit
@@ -305,6 +310,7 @@ test-suite de-calixtinus-test
     , template-haskell
     , text
     , text-icu >=0.8
+    , time
     , vector
     , warp
     , xml-conduit

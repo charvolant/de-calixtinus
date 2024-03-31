@@ -23,35 +23,36 @@ dependencies:
   - base >= 4.7 && < 5
   - aeson >= 2
   - aeson-pretty
+  - blaze-markup
+  - blaze-html
+  - bytestring
+  - colour
   - cookie
   - containers
-  - text
-  - text-icu >= 0.8
-  - formatting
-  - bytestring
-  - vector
-  - network-uri
-  - numeric-tools == 0.2.*
-  - scientific
-  - optparse-applicative
-  - split
-  - shakespeare
-  - xml-conduit
-  - xml-hamlet
-  - blaze-html
-  - colour
+  - data-default-class
   - directory
   - filepath
+  - file-embed
+  - formatting
+  - network-uri
+  - numeric-tools == 0.2.*
+  - optparse-applicative
+  - scientific
+  - shakespeare
+  - split
+  - template-haskell
+  - text
+  - text-icu >= 0.8
+  - time
+  - vector
+  - warp
   - yaml
   - yesod
   - yesod-core
   - yesod-form
   - yesod-static
-  - data-default-class
-  - blaze-markup
-  - template-haskell
-  - file-embed
-  - warp
+  - xml-conduit
+  - xml-hamlet
   - xml-types
 
 ghc-options:

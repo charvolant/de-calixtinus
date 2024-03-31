@@ -16,22 +16,16 @@ import Camino.Camino
 import Camino.Preferences
 import Graph.Graph
 import Camino.Planner
-import Camino.Display.Css
 import Camino.Display.KML
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Camino.Config
-import Control.Monad (when)
 import qualified Data.Set as S
 import Options.Applicative
 import Data.List.Split
-import Text.Cassius
-import Text.Hamlet
 import Text.XML
-import qualified Data.Text as ST (Text, unpack)
-import qualified Data.Text.Lazy as T (concat)
-import qualified Data.Text.Lazy.IO as TIO (writeFile)
+import qualified Data.Text as ST (unpack)
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import System.FilePath
 import System.Directory

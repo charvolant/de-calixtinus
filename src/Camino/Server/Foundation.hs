@@ -27,12 +27,11 @@ import qualified Data.Set as S
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
-import Data.Time.Clock (DiffTime, addUTCTime, getCurrentTime, secondsToDiffTime)
+import Data.Time.Clock (DiffTime, secondsToDiffTime)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Web.Cookie
 import Yesod
 import Yesod.Static (Static)
-import Debug.Trace
 
 data CaminoApp = CaminoApp {
     caminoAppRoot :: Text
@@ -283,7 +282,6 @@ setNotice accept =
       , setCookieSecure = True
       , setCookieSameSite = Just sameSiteStrict
     }
-    traceM ("Notice cookie = " ++ show cookie)
     setCookie cookie
   else
     deleteCookie noticeCookie "/"

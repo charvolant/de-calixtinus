@@ -31,6 +31,13 @@
     cmd: "/usr/bin/certbot --non-interactive --nginx --agree-tos --keep-until-expiring --email {{ acme_account_email }} -d {{ server_name }}"
   when: not certificate.stat.exists or force_certificate
 
+- name: Add files
+  ansible.builtin.copy:
+    src: files/robots.txt
+    dest: /usr/share/nginx/html/
+    owner: root
+    group: root
+
 - name: Set up nginx configuration (SSL)
   ansible.builtin.template:
     src: templates/nginx.conf.j2

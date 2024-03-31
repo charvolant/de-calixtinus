@@ -41,6 +41,15 @@ http {
       location = /50x.html {
       }
 
+      location = /robots.txt {
+      }
+
+      location = /nginx-logo.png {
+      }
+
+      location = /poweredby.png {
+      }
+
       location / {
         proxy_pass http://localhost:3000;
       }

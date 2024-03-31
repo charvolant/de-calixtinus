@@ -3,7 +3,7 @@ module Camino.Server.Settings (
 ) where
 
 import Data.Default.Class (def)
-import Language.Haskell.TH.Syntax  (Exp, Name, Q)
+import Language.Haskell.TH.Syntax  (Exp, Q)
 import Yesod.Default.Util (WidgetFileSettings, widgetFileNoReload, widgetFileReload)
 
 widgetFileSettings :: WidgetFileSettings

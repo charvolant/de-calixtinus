@@ -7,16 +7,12 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 -}
-import qualified Data.ByteString.Lazy as B
-import Data.Aeson
 import Data.Text (pack)
 import Camino.Camino
 import Camino.Config
 import Camino.Server.Application
 import Camino.Server.Foundation
-import Control.Monad (when)
 import Options.Applicative
-import System.FilePath
 import Yesod.Static
 
 data Server = Server {

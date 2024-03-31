@@ -26,7 +26,7 @@ import Data.Text.ICU.Char (Bool_(..), property)
 import Data.Text.ICU.Normalize2 (NormalizationMode(..), normalize)
  
 -- | Select elements from a list that are in a set, keeping the order of the list
-selectFromList :: (Ord a, Eq a) => S.Set a -- ^ The elements to select
+selectFromList :: (Ord a) => S.Set a -- ^ The elements to select
   -> [a] -- ^ The source list
   -> [a] -- ^ The resulting list of selected elements, keeping the order of the source list
 selectFromList sel = filter (\v -> S.member v sel)

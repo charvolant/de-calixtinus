@@ -26,7 +26,6 @@ import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
-import Camino.Display.Css
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
@@ -35,12 +34,10 @@ import Data.Text (Text, isPrefixOf, pack, toLower)
 import Data.Text.Lazy (toStrict)
 import Data.Colour (Colour)
 import Data.Colour.SRGB (toSRGB24, RGB(..))
-import Data.Colour.Names (white)
 import qualified Data.Set as S
 import qualified Data.Map as M
 import Data.List (find, singleton)
 import Data.XML.Types (Content(..))
-import Text.Cassius
 import Text.Hamlet
 import Text.Hamlet.XML
 import Text.XML
@@ -140,7 +137,7 @@ caminoLocationStyle _camino stops waypoints location
 
 
 caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
+caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
   <div>
     <h4>#{locationName location}
       $maybe href <- locationHref location
@@ -163,7 +160,6 @@ caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints lo
     message = renderCaminoMsg config
     route = renderCaminoRoute config ["en", ""]
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
-    css = getAssets Css config
 
 caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationKml config preferences camino trip stops waypoints location = [xml|

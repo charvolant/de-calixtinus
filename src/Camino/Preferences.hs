@@ -50,7 +50,7 @@ import Camino.Camino
 import Camino.Util
 import Camino.Walking
 import qualified Data.Map as M (Map, (!), fromList)
-import qualified Data.Set as S (Set, delete, difference, empty, fromList, insert, intersection, map, member, singleton, union, unions)
+import qualified Data.Set as S (Set, delete, empty, insert, intersection, map, member, singleton, union, unions)
 import Graph.Graph (successors, predecessors)
 -- import Debug.Trace
 
@@ -293,11 +293,11 @@ withRoutes preferences routes = let
 
 -- | Update with a new start and finish and, if necessary, stops etc normalised
 withStartFinish :: CaminoPreferences -> Location -> Location -> CaminoPreferences
-withStartFinish preferences start finish = let
+withStartFinish preferences st fin = let
     camino' = preferenceCamino preferences
     routes' = preferenceRoutes preferences
-    start' = normaliseLocation camino' start
-    finish' = normaliseLocation camino' finish
+    start' = normaliseLocation camino' st
+    finish' = normaliseLocation camino' fin
     prefs' = preferences { preferenceStart = start', preferenceFinish = finish' }
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
     stops' = preferenceStops prefs' `S.intersection` allowed
@@ -322,10 +322,10 @@ allowedLocations preferences = caminoRouteLocations (preferenceCamino preference
 reachableLocations :: CaminoPreferences -> S.Set Location
 reachableLocations preferences = let
     camino = preferenceCamino preferences
-    start = preferenceStart preferences
-    finish = preferenceFinish preferences
+    start' = preferenceStart preferences
+    finish' = preferenceFinish preferences
   in 
-    S.insert start $ S.insert finish $ (successors camino start) `S.intersection` (predecessors camino finish) `S.intersection` (allowedLocations preferences)
+    S.insert start' $ S.insert finish' $ (successors camino start') `S.intersection` (predecessors camino finish') `S.intersection` (allowedLocations preferences)
     
 -- | Generate a set of recommended stops, based on the selected routes
 recommendedStops :: CaminoPreferences -- ^ The preferences (normalised, see `normalisePreferences`)

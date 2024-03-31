@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE QuasiQuotes           #-}
 {-# LANGUAGE TemplateHaskell       #-}
@@ -21,10 +20,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 
 module Camino.Server.Application where
 
-import GHC.Generics (Generic)
-import Data.Aeson
 import Camino.Camino
-import qualified Camino.Config as C
 import Camino.Planner (Trip)
 import Camino.Preferences
 import Camino.Util
@@ -32,30 +28,15 @@ import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.KML
 import Camino.Display.Routes
-import Camino.Server.Fields
 import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
-import Control.Monad (when)
-import qualified Data.Map as M (fromList)
-import qualified Data.ByteString.Lazy as LB (fromStrict, toStrict)
 import Data.Default.Class
-import Data.Either (isLeft, fromLeft, fromRight, lefts, rights)
-import Data.List (any, find, elem, isPrefixOf, partition, sortOn)
-import Data.Maybe (fromJust, fromMaybe, isJust, isNothing)
-import qualified Data.Map as M
-import qualified Data.Set as S
-import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
-import Data.Text.Lazy (toStrict)
+import Data.Text (Text, unpack)
 import Text.Hamlet
-import Text.Julius (RawJS(..))
-import Text.Blaze (ToMarkup (toMarkup))
-import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Text.Read (readMaybe)
 import Text.XML
 import Yesod
-import Yesod.Form.Functions
-import Debug.Trace
 import Camino.Planner (planCamino)
 
 
@@ -142,7 +123,7 @@ getHomeR = do
 postNoticeR :: Handler Html
 postNoticeR = do  
   render <- getMessageRender
-  ((result, widget), enctype) <- runFormPost $ (acceptNoticeForm) Nothing
+  ((result, _widget), _enctype) <- runFormPost $ (acceptNoticeForm) Nothing
   case result of
       FormSuccess accept -> do
          setNotice accept
@@ -178,7 +159,7 @@ postPlanR = do
 
 postPlanKmlR :: Handler TypedContent
 postPlanKmlR = do
-  ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
+  ((result, _widget), _enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
   case result of
       FormSuccess prefs -> do
          encodePreferences prefs
@@ -197,28 +178,29 @@ getPreferencesR = do
 
 postPreferencesR :: Handler Html
 postPreferencesR = do
-  step <- lookupPostParam "_step"
-  next <- lookupPostParam "_next"
-  let step' = maybe Nothing (readMaybe . unpack) step
-  let next' = maybe FitnessStep id $ maybe Nothing (readMaybe . unpack) next
+  stepp <- lookupPostParam "_step"
+  nextp <- lookupPostParam "_next"
+  let step' = maybe Nothing (readMaybe . unpack) stepp
+  let next' = maybe FitnessStep id $ maybe Nothing (readMaybe . unpack) nextp
   case step' of
     Nothing ->
       getPreferencesR
     Just step'' ->
       nextStep step'' next'
 
-nextStep step next = do
-      ((result, widget), enctype) <- runFormPost $ (stepForm step) Nothing
+nextStep :: PreferenceStep -> PreferenceStep -> Handler Html
+nextStep stepp nextp = do
+      ((result, widget), enctype) <- runFormPost $ (stepForm stepp) Nothing
       case result of
           FormSuccess prefs -> do
-             (widget', enctype') <- generateFormPost $ (stepForm next) (Just prefs)
-             stepPage next (Just prefs) widget' enctype'
+             (widget', enctype') <- generateFormPost $ (stepForm nextp) (Just prefs)
+             stepPage nextp (Just prefs) widget' enctype'
           FormFailure errs -> do
             setMessage [shamlet|
               $forall err <- errs
                 <div .text-danger>#{err}
             |]
-            stepPage step Nothing widget enctype
+            stepPage stepp Nothing widget enctype
           _ ->
             getHomeR
 
@@ -233,8 +215,8 @@ stepForm StopsStep prefs = chooseStopsForm prefs
 stepForm ShowPreferencesStep prefs = confirmPreferencesForm prefs
 
 stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> PreferenceStep -> Widget -> Enctype -> Handler Html
-stepPage' title top bottom step prev next widget enctype = do
-  (embedded, help) <- helpPopup step
+stepPage' title top bottom stepp prevp nextp widget enctype = do
+  (embedded, help) <- helpPopup stepp
   defaultLayout $ do
     setTitleI title
     $(widgetFile "step")
@@ -271,13 +253,13 @@ helpPopup' StopsStep _ = Just $(ihamletFile "templates/help/stops-help-en.hamlet
 helpPopup' _ _ = Nothing
 
 helpPopup :: PreferenceStep -> Handler (Widget, Widget)
-helpPopup step = do
+helpPopup stepp = do
   master <- getYesod
   langs <- languages
   let config = caminoAppConfig master
   let router = renderCaminoRoute config langs
   let messages = renderCaminoMsg config
-  let help' = (\h -> h messages router) <$> helpPopup' step langs
+  let help' = (\h -> h messages router) <$> helpPopup' stepp langs
   return $ case help' of
     Nothing -> (
          [whamlet| |]
@@ -330,14 +312,11 @@ kmlFileName camino (Just trip) = (toFileName $ caminoName $ preferenceCamino cam
 planKml :: PreferenceData -> Handler TypedContent
 planKml prefs = do
     master <- getYesod
-    langs <- languages
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
     let trip = planCamino tprefs cprefs
     let trip' = either (const Nothing) Just trip
     let config = caminoAppConfig master
-    let router = renderCaminoRoute config langs
-    let messages = renderCaminoMsg config
     let kml = createCaminoDoc config tprefs cprefs trip'
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
     addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs trip' <> "\"")

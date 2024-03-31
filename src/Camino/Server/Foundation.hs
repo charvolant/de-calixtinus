@@ -19,27 +19,18 @@ module Camino.Server.Foundation where
 import Camino.Camino
 import Camino.Preferences
 import Camino.Display.I18n (CaminoMsg, renderCaminoMsg)
-import Camino.Display.Routes (CaminoRoute(..))
 import qualified Camino.Config as C
-import Camino.Server.Settings
 import Data.Aeson
-import qualified Data.ByteString as B (ByteString)
 import qualified Data.ByteString.Lazy as LB (toStrict)
-import Data.Default.Class (def)
 import qualified Data.Map as M
-import Data.Maybe (isNothing)
 import qualified Data.Set as S
-import Data.Text (Text, unpack)
+import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
-import Data.Yaml.Aeson (decodeEither)
-import Language.Haskell.TH.Syntax  (Exp, Name, Q)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Web.Cookie
 import Yesod
-import Yesod.Default.Util (WidgetFileSettings, addStaticContentExternal, widgetFileNoReload, widgetFileReload)
 import Yesod.Static (Static)
-import Debug.Trace
 
 data CaminoApp = CaminoApp {
     caminoAppRoot :: Text
@@ -181,7 +172,6 @@ permittedStops :: PreferenceData -> S.Set Location -> S.Set Location
 permittedStops prefs locs = let
     accommodation = prefAccommodation prefs
     allowed ac = maybe mempty id (M.lookup ac accommodation) /= Reject
-    campingAllowed = allowed Camping -- Anything goes
   in
     S.filter (\l -> any (allowed . accommodationType) (locationAccommodation l)) locs
 

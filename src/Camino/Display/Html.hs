@@ -15,7 +15,7 @@ Generate HTML descriptions of
 module Camino.Display.Html where
 
 import Camino.Camino
-import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkConfig(..), LinkI18n(..), LinkType(..), getAssets, getLinks)
+import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkType(..), getAssets, getLinks)
 import Camino.Planner (Trip, Day, Metrics(..), tripLegs, tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Util
@@ -24,7 +24,7 @@ import Camino.Display.I18n
 import Camino.Display.Routes
 import Graph.Graph (outgoing)
 import Text.Hamlet
-import qualified Data.Text as T (concat, filter, intercalate, null, pack, take, Text, toLower, toUpper)
+import qualified Data.Text as T (concat, intercalate, null, pack, take, Text, toLower, toUpper)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -836,16 +836,14 @@ layoutHtml config title header body footer = [ihamlet|
 
 
 keyHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-keyHtml config preferences camino = $(ihamletFile "templates/help/key-en.hamlet")
+keyHtml _config preferences camino = $(ihamletFile "templates/help/key-en.hamlet")
 
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
-helpHtml config = $(ihamletFile "templates/help/help-en.hamlet")
+helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 
 caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoHtmlBase config preferences camino trip = let
-    camino' = preferenceCamino camino
-    title = maybe (caminoName camino') (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) trip
-    body = [ihamlet|
+caminoHtmlBase config preferences camino trip = 
+  [ihamlet|
       <main .container-fluid .p-2>
         <div>
           <ul .nav .nav-tabs role="tablist">
@@ -877,8 +875,7 @@ caminoHtmlBase config preferences camino trip = let
               ^{keyHtml config preferences camino}
       ^{caminoMapScript preferences camino trip}
     |]
-  in
-    body
+
 
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtml config preferences camino trip = let

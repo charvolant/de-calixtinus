@@ -1,9 +1,9 @@
-{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE QuasiQuotes           #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE FlexibleContexts      #-}
+{-# OPTIONS_GHC -Wno-orphans       #-}
 {-|
 Module      : Forms
 Description : Forms for the De Calixtinus application
@@ -34,30 +34,22 @@ module Camino.Server.Forms (
   , travelPreferencesFrom
 ) where
 
-import GHC.Generics (Generic)
 import Camino.Camino
-import Camino.Config
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoFitnessMsg, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
 import Camino.Display.I18n (renderCaminoMsg)
-import Camino.Display.Routes (CaminoRoute(..), renderCaminoRoute)
+import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
-import Data.Aeson
-import Data.Either (fromRight)
 import Data.List (find, partition, singleton, sortOn)
 import qualified Data.Map as M
-import Data.Maybe (catMaybes, fromJust, isJust, isNothing, maybe)
+import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
-import qualified Text.Blaze.Internal as Blaze
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Yesod
--- import Yesod.Form.Functions
--- import Yesod.Form.Fields (hiddenField)
-import Debug.Trace
 
 readValue :: (Read a) => Text -> Maybe a
 readValue v = readMaybe $ unpack v
@@ -296,7 +288,7 @@ changed (FormSuccess x) (FormSuccess y) = x /= y
 changed _ _ = False
 
 makePreferenceData :: CaminoApp -> PreferenceDataFields -> FormResult PreferenceData
-makePreferenceData master fields = let
+makePreferenceData _master fields = let
     travel' = resTravel fields
     fitness' = resFitness fields
     changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness')
@@ -392,7 +384,6 @@ chooseFitnessForm prefs extra = do
 chooseRangeForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseRangeForm prefs extra = do
     master <- getYesod
-    langs <- languages
     let distanceRangeField = if maybe Walking prefTravel prefs == Cycling then rangeField 0.0 250.0 1.0 else rangeField 0.0 50.0 0.5
     let timeRangeField = rangeField 0.0 16.0 0.1
     (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabel MsgDistancePreferencesLabel) (prefDistance <$> prefs)
@@ -616,9 +607,9 @@ chooseStartForm prefs extra = do
     render <- getMessageRender
     let camino = prefCamino <$> prefs
     let routes = prefRoutes <$> prefs
-    let start = prefStart <$> prefs
-    let finish = prefFinish <$> prefs
-    let cprefs = CaminoPreferences <$> camino <*> start <*> finish <*> routes <*> pure S.empty <*> pure S.empty
+    let start' = prefStart <$> prefs
+    let finish' = prefFinish <$> prefs
+    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
@@ -629,8 +620,8 @@ chooseStartForm prefs extra = do
     let rfinishes = maybe [] suggestedFinishes cprefs
     let startOptions = makeOptions render (pack . locationID) locationName rstarts stops
     let finishOptions = makeOptions render (pack . locationID) locationName rfinishes stops
-    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start
-    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish
+    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'
+    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish'
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStart = stRes,
@@ -681,10 +672,10 @@ chooseStopsForm prefs extra = do
     render <- getMessageRender
     let camino = prefCamino <$> prefs
     let routes = prefRoutes <$> prefs
-    let start = prefStart <$> prefs
-    let finish = prefFinish <$> prefs
+    let start' = prefStart <$> prefs
+    let finish' = prefFinish <$> prefs
     let cprefs = withRoutes <$> (defaultCaminoPreferences <$> camino) <*> routes
-    let cprefs' = withStartFinish <$> cprefs <*> start <*> finish
+    let cprefs' = withStartFinish <$> cprefs <*> start' <*> finish'
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = reachableLocations <$> cprefs'
@@ -777,7 +768,6 @@ confirmPreferencesForm prefs extra = do
 
 acceptNoticeForm :: Maybe Bool -> Html -> MForm Handler (FormResult Bool, Widget)
 acceptNoticeForm accept extra = do
-  master <- getYesod
   render <- getMessageRender
   (res, acceptView) <- mreq (extendedCheckboxField (\m -> toHtml $ render m) MsgAcceptDisclaimerLabel Nothing) "" accept
   let widget = [whamlet|

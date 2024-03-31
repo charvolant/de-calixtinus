@@ -8,12 +8,12 @@
     <div .col-10>
       <form .container-fluid method=post action=@{PreferencesR} enctype="#{enctype}">
         ^{widget}
-        <input type=hidden name="_step" value="#{show step}">
+        <input type=hidden name="_step" value="#{show stepp}">
         <div .row .justify-content-between>
           <div .col-auto .col-me-auto>
-            <button type="submit" name="_next" value="#{show prev}" .btn .btn-secondary>_{MsgBackLabel}
+            <button type="submit" name="_next" value="#{show prevp}" .btn .btn-secondary>_{MsgBackLabel}
           <div .col-auto>
-            <button type="submit" name="_next" value="#{show next}" .btn .btn-primary>_{MsgNextLabel}
+            <button type="submit" name="_next" value="#{show nextp}" .btn .btn-primary>_{MsgNextLabel}
   $maybe bot <- bottom
     <div .row .m-5>
       <div .col>

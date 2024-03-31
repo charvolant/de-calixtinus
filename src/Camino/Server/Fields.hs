@@ -26,23 +26,18 @@ module Camino.Server.Fields (
   , rangeField
 ) where
 
-import Camino.Camino (Camino(..), Route(..), Penance(..))
+import Camino.Camino (Penance(..))
 import Camino.Preferences (PreferenceRange(..), validRange)
-import Camino.Util (canonicalise, categorise, partition)
-import Camino.Display.I18n (CaminoMsg, formatPenance)
-import Data.Either (fromLeft, fromRight, isLeft, rights)
-import Data.List (findIndex, find, partition, sortOn)
+import Camino.Display.I18n (formatPenance)
+import Data.Either (fromRight, isLeft, rights)
+import Data.List (find)
 import qualified Data.Map as M
 import qualified Data.Set as S
-import Data.Text (Text, append, cons, intercalate, pack, snoc, splitOn, unpack)
-import Data.Text.Lazy (toStrict)
-import Data.Text.Read (decimal)
-import Text.Blaze (ToMarkup (toMarkup))
-import Text.Blaze.Html.Renderer.Text (renderHtml)
+import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
 import Yesod.Core
 import Yesod.Form.Types
 import Yesod.Form.Functions
-import Debug.Trace
+import Text.Blaze.Html (ToMarkup)
 
 -- | Creates an input with @type="hidden"@ where the hidden fields can be mapped to and from an actual value.
 --   This can be useful when you have something that needs to be decoded in context and a @PathPiece@ just doesn't have the relevant information.
@@ -99,8 +94,7 @@ extendedRadioFieldList :: (Eq a, RenderMessage site FormMessage) =>
 extendedRadioFieldList render options = extendedRadioFieldList' (renderOptions render options)
    
 -- | Create a checkbox with additional explanation
-extendedCheckboxField :: (RenderMessage site FormMessage) => 
-     (msg -> Html) -- ^ The render function. Because basically composing monads makes my brain drop out
+extendedCheckboxField :: (msg -> Html) -- ^ The render function. Because basically composing monads makes my brain drop out
   -> msg -- ^ The label associated with the checkbox
   -> Maybe msg -- ^ The possible options for the radio list, with a key (identifier), label, value and optional description
   -> Field (HandlerFor site) Bool -- ^ The resulting field
@@ -176,7 +170,7 @@ rangeField minv maxv stepv = Field
 -- | The standard list of penance options
 penanceOptions :: [(Text, Penance, Bool, Html)]
 penanceOptions =
-    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance p)) (zip [1..] range)
+    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance p)) (zip [1::Int ..] range)
   where
     range = [mempty, Penance 0.5, Penance 1.0, Penance 1.5, Penance 2.0, Penance 2.5, Penance 3.0, Penance 4.0, Penance 5.0, Penance 8.0, Penance 10.0, Reject]
 
@@ -193,7 +187,7 @@ penanceSelect theId name attrs val = [whamlet|
          <option value=#{key} :isSelected dflt opt val:selected>^{label}
   |]
   where
-    isSelected dflt opt val = either (const dflt) (== opt) val
+    isSelected dflt opt v = either (const dflt) (== opt) v
 
 
 -- | Create a field that handles penances
@@ -205,7 +199,7 @@ penanceField = Field
     }
 
 -- | Create a field that handles preference ranges
-penanceMapField :: (RenderMessage site FormMessage, RenderMessage site CaminoMsg, Eq a, Ord a) => [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
+penanceMapField :: (RenderMessage site FormMessage, Ord a) => [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
 penanceMapField values = Field
     { fieldParse = \rawVals -> \_fileVals -> if null rawVals then
           return $ Right Nothing
@@ -222,7 +216,7 @@ penanceMapField values = Field
               in
                 return $ Right $ Just $ M.fromList rvals
     , fieldView = \theId name attrs val _isReq -> let
-          zippo = zip [1 ..] values
+          zippo = zip [1::Int ..] values
         in [whamlet|
       $forall (idx, (opt, label)) <- zippo
         <div .input-group .g-3>
@@ -235,7 +229,7 @@ penanceMapField values = Field
       makeSub base idx = pack (unpack base ++ "-" ++ show idx)
 
 -- | Create a series of radio buttons for a series of options
-implyingCheckListField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage, RenderMessage site msg) => [(Text, msg, a, Maybe msg, Bool, S.Set a, S.Set a)] -> Field (HandlerFor site) (S.Set a)
+implyingCheckListField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(Text, msg, a, Maybe msg, Bool, S.Set a, S.Set a)] -> Field (HandlerFor site) (S.Set a)
 implyingCheckListField options = Field
     { fieldParse = \rawVals -> \_fileVals -> let
              pvals = map getValue rawVals
@@ -246,8 +240,8 @@ implyingCheckListField options = Field
                  -- The gets pretty ugly. Disabled values are not returned in HTML so we have to
                  -- deduce the extra values needed
                  vals = S.fromList $ rights pvals
-                 rlookup = M.fromList $ map (\(_, _, v, _, _, r, _) -> (v, r)) options
-                 req = S.unions $ S.map (rlookup M.!) vals
+                 reqlookup = M.fromList $ map (\(_, _, v, _, _, r, _) -> (v, r)) options
+                 req = S.unions $ S.map (reqlookup M.!) vals
                  complete = vals `S.union` required `S.union` req
                in
                  return $ Right $ Just $ complete
@@ -270,7 +264,7 @@ $forall (idx, (key, label, opt, mexp, _req, _requ, _excl)) <- zoptions
 <script>
   var required_#{theId} = new Object();
   var exclusive_#{theId} = new Object();
-  $forall (idx, (_key, _label, _opt, _mexp, req, requ, excl)) <- zoptions
+  $forall (idx, (_key, _label, _opt, _mexp, _req, requ, excl)) <- zoptions
     required_#{theId}["#{inputId theId idx}"] = new Set([#{setIds theId requ}]);
     exclusive_#{theId}["#{inputId theId idx}"] = new Set([#{setIds theId excl}]);
   function changed_#{theId}() {
@@ -313,9 +307,8 @@ $forall (idx, (key, label, opt, mexp, _req, _requ, _excl)) <- zoptions
     , fieldEnctype = UrlEncoded
     }
     where
-      zoptions = zip [1..] options
+      zoptions = zip [1::Int ..] options
       zlookup = M.fromList $ map (\(idx, (_key, _label, v, _mmsg, _dflt, _re, _ex)) -> (v, idx)) zoptions
-      lookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt, _re, _ex) -> (v, key)) options
       rlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt, _re, _ex) -> (key, v)) options
       required = S.fromList $ map (\(_, _, opt, _, _, _, _) -> opt) $ filter (\(_, _, _, _, req, _, _) -> req) options
       inputId base idx = pack (unpack base ++ "-" ++ show idx)
@@ -323,7 +316,7 @@ $forall (idx, (key, label, opt, mexp, _req, _requ, _excl)) <- zoptions
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
 
 -- | Create a field that allows clicking of possible values into a "select-pen"
-clickSelectionField :: (Eq a, Ord a, ToMarkup msg, ToMessage msg, RenderMessage site FormMessage) => [(msg, [(Text, msg, a)])] -> Field (HandlerFor site) (S.Set a)
+clickSelectionField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(msg, [(Text, msg, a)])] -> Field (HandlerFor site) (S.Set a)
 clickSelectionField categories = Field
       { fieldParse = \rawVals -> \_fileVals -> case rawVals of
           [] -> return $ Right Nothing
@@ -409,7 +402,7 @@ clickSelectionField categories = Field
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
       
 -- | A selection field that allows keys
-extendedSelectionField :: (Eq a, Ord a, ToMarkup msg, ToMessage msg, RenderMessage site FormMessage) => [(msg, [(Text, msg, a)])] -> Field (HandlerFor site) a
+extendedSelectionField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(msg, [(Text, msg, a)])] -> Field (HandlerFor site) a
 extendedSelectionField categories = Field
       { fieldParse = parseHelper $ getValue
     , fieldView = \theId name _attrs val _isReq -> let

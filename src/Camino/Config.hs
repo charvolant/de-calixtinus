@@ -44,7 +44,6 @@ import Data.Maybe (catMaybes, listToMaybe)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
-import Debug.Trace
 
 -- | A locale description
 type Locale = Text

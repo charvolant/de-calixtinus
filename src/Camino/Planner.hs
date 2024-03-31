@@ -258,7 +258,7 @@ penance :: TravelPreferences -- ^ The travel preferences
   -> Metrics -- ^ The penance value
 penance preferences camino day =
   let
-    (normalSpeed, actualSpeed, time, distance, perceived, ascent, descent, nonWalking) = travelMetrics preferences day
+    (normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, nonWalking) = travelMetrics preferences day
     -- If there is no accommodation within this leg, then accept any distance. If not walking or the last day, then skip lower bounds
     atEnd = isLastDay (preferenceFinish camino) day
     accommodationFree = isAccommodationFree preferences day
@@ -333,7 +333,7 @@ caminoAccept _preferences _camino days =
 --   Currently, the sum of all day scores
 --   Refuse any camino that doesn't include all required stops and exclude all excluded stops
 caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
-caminoEvaluate preferences camino days =
+caminoEvaluate _preferences camino days =
   let
     final = finish $ last days
     waypoints = if final == (preferenceFinish camino) then preferenceStops camino else foldl (S.union) S.empty (map passed days)

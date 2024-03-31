@@ -36,7 +36,7 @@
 <p>
   I'd also always wanted to learn the <a href="https://www.haskell.org/">Haskell</a> programming language.
   However, learning Haskell is quite the uphill struggle and I needed a self-contained project that would
-  motivate me to push myself to learn the new concepts that underly Haskell.
+  motivate me to push myself to learn the new concepts that underlie Haskell.
   It turns out that this was the project I was looking for.
 
 <h2>What's all this about Penance?
@@ -55,7 +55,7 @@
 
 <p>
   Dynamic programming requires a single measure to optimise and I started thinking of using "penance" as the
-  name of the measure that I was optimsing.
+  name of the measure that I was optimising.
   Walking on the Camino, you want to minimise the penance you pay.
   (Or maximise, if you're that sort of pilgrim, but I haven't implemented that yet.)
 
@@ -104,7 +104,7 @@
   It also updates dynamically and can be used to load multiple Camino routes.
   You can get more information about this at the Apple Store, Google Play or at the
   <a href="https://www.editorialbuencamino.com/">app website</a>.
-  My heartfelt thanks to Editorial Buen Camino, who gave me permission to use thier data.
+  My heartfelt thanks to Editorial Buen Camino, who gave me permission to use their data.
 
 <p>
  A secondary source is <cite>The Camino Portugués</cite> by Kat Davis (Cicerone, 2019), which we

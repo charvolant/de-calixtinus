@@ -151,7 +151,7 @@
       <td>
         The route variants that you wish to use.
         The main Camino route is always included, but you may wish to choose variants, such as the
-        Spiritual Variant or the Coastal Route for the Portguese Camino.
+        Spiritual Variant or the Coastal Route for the Portuguese Camino.
     <tr>
       <td>Trip Start
       <td>
@@ -199,7 +199,7 @@
       <td>
         The upper bound for the preference range.
     <tr>
-      <td>Miniumum
+      <td>Minimum
       <td>
         The minimum acceptable value.
         Anything less than the minimum will be rejected.
@@ -577,13 +577,13 @@
 <p>
   The first element on the header is an icon showing the type of location, followed by the name.
   The location type is a very rough indicator of the type of location.
-  The exact line between what is a village, a town or a city is not well-defined, monsteries are often attached
+  The exact line between what is a village, a town or a city is not well-defined, monasteries are often attached
   to villages and a point of interest could be almost anything.
   If this location is a stop point at the end of a day's walk, a bed icon is shown after the location name.
 
 <p>
   The next element shows the services that the location offers.
-  These are services that are publically available, generally shop, cafés and the like and within
+  These are services that are publicly available, generally shop, cafés and the like and within
   relatively easy reach of a pilgrim.
 
 <p>

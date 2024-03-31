@@ -36,7 +36,7 @@
         <tr>
            <td>^{caminoLocationTypeIcon Town}
            <td>Town
-           <td>A larger locality with most services and a variety of accommmodation usually available
+           <td>A larger locality with most services and a variety of accommodation usually available
         <tr>
            <td>^{caminoLocationTypeIcon City}
            <td>City
@@ -267,7 +267,7 @@
             <td>^{caminoSleepingIcon Mattress}
             <td>Mattress
             <td>
-                A matress on the floor in a shared space
+                A mattress on the floor in a shared space
         <tr>
             <td>^{caminoSleepingIcon SleepingBag}
             <td>Sleeping Bag

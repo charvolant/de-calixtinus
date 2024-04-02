@@ -1,5 +1,13 @@
 # Ansible Notes
 
+This is an ansible script for installing on an AWS lightsail instance, or similar,
+using Amazon Linux 2023.
+It could, presumably, be modified for other installations as required.
+
+You will probably need an inventory.
+Copy the [skeleton](inventory-skeleton.yml) file and replace the `_NAME_` entries with
+appropriate values.
+
 # Installing SSL certificate
 
 The `nginx` role should automatically install a certificate from letsencrypt if needed.

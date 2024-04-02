@@ -1,7 +1,12 @@
+# Installation directory for software and library data
 dcx_dir: /opt/de-calixtinus
+# S3 bucket to install distribution from
 dcx_dist_bucket: camino-planner
 dcx_group: dcx
 dcx_log_dir: /var/log/de-calixtinus
 dcx_run_dir: /var/run/de-calixtinus
 dcx_user: dcx
+# If true, use the static s3 bucket for static CSS icons etc.
+dcx_use_s3: true
+# Version to install
 dcx_version: 0.1

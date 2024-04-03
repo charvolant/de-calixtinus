@@ -9,10 +9,11 @@ import Camino.Preferences
 import TestUtils
 import qualified Data.Map as M
 import qualified Data.Set as S
+import Data.Default.Class
 import Data.Either
 import Data.Maybe
 import Data.Metadata
-import Graph.Graph (vertex, identifier)
+import Graph.Graph (identifier)
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
 assertPenanceEqual msg Reject Reject _precision = assertBool msg True
@@ -131,7 +132,7 @@ route1 = Route {
   routeInclusions = S.empty,
   routeExclusions = S.empty, 
   routeStops = S.empty,
-  routePalette = defaultPalette 
+  routePalette = def 
 }
 
 camino1 = Camino {

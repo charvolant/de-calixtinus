@@ -45,6 +45,7 @@ module Camino.Preferences (
 
 import Data.Aeson
 import Data.List (find)
+import Data.Placeholder
 import Data.Text (Text)
 import Camino.Camino
 import Camino.Util
@@ -52,7 +53,6 @@ import Camino.Walking
 import qualified Data.Map as M (Map, (!), fromList)
 import qualified Data.Set as S (Set, delete, empty, insert, intersection, map, member, singleton, union, unions)
 import Graph.Graph (successors, predecessors)
--- import Debug.Trace
 
 -- | Acceptable range boundaries for various parameters.
 -- 
@@ -231,12 +231,12 @@ instance FromJSON CaminoPreferences where
     routes' <- v .:? "routes" .!= S.empty
     stops' <- v .:? "stops" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
-    let camino'' = placeholderCamino camino'
-    let start'' = placeholderLocation start'
-    let finish'' = placeholderLocation finish'
-    let routes'' = S.map placeholderRoute routes'
-    let stops'' = S.map placeholderLocation stops'
-    let excluded'' = S.map placeholderLocation excluded'
+    let camino'' = placeholder camino'
+    let start'' = placeholder start'
+    let finish'' = placeholder finish'
+    let routes'' = S.map placeholder routes'
+    let stops'' = S.map placeholder stops'
+    let excluded'' = S.map placeholder excluded'
     return CaminoPreferences {
         preferenceCamino = camino''
       , preferenceStart = start''
@@ -280,7 +280,7 @@ normalisePreferences caminos preferences =
 withRoutes :: CaminoPreferences -> S.Set Route -> CaminoPreferences
 withRoutes preferences routes = let
     camino' = preferenceCamino preferences
-    routes' = normaliseRoutes camino' routes
+    routes' = S.map (normalise camino') routes
     prefs' = preferences { preferenceRoutes = routes' }
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
     start' = if S.member (preferenceStart prefs') allowed then preferenceStart prefs' else head $ suggestedStarts prefs'
@@ -296,8 +296,8 @@ withStartFinish :: CaminoPreferences -> Location -> Location -> CaminoPreference
 withStartFinish preferences st fin = let
     camino' = preferenceCamino preferences
     routes' = preferenceRoutes preferences
-    start' = normaliseLocation camino' st
-    finish' = normaliseLocation camino' fin
+    start' = normalise camino' st
+    finish' = normalise camino' fin
     prefs' = preferences { preferenceStart = start', preferenceFinish = finish' }
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
     stops' = preferenceStops prefs' `S.intersection` allowed

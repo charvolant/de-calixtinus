@@ -43,6 +43,7 @@ library
       Camino.Util
       Camino.Walking
       Data.Metadata
+      Data.Placeholder
       Graph.Graph
       Graph.Programming
   other-modules:

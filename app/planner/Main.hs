@@ -10,8 +10,6 @@ Portability : POSIX
 -}
 module Main (main) where
 
-import qualified Data.ByteString.Lazy as B
-import Data.Aeson
 import Camino.Camino
 import Camino.Preferences
 import Graph.Graph
@@ -21,11 +19,14 @@ import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Camino.Config
-import qualified Data.Set as S
-import Options.Applicative
+import qualified Data.ByteString.Lazy as B
+import Data.Aeson
 import Data.List.Split
-import Text.XML
+import Data.Placeholder
+import qualified Data.Set as S
 import qualified Data.Text as ST (unpack)
+import Options.Applicative
+import Text.XML
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import System.FilePath
 import System.Directory
@@ -70,9 +71,9 @@ plan opts = do
     let output' = output opts
     let begin' = vertex camino' (begin opts)
     let end' = vertex camino' (end opts)
-    let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholderRoute (splitOn "," (routes opts))
-    let stops' =  if stops opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (stops opts))
-    let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholderLocation (splitOn "," (exclude opts))
+    let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholder (splitOn "," (routes opts))
+    let stops' =  if stops opts == "" then S.empty else S.fromList $ map placeholder (splitOn "," (stops opts))
+    let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholder (splitOn "," (exclude opts))
     let caminoPrefs' = withRoutes (defaultCaminoPreferences camino') routes'
     let caminoPrefs'' = normalisePreferences [camino'] $ caminoPrefs' {
        preferenceStart = begin',

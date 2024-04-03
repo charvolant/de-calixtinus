@@ -32,7 +32,6 @@ import System.FilePath
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import Text.Cassius
 import Text.Hamlet
-import Debug.Trace
 
 createCssFiles :: Config -> [Camino]  -> FilePath -> IO ()
 createCssFiles config caminos output = do
@@ -46,7 +45,6 @@ createHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRo
 createHelpFile config locale file html = do
   let router = renderCaminoRoute config [locale, ""]
   let messages = renderCaminoMsg config
-  traceM ("Creating " ++ show file)
   LB.writeFile file $ renderHtml $ html messages router
   
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()

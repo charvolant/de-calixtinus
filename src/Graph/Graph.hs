@@ -22,7 +22,6 @@ module Graph.Graph(
 
 import qualified Data.List as L
 import qualified Data.Set as S
--- import Debug.Trace
 
 -- | Something that can act as a vertex node on a graph
 class (Eq v, Ord v, Show v) => Vertex v where

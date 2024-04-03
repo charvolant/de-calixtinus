@@ -2,6 +2,7 @@
 module CaminoSpec(testCamino) where
 
 import Test.HUnit
+import Data.Placeholder
 import Camino.Camino
 
 testCamino :: Test
@@ -33,11 +34,11 @@ testLeg = TestList [
   TestLabel "LegCompare" testLegCompare
   ]
 
-location1 = placeholderLocation "L1"
+location1 = placeholder "L1"
 
-location2 = placeholderLocation "L2"
+location2 = placeholder "L2"
 
-location3 = placeholderLocation "L3"
+location3 = placeholder "L3"
 
 leg1 = Leg Road location1 location2 1.2 Nothing 20.0 10.0 Nothing Nothing
 

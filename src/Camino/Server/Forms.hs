@@ -45,6 +45,7 @@ import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
+import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
 import Text.Hamlet
@@ -117,15 +118,15 @@ instance (Ord a, PathPiece a) => PathPiece (S.Set a) where
   toPathPiece v = toPathPiece $ S.toList v
 
 instance PathPiece Location where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholderLocation $ unpack v
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
   toPathPiece v = pack $ locationID v
 
 instance PathPiece Camino.Camino.Route where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholderRoute $ unpack v
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
   toPathPiece v = pack $ routeID v
 
 instance PathPiece Camino where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholderCamino $ unpack v
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
   toPathPiece v = pack $ caminoId v
 
 instance (Show a, Read a) => PathPiece (PreferenceRange a) where
@@ -196,11 +197,11 @@ findCaminoById caminos val = find (\c -> caminoId c == val') caminos where val' 
 
 findRouteById :: FormResult Camino -> Text -> Maybe Camino.Camino.Route
 findRouteById (FormSuccess camino) val = find (\r -> routeID r == val') (caminoRoutes camino) where val' = unpack val
-findRouteById _ val = Just $ placeholderRoute $ unpack val
+findRouteById _ val = Just $ placeholder $ unpack val
 
 findLocationById :: FormResult Camino -> Text -> Maybe Location
 findLocationById (FormSuccess camino) val = M.lookup val' (caminoLocations camino) where val' = unpack val
-findLocationById _ val = Just $ placeholderLocation $ unpack val
+findLocationById _ val = Just $ placeholder $ unpack val
 
 findSetById :: (Ord a) => FormResult Camino -> (FormResult Camino -> Text -> Maybe a) -> S.Set Text -> Maybe (S.Set a)
 findSetById cres finder val = let

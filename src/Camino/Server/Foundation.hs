@@ -23,6 +23,7 @@ import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
 import qualified Data.Map as M
+import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
@@ -76,12 +77,12 @@ instance FromJSON PreferenceData where
       finish' <- v .: "finish"
       stops' <- v .: "stops"
       excluded' <- v .: "excluded"
-      let camino'' = placeholderCamino camino'
-      let routes'' = S.map placeholderRoute routes'
-      let start'' = placeholderLocation start'
-      let finish'' = placeholderLocation finish'
-      let stops'' = S.map placeholderLocation stops'
-      let excluded'' = S.map placeholderLocation excluded'
+      let camino'' = placeholder camino'
+      let routes'' = S.map placeholder routes'
+      let start'' = placeholder start'
+      let finish'' = placeholder finish'
+      let stops'' = S.map placeholder stops'
+      let excluded'' = S.map placeholder excluded'
       return PreferenceData {
           prefTravel = travel'
         , prefFitness = fitness'

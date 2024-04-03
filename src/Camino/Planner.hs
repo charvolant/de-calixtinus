@@ -39,7 +39,6 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Maybe (isJust, isNothing, fromJust, fromMaybe, mapMaybe, maybeToList)
 import qualified Data.Text as T
--- import Debug.Trace
 
 -- | The metrics for a day, segment or complete trip
 data Metrics = Metrics {

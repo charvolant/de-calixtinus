@@ -7,6 +7,7 @@ import PlannerSpec
 import GraphSpec
 import ProgrammingSpec
 import MetadataSpec
+import PropositionalSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Data.Map
@@ -32,6 +33,7 @@ main = do
 
 testList prefs camino = TestList [ 
     TestLabel "Metadata" testMetadata,
+    TestLabel "Propositional" testPropositional,
     TestLabel "Config" testConfig,
     TestLabel "Camino" testCamino, 
     TestLabel "Walking" testWalking, 

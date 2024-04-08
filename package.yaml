@@ -42,7 +42,6 @@ dependencies:
   - split
   - template-haskell
   - text
-  - text-icu >= 0.8
   - time
   - vector
   - warp

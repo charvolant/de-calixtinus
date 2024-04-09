@@ -10,20 +10,20 @@ import MetadataSpec
 import PropositionalSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
+import Data.Default.Class
 import Data.Map
 import Data.Placeholder
 import Camino.Camino
 import Camino.Preferences
 import Data.Either (fromRight, isLeft)
 import Control.Monad (when)
-import Data.Metadata (defaultMetadata)
 
 main :: IO ()
 main = do
     cf <- B.readFile "camino-portuguese.json"
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
-    let camino = fromRight (Camino { caminoId = "Test", caminoName = "Test", caminoDescription = "", caminoMetadata = defaultMetadata, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoDefaultRoute = placeholder "X" }) ec
+    let camino = fromRight (Camino { caminoId = "Test", caminoName = "Test", caminoDescription = "", caminoMetadata = def, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X" }) ec
     pf <- B.readFile "short-preferences.json"
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)

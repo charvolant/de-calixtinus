@@ -50,7 +50,7 @@ testGraph = TestList [
   TestLabel "Sucessors" testSuccessors,
   TestLabel "Predecessors" testPredecessors,
   TestLabel "Available" testAvailable
-  ]
+  ] :: Test
   
 testBasics = TestList [testBasics1, testBasics2, testBasics3, testBasics4]
 

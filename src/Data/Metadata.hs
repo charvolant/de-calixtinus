@@ -18,7 +18,6 @@ module Data.Metadata (
   Statement(..),
 
   decodeTerm,
-  defaultMetadata,
   encodeTerm,
   statementLabel,
   statementLang,
@@ -27,6 +26,7 @@ module Data.Metadata (
 ) where
 
 import Data.Aeson
+import Data.Default.Class
 import Data.List (find)
 import Data.Maybe (fromJust)
 import qualified Data.Text as T (Text, concat, isPrefixOf, null, split, stripPrefix, stripSuffix, unpack, pack)
@@ -129,10 +129,9 @@ instance ToJSON Metadata where
     in
       object [ "namespaces" .= namespaces', "statements" .= statements'' ]
 
-
--- | A default metadata instance with common namespaces
-defaultMetadata :: Metadata
-defaultMetadata = Metadata {
+-- | A default, empty metadata container with the dc: and dcterms: namespaces
+instance Default Metadata where
+  def = Metadata {
     metadataNamespaces = [
       Namespace "dc:" "http://purl.org/dc/elements/1.1/",
       Namespace "dcterms:" "http://purl.org/dc/terms/"

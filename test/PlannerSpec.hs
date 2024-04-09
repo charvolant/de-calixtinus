@@ -129,8 +129,6 @@ route1 = Route {
   routeName = "R1", 
   routeDescription = "Route 1",
   routeLocations = S.fromList [location1, location2, location3], 
-  routeInclusions = S.empty,
-  routeExclusions = S.empty, 
   routeStops = S.empty,
   routePalette = def 
 }
@@ -139,7 +137,7 @@ camino1 = Camino {
   caminoId = "Test",
   caminoName = "Test",
   caminoDescription = "Test camino",
-  caminoMetadata = defaultMetadata,
+  caminoMetadata = def,
   caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
   caminoLegs = legs1,
   caminoRoutes = [route1],

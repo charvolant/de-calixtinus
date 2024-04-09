@@ -12,7 +12,9 @@
 <p>
   Other routes can be selected as desired.
   Well, more or less.
-  Some routes are mutually exclusive.
-  Other routes are variants of variants.
-  If you select these routes, the other required routes or exclusive routes will be greyed-out and set as required.
+  Choosing some routes makes others impossible and make them disallowed; for example you can't choose the
+  litoral route from Porto if you also intend to go partway along the main, central, route before transferring over
+  to the coast.
+  Other routes are variants of variants and require the main variant to be selected before you can choose them.
+  Required routes, disallowed routes and routes dependent on other routes will be greyed-out and set as required.
   If you unselect the route, the other routes will become available again.

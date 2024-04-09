@@ -67,10 +67,10 @@ chains1 = [
   Chain (Vertex 1) (Vertex 3) [Edge 1 2, Edge 2 3] 2
   ]
 
-accept1 :: Edge e _v => AcceptFunction e
+accept1 :: AcceptFunction e
 accept1 aseq = length aseq < 3
 
-accept2 :: Edge e _v => AcceptFunction e
+accept2 :: AcceptFunction e
 accept2 _seq = True
 
 evaluate1 :: EvaluationFunction TestEdge Int
@@ -91,7 +91,7 @@ testProgramming = TestList [
   TestLabel "ConstructTable" testConstructTable,
   TestLabel "ChainGraph" testChainGraph,
   TestLabel "Program" testProgram
-  ]
+  ] :: Test
   
 testExtend = TestList [testExtend1, testExtend2]
 

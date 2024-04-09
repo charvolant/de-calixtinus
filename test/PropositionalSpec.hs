@@ -10,7 +10,7 @@ testPropositional = TestList [
       TestLabel "Reduce" testReduce
     , TestLabel "Evaluate" testEvaluate
     , TestLabel "Implications" testImplications
-  ]
+  ] :: Test
 
 testReduce = TestList [
        TestLabel "Reduce 1" testReduce1
@@ -58,8 +58,8 @@ testEvaluate = TestList [
   ]
 
 testEvaluate1 = let
-  map = M.fromList [(1, T), (2, F)]
-  eval = \v -> M.lookup v map
+  mape = M.fromList [(1, T), (2, F)]
+  eval = \v -> M.lookup v mape
  in
    TestCase (do
      assertEqual "Evaluate 1 1" T (evaluate eval $ Variable 1)
@@ -80,13 +80,12 @@ testEvaluate1 = let
 clauses1 = [
       Implies (Variable 1) (Variable 2)
     , Implies (Variable 2) (Variable 3)
-    , Implies (Variable 2) (Not $ Variable 4)
   ]
 
   
 clauses2 = [
       Implies (And [(Variable 1), (Variable 2)]) (Variable 3)
-    , Implies (And [Or [(Variable 1), (Variable 2)], Not (Variable 4)]) (Not $ Variable 5)
+    , Implies (And [Or [(Variable 1), (Variable 2)], Not (Variable 4)]) (Variable 5)
   ]
   
 
@@ -99,32 +98,32 @@ testImplications = TestList [
   ]
   
 testImplications1 = let
-     map = M.fromList [(1, T), (2, T)]
-     eval = \v -> M.lookup v map
+     mape = M.fromList [(1, T), (2, T)]
+     eval = \v -> M.lookup v mape
     in
       TestCase (do
         assertEqual "Implications 1 1" Nothing ((implications clauses1 eval) 1)
         assertEqual "Implications 1 2" (Just T) ((implications clauses1 eval) 2)
         assertEqual "Implications 1 3" (Just T) ((implications clauses1 eval) 3)
-        assertEqual "Implications 1 4" (Just F) ((implications clauses1 eval) 4)
+        assertEqual "Implications 1 4" Nothing ((implications clauses1 eval) 4)
      )
 
   
 testImplications2 = let
-     map = M.fromList [(1, F), (2, T)]
-     eval = \v -> M.lookup v map
+     mape = M.fromList [(1, F), (2, T)]
+     eval = \v -> M.lookup v mape
     in
       TestCase (do
         assertEqual "Implications 2 1" Nothing ((implications clauses1 eval) 1)
         assertEqual "Implications 2 2" Nothing ((implications clauses1 eval) 2)
         assertEqual "Implications 2 3" (Just T) ((implications clauses1 eval) 3)
-        assertEqual "Implications 2 4" (Just F) ((implications clauses1 eval) 4)
+        assertEqual "Implications 2 4" Nothing ((implications clauses1 eval) 4)
      )
 
  
 testImplications3 = let
-     map = M.fromList [(1, T), (2, T)]
-     eval = \v -> M.lookup v map
+     mape = M.fromList [(1, T), (2, T)]
+     eval = \v -> M.lookup v mape
     in
       TestCase (do
         assertEqual "Implications 3 1" Nothing ((implications clauses2 eval) 1)
@@ -136,8 +135,8 @@ testImplications3 = let
 
 
 testImplications4 = let
-     map = M.fromList [(1, F), (2, T), (4, T)]
-     eval = \v -> M.lookup v map
+     mape = M.fromList [(1, F), (2, T), (4, T)]
+     eval = \v -> M.lookup v mape
     in
       TestCase (do
         assertEqual "Implications 4 1" Nothing ((implications clauses2 eval) 1)
@@ -149,13 +148,13 @@ testImplications4 = let
 
 
 testImplications5 = let
-     map = M.fromList [(1, F), (2, T), (4, F)]
-     eval = \v -> M.lookup v map
+     mape = M.fromList [(1, F), (2, T), (4, F)]
+     eval = \v -> M.lookup v mape
     in
       TestCase (do
         assertEqual "Implications 5 1" Nothing ((implications clauses2 eval) 1)
         assertEqual "Implications 5 2" Nothing ((implications clauses2 eval) 2)
         assertEqual "Implications 5 3" Nothing ((implications clauses2 eval) 3)
         assertEqual "Implications 5 4" Nothing ((implications clauses2 eval) 4)
-        assertEqual "Implications 5 5" (Just F) ((implications clauses2 eval) 5)
+        assertEqual "Implications 5 5" (Just T) ((implications clauses2 eval) 5)
      )

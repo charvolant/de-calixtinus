@@ -29,6 +29,7 @@ module Camino.Camino (
   , Palette(..)
   , Penance(..)
   , Route(..)
+  , RouteLogic(..)
   , Service(..)
   , Sleeping(..)
   , Travel(..)
@@ -46,6 +47,10 @@ module Camino.Camino (
   , caminoLocationList
   , caminoRoute
   , caminoRouteLocations
+  , completeRoutes
+  , createAllowsClauses
+  , createRequiresClauses
+  , createProhibitsClauses
   , fitnessEnumeration
   , locationAccommodationTypes
   , locationTypeEnumeration
@@ -67,7 +72,8 @@ import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
 import Data.Placeholder
-import qualified Data.Set as S (Set, difference, empty, intersection, map, fromList, member, union, unions)
+import Data.Propositional
+import qualified Data.Set as S (Set, difference, empty, intersection, map, null, fromList, member, toList, union, unions, singleton)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Text (Text, append, unpack, pack)
 import Graph.Graph
@@ -118,6 +124,7 @@ instance ToJSON Penance where
 data SRS = SRS String
   deriving (Eq, Show)
 
+srsID :: SRS -> String
 srsID (SRS sid) = sid
 
 instance Default SRS where
@@ -458,11 +465,7 @@ data Route = Route {
     routeID :: String -- ^ An identifier for the route
   , routeName :: Text -- ^ The route name
   , routeDescription :: Text -- ^ The route description
-  , routeRequires :: S.Set Route -- ^ Other routes required by this route
-  , routeExclusive :: S.Set Route -- ^ Other routes mutually exclusive topt his route
   , routeLocations :: S.Set Location -- ^ The locations along the route
-  , routeInclusions :: S.Set Location -- ^ The locations on other routes that should eb put back in if they have been excluded by another route
-  , routeExclusions :: S.Set Location -- ^ The locations on other routes that are eliminated by this route
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
   , routeFinishes :: [Location] -- ^ A list of suggested finish points for the route
@@ -476,11 +479,7 @@ instance FromJSON Route where
       id' <- v .: "id"
       name' <- v .: "name"
       description' <- v .: "description"
-      requires' <- v .:? "requires" .!= S.empty
-      exclusive' <- v .:? "exclusive" .!= S.empty
       locations' <- v .:? "locations" .!= S.empty
-      inclusions' <- v .:? "inclusions" .!= S.empty
-      exclusions' <- v .:? "exclusions" .!= S.empty
       stops' <- v .:? "stops" .!= S.empty
       starts' <- v .:? "starts" .!= []
       finishes' <- v .:? "finishes" .!= []
@@ -489,11 +488,7 @@ instance FromJSON Route where
           routeID = id'
         , routeName = name'
         , routeDescription = description'
-        , routeRequires = requires'
-        , routeExclusive = exclusive'
         , routeLocations = locations'
-        , routeInclusions = inclusions'
-        , routeExclusions = exclusions'
         , routeStops = stops'
         , routeStarts = starts'
         , routeFinishes = finishes'
@@ -502,16 +497,12 @@ instance FromJSON Route where
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' requires' exclusive' locations' inclusions' exclusions' stops' starts' finishes' palette') =
+    toJSON (Route id' name' description' locations' stops' starts' finishes' palette') =
       object [ 
           "id" .= id'
         , "name" .= name'
         , "description" .= description'
-        , "required" .= S.map routeID requires'
-        , "exclusive" .= S.map routeID exclusive'
         , "locations" .= S.map locationID locations'
-        , "inclusions" .=  S.map locationID inclusions'
-        , "exclusions" .= S.map locationID exclusions'
         , "stops" .= S.map locationID stops'
         , "starts" .= map locationID starts'
         , "finishes" .= map locationID finishes'
@@ -530,30 +521,137 @@ instance Placeholder Camino Route where
       routeID = rid
     , routeName = pack ("Placeholder for " ++ rid)
     , routeDescription = ""
-    , routeRequires = S.empty
-    , routeExclusive = S.empty
     , routeLocations = S.empty
-    , routeInclusions = S.empty
-    , routeExclusions = S.empty
     , routeStops = S.empty
     , routeStarts = []
     , routeFinishes = []
     , routePalette = def
   }
   normalise camino route = route {
-       routeRequires = remapsr (routeRequires route)
-     , routeExclusive = remapsr (routeExclusive route)
-     , routeLocations = remapsl (routeLocations route)
-     , routeInclusions = remapsl (routeInclusions route)
-     , routeExclusions = remapsl (routeExclusions route)
+       routeLocations = remapsl (routeLocations route)
      , routeStops = remapsl (routeStops route)
      , routeStarts = remapl (routeStarts route)
      , routeFinishes = remapl (routeFinishes route)
    }
    where
-     remapsr = S.map (normalise camino)
      remapsl = S.map (normalise camino)
      remapl = map (normalise camino)
+
+-- | Statements about how routes weave together
+--   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
+--   can't have these. You'll also need to include these locations and remove those.
+--   The formula construction allows to to make arbitrary 
+data RouteLogic = RouteLogic {
+    routeLogicDescription :: Maybe Text -- ^ Explain what is happening
+  , routeLogicCondition :: Formula Route -- ^ What triggers this bit of logic
+  , routeLogicRequires :: S.Set Route -- ^ Routes that must be included for things to work
+  , routeLogicAllows :: S.Set Route -- ^ Routes that this implies can be included
+  , routeLogicProhibits :: S.Set Route -- ^ Routes that this implies should be excluded
+  , routeLogicInclude :: S.Set Location -- ^ Stuff to add to the allowed locations
+  , routeLogicExclude :: S.Set Location -- ^ Stuff to remove from the allowed locations
+} deriving (Show)
+
+-- | Read formulas a JSON
+instance FromJSON (Formula Route) where
+  parseJSON (Bool v) = do
+    return $ if v then T else F
+  parseJSON (String v) = do
+    return $ Variable $ placeholder (unpack v)
+  parseJSON (Object v) = do
+    and' <- v .:? "and"
+    or' <- v .:? "or"
+    not' <- v .:? "not"
+    imp' <- v .:? "implies"
+    return $ case (and', or', not', imp') of
+      (Just a, Nothing, Nothing, Nothing) -> And a
+      (Nothing, Just a, Nothing, Nothing) -> Or a
+      (Nothing, Nothing, Just a, Nothing) -> Not a
+      (Nothing, Nothing, Nothing, Just [a, b]) -> Implies a b
+      _ -> error ("No logical object, must have one of and, or, not or implies: " ++ show v)
+  parseJSON v = error ("Unable to parse route object " ++ show v)
+
+-- | Produce formulas a JSON
+instance ToJSON (Formula Route) where
+  toJSON T = Bool True
+  toJSON F = Bool False
+  toJSON (Variable route) = String $ pack $ placeholderID route
+  toJSON (And fs) = object [ "and" .= fs ]
+  toJSON (Or fs) = object [ "or" .= fs ]
+  toJSON (Not f) = object [ "not" .= f ]
+  toJSON (Implies p c) = object [ "implies" .= [p, c] ]
+
+instance FromJSON RouteLogic where
+  parseJSON (Object v) = do
+    description' <- v .:? "description"
+    condition' <- v .: "condition"
+    requires' <- v .:? "requires" .!= S.empty
+    allows' <- v .:? "allows" .!= S.empty
+    prohibits' <- v .:? "prohibits" .!= S.empty
+    include' <- v .:? "include" .!= S.empty
+    exclude' <- v .:? "exclude" .!= S.empty
+    return RouteLogic {
+        routeLogicDescription = description'
+      , routeLogicCondition = condition'
+      , routeLogicRequires = requires'
+      , routeLogicAllows = allows'
+      , routeLogicProhibits = prohibits'
+      , routeLogicInclude = include'
+      , routeLogicExclude = exclude'
+    }
+  parseJSON v = error ("Unable to parse route object " ++ show v)
+
+instance ToJSON RouteLogic where
+  toJSON (RouteLogic description' condition' requires' allows' prohibits' include' exclude') =
+    object [
+        "description" .= description'
+      , "condition" .= condition'
+      , "requires" .= nonEmpty requires'
+      , "allows" .= nonEmpty allows'
+      , "prohibits" .= nonEmpty prohibits'
+      , "include" .= nonEmpty include'
+      , "exclude" .= nonEmpty exclude'
+    ]
+    where
+      nonEmpty v = if S.null v then Nothing else Just v
+
+normaliseFormula :: Camino -> Formula Route -> Formula Route
+normaliseFormula camino (Variable route) = Variable $ normalise camino route    
+normaliseFormula camino (And fs) = And (map (normaliseFormula camino) fs)  
+normaliseFormula camino (Or fs) = Or (map (normaliseFormula camino) fs)  
+normaliseFormula camino (Not f) = Not $ normaliseFormula camino f 
+normaliseFormula camino (Implies p c) = Implies (normaliseFormula camino p) (normaliseFormula camino c) 
+normaliseFormula _camino f = f
+
+normaliseRouteLogic :: Camino -> RouteLogic -> RouteLogic
+normaliseRouteLogic camino logic = logic {
+      routeLogicCondition = normaliseFormula camino (routeLogicCondition logic)
+    , routeLogicRequires = S.map (normalise camino) (routeLogicRequires logic)
+    , routeLogicAllows = S.map (normalise camino) (routeLogicAllows logic)
+    , routeLogicProhibits = S.map (normalise camino) (routeLogicProhibits logic)
+    , routeLogicInclude = S.map (normalise camino) (routeLogicInclude logic)
+    , routeLogicExclude = S.map (normalise camino) (routeLogicExclude logic)
+  }
+
+createLogicClauses' :: RouteLogic -> S.Set Route -> [Formula Route]
+createLogicClauses' logic consequents =
+    map (\r -> Implies condition (Variable r)) (S.toList $ consequents)
+  where
+    condition = routeLogicCondition logic
+
+-- | Convert the route logic into clauses for requirement deduction
+createRequiresClauses :: RouteLogic -- ^ The piece of route logic
+  -> [Formula Route] -- ^ A list of clauses that imply anything required is true and anything prohibited is false
+createRequiresClauses logic = createLogicClauses' logic (routeLogicRequires logic)
+
+-- | Convert the route logic into clauses for allowed route deduction
+createAllowsClauses :: RouteLogic -- ^ The piece of route logic
+  -> [Formula Route] -- ^ A list of clauses that imply anything allowed is true and anything prohibited is false
+createAllowsClauses logic = createLogicClauses' logic (routeLogicAllows logic)
+
+-- | Convert the route logic into clauses for prohibited route deduction
+createProhibitsClauses :: RouteLogic -- ^ The piece of route logic
+  -> [Formula Route] -- ^ A list of clauses that imply anything allowed is true and anything prohibited is false
+createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits logic)
 
 -- | A way, consisting of a number of legs with a start and end
 --   The purpose of the Camino Planner is to divide a camino into 
@@ -565,6 +663,7 @@ data Camino = Camino {
   , caminoLocations :: M.Map String Location -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
   , caminoRoutes :: [Route] -- ^ Named sub-routes
+  , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
 } deriving (Show)
 
@@ -573,13 +672,14 @@ instance FromJSON Camino where
     id' <- v .: "id"
     name' <- v .: "name"
     description' <- v .: "description"
-    metadata' <- v .:? "metadata" .!= defaultMetadata
+    metadata' <- v .:? "metadata" .!= def
     locs <- v .: "locations"
     let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
     legs' <- v .: "legs"
     let legs'' = map (normaliseLeg locMap) legs'
     routes' <- v .: "routes"
-    defaultRoute' <- v .:? "defaultRoute" .!= (routeID $ head routes')
+    routeLogic' <- v .: "route-logic"
+    defaultRoute' <- v .:? "default-route" .!= (routeID $ head routes')
     let defaultRoute'' = fromJust $ find (\r -> routeID r == defaultRoute') routes'
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
@@ -592,6 +692,7 @@ instance FromJSON Camino where
       , caminoLocations = locMap
       , caminoLegs = legs''
       , caminoRoutes = routes''
+      , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
     }
     return camino'
@@ -605,24 +706,35 @@ instance Ord Camino where
   a `compare` b = caminoId a `compare` caminoId b
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' locations' legs' routes' defaultRoute') =
-    object [ "id" .= id', "name" .= name', "description" .= description', "metadata" .= metadata', "locations" .= (M.elems locations'), "legs" .= legs', "routes" .= routes', "defaultRoute" .= routeID defaultRoute' ]
+  toJSON (Camino id' name' description' metadata' locations' legs' routes' routeLogic' defaultRoute') =
+    object [ 
+        "id" .= id'
+      , "name" .= name'
+      , "description" .= description'
+      , "metadata" .= metadata'
+      , "locations" .= (M.elems locations')
+      , "legs" .= legs'
+      , "routes" .= routes'
+      , "route-logic" .= routeLogic'
+      , "default-route" .= routeID defaultRoute' 
+    ]
 
 instance Graph Camino Leg Location where
   vertex camino vid = (caminoLocations camino) M.! vid
   edge camino loc1 loc2 = find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' locations' legs' routes' defaultRoute') allowed  = 
+  subgraph (Camino id' name' description' metadata' locations' legs' routes' routeLogic' defaultRoute') allowed  = 
     let
       id'' = id' ++ "'"
       name'' = name' `append` " subgraph"
       locations'' = M.filter (\l -> S.member l allowed) locations'
       legs'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) legs'
-      routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeInclusions = routeInclusions r `S.intersection` allowed, routeExclusions = routeExclusions r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
+      routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
+      routeLogic'' = map (\l -> l { routeLogicInclude = routeLogicInclude l `S.intersection` allowed, routeLogicExclude = routeLogicExclude l `S.intersection` allowed}) routeLogic'
       defaultRoute'' = fromJust $ find (\r -> routeID r == routeID defaultRoute') routes'
     in
-      Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoRoutes = routes'', caminoDefaultRoute = defaultRoute'' }
+      Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoRoutes = routes'', caminoRouteLogic = routeLogic'', caminoDefaultRoute = defaultRoute'' }
 
 instance Placeholder [Camino] Camino where
   placeholderID = caminoId
@@ -634,6 +746,7 @@ instance Placeholder [Camino] Camino where
       , caminoLocations = M.empty
       , caminoLegs = []
       , caminoRoutes = [dr]
+      , caminoRouteLogic = []
       , caminoDefaultRoute = dr
     }
     where
@@ -647,8 +760,9 @@ instance Placeholder [Camino] Camino where
       camino1 = camino { caminoLegs = map (normaliseLeg (caminoLocations camino)) (caminoLegs camino) }
       camino2 = camino1 { caminoRoutes = map (normalise camino1) (caminoRoutes camino1) }
       camino3 = camino2 { caminoDefaultRoute = normalise camino2 (caminoDefaultRoute camino2) }
+      camino4 = camino3 { caminoRouteLogic = map (normaliseRouteLogic camino3) (caminoRouteLogic camino3)  }
     in
-      camino3
+      camino4
 
 -- | Get a list of locations for the camino
 caminoLocationList :: Camino -- ^ The camino
@@ -702,18 +816,35 @@ caminoLegRoute camino leg = let
   in
     maybe dflt id route
 
+-- | Build a set of complete routes, including any required by the actual supplied set of routes
+completeRoutes :: Camino -> S.Set Route -> (S.Set Route, Substitution Route)
+completeRoutes camino routes = let
+    logics = caminoRouteLogic camino
+    sub = substitutionFromDomain (S.fromList $ caminoRoutes camino) (routes `S.union` (S.singleton $ caminoDefaultRoute camino))
+    requires = concat $ map createRequiresClauses logics
+    required = implications requires sub
+    prohibits = concat $ map createProhibitsClauses logics
+    prohibited = implications prohibits (overlay sub required)
+    membership = (sub `overlay` invert prohibited) `overlay` required
+    complete = S.fromList $ filter (\v -> membership v == Just T) (caminoRoutes camino)
+  in
+   (complete, membership)
+
 -- | Work out what locations are acceptable in a camino, based on the chosen routes.
 --   The default route is always included, followed by the routes specified in the preferences.
 --   The routes are worked through in order (with the default route always first).
+--   The any route logics are worked through in order
 --   That way, locations can be included by one route and then excluded by a ltere route
 caminoRouteLocations :: Camino -- ^ The base camino definition
-  -> S.Set Route -- ^ The routes that are being used
+  -> S.Set Route -- ^ The base routes that are being used
   -> S.Set Location -- ^ The allowed locations
 caminoRouteLocations camino used =
   let
-    routes = filter (\r -> S.member r used || r == caminoDefaultRoute camino) (caminoRoutes camino)
+    (routes, membership) = completeRoutes camino used
+    baseLocations = S.unions $ S.map routeLocations routes
+    logics =  filter (\l -> evaluate membership (routeLogicCondition l) == T) (caminoRouteLogic camino)
   in
-    foldl (\allowed -> \route -> (allowed `S.union` routeLocations route `S.union` routeInclusions route) `S.difference` routeExclusions route) S.empty routes
+    foldl (\allowed -> \logic -> (allowed `S.union` routeLogicInclude logic) `S.difference` routeLogicExclude logic) baseLocations logics
 
 -- | The travel function to use
 data Travel = Walking -- ^ Walking using the Tobler estimate of time

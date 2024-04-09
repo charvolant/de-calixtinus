@@ -75,7 +75,6 @@ library
     , split
     , template-haskell
     , text
-    , text-icu >=0.8
     , time
     , vector
     , warp
@@ -120,7 +119,6 @@ executable camino-map-exe
     , split
     , template-haskell
     , text
-    , text-icu >=0.8
     , time
     , vector
     , warp
@@ -165,7 +163,6 @@ executable camino-planner-exe
     , split
     , template-haskell
     , text
-    , text-icu >=0.8
     , time
     , vector
     , warp
@@ -210,7 +207,6 @@ executable camino-server-exe
     , split
     , template-haskell
     , text
-    , text-icu >=0.8
     , time
     , vector
     , warp
@@ -255,7 +251,6 @@ executable generate-static-exe
     , split
     , template-haskell
     , text
-    , text-icu >=0.8
     , time
     , vector
     , warp
@@ -312,7 +307,6 @@ test-suite de-calixtinus-test
     , split
     , template-haskell
     , text
-    , text-icu >=0.8
     , time
     , vector
     , warp

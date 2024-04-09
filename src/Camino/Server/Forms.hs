@@ -210,11 +210,7 @@ findSetById cres finder val = let
     if any isNothing results then Nothing else Just $ S.fromList $ catMaybes results
 
 fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Camino.Route
-fullRoutes (FormSuccess camino) routes = let
-  required = S.singleton $ caminoDefaultRoute camino
-  implied = S.unions $ S.map routeRequires routes
-  in
-    routes `S.union` implied `S.union` required
+fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
 fullRoutes _ routes = routes
 
 
@@ -555,8 +551,11 @@ chooseRoutesForm prefs extra = do
     master <- getYesod
     let camino = prefCamino <$> prefs
     let routes = maybe (Prelude.concat (map caminoRoutes (caminoAppCaminos master))) caminoRoutes camino
-    let routeOptions = map (\r -> (pack $ routeID r, routeName r, r, Just $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino, routeRequires r, routeExclusive r)) routes
-    (roRes, roView) <- mreq (implyingCheckListField routeOptions) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
+    let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino
+    let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
+    let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
+    let routeOptions = map (\r -> (pack $ routeID r, routeName r, r, Just $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
+    (roRes, roView) <- mreq (implyingCheckListField routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resRoutes = roRes,

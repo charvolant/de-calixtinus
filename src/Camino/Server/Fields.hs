@@ -32,12 +32,14 @@ import Camino.Display.I18n (formatPenance)
 import Data.Either (fromRight, isLeft, rights)
 import Data.List (find)
 import qualified Data.Map as M
+import Data.Propositional
 import qualified Data.Set as S
 import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
 import Yesod.Core
 import Yesod.Form.Types
 import Yesod.Form.Functions
-import Text.Blaze.Html (ToMarkup)
+import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
+import Debug.Trace
 
 -- | Creates an input with @type="hidden"@ where the hidden fields can be mapped to and from an actual value.
 --   This can be useful when you have something that needs to be decoded in context and a @PathPiece@ just doesn't have the relevant information.
@@ -228,9 +230,22 @@ penanceMapField values = Field
     where
       makeSub base idx = pack (unpack base ++ "-" ++ show idx)
 
+createCheckFieldCondition' :: (Ord a) =>  M.Map a Int -> Formula a -> Text
+createCheckFieldCondition' _zlookup T = "true"
+createCheckFieldCondition' _zlookup F = "false"
+createCheckFieldCondition' zlookup (Variable v) = "t_" <> pack (show (zlookup M.! v)) 
+createCheckFieldCondition' zlookup (And fs) = "(" <> (intercalate " && " (map (createCheckFieldCondition' zlookup) fs)) <> ")"
+createCheckFieldCondition' zlookup (Or fs) = "(" <> (intercalate " || " (map (createCheckFieldCondition' zlookup) fs)) <> ")"
+createCheckFieldCondition' zlookup (Not f) = "!" <> createCheckFieldCondition' zlookup f
+createCheckFieldCondition' zlookup (Implies p c) = "!" <> createCheckFieldCondition' zlookup p <> " || " <> createCheckFieldCondition' zlookup c -- p -> q = !p v q
+
+createCheckFieldCondition :: (Ord a) => Text -> Text -> M.Map a Int -> Formula a -> Html
+createCheckFieldCondition base positive zlookup (Implies p (Variable v)) = [shamlet|if (#{preEscapedToHtml (createCheckFieldCondition' zlookup p)}) #{positive}.add("#{base}-#{idx}");|] where idx = zlookup M.! v
+createCheckFieldCondition _ _ _ _ = error "Only program clauses permitted"
+
 -- | Create a series of radio buttons for a series of options
-implyingCheckListField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(Text, msg, a, Maybe msg, Bool, S.Set a, S.Set a)] -> Field (HandlerFor site) (S.Set a)
-implyingCheckListField options = Field
+implyingCheckListField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(Text, msg, a, Maybe msg, Bool)] -> [Formula a] -> [Formula a] -> [Formula a] -> Field (HandlerFor site) (S.Set a)
+implyingCheckListField options requiredClauses allowedClauses prohibitedClauses = Field
     { fieldParse = \rawVals -> \_fileVals -> let
              pvals = map getValue rawVals
            in
@@ -238,82 +253,103 @@ implyingCheckListField options = Field
                return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
               else let
                  -- The gets pretty ugly. Disabled values are not returned in HTML so we have to
-                 -- deduce the extra values needed
+                 -- deduce any extra values needed
                  vals = S.fromList $ rights pvals
-                 reqlookup = M.fromList $ map (\(_, _, v, _, _, r, _) -> (v, r)) options
-                 req = S.unions $ S.map (reqlookup M.!) vals
-                 complete = vals `S.union` required `S.union` req
+                 sub = substitutionFromDomain values vals
+                 implies = implications requiredClauses sub
+                 implied = S.filter (\v -> implies v == Just T) values
+                 complete = trace ("Vals = " ++ (show (S.map (\v -> vlookup M.! v) vals))  ++ " required = " ++ (show (S.map (\v -> vlookup M.! v) required)) ++ " implied = " ++ (show (S.map (\v -> vlookup M.! v) implied))) (vals `S.union` required `S.union` implied)
                in
                  return $ Right $ Just $ complete
     , fieldView = \theId name _attrs val _isReq -> let
           merr = either Just (const Nothing) val
           chosen = required `S.union` either (const S.empty) id val
-          optional = S.fromList $ map (\(_, _, v, _, _, _, _) -> v) $ filter (\(_, _, _, _, req, _, _) -> not req) options
         in do
            toWidget [whamlet|
 $maybe err <- merr
   <div .alert .alert-danger>#{err}
-$forall (idx, (key, label, opt, mexp, _req, _requ, _excl)) <- zoptions
+$forall (idx, (key, label, opt, mexp, _req)) <- zoptions
   <div .form-check id="#{inputId theId idx}-container" :S.member opt required:.text-secondary>
-    <input .form-check-input type=checkbox name=#{name} value=#{key} id="#{inputId theId idx}" onchange="changed_#{theId}()" :S.member opt required:disabled :S.member opt chosen:checked>
+    <input .form-check-input type=checkbox name=#{name} value=#{key} id="#{inputId theId idx}" onchange="changed_#{theId}()" :not (S.member opt initialAllowed):disabled :S.member opt chosen:checked>
     <label .form-check-label for="#{inputId theId idx}">#{label}
     $maybe exp <- mexp
       <div .form-text>#{exp}
       |]
            toWidgetBody [hamlet|
 <script>
-  var required_#{theId} = new Object();
-  var exclusive_#{theId} = new Object();
-  $forall (idx, (_key, _label, _opt, _mexp, _req, requ, excl)) <- zoptions
-    required_#{theId}["#{inputId theId idx}"] = new Set([#{setIds theId requ}]);
-    exclusive_#{theId}["#{inputId theId idx}"] = new Set([#{setIds theId excl}]);
-  function changed_#{theId}() {
+  function imply_#{theId}(selected, requires, allows, prohibits) {#{nl}
+    var nrequires = new Set([]);
+    var nallows = new Set([]);
+    var nprohibits = new Set([]);#{nl}
+    $forall (idx, (_key, _label, _opt, _mexp, _req)) <- zoptions
+      var t_#{idx} = (selected.has("#{inputId theId idx}") || requires.has("#{inputId theId idx}")) && !prohibits.has("#{inputId theId idx}");#{nl}
+    $forall clause <- requiredClauses
+      #{createCheckFieldCondition theId "nrequires" zlookup clause}#{nl}
+    $forall clause <- allowedClauses
+      #{createCheckFieldCondition theId "nallows" zlookup clause}#{nl}
+    $forall clause <- prohibitedClauses
+      #{createCheckFieldCondition theId "nprohibits" zlookup clause}#{nl}
+    if (nrequires.size == requires.size && requires.isSupersetOf(nrequires) && nallows.size == allows.size && allows.isSupersetOf(nallows) && nprohibits.size == prohibits.size && prohibits.isSupersetOf(nprohibits))#{nl}
+      return [nrequires, nallows, nprohibits];#{nl}
+    return imply_#{theId}(selected, nrequires, nallows, nprohibits);#{nl}
+  }
+  
+  function changed_#{theId}() {#{nl}
     var checked = $('input[name="#{name}"]:checked');
-    var enable = new Set([#{setIds theId optional}]);
-    var disable = new Set([#{setIds theId required}]);
+    var selected = new Set([]);
+    var enable = new Set([#{setIds theId initialAllowed}]);
+    var disable = new Set([#{setIds theId initialDisabled}]);
     var check = new Set([#{setIds theId required}]);
     var uncheck = new Set([]);
     checked.each(function() {
-      var id = this.id;
-      var req = required_#{theId}[id];
-      var exl = exclusive_#{theId}[id];
-      enable = enable.difference(exl).difference(req);
-      disable = disable.union(exl).union(req);
-      uncheck = uncheck.union(exl);
-      check = check.union(req);
-   });
-   enable.forEach(function(v, k, s) {
-    var e = $('#' + v);
-    e.prop("disabled", false);
-    e = $('#' + v + '-container');
-    e.removeClass("text-secondary");
-   });
-   disable.forEach(function(v, k, s) {
-     var e = $('#' + v);
-     e.prop("disabled", true);
-     e = $('#' + v + '-container');
-     e.addClass("text-secondary");
-   });
-   uncheck.forEach(function(v, k, s) {
-    var e = $('#' + v);
-    e.prop("checked", false);
-   });
-   check.forEach(function(v, k, s) {
-    var e = $('#' + v);
-    e.prop("checked", true);
-   });
+      selected.add(this.id);
+    });
+    var implied = imply_#{theId}(selected, new Set([]), new Set([]), new Set([]));
+    enable = enable.union(implied[1]).difference(implied[0]).difference(implied[2]);
+    disable = disable.difference(implied[1]).union(implied[0]).union(implied[2]);
+    uncheck = uncheck.union(implied[2]);
+    check = check.union(implied[0]);
+    enable.forEach(function(v, k, s) {
+      var e = $('#' + v);
+      e.prop("disabled", false);
+      e = $('#' + v + '-container');
+      e.removeClass("text-secondary");
+    });
+    disable.forEach(function(v, k, s) {
+      var e = $('#' + v);
+      e.prop("disabled", true);
+      e = $('#' + v + '-container');
+      e.addClass("text-secondary");
+    });
+    uncheck.forEach(function(v, k, s) {
+      var e = $('#' + v);
+      e.prop("checked", false);
+    });
+    check.forEach(function(v, k, s) {
+      var e = $('#' + v);
+      e.prop("checked", true);
+    });
   }
+
+  \$(document).ready(changed_#{theId});
 |]
     , fieldEnctype = UrlEncoded
     }
     where
+      values = S.fromList $ map (\(_key, _label, v, _mmsg, _dflt) -> v) options
+      required = S.fromList $ map (\(_, _, opt, _, _) -> opt) $ filter (\(_, _, _, _, req) -> req) options
+      optional = S.fromList $ map (\(_, _, v, _, _) -> v) $ filter (\(_, _, _, _, req) -> not req) options
+      conditional = S.fromList $ map clauseConsequentVar allowedClauses
+      initialAllowed = optional `S.difference` conditional
+      initialDisabled = conditional `S.union` required
       zoptions = zip [1::Int ..] options
-      zlookup = M.fromList $ map (\(idx, (_key, _label, v, _mmsg, _dflt, _re, _ex)) -> (v, idx)) zoptions
-      rlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt, _re, _ex) -> (key, v)) options
-      required = S.fromList $ map (\(_, _, opt, _, _, _, _) -> opt) $ filter (\(_, _, _, _, req, _, _) -> req) options
+      zlookup = M.fromList $ map (\(idx, (_key, _label, v, _mmsg, _dflt)) -> (v, idx)) zoptions
+      rlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt) -> (key, v)) options
+      vlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt) -> (v, key)) options
       inputId base idx = pack (unpack base ++ "-" ++ show idx)
       setIds base vals = preEscapedToMarkup $ intercalate ", " $ map (\v -> cons '"' (snoc (inputId base (zlookup M.! v)) '"')) $ S.toList vals
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
+      nl = "\n" :: Text
 
 -- | Create a field that allows clicking of possible values into a "select-pen"
 clickSelectionField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(msg, [(Text, msg, a)])] -> Field (HandlerFor site) (S.Set a)

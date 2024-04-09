@@ -36,6 +36,12 @@ Leaving the "action" icons, such as the globe and information symbol unscaled se
 
 ## text-icu
 
+**No longer required**
+Using `text-icu` seems to create constant headaches in terms of compilation and
+installation and has been replaced by a simple system that canonicalises most
+romance language accented letters.
+This may be a bad choice, which is why the instructions are still here.
+
 The `text-icu` package allows canonicalisation of unicode characters.
 This package depends on the [icu4c](https://icu.unicode.org/) library.
 For macOS, you will need to have [brew](https://brew.sh/) installed and install the library

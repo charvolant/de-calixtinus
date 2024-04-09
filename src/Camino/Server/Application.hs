@@ -39,7 +39,6 @@ import Text.XML
 import Yesod
 import Camino.Planner (planCamino)
 
-
 mkYesodDispatch "CaminoApp" resourcesCaminoApp
 
 data PreferenceStep =
@@ -190,19 +189,19 @@ postPreferencesR = do
 
 nextStep :: PreferenceStep -> PreferenceStep -> Handler Html
 nextStep stepp nextp = do
-      ((result, widget), enctype) <- runFormPost $ (stepForm stepp) Nothing
-      case result of
-          FormSuccess prefs -> do
-             (widget', enctype') <- generateFormPost $ (stepForm nextp) (Just prefs)
-             stepPage nextp (Just prefs) widget' enctype'
-          FormFailure errs -> do
-            setMessage [shamlet|
-              $forall err <- errs
-                <div .text-danger>#{err}
-            |]
-            stepPage stepp Nothing widget enctype
-          _ ->
-            getHomeR
+  ((result, widget), enctype) <- runFormPost $ (stepForm stepp) Nothing
+  case result of
+      FormSuccess prefs -> do
+         (widget', enctype') <- generateFormPost $ (stepForm nextp) (Just prefs)
+         stepPage nextp (Just prefs) widget' enctype'
+      FormFailure errs -> do
+        setMessage [shamlet|
+          $forall err <- errs
+            <div .text-danger>#{err}
+        |]
+        stepPage stepp Nothing widget enctype
+      _ ->
+        getHomeR
 
 stepForm :: PreferenceStep -> Maybe PreferenceData -> (Html -> MForm Handler (FormResult PreferenceData, Widget))
 stepForm FitnessStep prefs = chooseFitnessForm prefs

@@ -39,11 +39,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-03-10"
+        "value": "2024-04-09"
       },
       {
         "term": "dcterms:version",
-        "value": "0.1"
+        "value": "0.1.1"
       },
       {
         "term": "dcterms:license",
@@ -9553,15 +9553,9 @@
       "id": "P-RFT",
       "name": "Fátima - Tomar",
       "description": "A variant pilgrimage including the Fátima shrine and returning to the main route at Tomar",
-      "exclusive": [
-        "P-RFA"
-      ],
       "locations": [
         "P-F1", "P-F2", "P-F3", "P-F4", "P-F5", "P-F6", "P-F7", "P-F8", "P-F9", "P-F10",
         "P-F11", "P-F12", "P-F13", "P-F14", "P-F15"
-      ],
-      "exclusions": [
-        "P-P21", "P-P22", "P-P23", "P-P24", "P-P25", "P-P26", "P-P27", "P-P28", "P-P29", "P-P30", "P-P31"
       ],
       "stops": [
         "P-F10"
@@ -9574,9 +9568,6 @@
       "id": "P-RFA",
       "name": "Fátima - Ansião",
       "description": "A variant pilgrimage including the Fátima shrine and returning to the main route near Ansião",
-      "exclusive": [
-        "P-RFT"
-      ],
       "locations": [
         "P-F1", "P-F2", "P-F3", "P-F4", "P-F5", "P-F6", "P-F7", "P-F8", "P-F9", "P-F10",
         "P-F11", "P-F16", "P-F17", "P-F18", "P-F19", "P-F20",
@@ -9584,12 +9575,6 @@
         "P-F31", "P-F32", "P-F33", "P-F35", "P-F36", "P-F37", "P-F38", "P-F39", "P-F40",
         "P-F41", "P-F42", "P-F43", "P-F44", "P-F45", "P-F46", "P-F47", "P-F48", "P-F49", "P-F50",
         "P-F51", "P-F52", "P-F53", "P-F54"
-      ],
-      "exclusions": [
-        "P-P21", "P-P22", "P-P23", "P-P24", "P-P25", "P-P26", "P-P27", "P-P28", "P-P29", "P-P30",
-        "P-P31", "P-P32", "P-P33", "P-P34", "P-P35", "P-P36", "P-P37", "P-P38", "P-P39", "P-P40",
-        "P-P41", "P-P42", "P-P43", "P-P44", "P-P45", "P-P46", "P-P47", "P-P48", "P-P49", "P-P50",
-        "P-P51"
       ],
       "stops": [
         "P-F10"
@@ -9610,10 +9595,6 @@
         "P-E11", "P-E12", "P-E13", "P-E14", "P-E15", "P-E16", "P-E17", "P-E18", "P-E19", "P-E20",
         "P-E21", "P-E22"
       ],
-      "exclusions": [
-        "P-P239", "P-P240", "P-P241", "P-P242", "P-P243", "P-P244", "P-P245", "P-P246", "P-P247", "P-P248",
-        "P-P249", "P-P250", "P-P251", "P-P252", "P-P253", "P-P254", "P-P255", "P-P256", "P-P257"
-      ],
       "stops": [
         "P-E21"
       ],
@@ -9626,24 +9607,13 @@
       "name": "Coastal Route",
       "description": "An alternative to the central route from Porto, the coastal route follows the Atlantic coast from Porto into Spain",
       "locations": [
-               "P-C2",  "P-C3",  "P-C4",  "P-C5",  "P-C6",  "P-C7",  "P-C8",  "P-C9",  "P-C10",
+                 "P-C2",  "P-C3",  "P-C4",  "P-C5",  "P-C6",  "P-C7",  "P-C8",  "P-C9",  "P-C10",
         "P-C11", "P-C12", "P-C13", "P-C14", "P-C15", "P-C16", "P-C17", "P-C18", "P-C19", "P-C20",
         "P-C21", "P-C22", "P-C23", "P-C24", "P-C25", "P-C26", "P-C27", "P-C28", "P-C29", "P-C30",
         "P-C31", "P-C32", "P-C33", "P-C34", "P-C35", "P-C36", "P-C37", "P-C38", "P-C39", "P-C40",
         "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
         "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
         "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
-      ],
-      "exclusions": [
-        "P-P140", "P-P141", "P-P142", "P-P143", "P-P144", "P-P145", "P-P146", "P-P147", "P-P148", "P-P149",
-        "P-P150", "P-P151", "P-P152", "P-P153", "P-P154", "P-P155", "P-P156", "P-P157", "P-P158", "P-P159",
-        "P-P160", "P-P161", "P-P162", "P-P163", "P-P164", "P-P165", "P-P166", "P-P167", "P-P168", "P-P169",
-        "P-P170", "P-P171", "P-P172", "P-P173", "P-P174", "P-P175", "P-P176", "P-P177", "P-P178", "P-P179",
-        "P-P180", "P-P181", "P-P182", "P-P183", "P-P184", "P-P185", "P-P186", "P-P187", "P-P188", "P-P189",
-        "P-P190", "P-P191", "P-P192", "P-P193", "P-P194", "P-P195", "P-P196", "P-P197", "P-P198", "P-P199",
-        "P-P200", "P-P201", "P-P202", "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
-        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
-        "P-P220", "P-P221", "P-P222"
       ],
       "stops": [
         "P-C13", "P-C36"
@@ -9656,16 +9626,9 @@
       "id": "P-RL",
       "name": "Littoral Route",
       "description": "A variation on the coastal route that follows the coastline from Porto to Vila do Conde",
-      "requires": [
-        "P-RC"
-      ],
       "locations": [
         "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10",
         "L11"
-      ],
-      "exclusions": [
-              "P-C2", "P-C3", "P-C4", "P-C5", "P-C6", "P-C7", "P-C8", "P-C9", "P-C10",
-        "P-P139"
       ],
       "stops": [
       ],
@@ -9677,31 +9640,10 @@
       "id": "P-RT1",
       "name": "Coastal - Central (Vila do Conde)",
       "description": "A transfer from the coastal route to the central route from Vila do Conde to São Pedro do Rates.",
-      "requires": [
-        "P-RC"
-      ],
       "locations": [
         "P-T9"
       ],
-      "inclusions": [
-                            "P-P152", "P-P153", "P-P154", "P-P155", "P-P156", "P-P157", "P-P158", "P-P159",
-        "P-P160", "P-P161", "P-P162", "P-P163", "P-P164", "P-P165", "P-P166", "P-P167", "P-P168", "P-P169",
-        "P-P170", "P-P171", "P-P172", "P-P173", "P-P174", "P-P175", "P-P176", "P-P177", "P-P178", "P-P179",
-        "P-P180", "P-P181", "P-P182", "P-P183", "P-P184", "P-P185", "P-P186", "P-P187", "P-P188", "P-P189",
-        "P-P190", "P-P191", "P-P192", "P-P193", "P-P194", "P-P195", "P-P196", "P-P197", "P-P198", "P-P199",
-        "P-P200", "P-P201", "P-P202", "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
-        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
-        "P-P220", "P-P221", "P-P222"
-      ],
-      "exclusions": [
-                          "P-C13", "P-C14", "P-C15", "P-C16", "P-C17", "P-C18", "P-C19", "P-C20",
-        "P-C21", "P-C22", "P-C23", "P-C24", "P-C25", "P-C26", "P-C27", "P-C28", "P-C29", "P-C30",
-        "P-C31", "P-C32", "P-C33", "P-C34", "P-C35", "P-C36", "P-C37", "P-C38", "P-C39", "P-C40",
-        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
-        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
-        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
-      ],
-      "stops": [ ],
+      "stops": [ "P-P154" ],
       "palette": {
         "colour": "F09860"
       }
@@ -9710,31 +9652,10 @@
       "id": "P-RT2",
       "name": "Central - Coastal (São Pedro de Rates - Fão)",
       "description": "A transfer from the central route to the coastal route from São Pedro de Rates to Fão.",
-      "requires": [
-        "P-RC"
-      ],
       "locations": [
         "P-T10", "P-T11", "P-T12"
       ],
-      "inclusions": [
-                                                                       "P-C18", "P-C19", "P-C20",
-        "P-C21", "P-C22", "P-C23", "P-C24", "P-C25", "P-C26", "P-C27", "P-C28", "P-C29", "P-C30",
-        "P-C31", "P-C32", "P-C33", "P-C34", "P-C35", "P-C36", "P-C37", "P-C38", "P-C39", "P-C40",
-        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
-        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
-        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
-      ],
-      "exclusions": [
-                                                          "P-P155", "P-P156", "P-P157", "P-P158", "P-P159",
-        "P-P160", "P-P161", "P-P162", "P-P163", "P-P164", "P-P165", "P-P166", "P-P167", "P-P168", "P-P169",
-        "P-P170", "P-P171", "P-P172", "P-P173", "P-P174", "P-P175", "P-P176", "P-P177", "P-P178", "P-P179",
-        "P-P180", "P-P181", "P-P182", "P-P183", "P-P184", "P-P185", "P-P186", "P-P187", "P-P188", "P-P189",
-        "P-P190", "P-P191", "P-P192", "P-P193", "P-P194", "P-P195", "P-P196", "P-P197", "P-P198", "P-P199",
-        "P-P200", "P-P201", "P-P202", "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
-        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
-        "P-P220", "P-P221", "P-P222"
-      ],
-      "stops": [ ],
+      "stops": [ "P-P154" ],
       "palette": {
         "colour": "F09860"
       }
@@ -9743,26 +9664,9 @@
       "id": "P-RT3",
       "name": "Coastal - Central (Minho)",
       "description": "A transfer from the coastal route to the central route from Carminha to Valença do Minho, traveling along the Minho river bordering Portugal and Spain.",
-      "requires": [
-        "P-RC"
-      ],
-      "exclusive": [
-        "P-RT4"
-      ],
       "locations": [
         "P-T1", "P-T2", "P-T3", "P-T4", "P-T5", "P-T6", "P-T7"
        ],
-      "inclusions": [
-        "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
-        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
-        "P-P220", "P-P221", "P-P222"
-      ],
-      "exclusions": [
-        "P-C37", "P-C38", "P-C39", "P-C40",
-        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
-        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
-        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
-      ],
       "stops": [ ],
       "palette": {
         "colour": "F09860"
@@ -9772,25 +9676,8 @@
       "id": "P-RT4",
       "name": "Coastal - Central (Minho by Boat)",
       "description": "A transfer from the coastal route to the central route from Carminha to Valença do Minho, Via Camino by Boat along the Minho river",
-      "requires": [
-        "P-RC"
-      ],
-      "exclusive": [
-        "P-RT3"
-      ],
       "locations": [
         "P-T8"
-      ],
-      "inclusions": [
-        "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
-        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
-        "P-P220", "P-P221", "P-P222"
-      ],
-      "exclusions": [
-        "P-C38", "P-C39", "P-C40",
-        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
-        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
-        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
       ],
       "stops": [ ],
       "palette": {
@@ -9798,5 +9685,174 @@
       }
     }
   ],
-  "defaultRoute": "P-RP"
+  "route-logic": [
+    {
+      "description": "Changes for the Fátima-Tomar route",
+      "condition" : "P-RFT",
+      "prohibits": [
+        "P-RFA"
+      ],
+      "exclude": [
+        "P-P21", "P-P22", "P-P23", "P-P24", "P-P25", "P-P26", "P-P27", "P-P28", "P-P29", "P-P30", "P-P31"
+      ]
+    },
+    {
+      "description": "Changes for the the Fátima-Ansião route",
+      "condition": "P-RFA",
+      "prohibits": [
+        "P-RFT"
+      ],
+      "exclude": [
+        "P-P21", "P-P22", "P-P23", "P-P24", "P-P25", "P-P26", "P-P27", "P-P28", "P-P29", "P-P30",
+        "P-P31", "P-P32", "P-P33", "P-P34", "P-P35", "P-P36", "P-P37", "P-P38", "P-P39", "P-P40",
+        "P-P41", "P-P42", "P-P43", "P-P44", "P-P45", "P-P46", "P-P47", "P-P48", "P-P49", "P-P50",
+        "P-P51"
+      ]
+    },
+    {
+      "description": "Changes for the Variante Espiritual",
+      "condition": "P-RS",
+      "exclude": [
+        "P-P239", "P-P240", "P-P241", "P-P242", "P-P243", "P-P244", "P-P245", "P-P246", "P-P247", "P-P248",
+        "P-P249", "P-P250", "P-P251", "P-P252", "P-P253", "P-P254", "P-P255", "P-P256", "P-P257"
+      ]
+    },
+    {
+      "description": "Changes for the vanilla Coastal Route",
+      "condition": "P-RC",
+      "allows": [ "P-RL",  "P-RT1",  "P-RT2",  "P-RT3", "P-RT4" ],
+      "exclude": [
+        "P-P140", "P-P141", "P-P142", "P-P143", "P-P144", "P-P145", "P-P146", "P-P147", "P-P148", "P-P149",
+        "P-P150", "P-P151", "P-P152", "P-P153", "P-P154", "P-P155", "P-P156", "P-P157", "P-P158", "P-P159",
+        "P-P160", "P-P161", "P-P162", "P-P163", "P-P164", "P-P165", "P-P166", "P-P167", "P-P168", "P-P169",
+        "P-P170", "P-P171", "P-P172", "P-P173", "P-P174", "P-P175", "P-P176", "P-P177", "P-P178", "P-P179",
+        "P-P180", "P-P181", "P-P182", "P-P183", "P-P184", "P-P185", "P-P186", "P-P187", "P-P188", "P-P189",
+        "P-P190", "P-P191", "P-P192", "P-P193", "P-P194", "P-P195", "P-P196", "P-P197", "P-P198", "P-P199",
+        "P-P200", "P-P201", "P-P202", "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
+        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
+        "P-P220", "P-P221", "P-P222"
+      ]
+    },
+    {
+      "name": "Changes for the Littoral Route variation on the Coastal Route",
+      "condition": "P-RL",
+      "requires": [ "P-RC" ],
+      "exclusions": [
+        "P-C2", "P-C3", "P-C4", "P-C5", "P-C6", "P-C7", "P-C8", "P-C9", "P-C10",
+        "P-P139"
+      ]
+    },
+    {
+      "condition": {
+        "and": [
+          "P-RT1",
+          "P-RT2"
+        ]
+      },
+      "description": "Re-introduce the small segment of the central route if we're going coastal-central-coastal",
+      "requires": [ "P-RC" ],
+      "include": [
+        "P-P152", "P-P153", "P-P154"
+      ],
+      "exclude": [
+        "P-C13", "P-C14", "P-C15", "P-C16", "P-C17"
+      ]
+    },
+    {
+      "condition": {
+        "and": [
+          "P-RT1",
+          {
+            "not": "P-RT2"
+          }
+        ]
+      },
+      "description": "Transfer from the coastal to central route without going back",
+      "requires": [ "P-RC" ],
+      "prohibits": [ "P-RT3", "P-RT4" ],
+      "include": [
+        "P-P152", "P-P153", "P-P154", "P-P155", "P-P156", "P-P157", "P-P158", "P-P159",
+        "P-P160", "P-P161", "P-P162", "P-P163", "P-P164", "P-P165", "P-P166", "P-P167", "P-P168", "P-P169",
+        "P-P170", "P-P171", "P-P172", "P-P173", "P-P174", "P-P175", "P-P176", "P-P177", "P-P178", "P-P179",
+        "P-P180", "P-P181", "P-P182", "P-P183", "P-P184", "P-P185", "P-P186", "P-P187", "P-P188", "P-P189",
+        "P-P190", "P-P191", "P-P192", "P-P193", "P-P194", "P-P195", "P-P196", "P-P197", "P-P198", "P-P199",
+        "P-P200", "P-P201", "P-P202", "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
+        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
+        "P-P220", "P-P221", "P-P222"
+      ],
+      "exclude": [
+        "P-C13", "P-C14", "P-C15", "P-C16", "P-C17", "P-C18", "P-C19", "P-C20",
+        "P-C21", "P-C22", "P-C23", "P-C24", "P-C25", "P-C26", "P-C27", "P-C28", "P-C29", "P-C30",
+        "P-C31", "P-C32", "P-C33", "P-C34", "P-C35", "P-C36", "P-C37", "P-C38", "P-C39", "P-C40",
+        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
+        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
+        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
+      ]
+    },
+    {
+      "condition": {
+        "and": [
+          {
+            "not": "P-RT1"
+          },
+          "P-RT2"
+        ]
+      },
+      "description": "Transferring from the central route down to the coastal route",
+      "requires": [ "P-RC" ],
+      "allows": [ "P-RT3", "P-RT4" ],
+      "prohibits": [ "P-RL" ],
+      "include": [
+        "P-P140", "P-P141", "P-P142", "P-P143", "P-P144", "P-P145", "P-P146", "P-P147", "P-P148", "P-P149",
+        "P-P150", "P-P151", "P-P152", "P-P153", "P-P154"
+      ],
+      "exclude": [
+                  "P-C2",   "P-C3",   "P-C4",   "P-C5",   "P-C6",   "P-C7",   "P-C8",   "P-C9",   "P-C10",
+        "P-C11",  "P-C12",  "P-C13",  "P-C14",  "P-C15",  "P-C16",  "P-C17",
+        "P-P155", "P-P156", "P-P157", "P-P158", "P-P159",
+        "P-P160", "P-P161", "P-P162", "P-P163", "P-P164", "P-P165", "P-P166", "P-P167", "P-P168", "P-P169",
+        "P-P170", "P-P171", "P-P172", "P-P173", "P-P174", "P-P175", "P-P176", "P-P177", "P-P178", "P-P179",
+        "P-P180", "P-P181", "P-P182", "P-P183", "P-P184", "P-P185", "P-P186", "P-P187", "P-P188", "P-P189",
+        "P-P190", "P-P191", "P-P192", "P-P193", "P-P194", "P-P195", "P-P196", "P-P197", "P-P198", "P-P199",
+        "P-P200", "P-P201", "P-P202", "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
+        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
+        "P-P220", "P-P221", "P-P222"
+      ]
+    },
+    {
+      "description": "Routes from Caminha - Valenca/Tui mutually exclusive",
+      "condition": "P-RT3",
+      "requires": [ "P-RC" ],
+      "prohibits": [ "P-RT4" ],
+      "include": [
+        "P-P203", "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
+        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
+        "P-P220", "P-P221", "P-P222"
+      ],
+      "exclude": [
+        "P-C37", "P-C38", "P-C39", "P-C40",
+        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
+        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
+        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
+      ]
+    },
+    {
+      "description": "Routes from Caminha - Valenca/Tui mutually exclusive",
+      "condition": "P-RT4",
+      "requires": [ "P-RC" ],
+      "prohibits": [ "P-RT3" ],
+      "include": [
+        "P-P204", "P-P205", "P-P206", "P-P207", "P-P208", "P-P209",
+        "P-P210", "P-P211", "P-P212", "P-P213", "P-P214", "P-P215", "P-P216", "P-P217", "P-P218", "P-P219",
+        "P-P220", "P-P221", "P-P222"
+      ],
+      "exclude": [
+        "P-C38", "P-C39", "P-C40",
+        "P-C41", "P-C42", "P-C43", "P-C44", "P-C45", "P-C46", "P-C47", "P-C48", "P-C49", "P-C50",
+        "P-C51", "P-C52", "P-C53", "P-C54", "P-C55", "P-C56", "P-C57", "P-C58", "P-C59", "P-C60",
+        "P-C61", "P-C62", "P-C63", "P-C64", "P-C65"
+      ]
+    }
+  ],
+  "default-route": "P-RP"
 }

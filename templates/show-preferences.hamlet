@@ -11,10 +11,9 @@
       <form .container-fluid method=post enctype="#{enctype}">
         ^{widget}
         <input type=hidden name="_step" value="ShowPreferencesStep">
-        <div .row .justify-content-between>
-          <div .col-auto .me-auto>
+        <div .btn-toolbar .justify-content-between>
+          <div .btn-group>
             <button type="submit" name="_next" formaction="@{PreferencesR}" value="StopsStep" .btn .btn-secondary>_{MsgBackLabel}
-          <div .col-auto>
+          <div .btn-group>
+            <button type="submit" name="_generate" formaction="@{PlanKmlR}" .btn .btn-outline-secondary title="_{MsgPlanKmlTitle}">_{MsgPlanKmlLabel}
             <button type="submit" name="_generate" formaction="@{PlanR}" .btn .btn-primary title="_{MsgPlanTitle}">_{MsgPlanLabel}
-          <div .col-auto>
-            <button type="submit" name="_generate" formaction="@{PlanKmlR}" .btn .btn-primary title="_{MsgPlanKmlTitle}">_{MsgPlanKmlLabel}

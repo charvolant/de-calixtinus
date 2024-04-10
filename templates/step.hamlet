@@ -9,10 +9,10 @@
       <form .container-fluid method=post action=@{PreferencesR} enctype="#{enctype}">
         ^{widget}
         <input type=hidden name="_step" value="#{show stepp}">
-        <div .row .justify-content-between>
-          <div .col-auto .col-me-auto>
+        <div .btn-toolbar .justify-content-between>
+          <div .btn-group>
             <button type="submit" name="_next" value="#{show prevp}" .btn .btn-secondary>_{MsgBackLabel}
-          <div .col-auto>
+          <div .btn-group>
             <button type="submit" name="_next" value="#{show nextp}" .btn .btn-primary>_{MsgNextLabel}
   $maybe bot <- bottom
     <div .row .m-5>

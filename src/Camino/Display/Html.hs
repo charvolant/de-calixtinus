@@ -43,18 +43,22 @@ conditionalLabel label values = [ihamlet|
 
 penanceSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
 penanceSummary _preferences _camino metrics = [ihamlet|
-   <div .penance-summary .dropdown title="_{PenanceSummaryTitle}">
-     <button .btn .btn-outline-primary .penance-summary .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
-       _{PenanceMsg (metricsPenance metrics)}
-     <div .dropdown-menu>
-       <a .dropdown-item>_{DistancePenanceMsg (metricsPerceivedDistance metrics)}
-       <a .dropdown-item>_{AccommodationPenanceMsg (metricsAccommodation metrics)}
-       <a .dropdown-item>_{StopPenanceMsg (metricsStop metrics)}
-       <a .dropdown-item>_{StopServicesPenanceMsg (metricsStopServices metrics)}
-       <a .dropdown-item>_{DayServicesPenanceMsg (metricsDayServices metrics)}
-       <a .dropdown-item>_{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
-       <a .dropdown-item>_{TimeAdjustMsg (metricsTimeAdjust metrics)}
-       <a .dropdown-item>_{MiscPenanceMsg (metricsMisc metrics)}
+   _{PenanceMsg (metricsPenance metrics)} =
+   _{DistancePenanceMsg (metricsPerceivedDistance metrics)}
+   $if metricsDistanceAdjust metrics /= mempty
+     \ + _{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
+   $if metricsTimeAdjust metrics /= mempty
+     \ + _{TimeAdjustMsg (metricsTimeAdjust metrics)}
+   $if metricsStop metrics /= mempty
+     \ + _{StopPenanceMsg (metricsStop metrics)}
+   $if metricsAccommodation metrics /= mempty
+     \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
+   $if metricsStopServices metrics /= mempty
+     \ + _{StopServicesPenanceMsg (metricsStopServices metrics)}
+   $if metricsDayServices metrics /= mempty
+     \ + _{DayServicesPenanceMsg (metricsDayServices metrics)}
+   $if metricsMisc metrics /= mempty
+     \ + _{MiscPenanceMsg (metricsMisc metrics)}
    |]
     
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -65,7 +69,6 @@ metricsSummary _preferences _camino metrics days = [ihamlet|
       (_{DaysMsg d}) #
     _{AscentMsg (metricsAscent metrics)}
     _{DescentMsg (metricsDescent metrics)}
-    _{PenanceMsg (metricsPenance metrics)}
   |]
 
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -515,20 +518,22 @@ caminoTripHtml preferences camino trip = [ihamlet|
         <p>
           #{locationName $ start trip}
           $forall l <- map finish $ path trip
-            \  - #{locationName l}
+            \  - <a href="#leg-#{locationID l}">#{locationName l}
         <p>
-          ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}
+          ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}     
+          _{PenanceMsg (metricsPenance (score trip))}
     $forall day <- path trip
       <div .card .day .p-1>
-        <h4>
+        <h4 id="leg-#{locationID (finish day)}">
           <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ start day}
           \   -
           <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ finish day}
           _{DistanceFormatted (metricsDistance $ score day)}
-          ^{penanceSummary preferences camino $ score day}
         <div .card-body>
          <p>
             ^{metricsSummary preferences camino (score day) Nothing}
+            <br>
+            ^{penanceSummary preferences camino $ score day}
          <ul>
             <li>
               <div .location-summary>

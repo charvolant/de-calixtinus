@@ -32,7 +32,8 @@
         <td>^{caminoTravelIcon Cycling}
         <td>_{caminoTravelMsg Cycling}
         <td>Cycling the Camino.
-            The functions for this travel mode are not yet written.
+            This option uses a variant of Naismith's rule for cycling, with more attention paid to levels of fitness.
+            It is still undergoing testing.
 
 <h2 #fitness-help>Fitness
 
@@ -130,13 +131,55 @@
      <td>8.5
  <tfoot>
    <tr>
-     <td colspan="4" .fw-lighter><sup>1</sup> How fitness is determined. The time it takes to climb 1000 feet over half a mile
+     <td colspan="5" .fw-lighter><sup>1</sup> How fitness is determined. The time it takes to climb 1000 feet over half a mile
    <tr>
-     <td colspan="4" .fw-lighter><sup>2</sup> How fitness is determined. The time you can walk at 5km/hr before noticeably slowing.
+     <td colspan="5" .fw-lighter><sup>2</sup> How fitness is determined. The time you can walk at 5km/hr before noticeably slowing.
    <tr>
-     <td colspan="4" .fw-lighter><sup>3</sup> Based on average over five hours walking
+     <td colspan="5" .fw-lighter><sup>3</sup> Based on average over five hours walking
    <tr>
-     <td colspan="4" .fw-lighter><sup>4</sup> The maximum feasible -- but hardly recommended -- time spent walking
+     <td colspan="5" .fw-lighter><sup>4</sup> The maximum feasible -- but hardly recommended -- time spent walking
+
+<p>
+  Cyclists can estimate fitness based on road-speed and VAM (velocità ascensionale media or average ascent speed).
+
+
+<table .table .table-striped>
+ <thead>
+   <tr>
+     <th scope="col">Fitness
+     <th scope="col">Road Speed (km/hr)<sup>1</sup>
+     <th scope="col">VAM (m/hr)<sup>2</sup>
+ <tbody>
+   <tr>
+     <td>Super Fit
+     <td>40
+     <td>1600
+   <tr>
+     <td>Very Fit
+     <td>32
+     <td>1300
+   <tr>
+     <td>Fit
+     <td>28
+     <td>1100
+   <tr>
+     <td>Normal
+     <td>24
+     <td>900
+   <tr>
+     <td>Unfit
+     <td>20
+     <td>700
+    <tr>
+     <td>Very Unfit
+     <td>16
+     <td>400
+ <tfoot>
+   <tr>
+     <td colspan="3" .fw-lighter><sup>1</sup> Sustained road speed on a flat, well-maintained road
+   <tr>
+     <td colspan="3" .fw-lighter><sup>2</sup> Sustained climb over an hour or so on a 5% gradient.
+       As a rule of thumb, add 50 for every extra 1% gradient and subtract 50 for every 1% reduction in gradient.
 
 <h2>Further Information
 
@@ -148,3 +191,5 @@
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections">Tranter's corrections
     (Used to account for fatigue and fitness.)
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/VAM_(bicycling)">VAM

@@ -101,7 +101,7 @@ data CaminoMsg =
   | PenanceFormatted Penance
   | PenanceMsg Penance
   | PenanceReject
-  | PenanceSummaryTitle
+  | PenanceSummaryLabel
   | PerceivedDistanceLabel
   | PetsTitle
   | PharmacyTitle
@@ -263,7 +263,7 @@ renderCaminoMsgDefault _ PeakTitle = "Peak"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
 renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ PenanceReject = "Rejected"
-renderCaminoMsgDefault _ PenanceSummaryTitle = "Penance Summary"
+renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
 renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
 renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"

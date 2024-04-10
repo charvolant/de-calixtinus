@@ -237,7 +237,7 @@
   <div .aside .col-2 .m-1 .p-1 .float-end>
     Penance is always calculated as a <em>walking</em> distance.
     Cyclists have a greater range of speeds and distances when compared to walkers.
-    Treating everything as a walking distances allows peferences for things like accommodation and services to be
+    Treating everything as walking distances allows preferences for things like accommodation and services to be
     treated in a consistent manner.
   The root measure of penance is how many kilometres you have walked (cyclists, see the note).
   Other aspects of the trip, such as accommodation preferences and the like are converted into
@@ -275,7 +275,7 @@
     A user can express preferences in terms of a distance range and time range.
     A small amount of additional penance is added for being away from the target distance.
     Once the distance or time is outside the normal lower and upper bounds of the range, more penance is
-    calculated to indicate either a heartbreakingly long day or a pathetically short walk.
+    calculated to indicate either a heartbreakingly long day or an embarrassingly short walk.
     There are also hard maximum and minimum limits, which will case the day to be rejected as a possible stage.
   <li>
     A stop penance is added.
@@ -404,45 +404,20 @@
      -
     <a href="#">Azambuja
     <span .distance">19.4km
-    <div .penance-summary .dropdown>
-      <button .btn .btn-outline-primary .penance-summary .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
-        Penance
-        <span .penance>24.7km
-      <div .dropdown-menu>
-        <a .dropdown-item>
-          Distance
-          <span .distance>22.2km
-        <a .dropdown-item>
-          Accommodation
-          <span .penance>0.5km
-        <a .dropdown-item>
-          Stop
-          <span .penance>2.0km
-        <a .dropdown-item>
-          Missing Services (Stop)
-          <span .penance>0.0km
-        <a .dropdown-item>
-          Missing Services (Day)
-          <span .penance>0.0km
-        <a .dropdown-item>
-          Distance Adjustment
-          <span .penance>0.0km
-       <a .dropdown-item>
-          Time Adjustment
-          <span .penance>0.0km
-       <a .dropdown-item>
-          Other
-          <span .penance>0.0km
   <div .card-body>
     <p>
       Distance
       <span .distance">19.4km
-      (feels like <span .distance">22.2km</span>)
+      (feels like <span .distance">19.2km</span>)
       over <span class="time">5.5hrs</span>
       Ascent <span class="height">25m</span>
       Descent <span class="height">25m</span>
-      Penance <span class="penance">24.7km</span>
-    <ul>
+      <br>
+      Penance <span .penance>21.7 km</span>
+      \ = Distance <span .distance>19.2 km</span>
+      \ + Stop <span .penance>2.0 km</span>
+      \ + Accommodation <span .penance>0.5 km</span>
+     <ul>
       <li>
         <div .location-summary>
           Vila Franca de Xira
@@ -492,12 +467,16 @@
         ...
 
 <p>
-  The top line shows the start and end points for the day, the total distance travelled and the
-  <a href="#penance-help">penance
-  score for the day.
+  The top line shows the start and end points for the day and the total distance travelled.
   Clicking on either of the locations will take you to a more detailed description of the location in
   the <a hre="#location-help">locations</a> tab.
-  Clicking on the penance score will show a more detailed breakdown of the total penance for the day.
+
+<p>
+  Below the top line is a line giving the distance and time travelled for the day.
+  A line below shows the
+  <a href="#penance-help">penance
+  score for the day, broken down into components.
+  Different components will appear in this line, as needed.
 
 <p>
   The following lines give the waypoints for the day.

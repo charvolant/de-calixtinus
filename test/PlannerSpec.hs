@@ -33,12 +33,13 @@ testPlanner preferences camino = TestList [
   TestLabel "Plan Camino" (testPlanCamino preferences camino)
   ]
 
+distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
+
 preferences1 = TravelPreferences {
     preferenceTravelFunction = Walking,
     preferenceFitness = Normal,
-    preferenceDistance = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0),
+    preferenceDistance = distanceRange1,
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
-    preferencePerceivedDistance = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0),
     preferenceStop = Penance 0.5,
     preferenceAccommodation = M.fromList [
         (MunicipalAlbergue, (Penance 1.5)),
@@ -53,6 +54,28 @@ preferences1 = TravelPreferences {
       (Bank, (Penance 0.1))
     ]
   }
+  
+
+preferences2 = TravelPreferences {
+    preferenceTravelFunction = Cycling,
+    preferenceFitness = Normal,
+    preferenceDistance = distanceRange1,
+    preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
+    preferenceStop = Penance 0.5,
+    preferenceAccommodation = M.fromList [
+        (MunicipalAlbergue, (Penance 1.5)),
+        (PrivateAlbergue, (Penance 0.9))
+      ],
+    preferenceStopServices = M.fromList [
+      (Restaurant, (Penance 0.2)),
+      (Groceries, (Penance 0.3))
+    ],
+    preferenceDayServices = M.fromList [
+      (Pharmacy, (Penance 0.1)),
+      (Bank, (Penance 0.1))
+    ]
+  }
+
 
 location1 = Location {
     locationID = "A",
@@ -153,13 +176,19 @@ cpreferences1 = CaminoPreferences {
   preferenceExcluded = S.empty
 }
   
-testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3]
+testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3, testHoursSimple4, testHoursSimple5, testHoursSimple6]
 
-testHoursSimple1 = TestCase (assertMaybeFloatEqual "Hours Simple 1" (Just 1.160) (walkingHours preferences1 legs1) 0.001)
+testHoursSimple1 = TestCase (assertMaybeFloatEqual "Hours Simple 1" (Just 1.160) (travelHours preferences1 legs1) 0.001)
 
-testHoursSimple2 = TestCase (assertMaybeFloatEqual "Hours Simple 2" (Just 2.313) (walkingHours preferences1 legs2) 0.001)
+testHoursSimple2 = TestCase (assertMaybeFloatEqual "Hours Simple 2" (Just 2.313) (travelHours preferences1 legs2) 0.001)
 
-testHoursSimple3 = TestCase (assertMaybeFloatEqual "Hours Simple 3" (Just 0.465) (walkingHours preferences1 legs0) 0.001)
+testHoursSimple3 = TestCase (assertMaybeFloatEqual "Hours Simple 3" (Just 0.465) (travelHours preferences1 legs0) 0.001)
+
+testHoursSimple4 = TestCase (assertMaybeFloatEqual "Hours Simple 4" (Just 0.358) (travelHours preferences2 legs1) 0.001)
+
+testHoursSimple5 = TestCase (assertMaybeFloatEqual "Hours Simple 5" (Just 0.745) (travelHours preferences2 legs2) 0.001)
+
+testHoursSimple6 = TestCase (assertMaybeFloatEqual "Hours Simple 6" (Just 0.212) (travelHours preferences2 legs0) 0.001)
 
   
 testTravelSimple = TestList [testTravelSimple1, testTravelSimple2, testTravelSimple3]
@@ -190,11 +219,15 @@ testAccommodationSimple2 = let
     )
 
 
-testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2 ]
+testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.5) (metricsPenance $ penance preferences1 cpreferences1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.3) (metricsPenance $ penance preferences1 cpreferences1 legs0) 0.1)
 
 testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 15.6) (metricsPenance $ penance preferences1 cpreferences1 legs1) 0.1)
+
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.2) (metricsPenance $ penance preferences2 cpreferences1 legs0) 0.1)
+
+testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 12.4) (metricsPenance $ penance preferences2 cpreferences1 legs1) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 

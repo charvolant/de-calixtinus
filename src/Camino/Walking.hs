@@ -16,12 +16,19 @@ The Tranter corrections help take care of such issues.
 * <https://en.wikipedia.org/wiki/Naismith%27s_rule>
 * <https://en.wikipedia.org/wiki/Tobler%27s_hiking_function>
 
+is measured by VAM - velocità ascensionale media - with the assumption that each additional 1% of slope
+reduces ascension speed by 50m/hr
+
+* https://en.wikipedia.org/wiki/VAM_(bicycling)
+
+
 @
 let t = tobler 4.5 100 0 in
   tranter Normal t
 @
 -}
 module Camino.Walking (
+  cycling,
   naismith, 
   nominalSpeed,
   perceivedDistance,
@@ -33,19 +40,55 @@ import Numeric.Tools.Interpolation
 import qualified Data.Vector as V (Vector, fromList, length)
 import Camino.Camino
 
+-- | Base cycling speed for time estimates
+cyclingSpeed :: (Floating a) => Fitness -> a
+cyclingSpeed SuperFit = 40.0
+cyclingSpeed VeryFit = 32.0
+cyclingSpeed Fit = 28.0
+cyclingSpeed Normal = 24.0
+cyclingSpeed Unfit = 20.0
+cyclingSpeed VeryUnfit = 16.0
+
+-- | Base cycling ascent rates for time estimates, using a 5% slope as a rough guide
+cyclingAscent :: (Floating a) => Fitness -> a
+cyclingAscent SuperFit = 1600.0 -- Finishing mountain stage in Tour de France
+cyclingAscent VeryFit = 1300.0
+cyclingAscent Fit = 1100.0
+cyclingAscent Normal = 900.0
+cyclingAscent Unfit = 700.0
+cyclingAscent VeryUnfit = 400.0
+
+cycling :: (Ord a, Floating a) => Fitness  -- ^ The broad level of fitness
+  -> a -- ^ The distance in km
+  -> a -- ^ The ascent in metres
+  -> a -- ^ The descent in metres
+  -> a -- ^ The time taken in hourse
+cycling fitness distance ascent descent = 
+  let
+    da = if ascent == 0.0 then 0.0 else distance * ascent / (descent + ascent)
+    as = if da == 0.0 then 0 else ascent / (da * 1000)
+    speed = cyclingSpeed fitness
+    ascentRate = cyclingAscent fitness
+    modifiedAscentRate = max 200.0 (ascentRate - (as - 0.05) * 5000.0) -- Lose 50m/s per 1% of slope
+  in
+    distance / speed + ascent / modifiedAscentRate
+    
+      
 -- | Calculate the time taken to walk a distance using simple Naismith's rule
-naismith :: (Floating a) => a -- ^ The distance in km
+naismith :: (Floating a) => Fitness -- ^ The broad level of fitness
+  -> a -- ^ The distance in km
   -> a -- ^ The ascent in metres
   -> a -- ^ The descent in metres
   -> a -- ^ The time taken in hours
-naismith distance ascent _ = (distance / 5) + (ascent / 600)
+naismith _ distance ascent _ = (distance / 5) + (ascent / 600)
 
 -- | Calculate the time taken using Toblers's function
-tobler :: (Ord a, Floating a) => a -- ^ The distance in km
+tobler :: (Ord a, Floating a) => Fitness -- ^ The broad level of fitness
+  -> a -- ^ The distance in km
   -> a -- ^ The ascent in metres
   -> a -- ^ The descent in metres
   -> a -- ^ The time taken in hours
-tobler distance ascent descent =
+tobler _ distance ascent descent =
   let
     da = if ascent == 0.0 then 0.0 else distance * ascent / (descent + ascent)
     dd = if descent == 0.0 then 0.0 else distance * descent / (descent + ascent)
@@ -207,24 +250,38 @@ tranterLower fitness = realToFrac $ meshLowerBound $ interpolationMesh $ tranter
 tranterUpper :: Fitness -> Float 
 tranterUpper fitness = realToFrac $ meshUpperBound $ interpolationMesh $ tranter' fitness
 
--- | Normal walking speed, based on fitness level and a nomimal five hours of walking, adjusted slightly for sanity
-nominalSpeed :: Fitness -- ^ The level of fitness of the person walking
+-- | Normal walking speed, based on fitness level and a nomimal five hours of walking/riding, adjusted slightly for sanity
+nominalSpeed :: Travel -- ^ The type of travele
+  -> Fitness -- ^ The level of fitness of the person walking
   -> Float -- ^ Nominal speed on level ground in km/hr
-nominalSpeed SuperFit = 6.0
-nominalSpeed VeryFit = 5.5
-nominalSpeed Fit = 4.5
-nominalSpeed Normal = 4.0
-nominalSpeed Unfit = 3.5
-nominalSpeed VeryUnfit = 3.0
+nominalSpeed Walking SuperFit = 6.0
+nominalSpeed Walking VeryFit = 5.5
+nominalSpeed Walking Fit = 4.5
+nominalSpeed Walking Normal = 4.0
+nominalSpeed Walking Unfit = 3.5
+nominalSpeed Walking VeryUnfit = 3.0
+nominalSpeed Walking_Naismith SuperFit = 6.0
+nominalSpeed Walking_Naismith VeryFit = 5.5
+nominalSpeed Walking_Naismith Fit = 5.0
+nominalSpeed Walking_Naismith Normal = 5.0
+nominalSpeed Walking_Naismith Unfit = 4.5
+nominalSpeed Walking_Naismith VeryUnfit = 4.0
+nominalSpeed Cycling SuperFit = 40.0
+nominalSpeed Cycling VeryFit = 32.0
+nominalSpeed Cycling Fit = 25.0
+nominalSpeed Cycling Normal = 20.0
+nominalSpeed Cycling Unfit = 15.0
+nominalSpeed Cycling VeryUnfit = 10.0
 
 -- | The perceived distance compared to the actual distance when walking over flat ground
-perceivedDistance :: Fitness -- ^ The fitness level
+perceivedDistance :: Travel -- ^ The travel type
+ -> Fitness -- ^ The fitness level
  -> Float -- ^ The actual distance
  -> Bool -- ^ If out of range, choose the upper boundary, otherwise choose the lower one
  -> Float -- ^ 
-perceivedDistance fitness distance upper = let
-    normalSpeed = nominalSpeed Normal
-    baseHours = tobler distance 0.0 0.0
+perceivedDistance travel fitness distance upper = let
+    normalSpeed = nominalSpeed Walking Normal
+    baseHours = if travel == Cycling then cycling fitness distance 0.0 0.0 else tobler fitness distance 0.0 0.0
     mlower = tranterLower fitness
     mupper = tranterUpper fitness
     baseHours' = if baseHours >= mlower && baseHours <= mupper then baseHours else if upper then mupper else mlower

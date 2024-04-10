@@ -431,9 +431,6 @@ preferencesHtml link preferences camino _trip = [ihamlet|
       <div .col-4>_{DistancePreferencesLabel}
       <div .col>^{preferenceRangeHtml $ preferenceDistance preferences}
     <div .row>
-      <div .col-4>_{DistancePreferencesPerceivedLabel}
-      <div .col>^{preferenceRangeHtml $ preferencePerceivedDistance preferences}
-    <div .row>
       <div .col-4>_{TimePreferencesLabel}
       <div .col>^{preferenceRangeHtml $ preferenceTime preferences}
     <div .row>

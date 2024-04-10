@@ -16,6 +16,7 @@ module Data.Propositional (
   , evaluate
   , formulaMap
   , implications
+  , implicationsSingle
   , invert
   , isClause
   , overlay
@@ -153,6 +154,18 @@ implications :: (Ord a) => [Formula a] -- The list of clauses
   -> Substitution a -- ^ The final mapping (not including anything in the initial mapping unless it is deduced)
 implications clauses mapping = let
     result = implications' clauses mapping M.empty
+  in
+    \v -> M.lookup v result
+
+   
+-- | Process first-level implications in clause form.
+--   This is like @implications@ but does not keep calculating until a fixpoint is reached
+--   The result is a map of variables known to be true or false as consequence.
+implicationsSingle :: (Ord a) => [Formula a] -- The list of clauses
+  -> Substitution a -- ^ The initial mapping
+  -> Substitution a -- ^ The final mapping (not including anything in the initial mapping unless it is deduced)
+implicationsSingle clauses mapping = let
+    result = implications'' clauses mapping M.empty
   in
     \v -> M.lookup v result
 

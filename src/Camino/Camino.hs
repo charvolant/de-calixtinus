@@ -824,7 +824,7 @@ completeRoutes camino routes = let
     requires = concat $ map createRequiresClauses logics
     required = implications requires sub
     prohibits = concat $ map createProhibitsClauses logics
-    prohibited = implications prohibits (overlay sub required)
+    prohibited = implicationsSingle prohibits (overlay sub required) -- Single to stop mutual exclusions from implicating themselves
     membership = (sub `overlay` invert prohibited) `overlay` required
     complete = S.fromList $ filter (\v -> membership v == Just T) (caminoRoutes camino)
   in

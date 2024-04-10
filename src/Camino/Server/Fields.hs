@@ -39,7 +39,6 @@ import Yesod.Core
 import Yesod.Form.Types
 import Yesod.Form.Functions
 import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
-import Debug.Trace
 
 -- | Creates an input with @type="hidden"@ where the hidden fields can be mapped to and from an actual value.
 --   This can be useful when you have something that needs to be decoded in context and a @PathPiece@ just doesn't have the relevant information.
@@ -258,7 +257,7 @@ implyingCheckListField options requiredClauses allowedClauses prohibitedClauses 
                  sub = substitutionFromDomain values vals
                  implies = implications requiredClauses sub
                  implied = S.filter (\v -> implies v == Just T) values
-                 complete = trace ("Vals = " ++ (show (S.map (\v -> vlookup M.! v) vals))  ++ " required = " ++ (show (S.map (\v -> vlookup M.! v) required)) ++ " implied = " ++ (show (S.map (\v -> vlookup M.! v) implied))) (vals `S.union` required `S.union` implied)
+                 complete = vals `S.union` required `S.union` implied
                in
                  return $ Right $ Just $ complete
     , fieldView = \theId name _attrs val _isReq -> let
@@ -345,7 +344,6 @@ $forall (idx, (key, label, opt, mexp, _req)) <- zoptions
       zoptions = zip [1::Int ..] options
       zlookup = M.fromList $ map (\(idx, (_key, _label, v, _mmsg, _dflt)) -> (v, idx)) zoptions
       rlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt) -> (key, v)) options
-      vlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt) -> (v, key)) options
       inputId base idx = pack (unpack base ++ "-" ++ show idx)
       setIds base vals = preEscapedToMarkup $ intercalate ", " $ map (\v -> cons '"' (snoc (inputId base (zlookup M.! v)) '"')) $ S.toList vals
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)

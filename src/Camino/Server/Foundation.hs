@@ -150,7 +150,6 @@ travelPreferencesFrom prefs = TravelPreferences {
     preferenceTravelFunction = prefTravel prefs
   , preferenceFitness = prefFitness prefs
   , preferenceDistance = prefDistance prefs
-  , preferencePerceivedDistance = perceivedDistanceRange (prefFitness prefs) (prefDistance prefs)
   , preferenceTime = prefTime prefs
   , preferenceStop = prefStop prefs
   , preferenceAccommodation = prefAccommodation prefs

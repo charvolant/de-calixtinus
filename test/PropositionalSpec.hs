@@ -1,16 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
 module PropositionalSpec(testPropositional) where
 
 import Test.HUnit
 import qualified Data.Map as M
 import Data.Propositional
 
+testPropositional :: Test
 testPropositional = TestList [
       TestLabel "Reduce" testReduce
     , TestLabel "Evaluate" testEvaluate
     , TestLabel "Implications" testImplications
-  ] :: Test
+  ]
 
 testReduce = TestList [
        TestLabel "Reduce 1" testReduce1

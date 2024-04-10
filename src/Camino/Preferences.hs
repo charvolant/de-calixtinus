@@ -160,15 +160,15 @@ rangeDistance (PreferenceRange _derived targ lower upper _mini _maxi) value
   
 
 -- | Convert a normal distance range into a perceived distance range      
-perceivedDistanceRange :: Fitness -> PreferenceRange Float -> PreferenceRange Float
-perceivedDistanceRange fitness range = let
-    mini' = fmap (\v -> perceivedDistance fitness v False) (rangeMinimum range)
-    lower' = perceivedDistance fitness (rangeLower range) False
-    target' = perceivedDistance fitness (rangeTarget range) True  
-    upper' = perceivedDistance fitness (rangeUpper range) True
-    maxi' = fmap (\v -> perceivedDistance fitness v True) (rangeMaximum range)
+perceivedDistanceRange :: Travel -> Fitness -> PreferenceRange Float -> PreferenceRange Float
+perceivedDistanceRange travel fitness range = let
+    mini' = fmap (\v -> perceivedDistance travel fitness v False) (rangeMinimum range)
+    lower' = perceivedDistance travel fitness (rangeLower range) False
+    target' = perceivedDistance travel fitness (rangeTarget range) True  
+    upper' = perceivedDistance travel fitness (rangeUpper range) True
+    maxi' = fmap (\v -> perceivedDistance travel fitness v True) (rangeMaximum range)
   in
-    PreferenceRange (Just "Derived from distance preferences") target' lower' upper' mini' maxi'
+    PreferenceRange (Just "Normal fitness walking equivalent") target' lower' upper' mini' maxi'
     
 -- | Preferences for hwo far, how long and what sort of comforts one might expect.
 --   These can be reasonably expected to remain constant across different caminos   
@@ -177,7 +177,6 @@ data TravelPreferences = TravelPreferences {
   , preferenceFitness :: Fitness -- ^ The base fitness level
   , preferenceDistance :: PreferenceRange Float -- ^ The preferred distance range
   , preferenceTime :: PreferenceRange Float -- ^ The preferred time walking range
-  , preferencePerceivedDistance :: PreferenceRange Float -- ^ The preferred distance range; if nothing then built from the distance range
   , preferenceStop :: Penance -- ^ The amount of penance associated with stopping for a day (larger will tend to increase legs, smaller the opposite)
   , preferenceAccommodation :: M.Map AccommodationType Penance -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   , preferenceStopServices :: M.Map Service Penance -- ^ Desired services at a stop (absence implies zero desire)
@@ -190,7 +189,6 @@ instance FromJSON TravelPreferences where
     fitness' <- v .: "fitness"
     distance' <- v .: "distance"
     time' <- v .: "time"
-    perceived' <- v .:? "perceived" .!= perceivedDistanceRange fitness' distance'
     stop' <- v .: "stop"
     accommodation' <- v .: "accommodation"
     sstop' <- v .: "services-stop"
@@ -200,7 +198,6 @@ instance FromJSON TravelPreferences where
         , preferenceFitness = fitness'
         , preferenceDistance = distance'
         , preferenceTime = time'
-        , preferencePerceivedDistance = perceived'
         , preferenceAccommodation = accommodation'
         , preferenceStop = stop'
         , preferenceStopServices = sstop'
@@ -209,8 +206,8 @@ instance FromJSON TravelPreferences where
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' distance' time' perceived' stop' accommodation' sstop' sday') =
-    object [ "travel" .= travel', "fitness" .= fitness', "distance" .= distance', "time" .= time', "perceived" .= perceived', "stop" .= stop', "accommodation" .= accommodation', "services-stop" .= sstop', "services-day" .= sday']
+  toJSON (TravelPreferences travel' fitness' distance' time' stop' accommodation' sstop' sday') =
+    object [ "travel" .= travel', "fitness" .= fitness', "distance" .= distance', "time" .= time', "stop" .= stop', "accommodation" .= accommodation', "services-stop" .= sstop', "services-day" .= sday']
 
     
 -- | Preferences for where to go and where to stop on a camino  
@@ -467,7 +464,6 @@ defaultTravelPreferences travel fitness = let
         preferenceFitness = fitness,
         preferenceDistance = distance,
         preferenceTime = suggestedTimeRange travel fitness,
-        preferencePerceivedDistance = perceivedDistanceRange fitness distance,
         preferenceStop = Penance 2.0,
         preferenceAccommodation = suggestedAccommodation travel fitness,
         preferenceStopServices = suggestedStopServices travel fitness,

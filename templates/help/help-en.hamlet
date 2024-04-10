@@ -64,7 +64,7 @@
   "Penance" started as an in-joke by the author where, after a particularly miserable night and day, the owner of
   the hotel we finally got to commented that we'd paid for all our sins in one go.
   The basic idea is that everything is converted into equivalent kilometres of walking.
-  Actual walking is converted into a perceived distance that takes account of climbs and descents, fatigue and so on.
+  Actual travel is converted into a perceived distance that takes account of climbs and descents, fatigue and so on.
   To this distance, adjustments are added for particularly long or short distances, whether the place where you sleep
   meets your needs, whether there is a restaurant in the town where you are staying so that you can eat, and a variety
   of other adjustments.
@@ -234,7 +234,12 @@
   The Camino Planner attempts to divide the entire trip into day-stages that minimise the
   total amount of penance accumulated during the journey.
 <p>
-  The root measure of penance is how many kilometres you have walked.
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    Penance is always calculated as a <em>walking</em> distance.
+    Cyclists have a greater range of speeds and distances when compared to walkers.
+    Treating everything as a walking distances allows peferences for things like accommodation and services to be
+    treated in a consistent manner.
+  The root measure of penance is how many kilometres you have walked (cyclists, see the note).
   Other aspects of the trip, such as accommodation preferences and the like are converted into
   kilometre-equivalents and added to the base walking distance.
   As a general rule, think of the other penance values in terms of,
@@ -264,6 +269,7 @@
   <li>
     The resulting time is converted into a <em>perceived distance</em>, essentially the distance an untiring
     person of normal fitness, walking on flat ground, would walk in the same time.
+    Cycling distances are also converted into a perceived walking distance.
     The perceived distance forms the basis of the penance score.
   <li>
     A user can express preferences in terms of a distance range and time range.

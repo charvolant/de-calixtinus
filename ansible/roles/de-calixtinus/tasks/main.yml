@@ -18,6 +18,13 @@
       - libicu
     state: present
 
+- name: Ensure unicode icu library is present
+  yum:
+    name:
+      - libicu
+    state: present
+  when: install_icu
+
 - name: Get distribution from s3
   ansible.builtin.get_url:
     url: "https://{{ dcx_dist_bucket }}.s3.ap-southeast-2.amazonaws.com/build/de-calixtinus-{{ dcx_version }}.tar.gz"

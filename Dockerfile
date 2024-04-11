@@ -11,7 +11,7 @@ RUN stack install --local-bin-path /app/bin :camino-server-exe
 FROM debian:buster-slim
 LABEL title="De Calixtinus"
 LABEL description="A web server that allows users to enter travel preferences and creates a staged plan for the Camino Santiago"
-LABEL version=0.1
+LABEL version=0.2
 RUN apt-get update && apt-get install libicu63
 COPY --from=build /app /app
 EXPOSE 3000

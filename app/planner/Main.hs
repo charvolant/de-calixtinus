@@ -41,7 +41,7 @@ data Plan = Plan {
   exclude :: String,
   config :: FilePath,
   output :: FilePath
-}
+} deriving (Show)
 
 arguments :: Parser Plan
 arguments =  Plan

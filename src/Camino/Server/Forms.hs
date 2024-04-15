@@ -441,9 +441,9 @@ chooseServicesForm prefs extra = do
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
     let dayServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
     (stRes, stView) <- mreq penanceField (fieldSettingsLabel MsgStopPreferencesLabel) (prefStop <$> prefs)
-    (acRes, acView) <- mreq (penanceMapField accommodationOptions) (fieldSettingsLabel MsgAccommodationPreferencesLabel) (prefAccommodation <$> prefs)
-    (ssRes, ssView) <- mreq (penanceMapField stopServiceOptions) (fieldSettingsLabel MsgStopServicePreferencesLabel) (prefStopServices <$> prefs)
-    (dsRes, dsView) <- mreq (penanceMapField dayServiceOptions) (fieldSettingsLabel MsgDayServicePreferencesLabel) (prefDayServices <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField True accommodationOptions) (fieldSettingsLabel MsgAccommodationPreferencesLabel) (prefAccommodation <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField False stopServiceOptions) (fieldSettingsLabel MsgStopServicePreferencesLabel) (prefStopServices <$> prefs)
+    (dsRes, dsView) <- mreq (penanceMapField False dayServiceOptions) (fieldSettingsLabel MsgDayServicePreferencesLabel) (prefDayServices <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStop = stRes,

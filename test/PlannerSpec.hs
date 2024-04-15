@@ -54,7 +54,7 @@ preferences1 = TravelPreferences {
       (Bank, (Penance 0.1))
     ]
   }
-  
+
 
 preferences2 = TravelPreferences {
     preferenceTravelFunction = Cycling,
@@ -63,8 +63,8 @@ preferences2 = TravelPreferences {
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
     preferenceStop = Penance 0.5,
     preferenceAccommodation = M.fromList [
-        (MunicipalAlbergue, (Penance 1.5)),
-        (PrivateAlbergue, (Penance 0.9))
+        (MunicipalAlbergue, (Penance 0.0)),
+        (PrivateAlbergue, (Penance 1.0))
       ],
     preferenceStopServices = M.fromList [
       (Restaurant, (Penance 0.2)),
@@ -199,15 +199,16 @@ testTravelSimple2 = TestCase (assertFloatEqual "Travel Simple 2" 10.0 (travel pr
 
 testTravelSimple3 = TestCase (assertFloatEqual "Travel Simple 3" 2.0 (travel preferences1 legs0) 0.001)
 
-testAccommodationSimple = TestList [ testAccommodationSimple1, testAccommodationSimple2 ]
+testAccommodationSimple = TestList [ testAccommodationSimple1, testAccommodationSimple2, testAccommodationSimple3 ]
 
 testAccommodationSimple1 = let
     (accom, serv, pen) = accommodation preferences1 camino1 legs0 services0 False
   in
     TestCase (do
       assertEqual "Accommodation Simple 1 1" True (isJust accom)
-      assertEqual "Accommodation Simple 1 2" services0 serv
-      assertPenanceEqual "Accommodation Simple 1 3" (Penance 1.4) pen 0.001
+      assertEqual "Accommodation Simple 1 2" PrivateAlbergue (accommodationType $ fromJust accom)
+      assertEqual "Accommodation Simple 1 3" services0 serv
+      assertPenanceEqual "Accommodation Simple 1 4" (Penance 1.4) pen 0.001
     )
 testAccommodationSimple2 = let
     (accom, serv, pen) = accommodation preferences1 camino1 legs1 services0 False
@@ -217,6 +218,15 @@ testAccommodationSimple2 = let
       assertEqual "Accommodation Simple 2 2" services0 serv
       assertPenanceEqual "Accommodation Simple 2 3" Reject pen 0.001
     )
+testAccommodationSimple3 = let
+    (accom, serv, pen) = accommodation preferences2 camino1 legs0 services0 False
+  in
+    TestCase (do
+      assertEqual "Accommodation Simple 3 1" True (isJust accom)
+      assertEqual "Accommodation Simple 3 2" MunicipalAlbergue (accommodationType $ fromJust accom)
+      assertEqual "Accommodation Simple 3 3" services0 serv
+      assertPenanceEqual "Accommodation Simple 3 4" (Penance 0.5) pen 0.001
+    )
 
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
@@ -225,7 +235,7 @@ testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.
 
 testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 15.6) (metricsPenance $ penance preferences1 cpreferences1 legs1) 0.1)
 
-testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.2) (metricsPenance $ penance preferences2 cpreferences1 legs0) 0.1)
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 2.3) (metricsPenance $ penance preferences2 cpreferences1 legs0) 0.1)
 
 testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 12.4) (metricsPenance $ penance preferences2 cpreferences1 legs1) 0.1)
 

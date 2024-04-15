@@ -200,8 +200,8 @@ penanceField = Field
     }
 
 -- | Create a field that handles preference ranges
-penanceMapField :: (RenderMessage site FormMessage, Ord a) => [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
-penanceMapField values = Field
+penanceMapField :: (RenderMessage site FormMessage, Ord a) => Bool -> [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
+penanceMapField allVals values = Field
     { fieldParse = \rawVals -> \_fileVals -> if null rawVals then
           return $ Right Nothing
         else if length values /= length rawVals then
@@ -213,7 +213,7 @@ penanceMapField values = Field
               return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
              else let
                 zvals = zip (map fst values) (map (fromRight mempty) pvals)
-                rvals = filter (\p -> snd p /= mempty) zvals
+                rvals = filter (\p -> allVals || (snd p /= mempty)) zvals
               in
                 return $ Right $ Just $ M.fromList rvals
     , fieldView = \theId name attrs val _isReq -> let

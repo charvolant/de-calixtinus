@@ -19,10 +19,11 @@ import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkType(..), 
 import Camino.Planner (Trip, Day, Metrics(..), tripLegs, tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Util
-import Camino.Display.Css (toCssColour)
+import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Graph.Graph (outgoing)
+import Text.Cassius (renderCss)
 import Text.Hamlet
 import qualified Data.Text as T (concat, intercalate, null, pack, take, Text, toLower, toUpper)
 import Formatting
@@ -814,7 +815,7 @@ layoutHtml config title header body footer = [ihamlet|
                    $forall link <- headLinks
                      <li .nav-item">
                        <a .nav-item href="@{LinkRoute link}">_{LinkLabel link}
-         <main .p-2>
+         <main .container-fluid .p-2>
            ^{body}
          <footer .text-center .py-4 .px-2>
            <div .row .row-cols-1 .row-cols-lg-3>
@@ -846,37 +847,39 @@ helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtmlBase config preferences camino trip = 
   [ihamlet|
-      <main .container-fluid .p-2>
-        <div>
-          <ul .nav .nav-tabs role="tablist">
-            <li .nav-item role="presentation">
-              <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
-            <li .nav-item role="presentation">
-              <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
-            <li .nav-item role="presentation">
-              <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
-            <li .nav-item role="presentation">
-              <a #preferences-toggle .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
-            <li .nav-item role="presentation">
-              <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
-            <li .nav-item role="presentation">
-              <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
-          <div .tab-content>
-            <div .tab-pane .active role="tabpanel" id="map-tab">
-              ^{caminoMapHtml preferences camino trip}
-            $maybe t <- trip
-              <div .tab-pane role="tabpanel" id="plan-tab">
-                ^{caminoTripHtml preferences camino t}
-            <div .tab-pane role="tabpanel" id="locations-tab">
-              ^{caminoLocationsHtml preferences camino trip}
-            <div .tab-pane role="tabpanel" id="preferences-tab">
-              ^{preferencesHtml True preferences camino trip}
-            <div .tab-pane role="tabpanel" id="about-tab">
-              ^{aboutHtml preferences camino trip}
-            <div .tab-pane role="tabpanel" id="key-tab">
-              ^{keyHtml config preferences camino}
-      ^{caminoMapScript preferences camino trip}
-    |]
+      <style>
+        $forall css <- caminoCss config (preferenceCamino camino)
+          #{renderCss css }
+      <div>
+        <ul .nav .nav-tabs role="tablist">
+          <li .nav-item role="presentation">
+            <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
+          <li .nav-item role="presentation">
+            <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
+          <li .nav-item role="presentation">
+            <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
+          <li .nav-item role="presentation">
+            <a #preferences-toggle .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
+          <li .nav-item role="presentation">
+            <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
+          <li .nav-item role="presentation">
+            <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
+        <div .tab-content>
+          <div .tab-pane .active role="tabpanel" id="map-tab">
+            ^{caminoMapHtml preferences camino trip}
+          $maybe t <- trip
+            <div .tab-pane role="tabpanel" id="plan-tab">
+              ^{caminoTripHtml preferences camino t}
+          <div .tab-pane role="tabpanel" id="locations-tab">
+            ^{caminoLocationsHtml preferences camino trip}
+          <div .tab-pane role="tabpanel" id="preferences-tab">
+            ^{preferencesHtml True preferences camino trip}
+          <div .tab-pane role="tabpanel" id="about-tab">
+            ^{aboutHtml preferences camino trip}
+          <div .tab-pane role="tabpanel" id="key-tab">
+            ^{keyHtml config preferences camino}
+    ^{caminoMapScript preferences camino trip}
+  |]
 
 
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute

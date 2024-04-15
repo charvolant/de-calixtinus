@@ -11,8 +11,9 @@ Stability   : experimental
 Portability : POSIX
 -}
 module Camino.Display.Css (
-  caminoCss,
-  toCssColour
+    caminoCss
+  , staticCss
+  , toCssColour
 ) where
 
 import Camino.Camino
@@ -21,6 +22,7 @@ import Camino.Display.Routes
 import Data.Char (ord)
 import Data.Colour
 import Data.Colour.SRGB
+import Data.Default.Class
 import Data.Text ()
 import Numeric
 import Text.Cassius
@@ -147,11 +149,16 @@ caminoFontCss asset = [cassius|
 caminoBaseCss :: Render CaminoRoute -> Css
 caminoBaseCss = $(cassiusFile "templates/css/base.cassius")
 
-caminoCss :: Config -> [Camino] -> [Render CaminoRoute -> Css]
-caminoCss config caminos = (base':default':routes') ++ fonts' ++ icons'
+-- | Generate CSS that can be placed in a static file
+staticCss :: Config -- ^ The base configuration
+  -> [Render CaminoRoute -> Css] -- ^ A list of CSS fragments for static CSS
+staticCss config = [caminoBaseCss, paletteCss "location-default" def] ++ (map caminoFontCss (getAssets Font config)) ++ caminoIconCss
+
+-- | Generate CSS for a camino.
+--   This is intended to be embedded in a camino plan and contains things like specific route palettes
+caminoCss :: Config -> Camino -> [Css]
+caminoCss config camino = map (\c -> c router) (default':routes')
   where
-    base' = caminoBaseCss
-    default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute (head caminos))
-    routes' = concat $ map (\c -> map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes c)) caminos
-    fonts' = map caminoFontCss (getAssets Font config)
-    icons' = caminoIconCss
+    router = renderCaminoRoute config [""]
+    default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute camino)
+    routes' =  map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes camino)

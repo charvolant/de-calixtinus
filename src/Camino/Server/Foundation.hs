@@ -236,7 +236,7 @@ instance Yesod CaminoApp where
                       <a .nav-item href=@{HelpR}>#{helpLabel}
             $maybe msg <- message
               <div>#{msg}
-          <main .p-2>
+          <main .container-fluid .p-2>
             ^{pageBody pc}
           <footer .text-center .py-4 .px-2>
             <div .row .row-cols-1 .row-cols-lg-3>

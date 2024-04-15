@@ -33,10 +33,10 @@ import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import Text.Cassius
 import Text.Hamlet
 
-createCssFiles :: Config -> [Camino]  -> FilePath -> IO ()
-createCssFiles config caminos output = do
+createCssFiles :: Config -> FilePath -> IO ()
+createCssFiles config output = do
   let router = renderCaminoRoute config [""]
-  let css = caminoCss config caminos
+  let css = staticCss config
   let file = output </> "camino.css"
   createDirectoryIfMissing True output
   LTIO.writeFile file $ LT.concat (map (\c -> renderCss $ c router) css)

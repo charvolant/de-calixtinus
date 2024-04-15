@@ -8,5 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+### Changed
+
+* Route CSS is now embedded in final plan rather than added to the general camino.css
+
+### Fixed
+
+* Municipal albergues being ignored #2
+
 ## 0.1 - 2024-04-11
 

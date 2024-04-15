@@ -19,23 +19,20 @@ import System.Directory
 
 data Generate = Generate {
   config :: FilePath,
-  output :: FilePath,
-  caminos :: [FilePath]
+  output :: FilePath
 }
 
 arguments :: Parser Generate
 arguments =  Generate
     <$> (strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG" <> help "Configuration file"))
     <*> (strOption (long "output" <> short 'o' <> value "./static" <> metavar "OUTPUTDIR" <> help "Output directory"))
-    <*> some (argument str (metavar "CAMINO-FILE"))
 
 generate :: Generate -> IO ()
 generate opts = do
-    caminos' <- mapM readCamino (caminos opts) 
     config' <- readConfigFile (config opts)
     let output' = output opts
     createDirectoryIfMissing True output'
-    createCssFiles config' caminos' (output' </> "css")
+    createCssFiles config' (output' </> "css")
     createHelpFiles config' (output' </> "help")
 
 main :: IO ()

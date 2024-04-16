@@ -33,6 +33,9 @@ import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Web.Cookie
 import Yesod
 import Yesod.Static (Static)
+import Camino.Server.Settings (widgetFile)
+import Text.Hamlet (HtmlUrlI18n, ihamletFile)
+import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
 
 data CaminoApp = CaminoApp {
     caminoAppRoot :: Text
@@ -196,6 +199,8 @@ instance Yesod CaminoApp where
     langs <- languages
     message <- getMessage
     render <- getMessageRender
+    cn <- checkNotice
+    let notice = not cn
     let config = caminoAppConfig master
     let micons = C.getAsset "icons" config
     let css = C.getAssets C.Css config
@@ -204,6 +209,8 @@ instance Yesod CaminoApp where
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render MsgHelpLabel
     pc <- widgetToPageContent widget
+    np <- noticePopup
+    nc <- widgetToPageContent np
     withUrlRenderer [hamlet|
       $doctype 5
       <html>
@@ -218,6 +225,8 @@ instance Yesod CaminoApp where
           $forall s <- scriptsHeader
             <script src="#{C.assetPath s}">
           ^{pageHead pc}
+          $if notice
+            ^{pageHead nc}
         <body>
           <header .p-2>
             <nav .navbar .navbar-expand-md>
@@ -247,10 +256,30 @@ instance Yesod CaminoApp where
                 <p .text-muted .my-2>
               <div .col>
                 <p .text-muted .my-2>#{render MsgTestMessage}
-           $forall s <- scriptsFooter
-             <script src="#{C.assetPath s}">
+          $if notice
+            ^{pageBody nc}
+          $forall s <- scriptsFooter
+            <script src="#{C.assetPath s}">
    |]
 
+noticePopupText :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
+noticePopupText [] = noticePopupText ["en"]
+noticePopupText ("en":_) = $(ihamletFile "templates/notice/notice-en.hamlet")
+noticePopupText (_:rest) = noticePopupText rest
+
+noticePopup :: Handler Widget
+noticePopup = do
+  master <- getYesod
+  langs <- languages
+  let config = caminoAppConfig master
+  let router = renderCaminoRoute config langs
+  let messages = renderCaminoMsg config
+  let notice = (noticePopupText langs) messages router
+  return $(widgetFile "notice-popup")
+
+-- | Update this as terms change
+noticeVersion :: Text
+noticeVersion = "Accept 0.2"
 
 noticeCookie :: Text
 noticeCookie = "de-calixtinus-notice"
@@ -268,7 +297,7 @@ preferencesAge = secondsToDiffTime $ 91 * 24 * 60 * 60 -- About a quarter of a y
 checkNotice :: Handler Bool
 checkNotice = do
   notice <- lookupCookie noticeCookie
-  return $ maybe False ( == "Accept") notice
+  return $ maybe False ( == noticeVersion) notice
 
 -- | Set the notice, based on the
 setNotice :: Bool -> Handler ()
@@ -276,7 +305,7 @@ setNotice accept =
   if accept then do
     let cookie  = defaultSetCookie { 
         setCookieName = encodeUtf8 noticeCookie
-      , setCookieValue = "Accept"
+      , setCookieValue = encodeUtf8 noticeVersion
       , setCookiePath = Just "/"
       , setCookieMaxAge = Just noticeAge 
       , setCookieSecure = True

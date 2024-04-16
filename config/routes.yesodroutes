@@ -2,7 +2,7 @@
 /preferences PreferencesR GET POST
 /plan PlanR POST
 /planKml PlanKmlR POST
-/notice NoticeR POST
+/notice NoticeR GET
 /about AboutR GET
 /help HelpR GET
 /static StaticR Static caminoAppStatic

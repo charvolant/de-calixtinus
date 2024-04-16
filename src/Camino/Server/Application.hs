@@ -32,7 +32,7 @@ import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
 import Data.Default.Class
-import Data.Text (Text, unpack)
+import Data.Text (Text, unpack, pack)
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
@@ -58,23 +58,12 @@ homeP =
     setTitleI MsgAppName
     $(widgetFile "homepage")
 
-noticeP :: Handler Html
-noticeP = do
-  master <- getYesod
-  langs <- languages
-  let config = caminoAppConfig master
-  let router = renderCaminoRoute config langs
-  let messages = renderCaminoMsg config
-  (widget, enctype) <- generateFormPost $ acceptNoticeForm (Just False)
-  defaultLayout $ do
-    let notice = (noticeWidget langs) messages router
-    setTitleI MsgAppName
-    $(widgetFile "notice")
-    
-noticeWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
-noticeWidget [] = noticeWidget ["en"]
-noticeWidget ("en":_) = $(ihamletFile "templates/notice/notice-en.hamlet")
-noticeWidget (_:other) = noticeWidget other
+getNoticeR :: Handler Text
+getNoticeR = do
+  accepted <- lookupGetParam "accepted"
+  let accepted' = maybe False ( == "true") accepted
+  setNotice accepted'
+  return $ pack $ "Accepted " ++ (show accepted')
 
 getHelpR :: Handler Html
 getHelpR = do
@@ -113,32 +102,7 @@ aboutWidget (_:other) = aboutWidget other
 
 getHomeR :: Handler Html
 getHomeR = do
-  accept <- checkNotice
-  if accept then
-    homeP
-  else
-    noticeP
-
-postNoticeR :: Handler Html
-postNoticeR = do  
-  render <- getMessageRender
-  ((result, _widget), _enctype) <- runFormPost $ (acceptNoticeForm) Nothing
-  case result of
-      FormSuccess accept -> do
-         setNotice accept
-         if accept then
-           redirect HomeR
-         else do
-           setMessage [shamlet|<div .alert .alert-danger>#{render MsgAcceptDisclaimerRequired}|]
-           noticeP
-      FormFailure errs -> do
-        setMessage [shamlet|
-          $forall err <- errs
-            <div .alert .alert-danger>#{err}
-        |]
-        noticeP
-      _ ->
-        getHomeR
+  homeP
 
 postPlanR :: Handler Html
 postPlanR = do

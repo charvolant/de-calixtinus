@@ -1,0 +1,25 @@
+const noticeModal = new bootstrap.Modal('#notice-dialog');
+
+function showNoticePopup() {
+  noticeModal.show();
+}
+
+function checkNotice() {
+  var check = $('#notice-accept-terms');
+  var accept = $('#notice-accept');
+  var enable = check.prop('checked');
+  accept.prop('disabled', !enable);
+}
+
+function acceptNotice() {
+    var check = $('#notice-accept-terms');
+    var accepted = check.prop('checked');
+    $.ajax({
+      url: "/notice?accepted=" + accepted,
+      error: function(jqxhr, status, err) {
+        alert('Unable to process notice acceptance: ' + err);
+      }
+    });
+}
+
+$(document).ready(showNoticePopup);

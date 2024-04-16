@@ -1,0 +1,12 @@
+<div #notice-dialog .modal .modal-lg data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div .modal-dialog>
+    <div .modal-content>
+      <div class="modal-header">
+        <h5 class="modal-title">_{MsgAppName}</h5>
+      <div #notice-dialog-contents .modal-body>
+        ^{notice}
+        <div .form-check>
+          <input .form-check-input #notice-accept-terms type=checkbox name="notice-accept-terms" onclick="checkNotice();">
+          <label .form-check-label for="notice-accept-terms">_{MsgAcceptDisclaimerLabel}
+      <div .modal-footer>
+        <button #notice-accept type="button" class="btn btn-primary" onclick="acceptNotice();" data-bs-dismiss="modal" disabled>_{MsgAcceptLabel}</button>

@@ -4,19 +4,40 @@
   De Calixtinus uses cookies for session tracking and to keep a persistent copy of your current travel and route preferences.
   De Calixtinus does not keep any other personal information, or share information with other entities.
 
+<h2>Usage
+
+<p>
+  This is intended to be a helpful tool for people planning their trip.
+  It provides a <em>suggested</em> itinerary that you can choose to ignore any time you feel like it.
+
+<p>
+  De Calixtinus is (usually) fast enough to allow you to revisit things en-route, starting from where you currently are.
+  One of the reasons that it keeps your current set of preferences in a cookie is so that you can breeze through
+  things you don't want to change if, for example, you didn't quite make your goal and what to re-plan mid-camino.
+
+<p>
+  De Calixtinus doesn't really distinguish between an interesting place
+  to stop, full of sights and entertainment, and a boring, dusty waypoint in the middle of nowhere.
+  Or a bar that is sometimes open for a couple of hours each day or a full-dress restaurant.
+  Or a small corner shop and a full-blown supermarket.
+
+<h3>Units
+
+<p>
+  De Calixtinus uses the metric system, both internally and for input and display.
+  A possible future enhancement is to allow the user to specify their preferred unit system but,
+  right now, netric it is.
+
 <h2>Disclaimer
 
 <p>
   <strong>De Calixtinus is still under development
-  The output from this program is no substitute for either careful planning or
-  casual resilience in the face of adversity.
 
 <p>
-  This is intended to be a helpful tool for people planning their trip.
   Just because "Computer Says So!" doesn't mean it's a good idea.
-  So use your own judgement.
-  In particular, the planner doesn't really distinguish between an interesting place
-  to stop, full of sights and entertainment, and a boring, dusty waypoint in the middle of nowhere.
+  So use your own judgement and check other sources of information.
+  The output from this program is no substitute for either careful planning or
+  casual resilience in the face of adversity.
 
 <p>
   I've done my best to be accurate about the data but ...

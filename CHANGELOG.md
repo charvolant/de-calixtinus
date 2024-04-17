@@ -8,13 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+### Added
+
+* Camino Fisterra
+
 ### Changed
 
 * Route CSS is now embedded in final plan rather than added to the general camino.css
+* Improved location of help and metric conversion
 
 ### Fixed
 
-* Municipal albergues being ignored #2
+* Municipal albergues being ignored [2](https://github.com/charvolant/de-calixtinus/issues/2)
 
 ## 0.1 - 2024-04-11
 

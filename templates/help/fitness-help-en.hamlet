@@ -18,21 +18,20 @@
         <td>^{caminoTravelIcon Walking}
         <td>_{caminoTravelMsg Walking}
         <td>Walking the Camino.
-            This option uses Tobler's rule to calculate the time taken to travel a given distance.
-            Tobler's rule takes account of the need to slow down on steep descents.
+            This option uses a rule to calculate the time taken to travel a given distance
+            that takes account of the need to slow down on steep descents.
             This is the default travel type.
     <tr>
         <td>^{caminoTravelIcon Walking_Naismith}
         <td>_{caminoTravelMsg Walking_Naismith}
         <td>Walking the Camino for powerful walkers.
-            This option uses Naismith's rule to calculate the time taken to travel a given distance.
-            Naismith was surveyor who spent most of his time walking and had a very consistent stride.
-            It assumes that you are fit enough to not slow up when descending a slope.
+            This option uses a rule to calculate the time taken to travel a given distance
+            that works for very capable walkers who will not slow up when descending a steep slope.
     <tr>
         <td>^{caminoTravelIcon Cycling}
         <td>_{caminoTravelMsg Cycling}
         <td>Cycling the Camino.
-            This option uses a variant of Naismith's rule for cycling, with more attention paid to levels of fitness.
+            This option uses a rule for cycling, with more attention paid to levels of fitness.
             It is still undergoing testing.
 
 <h2 #fitness-help>Fitness
@@ -186,8 +185,12 @@
 <ul>
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule">Naismith's rule
+    The rule used in the powerful walking style.
+    Naismith was surveyor who spent most of his time walking and had a very consistent stride.
+    It assumes that someone fit enough to not slow up when descending a slope.
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Tobler%27s_hiking_function">Tobler's hiking function
+    The rule used in the standard walking style.
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections">Tranter's corrections
     (Used to account for fatigue and fitness.)

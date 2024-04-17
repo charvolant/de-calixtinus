@@ -83,6 +83,23 @@ helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
 helpWidget (_:other) = helpWidget other
 
 
+getMetricR :: Handler Html
+getMetricR = do
+  master <- getYesod
+  langs <- languages
+  let config = caminoAppConfig master
+  let router = renderCaminoRoute config langs
+  let messages = renderCaminoMsg config
+  defaultLayout $ do
+    setTitleI MsgMetricTitle
+    toWidget ((metricWidget langs) messages router)
+
+-- | Help for the languages that we have
+metricWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
+metricWidget [] = metricWidget ["en"]
+metricWidget ("en":_) = $(ihamletFile "templates/help/metric-en.hamlet")
+metricWidget (_:other) = metricWidget other
+
 getAboutR :: Handler Html
 getAboutR = do
   master <- getYesod
@@ -106,7 +123,7 @@ getHomeR = do
 
 postPlanR :: Handler Html
 postPlanR = do
-  ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
+  ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep blankHelp) Nothing
   case result of
       FormSuccess prefs -> do
          encodePreferences prefs
@@ -116,13 +133,13 @@ postPlanR = do
           $forall err <- errs
             <div .text-danger>#{err}
         |]
-        stepPage ShowPreferencesStep Nothing widget enctype
+        stepPage ShowPreferencesStep Nothing blankHelp widget enctype
       _ ->
         getHomeR
 
 postPlanKmlR :: Handler TypedContent
 postPlanKmlR = do
-  ((result, _widget), _enctype) <- runFormPost $ (stepForm ShowPreferencesStep) Nothing
+  ((result, _widget), _enctype) <- runFormPost $ (stepForm ShowPreferencesStep blankHelp) Nothing
   case result of
       FormSuccess prefs -> do
          encodePreferences prefs
@@ -136,8 +153,9 @@ getPreferencesR = do
     master <- getYesod
     prefs <- decodePreferences
     let prefs' = Just $ maybe (defaultPreferenceData master) id prefs
-    ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm prefs'
-    stepPage FitnessStep Nothing widget enctype
+    (embedded, help) <- helpPopup FitnessStep
+    ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm embedded prefs'
+    stepPage FitnessStep Nothing help widget enctype
 
 postPreferencesR :: Handler Html
 postPreferencesR = do
@@ -153,46 +171,48 @@ postPreferencesR = do
 
 nextStep :: PreferenceStep -> PreferenceStep -> Handler Html
 nextStep stepp nextp = do
-  ((result, widget), enctype) <- runFormPost $ (stepForm stepp) Nothing
+  (embedded, help) <- helpPopup stepp
+  ((result, widget), enctype) <- runFormPost $ (stepForm stepp embedded) Nothing
   case result of
       FormSuccess prefs -> do
-         (widget', enctype') <- generateFormPost $ (stepForm nextp) (Just prefs)
-         stepPage nextp (Just prefs) widget' enctype'
+         (embedded', help') <- helpPopup nextp
+         (widget', enctype') <- generateFormPost $ (stepForm nextp embedded') (Just prefs)
+         stepPage nextp (Just prefs) help' widget' enctype'
       FormFailure errs -> do
         setMessage [shamlet|
           $forall err <- errs
             <div .text-danger>#{err}
         |]
-        stepPage stepp Nothing widget enctype
+        stepPage stepp Nothing help widget enctype
       _ ->
         getHomeR
 
-stepForm :: PreferenceStep -> Maybe PreferenceData -> (Html -> MForm Handler (FormResult PreferenceData, Widget))
-stepForm FitnessStep prefs = chooseFitnessForm prefs
-stepForm RangeStep prefs = chooseRangeForm prefs
-stepForm ServicesStep prefs = chooseServicesForm prefs
-stepForm CaminoStep prefs = chooseCaminoForm prefs
-stepForm RoutesStep prefs = chooseRoutesForm prefs
-stepForm StartStep prefs = chooseStartForm prefs
-stepForm StopsStep prefs = chooseStopsForm prefs
-stepForm ShowPreferencesStep prefs = confirmPreferencesForm prefs
+stepForm :: PreferenceStep -> Widget -> Maybe PreferenceData -> (Html -> MForm Handler (FormResult PreferenceData, Widget))
+stepForm FitnessStep help prefs = chooseFitnessForm help prefs
+stepForm RangeStep help prefs = chooseRangeForm help prefs
+stepForm ServicesStep help prefs = chooseServicesForm help prefs
+stepForm CaminoStep help prefs = chooseCaminoForm help prefs
+stepForm RoutesStep help prefs = chooseRoutesForm help prefs
+stepForm StartStep help prefs = chooseStartForm help prefs
+stepForm StopsStep help prefs = chooseStopsForm help prefs
+stepForm ShowPreferencesStep help prefs = confirmPreferencesForm help prefs
 
-stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> PreferenceStep -> Widget -> Enctype -> Handler Html
-stepPage' title top bottom stepp prevp nextp widget enctype = do
-  (embedded, help) <- helpPopup stepp
+stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> PreferenceStep -> Widget -> Widget -> Enctype -> Handler Html
+stepPage' title top bottom stepp prevp nextp help widget enctype = do
   defaultLayout $ do
     setTitleI title
+    toWidget help
     $(widgetFile "step")
 
-stepPage :: PreferenceStep -> Maybe PreferenceData -> Widget -> Enctype -> Handler Html
-stepPage FitnessStep _ widget enctype = stepPage' MsgFitnessTitle MsgFitnessText (Just MsgFitnessBottom) FitnessStep FitnessStep RangeStep widget enctype
-stepPage RangeStep _ widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing RangeStep FitnessStep ServicesStep widget enctype
-stepPage ServicesStep _ widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing ServicesStep RangeStep CaminoStep widget enctype
-stepPage CaminoStep _ widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing CaminoStep ServicesStep RoutesStep widget enctype
-stepPage RoutesStep _ widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing RoutesStep CaminoStep StartStep widget enctype
-stepPage StartStep _ widget enctype = stepPage' MsgStartTitle MsgStartText Nothing StartStep RoutesStep StopsStep widget enctype
-stepPage StopsStep _ widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StopsStep StartStep ShowPreferencesStep widget enctype
-stepPage ShowPreferencesStep (Just prefs) widget enctype = let
+stepPage :: PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
+stepPage FitnessStep _ help widget enctype = stepPage' MsgFitnessTitle MsgFitnessText (Just MsgFitnessBottom) FitnessStep FitnessStep RangeStep help widget enctype
+stepPage RangeStep _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing RangeStep FitnessStep ServicesStep help widget enctype
+stepPage ServicesStep _ help widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing ServicesStep RangeStep CaminoStep help widget enctype
+stepPage CaminoStep _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing CaminoStep ServicesStep RoutesStep help widget enctype
+stepPage RoutesStep _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing RoutesStep CaminoStep StartStep help widget enctype
+stepPage StartStep _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing StartStep RoutesStep StopsStep help widget enctype
+stepPage StopsStep _ help widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StopsStep StartStep ShowPreferencesStep help widget enctype
+stepPage ShowPreferencesStep (Just prefs) help widget enctype = let
     preferences = travelPreferencesFrom prefs
     camino = caminoPreferencesFrom prefs
   in
@@ -203,8 +223,14 @@ stepPage ShowPreferencesStep (Just prefs) widget enctype = let
       let router = renderCaminoRoute config langs
       let messages = renderCaminoMsg config
       setTitleI MsgShowPreferencesTitle
+      toWidget help
       $(widgetFile "show-preferences")
-stepPage ShowPreferencesStep _ widget enctype = stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing ShowPreferencesStep StopsStep ShowPreferencesStep widget enctype
+stepPage ShowPreferencesStep _ help widget enctype = stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing ShowPreferencesStep StopsStep ShowPreferencesStep help widget enctype
+
+
+-- For use where a help widget is required but not present
+blankHelp :: Widget
+blankHelp = [whamlet||]
 
 helpPopup' :: PreferenceStep -> [Lang] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
 helpPopup' FitnessStep _ = Just $(ihamletFile "templates/help/fitness-help-en.hamlet")
@@ -225,12 +251,12 @@ helpPopup stepp = do
   let help' = (\h -> h messages router) <$> helpPopup' stepp langs
   return $ case help' of
     Nothing -> (
-         [whamlet| |]
-       , [whamlet| |]
+         blankHelp
+       , blankHelp
       )
     Just help -> (
            [whamlet|
-            <a .fs-2 .text-primary href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
+            <a .text-primary href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
               <span .ca-help>
            |]
         , $(widgetFile "help-popup")

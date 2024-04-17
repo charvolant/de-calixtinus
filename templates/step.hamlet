@@ -2,7 +2,6 @@
   <div .row .m-5>
     <div .col>
       <p>
-        ^{embedded}
         _{top}
   <div .row .justify-content-center>
     <div .col-10>
@@ -18,4 +17,3 @@
     <div .row .m-5>
       <div .col>
         <p>_{bot}
-  ^{help}

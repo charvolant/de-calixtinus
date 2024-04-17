@@ -240,9 +240,9 @@ instance Yesod CaminoApp where
                   <ul .navbar-nav>
                     $forall link <- headLinks
                       <li .nav-item>
-                        <a .nav-item href="#{C.linkPath link}">#{C.linkLabel link}
+                        <a target="_blank" .nav-item href="#{C.linkPath link}">#{C.linkLabel link}
                     <li .nav-item>
-                      <a .nav-item href=@{HelpR}>#{helpLabel}
+                      <a target="_blank" .nav-item href=@{HelpR} title="#{render MsgHelpTitle}">#{helpLabel}
             $maybe msg <- message
               <div>#{msg}
           <main .container-fluid .p-2>
@@ -251,11 +251,12 @@ instance Yesod CaminoApp where
             <div .row .row-cols-1 .row-cols-lg-3>
               <div .col>
                 <p .text-muted .my-2>
-                  <a href="@{AboutR}">#{render MsgAboutLabel}
-              <div .col>
-                <p .text-muted .my-2>
+                  <a target="_blank" href="@{AboutR}">#{render MsgAboutLabel}
               <div .col>
                 <p .text-muted .my-2>#{render MsgTestMessage}
+              <div .col>
+                <p .text-muted .my-2>
+                  <a target="_blank" href="@{MetricR}" title="#{render MsgMetricTitle}">#{render MsgMetricLabel}
           $if notice
             ^{pageBody nc}
           $forall s <- scriptsFooter

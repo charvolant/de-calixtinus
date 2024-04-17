@@ -10,7 +10,7 @@ CaminoText: Select the Camino you wish to walk from the following options. Many 
 CaminoTitle: Select Camino
 CloseLabel: Close
 DayServicePreferencesLabel: Preferred Services during Day
-DistancePreferencesLabel: Distance Preferences
+DistancePreferencesLabel: Distance Preferences (km)
 ExcludedLabel: Locations not to stop at
 FinishLocationLabel: Trip End
 FitnessText: To begin with, choose the way you intend to travel. Then choose the level of fitness that you have.
@@ -18,12 +18,14 @@ FitnessBottom: Be careful with fitness. Normal is normal for a young walker with
 FitnessTitle: Travel Style and Fitness
 ForbiddenStopsLabel: Forbidden Stops
 HelpLabel: Help
-HelpTitle: Help
+HelpTitle: General Help
 HomeText1: Welcome to De Calixtinus.
 HomeText2: If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accommodation, food etc. The panner is designed to give you a globally optimal set of stages, stretching some a bit and reducing others, to give you the best overall trip. It does this by minimising "penance" a name that captures the total effort for a day, including distance, climbs and descents, accommodation, sources of food and other things.
 HomeText3: To begin, press the Start button below.
 InvalidCamino: Invalid camino
 InvalidStep: Invalid preferences step
+MetricLabel: Metric Conversion
+MetricTitle: Metric/Imperial Conversion
 MoreInformation: More Information
 NextLabel: Next
 PlanKmlLabel: Plan (KML)
@@ -54,5 +56,5 @@ StopsText: Select locations where you must stop at the end of a day and location
 StopsTitle: Required and Excluded Stops
 SuggestedLabel: Suggested
 TestMessage: Currently under testing, see the About page
-TimePreferencesLabel: Time Preferences
+TimePreferencesLabel: Time Preferences (hours)
 

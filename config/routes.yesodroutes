@@ -5,4 +5,5 @@
 /notice NoticeR GET
 /about AboutR GET
 /help HelpR GET
+/metric MetricR GET
 /static StaticR Static caminoAppStatic

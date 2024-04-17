@@ -20,7 +20,6 @@ The preferences gathering forms use a common data element and pass data via hidd
 module Camino.Server.Forms (
     PreferenceData(..)
 
-  , acceptNoticeForm
   , caminoPreferencesFrom
   , confirmPreferencesForm
   , chooseCaminoForm
@@ -326,8 +325,8 @@ makePreferenceData _master fields = let
       <*> excluded'
 
 -- | Form to allow fitness settings to be chosen
-chooseFitnessForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseFitnessForm prefs extra = do
+chooseFitnessForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseFitnessForm help prefs extra = do
     master <- getYesod
     let render = renderCaminoMsg (caminoAppConfig master)
     let  travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
@@ -348,13 +347,13 @@ chooseFitnessForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewFitness fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -378,8 +377,8 @@ chooseFitnessForm prefs extra = do
     return (res, widget)
 
 -- | Form to allow preference range settings to be chosen
-chooseRangeForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseRangeForm prefs extra = do
+chooseRangeForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseRangeForm help prefs extra = do
     master <- getYesod
     let distanceRangeField = if maybe Walking prefTravel prefs == Cycling then rangeField 0.0 250.0 1.0 else rangeField 0.0 50.0 0.5
     let timeRangeField = rangeField 0.0 16.0 0.1
@@ -399,13 +398,13 @@ chooseRangeForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewTime fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
@@ -430,8 +429,8 @@ chooseRangeForm prefs extra = do
 
 
 -- | Form to allow service preferences to be chosen
-chooseServicesForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseServicesForm prefs extra = do
+chooseServicesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseServicesForm help prefs extra = do
     master <- getYesod
     langs <- languages
     let config = caminoAppConfig master
@@ -462,25 +461,25 @@ chooseServicesForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewAccommodation fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewStopServices fields
          <div .row .mb-3>
            <div .col>
              <label for="#{fvId view}">
-               ^{fvLabel view}
+               ^{fvLabel view} ^{help}
              ^{fvInput view}
       $with view <- viewDayServices fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
@@ -503,8 +502,8 @@ chooseServicesForm prefs extra = do
 
 
 -- | Form to allow the camino to be chosen
-chooseCaminoForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseCaminoForm prefs extra = do
+chooseCaminoForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseCaminoForm help prefs extra = do
     master <- getYesod
     let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ caminoName c, c, Just $ toHtml $ caminoDescription c)) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
@@ -520,7 +519,7 @@ chooseCaminoForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
@@ -546,8 +545,8 @@ chooseCaminoForm prefs extra = do
 
 
 -- | Form to allow the routes to be chosen
-chooseRoutesForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseRoutesForm prefs extra = do
+chooseRoutesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseRoutesForm help prefs extra = do
     master <- getYesod
     let camino = prefCamino <$> prefs
     let routes = maybe (Prelude.concat (map caminoRoutes (caminoAppCaminos master))) caminoRoutes camino
@@ -568,7 +567,7 @@ chooseRoutesForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
@@ -601,8 +600,8 @@ makeOptions render keyer labeler recommended options = let
     (render MsgSuggestedLabel, mkOptions recommended) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . labeler) other))
 
 -- | Form to allow start and finish to be chosen
-chooseStartForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseStartForm prefs extra = do
+chooseStartForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseStartForm help prefs extra = do
     master <- getYesod
     render <- getMessageRender
     let camino = prefCamino <$> prefs
@@ -636,13 +635,13 @@ chooseStartForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewFinish fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
@@ -666,8 +665,8 @@ chooseStartForm prefs extra = do
     return (res, widget)
 
 -- | Form to allow the stops to be chosen
-chooseStopsForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseStopsForm prefs extra = do
+chooseStopsForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseStopsForm help prefs extra = do
     master <- getYesod
     render <- getMessageRender
     let camino = prefCamino <$> prefs
@@ -705,13 +704,13 @@ chooseStopsForm prefs extra = do
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewExcluded fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
-              ^{fvLabel view}
+              ^{fvLabel view} ^{help}
             ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
@@ -736,8 +735,8 @@ chooseStopsForm prefs extra = do
     
 
 -- | Form to ensure preferences have been confirmed
-confirmPreferencesForm :: Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-confirmPreferencesForm prefs extra = do
+confirmPreferencesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+confirmPreferencesForm _help prefs extra = do
     master <- getYesod
     fields <- defaultPreferenceFields master prefs
     let res = makePreferenceData master fields
@@ -765,13 +764,3 @@ confirmPreferencesForm prefs extra = do
       ^{fvInput (viewExcluded fields)}
     |]
     return (res, widget)
-
-acceptNoticeForm :: Maybe Bool -> Html -> MForm Handler (FormResult Bool, Widget)
-acceptNoticeForm accept extra = do
-  render <- getMessageRender
-  (res, acceptView) <- mreq (extendedCheckboxField (\m -> toHtml $ render m) MsgAcceptDisclaimerLabel Nothing) "" accept
-  let widget = [whamlet|
-    #{extra}
-    ^{fvInput acceptView}
-  |]
-  return (res, widget)

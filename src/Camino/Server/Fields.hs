@@ -19,6 +19,7 @@ module Camino.Server.Fields (
   , extendedCheckboxField
   , extendedRadioFieldList
   , extendedSelectionField
+  , fieldSettingsLabelTooltip
   , implyingCheckListField
   , parsingHiddenField
   , penanceField
@@ -39,6 +40,12 @@ import Yesod.Core
 import Yesod.Form.Types
 import Yesod.Form.Functions
 import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
+
+-- | Generate a 'FieldSettings' from the given label and tooltip message.
+fieldSettingsLabelTooltip :: RenderMessage site msg => msg -- ^ The label message
+  -> msg -- ^ The tooptip message
+  -> FieldSettings site -- ^ The resulting field settings
+fieldSettingsLabelTooltip msg tooltip = FieldSettings (SomeMessage msg) (Just $ SomeMessage tooltip) Nothing Nothing []
 
 -- | Creates an input with @type="hidden"@ where the hidden fields can be mapped to and from an actual value.
 --   This can be useful when you have something that needs to be decoded in context and a @PathPiece@ just doesn't have the relevant information.

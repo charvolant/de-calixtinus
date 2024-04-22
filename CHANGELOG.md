@@ -11,6 +11,7 @@ and this project adheres to the
 ### Added
 
 * Camino Fisterra
+* Show chosen accommodation and penance for all locations
 
 ### Changed
 
@@ -20,6 +21,7 @@ and this project adheres to the
 ### Fixed
 
 * Municipal albergues being ignored [2](https://github.com/charvolant/de-calixtinus/issues/2)
+* Consistent handling of accommodation/service preferences #[3](https://github.com/charvolant/de-calixtinus/issues/3)
 
 ## 0.1 - 2024-04-11
 

@@ -21,7 +21,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Planner (Trip)
+import Camino.Planner (AccommodationMap, Trip)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Html
@@ -262,7 +262,7 @@ helpPopup stepp = do
         , $(widgetFile "help-popup")
       )
 
-addError :: Either Location Trip -> Handler ()
+addError :: Either Location (Trip, AccommodationMap) -> Handler ()
 addError (Left loc) = do
   setMessage [shamlet|
     <div ..alert .alert-warning role="alert">
@@ -304,7 +304,7 @@ planKml prefs = do
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
     let trip = planCamino tprefs cprefs
-    let trip' = either (const Nothing) Just trip
+    let trip' = either (const Nothing) (Just . fst) trip
     let config = caminoAppConfig master
     let kml = createCaminoDoc config tprefs cprefs trip'
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml

@@ -10,14 +10,15 @@ Portability : POSIX
 -}
 
 module Graph.Graph(
-  Vertex(..),
-  Edge(..),
-  Graph(..),
+    Edge(..)
+  , Graph(..)
+  , Vertex(..)
   
-  successors,
-  predecessors,
-  available,
-  graphSummary
+  , available
+  , graphSummary
+  , predecessors
+  , reachable
+  , successors
 ) where
 
 import qualified Data.List as L
@@ -48,6 +49,8 @@ class Edge e v => Graph g e v | g -> e, g -> v where
   edge :: g -> v -> v -> Maybe e
   -- | Construct a subgraph containing only the given vertices
   subgraph :: g -> S.Set v -> g
+  -- | Mirror (reverse) the graph so that all edges are reversed
+  mirror :: g -> g
   -- | Get the preceding vertices in a graph
   sources :: g -> v -> S.Set v
   sources g v = S.fromList $ map source (incoming g v)
@@ -111,3 +114,16 @@ graphSummary graph vertices =
     )
   )
   ++ "]"
+  
+-- | Find the vertices that are reachable between two vertices, given a select function
+reachable :: (Graph g e v) => g -- ^ The graph
+  -> v -- ^ The beginning vertex on the graph
+  -> v -- ^ The ending vertex on the graph
+  -> (v -> Bool) -- ^ The selection function that determines whether to include a vertex
+  -> S.Set v -- ^ The reachable vertices
+reachable graph begin end select = let
+    succs = (successors graph begin) `S.union` (S.singleton begin)
+    preds = (predecessors graph end) `S.union` (S.singleton end)
+  in
+    S.filter select (succs `S.intersection` preds)
+    

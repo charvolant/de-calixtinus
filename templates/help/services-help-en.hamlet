@@ -5,14 +5,14 @@
   day's-end and what sort of services you want during the day.
   These preferences are expressed in kilometres walked.
   As a general rule, read the kilometre values as
-  "I would rather walk an extra <em>x</em> kilometres than stay in this type of accommodation",
+  "I would rather walk an extra <em>x</em> kilometres to stay in this type of accommodation",
   "I would walk an extra <em>y</em> kilometres to ensure that I have this available when I stop walking for the day" or
   "I would walk an extra <em>z</em> kilometres to ensure that I have access to this sometime during the day".
 
-<h3 #stop-help>Day's-end Cost
+<h3 #stop-help>Day's End
 
 <p>
-  The day's-end cost is an extra distance tacked on to each day to represent the business of finding and paying
+  Day's end is an extra distance tacked on to each day to represent the business of finding and paying
   for your accommodation, shopping, sorting out bedding and the like.
 
 <p>
@@ -25,13 +25,20 @@
 
 <p>
   The accommodation preferences indicate how willing you are to stay in a particular type of accommodation.
-  The higher the value, the less willing you are to use that style.
-  You can use this section to indicate that you would prefer to be comfortable (hotels, guest houses etc have lower values)
-  or prefer to be more medieval (albergues and hostels have lower values).
+  The higher the value, the more willing you are to use that style.
+  You can use this section to indicate that you would prefer to be comfortable (hotels, guest houses etc have higher values)
+  or prefer to be more medieval (albergues and hostels have higher values).
 
 <p>
   The "reject" or _{PenanceFormatted Reject} symbol indicates that you do not wish to use that accommodation type at all.
   By default, camping by the roadside is set to reject.
+
+<p>
+  Since you can only sleep in one place each night, accommodation preferences work by seeing if there is something
+  you like more nearby.
+  When planning, De Calixtinus looks at nearby locations to see if there are better options close enough to be
+  worth the extra effort.
+  See the general help for more information on how accommodation preferences are used.
 
 <h3 #stop-service-help>Preferred Services at Day's End
 

@@ -88,7 +88,7 @@ plan opts = do
     let solution = planCamino preferences' caminoPrefs'''
     let solution' = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just solution
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences' caminoPrefs''' solution'
+    let kml = createCaminoDoc config' preferences' caminoPrefs''' (fst <$> solution')
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml)
     let html = caminoHtml config' preferences' caminoPrefs''' solution'

@@ -14,20 +14,20 @@ Here is a longer description of this module, containing some
 commentary with @some markup@.
 -}
 module Graph.Programming (
-  AcceptFunction,
-  Chain(..),
-  ChainGraph,
-  ChoiceFunction,
-  EvaluationFunction,
-  Score(..),
+    AcceptFunction
+  , Chain(..)
+  , ChainGraph
+  , ChoiceFunction
+  , EvaluationFunction
+  , Score(..)
 
-  extend,
-  forwards,
-  constructTable,
-  passed,
-  paths,
-  program,
-  step
+  , extend
+  , forwards
+  , constructTable
+  , passed
+  , paths
+  , program
+  , step
 ) where
 
 import qualified Data.Map as M
@@ -89,6 +89,7 @@ instance (Edge e v, Score s) => Graph (ChainGraph v e s) (Chain v e s) v where
   edge graph begin end = do
     out <- M.lookup begin (forwards graph)
     M.lookup end out
+  mirror (ChainGraph forwards' reverses') = ChainGraph reverses' forwards'
   subgraph graph vs = 
     let
       sub accessor = M.fromList $ map (\v -> (v, M.filterWithKey (\k -> \_c -> S.member k vs) (accessor graph M.! v))) (filter (\k -> S.member k vs) (M.keys $ accessor graph))
@@ -110,7 +111,6 @@ type ChoiceFunction v e s = Chain v e s -> Chain v e s -> Chain v e s
 
 -- | Choose whether a vertex is usable
 type SelectFunction v = v -> Bool
-
 
 -- | Construct a chain graph from a list of chains
 fromChains :: (Edge e v, Score s) => EvaluationFunction e s -> [Chain v e s] -> ChainGraph v e s
@@ -161,9 +161,9 @@ transpose' choice chains =
   foldl (\sm -> \s -> let k = (start s, finish s) in M.insertWith choice k s sm) M.empty chains
 
 step :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> S.Set v -> [Chain v e s] -> [Chain v e s]
-step graph choice accept eval reachable current =
+step graph choice accept eval reachable' current =
   let
-    vertices = available graph reachable (S.fromList $ map finish current) -- Next available vertices
+    vertices = available graph reachable' (S.fromList $ map finish current) -- Next available vertices
     verticesList = S.toList vertices
     expanded = concat $ map (paths graph accept eval current) verticesList -- Expand out available vertices
     transposed = transpose' choice expanded
@@ -173,22 +173,20 @@ step graph choice accept eval reachable current =
     current ++ self ++ contracted
 
 constructTable' :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> S.Set v -> [Chain v e s] -> [Chain v e s]
-constructTable' graph choice accept eval reachable current =
+constructTable' graph choice accept eval reachable' current =
   let
-    update = step graph choice accept eval reachable current
+    update = step graph choice accept eval reachable' current
   in
-    if length current == length update then update else constructTable' graph choice accept eval reachable update
+    if length current == length update then update else constructTable' graph choice accept eval reachable' update
 
 -- | Construct a table of stages from vertices that lead from/to a begin/end point
 constructTable :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> SelectFunction v -> v -> v -> ChainGraph v e s
 constructTable graph choice accept eval select begin end =
   let
     origin = [Chain begin begin [] mempty]
-    succs = (successors graph begin) `S.union` (S.singleton begin)
-    preds = (predecessors graph end) `S.union` (S.singleton end)
-    reachable = S.filter select (succs `S.intersection` preds)
-    sg = subgraph graph reachable
-    result = fromChains eval (constructTable' sg choice accept eval reachable origin)
+    reachable' = reachable graph begin end select
+    sg = subgraph graph reachable'
+    result = fromChains eval (constructTable' sg choice accept eval reachable' origin)
   in
     -- trace ("Reachable = " ++ (show $ S.map identifier reachable) ++ " subgraph " ++ graphSummary sg reachable) result
     result

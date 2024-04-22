@@ -16,7 +16,7 @@ module Camino.Display.Html where
 
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkType(..), getAssets, getLinks)
-import Camino.Planner (Trip, Day, Metrics(..), tripLegs, tripStops, tripWaypoints)
+import Camino.Planner (AccommodationChoice(..), AccommodationMap, Trip, Day, Metrics(..), tripLegs, tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
@@ -42,25 +42,40 @@ conditionalLabel label values = [ihamlet|
         <h6>_{label}
   |]
 
-penanceSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-penanceSummary _preferences _camino metrics = [ihamlet|
+penanceSummary :: TravelPreferences -> CaminoPreferences -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+penanceSummary _preferences _camino detail metrics = [ihamlet|
    _{PenanceMsg (metricsPenance metrics)} =
    _{DistancePenanceMsg (metricsPerceivedDistance metrics)}
    $if metricsDistanceAdjust metrics /= mempty
      \ + _{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
    $if metricsTimeAdjust metrics /= mempty
      \ + _{TimeAdjustMsg (metricsTimeAdjust metrics)}
-   $if metricsStop metrics /= mempty
-     \ + _{StopPenanceMsg (metricsStop metrics)}
-   $if metricsAccommodation metrics /= mempty
-     \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
+   \ + _{StopPenanceMsg (metricsStop metrics)}
+   \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
+   $if detail && not (S.null acServices)
+     \ (
+     $forall service <- acServices
+        ^{caminoServiceIcon service}
+     )
    $if metricsStopServices metrics /= mempty
      \ + _{StopServicesPenanceMsg (metricsStopServices metrics)}
+     $if detail
+       \ (
+       $forall service <- metricsMissingStopServices metrics
+          ^{caminoServiceIcon service}
+       )
    $if metricsDayServices metrics /= mempty
      \ + _{DayServicesPenanceMsg (metricsDayServices metrics)}
+     if $detail
+       \ (
+       $forall service <- metricsMissingDayServices metrics
+          ^{caminoServiceIcon service}
+       )
    $if metricsMisc metrics /= mempty
      \ + _{MiscPenanceMsg (metricsMisc metrics)}
    |]
+  where
+    acServices = maybe S.empty (accommodationChoiceServices . fst) (L.uncons $ metricsAccommodationChoice metrics)
     
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
 metricsSummary _preferences _camino metrics days = [ihamlet|
@@ -272,20 +287,34 @@ caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping')
           ^{caminoSleepingIcon sleeping}
  |]
 
-caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoAccommodationHtml (GenericAccommodation _type) = [ihamlet| |]
-caminoAccommodationHtml (Accommodation name' type' services' sleeping') = [ihamlet|
+caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
+caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping) = [ihamlet|#{name'}|]
+
+caminoAccommodationHtml :: Accommodation -> Maybe AccommodationChoice -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationHtml accommodation choice = [ihamlet|
   <div .row .accommodation>
     <div .offset-1 .col-5>
       ^{caminoAccommodationTypeIcon type'}
-      #{name'}
+      ^{caminoAccommodationNameHtml accommodation}
+      $maybe ac <- choice'
+        <span .chosen-accommodation>
+          $if accommodationChoicePenance ac /= mempty
+            <span .chosen-accommodation-penance>+_{PenanceFormatted (accommodationChoicePenance ac)}
     <div .col-4>
-      $forall service <- services'
+      $forall service <- accommodationServices accommodation
         ^{caminoServiceIcon service}
     <div .col-2>
-      $forall sleeping <- sleeping'
+      $forall sleeping <- accommodationSleeping accommodation
         ^{caminoSleepingIcon sleeping}
  |]
+   where
+     name' = accommodationName accommodation
+     type' = accommodationType accommodation
+     cp' = maybe Reject accommodationChoicePenance choice
+     cn' = maybe "" (accommodationName . accommodationChoice) choice
+     ct' = maybe Camping (accommodationType . accommodationChoice) choice
+     choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
 
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
@@ -341,8 +370,8 @@ locationLegs preferences showLink camino used location = [ihamlet|
     outgoingLegs = outgoing camino' location
     (usedLegs, unusedLegs) = L.partition (\l -> S.member l used) outgoingLegs
 
-caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationHtml preferences camino _trip containerId stops waypoints used location = [ihamlet|
+caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> AccommodationMap -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationHtml preferences camino _trip accmap containerId stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .location-#{routeID route} :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
       <div .row>
@@ -371,7 +400,7 @@ caminoLocationHtml preferences camino _trip containerId stops waypoints used loc
                     <span .ca-information title="_{LinkOut (locationName location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
-          ^{caminoAccommodationHtml accommodation}
+          ^{caminoAccommodationHtml accommodation accChoice}
         ^{conditionalLabel RouteLabel (outgoing camino' location)}
         ^{locationLegs preferences True camino used location}
   |]
@@ -381,9 +410,10 @@ caminoLocationHtml preferences camino _trip containerId stops waypoints used loc
     route = caminoRoute camino' (preferenceRoutes camino) location
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
+    accChoice = M.lookup location accmap
     
-caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationsHtml preferences camino trip = [ihamlet|
+caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> AccommodationMap -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationsHtml preferences camino trip accmap = [ihamlet|
   <div .container-fluid>
     <div .row>
       <nav .navbar .navbar-expand-md>
@@ -400,7 +430,7 @@ caminoLocationsHtml preferences camino trip = [ihamlet|
         <div #locations .accordion .container-fluid>
           $forall loc <- locationsSorted
             <div .row>
-              ^{caminoLocationHtml preferences camino trip "locations" stops waypoints usedLegs loc}
+              ^{caminoLocationHtml preferences camino trip accmap "locations" stops waypoints usedLegs loc}
   |]
   where
     camino' = preferenceCamino camino
@@ -521,7 +551,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
           $forall l <- map finish $ path trip
             \  - <a href="#leg-#{locationID l}">#{locationName l}
         <p>
-          ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}     
+          ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}
           _{PenanceMsg (metricsPenance (score trip))}
     $forall day <- path trip
       <div .card .day .p-1>
@@ -534,7 +564,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
          <p>
             ^{metricsSummary preferences camino (score day) Nothing}
             <br>
-            ^{penanceSummary preferences camino $ score day}
+            ^{penanceSummary preferences camino True $ score day}
          <ul>
             <li>
               <div .location-summary>
@@ -547,7 +577,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
                   ^{legLine preferences camino leg}
          $forall accom <- metricsAccommodationChoice $ score day
             <p>
-              ^{caminoAccommodationSummaryHtml accom}
+              ^{caminoAccommodationSummaryHtml (accommodationChoice accom)}
    |]
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -844,7 +874,7 @@ keyHtml _config preferences camino = $(ihamletFile "templates/help/key-en.hamlet
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 
-caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe (Trip, AccommodationMap) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtmlBase config preferences camino trip = 
   [ihamlet|
       <style>
@@ -866,24 +896,27 @@ caminoHtmlBase config preferences camino trip =
             <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
         <div .tab-content>
           <div .tab-pane .active role="tabpanel" id="map-tab">
-            ^{caminoMapHtml preferences camino trip}
-          $maybe t <- trip
+            ^{caminoMapHtml preferences camino trip'}
+          $maybe t <- trip'
             <div .tab-pane role="tabpanel" id="plan-tab">
               ^{caminoTripHtml preferences camino t}
           <div .tab-pane role="tabpanel" id="locations-tab">
-            ^{caminoLocationsHtml preferences camino trip}
+            ^{caminoLocationsHtml preferences camino trip' accmap}
           <div .tab-pane role="tabpanel" id="preferences-tab">
-            ^{preferencesHtml True preferences camino trip}
+            ^{preferencesHtml True preferences camino trip'}
           <div .tab-pane role="tabpanel" id="about-tab">
-            ^{aboutHtml preferences camino trip}
+            ^{aboutHtml preferences camino trip'}
           <div .tab-pane role="tabpanel" id="key-tab">
             ^{keyHtml config preferences camino}
-    ^{caminoMapScript preferences camino trip}
+    ^{caminoMapScript preferences camino trip'}
   |]
+  where
+    trip' = fst <$> trip
+    accmap = maybe M.empty snd trip
 
 
-caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe (Trip, AccommodationMap) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtml config preferences camino trip = let
-    title = maybe "Camino" (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) trip
+    title = maybe "Camino" (\t -> (locationName $ start $ fst t) <> " - " <> (locationName $ finish $ fst t)) trip
   in
     layoutHtml config title Nothing (caminoHtmlBase config preferences camino trip) Nothing

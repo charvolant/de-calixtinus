@@ -119,7 +119,7 @@
       <td>
         The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
     <tr>
-      <td>Day's-end Cost
+      <td>Day's End
       <td>
         The <a href="#penance-help">penance</a> associated with stopping for the day.
         This value captures the costs involved in finding a place to stay, meals, washing and all the other
@@ -127,14 +127,19 @@
     <tr>
       <td>Accommodation Preferences
       <td>
-        A table of penance costs for staying at a particular type of accommodation.
+        A table of preferences for staying at a particular type of accommodation.
         Any accommodation type not listed here will be rejected.
+        The penance can be read as "I would be prepared to walk this distance extra to stay in something like this,
+        instead of the thing I least want to stay in."
+        The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
+        detailed description.
     <tr>
       <td>Missing Stop Services
       <td>
         A list of the services, either in the location you are staying or in the accommodation that you choose,
         that you would like to be present in the place that you stop for the day.
-        Each service is associated with the penance added if that service is <em>not</em> available.
+        Each service is associated with the penance added if that service is <em>not</em> available,
+        suggesting that you would be prepared to walk further to get that service.
     <tr>
       <td>Missing Day Services
       <td>
@@ -287,13 +292,26 @@
   <li>
     The user can express preferences for services available throughout the day, again in terms of added penance
     if the services are not present somewhere along the route, including the start and end locations.
+  <li #accommodation-penance>
+    <p>
+      Accommodation penance works by seeing if there is a better option nearby.
+    <p>
+      The user can express preferences for certain types of accommodation and the most preferred
+      accommodation in that location is chosen.
+      In addition, accommodation can sometimes be chosen to fill out missing services from the surrounding location.
+      For example, a hotel with a restaurant may be chosen if one is desired but not present at the stop.
+    <p>
+      The preferred accommodation in that location is then compared with accommodation options in nearby locations.
+      If there is a nearby location with a potentially better option then the distance-adjusted difference between
+      the two preferences is added to the accommodation penance.
+    <p>
+      For example, if the best option in this location is a hotel (1.5km preference) but 2.4km away there is an
+      albergue (5.0km preference) then the accommodation penance is (5.0 - 1.5) - 2.4 = 1.1km, essentially suggesting
+      that it might be worth breaking your journey early or keeping on going for a bit.
+    <p>
+      In most cases, the local option is the best option and the accommodation penance is 0km.
   <li>
-    The user can express preferences for certain types of accommodation and the most preferred (least penance)
-    accommodation is chosen.
-    In addition, accommodation can sometimes be chosen to fill out missing services from the surrounding location.
-    For example, a hotel with a restaurant may be chosen if one is desired but not present at the stop.
-  <li>
-    The final penance is then the combination of penance from the perceived walking distance,
+    The final penance is the combined penance of the perceived walking distance,
     distance and time penalties, stop, accommodation and missing services.
 
 <h2 #plan-help>Plan
@@ -534,6 +552,8 @@
                 <div .offset-1 .col-5>
                   <span .accommodation .hotel .ca-hotel>
                   Hotel Dighton
+                  <span .chosen-accommodation>
+                    <span .chosen-accommodation-penance>+<span .penance">0.4 km</span>
                 <div .col-4>
                   <span .service .ca-wifi>
                   <span .service .ca-restaurant>
@@ -639,6 +659,21 @@
   and the possible sleeping arrangements, ranging from shared bunks ^{caminoSleepingIcon Shared} to
   a quadruple bedroom with an ensuite ^{caminoSleepingIcon QuadrupleWC}
   The complete list of sleeping arrangements is available on the Key tab.
+
+<p>
+  If there is a
+  <span .chosen-accommodation>
+  mark beside the accommodation, then this is the accommodation option for this location that the planner has
+  chosen as the best match for your preferences, although it may not have used it for a stop.
+  The planner does not choose on accommodation type alone.
+  If the accommodation option has services that look appealing, it may choose it over another option of a
+  more preferred type.
+  If there is a figure beside the symbol, e.g.
+  <span .chosen-accommodation>
+    <span .chosen-accommodation-penance>+<span .penance">0.4 km</span>
+  Then that indicates that there is a better option nearby, with the number giving a sense of the combination
+  of how much better and how far away that other option is.
+  (See <a href="#accommodation-penance">above</a> for more information.)
 
 
 <h3 #travel-help>Travel

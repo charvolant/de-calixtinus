@@ -8,6 +8,10 @@ and this project adheres to the
 
 ## Unreleased
 
+### Added
+
+* Show chosen accommodation and penance for all locations
+
 ### Changed
 
 * Route CSS is now embedded in final plan rather than added to the general camino.css
@@ -15,6 +19,7 @@ and this project adheres to the
 ### Fixed
 
 * Municipal albergues being ignored #2
+* Consistent handling of accommodation/service preferences #3
 
 ## 0.1 - 2024-04-11
 

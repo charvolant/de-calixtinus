@@ -24,6 +24,7 @@ instance Graph TestGraph TestEdge TestVertex where
   incoming (TestGraph edges) a = filter (\e -> a == target e) edges
   outgoing (TestGraph edges) a = filter (\e -> a == source e) edges
   edge (TestGraph edges) a b = find (\e -> source e == a && target e == b) edges
+  mirror (TestGraph edges) = TestGraph (map (\(Edge a b) -> Edge b a) edges)
   subgraph (TestGraph edges) vs = TestGraph (filter (\e -> S.member (source e) vs && S.member (target e) vs) edges)
   
 graph1 = TestGraph [
@@ -45,12 +46,13 @@ graph2 = TestGraph [
   Edge 5 6
   ]
 
+testGraph :: Test
 testGraph = TestList [
   TestLabel "Basics" testBasics,
   TestLabel "Sucessors" testSuccessors,
   TestLabel "Predecessors" testPredecessors,
   TestLabel "Available" testAvailable
-  ] :: Test
+  ]
   
 testBasics = TestList [testBasics1, testBasics2, testBasics3, testBasics4]
 

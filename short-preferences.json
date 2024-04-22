@@ -5,14 +5,14 @@
   "time": { "target": 5.0, "lower": 0.0, "upper":  6.0, "min": 0.0, "max": 8.0 },
   "stop": 2.0,
   "accommodation": {
-    "MunicipalAlbergue": 1.0,
-    "PrivateAlbergue": 0.5,
-    "Hostel": 1.0,
-    "HomeStay": 1.0,
-    "GuestHouse": 2.0,
-    "House": 2.0,
+    "MunicipalAlbergue": 6.0,
+    "PrivateAlbergue": 5.0,
+    "Hostel": 5.0,
+    "HomeStay": 4.0,
+    "GuestHouse": 4.0,
+    "House": 3.0,
     "Hotel": 2.5,
-    "CampGround": 4.0,
+    "CampGround": 0.0,
     "Camping": "reject"
   },
   "services-stop": {

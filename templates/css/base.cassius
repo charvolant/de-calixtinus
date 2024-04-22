@@ -27,6 +27,13 @@ a
   color: #2ab472
 .accommodation.home-stay
   color: #ff395c
+.chosen-accommodation
+  color: #6ac830
+.chosen-accommodation::before
+  content: "\2605"
+.chosen-accommodation-penance
+  font-size: smaller
+  vertical-align: top
 .location-tooltip
   .leg-to
     font-size: smaller

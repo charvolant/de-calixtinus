@@ -39,6 +39,7 @@ instance Graph TestGraph TestEdge TestVertex where
   incoming (TestGraph edges) a = filter (\e -> a == target e) edges
   outgoing (TestGraph edges) a = filter (\e -> a == source e) edges
   edge (TestGraph edges) a b = L.find (\e -> source e == a && target e == b) edges
+  mirror (TestGraph edges) = TestGraph (map (\(Edge a b) -> Edge b a) edges)
   subgraph (TestGraph edges) vs = TestGraph (filter (\e -> S.member (source e) vs && S.member (target e) vs) edges)
   
   
@@ -84,6 +85,7 @@ choice1 s1 s2 = if score s1 < score s2 then s1 else s2
 
 select1 _v = True
 
+testProgramming :: Test
 testProgramming = TestList [
   TestLabel "Extend" testExtend,
   TestLabel "Paths" testPaths,
@@ -91,7 +93,7 @@ testProgramming = TestList [
   TestLabel "ConstructTable" testConstructTable,
   TestLabel "ChainGraph" testChainGraph,
   TestLabel "Program" testProgram
-  ] :: Test
+  ]
   
 testExtend = TestList [testExtend1, testExtend2]
 

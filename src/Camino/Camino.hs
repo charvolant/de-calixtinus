@@ -56,6 +56,7 @@ module Camino.Camino (
   , locationTypeEnumeration
   , readCamino
   , serviceEnumeration
+  , subtractFloor
   , townServiceEnumeration
   , travelEnumeration
 ) where
@@ -81,7 +82,7 @@ import Graph.Programming
 
 -- | The measure of penance.
 -- |
--- | Currently, based a simple float that can be thought of as equivalent to hours spent walking.
+-- | Currently, based a simple float that can be thought of as equivalent to kilometres spent walking.
 data Penance = Reject -- ^ Unsustainable penance
  | Penance Float -- ^ Simple penance
  deriving (Show)
@@ -119,6 +120,13 @@ instance FromJSON Penance where
 instance ToJSON Penance where
     toJSON Reject = String "reject"
     toJSON (Penance score') = Number $ fromFloatDigits score'
+
+-- | Reduce a penance by another penance, with 0 penance the minimum
+--   @Reject - b = Reject@, @a - Reject = zero@, @a - b = max(zero, a - b)@
+subtractFloor :: Penance -> Penance -> Penance
+subtractFloor Reject _ = Reject
+subtractFloor _ Reject = mempty
+subtractFloor (Penance p1) (Penance p2) = if p2 > p1 then mempty else Penance (p1 - p2)
 
 -- | Spatial reference system
 data SRS = SRS String
@@ -457,7 +465,7 @@ instance ToJSON Palette where
 
 instance Default Palette where
   def = Palette {
-    paletteColour = yellow
+    paletteColour = sRGB24read "f9b34a" -- Camino yellow
   }
 
 -- | A route, a sub-section of the camino with graphical information
@@ -735,7 +743,14 @@ instance Graph Camino Leg Location where
       defaultRoute'' = fromJust $ find (\r -> routeID r == routeID defaultRoute') routes'
     in
       Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoRoutes = routes'', caminoRouteLogic = routeLogic'', caminoDefaultRoute = defaultRoute'' }
-
+  mirror camino =
+    let
+      id'' = caminoId camino ++ "'"
+      name'' = caminoName camino `append` " mirrored"
+      legs'' = map (\l -> l { legFrom = legTo l, legTo = legFrom l, legAscent = legDescent l, legDescent = legAscent l}) (caminoLegs camino)
+    in
+      camino { caminoId = id'', caminoName = name'', caminoLegs = legs'' }
+      
 instance Placeholder [Camino] Camino where
   placeholderID = caminoId
   placeholder cid = Camino {

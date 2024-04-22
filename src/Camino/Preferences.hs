@@ -361,26 +361,26 @@ suggestedAccommodation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> M.Map AccommodationType Penance -- ^ The suggested accommodation map
 suggestedAccommodation _ SuperFit = M.fromList [
-    (MunicipalAlbergue, Penance 0.0),
-    (PrivateAlbergue, Penance 1.0),
-    (Hostel, Penance 1.0),
-    (GuestHouse, Penance 2.0),
-    (HomeStay, Penance 2.0),
-    (House, Penance 3.0),
-    (Hotel, Penance 5.0),
-    (CampGround, Penance 2.0),
-    (Camping, Penance 5.0)
+    (MunicipalAlbergue, Penance 8.0),
+    (PrivateAlbergue, Penance 6.0),
+    (Hostel, Penance 6.0),
+    (GuestHouse, Penance 5.0),
+    (HomeStay, Penance 5.0),
+    (House, Penance 5.0),
+    (Hotel, Penance 2.0),
+    (CampGround, Penance 5.0),
+    (Camping, Penance 0.0)
   ]
 suggestedAccommodation t VeryFit = suggestedAccommodation t SuperFit
 suggestedAccommodation _ Fit = M.fromList [
-    (MunicipalAlbergue, Penance 0.0),
-    (PrivateAlbergue, Penance 0.5),
-    (Hostel, Penance 0.5),
-    (GuestHouse, Penance 1.0),
-    (HomeStay, Penance 1.0),
-    (House, Penance 1.0),
+    (MunicipalAlbergue, Penance 6.0),
+    (PrivateAlbergue, Penance 5.0),
+    (Hostel, Penance 5.0),
+    (GuestHouse, Penance 3.0),
+    (HomeStay, Penance 3.0),
+    (House, Penance 2.0),
     (Hotel, Penance 2.0),
-    (CampGround, Penance 3.0),
+    (CampGround, Penance 0.0),
     (Camping, Reject)
   ]
 suggestedAccommodation t Normal = suggestedAccommodation t Fit

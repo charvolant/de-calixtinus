@@ -36,6 +36,7 @@ data CaminoMsg =
   | AccommodationPenanceMsg Penance
   | AccommodationPreferencesLabel
   | AscentMsg Float
+  | AustereTitle
   | BankTitle
   | BedlinenTitle
   | BicycleRepairTitle
@@ -48,6 +49,8 @@ data CaminoMsg =
   | CampingTitle
   | CampSiteTitle
   | CityTitle
+  | ComfortableTitle
+  | ComfortLabel
   | CyclingTitle
   | CyclePathTitle
   | DayServicesPenanceMsg Penance
@@ -70,6 +73,7 @@ data CaminoMsg =
   | FerryTitle
   | FitnessLabel
   | FitTitle
+  | FrugalTitle
   | GroceriesTitle
   | GuestHouseTitle
   | HandwashTitle
@@ -89,6 +93,7 @@ data CaminoMsg =
   | LinkOut Text
   | LocationsLabel
   | LockersTitle
+  | LuxuriousTitle
   | MapLabel
   | MattressTitle
   | MedicalTitle
@@ -105,6 +110,7 @@ data CaminoMsg =
   | PerceivedDistanceLabel
   | PetsTitle
   | PharmacyTitle
+  | PilgrimTitle
   | PlanLabel
   | PoiTitle
   | PoolTitle
@@ -192,6 +198,7 @@ renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
+renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
 renderCaminoMsgDefault _ BedlinenTitle = "Bedlinen"
 renderCaminoMsgDefault _ BicycleRepairTitle = "Bicycle Repair"
@@ -204,6 +211,8 @@ renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CityTitle = "City"
+renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
+renderCaminoMsgDefault _ ComfortLabel = "Comfort"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
@@ -232,6 +241,7 @@ renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
+renderCaminoMsgDefault _ FrugalTitle = "Frugal"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
@@ -251,6 +261,7 @@ renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance pe
 renderCaminoMsgDefault _ (LinkOut name) = [shamlet|More information on #{name}|]
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
+renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"
 renderCaminoMsgDefault _ MapLabel = "Map"
 renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
@@ -267,6 +278,7 @@ renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
 renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
 renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
+renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
 renderCaminoMsgDefault _ PoiTitle = "Locality"
 renderCaminoMsgDefault _ PoolTitle = "Pool"

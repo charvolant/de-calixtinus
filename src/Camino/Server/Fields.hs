@@ -175,23 +175,32 @@ rangeField minv maxv stepv = Field
       dash = '\x2014'
 
 
--- | The standard list of penance options
-penanceOptions :: [(Text, Penance, Bool, Html)]
-penanceOptions =
-    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance p)) (zip [1::Int ..] range)
+-- | The standard list of penance options for services
+penanceServiceOptions :: [(Text, Penance, Bool, Html)]
+penanceServiceOptions =
+    map (\(idx, p) -> (pack $ show idx, p, p == mempty, label p)) (zip [1::Int ..] range)
   where
+    label p = if p == mempty then "--" else formatPenance p
     range = [mempty, Penance 0.5, Penance 1.0, Penance 1.5, Penance 2.0, Penance 2.5, Penance 3.0, Penance 4.0, Penance 5.0, Penance 8.0, Penance 10.0, Reject]
 
+
+-- | The standard list of penance options for accommodation
+penanceAccommodationOptions :: [(Text, Penance, Bool, Html)]
+penanceAccommodationOptions =
+    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance p)) (zip [1::Int ..] range)
+  where
+    range = [mempty, Penance 1.0, Penance 2.0, Penance 3.0, Penance 4.0, Penance 5.0, Penance 6.0, Penance 7.0, Penance 8.0, Penance 10.0, Penance 12.0, Penance 15.0, Reject]
+
 -- | Parse a penance value
-parsePenance s = case find (\(key, _, _, _) -> key == s) penanceOptions of
+parsePenance options s = case find (\(key, _, _, _) -> key == s) options of
     Just (_, v, _, _) -> Right $ v
     _ -> Left $ MsgInvalidEntry s
 
 -- | A penance selection field
-penanceSelect :: Text -> Text -> [(Text, Text)] -> Either Text Penance -> WidgetFor site ()
-penanceSelect theId name attrs val = [whamlet|
+penanceSelect :: [(Text, Penance, Bool, Html)] -> Text -> Text -> [(Text, Text)] -> Either Text Penance -> WidgetFor site ()
+penanceSelect options theId name attrs val = [whamlet|
      <select .form-select ##{theId} name=#{name} *{attrs}>
-       $forall (key, opt, dflt, label) <- penanceOptions
+       $forall (key, opt, dflt, label) <- options
          <option value=#{key} :isSelected dflt opt val:selected>^{label}
   |]
   where
@@ -199,22 +208,25 @@ penanceSelect theId name attrs val = [whamlet|
 
 
 -- | Create a field that handles penances
-penanceField :: (RenderMessage site FormMessage) => Field (HandlerFor site) (Penance)
-penanceField = Field
-    { fieldParse = parseHelper parsePenance
-    , fieldView = \theId name attrs val _isReq -> penanceSelect theId name attrs val
+penanceField :: (RenderMessage site FormMessage) => Bool -> Field (HandlerFor site) (Penance)
+penanceField accom = Field
+    { fieldParse = parseHelper (parsePenance options)
+    , fieldView = \theId name attrs val _isReq -> penanceSelect options theId name attrs val
     , fieldEnctype = UrlEncoded
     }
+  where
+    options = if accom then penanceAccommodationOptions else penanceServiceOptions
+
 
 -- | Create a field that handles preference ranges
-penanceMapField :: (RenderMessage site FormMessage, Ord a) => Bool -> [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
-penanceMapField allVals values = Field
+penanceMapField :: (RenderMessage site FormMessage, Ord a) => Bool -> Bool -> [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
+penanceMapField accom allVals values = Field
     { fieldParse = \rawVals -> \_fileVals -> if null rawVals then
           return $ Right Nothing
         else if length values /= length rawVals then
           return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
         else let
-            pvals = map parsePenance rawVals
+            pvals = map (parsePenance options) rawVals
           in
             if any isLeft pvals then
               return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
@@ -229,11 +241,12 @@ penanceMapField allVals values = Field
       $forall (idx, (opt, label)) <- zippo
         <div .input-group .g-3>
           <span .input-group-text id="#{makeSub theId idx}-label" >^{label}
-          ^{penanceSelect (makeSub theId idx) name attrs (fmap (M.findWithDefault mempty opt) val)}
+          ^{penanceSelect options (makeSub theId idx) name attrs (fmap (M.findWithDefault mempty opt) val)}
       |]
     , fieldEnctype = UrlEncoded
     }
     where
+      options = if accom then penanceAccommodationOptions else penanceServiceOptions
       makeSub base idx = pack (unpack base ++ "-" ++ show idx)
 
 createCheckFieldCondition' :: (Ord a) =>  M.Map a Int -> Formula a -> Text

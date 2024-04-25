@@ -1,6 +1,7 @@
 {
   "travel": "Walking",
   "fitness": "Normal",
+  "comfort": "Pilgrim",
   "distance": { "target": 24.0, "lower": 20.0, "upper":  28.0, "min": 8.0, "max": 32.0 },
   "time": { "target": 6.0, "lower": 0.0, "upper":  8.0, "min": 0.0, "max": 10.0 },
   "stop": 2.0,

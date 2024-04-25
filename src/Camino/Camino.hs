@@ -20,6 +20,7 @@ module Camino.Camino (
     Accommodation(..)
   , AccommodationType(..)
   , Camino(..)
+  , Comfort(..)
   , Fitness(..)
   , LatLong(..)
   , Leg(..)
@@ -47,6 +48,7 @@ module Camino.Camino (
   , caminoLocationList
   , caminoRoute
   , caminoRouteLocations
+  , comfortEnumeration
   , completeRoutes
   , createAllowsClauses
   , createRequiresClauses
@@ -65,7 +67,6 @@ import GHC.Generics (Generic)
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (readFile)
 import Data.Colour (Colour)
-import Data.Colour.Names
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.List (find)
@@ -862,9 +863,8 @@ caminoRouteLocations camino used =
     foldl (\allowed -> \logic -> (allowed `S.union` routeLogicInclude logic) `S.difference` routeLogicExclude logic) baseLocations logics
 
 -- | The travel function to use
-data Travel = Walking -- ^ Walking using the Tobler estimate of time
-   | Walking_Naismith -- ^ Walking using the Naismith estimate of time
-   | Cycling -- ^ Cycling using TBD
+data Travel = Walking -- ^ Walking
+   | Cycling -- ^ Cycling
   deriving (Generic, Eq, Read, Show, Ord, Enum, Bounded) 
 
 instance FromJSON Travel
@@ -894,6 +894,21 @@ instance ToJSON Fitness
 -- | Provide an enumeration of all fitness levesls
 fitnessEnumeration :: [Fitness]
 fitnessEnumeration = [minBound .. maxBound]
+
+-- | The general comfort level
+data Comfort = Austere -- ^ Minimal services and accommodation
+   | Frugal -- ^ Try to get by with minimal services
+   | Pilgrim -- ^ General pilgrim services, use albergues where possible but be open to other options
+   | Comfortable -- ^ Albergues are fine but 
+   | Luxurious -- ^ Major services and comfortable accommodation
+  deriving (Generic, Eq, Read, Show, Ord, Enum, Bounded) 
+
+instance FromJSON Comfort
+instance ToJSON Comfort
+
+-- | Provide an enumeration of all comfort levesls
+comfortEnumeration :: [Comfort]
+comfortEnumeration = [minBound .. maxBound]
 
 -- Read a camino description from a file
 readCamino :: FilePath -> IO Camino

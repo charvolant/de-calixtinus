@@ -37,8 +37,8 @@
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
-    However, we only have the data for one Camino at the moment (the Portuguese route, along with all its various
-    alternative routes and options.)
+    However, we only have the data for two Caminos at the moment (the Portuguese route, along with all its various
+    alternative routes and options, and the Fisterra route.)
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
   What you do is enter your <em>preferences</em> - how fit you are, how long would would like to walk each day,
@@ -60,9 +60,10 @@
   you're not quite up to very long stages - you can re-generate a plan, based on where you currently are.
 
 <p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    See the <a href="/about">about page for an explanation of how the term "penance" came to be.
+
   The planner works by minimising <a href="#penance-help"><em>penance</em></a>.
-  "Penance" started as an in-joke by the author where, after a particularly miserable night and day, the owner of
-  the hotel we finally got to commented that we'd paid for all our sins in one go.
   The basic idea is that everything is converted into equivalent kilometres of walking.
   Actual travel is converted into a perceived distance that takes account of climbs and descents, fatigue and so on.
   To this distance, adjustments are added for particularly long or short distances, whether the place where you sleep
@@ -86,8 +87,8 @@
 
 <p>
   The table below is a brief description of the various preferences.
-  Most screens contain detailed help, marked by a
-  <span .fs-3 .ca-help>
+  Most fields contain detailed help, marked by a
+  <span .ca-help>
   Click on the question mark for more information.
 
 <table .table .table-striped>
@@ -105,69 +106,73 @@
        <td>Fitness
        <td>
            The overall fitness of the walker.
-           The general travel rules assume a walker capable of a sustained 5km/hr on flat ground.
-           This is often too much for people and the fitness levels take this into account.
-    <tr>
+           \ The general travel rules assume a walker capable of a sustained 5km/hr on flat ground.
+           \ This is often too much for people and the fitness levels take this into account.
+     <tr>
+        <td>Comfort
+        <td>
+            The broad comfort level in terms of accommodation and services that the pilgrim would like.
+   <tr>
       <td>Distance Preferences
       <td>
         The preference range (<a href="#preference-range-help">see below</a>) for the actual distance travelled,
-        without regard to slope or fatigue.
-        This is the range most commonly specified, since it's the easiest to think about, and corresponds to the
-        the "you can expect to walk about 20km a day" advice that you will often see.
+        \ without regard to slope or fatigue.
+        \ This is the range most commonly specified, since it's the easiest to think about, and corresponds to the
+        \ the "you can expect to walk about 20km a day" advice that you will often see.
     <tr>
       <td>Time Preferences
       <td>
-        The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
+        \ The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
     <tr>
       <td>Day's End
       <td>
         The <a href="#penance-help">penance</a> associated with stopping for the day.
-        This value captures the costs involved in finding a place to stay, meals, washing and all the other
-        things you do at the end of the day.
+        \ This value captures the costs involved in finding a place to stay, meals, washing and all the other
+        \ things you do at the end of the day.
     <tr>
       <td>Accommodation Preferences
       <td>
         A table of preferences for staying at a particular type of accommodation.
-        Any accommodation type not listed here will be rejected.
-        The penance can be read as "I would be prepared to walk this distance extra to stay in something like this,
-        instead of the thing I least want to stay in."
-        The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
-        detailed description.
+        \ Any accommodation type not listed here will be rejected.
+        \ The penance can be read as "I would be prepared to walk this distance extra to stay in something like this,
+        \ instead of the thing I least want to stay in."
+        \ The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
+        \ detailed description.
     <tr>
       <td>Missing Stop Services
       <td>
         A list of the services, either in the location you are staying or in the accommodation that you choose,
-        that you would like to be present in the place that you stop for the day.
-        Each service is associated with the penance added if that service is <em>not</em> available,
-        suggesting that you would be prepared to walk further to get that service.
+        \ that you would like to be present in the place that you stop for the day.
+        \ Each service is associated with the penance added if that service is <em>not</em> available,
+        \ suggesting that you would be prepared to walk further to get that service.
     <tr>
       <td>Missing Day Services
       <td>
         A list of the services that you would like to be present somewhere along the day's route, including
-        the start and end locations.
-        Each service is associated with the penance added if that service is <em>not</em> available.
+        \ the start and end locations.
+        \ Each service is associated with the penance added if that service is <em>not</em> available.
     <tr>
       <td>Camino
       <td>
         The camino route you wish to travel.
-        For example, the Camnio Frances or the Camino Primitivo.
+        \ For example, the Camino Frances or the Camino Primitivo.
     <tr>
       <td>Route
       <td>
         The route variants that you wish to use.
-        The main Camino route is always included, but you may wish to choose variants, such as the
-        Spiritual Variant or the Coastal Route for the Portuguese Camino.
+        \ The main Camino route is always included, but you may wish to choose variants, such as the
+        \ Spiritual Variant or the Coastal Route for the Portuguese Camino.
     <tr>
       <td>Trip Start
       <td>
         The start point for the plan.
-        This is usually a well-known start point to begin with but may change if you wish to re-plan
-        along the way.
+        \ This is usually a well-known start point to begin with but that may change if you wish to re-plan
+        \ along the way.
     <tr>
       <td>Trip Finish
       <td>
         The end point for the plan.
-        This is usually Santiago de Compostela, but it doesn't have to be.
+        \ This is usually Santiago de Compostela, but it doesn't have to be.
     <tr>
       <td>Required Stops
       <td>
@@ -176,7 +181,7 @@
       <td>Excluded Stops
       <td>
         A list of the stops where you want the planner to ensure that you <em>don't</em> finish there at
-        the end of a day.
+        \ the end of a day.
 
 <h3 #preference-range-help>Preference Ranges
 
@@ -235,7 +240,6 @@
 
 <p>
   "Penance" is a catch-all term for how hard walking a stage of the Camino is going to be.
-  The name comes from a joke about the purpose of walking the Camino.
   The Camino Planner attempts to divide the entire trip into day-stages that minimise the
   total amount of penance accumulated during the journey.
 <p>
@@ -248,7 +252,7 @@
   Other aspects of the trip, such as accommodation preferences and the like are converted into
   kilometre-equivalents and added to the base walking distance.
   As a general rule, think of the other penance values in terms of,
-  "I would walk ... extra kilometres in the day to ensure this service or avoid this stop"
+  "I would walk ... extra kilometres in the day to ensure this service or get to this nicer stop"
 <p>
   In addition, penance can result in a flat-out "no fun, not doing this" rejection.
   This is indicted by the _{PenanceFormatted Reject} symbol.
@@ -266,8 +270,12 @@
     <ul>
       <li>
         Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
+        \ This rule is used for very fit and super-fit walkers.
       <li>
         Tobler's rule, which combines distance, ascent and descent.
+        \ This is the default rule for walkers.
+      <li>
+        A cycling rule that is similar to Naismith's rule, but takes more account of fitness.
   <li>
     The time taken for each leg is added together and then Tranter's corrections are applied.
     These corrections adjust for the fitness of the person walking and the effects of fatigue as the day wears on.
@@ -313,6 +321,26 @@
   <li>
     The final penance is the combined penance of the perceived walking distance,
     distance and time penalties, stop, accommodation and missing services.
+
+
+<h4>Further Information
+
+<ul>
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule">Naismith's rule
+    \ The rule used for very fit walkers.
+    Naismith was surveyor who spent most of his time walking and had a very consistent stride.
+    \ It assumes that someone fit enough to not slow up when descending a slope.
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/Tobler%27s_hiking_function">Tobler's hiking function
+    \ The rule used for the more common levels of fitness.
+    Unlike Naismith's rule, it takes account of steep descents.
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections">Tranter's corrections
+    \ Used to account for fatigue and fitness.
+  <li>
+    <a target="_blank" href="https://en.wikipedia.org/wiki/VAM_(bicycling)">VAM
+    \ Used to estimate the effects of climbing for cyclists.
 
 <h2 #plan-help>Plan
 
@@ -693,9 +721,10 @@
 <p>
   This means that the next destination is A Guarda, which is 3.1km away.
   There is a total ascent (climb upwards) of 50m and a total descent (climb downwards) of 5m.
-  The ascent and descent are totals and may represent several climbs and descents, the totals are fed into the
-  <href="#help-penance">penance
-  calculations to give a more accurate estimate of the effort expended which travelling.
+  The ascent and descent are totals and may represent several climbs and descents.
+  The totals are fed into the
+  <a href="#help-penance">penance
+  \ calculations to give a more accurate estimate of the effort expended which travelling.
   Ascent and descent are not shown if they are negligible.
 
 <p>

@@ -39,6 +39,7 @@ RoutePreferencesLabel: Routes
 RoutesText: Select the route variants that you wish to walk. The standard route is always selected. Some routes require other routes or cannot be done in conjunction with other routes.
 RoutesTitle: Select Routes
 SelectCamino: Select a camino
+SelectComfort: Select a comfort level
 SelectFitness: Select a fitness level
 SelectTravel: Select a travel type
 ServicesText: Select the cost for stopping at the end of the day and the desired accommodation and services at the end of the day and throughout the day. All preferences are measured in kilometres of walking and represent the amount of extra distance you would walk to get something you want.

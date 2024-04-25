@@ -138,10 +138,11 @@ isLastDay end day = (legTo $ last day) == end
 dayLocations :: [Leg] -> [Location]
 dayLocations day = (legFrom $ head day) : (map legTo day)
 
-travelFunction :: Travel -> (Fitness -> Float -> Float -> Float -> Float)
-travelFunction Walking = tobler
-travelFunction Walking_Naismith  = naismith
-travelFunction Cycling = cycling
+travelFunction :: Travel -> Fitness -> (Fitness -> Float -> Float -> Float -> Float)
+travelFunction Walking SuperFit = naismith
+travelFunction Walking VeryFit = naismith
+travelFunction Walking _ = tobler
+travelFunction Cycling _ = cycling
 
 -- | Calculate the expected hours of travel, for a sequence of legs
 travelHours :: TravelPreferences -- ^ The calculation preferences
@@ -149,7 +150,7 @@ travelHours :: TravelPreferences -- ^ The calculation preferences
   -> Maybe Float -- ^ The hours equivalent
 travelHours preferences day = let
     fitness = preferenceFitness preferences
-    baseHours = travelFunction (preferenceTravelFunction preferences)
+    baseHours = travelFunction (preferenceTravel preferences) fitness
     simple = sum $ map (\l -> baseHours fitness (legDistance l) (legAscent l) (legDescent l)) day
   in
     tranter (preferenceFitness preferences) simple
@@ -197,7 +198,7 @@ travelAdditional _preferences day = mconcat $ mapMaybe legPenance day
 travelMetrics :: TravelPreferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Bool)
 travelMetrics preferences day =
   let
-    travelType = preferenceTravelFunction preferences
+    travelType = preferenceTravel preferences
     fitness = preferenceFitness preferences
     walkingSpeed = nominalSpeed Walking Normal
     normalSpeed = nominalSpeed travelType Normal

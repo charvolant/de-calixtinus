@@ -36,7 +36,7 @@ module Camino.Server.Forms (
 import Camino.Camino
 import Camino.Preferences
 import Camino.Util
-import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoFitnessMsg, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
+import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
 import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
@@ -76,6 +76,10 @@ instance PathPiece Travel where
   toPathPiece = writeValue
 
 instance PathPiece Fitness where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Comfort where
   fromPathPiece = readValue
   toPathPiece = writeValue
 
@@ -157,6 +161,10 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewPrevFitness :: FieldView CaminoApp
   , resFitness :: FormResult Fitness 
   , viewFitness :: FieldView CaminoApp
+  , resPrevComfort :: FormResult Comfort 
+  , viewPrevComfort :: FieldView CaminoApp
+  , resComfort :: FormResult Comfort 
+  , viewComfort :: FieldView CaminoApp
   , resDistance :: FormResult (PreferenceRange Float)
   , viewDistance :: FieldView CaminoApp
   , resTime :: FormResult (PreferenceRange Float)
@@ -220,6 +228,8 @@ defaultPreferenceFields master prefs = do
     (trRes, trView) <- mreq hiddenField "" (prefTravel <$> prefs)
     (fipRes, fipView) <- mreq hiddenField "" (prefFitness <$> prefs)
     (fiRes, fiView) <- mreq hiddenField "" (prefFitness <$> prefs)
+    (copRes, copView) <- mreq hiddenField "" (prefComfort <$> prefs)
+    (coRes, coView) <- mreq hiddenField "" (prefComfort <$> prefs)
     (diRes, diView) <- mreq hiddenField "" (prefDistance <$> prefs)
     (tiRes, tiView) <- mreq hiddenField "" (prefTime <$> prefs)
     (stRes, stView) <- mreq hiddenField "" (prefStop <$> prefs)
@@ -245,6 +255,10 @@ defaultPreferenceFields master prefs = do
       , viewPrevFitness = fipView
       , resFitness = fiRes
       , viewFitness = fiView
+      , resPrevComfort = copRes
+      , viewPrevComfort = copView
+      , resComfort = coRes
+      , viewComfort = coView
       , resDistance = diRes
       , viewDistance = diView
       , resTime = tiRes
@@ -287,8 +301,9 @@ makePreferenceData :: CaminoApp -> PreferenceDataFields -> FormResult Preference
 makePreferenceData _master fields = let
     travel' = resTravel fields
     fitness' = resFitness fields
-    changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness')
-    dtp = defaultTravelPreferences <$> resTravel fields <*> resFitness fields
+    comfort' = resComfort fields
+    changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness') || (changed (resPrevComfort fields) comfort')
+    dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort'
     distance' = if changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if changedTravel then preferenceTime <$> dtp else resTime fields
     stop' = if changedTravel then preferenceStop <$> dtp else resStop fields
@@ -311,6 +326,7 @@ makePreferenceData _master fields = let
     PreferenceData
       <$> travel'
       <*> fitness'
+      <*> comfort'
       <*> distance'
       <*> time'
       <*> stop'
@@ -331,14 +347,18 @@ chooseFitnessForm help prefs extra = do
     let render = renderCaminoMsg (caminoAppConfig master)
     let  travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let  fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
+    let  comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
     (trRes, trView) <- mreq travelField (fieldSettingsLabel MsgSelectTravel) (prefTravel <$> prefs)
     (fRes, fView) <- mreq fitnessField (fieldSettingsLabel MsgSelectFitness) (prefFitness <$> prefs)
+    (cRes, cView) <- mreq comfortField (fieldSettingsLabel MsgSelectComfort) (prefComfort <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resTravel = trRes,
       viewTravel = trView,
       resFitness = fRes,
-      viewFitness = fView
+      viewFitness = fView,
+      resComfort = cRes,
+      viewComfort = cView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
@@ -355,8 +375,15 @@ chooseFitnessForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      $with view <- viewComfort fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewStop fields)}
@@ -410,6 +437,8 @@ chooseRangeForm help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewStop fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -439,10 +468,10 @@ chooseServicesForm help prefs extra = do
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
     let dayServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
-    (stRes, stView) <- mreq penanceField (fieldSettingsLabelTooltip MsgStopPreferencesLabel MsgStopPreferencesText) (prefStop <$> prefs)
-    (acRes, acView) <- mreq (penanceMapField True accommodationOptions) (fieldSettingsLabel MsgAccommodationPreferencesLabel) (prefAccommodation <$> prefs)
-    (ssRes, ssView) <- mreq (penanceMapField False stopServiceOptions) (fieldSettingsLabel MsgStopServicePreferencesLabel) (prefStopServices <$> prefs)
-    (dsRes, dsView) <- mreq (penanceMapField False dayServiceOptions) (fieldSettingsLabel MsgDayServicePreferencesLabel) (prefDayServices <$> prefs)
+    (stRes, stView) <- mreq (penanceField False) (fieldSettingsLabelTooltip MsgStopPreferencesLabel MsgStopPreferencesText) (prefStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField True True accommodationOptions) (fieldSettingsLabel MsgAccommodationPreferencesLabel) (prefAccommodation <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabel MsgStopServicePreferencesLabel) (prefStopServices <$> prefs)
+    (dsRes, dsView) <- mreq (penanceMapField False False dayServiceOptions) (fieldSettingsLabel MsgDayServicePreferencesLabel) (prefDayServices <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStop = stRes,
@@ -488,6 +517,8 @@ chooseServicesForm help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewPrevCamino fields)}
@@ -528,6 +559,8 @@ chooseCaminoForm help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewStop fields)}
@@ -576,6 +609,8 @@ chooseRoutesForm help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewStop fields)}
@@ -650,6 +685,8 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewStop fields)}
@@ -719,6 +756,8 @@ chooseStopsForm help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewStop fields)}
@@ -749,6 +788,8 @@ confirmPreferencesForm _help prefs extra = do
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
       ^{fvInput (viewStop fields)}

@@ -50,6 +50,7 @@ data CaminoApp = CaminoApp {
 data PreferenceData = PreferenceData {
     prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
+  , prefComfort :: Comfort -- ^ The comfort level
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
   , prefStop :: Penance -- ^ The stop cost
@@ -68,6 +69,7 @@ instance FromJSON PreferenceData where
    parseJSON (Object v) = do
       travel' <- v .: "travel"
       fitness' <- v .: "fitness"
+      comfort' <- v .: "comfort"
       distance' <- v .: "distance"
       time' <- v .: "time"
       stop' <- v .: "stop"
@@ -89,6 +91,7 @@ instance FromJSON PreferenceData where
       return PreferenceData {
           prefTravel = travel'
         , prefFitness = fitness'
+        , prefComfort = comfort'
         , prefDistance = distance'
         , prefTime = time'
         , prefStop = stop'
@@ -109,6 +112,7 @@ instance ToJSON PreferenceData where
       object [
           "travel" .= prefTravel prefs
         , "fitness" .= prefFitness prefs
+        , "comfort" .= prefComfort prefs
         , "distance" .= prefDistance prefs
         , "time" .= prefTime prefs
         , "stop" .= prefStop prefs
@@ -127,13 +131,15 @@ defaultPreferenceData :: CaminoApp -> PreferenceData
 defaultPreferenceData master = let
     travel' = Walking
     fitness' = Unfit
-    dtp = defaultTravelPreferences travel' fitness'
+    comfort' = Pilgrim
+    dtp = defaultTravelPreferences travel' fitness' comfort'
     camino' = head $ caminoAppCaminos master
     dcp = defaultCaminoPreferences camino'
   in
     PreferenceData {
         prefTravel = travel'
       , prefFitness = fitness'
+      , prefComfort = comfort'
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
       , prefStop = preferenceStop dtp
@@ -150,8 +156,9 @@ defaultPreferenceData master = let
 
 travelPreferencesFrom :: PreferenceData -> TravelPreferences
 travelPreferencesFrom prefs = TravelPreferences {
-    preferenceTravelFunction = prefTravel prefs
+    preferenceTravel = prefTravel prefs
   , preferenceFitness = prefFitness prefs
+  , preferenceComfort = prefComfort prefs
   , preferenceDistance = prefDistance prefs
   , preferenceTime = prefTime prefs
   , preferenceStop = prefStop prefs

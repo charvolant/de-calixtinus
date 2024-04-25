@@ -252,12 +252,10 @@ caminoServiceMsg Bus = BusTitle
 
 caminoTravelMsg :: Travel -> CaminoMsg
 caminoTravelMsg Walking = WalkingTitle
-caminoTravelMsg Walking_Naismith = WalkingNaismithTitle
 caminoTravelMsg Cycling = CyclingTitle
 
 caminoTravelIcon :: Travel -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTravelIcon Walking = [ihamlet| <span .travel .travel-walking .ca-walking title="_{WalkingTitle}"> |]
-caminoTravelIcon Walking_Naismith = [ihamlet| <span .travel .travel-walking-naismith .ca-walking title="_{WalkingNaismithTitle}"> |]
 caminoTravelIcon Cycling = [ihamlet| <span .travel .travel-cycling .ca-cycling title="_{CyclingTitle}"> |]
 
 caminoFitnessMsg :: Fitness -> CaminoMsg
@@ -270,6 +268,16 @@ caminoFitnessMsg VeryUnfit = VeryUnfitTitle
 
 caminoFitnessLabel :: Fitness -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoFitnessLabel fitness = [ihamlet| <span .fitness>_{caminoFitnessMsg fitness} |]
+
+caminoComfortMsg :: Comfort -> CaminoMsg
+caminoComfortMsg Austere = AustereTitle
+caminoComfortMsg Frugal = FrugalTitle
+caminoComfortMsg Pilgrim = PilgrimTitle
+caminoComfortMsg Comfortable = ComfortableTitle
+caminoComfortMsg Luxurious = LuxuriousTitle
+
+caminoComfortLabel :: Comfort -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoComfortLabel comfort = [ihamlet| <span .comfort>_{caminoComfortMsg comfort} |]
 
 caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
@@ -457,10 +465,13 @@ preferencesHtml link preferences camino _trip = [ihamlet|
   <div .container-fluid>
     <div .row>
       <div .col-4>_{TravelLabel}
-      <div .col>^{caminoTravelIcon $ preferenceTravelFunction preferences} _{caminoTravelMsg $ preferenceTravelFunction preferences}
+      <div .col>^{caminoTravelIcon $ preferenceTravel preferences} _{caminoTravelMsg $ preferenceTravel preferences}
     <div .row>
       <div .col-4>_{FitnessLabel}
       <div .col>^{caminoFitnessLabel $ preferenceFitness preferences}
+    <div .row>
+      <div .col-4>_{ComfortLabel}
+      <div .col>^{caminoComfortLabel $ preferenceComfort preferences}
     <div .row>
       <div .col-4>_{DistancePreferencesLabel}
       <div .col>^{preferenceRangeHtml $ preferenceDistance preferences}

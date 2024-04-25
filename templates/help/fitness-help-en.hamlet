@@ -2,9 +2,7 @@
 
 <p>
   The travel type is a broad description of how you intend to travel the Camino.
-  The type is used to estimate the amount of time it will take you to walk a (possibly hilly) segment of the way.
-  The type is also used to help provide defaults for the sort of services you might need along the way and the daily distance traveled.
-  Generally, people either walk or use a bicycle.
+  \ Generally, people either walk or use a bicycle.
 
 <table .table .table-striped>
   <caption>Travel Types
@@ -18,35 +16,23 @@
         <td>^{caminoTravelIcon Walking}
         <td>_{caminoTravelMsg Walking}
         <td>Walking the Camino.
-            This option uses a rule to calculate the time taken to travel a given distance
-            that takes account of the need to slow down on steep descents.
-            This is the default travel type.
-    <tr>
-        <td>^{caminoTravelIcon Walking_Naismith}
-        <td>_{caminoTravelMsg Walking_Naismith}
-        <td>Walking the Camino for powerful walkers.
-            This option uses a rule to calculate the time taken to travel a given distance
-            that works for very capable walkers who will not slow up when descending a steep slope.
     <tr>
         <td>^{caminoTravelIcon Cycling}
         <td>_{caminoTravelMsg Cycling}
         <td>Cycling the Camino.
-            This option uses a rule for cycling, with more attention paid to levels of fitness.
-            It is still undergoing testing.
 
 <h2 #fitness-help>Fitness
 
 <p>
   Fitness is a broad estimate of how long you can keep up a consistent walking or cycling pace.
-  Most legs on the Camino take five to eight hours and you can get pretty tired and footsore along the way.
-  The fitness level allows the planner to make allowances for the inevitable slowing of pace as you weary.
-  See
-  <a href="#estimating-fitness">below
-  for information on how to estimate fitness.
+  \ Most legs on the Camino take five to eight hours and you can get pretty tired and footsore along the way.
+  \ The fitness level allows the planner to make allowances for the inevitable slowing of pace as you weary.
+  \ See <a href="#estimating-fitness">below</a>
+  \ for information on how to estimate fitness.
 
 <p>
   <em>Beware of over-estimating your fitness.</em>
-  "Normal" fitness is someone in their 20s or 30s who has trained for long walks.
+  \ "Normal" fitness is someone in their 20s or 30s who has trained for long walks.
 
 <table .table .table-striped>
   <caption>Fitness Levels
@@ -70,7 +56,7 @@
     <tr>
         <td>_{caminoFitnessMsg Unfit}
         <td>An average walker who has trained for the Camino.
-            Consider this level if you have doubts about whether you're up to the normal level.
+            \ Consider this level if you have doubts about whether you're up to the normal level.
    <tr>
         <td>_{caminoFitnessMsg VeryUnfit}
         <td>An average walker without much training.
@@ -78,10 +64,9 @@
 <h3 #estimating-fitness>Estimating Fitness
 
 <p>
-  The planner uses as set of corrections, called Tranter's corrections, to account for fitness levels.
   The standard definition for fitness levels is the amount of time it takes to climb 1000 feet (300m) over half a mile (800m).
-  For example, using the following table, if it took you 25 minutes to climb 1000 feet, you would be classified as fit.
-  Another way to estimate fitness is to measure the time you can walk at a nominal 5km/hr (or 3mi/hr) before noticeably tiring.
+  \ For example, using the following table, if it took you 25 minutes to climb 1000 feet, you would be classified as fit.
+  \ Another way to estimate fitness is to measure the time you can walk at a nominal 5km/hr (or 3mi/hr) before noticeably tiring.
 
 <table .table .table-striped>
  <thead>
@@ -178,21 +163,44 @@
      <td colspan="3" .fw-lighter><sup>1</sup> Sustained road speed on a flat, well-maintained road
    <tr>
      <td colspan="3" .fw-lighter><sup>2</sup> Sustained climb over an hour or so on a 5% gradient.
-       As a rule of thumb, add 50 for every extra 1% gradient and subtract 50 for every 1% reduction in gradient.
+       \ As a rule of thumb, add 50 for every extra 1% gradient and subtract 50 for every 1% reduction in gradient.
 
-<h2>Further Information
+<h2 #comfort-help>Comfort
 
-<ul>
-  <li>
-    <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule">Naismith's rule
-    The rule used in the powerful walking style.
-    Naismith was surveyor who spent most of his time walking and had a very consistent stride.
-    It assumes that someone fit enough to not slow up when descending a slope.
-  <li>
-    <a target="_blank" href="https://en.wikipedia.org/wiki/Tobler%27s_hiking_function">Tobler's hiking function
-    The rule used in the standard walking style.
-  <li>
-    <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections">Tranter's corrections
-    (Used to account for fatigue and fitness.)
-  <li>
-    <a target="_blank" href="https://en.wikipedia.org/wiki/VAM_(bicycling)">VAM
+<p>
+  Comfort is a broad description of how much hardship you're prepared to put up with while walking.
+  \ Most of the time, comfort levels translate into pre-packaged accommodation and service preferences
+  \ while walking the camino.
+  \ You can adjust these pre-packaged defaults on the following screens to suit your needs.
+
+<table .table .table-striped>
+  <caption>Comfort Levels
+  <thead>
+    <tr>
+       <th scope="col">Comfort Level
+       <th scope="col">Description
+  <tbody>
+    <tr>
+        <td>_{caminoComfortMsg Austere}
+        <td>Minimise the use of expensive accommodation and services.
+            \ Camping is often a preferred option if there isn't an inexpensive albergue nearby.
+            \ Rather than use restaurants, you intend to buy your own food and cook it.
+    <tr>
+        <td>_{caminoComfortMsg Frugal}
+        <td>Reduce the use of expensive accommodation and services.
+            \ Camping is an option if there is nothing suitable nearby.
+            \ You are quite willing to buy your own food and cook it.
+    <tr>
+        <td>_{caminoComfortMsg Pilgrim}
+        <td>The normal pilgrim level of comfort.
+            \ In general albergues or guest house are preferred accommodation options, but you're willing to
+            \ spring for something a bit more luxurious every now and again.
+            \ You generally plan to eat in restaurants or cafés along the way.
+    <tr>
+        <td>_{caminoComfortMsg Comfortable}
+        <td>Similar to the normal pilgrim level of comfort but you're more willing to shell out to sleep between sheets
+            \ and eat well.
+    <tr>
+        <td>_{caminoComfortMsg Luxurious}
+        <td>Money is no object and you would prefer to have comfortable accommodation options and plenty
+            \ of service available.

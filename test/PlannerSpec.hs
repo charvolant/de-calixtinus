@@ -11,8 +11,6 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Default.Class
 import Data.Either
-import Data.Maybe
-import Data.Metadata
 import Graph.Graph (identifier)
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
@@ -37,8 +35,9 @@ testPlanner preferences camino = TestList [
 distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
 
 preferences1 = TravelPreferences {
-    preferenceTravelFunction = Walking,
+    preferenceTravel = Walking,
     preferenceFitness = Normal,
+    preferenceComfort = Pilgrim,
     preferenceDistance = distanceRange1,
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
     preferenceStop = Penance 0.5,
@@ -59,8 +58,9 @@ preferences1 = TravelPreferences {
 
 
 preferences2 = TravelPreferences {
-    preferenceTravelFunction = Cycling,
+    preferenceTravel = Cycling,
     preferenceFitness = Normal,
+    preferenceComfort = Pilgrim,
     preferenceDistance = distanceRange1,
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
     preferenceStop = Penance 0.5,
@@ -152,6 +152,8 @@ route1 = Route {
   routeName = "R1", 
   routeDescription = "Route 1",
   routeLocations = S.fromList [location1, location2, location3], 
+  routeStarts = [],
+  routeFinishes = [],
   routeStops = S.empty,
   routePalette = def 
 }
@@ -164,6 +166,7 @@ camino1 = Camino {
   caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
   caminoLegs = legs1,
   caminoRoutes = [route1],
+  caminoRouteLogic = [],
   caminoDefaultRoute = route1
 }
 

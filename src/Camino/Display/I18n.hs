@@ -91,6 +91,8 @@ data CaminoMsg =
   | LegPenanceMsg Penance
   | LinkLabel LinkConfig
   | LinkOut Text
+  | LocationPenanceMsg Penance
+  | LocationPreferencesLabel
   | LocationsLabel
   | LockersTitle
   | LuxuriousTitle
@@ -259,6 +261,8 @@ renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
 renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (LinkOut name) = [shamlet|More information on #{name}|]
+renderCaminoMsgDefault _ (LocationPenanceMsg penance') = [shamlet|Location ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ LocationPreferencesLabel = "Location Preferences"
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
 renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"

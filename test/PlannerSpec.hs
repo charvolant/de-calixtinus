@@ -40,7 +40,11 @@ preferences1 = TravelPreferences {
     preferenceComfort = Pilgrim,
     preferenceDistance = distanceRange1,
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
-    preferenceStop = Penance 0.5,
+    preferenceLocation = M.fromList [
+       (Village, (Penance 1.5)),
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+     ],
     preferenceAccommodation = M.fromList [
         (MunicipalAlbergue, (Penance 1.5)),
         (PrivateAlbergue, (Penance 0.9)),
@@ -63,7 +67,11 @@ preferences2 = TravelPreferences {
     preferenceComfort = Pilgrim,
     preferenceDistance = distanceRange1,
     preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
-    preferenceStop = Penance 0.5,
+    preferenceLocation = M.fromList [
+       (Village, (Penance 1.5)),
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+     ],
     preferenceAccommodation = M.fromList [
         (MunicipalAlbergue, (Penance 4.0)),
         (PrivateAlbergue, (Penance 3.0))

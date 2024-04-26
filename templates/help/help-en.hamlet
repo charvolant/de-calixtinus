@@ -124,20 +124,24 @@
       <td>
         \ The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
     <tr>
-      <td>Day's End
+      <td>Location Preferences
       <td>
-        The <a href="#penance-help">penance</a> associated with stopping for the day.
-        \ This value captures the costs involved in finding a place to stay, meals, washing and all the other
-        \ things you do at the end of the day.
+        A table of preferences for staying at a particular sort of location.
+        The penance can be read as "I would be prepared to walk this distance extra to stay in somewhere like this."
+        The effect of this is relative and declines with distance so, in most cases, the current location is considered
+        to be good enough, unless there is something really attractive nearby.
+        The calculation of location penance can be quite complicated; see <a href="#location-penance">below</a> for a more
+        detailed description.
     <tr>
       <td>Accommodation Preferences
       <td>
         A table of preferences for staying at a particular type of accommodation.
-        \ Any accommodation type not listed here will be rejected.
-        \ The penance can be read as "I would be prepared to walk this distance extra to stay in something like this,
-        \ instead of the thing I least want to stay in."
-        \ The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
-        \ detailed description.
+        Any accommodation type not listed here will be rejected.
+        The penance can be read as "I would be prepared to walk this distance extra to stay in something like this."
+        The effect of this is relative and declines with distance so, in most cases, the whatever is available is
+        usually good enough.
+        The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
+        detailed description.
     <tr>
       <td>Missing Stop Services
       <td>
@@ -270,10 +274,13 @@
     <ul>
       <li>
         Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
-        \ This rule is used for very fit and super-fit walkers.
-      <li>
-        Tobler's rule, which combines distance, ascent and descent.
-        \ This is the default rule for walkers.
+         Naismith was surveyor who spent most of his time walking and had a very consistent stride.
+        It assumes that someone fit enough to not slow up when descending a slope.
+        This rule is used for very fit and super-fit walkers.
+     <li>
+        Tobler's hiking function, which combines distance, ascent and descent.
+        Unlike Naismith's rule, Tobler's function takes steep descents into account.
+        This is the default rule for walkers.
       <li>
         A cycling rule that is similar to Naismith's rule, but takes more account of fitness.
   <li>
@@ -294,12 +301,27 @@
     A stop penance is added.
     This represents the business of settling down for the night, paying for accommodation, food costs and the like.
     The stop penance encourages the planner not to divide the walk into many short stages.
+    This penance is set by the chosen comfort level, with higher levels of comfort having a bias towards shorter legs.
   <li>
     The user can express preferences for services available in the stop location, in terms of added penance
     if the services are not present.
   <li>
     The user can express preferences for services available throughout the day, again in terms of added penance
     if the services are not present somewhere along the route, including the start and end locations.
+  <li #location-penance>
+    <p>
+      Location penance works by seeing if there is a more attractive location nearby.
+    <p>
+      The user can express preferences for certain types of location.
+      The current location is then compared with nearby locations.
+      If there is a nearby location that is a potentially better option then the distance-adjusted difference between
+      the two preferences is added to the penance.
+    <p>
+      For example, this location is an intersection (1.0km preference) but 2.3km away there is an
+      town (5.0km preference) then the location penance is (5.0 - 1.0) - 2.3 = 1.7km, essentially suggesting
+      that it might be worth breaking your journey early or keeping on going for a bit.
+    <p>
+      In most cases, the local option is the best option and the accommodation penance is 0km.
   <li #accommodation-penance>
     <p>
       Accommodation penance works by seeing if there is a better option nearby.
@@ -320,7 +342,7 @@
       In most cases, the local option is the best option and the accommodation penance is 0km.
   <li>
     The final penance is the combined penance of the perceived walking distance,
-    distance and time penalties, stop, accommodation and missing services.
+    distance and time penalties, stop, location, accommodation and missing services.
 
 
 <h4>Further Information
@@ -329,12 +351,9 @@
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule">Naismith's rule
     \ The rule used for very fit walkers.
-    Naismith was surveyor who spent most of his time walking and had a very consistent stride.
-    \ It assumes that someone fit enough to not slow up when descending a slope.
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Tobler%27s_hiking_function">Tobler's hiking function
     \ The rule used for the more common levels of fitness.
-    Unlike Naismith's rule, it takes account of steep descents.
   <li>
     <a target="_blank" href="https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections">Tranter's corrections
     \ Used to account for fatigue and fitness.

@@ -50,13 +50,17 @@ penanceSummary _preferences _camino detail metrics = [ihamlet|
      \ + _{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
    $if metricsTimeAdjust metrics /= mempty
      \ + _{TimeAdjustMsg (metricsTimeAdjust metrics)}
-   \ + _{StopPenanceMsg (metricsStop metrics)}
-   \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
-   $if detail && not (S.null acServices)
-     \ (
-     $forall service <- acServices
-        ^{caminoServiceIcon service}
-     )
+   $if metricsStop metrics /= mempty
+      \ + _{StopPenanceMsg (metricsStop metrics)}
+   $if metricsLocation metrics /= mempty
+     \ + _{LocationPenanceMsg (metricsLocation metrics)}
+   $if showAccommodation
+     \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
+     $if hasAccommodationServices
+       \ (
+       $forall service <- acServices
+          ^{caminoServiceIcon service}
+       )
    $if metricsStopServices metrics /= mempty
      \ + _{StopServicesPenanceMsg (metricsStopServices metrics)}
      $if detail
@@ -76,7 +80,9 @@ penanceSummary _preferences _camino detail metrics = [ihamlet|
    |]
   where
     acServices = maybe S.empty (tripChoiceServices . fst) (L.uncons $ metricsAccommodationChoice metrics)
-    
+    hasAccommodationServices = detail && not (S.null acServices)
+    showAccommodation = metricsLocation metrics /= mempty || hasAccommodationServices
+
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
 metricsSummary _preferences _camino metrics days = [ihamlet|
     _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
@@ -399,7 +405,11 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
             <div .col>
               $maybe d <- locationDescription location
                 #{d}
-            <div .col-1 .float-end>
+            <div .col-2 .float-end>
+              $maybe lc <- locChoice
+                $if tripChoicePenance lc /= mempty
+                  <span .chosen-location>
+                    <span .chosen-location-penance>+_{PenanceFormatted (tripChoicePenance lc)}
               $maybe pos <- locationPosition location
                 <button .btn .btn-primary onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
                   <span .ca-globe title="_{ShowOnMapTitle}">
@@ -419,6 +429,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
     accChoice = M.lookup location (solutionAccommodation solution)
+    locChoice = M.lookup location (solutionLocation solution)
     
 caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml preferences camino solution = [ihamlet|
@@ -480,25 +491,36 @@ preferencesHtml link preferences camino = [ihamlet|
       <div .col-4>_{TimePreferencesLabel}
       <div .col>^{preferenceRangeHtml $ preferenceTime preferences}
     <div .row>
-      <div .col-4>_{StopPreferencesLabel}
-      <div .col>_{PenanceFormatted (preferenceStop preferences)}
+      <div .col-4>_{LocationPreferencesLabel}
+    $forall lk <- locationTypes
+      <div .row>
+        <div .col-3 .offset-1>
+          <span .location-type-sample>^{caminoLocationTypeIcon lk}
+          \ _{caminoLocationTypeLabel lk}
+        <div .col>_{PenanceFormatted (findLoc preferences lk)}
     <div .row>
       <div .col-4>_{AccommodationPreferencesLabel}
     $forall ak <- accommodationTypes
       <div .row>
-        <div .col-3 .offset-1>^{caminoAccommodationTypeIcon ak} _{caminoAccommodationTypeMsg ak}
+        <div .col-3 .offset-1>
+          ^{caminoAccommodationTypeIcon ak}
+          \ _{caminoAccommodationTypeMsg ak}
         <div .col>_{PenanceFormatted (findAcc preferences ak)}
     <div .row>
       <div .col-4>_{StopServicesPreferencesLabel}
     $forall sk <- M.keys $ preferenceStopServices preferences
       <div .row>
-        <div .col-3 .offset-1>^{caminoServiceIcon sk} _{caminoServiceMsg sk}
+        <div .col-3 .offset-1>
+          ^{caminoServiceIcon sk}
+          \ _{caminoServiceMsg sk}
         <div .col>_{PenanceFormatted (findSs preferences sk)}
     <div .row>
       <div .col-4>_{DayServicesPreferencesLabel}
     $forall sk <- M.keys $ preferenceDayServices preferences
       <div .row>
-        <div .col-3 .offset-1>^{caminoServiceIcon sk} _{caminoServiceMsg sk}
+        <div .col-3 .offset-1>
+          ^{caminoServiceIcon sk}
+          \ _{caminoServiceMsg sk}
         <div .col>_{PenanceFormatted (findDs preferences sk)}
     <div .row>
       <div .col-4>_{RouteLabel}
@@ -548,8 +570,10 @@ preferencesHtml link preferences camino = [ihamlet|
                 #{locationName l}
   |]
   where
+    locationTypes = locationTypeEnumeration
     accommodationTypes = accommodationTypeEnumeration
     findAcc prefs ak = M.findWithDefault mempty ak (preferenceAccommodation prefs)
+    findLoc prefs lk = M.findWithDefault mempty lk (preferenceLocation prefs)
     findSs prefs sk = (preferenceStopServices prefs) M.! sk
     findDs prefs sk = (preferenceDayServices prefs) M.! sk
 

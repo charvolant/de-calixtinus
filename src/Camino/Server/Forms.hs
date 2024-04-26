@@ -36,120 +36,19 @@ module Camino.Server.Forms (
 import Camino.Camino
 import Camino.Preferences
 import Camino.Util
-import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
+import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
 import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
 import qualified Data.Map as M
-import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
+import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
-import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
+import Data.Text (Text, pack, unpack)
 import Text.Hamlet
-import Text.Read (readMaybe)
 import Yesod
-
-readValue :: (Read a) => Text -> Maybe a
-readValue v = readMaybe $ unpack v
-
-writeValue :: (Show a) => a -> Text
-writeValue = pack . show
-
-readMaybeValue :: (Read a) => Text -> Maybe (Maybe a)
-readMaybeValue v = if v == "--" then Just Nothing else Just <$> readValue v
-
-writeMaybeValue :: (Show a) => Maybe a -> Text
-writeMaybeValue v = maybe "--" writeValue v
-
-instance PathPiece AccommodationType where
-  fromPathPiece = readValue
-  toPathPiece = writeValue
-
-instance PathPiece Service where
-  fromPathPiece = readValue
-  toPathPiece = writeValue
-
-instance PathPiece Travel where
-  fromPathPiece = readValue
-  toPathPiece = writeValue
-
-instance PathPiece Fitness where
-  fromPathPiece = readValue
-  toPathPiece = writeValue
-
-instance PathPiece Comfort where
-  fromPathPiece = readValue
-  toPathPiece = writeValue
-
-instance PathPiece Float where
-  fromPathPiece = readValue
-  toPathPiece = writeValue
-
-instance PathPiece Penance where
-  fromPathPiece v = if v == "reject" then Just $ Reject else Penance <$> readValue v
-  toPathPiece Reject = "reject"
-  toPathPiece (Penance v) = writeValue v
-
-instance (PathPiece a, PathPiece b) => PathPiece (a, b) where
-  fromPathPiece v = case splitOn ":" v of
-    [a, b] -> (,) <$> fromPathPiece a <*> fromPathPiece b
-    _ -> Nothing
-  toPathPiece (a, b) = Data.Text.concat [toPathPiece a, ":", toPathPiece b]
-
-instance (PathPiece a) => PathPiece [a] where
-  fromPathPiece v = case splitOn "|" v of
-    [""] -> Just []
-    ["--"] -> Just []
-    sp -> let vals = map fromPathPiece sp in
-      if any isNothing vals then Nothing else Just $ catMaybes vals
-  toPathPiece v = if null v then "--" else intercalate "|" (map toPathPiece v)
-
--- Has to be specialised to avoid mis-typing
-instance PathPiece (M.Map AccommodationType Penance) where
-  fromPathPiece v = fmap M.fromList (fromPathPiece v)
-  toPathPiece v = toPathPiece $ M.toList v
-
--- Has to be specialised to avoid mis-typing
-instance PathPiece (M.Map Service Penance) where
-  fromPathPiece v = fmap M.fromList (fromPathPiece v)
-  toPathPiece v = toPathPiece $ M.toList v
-
-instance (Ord a, PathPiece a) => PathPiece (S.Set a) where
-  fromPathPiece v = fmap S.fromList (fromPathPiece v)
-  toPathPiece v = toPathPiece $ S.toList v
-
-instance PathPiece Location where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
-  toPathPiece v = pack $ locationID v
-
-instance PathPiece Camino.Camino.Route where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
-  toPathPiece v = pack $ routeID v
-
-instance PathPiece Camino where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
-  toPathPiece v = pack $ caminoId v
-
-instance (Show a, Read a) => PathPiece (PreferenceRange a) where
-  fromPathPiece v =
-    let
-      vals = map readMaybeValue (splitOn "|" v)
-      vals' = if all isJust vals then map fromJust vals else []
-    in
-      if length vals' == 5 then
-        Just (PreferenceRange Nothing (fromJust $ vals' !! 0) (fromJust $ vals' !! 1) (fromJust $ vals' !! 2) (vals' !! 3) (vals' !! 4))
-      else
-        Nothing
-  toPathPiece (PreferenceRange _derivation'  target'  lower' upper' min' max') = intercalate "|" $ map writeMaybeValue
-    [
-      Just target',
-      Just lower',
-      Just upper',
-      min',
-      max'
-    ]
 
 -- Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
@@ -169,8 +68,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewDistance :: FieldView CaminoApp
   , resTime :: FormResult (PreferenceRange Float)
   , viewTime :: FieldView CaminoApp
-  , resStop :: FormResult Penance 
-  , viewStop :: FieldView CaminoApp
+  , resLocation :: FormResult (M.Map LocationType Penance)
+  , viewLocation :: FieldView CaminoApp
   , resAccommodation :: FormResult (M.Map AccommodationType Penance)
   , viewAccommodation :: FieldView CaminoApp
   , resStopServices :: FormResult (M.Map Service Penance)
@@ -232,7 +131,7 @@ defaultPreferenceFields master prefs = do
     (coRes, coView) <- mreq hiddenField "" (prefComfort <$> prefs)
     (diRes, diView) <- mreq hiddenField "" (prefDistance <$> prefs)
     (tiRes, tiView) <- mreq hiddenField "" (prefTime <$> prefs)
-    (stRes, stView) <- mreq hiddenField "" (prefStop <$> prefs)
+    (loRes, loView) <- mreq hiddenField "" (prefLocation <$> prefs)
     (acRes, acView) <- mreq hiddenField "" (prefAccommodation <$> prefs)
     (ssRes, ssView) <- mreq hiddenField "" (prefStopServices <$> prefs)
     (dsRes, dsView) <- mreq hiddenField "" (prefDayServices <$> prefs)
@@ -263,8 +162,8 @@ defaultPreferenceFields master prefs = do
       , viewDistance = diView
       , resTime = tiRes
       , viewTime = tiView
-      , resStop = stRes
-      , viewStop = stView
+      , resLocation = loRes
+      , viewLocation = loView
       , resAccommodation = acRes
       , viewAccommodation = acView
       , resStopServices = ssRes
@@ -306,7 +205,7 @@ makePreferenceData _master fields = let
     dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort'
     distance' = if changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if changedTravel then preferenceTime <$> dtp else resTime fields
-    stop' = if changedTravel then preferenceStop <$> dtp else resStop fields
+    location' = if changedTravel then preferenceLocation <$> dtp else resLocation fields
     accommodation' = if changedTravel then preferenceAccommodation <$> dtp else resAccommodation fields
     stopServices' = if changedTravel then preferenceStopServices <$> dtp else resStopServices fields
     dayServices' = if changedTravel then preferenceDayServices <$> dtp else resDayServices fields
@@ -329,7 +228,7 @@ makePreferenceData _master fields = let
       <*> comfort'
       <*> distance'
       <*> time'
-      <*> stop'
+      <*> location'
       <*> accommodation'
       <*> stopServices'
       <*> dayServices'
@@ -386,7 +285,7 @@ chooseFitnessForm help prefs extra = do
       ^{fvInput (viewPrevComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
@@ -439,7 +338,7 @@ chooseRangeForm help prefs extra = do
       ^{fvInput (viewFitness fields)}
       ^{fvInput (viewPrevComfort fields)}
       ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
@@ -465,17 +364,18 @@ chooseServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config langs
     let messages = renderCaminoMsg config
+    let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
     let dayServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
-    (stRes, stView) <- mreq (penanceField False) (fieldSettingsLabelTooltip MsgStopPreferencesLabel MsgStopPreferencesText) (prefStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField True True locationOptions) (fieldSettingsLabel MsgLocationPreferencesLabel) (prefLocation <$> prefs)
     (acRes, acView) <- mreq (penanceMapField True True accommodationOptions) (fieldSettingsLabel MsgAccommodationPreferencesLabel) (prefAccommodation <$> prefs)
     (ssRes, ssView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabel MsgStopServicePreferencesLabel) (prefStopServices <$> prefs)
     (dsRes, dsView) <- mreq (penanceMapField False False dayServiceOptions) (fieldSettingsLabel MsgDayServicePreferencesLabel) (prefDayServices <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
-      resStop = stRes,
-      viewStop = stView,
+      resLocation = loRes,
+      viewLocation = loView,
       resAccommodation= acRes,
       viewAccommodation = acView,
       resStopServices = ssRes,
@@ -486,7 +386,7 @@ chooseServicesForm help prefs extra = do
     let res = makePreferenceData master fields
     let widget = [whamlet|
       #{extra}
-      $with view <- viewStop fields
+      $with view <- viewLocation fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
@@ -563,7 +463,7 @@ chooseCaminoForm help prefs extra = do
       ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
@@ -613,7 +513,7 @@ chooseRoutesForm help prefs extra = do
       ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
@@ -689,7 +589,7 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
@@ -760,7 +660,7 @@ chooseStopsForm help prefs extra = do
       ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
@@ -792,7 +692,7 @@ confirmPreferencesForm _help prefs extra = do
       ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
-      ^{fvInput (viewStop fields)}
+      ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}

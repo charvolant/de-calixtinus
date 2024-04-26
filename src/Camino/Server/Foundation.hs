@@ -4,6 +4,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs          #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-|
 Module      : Foundation
 Description : Yesod foundation for the Calixtinus application
@@ -23,9 +24,10 @@ import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
 import qualified Data.Map as M
+import Data.Maybe (catMaybes, fromJust, fromMaybe, isJust, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
-import Data.Text (Text)
+import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
 import Data.Time.Clock (DiffTime, secondsToDiffTime)
@@ -35,7 +37,119 @@ import Yesod
 import Yesod.Static (Static)
 import Camino.Server.Settings (widgetFile)
 import Text.Hamlet (HtmlUrlI18n, ihamletFile)
+import Text.Read (readMaybe)
 import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
+
+
+readValue :: (Read a) => Text -> Maybe a
+readValue v = readMaybe $ unpack v
+
+writeValue :: (Show a) => a -> Text
+writeValue = pack . show
+
+readMaybeValue :: (Read a) => Text -> Maybe (Maybe a)
+readMaybeValue v = if v == "--" then Just Nothing else Just <$> readValue v
+
+writeMaybeValue :: (Show a) => Maybe a -> Text
+writeMaybeValue v = maybe "--" writeValue v
+
+
+instance PathPiece LocationType where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece AccommodationType where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Service where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Travel where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Fitness where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Comfort where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Float where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece Penance where
+  fromPathPiece v = if v == "reject" then Just $ Reject else Penance <$> readValue v
+  toPathPiece Reject = "reject"
+  toPathPiece (Penance v) = writeValue v
+
+instance (PathPiece a, PathPiece b) => PathPiece (a, b) where
+  fromPathPiece v = case splitOn ":" v of
+    [a, b] -> (,) <$> fromPathPiece a <*> fromPathPiece b
+    _ -> Nothing
+  toPathPiece (a, b) = Data.Text.concat [toPathPiece a, ":", toPathPiece b]
+
+instance (PathPiece a) => PathPiece [a] where
+  fromPathPiece v = case splitOn "|" v of
+    [""] -> Just []
+    ["--"] -> Just []
+    sp -> let vals = map fromPathPiece sp in
+      if any isNothing vals then Nothing else Just $ catMaybes vals
+  toPathPiece v = if null v then "--" else intercalate "|" (map toPathPiece v)
+
+-- Has to be specialised to avoid mis-typing
+instance PathPiece (M.Map LocationType Penance) where
+  fromPathPiece v = fmap M.fromList (fromPathPiece v)
+  toPathPiece v = toPathPiece $ M.toList v
+
+-- Has to be specialised to avoid mis-typing
+instance PathPiece (M.Map AccommodationType Penance) where
+  fromPathPiece v = fmap M.fromList (fromPathPiece v)
+  toPathPiece v = toPathPiece $ M.toList v
+
+-- Has to be specialised to avoid mis-typing
+instance PathPiece (M.Map Service Penance) where
+  fromPathPiece v = fmap M.fromList (fromPathPiece v)
+  toPathPiece v = toPathPiece $ M.toList v
+
+instance (Ord a, PathPiece a) => PathPiece (S.Set a) where
+  fromPathPiece v = fmap S.fromList (fromPathPiece v)
+  toPathPiece v = toPathPiece $ S.toList v
+
+instance PathPiece Location where
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
+  toPathPiece v = pack $ locationID v
+
+instance PathPiece Camino.Camino.Route where
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
+  toPathPiece v = pack $ routeID v
+
+instance PathPiece Camino where
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
+  toPathPiece v = pack $ caminoId v
+
+instance (Show a, Read a) => PathPiece (PreferenceRange a) where
+  fromPathPiece v =
+    let
+      vals = map readMaybeValue (splitOn "|" v)
+      vals' = if all isJust vals then map fromJust vals else []
+    in
+      if length vals' == 5 then
+        Just (PreferenceRange Nothing (fromJust $ vals' !! 0) (fromJust $ vals' !! 1) (fromJust $ vals' !! 2) (vals' !! 3) (vals' !! 4))
+      else
+        Nothing
+  toPathPiece (PreferenceRange _derivation'  target'  lower' upper' min' max') = intercalate "|" $ map writeMaybeValue
+    [
+      Just target',
+      Just lower',
+      Just upper',
+      min',
+      max'
+    ]
 
 data CaminoApp = CaminoApp {
     caminoAppRoot :: Text
@@ -46,14 +160,13 @@ data CaminoApp = CaminoApp {
   , caminoAppCaminos :: [Camino]
 }
 
-
 data PreferenceData = PreferenceData {
     prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
   , prefComfort :: Comfort -- ^ The comfort level
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
-  , prefStop :: Penance -- ^ The stop cost
+  , prefLocation :: M.Map LocationType Penance -- ^ The location type preferences
   , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accommodation type preferences
   , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
   , prefDayServices :: M.Map Service Penance -- ^ The during-day service preferences
@@ -72,7 +185,7 @@ instance FromJSON PreferenceData where
       comfort' <- v .: "comfort"
       distance' <- v .: "distance"
       time' <- v .: "time"
-      stop' <- v .: "stop"
+      location' <- v .: "location"
       accommodation' <- v .: "accommodation"
       stopServices' <- v .: "stop-services"
       dayServices' <- v .: "day-services"
@@ -94,7 +207,7 @@ instance FromJSON PreferenceData where
         , prefComfort = comfort'
         , prefDistance = distance'
         , prefTime = time'
-        , prefStop = stop'
+        , prefLocation = location'
         , prefAccommodation = accommodation'
         , prefStopServices = stopServices'
         , prefDayServices = dayServices'
@@ -115,7 +228,7 @@ instance ToJSON PreferenceData where
         , "comfort" .= prefComfort prefs
         , "distance" .= prefDistance prefs
         , "time" .= prefTime prefs
-        , "stop" .= prefStop prefs
+        , "location" .= prefLocation prefs
         , "accommodation" .= prefAccommodation prefs
         , "stop-services" .= prefStopServices prefs
         , "day-services" .= prefDayServices prefs
@@ -142,7 +255,7 @@ defaultPreferenceData master = let
       , prefComfort = comfort'
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
-      , prefStop = preferenceStop dtp
+      , prefLocation = preferenceLocation dtp
       , prefAccommodation = preferenceAccommodation dtp
       , prefStopServices = preferenceStopServices dtp
       , prefDayServices = preferenceDayServices dtp
@@ -161,7 +274,7 @@ travelPreferencesFrom prefs = TravelPreferences {
   , preferenceComfort = prefComfort prefs
   , preferenceDistance = prefDistance prefs
   , preferenceTime = prefTime prefs
-  , preferenceStop = prefStop prefs
+  , preferenceLocation = prefLocation prefs
   , preferenceAccommodation = prefAccommodation prefs
   , preferenceStopServices = prefStopServices prefs
   , preferenceDayServices = prefDayServices prefs

@@ -30,37 +30,52 @@
            <th scope="col">Comments
       <tbody>
         <tr>
-            <td>^{caminoLocationTypeIcon Village}
-            <td>Village
-            <td>A smaller locality with limited services and accommodation
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Village}
+          <td>Village
+          <td>A smaller locality with limited services and accommodation
         <tr>
-           <td>^{caminoLocationTypeIcon Town}
-           <td>Town
-           <td>A larger locality with most services and a variety of accommodation usually available
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Town}
+          <td>Town
+          <td>A larger locality with most services and a variety of accommodation usually available
         <tr>
-           <td>^{caminoLocationTypeIcon City}
-           <td>City
-           <td>A large urban area with multiple options for services and accommodation
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon City}
+          <td>City
+          <td>A large urban area with multiple options for services and accommodation
         <tr>
-           <td>^{caminoLocationTypeIcon Bridge}
-           <td>Bridge
-           <td>A bridge acting as a waypoint
+          <td>
+            <span .location-type-sample>^{caminoLocationTypeIcon Bridge}
+          <td>Bridge
+          <td>A bridge acting as a waypoint
         <tr>
-           <td>^{caminoLocationTypeIcon Intersection}
-           <td>Intersection
-           <td>A road intersection
+          <td>
+             <span .location-type-sample>
+               ^{caminoLocationTypeIcon Intersection}
+          <td>Intersection
+          <td>A road intersection
         <tr>
-           <td>^{caminoLocationTypeIcon Monastery}
-           <td>Monastery
-           <td>A monastery, often with a hospice attached
+          <td>
+             <span .location-type-sample>
+               ^{caminoLocationTypeIcon Monastery}
+          <td>Monastery
+          <td>A monastery, often with a hospice attached
         <tr>
-           <td>^{caminoLocationTypeIcon Peak}
-           <td>Peak
-           <td>A peak or lookout
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Peak}
+          <td>Peak
+          <td>A peak or lookout
         <tr>
-           <td>^{caminoLocationTypeIcon Poi}
-           <td>Locality
-           <td>An unspecified waypoint
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Poi}
+          <td>Locality
+          <td>An unspecified waypoint
 
 <div #services-help .card>
   <div .card-body>

@@ -304,10 +304,14 @@ data LocationType = Village -- ^ A village
    | Intersection -- ^ An intersection
    | Peak -- ^ A peak or lookout
    | Poi -- ^ A generic point of interest
-   deriving (Show, Generic, Eq, Ord, Enum, Bounded)
+   deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  
 instance FromJSON LocationType
 instance ToJSON LocationType
+instance FromJSONKey LocationType where
+  fromJSONKey = genericFromJSONKey defaultJSONKeyOptions
+instance ToJSONKey LocationType where
+  toJSONKey = genericToJSONKey defaultJSONKeyOptions
 
 -- | Provide an enumeration of all location types
 locationTypeEnumeration :: [LocationType]

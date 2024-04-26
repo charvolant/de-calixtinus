@@ -24,6 +24,7 @@ HomeText2: If you are planning to walk the Camino Santiago, this site allows you
 HomeText3: To begin, press the Start button below.
 InvalidCamino: Invalid camino
 InvalidStep: Invalid preferences step
+LocationPreferencesLabel: Location Preferences
 MetricLabel: Metric Conversion
 MetricTitle: Metric/Imperial Conversion
 MoreInformation: More Information

@@ -82,9 +82,10 @@ data Metrics = Metrics {
     , metricsPerceivedDistance :: Maybe Float -- ^ Perceived distance in km (Nothing if the distance is too long)
     , metricsAscent :: Float -- ^ Ascent in metres
     , metricsDescent :: Float -- ^ Descent in metres
+    , metricsStop :: Penance -- ^ The penance associated with day's end
+    , metricsLocation :: Penance -- ^ The penance associated with the location
     , metricsAccommodationChoice :: [TripChoice Accommodation] -- ^ The places to stay on the way
     , metricsAccommodation :: Penance -- ^ Accommodation penance in km-equivalent. This represents the distance you would be prepared to walk to avoid this accommodation
-    , metricsStop :: Penance -- ^ Stop penance in km-equivalent. The represents the costs of stopping for the night in food urge to get on whatever
     , metricsMissingStopServices :: S.Set Service -- ^ The services missing at the end of the day
     , metricsStopServices :: Penance -- ^ Adjustment to penance in km-equivalnet caused by missing services at the stop point
     , metricsMissingDayServices :: S.Set Service -- ^ The services missing at the end of the day
@@ -108,9 +109,10 @@ instance Semigroup Metrics where
     metricsPerceivedDistance = (+) <$> metricsPerceivedDistance m1 <*> metricsPerceivedDistance m2,
     metricsAscent = metricsAscent m1 + metricsAscent m2,
     metricsDescent = metricsDescent m1 + metricsDescent m2,
+    metricsStop = metricsStop m1 <> metricsStop m2,
+    metricsLocation = metricsLocation m1 <> metricsLocation m2,
     metricsAccommodationChoice = metricsAccommodationChoice m1 <> metricsAccommodationChoice m2,
     metricsAccommodation = metricsAccommodation m1 <> metricsAccommodation m2,
-    metricsStop = metricsStop m1 <> metricsStop m2,
     metricsMissingStopServices = metricsMissingStopServices m1 `S.union` metricsMissingStopServices m2,
     metricsStopServices = metricsStopServices m1 <> metricsStopServices m2,
     metricsMissingDayServices = metricsMissingDayServices m1 `S.union` metricsMissingDayServices m2,
@@ -122,10 +124,10 @@ instance Semigroup Metrics where
   }
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 [] mempty mempty S.empty mempty S.empty mempty mempty mempty mempty mempty
+  mempty = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 [] mempty mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
+  invalid = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
 
 -- | A day's stage
 type Day = Chain Location Leg Metrics
@@ -280,15 +282,25 @@ isAccommodationFree _preferences accommodationMap day = all (\l -> (tripChoicePe
 locationChoice :: TravelPreferences -> Location -> TripChoice Location
 locationChoice preferences location = let
     services' =  (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.intersection` locationServices location
-    penance' = preferenceStop preferences
+    penance' = M.findWithDefault mempty (locationType location) (preferenceLocation preferences)
   in
     TripChoice location services' penance'
 
 missingServicePenance :: M.Map Service Penance -> S.Set Service -> Penance
 missingServicePenance prefs services = mconcat $ map (\s -> M.findWithDefault mempty s prefs) $ S.toList services
 
-stopPenance :: TravelPreferences -> Camino -> TripChoiceMap Location -> [Leg] -> Penance
-stopPenance _preferences _camino locationMap day = maybe Reject tripChoicePenance $ M.lookup (legTo $ last day) locationMap
+stopPenance' :: Comfort -> Penance
+stopPenance' Austere = Penance 4.0
+stopPenance' Frugal = Penance 3.0
+stopPenance' Pilgrim = Penance 2.0
+stopPenance' Comfortable = Penance 1.0
+stopPenance' Luxurious = Penance 0.0
+
+stopPenance :: TravelPreferences -> Camino -> [Leg] -> Penance
+stopPenance preferences _camino _day = stopPenance' (preferenceComfort preferences)
+
+locationPenance :: TravelPreferences -> Camino -> TripChoiceMap Location -> [Leg] -> Penance
+locationPenance _preferences _camino locationMap day = maybe Reject tripChoicePenance $ M.lookup (legTo $ last day) locationMap
 
 adjustment :: PreferenceRange Float -> Float -> Float -> Float -> Penance
 adjustment range bscale rscale value
@@ -321,7 +333,8 @@ penance preferences camino accommodationMap locationMap day =
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
     dayMissing = missingDayServices preferences (preferenceCamino camino) accom day
     dayMissingCost = missingServicePenance (preferenceStopServices preferences) dayMissing
-    stopCost = stopPenance preferences (preferenceCamino camino) locationMap day
+    stopCost = stopPenance preferences (preferenceCamino camino) day
+    locationCost = locationPenance preferences (preferenceCamino camino) locationMap day
     distanceCost = maybe Reject Penance perceived
     misc = travelAdditional preferences day
     total = distanceCost <> tripChoicePenance accom <> stopCost <> distanceAdjust <> timeAdjust <> stopMissingCost <> dayMissingCost <> misc
@@ -331,9 +344,10 @@ penance preferences camino accommodationMap locationMap day =
       perceived
       ascent
       descent
+      stopCost
+      locationCost
       (if tripChoicePenance accom == Reject then [] else [accom])
       (tripChoicePenance accom)
-      stopCost
       stopMissing'
       stopMissingCost
       dayMissing
@@ -437,7 +451,7 @@ rundownTail trail leg = let
     feed'
 
 buildTripChoiceMap'' :: (Location -> TripChoice v) -> TravelPreferences -> Camino -> M.Map Location (TripChoiceTrail v) -> Location -> TripChoiceTrail v
-buildTripChoiceMap'' chooser preferences camino trail location = let
+buildTripChoiceMap'' chooser _preferences camino trail location = let
     legs = incoming camino location
     feed = concat $ map (rundownTail trail) legs
     best = chooser location -- ^ The best local choice

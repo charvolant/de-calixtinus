@@ -86,12 +86,12 @@ plan opts = do
     let router = renderCaminoRoute config' ["en", ""]
     let messages = renderCaminoMsg config'
     let solution = planCamino preferences' caminoPrefs'''
-    let solution' = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just solution
+    let trip = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just (solutionTrip solution)
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences' caminoPrefs''' (fst <$> solution')
+    let kml = createCaminoDoc config' preferences' caminoPrefs''' trip
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml)
-    let html = caminoHtml config' preferences' caminoPrefs''' solution'
+    let html = caminoHtml config' preferences' caminoPrefs''' solution
     let indexFile = output' </> "index.html"
     B.writeFile indexFile (renderHtml (html messages router))
 

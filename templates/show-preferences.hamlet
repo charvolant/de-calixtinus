@@ -5,7 +5,7 @@
         _{MsgShowPreferencesText}
   <div .row .m-5>
     <div .col>
-      ^{(preferencesHtml False preferences camino Nothing) messages router}
+      ^{(preferencesHtml False preferences camino) messages router}
   <div .row .justify-content-center>
     <div .col-10>
       <form .container-fluid method=post enctype="#{enctype}">

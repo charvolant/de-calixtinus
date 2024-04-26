@@ -21,7 +21,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Planner (AccommodationMap, Trip)
+import Camino.Planner (Solution(..), Trip)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Html
@@ -262,7 +262,7 @@ helpPopup stepp = do
         , $(widgetFile "help-popup")
       )
 
-addError :: Either Location (Trip, AccommodationMap) -> Handler ()
+addError :: Either Location Trip -> Handler ()
 addError (Left loc) = do
   setMessage [shamlet|
     <div ..alert .alert-warning role="alert">
@@ -278,13 +278,12 @@ planPage prefs = do
     langs <- languages
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
-    let trip = planCamino tprefs cprefs
-    let trip' = either (const Nothing) Just trip
+    let solution = planCamino tprefs cprefs
     let config = caminoAppConfig master
     let router = renderCaminoRoute config langs
     let messages = renderCaminoMsg config
-    let html = (caminoHtmlBase config tprefs cprefs trip') messages router
-    addError trip
+    let html = (caminoHtmlBase config tprefs cprefs solution) messages router
+    addError (solutionTrip solution)
     defaultLayout $ do
       setTitle [shamlet|#{locationName (preferenceStart cprefs)} - #{locationName (preferenceFinish cprefs)}|]
       (toWidget html)
@@ -303,12 +302,12 @@ planKml prefs = do
     master <- getYesod
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
-    let trip = planCamino tprefs cprefs
-    let trip' = either (const Nothing) (Just . fst) trip
+    let solution = planCamino tprefs cprefs
+    let trip = either (const Nothing) (Just) (solutionTrip solution)
     let config = caminoAppConfig master
-    let kml = createCaminoDoc config tprefs cprefs trip'
+    let kml = createCaminoDoc config tprefs cprefs trip
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
-    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs trip' <> "\"")
+    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs trip <> "\"")
     return $ TypedContent kmlType (toContent result)
 
 runCaminoApp :: CaminoApp -> IO ()

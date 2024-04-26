@@ -254,7 +254,8 @@ accommodation :: TravelPreferences -- ^ The calculation preferences
 accommodation preferences location = let
     services = (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.difference` locationServices location
     ap = preferenceAccommodation preferences
-    accommodationOptions = if null ao then [openSleeping] else ao where ao = locationAccommodation location
+    defaultAccommodation = if locationCamping location then [openSleeping] else []
+    accommodationOptions = if null ao then defaultAccommodation else ao where ao = locationAccommodation location
     lp = map (accommodation' ap services) accommodationOptions
     choice = foldl selectAccommodationChoice invalidAccommodation lp
   in

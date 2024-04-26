@@ -31,7 +31,10 @@
 
 <p>
   The "reject" or _{PenanceFormatted Reject} symbol indicates that you do not wish to use that accommodation type at all.
-  By default, camping by the roadside is set to reject.
+  In many places, if there is no other available accommodation, camping by the roadside
+  (^{caminoAccommodationTypeIcon Camping}) is available as an option, although this does not extend to cities or towns.
+  Camping by the roadside is set to reject for all but the more frugal pilgrims.
+
 
 <p>
   Since you can only sleep in one place each night, accommodation preferences work by seeing if there is something

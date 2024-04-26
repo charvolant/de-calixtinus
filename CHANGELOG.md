@@ -12,15 +12,17 @@ and this project adheres to the
 
 * Camino Fisterra
 * Show chosen accommodation and penance for all locations
+* Add a comfort level to condition accommodation and servoce choice #[4](https://github.com/charvolant/de-calixtinus/issues/4)
 
 ### Changed
 
 * Route CSS is now embedded in final plan rather than added to the general camino.css
 * Improved location of help and metric conversion
+* Allow/Disallow camping either by configuration or by default #[5](https://github.com/charvolant/de-calixtinus/issues/5)
 
 ### Fixed
 
-* Municipal albergues being ignored [2](https://github.com/charvolant/de-calixtinus/issues/2)
+* Municipal albergues being ignored #[2](https://github.com/charvolant/de-calixtinus/issues/2)
 * Consistent handling of accommodation/service preferences #[3](https://github.com/charvolant/de-calixtinus/issues/3)
 
 ## 0.1 - 2024-04-11

@@ -313,6 +313,13 @@ instance ToJSON LocationType
 locationTypeEnumeration :: [LocationType]
 locationTypeEnumeration = [minBound .. maxBound]
 
+-- | The default state for allowing camping.
+--   Towns and cities don't usually allow camping
+locationCampingDefault :: LocationType -> Bool
+locationCampingDefault Town = False
+locationCampingDefault City = False
+locationCampingDefault _ = True
+
 -- | A URL for referencing.
 --   Currently, this is plain text.
 type URL = Text
@@ -329,6 +336,7 @@ data Location = Location {
   , locationPosition :: Maybe LatLong
   , locationServices :: S.Set Service
   , locationAccommodation :: [Accommodation]
+  , locationCamping :: Bool
 } deriving (Show)
 
 instance Placeholder Camino Location where
@@ -342,6 +350,7 @@ instance Placeholder Camino Location where
     , locationPosition = Nothing
     , locationServices = S.empty
     , locationAccommodation = []
+    , locationCamping = False
   }
   normalise camino location = maybe location id (M.lookup (locationID location) (caminoLocations camino))
 
@@ -357,12 +366,33 @@ instance FromJSON Location where
     position' <- v .:? "position"
     services' <- v .: "services"
     accommodation' <- v .: "accommodation"
-    return Location { locationID = id', locationName = name', locationDescription = description', locationHref = href', locationType = type', locationPosition = position', locationServices = services', locationAccommodation = accommodation' }
+    camping' <- v .:? "camping" .!= locationCampingDefault type'
+    return Location { 
+        locationID = id'
+      , locationName = name'
+      , locationDescription = description'
+      , locationHref = href'
+      , locationType = type'
+      , locationPosition = position'
+      , locationServices = services'
+      , locationAccommodation = accommodation'
+      , locationCamping = camping'
+    }
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' description' href' type' position' services' accommodation') =
-      object [ "id" .= id', "name" .= name', "description" .= description', "href" .= href', "type" .= type', "position" .= position', "services" .= services', "accommodation" .= accommodation' ]
+    toJSON (Location id' name' description' href' type' position' services' accommodation' camping') =
+      object [ 
+          "id" .= id'
+        , "name" .= name'
+        , "description" .= description'
+        , "href" .= href'
+        , "type" .= type'
+        , "position" .= position'
+        , "services" .= services'
+        , "accommodation" .= accommodation'
+        , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
+      ]
 
 instance Vertex Location where
   identifier = locationID
@@ -899,9 +929,9 @@ fitnessEnumeration = [minBound .. maxBound]
 data Comfort = Austere -- ^ Minimal services and accommodation
    | Frugal -- ^ Try to get by with minimal services
    | Pilgrim -- ^ General pilgrim services, use albergues where possible but be open to other options
-   | Comfortable -- ^ Albergues are fine but 
+   | Comfortable -- ^ Albergues are fine but
    | Luxurious -- ^ Major services and comfortable accommodation
-  deriving (Generic, Eq, Read, Show, Ord, Enum, Bounded) 
+  deriving (Generic, Eq, Read, Show, Ord, Enum, Bounded)
 
 instance FromJSON Comfort
 instance ToJSON Comfort

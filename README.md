@@ -8,15 +8,6 @@ Globally, means that the program will try to find the best set of stages over th
 entire trip, stretching and squeezing as appropriate to try and limit the number of
 ludicrously long or disappointingly short stages.
 
-To see an example, based on someone unfit who wants to walk about 20km
-a day and wants to go to via Fátima-Ansião, most of the Coastal/Littoral 
-routes and then transfer to Tui, look 
-[here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/index.html).
-Or [here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/camino.kml) for a KML version 
-displayable in Google Earth.
-(This route happens to correspond to the route the author took, although the planner comes
-up with some different stages to the ones we chose.)
-
 I started planning this program while walking the Camino Portugués.
 It's partially a learning exercise.
 I had always wanted to learn the [Haskell](https://www.haskell.org/) programming language properly but
@@ -25,6 +16,24 @@ to program idiomatically.
 It turns out that this was sufficient motivation.
 
 ## Usage
+
+De Calixtinus runs at https://de-calixtinus.org
+
+### Sample
+
+To see an exmaple plan, based on someone unfit who wants to walk about 20km
+a day and wants to go to via Fátima-Ansião, most of the Coastal/Littoral
+routes and then transfer to Tui, look
+[here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/index.html).
+Or [here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/camino.kml) for a KML version
+displayable in Google Earth.
+(This route happens to correspond to the route the author took, although the planner comes
+up with some different stages to the ones we chose.)
+
+### Docker Image
+
+The [docker image](https://hub.docker.com/repository/docker/charvolant/de-calixtinus/general)
+allows you to run de calixtinus locally, if you wish to play.
 
 ### Web Server
 To run the web server, use

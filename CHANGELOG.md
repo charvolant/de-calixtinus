@@ -20,6 +20,7 @@ and this project adheres to the
 * Improved location of help and metric conversion
 * Allow/Disallow camping either by configuration or by default #[5](https://github.com/charvolant/de-calixtinus/issues/5)
 * Handling of stop location preferences in the same way as accommodation (see below) #[6](https://github.com/charvolant/de-calixtinus/issues/6)
+* Make incoming/outgoing legs more obvious on location display
 
 ### Fixed
 

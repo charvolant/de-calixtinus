@@ -16,7 +16,7 @@
           <ul .dropdown-menu>
             <li .nav-item>
               <a .nav-link .active href="#plan-help">Overview
-            <li><hr class="dropdown-divider">
+            <li><hr .dropdown-divider>
             <li .nav-item>
               <a .nav-link .active href="#map-help">Map
             <li .nav-item>
@@ -474,9 +474,9 @@
       Distance
       <span .distance">19.4km
       (feels like <span .distance">19.2km</span>)
-      over <span class="time">5.5hrs</span>
-      Ascent <span class="height">25m</span>
-      Descent <span class="height">25m</span>
+      over <span .time>5.5hrs</span>
+      Ascent <span .height>25m</span>
+      Descent <span .height>25m</span>
       <br>
       Penance <span .penance>21.7 km</span>
       \ = Distance <span .distance>19.2 km</span>
@@ -594,6 +594,11 @@
             <div .accordion-body .container-fluid>
               <div .row>
                 <div .col>
+                <div .col-2 .float-end>
+                  <button .btn .btn-primary onclick="">
+                    <span .ca-globe>
+              <div .row>
+                <div .col>
                   <h6>Accommodation
               <div .row .accommodation>
                 <div .offset-1 .col-5>
@@ -619,12 +624,23 @@
                 <div .col>
                   <h6>Route
               <div .row>
-                <div .col .leg-to .leg-line .leg-used .offset-1">
-                  <a href="#">Santiago de Riba-Ul
-                  <span .leg-type>
-                  <span .leg-distance>2.3km
-                  <span .leg-ascent>20m
-                  <span  .leg-descent>70m
+                <div .col .text-start .my-auto>
+                  <ul>
+                    <li .leg-to .leg-line .leg-used>
+                      <a href="#">Póvoa (Travaca)
+                      <span .leg-type>
+                      <span .leg-distance>3.0km
+                      <span .leg-ascent>105m
+                      <span .leg-descent>40m
+                <div .col .text-center .my-auto>Oliveira de Azeméis
+                <div .col .text-end .my-auto>
+                  <ul>
+                    <li .leg-to .leg-line .leg-used>
+                      <a href="#">Santiago de Riba-Ul
+                      <span .leg-type>
+                      <span .leg-distance>2.3km
+                      <span .leg-ascent>20m
+                      <span .leg-descent>70m
 
 <p>
   The first element on the header is an icon showing the type of location, followed by the name.
@@ -651,6 +667,16 @@
   location.
 
 <p>
+  The
+  <button .btn .btn-primary .btn-sm onclick="">
+    <span .ca-globe>
+  \ button will take you to the location on the map.
+  If there is a figure, such as
+  <span .chosen-location><span .chosen-location-penance>+<span class=.penance>1.4 km
+  , beside the map button, it indicates that there is a better location nearby; the figure
+  gives the extra penance associated with staying in this location, rather than going to the nearby location.
+
+<p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
     Large cities and towns may have tens or hundreds of different accommodation options.
     Rather than list them all, just the general types of accommodation available are listed.
@@ -672,8 +698,8 @@
 <p>
   The routes list gives what
   <a href="#travel-help"> travel
-  legs lead out of the location and on to the next location.
-  Clicking on the location name will take you to the next location.
+  legs lead in to the location and then out of the location and on to the next location.
+  Clicking on the location name will take you to the previous/next location.
   There is usually only one leg available, unless the path forks into alternative routes or
   large scale variants.
 
@@ -726,7 +752,7 @@
 <h3 #travel-help>Travel
 
 <p>
-  A travel leg shows how far the next location is an, roughly, how much effort is involved.
+  A travel leg shows how far the previous/next location is and, roughly, how much effort is involved.
   A typical travel leg looks like:
 
 <div .row .m-2>

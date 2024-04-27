@@ -64,7 +64,7 @@
   hill climbing and fitness levels.
   If a day is particularly short or long, an additional amount of discomfort penance is added.
   After that, preferences in terms of the type of accommodation you want at the end of the day are expressed in
-  terms of "I would walk an extra <em>x</em> kilometres to avoid having to stay here."
+  terms of "I would walk an extra <em>x</em> kilometres to get to a better option nearby."
   Similarly, the services you want at day's end (eg a place to eat or lockers for your valuables) are expressed
   in terms of "I would walk an extra <em>y</em> kilometres to get this."
   All of this is added together to get the cost for the entire day, expressed in kilometres-equivalent of walking.
@@ -84,7 +84,8 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is only source data for the Camino Portuguese, the one we walked.
+  Currently, there is only source data for two caminos: the Camino Portuguese, the one we walked; and
+  the Camino Fisterra, a nice short one to add to the list.
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
   over 9,000 lines of JSON.
   More routes are planned.

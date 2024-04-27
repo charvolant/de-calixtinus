@@ -22,7 +22,7 @@ import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
-import Graph.Graph (outgoing)
+import Graph.Graph (incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
 import qualified Data.Text as T (concat, intercalate, null, pack, take, Text, toLower, toUpper)
@@ -343,46 +343,80 @@ locationLine _preferences _camino location = [ihamlet|
 
 legLine :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 legLine _preferences _camino leg = [ihamlet|
-    ^{caminoLegTypeIcon (legType leg)}
-    $if legDistance leg > 0
-      <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
-    $if legAscent leg > 0
-      <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
-    $if legDescent leg > 0
-      <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
-    $if isJust $ legTime leg
-      <span .leg-time>#{format (fixed 1 % "hrs") (fromJust $ legTime leg)}
-    $if isJust $ legPenance leg
-      <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
-    $if isJust $ legNotes leg
-      <span .leg-notes>#{fromJust $ legNotes leg}
+    <div .d-inline-block>
+      ^{caminoLegTypeIcon (legType leg)}
+      $if legDistance leg > 0
+        <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
+      $if legAscent leg > 0
+        <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
+      $if legDescent leg > 0
+        <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
+      $if isJust $ legTime leg
+        <span .leg-time>#{format (fixed 1 % "hrs") (fromJust $ legTime leg)}
+      $if isJust $ legPenance leg
+        <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
+      $if isJust $ legNotes leg
+        <span .leg-notes>#{fromJust $ legNotes leg}
   |]
 
-locationLegLine :: TravelPreferences -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
-locationLegLine preferences showLink camino leg = [ihamlet|
+locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLegLine preferences showLink showTo camino leg = [ihamlet|
    $if showLink
-     <a href="##{locationID $ legTo leg}">
-       #{locationName $ legTo leg}
+     <a href="##{locationID $ direction leg}">
+       #{locationName $ direction leg}
    $else
-     #{locationName $ legTo leg}
+     #{locationName $ direction leg}
    ^{legLine preferences camino leg}
  |]
+ where
+   direction = if showTo then legTo else legFrom
 
-locationLegs :: TravelPreferences -> Bool -> CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-locationLegs preferences showLink camino used location = [ihamlet|
+locationLegSummary :: TravelPreferences ->CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLegSummary preferences camino used location = [ihamlet|
   $forall leg <- usedLegs
     <div .row>
       <div .col .leg-to .leg-line .leg-used .offset-1>
-        ^{locationLegLine preferences showLink camino leg}
+        ^{locationLegLine preferences False False camino leg}
   $forall leg <- unusedLegs
       <div .row>
         <div .col .leg-to .leg-line .leg-unused .offset-1>
-          ^{locationLegLine preferences showLink camino leg}
+          ^{locationLegLine preferences False True camino leg}
  |]
   where
     camino' = preferenceCamino camino
     outgoingLegs = outgoing camino' location
     (usedLegs, unusedLegs) = L.partition (\l -> S.member l used) outgoingLegs
+
+
+locationLegs :: TravelPreferences -> CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLegs preferences camino used location = [ihamlet|
+  <div .row>
+    <div .col .text-start .my-auto>
+      <ul>
+        $forall leg <- usedIncomingLegs
+          <li .leg-to .leg-line .leg-used>
+            ^{locationLegLine preferences True False camino leg}
+        $forall leg <- unusedIncomingLegs
+          <li .leg-to .leg-line .leg-unused>
+            ^{locationLegLine preferences True False camino leg}
+    <div .col .text-center .my-auto>
+      #{arrow} #{locationName location} #{arrow}
+    <div .col .text-end .my-auto>
+      <ul>
+        $forall leg <- usedOutgoingLegs
+          <li .leg-to .leg-line .leg-used>
+            ^{locationLegLine preferences True True camino leg}
+        $forall leg <- unusedOutgoingLegs
+          <li .leg-to .leg-line .leg-unused>
+            ^{locationLegLine preferences True True camino leg}
+ |]
+  where
+    camino' = preferenceCamino camino
+    outgoingLegs = outgoing camino' location
+    (usedOutgoingLegs, unusedOutgoingLegs) = L.partition (\l -> S.member l used) outgoingLegs
+    incomingLegs = incoming camino' location
+    (usedIncomingLegs, unusedIncomingLegs) = L.partition (\l -> S.member l used) incomingLegs
+    arrow = '\x2192'
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId stops waypoints used location = [ihamlet|
@@ -420,7 +454,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
         $forall accommodation <- locationAccommodation location
           ^{caminoAccommodationHtml accommodation accChoice}
         ^{conditionalLabel RouteLabel (outgoing camino' location)}
-        ^{locationLegs preferences True camino used location}
+        ^{locationLegs preferences camino used location}
   |]
   where
     camino' = preferenceCamino camino
@@ -666,7 +700,7 @@ caminoMapTooltip preferences camino _solution usedLegs location = [ihamlet|
     <div .row>
       <div .col>
         ^{locationLine preferences camino location}
-    ^{locationLegs preferences False camino usedLegs location}
+    ^{locationLegSummary preferences camino usedLegs location}
   |]
 
 caminoMapScript :: TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

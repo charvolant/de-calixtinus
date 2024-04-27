@@ -61,9 +61,9 @@
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
-    See the <a href="/about">about page for an explanation of how the term "penance" came to be.
+    See the <a href="/about">about page</a> for an explanation of how the term "penance" came to be.
 
-  The planner works by minimising <a href="#penance-help"><em>penance</em></a>.
+  The planner works by minimising penance, a catch-all term for the effort spent travelling.
   The basic idea is that everything is converted into equivalent kilometres of walking.
   Actual travel is converted into a perceived distance that takes account of climbs and descents, fatigue and so on.
   To this distance, adjustments are added for particularly long or short distances, whether the place where you sleep
@@ -274,9 +274,9 @@
     <ul>
       <li>
         Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
-         Naismith was surveyor who spent most of his time walking and had a very consistent stride.
-        It assumes that someone fit enough to not slow up when descending a slope.
-        This rule is used for very fit and super-fit walkers.
+        \ Naismith was a surveyor who spent most of his time walking and had a very consistent stride.
+        \ It assumes that someone fit enough to not slow up when descending a slope.
+        \ This rule is used for very fit and super-fit walkers.
      <li>
         Tobler's hiking function, which combines distance, ascent and descent.
         Unlike Naismith's rule, Tobler's function takes steep descents into account.
@@ -296,7 +296,7 @@
     A small amount of additional penance is added for being away from the target distance.
     Once the distance or time is outside the normal lower and upper bounds of the range, more penance is
     calculated to indicate either a heartbreakingly long day or an embarrassingly short walk.
-    There are also hard maximum and minimum limits, which will case the day to be rejected as a possible stage.
+    There are also hard maximum and minimum limits, which will cause the day to be rejected as a possible stage.
   <li>
     A stop penance is added.
     This represents the business of settling down for the night, paying for accommodation, food costs and the like.
@@ -317,7 +317,7 @@
       If there is a nearby location that is a potentially better option then the distance-adjusted difference between
       the two preferences is added to the penance.
     <p>
-      For example, this location is an intersection (1.0km preference) but 2.3km away there is an
+      For example, this location is an intersection (1.0km preference) but 2.3km away there is a
       town (5.0km preference) then the location penance is (5.0 - 1.0) - 2.3 = 1.7km, essentially suggesting
       that it might be worth breaking your journey early or keeping on going for a bit.
     <p>
@@ -372,7 +372,7 @@
   <li><a href="#map-help">Map</a> - A map of the route.
   <li><a href="stage-help">Plan</a> - A plan for the Camino, showing each day's activity
   <li><a href="location-help">Locations</a> - Detailed information about each location
-  <li>Preferences - A summary of thea href="preferences-help">preferences</a> that you specified
+  <li>Preferences - A summary of the <a href="#preferences-help">preferences</a> that you specified
   <li>About - Information about the camino data
   <li>Key - A key for the various symbols and markers
 
@@ -595,7 +595,7 @@
               <div .row>
                 <div .col>
                 <div .col-2 .float-end>
-                  <button .btn .btn-primary onclick="">
+                  <button .btn .btn-primary .btn-sm onclick="">
                     <span .ca-globe>
               <div .row>
                 <div .col>

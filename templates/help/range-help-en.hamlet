@@ -17,23 +17,23 @@
     <tr>
         <td .text-danger>Minimum
         <td>The absolute minimum that is acceptable.
-            A day's stage calculated by the planning system will, generally, be at least this distance or time.
+            \ A day's stage calculated by the planning system will, generally, be at least this distance or time.
     <tr>
         <td>Lower
         <td>The lower bound of acceptability.
-            This is the minimum distance or time that you would wish to walk.
+            \ This is the minimum distance or time that you would wish to walk.
     <tr>
         <td .text-success>Target
         <td>The target
-            This is the distance or time that you wish to walk each day.
+            \ This is the distance or time that you wish to walk each day.
     <tr>
         <td>Upper
         <td>The target
-            This is the maximum distance or time that you would wish to walk.
+            \ This is the maximum distance or time that you would wish to walk.
     <tr>
         <td .text-danger>Maximum
         <td>The absolute maximum that is acceptable.
-            A day's stage calculated by the planning system will, generally, be at most this distance or time.
+            \ A day's stage calculated by the planning system will, generally, be at most this distance or time.
 
 <p>
   Generally, once the distance/time strays outside the upper or lower bounds, the planner will start adding

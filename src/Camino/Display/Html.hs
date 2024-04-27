@@ -362,7 +362,7 @@ legLine _preferences _camino leg = [ihamlet|
 locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegLine preferences showLink showTo camino leg = [ihamlet|
    $if showLink
-     <a href="##{locationID $ direction leg}">
+     <a href="##{locid}" onclick="showLocationDescription('#{locid}');">
        #{locationName $ direction leg}
    $else
      #{locationName $ direction leg}
@@ -370,13 +370,14 @@ locationLegLine preferences showLink showTo camino leg = [ihamlet|
  |]
  where
    direction = if showTo then legTo else legFrom
+   locid = locationID $ direction leg
 
 locationLegSummary :: TravelPreferences ->CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegSummary preferences camino used location = [ihamlet|
   $forall leg <- usedLegs
     <div .row>
       <div .col .leg-to .leg-line .leg-used .offset-1>
-        ^{locationLegLine preferences False False camino leg}
+        ^{locationLegLine preferences False True camino leg}
   $forall leg <- unusedLegs
       <div .row>
         <div .col .leg-to .leg-line .leg-unused .offset-1>
@@ -445,10 +446,10 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
                   <span .chosen-location>
                     <span .chosen-location-penance>+_{PenanceFormatted (tripChoicePenance lc)}
               $maybe pos <- locationPosition location
-                <button .btn .btn-primary onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
+                <button .btn .btn-primary .btn-sm onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
                   <span .ca-globe title="_{ShowOnMapTitle}">
               $maybe href <- locationHref location
-                <a .btn .btn-primary href="#{href}">
+                <a .btn .btn-primary .btn-sm href="#{href}">
                     <span .ca-information title="_{LinkOut (locationName location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
@@ -712,10 +713,15 @@ caminoMapScript preferences camino solution = [ihamlet|
       \$('#about-toggle').tab('show');
       \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
     }
+    
+    function openLocationDescription(id) {
+      \$('#location-body-' + id).addClass('show');
+    }
 
     function showLocationDescription(id) {
       \$('#locations-toggle').tab('show');
       \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
+      openLocationDescription(id);
     }
 
     function showLocationOnMap(lat, lng) {

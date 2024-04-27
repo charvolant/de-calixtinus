@@ -10,7 +10,6 @@ Portability : POSIX
 -}
 module Main (main) where
 
-import Camino.Camino
 import Camino.Display.Static
 import Camino.Config
 import Options.Applicative

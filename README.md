@@ -121,7 +121,7 @@ There's a bit of a way to go for that.
 
 ### The TODO List
 
-* A full website implementation
+* ~~A full website implementation~~
 * Start scoring stages (see the [design notes](#some-design-notes)) for
   * ~~Services available at the end-point and at accommodation (eg clothes washing facilities)~~
   * ~~Services available along the way (eg. an ATM somewhere during the day)~~

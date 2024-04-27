@@ -10,6 +10,25 @@ Once you have that, `stack build` will build the programs.
 You will need to watch the log to determine where stack puts the resulting executable,
 since it will be down a long rabbit-hole.
 
+## Static Files
+
+The files in the `static` subdirectory can be served directly,
+without generation.
+If you change the CSS or other templated static files, run
+`generate-static-exe -c CONFIG` to generate the appropriate CSS files.
+
+## Docker Image
+
+To create a docker image, make sure that you have the 
+static files up to date and then use
+
+```shell
+docker build . -t de-calixtinus:0.2
+```
+
+This builds the current source in a docker container and then
+creates a slimmed-down version for deployment.
+
 ## Icons and Fonts
 
 The camino planner uses an icon font [Camino-Icons.woff](fonts/Camino-Icons.woff)

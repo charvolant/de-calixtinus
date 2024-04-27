@@ -4,7 +4,8 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs          #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# OPTIONS_GHC -Wno-orphans       #-}
 {-|
 Module      : Foundation
 Description : Yesod foundation for the Calixtinus application
@@ -24,7 +25,7 @@ import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
 import qualified Data.Map as M
-import Data.Maybe (catMaybes, fromJust, fromMaybe, isJust, isNothing)
+import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)

@@ -3,7 +3,6 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE FlexibleContexts      #-}
-{-# OPTIONS_GHC -Wno-orphans       #-}
 {-|
 Module      : Forms
 Description : Forms for the De Calixtinus application

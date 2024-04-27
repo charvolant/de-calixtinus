@@ -12,7 +12,7 @@ StandardOutput=append:{{ dcx_log_dir }}/access.log
 StandardError=append:{{ dcx_log_dir }}/error.log
 RuntimeDirectory={{ dcx_run_dir }}
 WorkingDirectory=/run/{{ dcx_run_dir }}
-ExecStart={{ dcx_dir}}/bin/camino-server-exe -c {{ dcx_dir}}/lib/config.yaml -s {{ dcx_dir}}/lib/static -r https://{{ server_name }} -p 3000 {{ dcx_dir}}/lib/camino-portuguese.json
+ExecStart={{ dcx_dir}}/bin/camino-server-exe -c {{ dcx_dir}}/lib/config.yaml -s {{ dcx_dir}}/lib/static -r https://{{ server_name }} -p 3000 {{ dcx_dir}}/lib/camino-portuguese.json {{ dcx_dir}}/lib/camino-fisterra.json
 Restart=no
 
 [Install]

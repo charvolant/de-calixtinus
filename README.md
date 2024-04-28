@@ -24,8 +24,8 @@ De Calixtinus runs at https://de-calixtinus.org
 To see an exmaple plan, based on someone unfit who wants to walk about 20km
 a day and wants to go to via Fátima-Ansião, most of the Coastal/Littoral
 routes and then transfer to Tui, look
-[here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/index.html).
-Or [here](https://camino-planner.s3.ap-southeast-2.amazonaws.com/example/camino.kml) for a KML version
+[here](https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/example/index.html).
+Or [here](https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/example/camino.kml) for a KML version
 displayable in Google Earth.
 (This route happens to correspond to the route the author took, although the planner comes
 up with some different stages to the ones we chose.)

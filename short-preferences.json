@@ -2,17 +2,17 @@
   "travel": "Walking",
   "fitness": "Unfit",
   "comfort": "Pilgrim",
-  "distance": { "target": 20.0, "lower": 18.0, "upper":  24.0, "min": 8.0, "max": 28.0 },
+  "distance": { "target": 20.0, "lower": 18.0, "upper":  22.0, "min": 8.0, "max": 28.0 },
   "time": { "target": 5.0, "lower": 0.0, "upper":  6.0, "min": 0.0, "max": 8.0 },
   "location": {
     "Village": 2.0,
-    "Town": 2.0,
-    "City": 2.0,
-    "Monastery": 3.0,
-    "Bridge": 2.0,
+    "Town": 3.0,
+    "City": 3.0,
+    "Monastery": 2.0,
+    "Bridge": 1.0,
     "Intersection": 0.0,
     "Peak": 2.0,
-    "Poi": 1.0
+    "Poi": 2.0
   },
   "accommodation": {
     "MunicipalAlbergue": 6.0,

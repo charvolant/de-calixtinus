@@ -94,6 +94,7 @@ iconList = [
     ("ca-dryer", '\xe062'),
     ("ca-ferry", '\xe082'),
     ("ca-globe", '\xe090'),
+    ("ca-gite", '\xe01a'),
     ("ca-groceries", '\xe041'),
     ("ca-guesthouse", '\xe012'),
     ("ca-handwash", '\xe063'),

@@ -28,7 +28,7 @@ printLocation :: Location -> IO ()
 printLocation l = do
   putStr $ unpack $ locFormat id' name' lat' lon'
   where
-    locFormat = format (text % " " % text % " " % fixed 4 % "," % fixed 4 % "\n")
+    locFormat = format (text % " " % text % " " % fixed 5 % "," % fixed 5 % "\n")
     id' = pack $ locationID l
     name' = fromStrict $ locationName l
     position' = locationPosition l

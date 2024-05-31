@@ -74,6 +74,7 @@ data CaminoMsg =
   | FitnessLabel
   | FitTitle
   | FrugalTitle
+  | GiteTitle
   | GroceriesTitle
   | GuestHouseTitle
   | HandwashTitle
@@ -244,6 +245,7 @@ renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
 renderCaminoMsgDefault _ FrugalTitle = "Frugal"
+renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"

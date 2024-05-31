@@ -174,6 +174,7 @@ caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accommodation .guest-h
 caminoAccommodationTypeIcon HomeStay = [ihamlet| <span .accommodation .home-stay .ca-homestay title="_{HomeStayTitle}"> |]
 caminoAccommodationTypeIcon House = [ihamlet| <span .accommodation .house .ca-house title="_{HouseTitle}"> |]
 caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accommodation .hotel .ca-hotel title="_{HotelTitle}"> |]
+caminoAccommodationTypeIcon Gite = [ihamlet| <span .accommodation .gite .ca-gite title="_{GiteTitle}"> |]
 caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accommodation .camp-ground .ca-campground title="_{CampGroundTitle}"> |]
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accommodation .camping .ca-tent title="_{CampingTitle}"> |]
 
@@ -185,6 +186,7 @@ caminoAccommodationTypeMsg GuestHouse = GuestHouseTitle
 caminoAccommodationTypeMsg HomeStay = HomeStayTitle
 caminoAccommodationTypeMsg House = HouseTitle
 caminoAccommodationTypeMsg Hotel = HotelTitle
+caminoAccommodationTypeMsg Gite = GiteTitle
 caminoAccommodationTypeMsg CampGround = CampGroundTitle
 caminoAccommodationTypeMsg Camping = CampingTitle
 
@@ -196,6 +198,7 @@ caminoAccommodationLabel (GenericAccommodation GuestHouse) = GuestHouseTitle
 caminoAccommodationLabel (GenericAccommodation HomeStay) = HomeStayTitle
 caminoAccommodationLabel (GenericAccommodation House) = HouseTitle
 caminoAccommodationLabel (GenericAccommodation Hotel) = HotelTitle
+caminoAccommodationLabel (GenericAccommodation Gite) = GiteTitle
 caminoAccommodationLabel (GenericAccommodation CampGround) = CampGroundTitle
 caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
 caminoAccommodationLabel _ = AccommodationLabel

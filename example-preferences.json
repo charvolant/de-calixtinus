@@ -22,6 +22,7 @@
     "GuestHouse": 4.0,
     "House": 3.0,
     "Hotel": 2.5,
+    "Gite": 4.0,
     "CampGround": 0.0,
     "Camping": "reject"
   },

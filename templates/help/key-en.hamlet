@@ -69,7 +69,7 @@
             <span .location-type-sample>
               ^{caminoLocationTypeIcon Peak}
           <td>Peak
-          <td>A peak or lookout
+          <td>A peak, mountain pass or lookout
         <tr>
           <td>
             <span .location-type-sample>
@@ -217,6 +217,11 @@
             <td>
                 A commercial hotel, usually with multiple services and accommodation options.
         <tr>
+             <td>^{caminoAccommodationTypeIcon Gite}
+             <td>Gîtes d'Étape
+             <td>
+                 A stage lodging for walkers or cyclists
+       <tr>
             <td>^{caminoAccommodationTypeIcon CampGround}
             <td>Camp Ground
             <td>

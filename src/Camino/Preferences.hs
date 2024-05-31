@@ -444,6 +444,7 @@ suggestedAccommodation' Austere = M.fromList [
     (HomeStay, Penance 1.0),
     (House, Penance 0.0),
     (Hotel, Reject),
+    (Gite, Penance 7.0),
     (CampGround, Penance 6.0),
     (Camping, Penance 5.0)
   ]
@@ -455,6 +456,7 @@ suggestedAccommodation' Frugal = M.fromList [
     (HomeStay, Penance 4.0),
     (House, Penance 3.0),
     (Hotel, Penance 0.0),
+    (Gite, Penance 7.0),
     (CampGround, Penance 6.0),
     (Camping, Penance 4.0)
   ]
@@ -466,6 +468,7 @@ suggestedAccommodation' Pilgrim = M.fromList [
     (HomeStay, Penance 4.0),
     (House, Penance 2.0),
     (Hotel, Penance 0.0),
+    (Gite, Penance 6.0),
     (CampGround, Penance 4.0),
     (Camping, Reject)
   ]
@@ -477,6 +480,7 @@ suggestedAccommodation' Comfortable = M.fromList [
     (HomeStay, Penance 4.0),
     (House, Penance 5.0),
     (Hotel, Penance 8.0),
+    (Gite, Penance 2.0),
     (CampGround, Penance 0.0),
     (Camping, Reject)
   ]
@@ -488,6 +492,7 @@ suggestedAccommodation' Luxurious = M.fromList [
     (HomeStay, Penance 6.0),
     (House, Penance 7.0),
     (Hotel, Penance 8.0),
+    (Gite, Penance 0.0),
     (CampGround, Reject),
     (Camping, Reject)
   ]

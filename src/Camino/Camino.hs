@@ -164,6 +164,7 @@ data AccommodationType = MunicipalAlbergue -- ^ A pilgrims hostel run by local v
   | HomeStay -- ^ Rural accommodation, Quinta, Air B&B room etc.
   | House -- ^ An entire house or apartment for rent
   | Hotel -- ^ A dedicated hotel
+  | Gite -- ^ A gîtes d'etape, a stage lodging for walkers or cyclists
   | CampGround -- ^ A dedicated camping ground with services
   | Camping -- ^ Roadside camping (with a tent or without, depending on what carried)
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
@@ -263,6 +264,7 @@ accommodationServices (GenericAccommodation GuestHouse) = S.fromList [ WiFi, Hea
 accommodationServices (GenericAccommodation HomeStay) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation House) = S.fromList [ WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hotel) = S.fromList [ WiFi, Breakfast, Dinner, Restaurant, Bedlinen, Towels ]
+accommodationServices (GenericAccommodation Gite) = S.fromList [ Kitchen, BicycleStorage ]
 accommodationServices (GenericAccommodation CampGround) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation Camping) = S.empty
 
@@ -275,6 +277,7 @@ accommodationSleeping (GenericAccommodation GuestHouse) = S.fromList [ Single, D
 accommodationSleeping (GenericAccommodation HomeStay) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation House) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation Hotel) = S.fromList [ DoubleWC ]
+accommodationSleeping (GenericAccommodation Gite) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation CampGround) = S.fromList [ SleepingBag ]
 accommodationSleeping (GenericAccommodation Camping) = S.fromList [ SleepingBag ]
 
@@ -302,7 +305,7 @@ data LocationType = Village -- ^ A village
    | Monastery -- ^ A monastery/convent
    | Bridge -- ^ A bridge
    | Intersection -- ^ An intersection
-   | Peak -- ^ A peak or lookout
+   | Peak -- ^ A peak, mountain pass or lookout
    | Poi -- ^ A generic point of interest
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  

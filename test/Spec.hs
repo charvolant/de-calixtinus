@@ -24,7 +24,7 @@ main = do
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
     let camino = fromRight (Camino { caminoId = "Test", caminoName = "Test", caminoDescription = "", caminoMetadata = def, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X" }) ec
-    pf <- B.readFile "short-preferences.json"
+    pf <- B.readFile "test-preferences.json"
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)
     let shortPreferences = fromRight (defaultTravelPreferences Walking Normal Pilgrim) ep

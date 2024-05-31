@@ -262,13 +262,13 @@ testAccommodationSimple4 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 2.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 4.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
 
-testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 1.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
 
-testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 1.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 
@@ -296,10 +296,10 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 6" "P-P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P-P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 22.0) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 21.0) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P-P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P-P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (Penance 21.0) (metricsPenance $ score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 20.0) (metricsPenance $ score day2) 0.1
     )

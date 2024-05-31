@@ -61,17 +61,17 @@ To run the simple planner, use
 camino-planner-exe CAMINO PREFERENCES BEGIN END [-r ROUTES] [-s STOPS] [-x EXCLUDED] [-c CONFIG] [-o OUTPUT]
 ```
 
-| Argument    | Description                                                                                                                                             | Example                |                   |
-|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|-------------------| 
-| CAMINO      | A camino description in JSON form                                                                                                                       | camino-portuguese.json |                   |
-| PREFERENCES | A preference file in JSON form                                                                                                                          | short-preferences.json |                   |
-| BEGIN       | The identifier of the start point                                                                                                                       | P1                     | Lisbon            |
-| END         | The identifier of the end point                                                                                                                         | P284                   | Santiago          |
-| ROUTES      | An optional list, separated by commas, of variant routes that you wish to use. The default main route is always used.                                   | RS                     | Spiritual Variant |
-| STOPS       | An optional list, separated by commas, of places where you wish to stop for the night. If absent, the standard stops from the selected routes are used. | P78,F10                | Coimbra, Fátima   |
-| EXCLUDED    | An optional list, separated by commas, of places where you do not wish to stop for the night                                                            | P63                    | Zambujal          |
-| CONFIG      | An optional configuration file for generating the appropriate HTML output, in YAML form                                                                 | config.yaml            |                   |
-| OUTPUT      | The optional output directory to write the HTML plan to                                                                                                 | ./plan                 |                   |                                                                     
+| Argument    | Description                                                                                                                                             | Example                  |                   |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|-------------------| 
+| CAMINO      | A camino description in JSON form                                                                                                                       | camino-portuguese.json   |                   |
+| PREFERENCES | A preference file in JSON form                                                                                                                          | example-preferences.json |                   |
+| BEGIN       | The identifier of the start point                                                                                                                       | P1                       | Lisbon            |
+| END         | The identifier of the end point                                                                                                                         | P284                     | Santiago          |
+| ROUTES      | An optional list, separated by commas, of variant routes that you wish to use. The default main route is always used.                                   | RS                       | Spiritual Variant |
+| STOPS       | An optional list, separated by commas, of places where you wish to stop for the night. If absent, the standard stops from the selected routes are used. | P78,F10                  | Coimbra, Fátima   |
+| EXCLUDED    | An optional list, separated by commas, of places where you do not wish to stop for the night                                                            | P63                      | Zambujal          |
+| CONFIG      | An optional configuration file for generating the appropriate HTML output, in YAML form                                                                 | config.yaml              |                   |
+| OUTPUT      | The optional output directory to write the HTML plan to                                                                                                 | ./plan                   |                   |                                                                     
 
 At the moment, you have to use the location identifiers when specifying start- and
 end-points, etc.

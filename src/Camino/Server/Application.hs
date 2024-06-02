@@ -82,6 +82,29 @@ helpWidget [] = helpWidget ["en"]
 helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
 helpWidget (_:other) = helpWidget other
 
+getCaminoR :: Text -> Handler Html
+getCaminoR caminoId = do
+  master <- getYesod
+  let camino = findCaminoById (caminoAppCaminos master) caminoId
+  case camino of
+    Nothing -> do
+      setMessageI MsgInvalidCamino
+      getHomeR
+    Just camino' ->
+      caminoPage camino'
+
+caminoPage :: Camino -> Handler Html
+caminoPage camino = do
+    master <- getYesod
+    langs <- languages
+    let cprefs = defaultCaminoPreferences camino
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config langs
+    let messages = renderCaminoMsg config
+    let html = (caminoHtmlSimple config cprefs) messages router
+    defaultLayout $ do
+      setTitle [shamlet|#{caminoName (preferenceCamino cprefs)}|]
+      (toWidget html)
 
 getMetricR :: Handler Html
 getMetricR = do
@@ -282,7 +305,7 @@ planPage prefs = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config langs
     let messages = renderCaminoMsg config
-    let html = (caminoHtmlBase config tprefs cprefs solution) messages router
+    let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionTrip solution)
     defaultLayout $ do
       setTitle [shamlet|#{locationName (preferenceStart cprefs)} - #{locationName (preferenceFinish cprefs)}|]

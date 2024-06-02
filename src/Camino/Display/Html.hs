@@ -333,6 +333,22 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
      ct' = maybe Camping (accommodationType . tripChoice) choice
      choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
 
+-- | Get elements of a possible solution
+solutionElements :: Camino -> Maybe Solution -> (Either Location Trip, S.Set Location, S.Set Location, S.Set Leg)
+solutionElements camino Nothing = (
+    Left (head $ routeStarts $ caminoDefaultRoute camino),
+    S.empty,
+    S.fromList $ caminoLocationList camino,
+    S.fromList $ caminoLegs camino
+  )
+solutionElements _camino (Just solution) = (
+    trip',
+    either (const S.empty) (S.fromList . tripStops) trip',
+    either (const S.empty) (S.fromList . tripWaypoints) trip',
+    either (const S.empty) (S.fromList . tripLegs) trip'
+  ) where
+    trip' = solutionTrip solution
+
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
     #{locationName location}
@@ -422,7 +438,7 @@ locationLegs preferences camino used location = [ihamlet|
     (usedIncomingLegs, unusedIncomingLegs) = L.partition (\l -> S.member l used) incomingLegs
     arrow = '\x2192'
 
-caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .location-#{routeID route} :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
@@ -466,10 +482,10 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
     route = caminoRoute camino' (preferenceRoutes camino) location
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
-    accChoice = M.lookup location (solutionAccommodation solution)
-    locChoice = M.lookup location (solutionLocation solution)
+    accChoice = maybe Nothing (\s -> M.lookup location (solutionAccommodation s)) solution
+    locChoice = maybe Nothing (\s -> M.lookup location (solutionLocation s)) solution
     
-caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml preferences camino solution = [ihamlet|
   <div .container-fluid>
     <div .row>
@@ -494,11 +510,8 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
     locationOrder a b = compare (canonicalise $ locationName a) (canonicalise $ locationName b)
     locationsSorted = L.sortBy locationOrder (caminoLocationList camino')
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationName l) locationsSorted
-    trip = solutionTrip solution
-    stops = either (const S.empty) (S.fromList . tripStops) trip
-    waypoints = either (const S.empty) (S.fromList . tripWaypoints) trip
-    usedLegs = either (const $ S.fromList $ caminoLegs camino') (S.fromList . tripLegs) trip
-    
+    (_trip, stops, waypoints, usedLegs) = solutionElements camino' solution
+
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml range = [ihamlet|
     <span .text-danger>#{maybe "." (format (fixed 1)) (rangeMinimum range)} -
@@ -654,7 +667,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
               ^{caminoAccommodationSummaryHtml (tripChoice accom)}
    |]
 
-caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapHtml _preferences _camino _solution = [ihamlet|
   <div .container-fluid>
     <div .row>
@@ -698,7 +711,7 @@ caminoLocationIcon _preferences _camino stops waypoints location =
      | S.member loc waypoints = "Used"
      | otherwise = "Unused"
 
-caminoMapTooltip :: TravelPreferences -> CaminoPreferences -> Solution -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapTooltip :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapTooltip preferences camino _solution usedLegs location = [ihamlet|
   <div .location-tooltip .container-fluid>
     <div .row>
@@ -707,7 +720,7 @@ caminoMapTooltip preferences camino _solution usedLegs location = [ihamlet|
     ^{locationLegSummary preferences camino usedLegs location}
   |]
 
-caminoMapScript :: TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScript :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScript preferences camino solution = [ihamlet|
   <script>
     var map = L.map('map');
@@ -856,14 +869,12 @@ caminoMapScript preferences camino solution = [ihamlet|
   where
     camino' = preferenceCamino camino
     (tl, br) = caminoBbox camino'
-    trip = solutionTrip solution
-    stops = either (const S.empty) (S.fromList . tripStops) trip
-    waypoints = either (const S.empty) (S.fromList . tripWaypoints) trip
-    usedLegs = either (const S.empty) (S.fromList . tripLegs) trip
+    (_trip, stops, waypoints, usedLegs) = solutionElements camino' solution
     chooseWidth leg | S.member leg usedLegs = 7 :: Int
       | otherwise = 5 :: Int
     chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
       | otherwise = 0.5 :: Float
+
 
 aboutHtml :: TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
 aboutHtml _prefernces camino = [ihamlet|
@@ -892,6 +903,7 @@ aboutHtml _prefernces camino = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
+
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
  ->  T.Text -- ^ The page title
@@ -954,7 +966,7 @@ keyHtml _config preferences camino = $(ihamletFile "templates/help/key-en.hamlet
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 
-caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtmlBase config preferences camino solution =
   [ihamlet|
       <style>
@@ -992,11 +1004,48 @@ caminoHtmlBase config preferences camino solution =
     ^{caminoMapScript preferences camino solution}
   |]
   where
-    trip = either (const Nothing) Just (solutionTrip solution)
+    trip = maybe Nothing (\s -> either (const Nothing) Just (solutionTrip s)) solution
+
+-- | Display a camino wihout a chosen route
+caminoHtmlSimple :: Config -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoHtmlSimple config camino =
+  [ihamlet|
+      <style>
+        $forall css <- caminoCss config (preferenceCamino camino)
+          #{renderCss css }
+      <div .row>
+        <div .col .m-1>
+          #{caminoDescription camino'}
+      <div .row>
+        <div .col>
+          <div>
+            <ul .nav .nav-tabs role="tablist">
+              <li .nav-item role="presentation">
+                <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
+              <li .nav-item role="presentation">
+                <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
+              <li .nav-item role="presentation">
+                <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
+              <li .nav-item role="presentation">
+                <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
+            <div .tab-content>
+              <div .tab-pane .active role="tabpanel" id="map-tab">
+                ^{caminoMapHtml preferences camino Nothing}
+              <div .tab-pane role="tabpanel" id="locations-tab">
+                ^{caminoLocationsHtml preferences camino Nothing}
+              <div .tab-pane role="tabpanel" id="about-tab">
+                ^{aboutHtml preferences camino}
+              <div .tab-pane role="tabpanel" id="key-tab">
+                ^{keyHtml config preferences camino}
+        ^{caminoMapScript preferences camino Nothing}
+  |]
+  where
+    camino' = preferenceCamino camino
+    preferences = defaultTravelPreferences Walking Normal Pilgrim
 
 
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtml config preferences camino solution = let
     title = either (const $ caminoName $ preferenceCamino camino) (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) (solutionTrip solution)
   in
-    layoutHtml config title Nothing (caminoHtmlBase config preferences camino solution) Nothing
+    layoutHtml config title Nothing (caminoHtmlBase config preferences camino (Just solution)) Nothing

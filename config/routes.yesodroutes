@@ -1,9 +1,10 @@
 / HomeR GET
-/preferences PreferencesR GET POST
-/plan PlanR POST
-/planKml PlanKmlR POST
-/notice NoticeR GET
 /about AboutR GET
+/camino/#Text CaminoR GET
 /help HelpR GET
 /metric MetricR GET
+/notice NoticeR GET
+/plan PlanR POST
+/planKml PlanKmlR POST
+/preferences PreferencesR GET POST
 /static StaticR Static caminoAppStatic

@@ -29,6 +29,7 @@ module Camino.Server.Forms (
   , chooseStartForm
   , chooseStopsForm
   , defaultPreferenceData
+  , findCaminoById
   , travelPreferencesFrom
 ) where
 

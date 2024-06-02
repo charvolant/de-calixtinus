@@ -6,6 +6,7 @@ AcceptDisclaimerLabel: I accept use of cookies and testing status
 AcceptDisclaimerRequired: You must accept the conditions before proceeding
 AppName: De Calixtinus
 BackLabel: Back
+CaminosLabel: Caminos
 CaminoText: Select the Camino you wish to walk from the following options. Many caminos have variations and alternative routes that you can choose on the next screen.
 CaminoTitle: Select Camino
 CloseLabel: Close

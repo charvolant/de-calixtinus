@@ -5,6 +5,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-orphans       #-}
 {-|
 Module      : Foundation
@@ -361,9 +362,15 @@ instance Yesod CaminoApp where
                   <ul .navbar-nav>
                     $forall link <- headLinks
                       <li .nav-item>
-                        <a target="_blank" .nav-item href="#{C.linkPath link}">#{C.linkLabel link}
+                        <a target="_blank" .nav-link href="#{C.linkPath link}">#{C.linkLabel link}
+                    <li .nav-item .dropdown>
+                      <a .nav-link .dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">#{render MsgCaminosLabel}
+                      <ul .dropdown-menu>
+                        $forall camino <- caminoAppCaminos master
+                          <li>
+                            <a target="_blank" .nav-link .dropdown-item href="@{CaminoR (pack $ caminoId camino)}">#{caminoName camino}
                     <li .nav-item>
-                      <a target="_blank" .nav-item href=@{HelpR} title="#{render MsgHelpTitle}">#{helpLabel}
+                      <a target="_blank" .nav-link href=@{HelpR} title="#{render MsgHelpTitle}">#{helpLabel}
             $maybe msg <- message
               <div>#{msg}
           <main .container-fluid .p-2>

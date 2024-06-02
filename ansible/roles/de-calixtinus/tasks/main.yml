@@ -67,7 +67,7 @@
 
 - name: Use the S3 static configuration
   file:
-    src: "{{ dcx_dir }}/lib/config-s3.yaml"
+    src: "{{ dcx_dir }}/lib/{{ dcx_s3_config }}"
     dest: "{{ dcx_dir }}/lib/config.yaml"
     owner: "{{ dcx_user }}"
     group: "{{ dcx_group }}"

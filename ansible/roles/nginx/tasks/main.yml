@@ -8,9 +8,14 @@
     name: "{{ nginx_package_name }}"
     state: present
 
-- name: Ensure certbot-nginx is installed
+- name: Ensure certbot is installed
   ansible.builtin.yum:
     name: "{{ certbot_package_name }}"
+    state: present
+
+- name: Ensure certbot-nginx is installed
+  ansible.builtin.yum:
+    name: "{{ certbot_nginx_package_name }}"
     state: present
 
 # The following steps are run if there is no certificate in evidence

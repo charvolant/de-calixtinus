@@ -2,6 +2,7 @@
 acme_account_email: INVALID
 # The name of the cerbot package to install
 certbot_package_name: "certbot"
+certbot_nginx_package_name: "python3-certbot-nginx"
 # Force creation of certificates
 force_certificate: false
 # The name of the nginx package to install.

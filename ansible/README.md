@@ -8,7 +8,13 @@ You will probably need an inventory.
 Copy the [skeleton](inventory-skeleton.yml) file and replace the `_NAME_` entries with
 appropriate values.
 
-# Installing SSL certificate
+## Ansible Playbook
+
+```shell
+ansible-playbook -i INVENTORY de-calixtinus.yml
+```
+
+## Installing SSL certificate
 
 The `nginx` role should automatically install a certificate from letsencrypt if needed.
 But if things go wrong

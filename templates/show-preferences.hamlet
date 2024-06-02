@@ -15,5 +15,9 @@
           <div .btn-group>
             <button type="submit" name="_next" formaction="@{PreferencesR}" value="StopsStep" .btn .btn-secondary>_{MsgBackLabel}
           <div .btn-group>
-            <button type="submit" name="_generate" formaction="@{PlanKmlR}" .btn .btn-outline-secondary title="_{MsgPlanKmlTitle}">_{MsgPlanKmlLabel}
-            <button type="submit" name="_generate" formaction="@{PlanR}" .btn .btn-primary title="_{MsgPlanTitle}">_{MsgPlanLabel}
+            <button type="submit" name="_generate" formaction="@{PlanKmlR}" onclick="showWorking('plan-kml-spinner');" .btn .btn-outline-secondary title="_{MsgPlanKmlTitle}">
+              <span #plan-kml-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
+              _{MsgPlanKmlLabel}
+            <button type="submit" name="_generate" formaction="@{PlanR}" onclick="showWorking('plan-spinner');" .btn .btn-primary title="_{MsgPlanTitle}">
+              <span #plan-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
+              _{MsgPlanLabel}

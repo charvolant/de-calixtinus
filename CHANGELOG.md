@@ -8,6 +8,19 @@ and this project adheres to the
 
 ## Unreleased
 
+## 0.3 - 2024-06-04
+
+### Added
+
+* Camino Frances
+* Include Gîtes d'Étape accomodation type
+* Show summary pages of the various caminos
+
+### Chnaged
+
+* MunicipalAlbergue is now PilgrimAlbergue
+* Update ansible scripts for a development/testing server
+
 ## 0.2 - 2024-04-28
 
 ### Added

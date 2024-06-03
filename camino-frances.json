@@ -7891,7 +7891,7 @@
       "description": "Changes for the N120 route",
       "condition" : "F-A2",
       "exclude": [
-        "F-F68", "F-F69", "F-F70", "F-F71", "F-F72", "F-F73", "F-F74", "F-F75", "F-F76"
+        "F-F70", "F-F71", "F-F72", "F-F73", "F-F74", "F-F75", "F-F76"
       ]
     },
     {

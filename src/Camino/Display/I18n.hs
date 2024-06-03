@@ -102,7 +102,7 @@ data CaminoMsg =
   | MedicalTitle
   | MiscPenanceMsg Penance
   | MonasteryTitle
-  | MunicipalAlbergueTitle
+  | PilgrimAlbergueTitle
   | NormalTitle
   | OtherLabel
   | PeakTitle
@@ -273,7 +273,7 @@ renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
 renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
-renderCaminoMsgDefault _ MunicipalAlbergueTitle = "Municipal Albergue"
+renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
 renderCaminoMsgDefault _ PeakTitle = "Peak"

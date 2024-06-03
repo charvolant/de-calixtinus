@@ -57,7 +57,7 @@
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
     },
     {
       "id": "FI-F2",
@@ -162,7 +162,7 @@
       "accommodation": [
         {
           "name": "Negreira Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible" ],
           "sleeping": ["Shared" ]
         },
@@ -357,7 +357,7 @@
       "accommodation": [
         {
           "name": "Olveiroa Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -474,7 +474,7 @@
       "accommodation": [
         {
           "name": "A Casa da Fonte Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [
             "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible",
             "BicycleStorage", "Pets", "Bedlinen"
@@ -580,7 +580,7 @@
       "accommodation": [
         {
           "name": "San Roque Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Dinner", "Breakfast", "Accessible", "BicycleStorage",  "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -645,7 +645,7 @@
       "accommodation": [
         {
           "name": "Albergue Piedra Santa - Fisterra",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Handwash", "Heating", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -807,7 +807,7 @@
       "accommodation": [
         {
           "name": "Muxia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Dinner", "Lockers" ],
           "sleeping": [ "Shared" ]
         },

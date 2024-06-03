@@ -15,7 +15,7 @@
     "Poi": 2.0
   },
   "accommodation": {
-    "MunicipalAlbergue": 6.0,
+    "PilgrimAlbergue": 6.0,
     "PrivateAlbergue": 5.0,
     "Hostel": 5.0,
     "HomeStay": 4.0,

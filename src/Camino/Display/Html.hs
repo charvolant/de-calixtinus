@@ -167,7 +167,7 @@ caminoSleepingIcon Mattress = [ihamlet| <span .sleeping .ca-mattress title="_{Ma
 caminoSleepingIcon SleepingBag = [ihamlet| <span .sleeping .ca-sleeping-bag title="_{SleepingBagTitle}"> |]
 
 caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoAccommodationTypeIcon MunicipalAlbergue = [ihamlet| <span .accommodation .municipal-albergue .ca-albergue title="_{MunicipalAlbergueTitle}"> |]
+caminoAccommodationTypeIcon PilgrimAlbergue = [ihamlet| <span .accommodation .municipal-albergue .ca-albergue title="_{PilgrimAlbergueTitle}"> |]
 caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accommodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
 caminoAccommodationTypeIcon Hostel = [ihamlet| <span .accommodation .hostel .ca-hostel title="_{HostelTitle}"> |]
 caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accommodation .guest-house .ca-guesthouse title="_{GuestHouseTitle}"> |]
@@ -179,7 +179,7 @@ caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accommodation .camp-gr
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accommodation .camping .ca-tent title="_{CampingTitle}"> |]
 
 caminoAccommodationTypeMsg :: AccommodationType -> CaminoMsg
-caminoAccommodationTypeMsg MunicipalAlbergue = MunicipalAlbergueTitle
+caminoAccommodationTypeMsg PilgrimAlbergue = PilgrimAlbergueTitle
 caminoAccommodationTypeMsg PrivateAlbergue = PrivateAlbergueTitle
 caminoAccommodationTypeMsg Hostel = HostelTitle
 caminoAccommodationTypeMsg GuestHouse = GuestHouseTitle
@@ -191,7 +191,7 @@ caminoAccommodationTypeMsg CampGround = CampGroundTitle
 caminoAccommodationTypeMsg Camping = CampingTitle
 
 caminoAccommodationLabel :: Accommodation -> CaminoMsg
-caminoAccommodationLabel (GenericAccommodation MunicipalAlbergue) = MunicipalAlbergueTitle
+caminoAccommodationLabel (GenericAccommodation PilgrimAlbergue) = PilgrimAlbergueTitle
 caminoAccommodationLabel (GenericAccommodation PrivateAlbergue) = PrivateAlbergueTitle
 caminoAccommodationLabel (GenericAccommodation Hostel) = HostelTitle
 caminoAccommodationLabel (GenericAccommodation GuestHouse) = GuestHouseTitle

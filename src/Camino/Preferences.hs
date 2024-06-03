@@ -437,7 +437,7 @@ suggestedLocation t VeryUnfit comfort = suggestedLocation t Unfit comfort
 -- | Base accommodation from comfort level
 suggestedAccommodation' :: Comfort -> M.Map AccommodationType Penance
 suggestedAccommodation' Austere = M.fromList [
-    (MunicipalAlbergue, Penance 8.0),
+    (PilgrimAlbergue, Penance 8.0),
     (PrivateAlbergue, Penance 6.0),
     (Hostel, Penance 6.0),
     (GuestHouse, Penance 2.0),
@@ -449,7 +449,7 @@ suggestedAccommodation' Austere = M.fromList [
     (Camping, Penance 5.0)
   ]
 suggestedAccommodation' Frugal = M.fromList [
-    (MunicipalAlbergue, Penance 8.0),
+    (PilgrimAlbergue, Penance 8.0),
     (PrivateAlbergue, Penance 7.0),
     (Hostel, Penance 7.0),
     (GuestHouse, Penance 5.0),
@@ -461,7 +461,7 @@ suggestedAccommodation' Frugal = M.fromList [
     (Camping, Penance 4.0)
   ]
 suggestedAccommodation' Pilgrim = M.fromList [
-    (MunicipalAlbergue, Penance 8.0),
+    (PilgrimAlbergue, Penance 8.0),
     (PrivateAlbergue, Penance 7.0),
     (Hostel, Penance 7.0),
     (GuestHouse, Penance 5.0),
@@ -473,7 +473,7 @@ suggestedAccommodation' Pilgrim = M.fromList [
     (Camping, Reject)
   ]
 suggestedAccommodation' Comfortable = M.fromList [
-    (MunicipalAlbergue, Penance 1.0),
+    (PilgrimAlbergue, Penance 1.0),
     (PrivateAlbergue, Penance 3.0),
     (Hostel, Penance 2.0),
     (GuestHouse, Penance 3.0),
@@ -485,7 +485,7 @@ suggestedAccommodation' Comfortable = M.fromList [
     (Camping, Reject)
   ]
 suggestedAccommodation' Luxurious = M.fromList [
-    (MunicipalAlbergue, Penance 0.0),
+    (PilgrimAlbergue, Penance 0.0),
     (PrivateAlbergue, Penance 1.0),
     (Hostel, Penance 1.0),
     (GuestHouse, Penance 3.0),

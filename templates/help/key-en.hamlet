@@ -178,18 +178,19 @@
            <th scope="col">Comments
       <tbody>
         <tr>
-            <td>^{caminoAccommodationTypeIcon MunicipalAlbergue}
-            <td>Municipal Albergue
+            <td>^{caminoAccommodationTypeIcon PilgrimAlbergue}
+            <td>Pilgrim Albergue
             <td>
-                An albergue (pilgrim hostel) usually run by volunteers for pilgrims only.
-                Municipal albergues are generally inexpensive, have limited services and usually only allow one night's stay.
+                An albergue (pilgrim hostel) for pilgrims only.
+                Pilgrim albergues are often run by volunteer societies or as municipal albergues by the local municipality.
+                Pilgrim albergues are generally inexpensive, have limited services and usually only allow one night's stay.
                 Municipal albergues are often not bookable but simply accept pilgrims until full.
         <tr>
             <td>^{caminoAccommodationTypeIcon PrivateAlbergue}
             <td>Private Albergue
             <td>
                 An albergue run as a private business.
-                Private albergues usually offer more services than municipal albergues, allow more than one nights stay and are bookable.
+                Private albergues usually offer more services than pilgrim albergues, allow more than one nights stay and are bookable.
         <tr>
             <td>^{caminoAccommodationTypeIcon Hostel}
             <td>Hostel

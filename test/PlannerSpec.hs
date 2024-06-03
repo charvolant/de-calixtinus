@@ -46,7 +46,7 @@ preferences1 = TravelPreferences {
        (City, (Penance 0.5))
      ],
     preferenceAccommodation = M.fromList [
-        (MunicipalAlbergue, (Penance 1.5)),
+        (PilgrimAlbergue, (Penance 1.5)),
         (PrivateAlbergue, (Penance 0.9)),
         (Hotel, (Penance 0.5))
       ],
@@ -73,7 +73,7 @@ preferences2 = TravelPreferences {
        (City, (Penance 0.5))
      ],
     preferenceAccommodation = M.fromList [
-        (MunicipalAlbergue, (Penance 4.0)),
+        (PilgrimAlbergue, (Penance 4.0)),
         (PrivateAlbergue, (Penance 3.0))
       ],
     preferenceStopServices = M.fromList [
@@ -109,7 +109,7 @@ location2 = Location {
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
-      GenericAccommodation MunicipalAlbergue,
+      GenericAccommodation PilgrimAlbergue,
       Accommodation "B2" PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
     ]  
   }
@@ -139,7 +139,7 @@ location4 = Location {
     locationCamping = True,
     locationServices = S.empty,
     locationAccommodation = [
-      GenericAccommodation MunicipalAlbergue
+      GenericAccommodation PilgrimAlbergue
     ]  
   }
   
@@ -230,7 +230,7 @@ testAccommodationSimple1 = let
     accom = accommodationChoice preferences1 location2
   in
     TestCase (do
-      assertEqual "Accommodation Simple 1 1" MunicipalAlbergue (accommodationType $ tripChoice accom)
+      assertEqual "Accommodation Simple 1 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
       assertEqual "Accommodation Simple 1 2" S.empty (tripChoiceServices accom)
       assertPenanceEqual "Accommodation Simple 1 3" (Penance 1.5) (tripChoicePenance accom) 0.001
     )

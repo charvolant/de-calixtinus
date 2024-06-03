@@ -67,7 +67,7 @@
       "type": "Town",
       "position": { "latitude": 43.16340, "longitude": -1.23579 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "Gite", "GuestHouse", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Gite", "GuestHouse", "Hotel" ]
     },
     {
       "id": "F-F2",
@@ -122,7 +122,7 @@
       "accommodation": [
         {
           "name": "Luzaide-Valcarlos Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "BicycleStorage", "Lockers", "Bedlinen", "Towels"],
           "sleeping": [ "Shared" ]
         }
@@ -350,13 +350,13 @@
       "accommodation": [
         {
           "name": "Zaldiko Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "Triple" ]
         },
         {
           "name": "Concejo de Zubiri Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash"  ],
           "sleeping": [ "Shared" ]
         },
@@ -448,7 +448,7 @@
       "accommodation": [
         {
           "name": "Concejo de Larrasoaña Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Lockers", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -519,7 +519,7 @@
       "accommodation": [
         {
           "name": "Zabaldika Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Prayer", "Towels" ],
           "sleeping": [ "Shared" ]
         }
@@ -542,7 +542,7 @@
       "accommodation": [
         {
           "name": "Trinidad de Arre Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Prayer", "Pool" ],
           "sleeping": [ "Shared" ]
         }
@@ -602,7 +602,7 @@
       "type": "City",
       "position": { "latitude": 42.81831, "longitude": -1.645096 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus", "Train" ],
-      "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ]
     },
     {
       "id": "F-F27",
@@ -613,7 +613,7 @@
       "accommodation": [
         {
           "name": "Orden de Malta Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Handwash", "Kitchen", "BicycleStorage", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -641,7 +641,7 @@
       "accommodation": [
         {
           "name": "San Andrés Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         }
@@ -710,7 +710,7 @@
       "accommodation": [
         {
           "name": "Usda Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -749,13 +749,13 @@
       "accommodation": [
         {
           "name": "Padres Reparadores Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating","WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "CampSite", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Santiago Apósol Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Accessible", "CampSite" ],
           "sleeping": [ "Shared" ]
         },
@@ -774,7 +774,7 @@
       "accommodation": [
         {
           "name": "Hostel El Cantero",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "Double", "Triple" ]
         }
@@ -789,7 +789,7 @@
       "accommodation": [
         {
           "name": "Maralotx Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
@@ -837,7 +837,7 @@
       "accommodation": [
         {
           "name": "A Casa Mágica Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "DoubleWC", "Triple" ]
         },
@@ -864,25 +864,25 @@
       "accommodation": [
         {
           "name": "Caouchinos Hostel (Rocamador)",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen" ],
           "sleeping": [ "Shared", "Double", "DoubleWC", "Triple" ]
         },
         {
           "name": "Estella Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "San Miguel Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "ANFAS Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -958,7 +958,7 @@
       "accommodation": [
         {
           "name": "Hogar de Monjardin Oasis Trails Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Dinner", "Breakfast", "BicycleStorage", "Prayer", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "Triple" ]
         },
@@ -985,7 +985,7 @@
       "accommodation": [
         {
           "name": "La Fuente Casa de Austria Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -1033,7 +1033,7 @@
       "accommodation": [
         {
           "name": "Karma Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Dryer", "Dinner", "BicycleStorage"],
           "sleeping": [ "Shared" ]
         },
@@ -1099,7 +1099,7 @@
       "accommodation": [
         {
           "name": "Andrés Muñoz Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -1138,13 +1138,13 @@
       "accommodation": [
         {
           "name": "Santiago el Real Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Dinner", "Breakfast", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Logroño Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -1161,25 +1161,25 @@
       "accommodation": [
         {
           "name": "El Cántaro Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
         },
         {
           "name": "Buen Camino Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Breakfast" ],
           "sleeping": [ "Shared", "Single", "DoubleWC" ]
         },
         {
           "name": "Navarrete Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Breakfast" ],
           "sleeping": [ "Shared", "Single", "DoubleWC" ]
         },
         {
           "name": "Ka Casa del peregrino Ángel Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double" ]
         },
@@ -1239,7 +1239,7 @@
       "accommodation": [
         {
           "name": "Nájera Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible","BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -1258,7 +1258,7 @@
       "accommodation": [
         {
           "name": "Azofra Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -1318,7 +1318,7 @@
       "accommodation": [
         {
           "name": "Cofradia del Santo's House",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "Triple", "Quadruple" ]
         },
@@ -1337,13 +1337,13 @@
       "accommodation": [
         {
           "name": "San Juan Bautista Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Kitchen", "Breakfast", "Dinner", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "La Casa de las Sonrisas Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Handwash", "Breakfast", "Dinner", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -1388,7 +1388,7 @@
       "accommodation": [
         {
           "name": "San Lázaro Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Restaurant", "Dinner", "Accessible", "BicycleStorage", "Stables" ],
           "sleeping": [ "Shared" ]
         },
@@ -1442,13 +1442,13 @@
       "accommodation": [
         {
           "name": "Acacia & Orietta Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Lockers", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Parada Viloria Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared" ]
         },
@@ -1490,25 +1490,25 @@
       "accommodation": [
         {
           "name": "Cuatro Cantones Hostel-Restaurant",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Pool" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Belorado Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash","Breakfast", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "El Caminante Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
         },
         {
           "name": "A Santiago Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [
             "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast",
             "BicycleStorage", "Bedlinen", "Towels", "Pool"
@@ -1529,7 +1529,7 @@
       "accommodation": [
          {
           "name": "San Francisco de Asis Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Heating", "Handwash", "Dinner", "Breakfast", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -1550,7 +1550,7 @@
       "accommodation": [
          {
           "name": "San Roque Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         }
@@ -1565,13 +1565,13 @@
       "accommodation": [
         {
           "name": "Casa Las Almas",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "La Campana Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Handwash", "Dinner", "Breakfast" ],
           "sleeping": [ "Shared" ]
         }
@@ -1619,7 +1619,7 @@
       "accommodation": [
         {
           "name": "Monastery San Juan de Ortega Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Restaurant", "Lockers", "BicycleStorage", "Pets", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -1646,7 +1646,7 @@
       "accommodation": [
         {
           "name": "Fagus Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables" ],
           "sleeping": [ "Shared" ]
         },
@@ -1679,7 +1679,7 @@
       "accommodation": [
         {
           "name": "Albergue de peregrinos municipal de Olmos de Atapuerca",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -1732,7 +1732,7 @@
       "accommodation": [
         {
           "name": "Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Handwash", "Restaurant", "Dinner", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -1867,13 +1867,13 @@
       "accommodation": [
         {
           "name": "Casa de los Cubos Minicipal Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Santiago y Santa Catalina (La Divina Postora) Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -1891,7 +1891,7 @@
       "accommodation": [
         {
           "name": "Tardajos Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ ],
           "sleeping": [ "Shared" ]
         },
@@ -1945,7 +1945,7 @@
       "accommodation": [
         {
           "name": "Hornillos de Camino Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -1984,7 +1984,7 @@
       "accommodation": [
         {
           "name": "Alberge de \"Arroyo de San Bol\"",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "BicycleStorage", "Stables", "Pets", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         }
@@ -1999,7 +1999,7 @@
       "accommodation": [
         {
           "name": "San Juan Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "CampSite" ],
           "sleeping": [ "Shared" ]
         },
@@ -2056,19 +2056,19 @@
       "accommodation": [
         {
           "name": "San Antón Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "San Esteban Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Dryer", "Handwash", "Kitchen", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Orion Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Bedlinen" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
@@ -2087,13 +2087,13 @@
       "accommodation": [
         {
           "name": "San Nicolás Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Handwash", "Kitchen","Dinner", "Breakfast", "CampSite", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Itero del Castillo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         }
@@ -2108,7 +2108,7 @@
       "accommodation": [
         {
           "name": "Itero de la Vega Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -2162,13 +2162,13 @@
       "accommodation": [
         {
           "name": "Betania Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Frómista Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Dryer", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -2304,7 +2304,7 @@
       "accommodation": [
         {
           "name": "Villalcázar de Sirga Pilgrims Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Kitchen", "Breakfast", "Accessible", "Prayer", "Pets" ],
           "sleeping": [ "Shared" ]
         },
@@ -2337,19 +2337,19 @@
       "accommodation": [
         {
           "name": "Centro del Espíritu Santo Pilgrims Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Santa Maria del Camino parish Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Convento de Santa Clara Pilgrims Hotel and Hospice",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -2412,13 +2412,13 @@
       "accommodation": [
         {
           "name": "Calzadilla de la Cueza Pilgrims Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Accessible", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Camino Real Pilgrims Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "CampSite", "Pool" ],
           "sleeping": [ "Shared" ]
         },
@@ -2445,7 +2445,7 @@
       "accommodation": [
         {
           "name": "El Palomar Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Pool" ],
           "sleeping": [ "Shared", "Double", "Quadruple" ]
         },
@@ -2508,7 +2508,7 @@
       "accommodation": [
         {
           "name": "Laganares Hotel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         }
@@ -2547,19 +2547,19 @@
       "accommodation": [
         {
           "name": "Santa Cruz Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared", "DoubleWC" ]
         },
         {
           "name": "Cluny Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Viatoris Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
         },
@@ -2616,7 +2616,7 @@
       "accommodation": [
         {
           "name": "San Roque Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Handwash", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         }
@@ -2631,19 +2631,19 @@
       "accommodation": [
         {
           "name": "Bercianos de Real Camino Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Handwash", "Dinner", "Breakfast", "BicycleStorage", "Pets", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "La Perala Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Santa Clara Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
         },
@@ -2676,7 +2676,7 @@
       "accommodation": [
         {
           "name": "Doménico Laffi Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Stables", "CampSite" ],
           "sleeping": [ "Shared" ]
         },
@@ -2727,7 +2727,7 @@
       "accommodation": [
         {
           "name": "La Vieja Escuela Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Kitchen", "Lockers", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared" ]
         }
@@ -2742,13 +2742,13 @@
       "accommodation": [
         {
           "name": "La Parada Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Accessible", "Lockers", "BicycleStorage", "Towels" ],
           "sleeping": [ "Shared", "Double" ]
         },
         {
           "name": "Junta Vecinal Don Gaiferos Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Handwash", "Kitchen", "Restaurant", "BicycleStorage"],
           "sleeping": [ "Shared" ]
         },
@@ -2787,7 +2787,7 @@
       "accommodation": [
         {
           "name": "Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "Lockers", "BicycleStorage", "Stables" ],
           "sleeping": [ "Shared" ]
         },
@@ -2871,7 +2871,7 @@
       "accommodation": [
         {
           "name": "Pilgrims Hostel Municipal",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -2932,7 +2932,7 @@
       "accommodation": [
         {
           "name": "D. Antonino and Da. Cinia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -2971,7 +2971,7 @@
       "accommodation": [
         {
           "name": "La Casa del Camino Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "CampSite" ],
           "sleeping": [ "Shared" ]
         }
@@ -2994,7 +2994,7 @@
       "accommodation": [
         {
           "name": "Villadangos del Páramo Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
           "sleeping": [ "Shared" ]
         },
@@ -3027,19 +3027,19 @@
       "accommodation": [
         {
           "name": "La Huella Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared", "DoubleWC" ]
         },
         {
           "name": "La Casa Verde Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Stables" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Vieira Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Pets", "CampSite" ],
           "sleeping": [ "Shared" ]
         },
@@ -3068,7 +3068,7 @@
       "accommodation": [
         {
           "name": "El Pajar de Oncina Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Pets", "Bedlinen" ],
           "sleeping": [ "Shared", "Single" ]
         },
@@ -3097,19 +3097,19 @@
       "accommodation": [
         {
           "name": "Casa de Jesús Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "San Antonio de Padua Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Pets" ],
           "sleeping": [ "Shared", "Single", "DoubleWC" ]
         },
         {
           "name": "Tío Pepe Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
         }
@@ -3145,13 +3145,13 @@
       "accommodation": [
         {
           "name": "San Miguel Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared", "Double", "Quadruple" ]
         },
         {
           "name": "Karl Leisner Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "BicycleStorage", "Pets", "CampSite", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -3235,7 +3235,7 @@
       "accommodation": [
         {
           "name": "Santibáñez de Valdeiglesias Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Handwash", "Dinner", "Breakfast", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -3289,7 +3289,7 @@
       "accommodation": [
         {
           "name": "Servas de Marína Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -3308,7 +3308,7 @@
       "accommodation": [
         {
           "name": "Ecce Homo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Restaurant", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         }
@@ -3323,7 +3323,7 @@
       "accommodation": [
         {
           "name": "Murias de Rechivaldo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Handwash", "Kitchen" ],
           "sleeping": [ "Shared" ]
         },
@@ -3362,7 +3362,7 @@
       "accommodation": [
         {
           "name": "Castrillo de los Polvazares Pilgrims Hostel Municipal",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Dryer","Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -3416,13 +3416,13 @@
       "accommodation": [
         {
           "name": "Indian Way",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Sigo mi Manino Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC" ]
         },
@@ -3455,19 +3455,19 @@
       "accommodation": [
         {
           "name": "Nuestra Señora del Pilar Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single" ]
         },
         {
           "name": "Gaucelmo Shelter",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Dryer", "Kitchen", "Breakfast", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "CampSite", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -3530,19 +3530,19 @@
       "accommodation": [
         {
           "name": "Casa Chelo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Monte Irago Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Dryer", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Pets", "CampSite" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Domus Dei Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "BicycleStorage", "CampSite", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -3583,7 +3583,7 @@
       "accommodation": [
         {
           "name": "Manjarín Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Kitchen", "Prayer" ],
           "sleeping": [ "Shared" ]
         }
@@ -3598,13 +3598,13 @@
       "accommodation": [
         {
           "name": "Hostel Mesón El Acebo",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
         },
         {
           "name": "Albergue Parroguial Apóstal Santiago",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
@@ -3643,7 +3643,7 @@
       "accommodation": [
         {
           "name": "Riego de Ambrós Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Handwash", "Kitchen", "Restaurant", "Dinner", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         }
@@ -3658,13 +3658,13 @@
       "accommodation": [
         {
           "name": "Santa Marina Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "San Roque Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast","Dinner", "Accessible", "BicycleStorage", "Pets", "CampSite" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
@@ -3691,13 +3691,13 @@
       "accommodation": [
         {
           "name": "Alea Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner",  "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "San Nicolás de Flüe Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Stables", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -3791,7 +3791,7 @@
       "accommodation": [
         {
           "name": "Santuario de la Qunita Angustia Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Handwash", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -3856,7 +3856,7 @@
       "accommodation": [
         {
           "name": "Albergue de acogida La Biznaga",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         }
@@ -3871,13 +3871,13 @@
       "accommodation": [
         {
           "name": "Ave Fénix Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Pets", "CampSite", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Villafranca del Bierzo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -3932,19 +3932,19 @@
       "accommodation": [
         {
           "name": "Casa Susi Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Parroquial Trabadelo Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared", "Double" ]
         },
         {
           "name": "Trabadelo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Restaurant", "Dinner" ],
           "sleeping": [ "Shared", "Double" ]
         },
@@ -3995,7 +3995,7 @@
       "accommodation": [
         {
           "name": "Vagabond Vieiras Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -4022,7 +4022,7 @@
       "accommodation": [
         {
           "name": "Camynos Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "DoubleWC" ]
         },
@@ -4055,13 +4055,13 @@
       "accommodation": [
         {
           "name": "La Magdalena Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Vega de Valcarce Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Accessible", "BicycleStorage", "Pets", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -4100,7 +4100,7 @@
       "accommodation": [
         {
           "name": "Pequeño Potala Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -4166,7 +4166,7 @@
       "accommodation": [
         {
           "name": "La Faba Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         }
@@ -4196,7 +4196,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia O Cebreiro Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -4280,7 +4280,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Hospital da Condesa Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         }
@@ -4401,7 +4401,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Triacastela Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -4553,7 +4553,7 @@
       "accommodation": [
         {
           "name": "Casa Forte de Lusío Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -4677,7 +4677,7 @@
       "accommodation": [
         {
           "name": "El Beso Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Dinner", "Breakfast", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
@@ -4739,7 +4739,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Cavor Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
@@ -4777,7 +4777,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Sarria Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen" ],
           "sleeping": [ "Shared" ]
         },
@@ -4796,7 +4796,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Barbadelo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash" ],
           "sleeping": [ "Shared" ]
         },
@@ -4891,7 +4891,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galacia Ferreiros Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -4973,7 +4973,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galacia Portomarín Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Accessible" ],
           "sleeping": [ "Shared" ]
         },
@@ -5001,7 +5001,7 @@
       "accommodation": [
         {
           "name": "Gonzar Xunta de Galacia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -5049,7 +5049,7 @@
       "accommodation": [
         {
           "name": "Hospital da Cruz Xunta de Galacia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -5097,13 +5097,13 @@
       "accommodation": [
         {
           "name": "La Fuente del Peregrino Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Pets", "CampSite", "Prayer", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Ligonde Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -5124,7 +5124,7 @@
       "accommodation": [
         {
           "name": "Eirexe Xunta de Galicia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -5198,7 +5198,7 @@
       "accommodation": [
         {
           "name": "Os Chacotes Xunta de Galacia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         }
@@ -5213,7 +5213,7 @@
       "accommodation": [
         {
           "name": "Palas de Rei Xunta de Galacia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -5269,7 +5269,7 @@
       "accommodation": [
         {
           "name": "Casanova Xunta de Galacia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -5340,7 +5340,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galacia Melide Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen" ],
           "sleeping": [ "Shared" ]
         },
@@ -5374,7 +5374,7 @@
       "accommodation": [
         {
           "name": "El alemán Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared" ]
         },
@@ -5446,7 +5446,7 @@
       "accommodation": [
         {
           "name": "Ribadiso Xunta de Galicia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -5491,13 +5491,13 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Arzúa Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "De Camino Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Dinner", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
@@ -5597,7 +5597,7 @@
       "accommodation": [
         {
           "name": "La Corona Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "Triple", "Quadruple" ]
         },
@@ -5651,7 +5651,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Santa Irene Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -5723,13 +5723,13 @@
       "accommodation": [
         {
           "name": "Porta de Santiago Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Arca do Pino Xunta de Galicia Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "Stables", "Towels" ],
           "sleeping": [ "Shared" ]
         },
@@ -5746,7 +5746,7 @@
       "accommodation": [
         {
           "name": "Kilómetro 15 Boarding House",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
@@ -5862,7 +5862,7 @@
       "accommodation": [
         {
           "name": "Xunta de Galicia Monte del Gozo Pilgrims Hostel",
-          "type": "MunicipalAlbergue",
+          "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -5892,7 +5892,7 @@
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "MunicipalAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
     }
   ],
 

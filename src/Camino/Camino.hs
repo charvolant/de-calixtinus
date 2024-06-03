@@ -157,7 +157,7 @@ instance ToJSON LatLong where
   toJSON (LatLong latitude' longitude' srs') = object [ "latitude" .= latitude', "longitude" .= longitude', "srs" .= (if srs' == def then Nothing else Just (srsID srs')) ]
 
 -- | Broad accommodation types
-data AccommodationType = MunicipalAlbergue -- ^ A pilgrims hostel run by local volunteers
+data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local volunteers
   | PrivateAlbergue -- ^ A hostel run as a local business, oriented towards pilgrims
   | Hostel -- ^ A generic hostel
   | GuestHouse -- ^ A generic guesthouse
@@ -257,7 +257,7 @@ accommodationType (GenericAccommodation type') = type'
 
 accommodationServices :: Accommodation -> S.Set Service
 accommodationServices (Accommodation _name _type services' _sleeping) = services'
-accommodationServices (GenericAccommodation MunicipalAlbergue) = S.fromList [ Handwash ]
+accommodationServices (GenericAccommodation PilgrimAlbergue) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation PrivateAlbergue) = S.fromList [ Handwash, WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hostel) = S.fromList [ WiFi, Kitchen, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation GuestHouse) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
@@ -270,7 +270,7 @@ accommodationServices (GenericAccommodation Camping) = S.empty
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
 accommodationSleeping (Accommodation _name _type _services sleeping') = sleeping'
-accommodationSleeping (GenericAccommodation MunicipalAlbergue) = S.fromList [ Shared ]
+accommodationSleeping (GenericAccommodation PilgrimAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation PrivateAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation Hostel) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation GuestHouse) = S.fromList [ Single, Double ]

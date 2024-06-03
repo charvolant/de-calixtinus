@@ -159,7 +159,7 @@ An example location is:
   "accommodation": [
     {
       "name": "Azambuja Pilgrims Hostel",
-      "type": "MunicipalAlbergue",
+      "type": "PilgrimAlbergue",
       "services": ["Handwash"],
       "sleeping": ["Shared"]
     },

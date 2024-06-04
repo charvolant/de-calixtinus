@@ -408,7 +408,7 @@ noticePopup = do
 
 -- | Update this as terms change
 noticeVersion :: Text
-noticeVersion = "Accept 0.3"
+noticeVersion = "Accept 0.4"
 
 noticeCookie :: Text
 noticeCookie = "de-calixtinus-notice"

@@ -1,6 +1,10 @@
 {
   "id": "P",
-  "name": "Caminho Português",
+  "name": [
+    "Caminho Português@pt",
+    "Camino Portugués@es",
+    "Portuguese Way@en"
+  ],
   "description": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the French route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
   "metadata" : {
     "namespaces": [
@@ -24,7 +28,7 @@
       },
       {
         "term": "dcterms:title",
-        "value": "Camino Portuguese@en"
+        "value": "Portuguese Way@en"
       },
       {
         "term": "dcterms:creator",

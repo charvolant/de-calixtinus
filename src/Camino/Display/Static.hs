@@ -50,7 +50,7 @@ createHelpFile config locale file html = do
   LB.writeFile file $ renderHtml $ html messages router
   
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()
-createStandAloneHelpFile config locale file html title = createHelpFile config locale file (layoutHtml config title Nothing html Nothing)
+createStandAloneHelpFile config locale file html title = createHelpFile config locale file (layoutHtml config (simpleText title) Nothing html Nothing)
 
 createHelpFiles :: Config -> FilePath -> IO ()
 createHelpFiles config output = do

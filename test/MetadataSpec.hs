@@ -6,7 +6,7 @@ import Test.HUnit
 import Data.Aeson
 import Data.Either
 import Data.Localised
-import Data.Maybe (fromJust, isJust)
+import Data.Maybe (fromJust)
 import Data.Metadata
 import Network.URI
 import TestUtils

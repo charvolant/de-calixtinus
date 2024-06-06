@@ -38,6 +38,7 @@ module Camino.Camino (
   , module Graph.Programming
 
   , accommodationName
+  , accommodationNameLabel
   , accommodationType
   , accommodationTypeEnumeration
   , accommodationServices
@@ -46,6 +47,7 @@ module Camino.Camino (
   , caminoDump
   , caminoLegRoute
   , caminoLocationList
+  , caminoNameLabel
   , caminoRoute
   , caminoRouteLocations
   , comfortEnumeration
@@ -55,6 +57,7 @@ module Camino.Camino (
   , createProhibitsClauses
   , fitnessEnumeration
   , locationAccommodationTypes
+  , locationNameLabel
   , locationTypeEnumeration
   , readCamino
   , serviceEnumeration
@@ -70,6 +73,7 @@ import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.List (find)
+import Data.Localised (LocalisedText(..), appendText, localiseDefault, simpleText)
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
@@ -77,7 +81,7 @@ import Data.Placeholder
 import Data.Propositional
 import qualified Data.Set as S (Set, difference, empty, intersection, map, null, fromList, member, toList, union, unions, singleton)
 import Data.Scientific (fromFloatDigits, toRealFloat)
-import Data.Text (Text, append, unpack, pack)
+import Data.Text (Text, unpack, pack)
 import Graph.Graph
 import Graph.Programming
 
@@ -243,13 +247,17 @@ instance ToJSON Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
-  Accommodation Text AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accommodation
+  Accommodation LocalisedText AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accommodation
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
   deriving (Show)
   
-accommodationName :: Accommodation -> Text
+accommodationName :: Accommodation -> LocalisedText
 accommodationName (Accommodation name' _type _services _sleeping) = name'
-accommodationName (GenericAccommodation type') = pack ("Generic " ++ show type')
+accommodationName (GenericAccommodation type') = simpleText $ pack ("Generic " ++ show type')
+
+-- | Get a simple text version of the accommodation name
+accommodationNameLabel :: Accommodation -> Text
+accommodationNameLabel accommodation = localiseDefault $ accommodationName accommodation
 
 accommodationType :: Accommodation -> AccommodationType
 accommodationType (Accommodation _name type' _services _sleeping) = type'
@@ -336,7 +344,7 @@ type URL = Text
 --   Locations form the vertexes on the travel graph
 data Location = Location {
     locationID :: String
-  , locationName :: Text
+  , locationName :: LocalisedText
   , locationDescription :: Maybe Text
   , locationHref :: Maybe URL
   , locationType :: LocationType
@@ -350,7 +358,7 @@ instance Placeholder Camino Location where
   placeholderID = locationID
   placeholder lid = Location {
       locationID = lid
-    , locationName = pack ("Placeholder for " ++ lid)
+    , locationName = simpleText $ pack ("Placeholder for " ++ lid)
     , locationDescription = Nothing
     , locationHref = Nothing
     , locationType = Poi
@@ -415,6 +423,9 @@ instance Ord Location where
 locationAccommodationTypes :: Location -> S.Set AccommodationType
 locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
 
+-- | Get a simple text version of the location name
+locationNameLabel :: Location -> Text
+locationNameLabel location = localiseDefault $ locationName location
  
 -- | The type of transport available on a leg
 data LegType = Road -- ^ Walk or cycle on a road or suitable path
@@ -509,7 +520,7 @@ instance Default Palette where
 -- | A route, a sub-section of the camino with graphical information
 data Route = Route {
     routeID :: String -- ^ An identifier for the route
-  , routeName :: Text -- ^ The route name
+  , routeName :: LocalisedText -- ^ The route name
   , routeDescription :: Text -- ^ The route description
   , routeLocations :: S.Set Location -- ^ The locations along the route
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
@@ -565,7 +576,7 @@ instance Placeholder Camino Route where
   placeholderID = routeID
   placeholder rid = Route {
       routeID = rid
-    , routeName = pack ("Placeholder for " ++ rid)
+    , routeName = simpleText $ pack ("Placeholder for " ++ rid)
     , routeDescription = ""
     , routeLocations = S.empty
     , routeStops = S.empty
@@ -703,7 +714,7 @@ createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits lo
 --   The purpose of the Camino Planner is to divide a camino into 
 data Camino = Camino {
     caminoId :: String
-  , caminoName :: Text
+  , caminoName :: LocalisedText
   , caminoDescription :: Text
   , caminoMetadata :: Metadata
   , caminoLocations :: M.Map String Location -- ^ The camino locations
@@ -773,7 +784,7 @@ instance Graph Camino Leg Location where
   subgraph (Camino id' name' description' metadata' locations' legs' routes' routeLogic' defaultRoute') allowed  = 
     let
       id'' = id' ++ "'"
-      name'' = name' `append` " subgraph"
+      name'' = name' `appendText` " subgraph"
       locations'' = M.filter (\l -> S.member l allowed) locations'
       legs'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) legs'
       routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
@@ -784,7 +795,7 @@ instance Graph Camino Leg Location where
   mirror camino =
     let
       id'' = caminoId camino ++ "'"
-      name'' = caminoName camino `append` " mirrored"
+      name'' = caminoName camino `appendText` " mirrored"
       legs'' = map (\l -> l { legFrom = legTo l, legTo = legFrom l, legAscent = legDescent l, legDescent = legAscent l}) (caminoLegs camino)
     in
       camino { caminoId = id'', caminoName = name'', caminoLegs = legs'' }
@@ -793,7 +804,7 @@ instance Placeholder [Camino] Camino where
   placeholderID = caminoId
   placeholder cid = Camino {
         caminoId = cid
-      , caminoName = pack ("Placeholder for " ++ cid)
+      , caminoName = simpleText $ pack ("Placeholder for " ++ cid)
       , caminoDescription = ""
       , caminoMetadata = Metadata [] []
       , caminoLocations = M.empty
@@ -816,6 +827,10 @@ instance Placeholder [Camino] Camino where
       camino4 = camino3 { caminoRouteLogic = map (normaliseRouteLogic camino3) (caminoRouteLogic camino3)  }
     in
       camino4
+
+-- | Get a simple text version of the camino name
+caminoNameLabel :: Camino -> Text
+caminoNameLabel camino = localiseDefault $ caminoName camino
 
 -- | Get a list of locations for the camino
 caminoLocationList :: Camino -- ^ The camino
@@ -958,7 +973,7 @@ readCamino file = do
 
 -- Dump a camino as a semi-readable string
 caminoDump :: Camino -> String
-caminoDump camino = "Camino { " ++ caminoId camino ++ ": " ++ unpack (caminoName camino) ++
+caminoDump camino = "Camino { " ++ caminoId camino ++ ": " ++ unpack (localiseDefault $ caminoName camino) ++
   ", defaultRoute = " ++ (routeID $ caminoDefaultRoute camino) ++
   ", routes = " ++ show (map routeID $ caminoRoutes camino) ++
   ", locations = "++ show (M.keys $ caminoLocations camino)

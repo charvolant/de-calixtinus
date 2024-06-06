@@ -224,13 +224,6 @@ renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
-renderCaminoMsgDefault _ (DaySummaryMsg day) = [shamlet|
-  #{locationName $ start day} to #{locationName $ finish day}
-  ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
-  over ^{formatMaybeTime $ metricsTime metrics}
-  |]
-  where
-    metrics = score day
 renderCaminoMsgDefault _ (DescentMsg ascent) = [shamlet|Descent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ DinnerTitle = "Dinner"
 renderCaminoMsgDefault _ (DistanceAdjustMsg penance') = [shamlet|Distance Adjustment ^{formatPenance penance'}|]
@@ -342,6 +335,15 @@ renderCaminoMsg :: Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
+renderCaminoMsg config locales (DaySummaryMsg day) = [shamlet|
+  #{start'} to #{finish'}
+  ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
+  over ^{formatMaybeTime $ metricsTime metrics}
+  |]
+  where
+    metrics = score day
+    start' = renderCaminoMsg config locales (Txt (locationName $ start day))
+    finish' = renderCaminoMsg config locales (Txt (locationName $ finish day))
 renderCaminoMsg config locales (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident locales config) where ident = linkId link
 renderCaminoMsg _config locales (Txt lt) = let
     tt = localise locales lt
@@ -349,8 +351,8 @@ renderCaminoMsg _config locales (Txt lt) = let
     locale = ttLocale tt
     lang = localeLanguageTag locale
   in
-    if Data.Text.null lang then 
-      toHtml txt 
-    else 
+    if Data.Text.null lang then
+      toHtml txt
+    else
       [shamlet|<span lang="#{localeLanguageTag locale}">#{txt}|]
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg

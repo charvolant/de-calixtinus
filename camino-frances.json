@@ -1,6 +1,12 @@
 {
   "id": "F",
-  "name": "Camino Frances",
+  "name": [
+    "Camino Frances@fr",
+    "Camiño francés@gl",
+    "Camino francés@es",
+    "French Way@en",
+    "Frantses bidea@eu"
+  ],
   "description": "The Camino Frances is the most popular Camino route, running from Saint-Jean-Pied-de-Port in France to Santiago de Compostella.",
   "metadata" : {
     "namespaces": [
@@ -20,7 +26,7 @@
        },
       {
         "term": "dcterms:title",
-        "value": "Camino Frances@en"
+        "value": "Camino Frances@fr"
       },
       {
         "term": "dcterms:title",
@@ -29,6 +35,10 @@
       {
         "term": "dcterms:title",
         "value": "Camino francés@es"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Frantses bidea@eu"
       },
       {
         "term": "dcterms:creator",

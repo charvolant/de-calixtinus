@@ -17,7 +17,7 @@ module Camino.Display.Routes (
 
 import Camino.Camino
 import Camino.Config
-import Data.Localised
+import Data.Localised ()
 import Data.Text
 
 -- | Common Camino routes

@@ -22,10 +22,11 @@ import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
+import Data.Localised
 import Graph.Graph (incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
-import qualified Data.Text as T (concat, intercalate, null, pack, take, Text, toLower, toUpper)
+import qualified Data.Text as T (concat, intercalate, null, pack, take, toLower, toUpper)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -96,16 +97,18 @@ metricsSummary _preferences _camino metrics days = [ihamlet|
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
 daySummary _preferences _camino _trip day = [ihamlet|
     <p>_{DaySummaryMsg day}
-    <p>#{T.intercalate ", " (map locationName ((map legFrom $ path day) ++ [finish day]))}
+    <ol>
+      $forall loc <- (map legFrom $ path day) ++ [finish day]
+        <li>_{Txt (locationName loc)}
   |]
 
 tripSummary :: TravelPreferences -> CaminoPreferences -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripSummary _preferences _camino trip = [ihamlet|
-    <h1>From #{locationName $ start trip} to #{locationName $ finish trip}
+    <h1>From _{Txt (locationName $ start trip)} to _{Txt (locationName $ finish trip)}
     <h2>Stages
-    <ul>
-    $forall day <- path trip
-      <ol>#{locationName $ start day} - #{locationName $ finish day}
+    <ol>
+      $forall day <- path trip
+        <li>_{Txt (locationName $ start day)} - _{Txt (locationName $ finish day)}
   |]
 
 locationSummary :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -295,7 +298,7 @@ caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
 caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping') = [ihamlet|
     <span .accommodation>
       <span .pr-4>
-        ^{caminoAccommodationTypeIcon type'} #{accommodationName a}
+        ^{caminoAccommodationTypeIcon type'} _{Txt (accommodationName a)}
       <span .p2-4>
         $forall service <- services'
            ^{caminoServiceIcon service}
@@ -306,7 +309,7 @@ caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping')
 
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
-caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping) = [ihamlet|#{name'}|]
+caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping) = [ihamlet|_{Txt name'}|]
 
 caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|
@@ -326,10 +329,10 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
         ^{caminoSleepingIcon sleeping}
  |]
    where
-     name' = accommodationName accommodation
+     name' = accommodationNameLabel accommodation
      type' = accommodationType accommodation
      cp' = maybe Reject tripChoicePenance choice
-     cn' = maybe "" (accommodationName . tripChoice) choice
+     cn' = maybe "" (accommodationNameLabel . tripChoice) choice
      ct' = maybe Camping (accommodationType . tripChoice) choice
      choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
 
@@ -351,7 +354,7 @@ solutionElements _camino (Just solution) = (
 
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
-    #{locationName location}
+    _{Txt (locationName location)}
     <span .accommodation-types>
       $forall accommodation <- locationAccommodationTypes location
         ^{caminoAccommodationTypeIcon accommodation}
@@ -382,9 +385,9 @@ locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg
 locationLegLine preferences showLink showTo camino leg = [ihamlet|
    $if showLink
      <a href="##{locid}" onclick="showLocationDescription('#{locid}');">
-       #{locationName $ direction leg}
+       _{Txt (locationName $ direction leg)}
    $else
-     #{locationName $ direction leg}
+     _{Txt (locationName $ direction leg)}
    ^{legLine preferences camino leg}
  |]
  where
@@ -420,7 +423,7 @@ locationLegs preferences camino used location = [ihamlet|
           <li .leg-to .leg-line .leg-unused>
             ^{locationLegLine preferences True False camino leg}
     <div .col .text-center .my-auto>
-      #{arrow} #{locationName location} #{arrow}
+      #{arrow} _{Txt (locationName location)} #{arrow}
     <div .col .text-end .my-auto>
       <ul>
         $forall leg <- usedOutgoingLegs
@@ -446,7 +449,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
         <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
           <h5 .col-6>
             ^{caminoLocationTypeIcon (locationType location)}
-            #{locationName location}
+            _{Txt (locationName location)}
           <div .col .services>
              $forall service <- locationServices location
                 ^{caminoServiceIcon service}
@@ -469,7 +472,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
                   <span .ca-globe title="_{ShowOnMapTitle}">
               $maybe href <- locationHref location
                 <a .btn .btn-primary .btn-sm href="#{href}">
-                    <span .ca-information title="_{LinkOut (locationName location)}">
+                    <span .ca-information title="_{LinkOut (locationNameLabel location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
           ^{caminoAccommodationHtml accommodation accChoice}
@@ -497,7 +500,7 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
                 #{initial}
               <ul .dropdown-menu>
                 $forall loc <- locs
-                  <a .dropdown-item href="##{locationID loc}">#{locationName loc}
+                  <a .dropdown-item href="##{locationID loc}">_{Txt (locationName loc)}
     <div .row>
       <div .col>
         <div #locations .accordion .container-fluid>
@@ -507,9 +510,9 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
-    locationOrder a b = compare (canonicalise $ locationName a) (canonicalise $ locationName b)
+    locationOrder a b = compare (canonicalise $ locationNameLabel a) (canonicalise $ locationNameLabel b)
     locationsSorted = L.sortBy locationOrder (caminoLocationList camino')
-    locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationName l) locationsSorted
+    locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationNameLabel l) locationsSorted
     (_trip, stops, waypoints, usedLegs) = solutionElements camino' solution
 
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -580,25 +583,25 @@ preferencesHtml link preferences camino = [ihamlet|
           $forall r <- selectedRoutes camino
             <li>
               $if link
-                <a href="##{routeID r}" data-toggle="tab" onclick="showRouteDescription('#{routeID r}')">#{routeName r}
+                <a href="##{routeID r}" data-toggle="tab" onclick="showRouteDescription('#{routeID r}')">_{Txt (routeName r)}
               $else
-                #{routeName r}
+                _{Txt (routeName r)}
     <div .row>
       <div .col-4>_{TripStartLabel}
       <div .col>
         $with start <- preferenceStart camino
           $if link
-            <a href="##{locationID start}" data-toggle="tab" onclick="showLocationDescription('#{locationID start}')">#{locationName start}
+            <a href="##{locationID start}" data-toggle="tab" onclick="showLocationDescription('#{locationID start}')">_{Txt (locationName start)}
           $else
-            #{locationName start}
+            _{Txt (locationName start)}
     <div .row>
       <div .col-4>_{TripFinishLabel}
       <div .col>
         $with finish <- preferenceFinish camino
           $if link
-            <a href="##{locationID finish}" data-toggle="tab" onclick="showLocationDescription('#{locationID finish}')">#{locationName finish}
+            <a href="##{locationID finish}" data-toggle="tab" onclick="showLocationDescription('#{locationID finish}')">_{Txt (locationName finish)}
           $else
-            #{locationName finish}
+            _{Txt (locationName finish)}
     <div .row>
       <div .col-4>_{RequiredStopsLabel}
       <div .col>
@@ -606,9 +609,9 @@ preferencesHtml link preferences camino = [ihamlet|
           $forall l <- preferenceStops camino
             <li>
               $if link
-                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">_{Txt (locationName l)}
               $else
-                #{locationName l}
+                _{Txt (locationName l)}
     <div .row>
       <div .col-4>_{ExcludedStopsLabel}
       <div .col>
@@ -616,9 +619,9 @@ preferencesHtml link preferences camino = [ihamlet|
           $forall l <- preferenceExcluded camino
             <li>
               $if link
-                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">#{locationName l}
+                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">_{Txt (locationName l)}
               $else
-                #{locationName l}
+                _{Txt (locationName l)}
   |]
   where
     locationTypes = locationTypeEnumeration
@@ -634,18 +637,18 @@ caminoTripHtml preferences camino trip = [ihamlet|
     <div .row .trip-summary>
       <div .col>
         <p>
-          #{locationName $ start trip}
+          _{Txt (locationName $ start trip)}
           $forall l <- map finish $ path trip
-            \  - <a href="#leg-#{locationID l}">#{locationName l}
+            \  - <a href="#leg-#{locationID l}">_{Txt (locationName l)}
         <p>
           ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}
           _{PenanceMsg (metricsPenance (score trip))}
     $forall day <- path trip
       <div .card .day .p-1>
         <h4 id="leg-#{locationID (finish day)}">
-          <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ start day}
+          <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
           \   -
-          <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">#{locationName $ finish day}
+          <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
           _{DistanceFormatted (metricsDistance $ score day)}
         <div .card-body>
          <p>
@@ -687,7 +690,7 @@ caminoMapKeyHtml _preferences camino = [ihamlet|
             <td>
             <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
             <td>
-            <td>#{routeName r}
+            <td>_{Txt (routeName r)}
         $forall lt <- locationTypeEnumeration
           <tr>
             <td>
@@ -879,7 +882,7 @@ caminoMapScript preferences camino solution = [ihamlet|
 aboutHtml :: TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
 aboutHtml _prefernces camino = [ihamlet|
   <div .container-fluid>
-    <h2>#{caminoName camino'}
+    <h2>_{Txt (caminoName camino')}
     <div .row>
       <div .col>
         #{caminoDescription camino'}
@@ -887,7 +890,7 @@ aboutHtml _prefernces camino = [ihamlet|
     $forall route <- caminoRoutes camino'
       <div ##{routeID route} .row>
         <div .col>
-          <span style="color: #{toCssColour $ paletteColour $ routePalette route}">#{routeName route}
+          <span style="color: #{toCssColour $ paletteColour $ routePalette route}">_{Txt (routeName route)}
           #{routeDescription route}
     <h2>_{InformationLabel}
     <p>_{InformationDescription}
@@ -906,7 +909,7 @@ aboutHtml _prefernces camino = [ihamlet|
 
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
- ->  T.Text -- ^ The page title
+ ->  LocalisedText -- ^ The page title
  -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the head
  -> HtmlUrlI18n CaminoMsg CaminoRoute -- ^ The body HTML
  -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the foot (after the footer)
@@ -917,7 +920,7 @@ layoutHtml config title header body footer = [ihamlet|
        <head>
          <meta charset="utf-8">
          <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-         <title>#{title}
+         <title>_{Txt title}
          <link rel="icon" type="image/x-icon" href="@{IconRoute "favicon.ico"}">
          $forall c <- css
            <link rel="stylesheet" href="#{assetPath c}">
@@ -931,7 +934,7 @@ layoutHtml config title header body footer = [ihamlet|
              <div .container-fluid>
                <a .navbar-brand href="#">
                  <img width="64" height="64" src="@{IconRoute "tile-64.png"}" alt="Camino Planner">
-               <h1>#{title}
+               <h1>_{Txt title}
                <div .collapse .navbar-collapse .d-flex .justify-content-end #navcol-links">
                  <ul .navbar-nav>
                    $forall link <- headLinks
@@ -1046,6 +1049,6 @@ caminoHtmlSimple config camino =
 
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtml config preferences camino solution = let
-    title = either (const $ caminoName $ preferenceCamino camino) (\t -> (locationName $ start t) <> " - " <> (locationName $ finish t)) (solutionTrip solution)
+    title = caminoName $ preferenceCamino camino
   in
     layoutHtml config title Nothing (caminoHtmlBase config preferences camino (Just solution)) Nothing

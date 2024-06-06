@@ -528,7 +528,7 @@ tripLegs trip = foldr (\c -> \w -> w ++ path c) [] (path trip)
 
 -- | Useful label for a day sequence
 daysLabel :: [Day] -> T.Text
-daysLabel days = T.concat [locationName $ start $ head days, " -> ", locationName $ finish $ last days, " [", T.intercalate "," (map (locationName . start) (tail $ days)), "]" ]
+daysLabel days = T.concat [locationNameLabel $ start $ head days, " -> ", locationNameLabel $ finish $ last days, " [", T.intercalate "," (map (locationNameLabel . start) (tail $ days)), "]" ]
 
 -- | Useful label for trips
 tripLabel :: Trip -> T.Text

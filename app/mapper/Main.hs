@@ -30,7 +30,7 @@ printLocation l = do
   where
     locFormat = format (text % " " % text % " " % fixed 5 % "," % fixed 5 % "\n")
     id' = pack $ locationID l
-    name' = fromStrict $ locationName l
+    name' = fromStrict $ locationNameLabel l
     position' = locationPosition l
     lat' = maybe 0.0 latitude position'
     lon' = maybe 0.0 longitude position'

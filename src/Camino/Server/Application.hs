@@ -32,13 +32,13 @@ import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
 import Data.Default.Class
+import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
 import Yesod
 import Camino.Planner (planCamino)
-import Data.Localised (Locale, localeFromID, localeLanguageTag, rootLocale)
 
 mkYesodDispatch "CaminoApp" resourcesCaminoApp
 
@@ -106,7 +106,7 @@ caminoPage camino = do
     let messages = renderCaminoMsg config locales
     let html = (caminoHtmlSimple config cprefs) messages router
     defaultLayout $ do
-      setTitle [shamlet|#{caminoName (preferenceCamino cprefs)}|]
+      setTitle [shamlet|#{localiseText locales $ caminoName (preferenceCamino cprefs)}|]
       (toWidget html)
 
 getMetricR :: Handler Html
@@ -294,9 +294,10 @@ helpPopup stepp = do
 
 addError :: Either Location Trip -> Handler ()
 addError (Left loc) = do
+  locales <- getLocales
   setMessage [shamlet|
     <div ..alert .alert-warning role="alert">
-      Break at #{locationID loc} #{locationName loc}
+      Break at #{locationID loc} #{localiseText locales $ locationName loc}
     |]
   return ()
 addError _ = do
@@ -315,7 +316,7 @@ planPage prefs = do
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionTrip solution)
     defaultLayout $ do
-      setTitle [shamlet|#{locationName (preferenceStart cprefs)} - #{locationName (preferenceFinish cprefs)}|]
+      setTitle [shamlet|#{localiseText locales $ locationName (preferenceStart cprefs)} - #{localiseText locales $ locationName (preferenceFinish cprefs)}|]
       (toWidget html)
 
 -- | The MIME type for KML
@@ -324,8 +325,8 @@ kmlType = "application/vnd.google-earth.kml+xml"
 
 -- | Generate a file name for this
 kmlFileName :: CaminoPreferences -> Maybe Trip -> Text
-kmlFileName camino Nothing = (toFileName $ caminoName $ preferenceCamino camino) <> ".kml"
-kmlFileName camino (Just trip) = (toFileName $ caminoName $ preferenceCamino camino) <> "-" <> (toFileName $ locationName $ start trip) <> "-" <> (toFileName $ locationName $ finish trip) <> ".kml"
+kmlFileName camino Nothing = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".kml"
+kmlFileName camino (Just trip) = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> "-" <> (toFileName $ locationNameLabel $ start trip) <> "-" <> (toFileName $ locationNameLabel $ finish trip) <> ".kml"
 
 planKml :: PreferenceData -> Handler TypedContent
 planKml prefs = do

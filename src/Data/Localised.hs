@@ -21,10 +21,14 @@ module Data.Localised (
   , LocalisedText(..)
   , TaggedText(..)
   
+  , appendText
   , localeFromID
   , localeLanguageTag
   , localise
+  , localiseDefault
+  , localiseText
   , rootLocale
+  , simpleText
 ) where
 
 import Data.Aeson
@@ -68,6 +72,7 @@ frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra",
 galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing
 portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing
 spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing
+basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing
 
 -- | Decode a locale identifier into a locale specification
 --   If the locale cannot be identifier, the @rootLocale@ is returned
@@ -77,6 +82,9 @@ localeFromID :: Text -- ^ The locale identifier
   -> Locale -- ^ The resulting locale.
 localeFromID "" = rootLocale
 localeFromID "*" = rootLocale
+localeFromID "eu" = basqueLocale
+localeFromID "eus" = basqueLocale
+localeFromID "baq" = basqueLocale
 localeFromID "en" = englishLocale
 localeFromID "eng" = englishLocale
 localeFromID "en-GB" = englishUKLocale
@@ -145,6 +153,14 @@ instance ToJSON LocalisedText where
   toJSON (LocalisedText [tt]) = toJSON tt
   toJSON (LocalisedText texts) = toJSON (map toJSON texts)
 
+-- | Create a simple localised text element from some text
+simpleText :: Text -> LocalisedText
+simpleText txt = LocalisedText [TaggedText txt rootLocale]
+
+-- | Append some text to localised text
+appendText :: LocalisedText -> Text -> LocalisedText
+appendText (LocalisedText tts) txt = LocalisedText (map (\(TaggedText txt' locale) -> TaggedText (txt' <> txt) locale) tts)
+
 -- | Choose the most appropriately localised piece of text for a list of locales
 --   If there is no matching text and the 
 --   If there is only one piece of text, then that is used regardless
@@ -163,3 +179,13 @@ localise' [] _ = Nothing
 localise' (l:lr) lt@(LocalisedText tts) = case find (\tt -> ttLocale tt == l) tts of
   Nothing -> localise' lr lt
   mtt' -> mtt'
+  
+-- | Choose the most appropriately localised piece of text for a list of locales
+--   See @localise@
+localiseText :: [Locale] -> LocalisedText -> Text
+localiseText locales lt = ttText $ localise locales lt
+
+-- | Choose the default text
+--   See @localiseText@
+localiseDefault :: LocalisedText -> Text
+localiseDefault lt = ttText $ localise [] lt

@@ -140,10 +140,10 @@ caminoLocationStyle _camino stops waypoints location
 caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
   <div>
-    <h4>#{locationName location}
+    <h4>#{locationNameLabel location}
       $maybe href <- locationHref location
         <a style="float: right;" href="#{href}">
-          <span .ca-information title="_{LinkOut (locationName location)}">
+          <span .ca-information title="_{LinkOut (locationNameLabel location)}">
     $maybe d <- locationDescription location
       <div>#{d}
     <div>
@@ -167,7 +167,7 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
 caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationKml config preferences camino trip stops waypoints location = [xml|
     <Placemark id="#{pack $ locationID location}">
-      <name>#{locationName location}
+      <name>#{locationNameLabel location}
       <description>^{caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints location}
       <styleUrl>#{caminoLocationStyle camino stops waypoints location}
       ^{pointKml $ locationPosition location}
@@ -213,7 +213,7 @@ createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing [
       [xml|
         <Document>
           $maybe t <- trip
-            <name>#{locationName $ start t}#{divider}#{locationName $ finish t}
+            <name>#{locationNameLabel $ start t}#{divider}#{locationNameLabel $ finish t}
           ^{caminoStyles config camino}
           $forall location <- caminoLocationList camino'
             ^{caminoLocationKml config preferences camino trip stops waypoints location}

@@ -21,7 +21,7 @@ module Camino.Server.Foundation where
 
 import Camino.Camino
 import Camino.Preferences
-import Camino.Display.I18n (CaminoMsg, renderCaminoMsg)
+import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
@@ -331,6 +331,7 @@ instance Yesod CaminoApp where
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render MsgHelpLabel
+    let caminoTitle c = renderCaminoMsg config locales (Txt (caminoName c))
     pc <- widgetToPageContent widget
     np <- noticePopup
     nc <- widgetToPageContent np
@@ -369,7 +370,7 @@ instance Yesod CaminoApp where
                       <ul .dropdown-menu>
                         $forall camino <- caminoAppCaminos master
                           <li>
-                            <a target="_blank" .nav-link .dropdown-item href="@{CaminoR (pack $ caminoId camino)}">#{caminoName camino}
+                            <a target="_blank" .nav-link .dropdown-item href="@{CaminoR (pack $ caminoId camino)}">#{caminoTitle camino}
                     <li .nav-item>
                       <a target="_blank" .nav-link href=@{HelpR} title="#{render MsgHelpTitle}">#{helpLabel}
             $maybe msg <- message

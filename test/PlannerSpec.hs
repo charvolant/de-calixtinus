@@ -7,6 +7,7 @@ import Camino.Planner
 import Camino.Camino
 import Camino.Preferences
 import TestUtils
+import Data.Localised
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Default.Class
@@ -89,7 +90,7 @@ preferences2 = TravelPreferences {
 
 location1 = Location {
     locationID = "A",
-    locationName = "A",
+    locationName = simpleText "A",
     locationType = Poi,
     locationDescription = Nothing,
     locationCamping = True,
@@ -101,7 +102,7 @@ location1 = Location {
 
 location2 = Location {
     locationID = "B",
-    locationName = "B",
+    locationName = simpleText "B",
     locationType = Poi,
     locationDescription = Nothing,
     locationHref = Nothing,
@@ -110,13 +111,13 @@ location2 = Location {
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue,
-      Accommodation "B2" PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
+      Accommodation (simpleText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
     ]  
   }
  
 location3 = Location {
     locationID = "C",
-    locationName = "C",
+    locationName = simpleText "C",
     locationType = Poi,
     locationDescription = Nothing,
     locationHref = Nothing,
@@ -124,14 +125,14 @@ location3 = Location {
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
-      Accommodation "C1" Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
+      Accommodation (simpleText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
     ]  
   }
   
   
 location4 = Location {
     locationID = "D",
-    locationName = "D",
+    locationName = simpleText "D",
     locationType = Poi,
     locationDescription = Nothing,
     locationHref = Nothing,
@@ -161,7 +162,7 @@ legs2 = [
 
 route1 = Route { 
   routeID = "R1", 
-  routeName = "R1", 
+  routeName = simpleText "R1", 
   routeDescription = "Route 1",
   routeLocations = S.fromList [location1, location2, location3], 
   routeStarts = [],
@@ -172,7 +173,7 @@ route1 = Route {
 
 camino1 = Camino {
   caminoId = "Test",
-  caminoName = "Test",
+  caminoName = simpleText "Test",
   caminoDescription = "Test camino",
   caminoMetadata = def,
   caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],

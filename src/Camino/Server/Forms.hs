@@ -42,7 +42,7 @@ import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
-import Data.Localised (localeFromID)
+import Data.Localised (localeFromID, localiseText)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
@@ -441,7 +441,9 @@ chooseServicesForm help prefs extra = do
 chooseCaminoForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseCaminoForm help prefs extra = do
     master <- getYesod
-    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ caminoName c, c, Just $ toHtml $ caminoDescription c)) (caminoAppCaminos master))
+    locales <- getLocales
+    let localised c = localiseText locales $ caminoName c
+    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ localised c, c, Just $ toHtml $ caminoDescription c)) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -486,12 +488,13 @@ chooseCaminoForm help prefs extra = do
 chooseRoutesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseRoutesForm help prefs extra = do
     master <- getYesod
+    locales <- getLocales
     let camino = prefCamino <$> prefs
     let routes = maybe (Prelude.concat (map caminoRoutes (caminoAppCaminos master))) caminoRoutes camino
     let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
-    let routeOptions = map (\r -> (pack $ routeID r, routeName r, r, Just $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
+    let routeOptions = map (\r -> (pack $ routeID r, localiseText locales (routeName r), r, Just $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
     (roRes, roView) <- mreq (implyingCheckListField routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -544,6 +547,7 @@ chooseStartForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (Form
 chooseStartForm help prefs extra = do
     master <- getYesod
     render <- getMessageRender
+    locales <- getLocales
     let camino = prefCamino <$> prefs
     let routes = prefRoutes <$> prefs
     let start' = prefStart <$> prefs
@@ -553,12 +557,12 @@ chooseStartForm help prefs extra = do
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
     let allowedStops = permittedStops <$> prefs <*> possibleStops
-    let sortKey l = canonicalise $ locationName l
+    let sortKey l = canonicalise $ localiseText locales (locationName l)
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
     let rstarts = maybe [] suggestedStarts cprefs
     let rfinishes = maybe [] suggestedFinishes cprefs
-    let startOptions = makeOptions render (pack . locationID) locationName rstarts stops
-    let finishOptions = makeOptions render (pack . locationID) locationName rfinishes stops
+    let startOptions = makeOptions render (pack . locationID) ((localiseText locales) . locationName) rstarts stops
+    let finishOptions = makeOptions render (pack . locationID) ((localiseText locales) . locationName) rfinishes stops
     (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'
     (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish'
     df <- defaultPreferenceFields master prefs
@@ -611,6 +615,8 @@ chooseStopsForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (Form
 chooseStopsForm help prefs extra = do
     master <- getYesod
     render <- getMessageRender
+    locales <- getLocales
+    let localised l = localiseText locales $ locationName l
     let camino = prefCamino <$> prefs
     let routes = prefRoutes <$> prefs
     let start' = prefStart <$> prefs
@@ -621,13 +627,13 @@ chooseStopsForm help prefs extra = do
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = reachableLocations <$> cprefs'
     let allowedStops = permittedStops <$> prefs <*> possibleStops
-    let sortKey l = canonicalise $ locationName l
+    let sortKey l = canonicalise $ localised l
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
     let recommended = maybe S.empty recommendedStops cprefs'
     let (suggested, other) = Data.List.partition (\l -> S.member l recommended) stops
-    let mkOptions locs = map (\l -> (pack $ locationID l, locationName l, l)) locs
-    let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . locationName) other))
-    let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . locationName) stops))
+    let mkOptions locs = map (\l -> (pack $ locationID l, localised l, l)) locs
+    let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise .localised) other))
+    let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . localised) stops))
     let chosenStops = S.intersection <$> allowedStops <*> (prefStops <$> prefs)
     let chosenExcluded = S.intersection <$> allowedStops <*> (prefExcluded <$> prefs)
     (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabel MsgStopsLabel) chosenStops

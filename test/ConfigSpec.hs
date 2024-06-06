@@ -46,7 +46,7 @@ testConfig2 = Config {
   }
 }
 
-
+testConfig :: Test
 testConfig = TestList [
   TestLabel "GetAssets" testGetAssets,
   TestLabel "GetAsset" testGetAsset,

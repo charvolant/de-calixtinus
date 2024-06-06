@@ -5,6 +5,7 @@ module MetadataSpec(testMetadata) where
 import Test.HUnit
 import Data.Aeson
 import Data.Either
+import Data.Localised
 import Data.Maybe (fromJust, isJust)
 import Data.Metadata
 import Network.URI
@@ -22,11 +23,11 @@ dctermsDescription = fromJust $ parseURI "http://purl.org/dc/terms/source"
 
 namespace1 = Namespace "dc:" "http://purl.org/dc/elements/1.1/"
 
-statement1 = Statement dcTitle "A test title" (Just "en")
+statement1 = Statement dcTitle (TaggedText "A test title" (localeFromID "en"))
 
-statement2 = Statement dcCreated "2024-02-10" Nothing
+statement2 = Statement dcCreated (TaggedText "2024-02-10" rootLocale)
 
-statement3 = Statement dcCreated "2024-02-11" Nothing
+statement3 = Statement dcCreated (TaggedText "2024-02-11" rootLocale)
 
 testMetadata1 = Metadata {
   metadataNamespaces = [ namespace1 ],
@@ -73,7 +74,11 @@ json1 = [r|
   "statements": [
     {
       "term": "dc:title",
-      "value": "A something title"
+      "value": "A something title@en"
+    },
+    {
+      "term": "dc:title",
+      "value": "Um titulo de algo@pt"
     },
     {
       "term": "dc:created",
@@ -91,13 +96,19 @@ testRead1 =
   let
     mmetadata = eitherDecode json1 :: Either String Metadata
     metadata = either error id mmetadata
-    getTerm (Statement term _value _lang) = term
-    getValue (Statement _term value _lang) = value
+    getTerm (Statement term _value) = term
+    getValue (Statement _term value) = ttText value
+    getLang (Statement _term value) = localeLanguageTag $ ttLocale value
   in
     TestCase (do
       assertEqual "Read 1 1" 1 (Prelude.length $ metadataNamespaces metadata)
       assertEqual "Read 1 2" dcTitle (getTerm $ metadataStatements metadata !! 0)
       assertEqual "Read 1 3" "A something title" (getValue $ metadataStatements metadata !! 0)
-      assertEqual "Read 1 4" dctermsDescription (getTerm $ metadataStatements metadata !! 2)
-      assertEqual "Read 1 5" "Nowhere special" (getValue $ metadataStatements metadata !! 2)
+      assertEqual "Read 1 4" "en" (getLang $ metadataStatements metadata !! 0)
+      assertEqual "Read 1 5" dcTitle (getTerm $ metadataStatements metadata !! 1)
+      assertEqual "Read 1 6" "Um titulo de algo" (getValue $ metadataStatements metadata !! 1)
+      assertEqual "Read 1 7" "pt" (getLang $ metadataStatements metadata !! 1)
+      assertEqual "Read 1 8" dctermsDescription (getTerm $ metadataStatements metadata !! 3)
+      assertEqual "Read 1 9" "Nowhere special" (getValue $ metadataStatements metadata !! 3)
+      assertEqual "Read 1 10" "" (getLang $ metadataStatements metadata !! 2)
     )

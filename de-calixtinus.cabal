@@ -42,6 +42,7 @@ library
       Camino.Server.Settings
       Camino.Util
       Camino.Walking
+      Data.Localised
       Data.Metadata
       Data.Placeholder
       Data.Propositional
@@ -271,6 +272,7 @@ test-suite de-calixtinus-test
       CaminoSpec
       ConfigSpec
       GraphSpec
+      LocalisedSpec
       MetadataSpec
       PlannerSpec
       ProgrammingSpec

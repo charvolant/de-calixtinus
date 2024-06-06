@@ -16,18 +16,15 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Caminho Português",
-        "lang": "pt"
+        "value": "Caminho Português@pt"
       },
       {
         "term": "dcterms:title",
-        "value": "Camino Portugués",
-        "lang": "es"
+        "value": "Camino Portugués@es"
       },
       {
         "term": "dcterms:title",
-        "value": "Camino Portuguese",
-        "lang": "en"
+        "value": "Camino Portuguese@en"
       },
       {
         "term": "dcterms:creator",
@@ -39,11 +36,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-04-09"
+        "value": "2024-06-06"
       },
       {
         "term": "dcterms:version",
-        "value": "0.1.1"
+        "value": "0.4"
       },
       {
         "term": "dcterms:license",

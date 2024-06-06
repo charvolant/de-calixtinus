@@ -23,6 +23,7 @@ module Camino.Display.I18n (
 import Camino.Camino
 import Camino.Config
 import Camino.Planner
+import Data.Localised
 import Data.Text
 import Formatting
 import Text.Blaze.Html (toHtml)
@@ -152,6 +153,7 @@ data CaminoMsg =
   | TripStartLabel
   | TripleTitle
   | TripleWcTitle
+  | Txt LocalisedText
   | UnfitTitle
   | UnusedLabel
   | VeryFitTitle
@@ -162,6 +164,7 @@ data CaminoMsg =
   | WashingMachineTitle
   | WaypointLabel
   | WiFiTitle
+  deriving (Show)
 
 rejectSymbol :: Text
 rejectSymbol = "\x25c6"
@@ -251,7 +254,6 @@ renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
-renderCaminoMsgDefault config (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident ["en", ""] config) where ident = linkId link
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
 renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
@@ -333,9 +335,22 @@ renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
+renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
+  -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
-renderCaminoMsg = renderCaminoMsgDefault
+renderCaminoMsg config locales (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident locales config) where ident = linkId link
+renderCaminoMsg _config locales (Txt lt) = let
+    tt = localise locales lt
+    txt = ttText tt
+    locale = ttLocale tt
+    lang = localeLanguageTag locale
+  in
+    if Data.Text.null lang then 
+      toHtml txt 
+    else 
+      [shamlet|<span lang="#{localeLanguageTag locale}">#{txt}|]
+renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg

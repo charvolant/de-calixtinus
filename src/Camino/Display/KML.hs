@@ -29,6 +29,7 @@ import Camino.Preferences
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
+import Data.Localised (localeFromID, rootLocale)
 import Data.Maybe (fromJust)
 import Data.Text (Text, isPrefixOf, pack, toLower)
 import Data.Text.Lazy (toStrict)
@@ -79,7 +80,7 @@ kmlLocationStyle config identifier icon = [xml|
         <Icon>#{icon}
   |]
   where
-    router = renderCaminoRoute config [""]
+    router = renderCaminoRoute config [rootLocale]
     css = getAsset "camino-css" config
     layout = singleton $ NodeContent $ toStrict $ renderHtml $ [hamlet|
           <html>
@@ -157,8 +158,10 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
         ^{daySummary preferences camino trip d}
 |] message route)
   where
-    message = renderCaminoMsg config
-    route = renderCaminoRoute config ["en", ""]
+    langs = ["en", ""]
+    locales = map localeFromID langs
+    message = renderCaminoMsg config locales
+    route = renderCaminoRoute config locales
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
 caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]

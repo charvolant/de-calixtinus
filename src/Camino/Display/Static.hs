@@ -24,6 +24,7 @@ import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Data.ByteString.Lazy as LB (writeFile)
+import Data.Localised
 import Data.Text (Text)
 import qualified Data.Text.Lazy as LT (concat)
 import qualified Data.Text.Lazy.IO as LTIO (writeFile)
@@ -35,7 +36,7 @@ import Text.Hamlet
 
 createCssFiles :: Config -> FilePath -> IO ()
 createCssFiles config output = do
-  let router = renderCaminoRoute config [""]
+  let router = renderCaminoRoute config [rootLocale]
   let css = staticCss config
   let file = output </> "camino.css"
   createDirectoryIfMissing True output
@@ -43,8 +44,9 @@ createCssFiles config output = do
 
 createHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> IO ()
 createHelpFile config locale file html = do
-  let router = renderCaminoRoute config [locale, ""]
-  let messages = renderCaminoMsg config
+  let locales = [locale, rootLocale]
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
   LB.writeFile file $ renderHtml $ html messages router
   
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()
@@ -52,7 +54,8 @@ createStandAloneHelpFile config locale file html title = createHelpFile config l
 
 createHelpFiles :: Config -> FilePath -> IO ()
 createHelpFiles config output = do
+  let locale = localeFromID "en"
   createDirectoryIfMissing True output
-  createStandAloneHelpFile config "en" (output </> "help-en.html") $(ihamletFile "templates/help/help-en.hamlet") "Help"
-  createHelpFile config "en" (output </> "fitness-help-en.html") $(ihamletFile "templates/help/fitness-help-en.hamlet")
-  createHelpFile config "en" (output </> "range-help-en.html") $(ihamletFile "templates/help/range-help-en.hamlet")
+  createStandAloneHelpFile config locale (output </> "help-en.html") $(ihamletFile "templates/help/help-en.hamlet") "Help"
+  createHelpFile config locale (output </> "fitness-help-en.html") $(ihamletFile "templates/help/fitness-help-en.hamlet")
+  createHelpFile config locale (output </> "range-help-en.html") $(ihamletFile "templates/help/range-help-en.hamlet")

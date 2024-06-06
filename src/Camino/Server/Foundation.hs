@@ -25,6 +25,7 @@ import Camino.Display.I18n (CaminoMsg, renderCaminoMsg)
 import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
+import Data.Localised (Locale, localeFromID, localeLanguageTag, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Placeholder
@@ -310,7 +311,7 @@ instance RenderMessage CaminoApp FormMessage where
     renderMessage _ _ = defaultFormMessage
 
 instance RenderMessage CaminoApp CaminoMsg where
-    renderMessage master _langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) msg
+    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) (map localeFromID langs) msg
 
 instance Yesod CaminoApp where
   approot = ApprootMaster caminoAppRoot
@@ -318,7 +319,7 @@ instance Yesod CaminoApp where
   defaultLayout :: Widget -> Handler Html
   defaultLayout widget = do
     master <- getYesod
-    langs <- languages
+    locales <- getLocales
     message <- getMessage
     render <- getMessageRender
     cn <- checkNotice
@@ -326,7 +327,7 @@ instance Yesod CaminoApp where
     let config = caminoAppConfig master
     let micons = C.getAsset "icons" config
     let css = C.getAssets C.Css config
-    let headLinks = C.getLocalisedLinks C.Header config langs
+    let headLinks = C.getLocalisedLinks C.Header config locales
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render MsgHelpLabel
@@ -391,19 +392,21 @@ instance Yesod CaminoApp where
             <script src="#{C.assetPath s}">
    |]
 
-noticePopupText :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
-noticePopupText [] = noticePopupText ["en"]
-noticePopupText ("en":_) = $(ihamletFile "templates/notice/notice-en.hamlet")
-noticePopupText (_:rest) = noticePopupText rest
+noticePopupText :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
+noticePopupText [] = noticePopupText [rootLocale]
+noticePopupText (locale:rest)
+ | localeLanguageTag locale == "" = $(ihamletFile "templates/notice/notice-en.hamlet")
+ | localeLanguageTag locale == "en" = $(ihamletFile "templates/notice/notice-en.hamlet")
+ | otherwise = noticePopupText rest
 
 noticePopup :: Handler Widget
 noticePopup = do
   master <- getYesod
-  langs <- languages
+  locales <- getLocales
   let config = caminoAppConfig master
-  let router = renderCaminoRoute config langs
-  let messages = renderCaminoMsg config
-  let notice = (noticePopupText langs) messages router
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
+  let notice = (noticePopupText locales) messages router
   return $(widgetFile "notice-popup")
 
 -- | Update this as terms change
@@ -461,3 +464,8 @@ encodePreferences preferences = do
     , setCookieSameSite = Just sameSiteStrict
   }
   setCookie cookie
+
+getLocales :: MonadHandler m => m [Locale]
+getLocales = do
+  langs <- languages
+  return $ map localeFromID langs

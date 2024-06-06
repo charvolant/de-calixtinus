@@ -40,13 +40,11 @@ import Data.Aeson
 import qualified Data.Map as M
 import Data.Text (Text)
 import Data.List (find, elemIndex)
+import Data.Localised
 import Data.Maybe (catMaybes, listToMaybe)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
-
--- | A locale description
-type Locale = Text
 
 -- | Configuration for a map provider
 data MapConfig = Map {
@@ -120,22 +118,22 @@ instance ToJSON LinkType
 
 -- | A locality-specific link
 data LinkI18n = LinkI18n {
-  linkLocale :: Locale, -- ^ The language and optional localisation of the, eg "en" or "pt-BR". The empty string is the default match
+  linkLocale :: Locale, -- ^ The language and optional localisation of the asset
   linkLabel :: Text, -- ^ The localised link label
   linkPath :: Text -- ^ The path to the link
 }  deriving (Show)
 
 instance FromJSON LinkI18n where
   parseJSON (Object v) = do
-    locale' <- v .:? "locale" .!= ""
+    locale' <- v .:? "locale" .!= "*"
     label' <- v .: "label"
     path' <- v .: "path"
-    return $ LinkI18n locale' label' path'
+    return $ LinkI18n (localeFromID locale') label' path'
   parseJSON v = unexpected v
   
 instance ToJSON LinkI18n where
   toJSON (LinkI18n locale' label' path') =
-    object [ "locale" .= locale', "label" .= label', "path" .= path' ]
+    object [ "locale" .= (localeID locale'), "label" .= label', "path" .= path' ]
 
 -- | Return True if the second link is more specific than the first link
 moreSpecific :: [Locale] -> LinkI18n -> LinkI18n -> Bool
@@ -334,15 +332,15 @@ getLinks'' select variant config = let
     M.union local' defaults
 
 -- Try in locale order
-getLinks' ::  (LinkConfig -> Bool) -> [Text] -> Config -> [LinkI18n]
+getLinks' ::  (LinkConfig -> Bool) -> [Locale] -> Config -> [LinkI18n]
 getLinks' select locales config = let
-    base = getLinks'' select (\l -> let ll = linkLocale l in (ll == "" || ll == "*")) config
+    base = getLinks'' select (\l -> let ll = linkLocale l in (ll == rootLocale)) config
   in
     M.elems $ foldr (\lo -> \e -> M.union e (getLinks'' select (\l -> linkLocale l == lo) config)) base locales
 
 -- | Get a specific link, based on an identifier and a list of locales
 getLink :: Text -- ^ The link identifier
-  -> [Text] -- ^ The locale list
+  -> [Locale] -- ^ The locale list
   -> Config -- ^ The configuration to query
   -> Maybe LinkI18n -- ^ The internationalised link
 getLink ident locales config = listToMaybe $ getLinks' (\l -> linkId l == ident) locales config

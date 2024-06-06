@@ -3,6 +3,7 @@ module ConfigSpec(testConfig) where
 
 import Test.HUnit
 import Camino.Config
+import Data.Localised
 import Data.Map as M
 import Data.Maybe (fromJust, isJust)
 import TestUtils
@@ -34,7 +35,7 @@ testConfig2 = Config {
         linkType = Header,
         links = [
           LinkI18n {
-            linkLocale = "fr",
+            linkLocale = localeFromID "fr",
             linkLabel = "Feu",
             linkPath = "foo-fr.html"
           }

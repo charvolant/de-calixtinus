@@ -4,6 +4,7 @@ dcx_dir: /opt/de-calixtinus
 # S3 bucket to install distribution from
 dcx_dist_bucket: de-calixtinus
 dcx_group: dcx
+dcx_maximum_heap_size: 768m
 dcx_log_dir: /var/log/de-calixtinus
 dcx_run_dir: de-calixtinus
 # The s3 configuration to use

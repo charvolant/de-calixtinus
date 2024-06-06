@@ -16,13 +16,11 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Camino Fisterra",
-        "lang": "gl"
+        "value": "Camino Fisterra@gl"
       },
       {
         "term": "dcterms:title",
-        "value": "Camino Finisterre",
-        "lang": "es"
+        "value": "Camino Finisterre@es"
       },
       {
         "term": "dcterms:creator",
@@ -34,11 +32,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-04-12"
+        "value": "2024-06-06"
       },
       {
         "term": "dcterms:version",
-        "value": "0.1"
+        "value": "0.4"
       },
       {
         "term": "dcterms:license",

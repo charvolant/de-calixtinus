@@ -16,23 +16,19 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Camiño francés",
-        "lang": "gl"
+        "value": "Camiño francés@gl"
+       },
+      {
+        "term": "dcterms:title",
+        "value": "Camino Frances@en"
       },
       {
         "term": "dcterms:title",
-        "value": "Camino Frances",
-        "lang": "en"
+        "value": "French Way@en"
       },
       {
         "term": "dcterms:title",
-        "value": "French Way",
-        "lang": "en"
-      },
-      {
-        "term": "dcterms:title",
-        "value": "Camino francés",
-        "lang": "es"
+        "value": "Camino francés@es"
       },
       {
         "term": "dcterms:creator",
@@ -44,11 +40,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-04-29"
+        "value": "2024-06-06"
       },
       {
         "term": "dcterms:version",
-        "value": "0.1"
+        "value": "0.4"
       },
       {
         "term": "dcterms:license",

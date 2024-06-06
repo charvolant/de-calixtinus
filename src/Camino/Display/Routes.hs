@@ -17,6 +17,7 @@ module Camino.Display.Routes (
 
 import Camino.Camino
 import Camino.Config
+import Data.Localised
 import Data.Text
 
 -- | Common Camino routes
@@ -31,7 +32,7 @@ data CaminoRoute = AssetRoute Text -- ^ An identified font or asset
 findLink ident locales config = maybe "/error.html" linkPath (getLink ident locales config)
 
 -- | The rendering function for the routes
-renderCaminoRoute :: Config -> [Text] -> CaminoRoute -> [(Text, Text)] -> Text
+renderCaminoRoute :: Config -> [Locale] -> CaminoRoute -> [(Text, Text)] -> Text
 renderCaminoRoute config _locales (AssetRoute ident) _ = maybe ("invalid/" <> ident) assetPath (getAsset ident config)
 renderCaminoRoute config _locales (IconRoute ident) _ = (maybe "invalid" assetPath (getAsset "icons" config)) <> "/" <> ident
 renderCaminoRoute _config _locales KMLRoute _ = "camino.kml"

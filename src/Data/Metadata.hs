@@ -28,6 +28,7 @@ module Data.Metadata (
 import Data.Aeson
 import Data.Default.Class
 import Data.List (find)
+import Data.Localised (TaggedText(..), localeLanguageTag)
 import Data.Maybe (fromJust)
 import qualified Data.Text as T (Text, concat, isPrefixOf, null, split, stripPrefix, stripSuffix, unpack, pack)
 import Network.URI
@@ -64,47 +65,46 @@ encodeTerm namespaces term =
     maybe term' (\ns -> T.concat [(namespacePrefix ns), (fromJust $ T.stripPrefix (namespaceUri ns) term')]) namespace
 
 data Statement =
-  Statement URI T.Text (Maybe T.Text) -- ^ A proper statement
-  | RawStatement T.Text T.Text (Maybe T.Text) -- ^ A statement that needs to be decoded
+  Statement URI TaggedText -- ^ A proper statement
+  | RawStatement T.Text TaggedText -- ^ A statement that needs to be decoded
   deriving (Show)
 
 instance FromJSON Statement where
   parseJSON (Object v) = do
     term' <- v .: "term"
     value' <- v .: "value"
-    lang' <- v .:? "lang" .!= Nothing
-    return (RawStatement term' value' lang')
+    return (RawStatement term' value')
   parseJSON v = error ("Unable to parse namespace " ++ show v)
 
 instance ToJSON Statement where
-  toJSON (RawStatement term' value' lang') = object [ "term" .= term', "value" .= value', "lang" .= lang' ]
-  toJSON (Statement term' value' lang') = object [ "term" .= (uriToString id term') "", "value" .= value', "lang" .= lang' ]
+  toJSON (RawStatement term' value') = object [ "term" .= term', "value" .= value' ]
+  toJSON (Statement term' value') = object [ "term" .= (uriToString id term') "", "value" .= value' ]
 
-fromRawStatement _namespaces s@(Statement _ _ _) = s
-fromRawStatement namespaces (RawStatement term value lang) = Statement (fromJust $ decodeTerm namespaces term) value lang
+fromRawStatement _namespaces s@(Statement _ _) = s
+fromRawStatement namespaces (RawStatement term value) = Statement (fromJust $ decodeTerm namespaces term) value
 
 toRawStatement :: [Namespace] -> Statement -> Statement
-toRawStatement _namespaces r@(RawStatement _ _ _) = r
-toRawStatement namespaces (Statement term value lang) = RawStatement (encodeTerm namespaces term) value lang
+toRawStatement _namespaces r@(RawStatement _ _) = r
+toRawStatement namespaces (Statement term value) = RawStatement (encodeTerm namespaces term) value
 
 statementTerm :: Statement -> URI
-statementTerm (RawStatement term _value _lang) = maybe nullURI id (parseURI $ T.unpack term)
-statementTerm (Statement term _value _lang) = term
+statementTerm (RawStatement term _value) = maybe nullURI id (parseURI $ T.unpack term)
+statementTerm (Statement term _value) = term
 
 statementValue :: Statement -> T.Text
-statementValue (RawStatement _term value _lang) = value
-statementValue (Statement _term value _lang) = value
+statementValue (RawStatement _term value) = ttText value
+statementValue (Statement _term value) = ttText value
 
 statementLang :: Statement -> Maybe T.Text
-statementLang (RawStatement _term _value lang) = lang
-statementLang  (Statement _term _value lang) = lang
+statementLang (RawStatement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ ttLocale value
+statementLang  (Statement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ ttLocale value
 
 statementLabel :: Statement -> T.Text
 statementLabel statement =
   let
     url = case statement of
-      (RawStatement term _ _) -> term
-      (Statement term _ _) -> T.pack $ (uriToString id term) ""
+      (RawStatement term _) -> term
+      (Statement term _) -> T.pack $ (uriToString id term) ""
     broken = dropWhile T.null (T.split (\c -> c == '#' || c == '/') url)
   in
     if length broken == 0 then url else last broken

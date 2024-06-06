@@ -38,6 +38,7 @@ import Text.Read (readMaybe)
 import Text.XML
 import Yesod
 import Camino.Planner (planCamino)
+import Data.Localised (Locale, localeFromID, localeLanguageTag, rootLocale)
 
 mkYesodDispatch "CaminoApp" resourcesCaminoApp
 
@@ -68,24 +69,26 @@ getNoticeR = do
 getHelpR :: Handler Html
 getHelpR = do
   master <- getYesod
-  langs <- languages
+  locales <- getLocales
   let config = caminoAppConfig master
-  let router = renderCaminoRoute config langs
-  let messages = renderCaminoMsg config
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI MsgHelpTitle
-    toWidget ((helpWidget langs) messages router)
+    toWidget ((helpWidget locales) messages router)
 
 -- | Help for the languages that we have
-helpWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
-helpWidget [] = helpWidget ["en"]
-helpWidget ("en":_) = $(ihamletFile "templates/help/help-en.hamlet")
-helpWidget (_:other) = helpWidget other
+helpWidget :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
+helpWidget [] = helpWidget [rootLocale]
+helpWidget (locale:rest)
+ | localeLanguageTag locale == "" = $(ihamletFile "templates/help/help-en.hamlet")
+ | localeLanguageTag locale == "en" = $(ihamletFile "templates/help/help-en.hamlet")
+ | otherwise = helpWidget rest
 
 getCaminoR :: Text -> Handler Html
-getCaminoR caminoId = do
+getCaminoR cid = do
   master <- getYesod
-  let camino = findCaminoById (caminoAppCaminos master) caminoId
+  let camino = findCaminoById (caminoAppCaminos master) cid
   case camino of
     Nothing -> do
       setMessageI MsgInvalidCamino
@@ -96,11 +99,11 @@ getCaminoR caminoId = do
 caminoPage :: Camino -> Handler Html
 caminoPage camino = do
     master <- getYesod
-    langs <- languages
+    locales <- getLocales
     let cprefs = defaultCaminoPreferences camino
     let config = caminoAppConfig master
-    let router = renderCaminoRoute config langs
-    let messages = renderCaminoMsg config
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
     let html = (caminoHtmlSimple config cprefs) messages router
     defaultLayout $ do
       setTitle [shamlet|#{caminoName (preferenceCamino cprefs)}|]
@@ -109,36 +112,40 @@ caminoPage camino = do
 getMetricR :: Handler Html
 getMetricR = do
   master <- getYesod
-  langs <- languages
+  locales <- getLocales
   let config = caminoAppConfig master
-  let router = renderCaminoRoute config langs
-  let messages = renderCaminoMsg config
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI MsgMetricTitle
-    toWidget ((metricWidget langs) messages router)
+    toWidget ((metricWidget locales) messages router)
 
 -- | Help for the languages that we have
-metricWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
-metricWidget [] = metricWidget ["en"]
-metricWidget ("en":_) = $(ihamletFile "templates/help/metric-en.hamlet")
-metricWidget (_:other) = metricWidget other
+metricWidget :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
+metricWidget [] = metricWidget [rootLocale]
+metricWidget (locale:rest)
+ | localeLanguageTag locale == "" = $(ihamletFile "templates/help/metric-en.hamlet")
+ | localeLanguageTag locale == "en" = $(ihamletFile "templates/help/metric-en.hamlet")
+ | otherwise = metricWidget rest
 
 getAboutR :: Handler Html
 getAboutR = do
   master <- getYesod
-  langs <- languages
+  locales <- getLocales
   let config = caminoAppConfig master
-  let router = renderCaminoRoute config langs
-  let messages = renderCaminoMsg config
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI MsgAboutTitle
-    toWidget ((aboutWidget langs) messages router)
+    toWidget ((aboutWidget locales) messages router)
 
 -- | About text for the languages that we have
-aboutWidget :: [Text] -> HtmlUrlI18n CaminoMsg CaminoRoute
-aboutWidget [] = aboutWidget ["en"]
-aboutWidget ("en":_) = $(ihamletFile "templates/about/about-en.hamlet")
-aboutWidget (_:other) = aboutWidget other
+aboutWidget :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
+aboutWidget [] = aboutWidget [rootLocale]
+aboutWidget (locale:rest)
+ | localeLanguageTag locale == "" = $(ihamletFile "templates/about/about-en.hamlet")
+ | localeLanguageTag locale == "en" = $(ihamletFile "templates/about/about-en.hamlet")
+ | otherwise = aboutWidget rest
 
 getHomeR :: Handler Html
 getHomeR = do
@@ -241,10 +248,10 @@ stepPage ShowPreferencesStep (Just prefs) help widget enctype = let
   in
     defaultLayout $ do
       master <- getYesod
-      langs <- languages
+      locales <- getLocales
       let config = caminoAppConfig master
-      let router = renderCaminoRoute config langs
-      let messages = renderCaminoMsg config
+      let router = renderCaminoRoute config locales
+      let messages = renderCaminoMsg config locales
       setTitleI MsgShowPreferencesTitle
       toWidget help
       $(widgetFile "show-preferences")
@@ -255,7 +262,7 @@ stepPage ShowPreferencesStep _ help widget enctype = stepPage' MsgShowPreference
 blankHelp :: Widget
 blankHelp = [whamlet||]
 
-helpPopup' :: PreferenceStep -> [Lang] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
+helpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
 helpPopup' FitnessStep _ = Just $(ihamletFile "templates/help/fitness-help-en.hamlet")
 helpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
 helpPopup' ServicesStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
@@ -267,11 +274,11 @@ helpPopup' _ _ = Nothing
 helpPopup :: PreferenceStep -> Handler (Widget, Widget)
 helpPopup stepp = do
   master <- getYesod
-  langs <- languages
+  locales <- getLocales
   let config = caminoAppConfig master
-  let router = renderCaminoRoute config langs
-  let messages = renderCaminoMsg config
-  let help' = (\h -> h messages router) <$> helpPopup' stepp langs
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
+  let help' = (\h -> h messages router) <$> helpPopup' stepp locales
   return $ case help' of
     Nothing -> (
          blankHelp
@@ -298,13 +305,13 @@ addError _ = do
 planPage :: PreferenceData -> Handler Html
 planPage prefs = do
     master <- getYesod
-    langs <- languages
+    locales <- getLocales
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
     let solution = planCamino tprefs cprefs
     let config = caminoAppConfig master
-    let router = renderCaminoRoute config langs
-    let messages = renderCaminoMsg config
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionTrip solution)
     defaultLayout $ do

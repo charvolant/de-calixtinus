@@ -42,6 +42,7 @@ import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
+import Data.Localised (localeFromID)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
@@ -243,7 +244,8 @@ makePreferenceData _master fields = let
 chooseFitnessForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseFitnessForm help prefs extra = do
     master <- getYesod
-    let render = renderCaminoMsg (caminoAppConfig master)
+    langs <- languages
+    let render = renderCaminoMsg (caminoAppConfig master) (map localeFromID langs)
     let  travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let  fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let  comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
@@ -360,10 +362,10 @@ chooseRangeForm help prefs extra = do
 chooseServicesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseServicesForm help prefs extra = do
     master <- getYesod
-    langs <- languages
+    locales <- getLocales
     let config = caminoAppConfig master
-    let router = renderCaminoRoute config langs
-    let messages = renderCaminoMsg config
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration

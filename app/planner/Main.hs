@@ -22,6 +22,7 @@ import Camino.Config
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Data.List.Split
+import Data.Localised (localeFromID)
 import Data.Placeholder
 import qualified Data.Set as S
 import qualified Data.Text as ST (unpack)
@@ -83,8 +84,10 @@ plan opts = do
        preferenceStops = if S.null stops' then recommendedStops caminoPrefs'' else stops',
        preferenceExcluded = excluded'
     }
-    let router = renderCaminoRoute config' ["en", ""]
-    let messages = renderCaminoMsg config'
+    let langs = ["en", ""]
+    let locales = map localeFromID langs
+    let router = renderCaminoRoute config' locales
+    let messages = renderCaminoMsg config' locales
     let solution = planCamino preferences' caminoPrefs'''
     let trip = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationName v))) Just (solutionTrip solution)
     createDirectoryIfMissing True output'

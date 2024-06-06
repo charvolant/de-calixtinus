@@ -8,6 +8,7 @@ import GraphSpec
 import ProgrammingSpec
 import MetadataSpec
 import PropositionalSpec
+import LocalisedSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Data.Default.Class
@@ -31,7 +32,8 @@ main = do
     results <- runTestTT (testList shortPreferences camino)
     putStrLn $ show results
 
-testList prefs camino = TestList [ 
+testList prefs camino = TestList [
+    TestLabel "Localised" testLocalised,
     TestLabel "Metadata" testMetadata,
     TestLabel "Propositional" testPropositional,
     TestLabel "Config" testConfig,

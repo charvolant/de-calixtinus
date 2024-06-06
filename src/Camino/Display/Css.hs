@@ -23,6 +23,7 @@ import Data.Char (ord)
 import Data.Colour
 import Data.Colour.SRGB
 import Data.Default.Class
+import Data.Localised (rootLocale)
 import Data.Text ()
 import Numeric
 import Text.Cassius
@@ -160,6 +161,6 @@ staticCss config = [caminoBaseCss, paletteCss "location-default" def] ++ (map ca
 caminoCss :: Config -> Camino -> [Css]
 caminoCss config camino = map (\c -> c router) (default':routes')
   where
-    router = renderCaminoRoute config [""]
+    router = renderCaminoRoute config [rootLocale]
     default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute camino)
     routes' =  map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes camino)

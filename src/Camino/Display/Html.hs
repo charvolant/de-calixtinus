@@ -43,8 +43,8 @@ conditionalLabel label values = [ihamlet|
         <h6>_{label}
   |]
 
-penanceSummary :: TravelPreferences -> CaminoPreferences -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-penanceSummary _preferences _camino detail metrics = [ihamlet|
+penanceSummary :: TravelPreferences -> CaminoPreferences -> Bool -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = [ihamlet|
    _{PenanceMsg (metricsPenance metrics)} =
    _{DistancePenanceMsg (metricsPerceivedDistance metrics)}
    $if metricsDistanceAdjust metrics /= mempty
@@ -57,21 +57,21 @@ penanceSummary _preferences _camino detail metrics = [ihamlet|
      \ + _{LocationPenanceMsg (metricsLocation metrics)}
    $if showAccommodation
      \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
-     $if hasAccommodationServices
+     $if hasAccommodationServices && accommodationDetail
        \ (
        $forall service <- acServices
           ^{caminoServiceIcon service}
        )
    $if metricsStopServices metrics /= mempty
      \ + _{StopServicesPenanceMsg (metricsStopServices metrics)}
-     $if detail
+     $if serviceDetail
        \ (
        $forall service <- metricsMissingStopServices metrics
           ^{caminoServiceIcon service}
        )
    $if metricsDayServices metrics /= mempty
      \ + _{DayServicesPenanceMsg (metricsDayServices metrics)}
-     if $detail
+     if $serviceDetail
        \ (
        $forall service <- metricsMissingDayServices metrics
           ^{caminoServiceIcon service}
@@ -81,7 +81,7 @@ penanceSummary _preferences _camino detail metrics = [ihamlet|
    |]
   where
     acServices = maybe S.empty (tripChoiceServices . fst) (L.uncons $ metricsAccommodationChoice metrics)
-    hasAccommodationServices = detail && not (S.null acServices)
+    hasAccommodationServices = accommodationDetail && not (S.null acServices)
     showAccommodation = metricsLocation metrics /= mempty || hasAccommodationServices
 
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -307,20 +307,38 @@ caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping')
           ^{caminoSleepingIcon sleeping}
  |]
 
+
+caminoAccommodationChoiceSummaryHtml :: Accommodation -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
+    <span .accommodation>
+      <span .pr-4>
+        ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationTypeMsg type'}
+      $if hasServices
+        <span .p2-4>
+          \(
+          $forall service <- services'
+            ^{caminoServiceIcon service}
+          )
+  |]
+  where
+      type' = accommodationType accommodation
+      services' = maybe S.empty (tripChoiceServices . fst) (L.uncons $ metricsAccommodationChoice metrics)
+      hasServices = not (S.null services')
+
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
 caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping) = [ihamlet|_{Txt name'}|]
 
-caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation) -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation) ->HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|
   <div .row .accommodation>
     <div .offset-1 .col-5>
       ^{caminoAccommodationTypeIcon type'}
       ^{caminoAccommodationNameHtml accommodation}
       $maybe ac <- choice'
-        <span .chosen-accommodation>
+        <span .best-accommodation>
           $if tripChoicePenance ac /= mempty
-            <span .chosen-accommodation-penance>+_{PenanceFormatted (tripChoicePenance ac)}
+            <span .best-accommodation-penance>+_{PenanceFormatted (tripChoicePenance ac)}
     <div .col-4>
       $forall service <- accommodationServices accommodation
         ^{caminoServiceIcon service}
@@ -468,7 +486,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
             <div .col>
               $maybe d <- locationDescription location
                 _{Desc d}
-            <div .col-2 .float-end>
+            <div .col-1 .float-end>
               $maybe lc <- locChoice
                 $if tripChoicePenance lc /= mempty
                   <span .chosen-location>
@@ -657,7 +675,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
          <p>
             ^{metricsSummary preferences camino (score day) Nothing}
             <br>
-            ^{penanceSummary preferences camino True $ score day}
+            ^{penanceSummary preferences camino False True $ score day}
          <ul>
             <li>
               <div .location-summary>
@@ -670,7 +688,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
                   ^{legLine preferences camino leg}
          $forall accom <- metricsAccommodationChoice $ score day
             <p>
-              ^{caminoAccommodationSummaryHtml (tripChoice accom)}
+              ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
    |]
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

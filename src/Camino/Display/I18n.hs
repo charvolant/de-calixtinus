@@ -362,10 +362,10 @@ renderCaminoMsg config locales (Desc locd) = let
             $maybe txt <- descText elt
               #{txt}
           $maybe img <- mimg
-            <div col-1>
+            <div .col-1 .float-end>
               <img src="#{img}">
           $maybe about <- mabout
-            <div col-1>
+            <div .col-1 .float-end>
               <a .btn .btn-primary .btn-sm href="#{about}">
                 <span .ca-information title="#{renderCaminoMsg config locales LinkOut}">
         $forall note <- descNotes elt

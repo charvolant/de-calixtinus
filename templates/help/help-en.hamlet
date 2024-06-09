@@ -604,8 +604,8 @@
                 <div .offset-1 .col-5>
                   <span .accommodation .hotel .ca-hotel>
                   Hotel Dighton
-                  <span .chosen-accommodation>
-                    <span .chosen-accommodation-penance>+<span .penance">0.4 km</span>
+                  <span .best-accommodation .chosen-accomodation>
+                    <span .best-accommodation-penance>+<span .penance">0.4 km</span>
                 <div .col-4>
                   <span .service .ca-wifi>
                   <span .service .ca-restaurant>
@@ -735,15 +735,15 @@
 
 <p>
   If there is a
-  <span .chosen-accommodation>
+  <span .best-accommodation>
   mark beside the accommodation, then this is the accommodation option for this location that the planner has
   chosen as the best match for your preferences, although it may not have used it for a stop.
   The planner does not choose on accommodation type alone.
   If the accommodation option has services that look appealing, it may choose it over another option of a
   more preferred type.
   If there is a figure beside the symbol, e.g.
-  <span .chosen-accommodation>
-    <span .chosen-accommodation-penance>+<span .penance">0.4 km</span>
+  <span .best-accommodation>
+    <span .best-accommodation-penance>+<span .penance">0.4 km</span>
   Then that indicates that there is a better option nearby, with the number giving a sense of the combination
   of how much better and how far away that other option is.
   (See <a href="#accommodation-penance">above</a> for more information.)

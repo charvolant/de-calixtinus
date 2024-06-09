@@ -27,11 +27,11 @@ a
   color: #2ab472
 .accommodation.home-stay
   color: #ff395c
-.chosen-accommodation
+.best-accommodation
   color: #6ac830
-.chosen-accommodation::before
-  content: "\2605"
-.chosen-accommodation-penance
+.best-accommodation::before
+  content: "\2713"
+.best-accommodation-penance
   font-size: smaller
   vertical-align: top
 .chosen-location:
@@ -93,6 +93,8 @@ a
       font-family: "Camino Icons"
       font-weight: normal
       content: "\e020"
+  .best-accommodation
+    font-weight: bold
 .location-type-sample
   color: #{toCssColour caminoYellow}
 .location-waypoint

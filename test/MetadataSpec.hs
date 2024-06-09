@@ -23,11 +23,11 @@ dctermsDescription = fromJust $ parseURI "http://purl.org/dc/terms/source"
 
 namespace1 = Namespace "dc:" "http://purl.org/dc/elements/1.1/"
 
-statement1 = Statement dcTitle (TaggedText "A test title" (localeFromID "en"))
+statement1 = Statement dcTitle (TaggedText (localeFromIDOrError "en") "A test title")
 
-statement2 = Statement dcCreated (TaggedText "2024-02-10" rootLocale)
+statement2 = Statement dcCreated (TaggedText rootLocale "2024-02-10")
 
-statement3 = Statement dcCreated (TaggedText "2024-02-11" rootLocale)
+statement3 = Statement dcCreated (TaggedText rootLocale "2024-02-11")
 
 testMetadata1 = Metadata {
   metadataNamespaces = [ namespace1 ],
@@ -97,8 +97,8 @@ testRead1 =
     mmetadata = eitherDecode json1 :: Either String Metadata
     metadata = either error id mmetadata
     getTerm (Statement term _value) = term
-    getValue (Statement _term value) = ttText value
-    getLang (Statement _term value) = localeLanguageTag $ ttLocale value
+    getValue (Statement _term value) = plainText value
+    getLang (Statement _term value) = localeLanguageTag $ locale value
   in
     TestCase (do
       assertEqual "Read 1 1" 1 (Prelude.length $ metadataNamespaces metadata)

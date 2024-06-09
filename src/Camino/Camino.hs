@@ -73,7 +73,7 @@ import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.List (find)
-import Data.Localised (LocalisedText(..), appendText, localiseDefault, simpleText)
+import Data.Localised (Description(..), Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
@@ -247,13 +247,13 @@ instance ToJSON Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
-  Accommodation LocalisedText AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accommodation
+  Accommodation (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accommodation
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
   deriving (Show)
   
-accommodationName :: Accommodation -> LocalisedText
+accommodationName :: Accommodation -> (Localised TaggedText)
 accommodationName (Accommodation name' _type _services _sleeping) = name'
-accommodationName (GenericAccommodation type') = simpleText $ pack ("Generic " ++ show type')
+accommodationName (GenericAccommodation type') = wildcardText $ pack ("Generic " ++ show type')
 
 -- | Get a simple text version of the accommodation name
 accommodationNameLabel :: Accommodation -> Text
@@ -335,18 +335,13 @@ locationCampingDefault Town = False
 locationCampingDefault City = False
 locationCampingDefault _ = True
 
--- | A URL for referencing.
---   Currently, this is plain text.
-type URL = Text
-
 -- | A location, usually a city/town/village that marks the start and end points of a leg
 --   and which may have accommodation and other services available.
 --   Locations form the vertexes on the travel graph
 data Location = Location {
     locationID :: String
-  , locationName :: LocalisedText
-  , locationDescription :: Maybe Text
-  , locationHref :: Maybe URL
+  , locationName :: Localised TaggedText
+  , locationDescription :: Maybe (Localised Description)
   , locationType :: LocationType
   , locationPosition :: Maybe LatLong
   , locationServices :: S.Set Service
@@ -358,9 +353,8 @@ instance Placeholder Camino Location where
   placeholderID = locationID
   placeholder lid = Location {
       locationID = lid
-    , locationName = simpleText $ pack ("Placeholder for " ++ lid)
+    , locationName = wildcardText $ pack ("Placeholder for " ++ lid)
     , locationDescription = Nothing
-    , locationHref = Nothing
     , locationType = Poi
     , locationPosition = Nothing
     , locationServices = S.empty
@@ -376,7 +370,6 @@ instance FromJSON Location where
     id' <- v .: "id"
     name' <- v .: "name"
     description' <- v .:? "description" .!= Nothing
-    href' <- v .:? "href" .!= Nothing
     type' <- v .:? "type" .!= Poi
     position' <- v .:? "position"
     services' <- v .: "services"
@@ -386,7 +379,6 @@ instance FromJSON Location where
         locationID = id'
       , locationName = name'
       , locationDescription = description'
-      , locationHref = href'
       , locationType = type'
       , locationPosition = position'
       , locationServices = services'
@@ -396,12 +388,11 @@ instance FromJSON Location where
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' description' href' type' position' services' accommodation' camping') =
+    toJSON (Location id' name' description' type' position' services' accommodation' camping') =
       object [ 
           "id" .= id'
         , "name" .= name'
         , "description" .= description'
-        , "href" .= href'
         , "type" .= type'
         , "position" .= position'
         , "services" .= services'
@@ -451,12 +442,12 @@ data Leg = Leg {
     legType :: LegType -- ^ The type of leg
   , legFrom :: Location -- ^ The start location
   , legTo :: Location -- ^ The end location
+  , legDescription :: Maybe (Localised Description) -- ^ Additional descriptive information
   , legDistance :: Float -- ^ The distance between the start and end in kilometres
   , legTime :: Maybe Float -- ^ An explicit time associated with the leg
   , legAscent :: Float -- ^ The total ascent on the leg in metres
   , legDescent :: Float -- ^ The total descent on the leg in metres
   , legPenance :: Maybe Penance -- ^ Any additional penance associated with the leg
-  , legNotes :: Maybe Text -- ^ Additional notes about the leg
 } deriving (Show)
 
 instance FromJSON Leg where
@@ -464,19 +455,19 @@ instance FromJSON Leg where
       type' <- v .:? "type" .!= def
       from' <- v .: "from"
       to' <- v .: "to"
+      description' <- v .:? "description" .!= Nothing
       distance' <- v .: "distance"
       time' <- v .:? "time" .!= Nothing
       ascent' <- v .: "ascent"
       descent' <- v .: "descent"
       penance' <- v .:? "penance" .!= Nothing
-      notes' <- v .:? "notes" .!= Nothing
-      
-      return Leg { legType = type', legFrom = from', legTo = to', legDistance = distance', legTime = time',  legAscent = ascent', legDescent = descent', legPenance = penance', legNotes = notes' }
+       
+      return Leg { legType = type', legFrom = from', legTo = to', legDescription = description',  legDistance = distance', legTime = time',  legAscent = ascent', legDescent = descent', legPenance = penance' }
     parseJSON v = error ("Unable to parse leg object " ++ show v)
 
 instance ToJSON Leg where
-    toJSON (Leg type' from' to' distance' time' ascent' descent' penance' notes') =
-      object [ "type" .= (if type' == def then Nothing else Just type'), "from" .= locationID from', "to" .= locationID to', "distance" .= distance', "time" .= time', "ascent" .= ascent', "descent" .= descent', "penance" .= penance', "notes" .= notes' ]
+    toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance') =
+      object [ "type" .= (if type' == def then Nothing else Just type'), "from" .= locationID from', "to" .= locationID to', "description" .= description', "distance" .= distance', "time" .= time', "ascent" .= ascent', "descent" .= descent', "penance" .= penance' ]
 
 instance Edge Leg Location where
   source = legFrom
@@ -494,8 +485,8 @@ instance Ord Leg where
 
 -- | Ensure a leg has locations mapped correctly
 normaliseLeg :: M.Map String Location -> Leg -> Leg
-normaliseLeg locs (Leg type' from to distance time ascent descent penance notes) =
-  Leg { legType = type', legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDistance = distance, legTime = time, legAscent = ascent, legDescent = descent, legPenance = penance, legNotes = notes }
+normaliseLeg locs (Leg type' from to description distance time ascent descent penance) =
+  Leg { legType = type', legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDescription = description, legDistance = distance, legTime = time, legAscent = ascent, legDescent = descent, legPenance = penance }
 
 -- | A palette, graphical styles to use for displaying information
 data Palette = Palette {
@@ -520,8 +511,8 @@ instance Default Palette where
 -- | A route, a sub-section of the camino with graphical information
 data Route = Route {
     routeID :: String -- ^ An identifier for the route
-  , routeName :: LocalisedText -- ^ The route name
-  , routeDescription :: Text -- ^ The route description
+  , routeName :: Localised TaggedText -- ^ The route name
+  , routeDescription :: Localised Description -- ^ The route description
   , routeLocations :: S.Set Location -- ^ The locations along the route
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
@@ -576,8 +567,8 @@ instance Placeholder Camino Route where
   placeholderID = routeID
   placeholder rid = Route {
       routeID = rid
-    , routeName = simpleText $ pack ("Placeholder for " ++ rid)
-    , routeDescription = ""
+    , routeName = wildcardText $ pack ("Placeholder for " ++ rid)
+    , routeDescription = wildcardText ""
     , routeLocations = S.empty
     , routeStops = S.empty
     , routeStarts = []
@@ -714,8 +705,8 @@ createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits lo
 --   The purpose of the Camino Planner is to divide a camino into 
 data Camino = Camino {
     caminoId :: String
-  , caminoName :: LocalisedText
-  , caminoDescription :: Text
+  , caminoName :: Localised TaggedText
+  , caminoDescription :: Localised Description
   , caminoMetadata :: Metadata
   , caminoLocations :: M.Map String Location -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
@@ -804,8 +795,8 @@ instance Placeholder [Camino] Camino where
   placeholderID = caminoId
   placeholder cid = Camino {
         caminoId = cid
-      , caminoName = simpleText $ pack ("Placeholder for " ++ cid)
-      , caminoDescription = ""
+      , caminoName = wildcardText $ pack ("Placeholder for " ++ cid)
+      , caminoDescription = wildcardText ""
       , caminoMetadata = Metadata [] []
       , caminoLocations = M.empty
       , caminoLegs = []

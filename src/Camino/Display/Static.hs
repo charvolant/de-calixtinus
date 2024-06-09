@@ -43,19 +43,19 @@ createCssFiles config output = do
   LTIO.writeFile file $ LT.concat (map (\c -> renderCss $ c router) css)
 
 createHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> IO ()
-createHelpFile config locale file html = do
-  let locales = [locale, rootLocale]
+createHelpFile config loc file html = do
+  let locales = [loc, rootLocale]
   let router = renderCaminoRoute config locales
   let messages = renderCaminoMsg config locales
   LB.writeFile file $ renderHtml $ html messages router
   
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()
-createStandAloneHelpFile config locale file html title = createHelpFile config locale file (layoutHtml config (simpleText title) Nothing html Nothing)
+createStandAloneHelpFile config loc file html title = createHelpFile config loc file (layoutHtml config (wildcardText title) Nothing html Nothing)
 
 createHelpFiles :: Config -> FilePath -> IO ()
 createHelpFiles config output = do
-  let locale = localeFromID "en"
+  let loc = localeFromIDOrError "en"
   createDirectoryIfMissing True output
-  createStandAloneHelpFile config locale (output </> "help-en.html") $(ihamletFile "templates/help/help-en.hamlet") "Help"
-  createHelpFile config locale (output </> "fitness-help-en.html") $(ihamletFile "templates/help/fitness-help-en.hamlet")
-  createHelpFile config locale (output </> "range-help-en.html") $(ihamletFile "templates/help/range-help-en.hamlet")
+  createStandAloneHelpFile config loc (output </> "help-en.html") $(ihamletFile "templates/help/help-en.hamlet") "Help"
+  createHelpFile config loc (output </> "fitness-help-en.html") $(ihamletFile "templates/help/fitness-help-en.hamlet")
+  createHelpFile config loc (output </> "range-help-en.html") $(ihamletFile "templates/help/range-help-en.hamlet")

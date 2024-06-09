@@ -42,7 +42,7 @@ import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
-import Data.Localised (localeFromID, localiseText)
+import Data.Localised (localiseText)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
@@ -244,8 +244,8 @@ makePreferenceData _master fields = let
 chooseFitnessForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseFitnessForm help prefs extra = do
     master <- getYesod
-    langs <- languages
-    let render = renderCaminoMsg (caminoAppConfig master) (map localeFromID langs)
+    locales <- getLocales
+    let render = renderCaminoMsg (caminoAppConfig master) locales
     let  travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let  fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let  comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
@@ -442,8 +442,8 @@ chooseCaminoForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (For
 chooseCaminoForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
-    let localised c = localiseText locales $ caminoName c
-    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ localised c, c, Just $ toHtml $ caminoDescription c)) (caminoAppCaminos master))
+    let localised c = localiseText locales c
+    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ localised $ caminoName c, c, Just $ toHtml $ localised $ caminoDescription c)) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -489,12 +489,13 @@ chooseRoutesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (For
 chooseRoutesForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
+    let localised r = localiseText locales r
     let camino = prefCamino <$> prefs
     let routes = maybe (Prelude.concat (map caminoRoutes (caminoAppCaminos master))) caminoRoutes camino
     let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
-    let routeOptions = map (\r -> (pack $ routeID r, localiseText locales (routeName r), r, Just $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
+    let routeOptions = map (\r -> (pack $ routeID r, localised (routeName r), r, Just $ localised (routeDescription r), maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
     (roRes, roView) <- mreq (implyingCheckListField routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {

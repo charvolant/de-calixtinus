@@ -62,25 +62,25 @@ locationI2 = placeholder "I2"
 
 locationE1 = placeholder "E1"
 
-leg1 = Leg Road location1 location2 1.2 Nothing 20.0 10.0 Nothing Nothing
+leg1 = Leg Road location1 location2 Nothing 1.2 Nothing 20.0 10.0 Nothing 
 
-leg2 = Leg Trail location1 location2 1.2 Nothing 20.0 10.0 Nothing Nothing
+leg2 = Leg Trail location1 location2 Nothing 1.2 Nothing 20.0 10.0 Nothing
 
-leg3 = Leg Road location1 location3 1.2 Nothing 20.0 10.0 Nothing Nothing
+leg3 = Leg Road location1 location3 Nothing 1.2 Nothing 20.0 10.0 Nothing
 
-leg4 = Leg Road location2 location3 1.2 Nothing 20.0 10.0 Nothing Nothing
+leg4 = Leg Road location2 location3 Nothing 1.2 Nothing 20.0 10.0 Nothing 
 
-leg5 = Leg Road location1 location3 1.3 Nothing 20.0 10.0 Nothing Nothing
+leg5 = Leg Road location1 location3 Nothing 1.3 Nothing 20.0 10.0 Nothing
 
-leg6 = Leg Road location1 location3 1.3 Nothing 25.0 0.0 Nothing Nothing
+leg6 = Leg Road location1 location3 Nothing 1.3 Nothing 25.0 0.0 Nothing
 
-route1 = Route "R1" (simpleText "Route 1") "Route 1" (S.fromList [location1]) S.empty [] [] def
+route1 = Route "R1" (wildcardText "Route 1") (wildcardText "Route 1") (S.fromList [location1]) S.empty [] [] def
 
-route2 = Route "R2" (simpleText "Route 2") "Route 2" (S.fromList [location2]) S.empty [] [] def
+route2 = Route "R2" (wildcardText "Route 2") (wildcardText "Route 2") (S.fromList [location2]) S.empty [] [] def
 
-route3 = Route "R3" (simpleText "Route 3") "Route 3" (S.fromList [location3]) S.empty [] [] def
+route3 = Route "R3" (wildcardText "Route 3") (wildcardText "Route 3") (S.fromList [location3]) S.empty [] [] def
 
-route4 = Route "R4" (simpleText "Route 4") "Route 4" (S.fromList [location1, location2]) S.empty [] [] def
+route4 = Route "R4" (wildcardText "Route 4") (wildcardText "Route 4") (S.fromList [location1, location2]) S.empty [] [] def
 
 condition1 = And [Variable route1, Not $ Variable route2]
 
@@ -88,8 +88,8 @@ logic1 = RouteLogic (Just "Route Logic 1") condition1 (S.singleton route3) S.emp
 
 camino1 = Camino 
   "C1" 
-  (simpleText "Camino 1")
-  "Test camino 1" 
+  (wildcardText "Camino 1")
+  (wildcardText "Test camino 1")
   metadata1 
   (M.fromList $ map (\l -> (locationID l, l)) [location1, location2, location3, locationI1, locationI2]) 
   [leg1, leg2, leg3, leg4, leg5, leg6]

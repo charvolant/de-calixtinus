@@ -1,6 +1,9 @@
 {
   "id": "FI",
-  "name": "Camino Fisterra",
+  "name": [
+    "Camino Fisterra@ga",
+    "Camino Finisterre@es"
+  ],
   "description": "The Camino Fisterra leaves Santiago de Compestella and heads West, to Fisterra/Finisterre, the End of the World",
   "metadata" : {
     "namespaces": [
@@ -16,7 +19,7 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Camino Fisterra@gl"
+        "value": "Camino Fisterra@ga"
       },
       {
         "term": "dcterms:title",
@@ -1106,7 +1109,7 @@
       "distance": 3.69,
       "ascent": 70,
       "descent": 160,
-      "notes": "Via Lago"
+      "description": "Via Lago"
     },
     {
       "from": "FI-F17",
@@ -1142,7 +1145,7 @@
       "distance": 4.82,
       "ascent": 90,
       "descent": 195,
-      "notes": "Via A Picola"
+      "description": "Via A Picola"
     },
     {
       "from": "FI-F22",

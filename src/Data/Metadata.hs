@@ -28,7 +28,7 @@ module Data.Metadata (
 import Data.Aeson
 import Data.Default.Class
 import Data.List (find)
-import Data.Localised (TaggedText(..), localeLanguageTag)
+import Data.Localised (Tagged(..), TaggedText(..), localeLanguageTag)
 import Data.Maybe (fromJust)
 import qualified Data.Text as T (Text, concat, isPrefixOf, null, split, stripPrefix, stripSuffix, unpack, pack)
 import Network.URI
@@ -92,12 +92,12 @@ statementTerm (RawStatement term _value) = maybe nullURI id (parseURI $ T.unpack
 statementTerm (Statement term _value) = term
 
 statementValue :: Statement -> T.Text
-statementValue (RawStatement _term value) = ttText value
-statementValue (Statement _term value) = ttText value
+statementValue (RawStatement _term value) = plainText value
+statementValue (Statement _term value) = plainText value
 
 statementLang :: Statement -> Maybe T.Text
-statementLang (RawStatement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ ttLocale value
-statementLang  (Statement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ ttLocale value
+statementLang (RawStatement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ locale value
+statementLang  (Statement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ locale value
 
 statementLabel :: Statement -> T.Text
 statementLabel statement =

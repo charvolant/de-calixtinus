@@ -17,7 +17,7 @@ import Data.Placeholder
 import Camino.Camino
 import Camino.Preferences
 import Data.Either (fromRight, isLeft)
-import Data.Localised (simpleText)
+import Data.Localised (wildcardText)
 import Control.Monad (when)
 
 main :: IO ()
@@ -25,7 +25,7 @@ main = do
     cf <- B.readFile "camino-portuguese.json"
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
-    let camino = fromRight (Camino { caminoId = "Test", caminoName = simpleText "Test", caminoDescription = "", caminoMetadata = def, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X" }) ec
+    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardText "", caminoMetadata = def, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X" }) ec
     pf <- B.readFile "test-preferences.json"
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)

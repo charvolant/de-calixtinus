@@ -311,7 +311,7 @@ instance RenderMessage CaminoApp FormMessage where
     renderMessage _ _ = defaultFormMessage
 
 instance RenderMessage CaminoApp CaminoMsg where
-    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) (map localeFromID langs) msg
+    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) (catMaybes $ map localeFromID langs) msg
 
 instance Yesod CaminoApp where
   approot = ApprootMaster caminoAppRoot
@@ -469,4 +469,4 @@ encodePreferences preferences = do
 getLocales :: MonadHandler m => m [Locale]
 getLocales = do
   langs <- languages
-  return $ map localeFromID langs
+  return $ catMaybes $ map localeFromID langs

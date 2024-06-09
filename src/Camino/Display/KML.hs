@@ -30,7 +30,7 @@ import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Data.Localised (localeFromID, rootLocale)
-import Data.Maybe (fromJust)
+import Data.Maybe (catMaybes, fromJust)
 import Data.Text (Text, isPrefixOf, pack, toLower)
 import Data.Text.Lazy (toStrict)
 import Data.Colour (Colour)
@@ -141,11 +141,8 @@ caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferenc
 caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
   <div>
     <h4>#{locationNameLabel location}
-      $maybe href <- locationHref location
-        <a style="float: right;" href="#{href}">
-          <span .ca-information title="_{LinkOut (locationNameLabel location)}">
     $maybe d <- locationDescription location
-      <div>#{d}
+      <div>_{Desc d}
     <div>
       <div style="display: inline-block;" .services>
         $forall service <- locationServices location
@@ -159,7 +156,7 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
 |] message route)
   where
     langs = ["en", ""]
-    locales = map localeFromID langs
+    locales = catMaybes $ map localeFromID langs
     message = renderCaminoMsg config locales
     route = renderCaminoRoute config locales
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip

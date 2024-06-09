@@ -2,7 +2,7 @@
   "id": "F",
   "name": [
     "Camino Frances@fr",
-    "Camiño francés@gl",
+    "Camiño francés@ga",
     "Camino francés@es",
     "French Way@en",
     "Frantses bidea@eu"
@@ -22,7 +22,7 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Camiño francés@gl"
+        "value": "Camiño francés@ga"
        },
       {
         "term": "dcterms:title",
@@ -628,7 +628,7 @@
           "type": "PrivateAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Accessible", "Prayer", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ],
-          "notes": "Over 60s only"
+          "description": "Over 60s only"
         },
         {
           "name": "Quiet light room",
@@ -6099,7 +6099,7 @@
       "distance": 6.21,
       "ascent": 185,
       "descent": 30,
-      "notes": "After rain, the ascent to Mt Perdón can be too muddy for cyclists"
+      "description": "After rain, the ascent to Mt Perdón can be too muddy for cyclists"
     },
     {
       "type": "Trail",
@@ -6115,7 +6115,7 @@
       "distance": 1.7,
       "ascent": 15,
       "descent": 15,
-      "notes": "Alternative road route for cyclists"
+      "description": "Alternative road route for cyclists"
     },
     {
       "from": "F-F29",
@@ -6193,7 +6193,7 @@
       "distance": 3.68,
       "ascent": 30,
       "descent": 30,
-      "notes": "Modern route"
+      "description": "Modern route"
     },
     {
       "from": "F-F40",
@@ -6229,7 +6229,7 @@
       "distance": 12.17,
       "ascent": 35,
       "descent": 260,
-      "notes": "No water until Los Arcos"
+      "description": "No water until Los Arcos"
     },
     {
       "from": "F-F39",
@@ -6237,7 +6237,7 @@
       "distance": 2.59,
       "ascent": 45,
       "descent": 40,
-      "notes": "Original route"
+      "description": "Original route"
     },
     {
       "from": "F-F46",
@@ -6462,7 +6462,7 @@
       "distance": 3.7,
       "ascent": 40,
       "descent": 5,
-      "notes": "Via Fillafria and N-1"
+      "description": "Via Fillafria and N-1"
     },
     {
       "from": "F-F75",
@@ -6485,7 +6485,7 @@
       "ascent": 0,
       "descent": 25,
       "penance": 1.0,
-      "notes":"Via Castañares/Rio pico (muddy/potholes)"
+      "description":"Via Castañares/Rio pico (muddy/potholes)"
     },
     {
       "from": "F-F69",
@@ -6493,7 +6493,7 @@
       "distance": 2.89,
       "ascent": 20,
       "descent": 45,
-      "notes": "Via Santovenia de Oca and N120"
+      "description": "Via Santovenia de Oca and N120"
     },
     {
       "from": "F-F77",
@@ -6648,7 +6648,7 @@
       "distance": 15.11,
       "ascent": 45,
       "descent": 15,
-      "notes": "Main route"
+      "description": "Main route"
     },
     {
       "from": "F-F98",
@@ -6691,7 +6691,7 @@
       "distance": 4.9,
       "ascent": 5,
       "descent": 10,
-      "notes": "Via N120 and Villada"
+      "description": "Via N120 and Villada"
     },
     {
       "from": "F-F103",
@@ -6762,7 +6762,7 @@
       "distance": 9.08,
       "ascent": 70,
       "descent": 0,
-      "notes": "Via Trajana"
+      "description": "Via Trajana"
     },
     {
       "from": "F-F117",
@@ -6826,7 +6826,7 @@
       "distance": 3.47,
       "ascent": 5,
       "descent": 10,
-      "notes": "North variant"
+      "description": "North variant"
     },
     {
       "from": "F-F121",
@@ -6862,7 +6862,7 @@
       "distance": 1.69,
       "ascent": 15,
       "descent": 45,
-      "notes": "South variant"
+      "description": "South variant"
     },
     {
       "from": "F-F125",
@@ -6905,7 +6905,7 @@
       "distance": 2.10,
       "ascent": 10,
       "descent": 0,
-      "notes": "Via Santibáñez de Valdeiglesias"
+      "description": "Via Santibáñez de Valdeiglesias"
     },
     {
       "from": "F-F131",
@@ -6928,7 +6928,7 @@
       "ascent": 100,
       "descent": 95,
       "penance": 4.0,
-      "notes": "Via N120"
+      "description": "Via N120"
     },
     {
       "from": "F-F133",
@@ -6957,7 +6957,7 @@
       "distance": 1.97,
       "ascent": 25,
       "descent": 0,
-      "notes": "Detour to Castrillo"
+      "description": "Detour to Castrillo"
     },
     {
       "from": "F-F137",
@@ -6973,7 +6973,7 @@
       "ascent": 95,
       "descent": 0,
       "penance": 1.0,
-      "notes": "Direct route to Santa Catalina"
+      "description": "Direct route to Santa Catalina"
     },
     {
       "from": "F-F138",
@@ -7037,7 +7037,7 @@
       "distance": 4.3,
       "ascent": 50,
       "descent": 100,
-      "notes": "Ponferrada via Campo"
+      "description": "Ponferrada via Campo"
     },
     {
       "from": "F-F147",
@@ -7052,7 +7052,7 @@
       "distance": 6.7,
       "ascent": 45,
       "descent": 95,
-      "notes": "Direct to Ponferrada"
+      "description": "Direct to Ponferrada"
     },
     {
       "from": "F-F148",
@@ -7095,7 +7095,7 @@
       "distance": 1.44,
       "ascent": 40,
       "descent": 20,
-      "notes": "Northern route"
+      "description": "Northern route"
     },
     {
       "from": "F-F154",
@@ -7110,7 +7110,7 @@
       "distance": 5.20,
       "ascent": 125,
       "descent": 155,
-      "notes": "Direct route"
+      "description": "Direct route"
     },
     {
       "from": "F-F155",
@@ -7118,7 +7118,7 @@
       "distance": 4.69,
       "ascent": 45,
       "descent": 20,
-      "notes": "Southern route"
+      "description": "Southern route"
     },
     {
       "from": "F-F156",
@@ -7133,7 +7133,7 @@
       "distance": 7.96,
       "ascent": 440,
       "descent": 25,
-      "notes": "Northern route"
+      "description": "Northern route"
     },
     {
       "from": "F-F157",
@@ -7267,7 +7267,7 @@
       "distance": 3.85,
       "ascent": 20,
       "descent": 100,
-      "notes": "Via Samos"
+      "description": "Via Samos"
     },
     {
       "from": "F-F176",
@@ -7352,7 +7352,7 @@
       "distance": 2.09,
       "ascent": 70,
       "descent": 15,
-      "notes": "Via San Xil"
+      "description": "Via San Xil"
     },
     {
       "from": "F-F187",
@@ -7508,7 +7508,7 @@
       "distance": 2.19,
       "ascent": 20,
       "descent": 60,
-      "notes": "Stairways not recommended in wet weather"
+      "description": "Stairways not recommended in wet weather"
     },
     {
       "from": "F-F208",
@@ -7516,7 +7516,7 @@
       "distance": 2.49,
       "ascent": 40,
       "descent": 80,
-      "notes": "Complimentary route"
+      "description": "Complimentary route"
     },
     {
       "from": "F-F209",
@@ -7524,7 +7524,7 @@
       "distance": 1.59,
       "ascent": 40,
       "descent": 80,
-      "notes": "Historical route"
+      "description": "Historical route"
     },
     {
       "from": "F-F209",
@@ -7532,7 +7532,7 @@
       "distance": 7.5,
       "ascent": 190,
       "descent": 30,
-      "notes": "Compimentary route"
+      "description": "Compimentary route"
     },
     {
       "from": "F-F210",

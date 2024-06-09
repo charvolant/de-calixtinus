@@ -22,7 +22,7 @@ import Camino.Config
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Data.List.Split
-import Data.Localised (localeFromID)
+import Data.Localised (localeFromIDOrError)
 import Data.Placeholder
 import qualified Data.Set as S
 import qualified Data.Text as ST (unpack)
@@ -85,7 +85,7 @@ plan opts = do
        preferenceExcluded = excluded'
     }
     let langs = ["en", ""]
-    let locales = map localeFromID langs
+    let locales = map localeFromIDOrError langs
     let router = renderCaminoRoute config' locales
     let messages = renderCaminoMsg config' locales
     let solution = planCamino preferences' caminoPrefs'''

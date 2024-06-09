@@ -352,6 +352,12 @@ solutionElements _camino (Just solution) = (
   ) where
     trip' = solutionTrip solution
 
+descriptionLine :: TravelPreferences -> CaminoPreferences -> Localised Description -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionLine _preferences _camino description = [ihamlet|_{DescShort description}|]
+
+descriptionBlock :: TravelPreferences -> CaminoPreferences -> Localised Description -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionBlock _preferences _camino description = [ihamlet|_{Desc description}|]
+
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
     _{Txt (locationName location)}
@@ -377,8 +383,8 @@ legLine _preferences _camino leg = [ihamlet|
         <span .leg-time>#{format (fixed 1 % "hrs") (fromJust $ legTime leg)}
       $if isJust $ legPenance leg
         <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
-      $if isJust $ legNotes leg
-        <span .leg-notes>#{fromJust $ legNotes leg}
+      $if isJust $ legDescription leg
+        <span .leg-description>_{DescShort (fromJust $ legDescription leg)}
   |]
 
 locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -461,7 +467,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
          <div .row>
             <div .col>
               $maybe d <- locationDescription location
-                #{d}
+                _{Desc d}
             <div .col-2 .float-end>
               $maybe lc <- locChoice
                 $if tripChoicePenance lc /= mempty
@@ -470,9 +476,6 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
               $maybe pos <- locationPosition location
                 <button .btn .btn-primary .btn-sm onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
                   <span .ca-globe title="_{ShowOnMapTitle}">
-              $maybe href <- locationHref location
-                <a .btn .btn-primary .btn-sm href="#{href}">
-                    <span .ca-information title="_{LinkOut (locationNameLabel location)}">
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
           ^{caminoAccommodationHtml accommodation accChoice}
@@ -885,13 +888,13 @@ aboutHtml _prefernces camino = [ihamlet|
     <h2>_{Txt (caminoName camino')}
     <div .row>
       <div .col>
-        #{caminoDescription camino'}
+        _{Desc (caminoDescription camino')}
     <h3>_{RoutesLabel}
     $forall route <- caminoRoutes camino'
       <div ##{routeID route} .row>
         <div .col>
           <span style="color: #{toCssColour $ paletteColour $ routePalette route}">_{Txt (routeName route)}
-          #{routeDescription route}
+          _{Desc (routeDescription route)}
     <h2>_{InformationLabel}
     <p>_{InformationDescription}
     $with metadata <- caminoMetadata camino'
@@ -909,7 +912,7 @@ aboutHtml _prefernces camino = [ihamlet|
 
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
- ->  LocalisedText -- ^ The page title
+ -> Localised TaggedText -- ^ The page title
  -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the head
  -> HtmlUrlI18n CaminoMsg CaminoRoute -- ^ The body HTML
  -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the foot (after the footer)
@@ -1018,7 +1021,7 @@ caminoHtmlSimple config camino =
           #{renderCss css }
       <div .row>
         <div .col .m-1>
-          #{caminoDescription camino'}
+          _{Desc (caminoDescription camino')}
       <div .row>
         <div .col>
           <div>

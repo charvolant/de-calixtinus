@@ -7428,7 +7428,7 @@
       "distance": 1.27,
       "ascent": 35,
       "descent": 10,
-      "notes": "Via Rua da Fonte de Cerejeira (rough surface)"
+      "description": "Via Rua da Fonte de Cerejeira (rough surface)"
     },
     {
       "from": "P-P169",
@@ -7436,7 +7436,7 @@
       "distance": 1.5,
       "ascent": 35,
       "descent": 10,
-      "notes": "Via Rua de Reborido"
+      "description": "Via Rua de Reborido"
     },
     {
       "from": "P-P170",
@@ -7718,7 +7718,7 @@
       "ascent": 20,
       "descent": 20,
       "penance": 2.0,
-      "notes": "Via industrial area"
+      "description": "Via industrial area"
     },
     {
       "from": "P-P209",
@@ -7726,7 +7726,7 @@
       "distance": 2.49,
       "ascent": 35,
       "descent": 25,
-      "notes": "Via Ribadelouro"
+      "description": "Via Ribadelouro"
    },
     {
       "from": "P-P210",
@@ -7896,7 +7896,7 @@
       "distance": 2.0,
       "ascent": 0,
       "descent": 15,
-      "notes": "Via Río Tomaza footpath"
+      "description": "Via Río Tomaza footpath"
     },
     {
       "type": "Trail",
@@ -8255,7 +8255,7 @@
       "distance": 1.7,
       "ascent": 45,
       "descent": 0,
-      "notes": "Via Santa Marta"
+      "description": "Via Santa Marta"
     },
     {
       "from": "P-P281",
@@ -8263,7 +8263,7 @@
       "distance": 0.85,
       "ascent": 25,
       "descent": 20,
-      "notes": "Via Conxo"
+      "description": "Via Conxo"
     },
     {
       "from": "P-P282",
@@ -8954,7 +8954,7 @@
       "distance": 3.72,
       "ascent": 10,
       "descent": 5,
-      "notes": "No water until Apúlia"
+      "description": "No water until Apúlia"
     },
     {
       "from": "P-C15",
@@ -9119,7 +9119,7 @@
       "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "notes": "Via ferry or water taxi"
+      "description": "Via ferry or water taxi"
     },
     {
       "from": "P-C38",
@@ -9476,7 +9476,7 @@
       "ascent": 0,
       "descent": 0,
       "penance": 20.0,
-      "notes": "Via Camino by Boat"
+      "description": "Via Camino by Boat"
     },
     {
       "from": "P-T8",

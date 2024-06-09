@@ -4,9 +4,7 @@ module ConfigSpec(testConfig) where
 import Test.HUnit
 import Camino.Config
 import Data.Localised
-import Data.Map as M
 import Data.Maybe (fromJust, isJust)
-import TestUtils
 
 testConfig1 = Config {
   configParent = Just defaultConfig,
@@ -35,7 +33,7 @@ testConfig2 = Config {
         linkType = Header,
         links = [
           LinkI18n {
-            linkLocale = localeFromID "fr",
+            linkLocale = localeFromIDOrError "fr",
             linkLabel = "Feu",
             linkPath = "foo-fr.html"
           }

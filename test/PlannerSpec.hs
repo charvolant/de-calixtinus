@@ -90,11 +90,10 @@ preferences2 = TravelPreferences {
 
 location1 = Location {
     locationID = "A",
-    locationName = simpleText "A",
+    locationName = wildcardText "A",
     locationType = Poi,
     locationDescription = Nothing,
     locationCamping = True,
-    locationHref = Nothing,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = []
@@ -102,40 +101,37 @@ location1 = Location {
 
 location2 = Location {
     locationID = "B",
-    locationName = simpleText "B",
+    locationName = wildcardText "B",
     locationType = Poi,
     locationDescription = Nothing,
-    locationHref = Nothing,
     locationCamping = True,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue,
-      Accommodation (simpleText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
+      Accommodation (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
     ]  
   }
  
 location3 = Location {
     locationID = "C",
-    locationName = simpleText "C",
+    locationName = wildcardText "C",
     locationType = Poi,
     locationDescription = Nothing,
-    locationHref = Nothing,
     locationCamping = True,
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
-      Accommodation (simpleText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
+      Accommodation (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
     ]  
   }
   
   
 location4 = Location {
     locationID = "D",
-    locationName = simpleText "D",
+    locationName = wildcardText "D",
     locationType = Poi,
     locationDescription = Nothing,
-    locationHref = Nothing,
     locationPosition = Nothing,
     locationCamping = True,
     locationServices = S.empty,
@@ -146,24 +142,24 @@ location4 = Location {
   
 
 legs0 = [
-  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legNotes = Nothing }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing }
   ]
 
 legs1 = [
-  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legNotes = Nothing },
-  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legNotes = Nothing }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing },
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing }
   ]
   
 legs2 = [
-  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legNotes = Nothing },
-  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legNotes = Nothing },
-  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legNotes = Nothing }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legDescription = Nothing },
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing },
+  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legDescription = Nothing }
   ]
 
 route1 = Route { 
   routeID = "R1", 
-  routeName = simpleText "R1", 
-  routeDescription = "Route 1",
+  routeName = wildcardText "R1", 
+  routeDescription = wildcardText "Route 1",
   routeLocations = S.fromList [location1, location2, location3], 
   routeStarts = [],
   routeFinishes = [],
@@ -173,8 +169,8 @@ route1 = Route {
 
 camino1 = Camino {
   caminoId = "Test",
-  caminoName = simpleText "Test",
-  caminoDescription = "Test camino",
+  caminoName = wildcardText "Test",
+  caminoDescription = wildcardText "Test camino",
   caminoMetadata = def,
   caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
   caminoLegs = legs1,

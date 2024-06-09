@@ -128,7 +128,7 @@ instance FromJSON LinkI18n where
     locale' <- v .:? "locale" .!= "*"
     label' <- v .: "label"
     path' <- v .: "path"
-    return $ LinkI18n (localeFromID locale') label' path'
+    return $ LinkI18n (localeFromIDOrError locale') label' path'
   parseJSON v = unexpected v
   
 instance ToJSON LinkI18n where

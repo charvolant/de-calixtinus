@@ -18,9 +18,7 @@ module Camino.Config (
   Config(..),
   CrossOriginType(..),
   LinkConfig(..),
-  LinkI18n(..),
   LinkType(..),
-  Locale,
   MapConfig(..),
   WebConfig(..),
 
@@ -29,8 +27,6 @@ module Camino.Config (
   getAssets,
   getLink,
   getLinks,
-  getLocalisedLink,
-  getLocalisedLinks,
   getMap,
   readConfigFile
 ) where
@@ -39,9 +35,8 @@ import GHC.Generics (Generic)
 import Data.Aeson
 import qualified Data.Map as M
 import Data.Text (Text)
-import Data.List (find, elemIndex)
+import Data.List (find)
 import Data.Localised
-import Data.Maybe (catMaybes, listToMaybe)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
@@ -115,37 +110,12 @@ data LinkType = Header -- ^ The link is part of the heading menu
 
 instance FromJSON LinkType
 instance ToJSON LinkType
-
--- | A locality-specific link
-data LinkI18n = LinkI18n {
-  linkLocale :: Locale, -- ^ The language and optional localisation of the asset
-  linkLabel :: Text, -- ^ The localised link label
-  linkPath :: Text -- ^ The path to the link
-}  deriving (Show)
-
-instance FromJSON LinkI18n where
-  parseJSON (Object v) = do
-    locale' <- v .:? "locale" .!= "*"
-    label' <- v .: "label"
-    path' <- v .: "path"
-    return $ LinkI18n (localeFromIDOrError locale') label' path'
-  parseJSON v = unexpected v
-  
-instance ToJSON LinkI18n where
-  toJSON (LinkI18n locale' label' path') =
-    object [ "locale" .= (localeID locale'), "label" .= label', "path" .= path' ]
-
--- | Return True if the second link is more specific than the first link
-moreSpecific :: [Locale] -> LinkI18n -> LinkI18n -> Bool
-moreSpecific locales a b = pos a > pos b
-  where
-    pos x = maybe (length locales) id (elemIndex (linkLocale x) locales)
     
 -- | A link to an external, language-specific resource
 data LinkConfig = Link {
   linkId :: Text, -- ^ The link identifier
   linkType :: LinkType, -- ^ The type of link
-  links :: [LinkI18n] -- ^ The language-specific links. (Language matching is done
+  links :: Localised TaggedURL -- ^ The language-specific links
 } deriving (Show)
 
 instance FromJSON LinkConfig where
@@ -159,12 +129,6 @@ instance FromJSON LinkConfig where
 instance ToJSON LinkConfig where
   toJSON (Link id' type' links') =
     object [ "id" .= id', "type" .= type', "links" .= links' ]
-
--- | Select a localised link from a link configuration
--- | The link with the locale closest to the start of the locale list is chosen, otherwise the first link is returned as a default
-getLocalisedLink ::  [Locale] -> LinkConfig -> LinkI18n
-getLocalisedLink locales link = 
-    foldl (\current -> \candidate -> if moreSpecific locales current candidate then candidate else current) (head $ links link) (links link)
     
 -- | Configuration for what's needed to set up web pages and other resources
 data WebConfig = Web {
@@ -247,6 +211,13 @@ defaultConfig = Config {
         assetCrossOrigin = Unused
       },
       Asset {
+        assetId = "images",
+        assetType = Directory,
+        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/images",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
         assetId = "Camino Icons",
         assetType = Font,
         assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff",
@@ -307,7 +278,7 @@ getRecursive ident lister identifier config = let
       Nothing -> case parent of
         Nothing -> Nothing
         Just p -> getRecursive ident lister identifier p
-      r@(Just _) -> r
+      r -> r
 
 -- | Get an asset based on identifier
 --   If the configuration has a parent and the requisite asset is not present, then the parent is tried
@@ -316,34 +287,12 @@ getAsset :: Text -- ^ The asset identifier
   -> Maybe AssetConfig -- ^ The asset, if found
 getAsset ident config = getRecursive (Just ident) (webAssets . configWeb) assetId config
 
--- Get a map of id onto localised variant
-getLinks'' :: (LinkConfig -> Bool) -> (LinkI18n -> Bool) -> Config -> M.Map Text LinkI18n
-getLinks'' select variant config = let
-  defaults = maybe M.empty (\p -> getLinks'' select variant p) (configParent config)
-  local = filter select (webLinks $ configWeb config)
-  local' = M.fromList $ catMaybes $ map (\l -> let
-      ml = find variant (links l) 
-    in 
-      case ml of 
-        Nothing -> Nothing
-        (Just il) -> Just (linkId l, il)
-    ) local
-  in
-    M.union local' defaults
-
--- Try in locale order
-getLinks' ::  (LinkConfig -> Bool) -> [Locale] -> Config -> [LinkI18n]
-getLinks' select locales config = let
-    base = getLinks'' select (\l -> let ll = linkLocale l in (ll == rootLocale)) config
-  in
-    M.elems $ foldr (\lo -> \e -> M.union e (getLinks'' select (\l -> linkLocale l == lo) config)) base locales
-
 -- | Get a specific link, based on an identifier and a list of locales
 getLink :: Text -- ^ The link identifier
   -> [Locale] -- ^ The locale list
   -> Config -- ^ The configuration to query
-  -> Maybe LinkI18n -- ^ The internationalised link
-getLink ident locales config = listToMaybe $ getLinks' (\l -> linkId l == ident) locales config
+  -> Maybe TaggedURL -- ^ The internationalised link
+getLink ident locales config = (localise locales . links) <$> getRecursive (Just ident) (webLinks . configWeb) linkId config
 
 -- | Get links, based on a link type
 --   The resulting links are in the order specifiedin the configuration, from parent to child
@@ -360,14 +309,6 @@ getLinks lt config = let
     defaultsWithReplace = map (\l -> maybe l id (M.lookup (linkId l) updateMap)) defaults
   in
     defaultsWithReplace ++ newLinks
-
-
--- | Get localised links, based on a link type
-getLocalisedLinks :: LinkType -- ^ The link type
-  -> Config -- ^ The configuration to query
-  -> [Locale] -- ^ The locale choices
-  -> [LinkI18n] -- ^ The links to use
-getLocalisedLinks lt config locales = map (getLocalisedLink locales) (getLinks lt config)
 
 -- | Get a map, optionally based on an identifier
 --   If the configuration has a parent and the requisite map is not present, then the parent is tried

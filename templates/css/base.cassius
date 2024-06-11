@@ -34,13 +34,18 @@ a
 .best-accommodation-penance
   font-size: smaller
   vertical-align: top
-.chosen-location:
+.chosen-location
   color: #{toCssColour caminoBlue}
 .chosen-location-penance
   font-size: smaller
+.description-thumbnail
+  width: 40%
+  max-width: 200px;
+  .card-footer
+    font-size: smaller
 .location-tooltip
   .leg-to
-    font-size: smaller
+    font-size: x-small
 .leg-summary
   display: inline-block
   margin-left: 1em

@@ -5,6 +5,7 @@ import Test.HUnit
 import Camino.Config
 import Data.Localised
 import Data.Maybe (fromJust, isJust)
+import Network.URI (parseURI)
 
 testConfig1 = Config {
   configParent = Just defaultConfig,
@@ -31,13 +32,7 @@ testConfig2 = Config {
       Link {
         linkId = "foo",
         linkType = Header,
-        links = [
-          LinkI18n {
-            linkLocale = localeFromIDOrError "fr",
-            linkLabel = "Feu",
-            linkPath = "foo-fr.html"
-          }
-        ]
+        links = Localised [TaggedURL (localeFromIDOrError "fr") (fromJust $ parseURI "foo-fr.html") (Just "Feu")]
       }
     ],
     webMaps = []

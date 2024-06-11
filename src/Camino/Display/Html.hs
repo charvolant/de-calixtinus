@@ -15,7 +15,7 @@ Generate HTML descriptions of
 module Camino.Display.Html where
 
 import Camino.Camino
-import Camino.Config (Config(..), AssetConfig(..), AssetType(..), LinkType(..), getAssets, getLinks)
+import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
 import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Trip, tripLegs, tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Util
@@ -23,16 +23,16 @@ import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Data.Localised
+import Data.Maybe (fromJust, isJust, isNothing)
+import Data.Metadata
 import Graph.Graph (incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
-import qualified Data.Text as T (concat, intercalate, null, pack, take, toLower, toUpper)
+import qualified Data.Text as T (concat, intercalate, null, pack, replace, strip, take, toLower, toUpper)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.List as L
-import Data.Maybe (fromJust, isJust)
-import Data.Metadata
 
 -- | Include a label row if some values are non-empty
 conditionalLabel :: CaminoMsg -> [a] -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -370,11 +370,36 @@ solutionElements _camino (Just solution) = (
   ) where
     trip' = solutionTrip solution
 
-descriptionLine :: TravelPreferences -> CaminoPreferences -> Localised Description -> HtmlUrlI18n CaminoMsg CaminoRoute
-descriptionLine _preferences _camino description = [ihamlet|_{DescShort description}|]
+descriptionLine :: Description -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionLine description = [ihamlet|
+  $maybe txt <- descText description
+    _{Txt txt}
+  |]
 
-descriptionBlock :: TravelPreferences -> CaminoPreferences -> Localised Description -> HtmlUrlI18n CaminoMsg CaminoRoute
-descriptionBlock _preferences _camino description = [ihamlet|_{Desc description}|]
+-- Only partial. This should be enclosed in a .row since it allows extra stuff to be added
+descriptionBlock :: Description -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionBlock description = [ihamlet|
+  <div .col>
+    $maybe img <- mimg
+      <div .description-thumbnail .card .float-end>
+        <div .card-body>
+          <img .rounded .img-fluid src="@{ImgRoute img}" title="#{attribution}">
+        <div .card-footer>
+          <span .text-body-secondary>_{Txt (imageTitle img)}
+    $maybe txt <- descText description
+      <p>
+        _{Txt txt}
+    $forall note <- descNotes description
+      <p>
+        _{Txt note}
+  $maybe about <- descAbout description
+    <div .col-1 .float-end>
+      <a .btn .btn-primary .btn-sm href="@{LinkRoute about}" title="_{LinkTitle about}">
+        <span .ca-information>
+  |]
+  where
+    mimg = descImage description
+    attribution = maybe "" imageAttribution mimg
 
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
@@ -402,7 +427,7 @@ legLine _preferences _camino leg = [ihamlet|
       $if isJust $ legPenance leg
         <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
       $if isJust $ legDescription leg
-        <span .leg-description>_{DescShort (fromJust $ legDescription leg)}
+        <span .leg-description>^{descriptionLine (fromJust $ legDescription leg)}
   |]
 
 locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -483,9 +508,10 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
      <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
        <div .accordion-body .container-fluid>
          <div .row>
-            <div .col>
-              $maybe d <- locationDescription location
-                _{Desc d}
+            $maybe d <- locationDescription location
+              ^{descriptionBlock d}
+            $if isNothing (locationDescription location)
+              <div .col>
             <div .col-1 .float-end>
               $maybe lc <- locChoice
                 $if tripChoicePenance lc /= mempty
@@ -548,7 +574,7 @@ preferenceRangeHtml range = [ihamlet|
   |]
   
 preferencesHtml :: Bool -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-preferencesHtml link preferences camino = [ihamlet|
+preferencesHtml showLink preferences camino = [ihamlet|
   <div .container-fluid>
     <div .row>
       <div .col-4>_{TravelLabel}
@@ -603,7 +629,7 @@ preferencesHtml link preferences camino = [ihamlet|
         <ul .bar-separated-list>
           $forall r <- selectedRoutes camino
             <li>
-              $if link
+              $if showLink
                 <a href="##{routeID r}" data-toggle="tab" onclick="showRouteDescription('#{routeID r}')">_{Txt (routeName r)}
               $else
                 _{Txt (routeName r)}
@@ -611,7 +637,7 @@ preferencesHtml link preferences camino = [ihamlet|
       <div .col-4>_{TripStartLabel}
       <div .col>
         $with start <- preferenceStart camino
-          $if link
+          $if showLink
             <a href="##{locationID start}" data-toggle="tab" onclick="showLocationDescription('#{locationID start}')">_{Txt (locationName start)}
           $else
             _{Txt (locationName start)}
@@ -619,7 +645,7 @@ preferencesHtml link preferences camino = [ihamlet|
       <div .col-4>_{TripFinishLabel}
       <div .col>
         $with finish <- preferenceFinish camino
-          $if link
+          $if showLink
             <a href="##{locationID finish}" data-toggle="tab" onclick="showLocationDescription('#{locationID finish}')">_{Txt (locationName finish)}
           $else
             _{Txt (locationName finish)}
@@ -629,7 +655,7 @@ preferencesHtml link preferences camino = [ihamlet|
         <ul .bar-separated-list>
           $forall l <- preferenceStops camino
             <li>
-              $if link
+              $if showLink
                 <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">_{Txt (locationName l)}
               $else
                 _{Txt (locationName l)}
@@ -639,7 +665,7 @@ preferencesHtml link preferences camino = [ihamlet|
         <ul .bar-separated-list>
           $forall l <- preferenceExcluded camino
             <li>
-              $if link
+              $if showLink
                 <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">_{Txt (locationName l)}
               $else
                 _{Txt (locationName l)}
@@ -901,18 +927,18 @@ caminoMapScript preferences camino solution = [ihamlet|
 
 
 aboutHtml :: TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-aboutHtml _prefernces camino = [ihamlet|
+aboutHtml _preferences camino = [ihamlet|
   <div .container-fluid>
     <h2>_{Txt (caminoName camino')}
     <div .row>
       <div .col>
-        _{Desc (caminoDescription camino')}
+        ^{descriptionBlock (caminoDescription camino')}
     <h3>_{RoutesLabel}
     $forall route <- caminoRoutes camino'
       <div ##{routeID route} .row>
         <div .col>
           <span style="color: #{toCssColour $ paletteColour $ routePalette route}">_{Txt (routeName route)}
-          _{Desc (routeDescription route)}
+          ^{descriptionBlock (routeDescription route)}
     <h2>_{InformationLabel}
     <p>_{InformationDescription}
     $with metadata <- caminoMetadata camino'
@@ -958,9 +984,6 @@ layoutHtml config title header body footer = [ihamlet|
                <h1>_{Txt title}
                <div .collapse .navbar-collapse .d-flex .justify-content-end #navcol-links">
                  <ul .navbar-nav>
-                   $forall link <- headLinks
-                     <li .nav-item">
-                       <a .nav-item href="@{LinkRoute link}">_{LinkLabel link}
          <main .container-fluid .p-2>
            ^{body}
          <footer .text-center .py-4 .px-2>
@@ -979,7 +1002,6 @@ layoutHtml config title header body footer = [ihamlet|
      |]
      where
        css = getAssets Css config
-       headLinks = getLinks Header config
        scriptsHeader = getAssets JavaScriptEarly config
        scriptsFooter = getAssets JavaScript config
 
@@ -1039,7 +1061,7 @@ caminoHtmlSimple config camino =
           #{renderCss css }
       <div .row>
         <div .col .m-1>
-          _{Desc (caminoDescription camino')}
+          ^{descriptionBlock (caminoDescription camino')}
       <div .row>
         <div .col>
           <div>

@@ -42,7 +42,7 @@ import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
-import Data.Localised (localiseText)
+import Data.Localised (Description(..), Locale(..), Tagged(..), localise, localiseText)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
@@ -119,6 +119,9 @@ findSetById cres finder val = let
 fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Camino.Route
 fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
 fullRoutes _ routes = routes
+
+descriptionText :: [Locale] -> Description -> Maybe Text
+descriptionText locales description = plainText <$> (localise locales) <$> (descText description)
 
 
 -- Make a default set of preference data fields with everything hidden
@@ -443,7 +446,7 @@ chooseCaminoForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
     let localised c = localiseText locales c
-    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ localised $ caminoName c, c, Just $ toHtml $ localised $ caminoDescription c)) (caminoAppCaminos master))
+    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ localised $ caminoName c, c, toHtml <$> descriptionText locales (caminoDescription c))) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -495,7 +498,7 @@ chooseRoutesForm help prefs extra = do
     let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
-    let routeOptions = map (\r -> (pack $ routeID r, localised (routeName r), r, Just $ localised (routeDescription r), maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
+    let routeOptions = map (\r -> (pack $ routeID r, localised (routeName r), r, descriptionText locales (routeDescription r), maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
     (roRes, roView) <- mreq (implyingCheckListField routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {

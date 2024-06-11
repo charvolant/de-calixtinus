@@ -58,9 +58,7 @@ data CaminoMsg =
   | DayServicesPreferencesLabel
   | DaysMsg Int
   | DaySummaryMsg Day
-  | Desc (Localised Description)
   | DescentMsg Float
-  | DescShort (Localised Description)
   | DinnerTitle
   | DistanceAdjustMsg Penance
   | DistanceFormatted Float
@@ -93,7 +91,7 @@ data CaminoMsg =
   | KeyLabel
   | KitchenTitle
   | LegPenanceMsg Penance
-  | LinkLabel LinkConfig
+  | LinkTitle (Localised TaggedURL)
   | LinkOut
   | LocationPenanceMsg Penance
   | LocationPreferencesLabel
@@ -332,66 +330,32 @@ renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 
+renderLocalisedText :: (Tagged a) => [Locale] -> Localised a -> Html
+renderLocalisedText locales locd = let
+    elt = localise locales locd
+    txt = plainText elt
+    loc = locale elt
+    lang = localeLanguageTag loc
+  in
+    if Data.Text.null lang then
+      toHtml txt
+    else
+      [shamlet|<span lang="#{lang}">#{txt}|]
+
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
-renderCaminoMsg config locales (DaySummaryMsg day) = [shamlet|
+renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   #{start'} to #{finish'}
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
   over ^{formatMaybeTime $ metricsTime metrics}
   |]
   where
-    metrics = score day
-    start' = renderCaminoMsg config locales (Txt (locationName $ start day))
-    finish' = renderCaminoMsg config locales (Txt (locationName $ finish day))
-renderCaminoMsg config locales (Desc locd) = let
-    elt = localise locales locd
-    loc = locale elt
-    lang = localeLanguageTag loc
-    hasLang = not $ Data.Text.null lang
-    imageBase = maybe "." assetPath (getAsset "images" config)
-    mimg = fmap (uriToUrl imageBase) (descImage elt)
-    mabout = fmap (uriToUrl ".") (descAbout elt)
-  in
-    [shamlet|
-      <div .container-fluid .description :hasLang:lang="#{lang}">
-        <div .row>
-          <div .col>
-            $maybe txt <- descText elt
-              #{txt}
-          $maybe img <- mimg
-            <div .col-1 .float-end>
-              <img src="#{img}">
-          $maybe about <- mabout
-            <div .col-1 .float-end>
-              <a .btn .btn-primary .btn-sm href="#{about}">
-                <span .ca-information title="#{renderCaminoMsg config locales LinkOut}">
-        $forall note <- descNotes elt
-          <div .row>
-            <div .col>
-              #{note}
-      |]
-renderCaminoMsg _config locales (DescShort locd) = let
-    elt = localise locales locd
-    txt = plainText elt
-    loc = locale elt
-    lang = localeLanguageTag loc
-  in
-    if Data.Text.null lang then
-      toHtml txt
-    else
-      [shamlet|<span lang="#{lang}">#{txt}|]
-renderCaminoMsg config locales (LinkLabel link) = toHtml $ maybe ident linkLabel (getLink ident locales config) where ident = linkId link
-renderCaminoMsg _config locales (Txt locd) = let
-    elt = localise locales locd
-    txt = plainText elt
-    loc = locale elt
-    lang = localeLanguageTag loc
-  in
-    if Data.Text.null lang then
-      toHtml txt
-    else
-      [shamlet|<span lang="#{lang}">#{txt}|]
+   metrics = score day
+   start' = renderLocalisedText locales (locationName $ start day)
+   finish' = renderLocalisedText locales (locationName $ finish day)
+renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales locd
+renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales locd
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg

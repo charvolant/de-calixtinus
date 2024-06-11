@@ -4,12 +4,10 @@ module MetadataSpec(testMetadata) where
 
 import Test.HUnit
 import Data.Aeson
-import Data.Either
 import Data.Localised
 import Data.Maybe (fromJust)
 import Data.Metadata
 import Network.URI
-import TestUtils
 import Text.RawString.QQ
 import Data.ByteString.Lazy
 

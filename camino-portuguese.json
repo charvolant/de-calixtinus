@@ -68,12 +68,19 @@
     {
       "id": "P-P1",
       "name": "Lisbon",
-      "description": [
-        {
-          "locale": "*",
-          "about": "https://en.wikipedia.org/wiki/Lisbon"
+      "description": {
+        "text": "Capital city of Portugal and the start of the Portuguese Camino",
+        "notes": [
+          "You can obtain a credential from Lisbon Cathedral, also the start point of the Portugeuse Camino"
+        ],
+        "about": "https://en.wikipedia.org/wiki/Lisbon",
+        "image": {
+            "source": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Lisbon_Pra%C3%A7a_do_Com%C3%A9rcio_BW_2018-10-03_13-33-44_s.jpg",
+            "title": "Praça do Comércio@pt",
+            "rights": "Berthold Werner, via Wikimedia Commons",
+            "license": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
         }
-      ],
+      },
       "type": "City",
       "position": { "latitude":  38.7098, "longitude": -9.1333 },
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],

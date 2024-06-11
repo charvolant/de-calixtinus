@@ -142,7 +142,7 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
   <div>
     <h4>#{locationNameLabel location}
     $maybe d <- locationDescription location
-      <div>_{Desc d}
+      <div>^{descriptionLine d}
     <div>
       <div style="display: inline-block;" .services>
         $forall service <- locationServices location

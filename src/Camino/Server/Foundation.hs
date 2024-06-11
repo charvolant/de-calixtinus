@@ -25,7 +25,7 @@ import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
-import Data.Localised (Locale, localeFromID, localeLanguageTag, rootLocale)
+import Data.Localised (Locale, Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Placeholder
@@ -327,7 +327,7 @@ instance Yesod CaminoApp where
     let config = caminoAppConfig master
     let micons = C.getAsset "icons" config
     let css = C.getAssets C.Css config
-    let headLinks = C.getLocalisedLinks C.Header config locales
+    let headLinks = map (localise locales . C.links) (C.getLinks C.Header config)
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render MsgHelpLabel
@@ -364,7 +364,7 @@ instance Yesod CaminoApp where
                   <ul .navbar-nav>
                     $forall link <- headLinks
                       <li .nav-item>
-                        <a target="_blank" .nav-link href="#{C.linkPath link}">#{C.linkLabel link}
+                        <a target="_blank" .nav-link href="#{linkText link}">#{plainText link}
                     <li .nav-item .dropdown>
                       <a .nav-link .dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">#{render MsgCaminosLabel}
                       <ul .dropdown-menu>
@@ -395,9 +395,9 @@ instance Yesod CaminoApp where
 
 noticePopupText :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
 noticePopupText [] = noticePopupText [rootLocale]
-noticePopupText (locale:rest)
- | localeLanguageTag locale == "" = $(ihamletFile "templates/notice/notice-en.hamlet")
- | localeLanguageTag locale == "en" = $(ihamletFile "templates/notice/notice-en.hamlet")
+noticePopupText (locale':rest)
+ | localeLanguageTag locale' == "" = $(ihamletFile "templates/notice/notice-en.hamlet")
+ | localeLanguageTag locale' == "en" = $(ihamletFile "templates/notice/notice-en.hamlet")
  | otherwise = noticePopupText rest
 
 noticePopup :: Handler Widget

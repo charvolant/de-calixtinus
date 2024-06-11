@@ -17,26 +17,24 @@ module Camino.Display.Routes (
 
 import Camino.Camino
 import Camino.Config
-import Data.Localised ()
+import Data.Localised
 import Data.Text
 
 -- | Common Camino routes
 data CaminoRoute = AssetRoute Text -- ^ An identified font or asset
   | IconRoute Text -- ^ A specific icon
-  | KMLRoute -- ^ The KML version of this plan
-  | LinkRoute LinkConfig -- ^ The (locale specific) path for a link
-  | LinkIDRoute Text -- ^ The (locale specific) path for a link identifier
+  | ImgRoute Image -- ^ The (locale specific) path for an image
+  | LinkRoute (Localised TaggedURL) -- ^ The (locale specific) path for a link
   | LocationRoute Location -- ^ A location
   | MapTileRoute -- ^ The route to the map tile
-  
-findLink ident locales config = maybe "/error.html" linkPath (getLink ident locales config)
+
+findAssetPath ident config = maybe ("invalid/" <> ident) assetPath (getAsset ident config)
 
 -- | The rendering function for the routes
 renderCaminoRoute :: Config -> [Locale] -> CaminoRoute -> [(Text, Text)] -> Text
-renderCaminoRoute config _locales (AssetRoute ident) _ = maybe ("invalid/" <> ident) assetPath (getAsset ident config)
-renderCaminoRoute config _locales (IconRoute ident) _ = (maybe "invalid" assetPath (getAsset "icons" config)) <> "/" <> ident
-renderCaminoRoute _config _locales KMLRoute _ = "camino.kml"
-renderCaminoRoute config locales (LinkRoute link) _ = findLink (linkId link) locales config
-renderCaminoRoute config locales (LinkIDRoute ident) _ = findLink ident locales config
+renderCaminoRoute config _locales (AssetRoute ident) _ = findAssetPath ident config
+renderCaminoRoute config _locales (IconRoute ident) _ = (findAssetPath "icons" config) <> "/" <> ident
+renderCaminoRoute config locales (ImgRoute img) _ = resolveLink (findAssetPath "images" config) img
+renderCaminoRoute config locales (LinkRoute tl) _ = resolveLink (findAssetPath "links" config) (localise locales tl)
 renderCaminoRoute _config  _locales (LocationRoute location) _ = "#" <> pack (locationID location)
 renderCaminoRoute config  _locales MapTileRoute _ = maybe "invalid/map.png" mapTiles (getMap Nothing config)

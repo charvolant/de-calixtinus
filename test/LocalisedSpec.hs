@@ -6,7 +6,7 @@ module LocalisedSpec(testLocalised) where
 import Test.HUnit
 import Data.Aeson
 import Data.Localised
-import Data.Maybe (fromJust, isJust)
+import Data.Maybe (fromJust, isJust, isNothing)
 import Network.URI (parseURI)
 
 testLocalised :: Test
@@ -114,10 +114,10 @@ testDescriptionFromJSON1 =
     TestCase (do
       assertBool "Description FromJSON 1 1" (isJust desc)
       let desc' = fromJust desc
-      assertEqual "Description FromJSON 1 2" (Just "Hello There") (descText desc')
-      assertEqual "Description FromJSON 1 3" rootLocale (locale desc')
-      assertEqual "Description FromJSON 1 4" Nothing (descImage desc')
-      assertEqual "Description FromJSON 1 5" Nothing (descImage desc')
+      assertEqual "Description FromJSON 1 2" (Just "Hello There") (plainText <$> localise [] <$> descText desc')
+      assertBool "Description FromJSON 1 3" (null $ descNotes desc')
+      assertBool "Description FromJSON 1 4" (isNothing $ descAbout desc')
+      assertBool "Description FromJSON 1 5" (isNothing $ descImage desc')
       )
 
 testDescriptionFromJSON2 =
@@ -127,10 +127,10 @@ testDescriptionFromJSON2 =
     TestCase (do
       assertBool "Description FromJSON 2 1" (isJust desc)
       let desc' = fromJust desc
-      assertEqual "Description FromJSON 2 2" "Hello There"(plainText desc')
-      assertEqual "Description FromJSON 2 3" "en" (localeID $ locale desc')
-      assertEqual "Description FromJSON 1 4" Nothing (descImage desc')
-      assertEqual "Description FromJSON 1 5" Nothing (descImage desc')
+      assertEqual "Description FromJSON 2 2" (Just "Hello There") (plainText <$> localise [] <$> descText desc')
+      assertBool "Description FromJSON 2 3" (null $ descNotes desc')
+      assertBool "Description FromJSON 1 4" (isNothing $ descAbout desc')
+      assertBool "Description FromJSON 1 5" (isNothing $ descImage desc')
       )
 
 testDescriptionFromJSON3 =
@@ -140,28 +140,28 @@ testDescriptionFromJSON3 =
     TestCase (do
       assertBool "Description FromJSON 3 1" (isJust desc)
       let desc' = fromJust desc
-      assertEqual "Description FromJSON 3 2" "Hello@There" (plainText desc')
-      assertEqual "Description FromJSON 3 3" "en-US" (localeID $ locale desc')
-      assertEqual "Description FromJSON 3 4" Nothing (descImage desc')
-      assertEqual "Description FromJSON 3 5" Nothing (descImage desc')
+      assertEqual "Description FromJSON 3 2" (Just "Hello@There") (plainText <$> localise [] <$> descText desc')
+      assertBool "Description FromJSON 3 3" (null $ descNotes desc')
+      assertBool "Description FromJSON 3 4" (isNothing $ descAbout desc')
+      assertBool "Description FromJSON 3 5" (isNothing $ descImage desc')
       )
 
 testDescriptionFromJSON4 =
   let
-    desc = decode "{ \"locale\": \"en-US\", \"text\": \"Hello@There\", \"about\": \"https://nowhere.com\", \"image\": \"https://somewhere.com\" }" :: Maybe Description
+    desc = decode "{ \"text\": \"Hello@There@en-US\", \"about\": \"https://nowhere.com\", \"image\": { \"source\": \"https://somewhere.com\", \"title\": \"Hello\" } }" :: Maybe Description
   in
     TestCase (do
       assertBool "Description FromJSON 4 1" (isJust desc)
       let desc' = fromJust desc
-      assertEqual "Description FromJSON 4 2" "Hello@There" (plainText desc')
-      assertEqual "Description FromJSON 4 3" "en-US" (localeID $ locale desc')
-      assertEqual "Description FromJSON 4 4" (parseURI "https://nowhere.com") (descAbout desc')
-      assertEqual "Description FromJSON 4 5" (parseURI "https://somewhere.com") (descImage desc')
+      assertEqual "Description FromJSON 4 2" (Just "Hello@There") (plainText <$> localise [] <$> descText desc')
+      assertEqual "Description FromJSON 4 3" (Just "en-US") (localeID <$> locale <$> localise [] <$> descText desc')
+      assertEqual "Description FromJSON 4 4" "https://nowhere.com" (linkText $ localise [] (fromJust $ descAbout desc'))
+      assertEqual "Description FromJSON 4 5" "https://somewhere.com" (linkText $ fromJust $ descImage desc')
       )
 
 testDescriptionToJSON1 =
   let
-    desc = Description rootLocale (Just "Hello There") [] Nothing Nothing
+    desc = Description (Just $ wildcardText "Hello There") [] Nothing Nothing
     et = encode desc
   in
     TestCase (do
@@ -170,7 +170,8 @@ testDescriptionToJSON1 =
 
 testDescriptionToJSON2 =
   let
-    desc = Description (localeFromIDOrError "en") (Just "Hello There") [] Nothing Nothing
+    loc = localeFromIDOrError "en"
+    desc = Description (Just $ Localised [TaggedText loc "Hello There"]) [] Nothing Nothing
     et = encode desc
   in
     TestCase (do
@@ -180,11 +181,12 @@ testDescriptionToJSON2 =
 
 testDescriptionToJSON3 =
   let
-    desc = Description (localeFromIDOrError "en-US") (Just "Hello There") [] (parseURI "https://www.fish.com") Nothing
+    loc = localeFromIDOrError "en-US" 
+    desc = Description (Just $ Localised [TaggedText loc "Hello There"]) [] (Just $ Localised [TaggedURL loc (fromJust $ parseURI "https://www.fish.com") (Just "Fish")]) Nothing
     et = encode desc
   in
     TestCase (do
-      assertEqual "Description ToJSON 1 1" "{\"about\":\"https://www.fish.com\",\"image\":null,\"locale\":\"en-US\",\"notes\":null,\"text\":\"Hello There\"}" et
+      assertEqual "Description ToJSON 1 1" "{\"about\":{\"locale\":\"en-US\",\"title\":\"Fish\",\"url\":\"https://www.fish.com\"},\"image\":null,\"notes\":null,\"text\":\"Hello There@en-US\"}" et
       )
 
 testLocalisedText = TestList [
@@ -268,8 +270,9 @@ testLocalisedToJSON3 =
 
 testLocalisedToJSON4 =
   let
-    lt = Localised [Description  (localeFromIDOrError "en") (Just "Hello There") [] Nothing Nothing]
-    et = encode lt
+    loc =  localeFromIDOrError "en"
+    desc = Description (Just $ Localised [TaggedText loc "Hello There"]) [] Nothing Nothing
+    et = encode desc
   in
     TestCase (do
       assertEqual "Localised ToJSON 1 1" "\"Hello There@en\"" et
@@ -277,11 +280,12 @@ testLocalisedToJSON4 =
 
 testLocalisedToJSON5 =
   let
-    lt = Localised [Description  (localeFromIDOrError "en") (Just "Hello There") [] (parseURI "urn:x-y:z") Nothing]
-    et = encode lt
+    loc =  localeFromIDOrError "en"
+    desc = Description (Just $ Localised [TaggedText loc "Hello There"]) [] (Just $ Localised [TaggedURL loc (fromJust $ parseURI "urn:x-y:z") Nothing]) Nothing
+    et = encode desc
   in
     TestCase (do
-      assertEqual "Localised ToJSON 1 1" "{\"about\":\"urn:x-y:z\",\"image\":null,\"locale\":\"en\",\"notes\":null,\"text\":\"Hello There\"}" et
+      assertEqual "Localised ToJSON 1 1" "{\"about\":\"urn:x-y:z@en\",\"image\":null,\"notes\":null,\"text\":\"Hello There@en\"}" et
       )
 
 testLocalise = TestList [

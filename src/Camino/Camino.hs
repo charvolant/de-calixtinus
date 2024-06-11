@@ -73,7 +73,7 @@ import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.List (find)
-import Data.Localised (Description(..), Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
+import Data.Localised (Description(..), Localised(..), TaggedText(..), appendText, localiseDefault, wildcardDescription, wildcardText)
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
@@ -341,7 +341,7 @@ locationCampingDefault _ = True
 data Location = Location {
     locationID :: String
   , locationName :: Localised TaggedText
-  , locationDescription :: Maybe (Localised Description)
+  , locationDescription :: Maybe Description
   , locationType :: LocationType
   , locationPosition :: Maybe LatLong
   , locationServices :: S.Set Service
@@ -442,7 +442,7 @@ data Leg = Leg {
     legType :: LegType -- ^ The type of leg
   , legFrom :: Location -- ^ The start location
   , legTo :: Location -- ^ The end location
-  , legDescription :: Maybe (Localised Description) -- ^ Additional descriptive information
+  , legDescription :: Maybe Description -- ^ Additional descriptive information
   , legDistance :: Float -- ^ The distance between the start and end in kilometres
   , legTime :: Maybe Float -- ^ An explicit time associated with the leg
   , legAscent :: Float -- ^ The total ascent on the leg in metres
@@ -512,7 +512,7 @@ instance Default Palette where
 data Route = Route {
     routeID :: String -- ^ An identifier for the route
   , routeName :: Localised TaggedText -- ^ The route name
-  , routeDescription :: Localised Description -- ^ The route description
+  , routeDescription :: Description -- ^ The route description
   , routeLocations :: S.Set Location -- ^ The locations along the route
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
@@ -568,7 +568,7 @@ instance Placeholder Camino Route where
   placeholder rid = Route {
       routeID = rid
     , routeName = wildcardText $ pack ("Placeholder for " ++ rid)
-    , routeDescription = wildcardText ""
+    , routeDescription = wildcardDescription ""
     , routeLocations = S.empty
     , routeStops = S.empty
     , routeStarts = []
@@ -706,7 +706,7 @@ createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits lo
 data Camino = Camino {
     caminoId :: String
   , caminoName :: Localised TaggedText
-  , caminoDescription :: Localised Description
+  , caminoDescription :: Description
   , caminoMetadata :: Metadata
   , caminoLocations :: M.Map String Location -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
@@ -796,7 +796,7 @@ instance Placeholder [Camino] Camino where
   placeholder cid = Camino {
         caminoId = cid
       , caminoName = wildcardText $ pack ("Placeholder for " ++ cid)
-      , caminoDescription = wildcardText ""
+      , caminoDescription = wildcardDescription ""
       , caminoMetadata = Metadata [] []
       , caminoLocations = M.empty
       , caminoLegs = []

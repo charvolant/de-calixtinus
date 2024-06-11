@@ -11,7 +11,7 @@ import Network.URI
 import Text.RawString.QQ
 import Data.ByteString.Lazy
 
-dcElements = fromJust $ parseURI "http://purl.org/dc/elements/1.1/"
+-- dcElements = fromJust $ parseURI "http://purl.org/dc/elements/1.1/"
 
 dcTitle = fromJust $ parseURI "http://purl.org/dc/elements/1.1/title"
 
@@ -33,11 +33,13 @@ testMetadata1 = Metadata {
 }
 
 
+testMetadata :: Test
 testMetadata = TestList [
-  TestLabel "Encode Term" testEncodeTerm,
-  TestLabel "Decode Termt" testDecodeTerm,
-  TestLabel "Read" testRead
-  ]
+    TestLabel "Encode Term" testEncodeTerm
+  , TestLabel "Decode Termt" testDecodeTerm
+  , TestLabel "Read" testRead
+  , TestLabel "Write" testWrite
+ ]
   
 testEncodeTerm = TestList [
   testEncodeTerm1, testEncodeTerm2
@@ -95,8 +97,11 @@ testRead1 =
     mmetadata = eitherDecode json1 :: Either String Metadata
     metadata = either error id mmetadata
     getTerm (Statement term _value) = term
+    getTerm _ = error "Invalid term"
     getValue (Statement _term value) = plainText value
+    getValue _ = error "Invalid value"
     getLang (Statement _term value) = localeLanguageTag $ locale value
+    getLang _ = error "Invalid language"
   in
     TestCase (do
       assertEqual "Read 1 1" 1 (Prelude.length $ metadataNamespaces metadata)
@@ -110,3 +115,15 @@ testRead1 =
       assertEqual "Read 1 9" "Nowhere special" (getValue $ metadataStatements metadata !! 3)
       assertEqual "Read 1 10" "" (getLang $ metadataStatements metadata !! 2)
     )
+
+testWrite = TestList [
+  testWrite1
+  ]
+
+testWrite1 =
+  let
+    em = encode testMetadata1
+  in
+    TestCase (do
+        assertEqual "Write 1 1" "{\"namespaces\":[{\"namespace\":\"http://purl.org/dc/elements/1.1/\",\"prefix\":\"dc\"}],\"statements\":[{\"term\":\"dc:title\",\"value\":\"A test title@en\"},{\"term\":\"dc:created\",\"value\":\"2024-02-10\"},{\"term\":\"dc:created\",\"value\":\"2024-02-11\"}]}" em
+      )

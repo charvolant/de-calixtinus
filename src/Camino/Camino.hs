@@ -29,6 +29,7 @@ module Camino.Camino (
   , LocationType(..)
   , Palette(..)
   , Penance(..)
+  , PointOfInterest(..)
   , Route(..)
   , RouteLogic(..)
   , Service(..)
@@ -58,6 +59,8 @@ module Camino.Camino (
   , fitnessEnumeration
   , locationAccommodationTypes
   , locationNameLabel
+  , locationPoiTypes
+  , locationStopTypeEnumeration
   , locationTypeEnumeration
   , readCamino
   , serviceEnumeration
@@ -68,6 +71,7 @@ module Camino.Camino (
 
 import GHC.Generics (Generic)
 import Data.Aeson
+import Data.Aeson.Types (typeMismatch)
 import qualified Data.ByteString.Lazy as LB (readFile)
 import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
@@ -305,15 +309,25 @@ instance ToJSON Accommodation where
       object [ "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping' ]
     toJSON (GenericAccommodation type' ) =
       toJSON type'
- 
--- | The type of location 
+
+-- | The type of location or point of interest
 data LocationType = Village -- ^ A village
    | Town -- ^ A town
    | City -- ^ A city
    | Monastery -- ^ A monastery/convent
-   | Bridge -- ^ A bridge
+   | Bridge -- ^ A bridge or underpass
    | Intersection -- ^ An intersection
    | Peak -- ^ A peak, mountain pass or lookout
+   | Church -- ^ A church or chapel
+   | Cathedral -- ^ A cathedral, basillica, shrine or similar large religious building
+   | Cross -- ^ A crucifix or other religious monument
+   | Fountain -- ^ A fountain or spring
+   | Municipal -- ^ An office,m aquare, market etc
+   | Museum -- ^ A museum or gallery
+   | Historical -- ^ A historical or archaeological site
+   | Park -- ^ A park or gardens
+   | Natural -- ^ A site of natural beauty
+   | Warning -- ^ A dangerous location (busy road crossing, etc)
    | Poi -- ^ A generic point of interest
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  
@@ -328,12 +342,47 @@ instance ToJSONKey LocationType where
 locationTypeEnumeration :: [LocationType]
 locationTypeEnumeration = [minBound .. maxBound]
 
+-- | Provide an enumeration of all places to stop
+locationStopTypeEnumeration :: [LocationType]
+locationStopTypeEnumeration = [Village, Town, City, Monastery, Bridge, Intersection, Peak]
+
 -- | The default state for allowing camping.
 --   Towns and cities don't usually allow camping
 locationCampingDefault :: LocationType -> Bool
 locationCampingDefault Town = False
 locationCampingDefault City = False
 locationCampingDefault _ = True
+
+-- | A point of interest, attached to a parent location or leg
+data PointOfInterest = PointOfInterest {
+    poiName :: Localised TaggedText
+  , poiDescription :: Maybe Description
+  , poiType :: LocationType
+  , poiPosition :: Maybe LatLong
+} deriving (Show)
+
+instance FromJSON PointOfInterest where
+  parseJSON (Object v) = do
+    name' <- v .: "name"
+    description' <- v .:? "description" .!= Nothing
+    type' <- v .:? "type" .!= Poi
+    position' <- v .:? "position"
+    return PointOfInterest {
+        poiName = name'
+      , poiDescription = description'
+      , poiType = type'
+      , poiPosition = position'
+    }
+  parseJSON v = typeMismatch "expecting object" v
+
+instance ToJSON PointOfInterest where
+    toJSON (PointOfInterest name' description' type' position') =
+      object [
+          "name" .= name'
+        , "description" .= description'
+        , "type" .= type'
+        , "position" .= position'
+      ]
 
 -- | A location, usually a city/town/village that marks the start and end points of a leg
 --   and which may have accommodation and other services available.
@@ -346,6 +395,7 @@ data Location = Location {
   , locationPosition :: Maybe LatLong
   , locationServices :: S.Set Service
   , locationAccommodation :: [Accommodation]
+  , locationPois :: [PointOfInterest]
   , locationCamping :: Bool
 } deriving (Show)
 
@@ -359,6 +409,7 @@ instance Placeholder Camino Location where
     , locationPosition = Nothing
     , locationServices = S.empty
     , locationAccommodation = []
+    , locationPois = []
     , locationCamping = False
   }
   normalise camino location = maybe location id (M.lookup (locationID location) (caminoLocations camino))
@@ -374,6 +425,7 @@ instance FromJSON Location where
     position' <- v .:? "position"
     services' <- v .: "services"
     accommodation' <- v .: "accommodation"
+    pois' <- v .:? "pois" .!= []
     camping' <- v .:? "camping" .!= locationCampingDefault type'
     return Location { 
         locationID = id'
@@ -383,12 +435,13 @@ instance FromJSON Location where
       , locationPosition = position'
       , locationServices = services'
       , locationAccommodation = accommodation'
+      , locationPois = pois'
       , locationCamping = camping'
     }
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' description' type' position' services' accommodation' camping') =
+    toJSON (Location id' name' description' type' position' services' accommodation' pois' camping') =
       object [ 
           "id" .= id'
         , "name" .= name'
@@ -397,6 +450,7 @@ instance ToJSON Location where
         , "position" .= position'
         , "services" .= services'
         , "accommodation" .= accommodation'
+        , "pois" .= pois'
         , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
       ]
 
@@ -413,6 +467,11 @@ instance Ord Location where
 --   These are ordered into enumeration order
 locationAccommodationTypes :: Location -> S.Set AccommodationType
 locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
+
+-- | Get the accommodation types available at a location
+--   These are ordered into enumeration order
+locationPoiTypes :: Location -> S.Set LocationType
+locationPoiTypes location = S.fromList $ map poiType (locationPois location)
 
 -- | Get a simple text version of the location name
 locationNameLabel :: Location -> Text

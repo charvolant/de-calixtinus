@@ -27,6 +27,8 @@ a
   color: #2ab472
 .accommodation.home-stay
   color: #ff395c
+.attribution
+  font-size: x-small
 .best-accommodation
   color: #6ac830
 .best-accommodation::before
@@ -39,10 +41,14 @@ a
 .chosen-location-penance
   font-size: smaller
 .description-thumbnail
-  width: 40%
-  max-width: 200px;
+  width: 20%
+  max-width: 100px;
   .card-footer
     font-size: smaller
+.information
+  margin-right: 1ex
+  font-size: larger
+  color: #{toCssColour caminoBlue}
 .location-tooltip
   .leg-to
     font-size: x-small
@@ -106,6 +112,11 @@ a
   .accordion-header
     h5
       font-weight: bolder
+.poi-types
+   color: #{toCssColour caminoBlue}
+.show-on-map
+   color: #{toCssColour caminoBlue}
+   font-size: larger
 .sleeping
   color: #{toCssColour caminoBlue}
 .travel

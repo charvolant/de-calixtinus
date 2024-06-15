@@ -67,12 +67,12 @@
   "locations": [
     {
       "id": "P-P1",
-      "name": "Lisbon",
+      "name": [
+        "Lisboa@pt",
+        "Lisbon@en"
+      ],
       "description": {
         "text": "Capital city of Portugal and the start of the Portuguese Camino",
-        "notes": [
-          "You can obtain a credential from Lisbon Cathedral, also the start point of the Portugeuse Camino"
-        ],
         "about": "https://en.wikipedia.org/wiki/Lisbon",
         "image": {
             "source": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Lisbon_Pra%C3%A7a_do_Com%C3%A9rcio_BW_2018-10-03_13-33-44_s.jpg",
@@ -84,7 +84,20 @@
       "type": "City",
       "position": { "latitude":  38.7098, "longitude": -9.1333 },
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": []
+      "accommodation": [],
+      "pois": [
+        {
+          "name": "Lisbon Cathedral",
+          "description": {
+            "text": "The start point for the Potuguese Camino",
+            "notes": [
+              "You can obtain a pilgrim's credential from inside the cathedral, from 10am Mon-Sat"
+            ]
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 38.70984, "longitude": -9.13291 }
+        }
+      ]
     },
     {
       "id": "P-P2",
@@ -878,9 +891,26 @@
       "type": "Town",
       "position": { "latitude": 40.02915, "longitude": -8.45484 },
       "services": [ "Restaurant", "Groceries", "BicycleRepair", "Bank" ],
-      "accommodation": [ "PrivateAlbergue" ]
+      "accommodation": [ "PrivateAlbergue" ],
+      "pois": [
+        {
+          "name": [
+            "Villa Romana do Rabaçal@pt",
+            "Roman Villa of Rabaçal@en"
+          ],
+          "description": {
+            "text": "The remains of a Roman villa from the 6th century CE@en",
+            "notes": [
+              "The site is fenced. Visitors can access the site via the museum at Rua da Igreja, Rabaçal@en"
+            ],
+            "about": "https://www.cm-penela.pt/museum/villa.html"
+          },
+          "type": "Historical",
+          "position": { "latitude": 40.03836, "longitude": -8.45767 }
+        }
+      ]
     },
-     {
+    {
       "id": "P-P63",
       "name": "Zambujal",
       "type": "Village",
@@ -906,11 +936,21 @@
     },
     {
       "id": "P-P66",
-      "name": "Conimbriga",
-      "type": "Poi",
+      "name": "Conímbriga",
+      "type": "Historical",
       "position": { "latitude": 40.09850, "longitude": -8.49157 },
       "services": [ "Restaurant" ],
-      "accommodation": [  ]
+      "accommodation": [  ],
+      "pois": [
+        {
+          "name": [
+            "Museu Monográfico de Conímbriga@pt",
+            "Conímbriga Roman Ruins and Museum@en"
+          ],
+          "type": "Museum",
+          "position": { "latitude": 40.09835, "longitude": -8.49050 }
+        }
+      ]
     },
     {
       "id": "P-P67",
@@ -3814,7 +3854,28 @@
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
+      "pois": [
+        {
+          "name": [
+            "Catedral Basílica de Santiago de Compostela@gl",
+            "Catedral Basílica de Santiago de Compostela@es",
+            "Santiago de Compostela Cathedral@en"
+          ],
+          "description": {
+            "text": "Journey's End@en",
+            "about": "https://catedraldesantiago.es/",
+            "image": {
+              "source": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Santiago_cathedral_2021.jpg",
+              "title": "View from the Praza do Obradoiro",
+              "rights": "Fernando, via Wikimedia Commons",
+              "license": "CC BY-SA 4.0"
+            }
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 42.88060, "longitude": -8.54466 }
+        }
+      ]
     },
 
     {
@@ -3976,6 +4037,19 @@
           "type": "Hotel",
           "services": ["WiFi", "Restaurant", "Bedlinen", "Towels"],
           "sleeping": ["Single", "DoubleWC"]
+        }
+      ],
+      "pois": [
+        {
+          "name": [
+            "Santuário de Fátima@pt",
+            "Sanctuary of Fátima@en"
+          ],
+          "description": {
+            "about": "https://www.fatima.pt"
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 39.63163, "longitude": -8.67331 }
         }
       ]
     },

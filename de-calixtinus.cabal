@@ -42,6 +42,7 @@ library
       Camino.Server.Settings
       Camino.Util
       Camino.Walking
+      Data.Event
       Data.Localised
       Data.Metadata
       Data.Placeholder

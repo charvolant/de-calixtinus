@@ -108,6 +108,7 @@ caminoPage camino = do
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ caminoName (preferenceCamino cprefs)}|]
       (toWidget html)
+      imagePopup
 
 getMetricR :: Handler Html
 getMetricR = do
@@ -292,6 +293,9 @@ helpPopup stepp = do
         , $(widgetFile "help-popup")
       )
 
+imagePopup :: Widget
+imagePopup = $(widgetFile "image-popup")
+
 addError :: Either Location Trip -> Handler ()
 addError (Left loc) = do
   locales <- getLocales
@@ -318,6 +322,7 @@ planPage prefs = do
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ locationName (preferenceStart cprefs)} - #{localiseText locales $ locationName (preferenceFinish cprefs)}|]
       (toWidget html)
+      imagePopup
 
 -- | The MIME type for KML
 kmlType :: ContentType

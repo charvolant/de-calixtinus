@@ -49,8 +49,11 @@ data CaminoMsg =
   | CampGroundTitle
   | CampingTitle
   | CampSiteTitle
+  | CathedralTitle
+  | ChurchTitle
   | CityTitle
   | ComfortableTitle
+  | CrossTitle
   | ComfortLabel
   | CyclingTitle
   | CyclePathTitle
@@ -75,12 +78,14 @@ data CaminoMsg =
   | FitnessLabel
   | FitTitle
   | FrugalTitle
+  | FountainTitle
   | GiteTitle
   | GroceriesTitle
   | GuestHouseTitle
   | HandwashTitle
   | HeatingTitle
   | HelpLabel
+  | HistoricalTitle
   | HomeStayTitle
   | HostelTitle
   | HotelTitle
@@ -103,9 +108,13 @@ data CaminoMsg =
   | MedicalTitle
   | MiscPenanceMsg Penance
   | MonasteryTitle
+  | MunicipalTitle
+  | MuseumTitle
+  | NaturalTitle
   | PilgrimAlbergueTitle
   | NormalTitle
   | OtherLabel
+  | ParkTitle
   | PeakTitle
   | PenanceFormatted Penance
   | PenanceMsg Penance
@@ -116,6 +125,8 @@ data CaminoMsg =
   | PharmacyTitle
   | PilgrimTitle
   | PlanLabel
+  | PoiLabel
+  | PoisLabel
   | PoiTitle
   | PoolTitle
   | PrayerTitle
@@ -154,6 +165,7 @@ data CaminoMsg =
   | TripleTitle
   | TripleWcTitle
   | Txt (Localised TaggedText)
+  | TxtPlain Bool Bool (Localised TaggedText)
   | UnfitTitle
   | UnusedLabel
   | VeryFitTitle
@@ -161,6 +173,7 @@ data CaminoMsg =
   | VillageTitle
   | WalkingNaismithTitle
   | WalkingTitle
+  | WarningTitle
   | WashingMachineTitle
   | WaypointLabel
   | WiFiTitle
@@ -216,9 +229,12 @@ renderCaminoMsgDefault _ BusTitle = "Bus"
 renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
+renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
+renderCaminoMsgDefault _ ChurchTitle = "Church"
 renderCaminoMsgDefault _ CityTitle = "City"
 renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
 renderCaminoMsgDefault _ ComfortLabel = "Comfort"
+renderCaminoMsgDefault _ CrossTitle = "Cross"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
@@ -240,6 +256,7 @@ renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
+renderCaminoMsgDefault _ FountainTitle = "Fountain"
 renderCaminoMsgDefault _ FrugalTitle = "Frugal"
 renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
@@ -247,6 +264,7 @@ renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
+renderCaminoMsgDefault _ HistoricalTitle = "Historical site, archaeological site or ruin"
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
 renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
@@ -268,10 +286,14 @@ renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
 renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
+renderCaminoMsgDefault _ MunicipalTitle = "Town square, market, etc."
+renderCaminoMsgDefault _ MuseumTitle = "Museum or gallery"
+renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, etc."
 renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
-renderCaminoMsgDefault _ PeakTitle = "Peak"
+renderCaminoMsgDefault _ ParkTitle = "Park or garden"
+renderCaminoMsgDefault _ PeakTitle = "Peak, pass or lookout"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
 renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ PenanceReject = "Rejected"
@@ -281,6 +303,8 @@ renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
 renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
+renderCaminoMsgDefault _ PoiLabel = "Point of Interest"
+renderCaminoMsgDefault _ PoisLabel = "Points of Interest"
 renderCaminoMsgDefault _ PoiTitle = "Locality"
 renderCaminoMsgDefault _ PoolTitle = "Pool"
 renderCaminoMsgDefault _ PrayerTitle = "Prayer"
@@ -325,22 +349,25 @@ renderCaminoMsgDefault _ VeryUnfitTitle = "Very unfit"
 renderCaminoMsgDefault _ VillageTitle = "Village"
 renderCaminoMsgDefault _ WalkingTitle = "Walking"
 renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
+renderCaminoMsgDefault _ WarningTitle = "Warning"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 
-renderLocalisedText :: (Tagged a) => [Locale] -> Localised a -> Html
-renderLocalisedText locales locd = let
+renderLocalisedText :: (Tagged a) => [Locale] -> Bool -> Bool -> Localised a -> Html
+renderLocalisedText locales attr js locd = let
     elt = localise locales locd
     txt = plainText elt
+    txt' = if attr then replace "\"" "'" txt else txt
+    txt'' = if js then replace "'" "\\'" txt' else txt'
     loc = locale elt
     lang = localeLanguageTag loc
   in
-    if Data.Text.null lang then
-      toHtml txt
+    if attr || Data.Text.null lang then
+      toHtml txt''
     else
-      [shamlet|<span lang="#{lang}">#{txt}|]
+      [shamlet|<span lang="#{lang}">#{txt''}|]
 
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
@@ -354,8 +381,9 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   |]
   where
    metrics = score day
-   start' = renderLocalisedText locales (locationName $ start day)
-   finish' = renderLocalisedText locales (locationName $ finish day)
-renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales locd
-renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales locd
+   start' = renderLocalisedText locales False False (locationName $ start day)
+   finish' = renderLocalisedText locales False False (locationName $ finish day)
+renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales False False locd
+renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
+renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg

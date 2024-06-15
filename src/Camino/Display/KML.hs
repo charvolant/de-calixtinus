@@ -101,7 +101,7 @@ locationStyles config locType iconBase = let
 
 caminoStyles :: Config -> CaminoPreferences -> [Node]
 caminoStyles config camino =
-    foldr (\t -> \k -> k ++ locationStyles config t iconBase) [] locationTypeEnumeration ++
+    foldr (\t -> \k -> k ++ locationStyles config t iconBase) [] locationStopTypeEnumeration ++
     foldr (\r -> \k -> k ++ kmlRouteStyle (pack (routeID r <> "-used")) 8 1 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
     foldr (\r -> \k -> k ++ kmlRouteStyle (pack (routeID r <> "-unused")) 4 0.5 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
     kmlRouteStyle "default-used" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino') ++

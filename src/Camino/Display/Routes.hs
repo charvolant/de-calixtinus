@@ -34,7 +34,7 @@ findAssetPath ident config = maybe ("invalid/" <> ident) assetPath (getAsset ide
 renderCaminoRoute :: Config -> [Locale] -> CaminoRoute -> [(Text, Text)] -> Text
 renderCaminoRoute config _locales (AssetRoute ident) _ = findAssetPath ident config
 renderCaminoRoute config _locales (IconRoute ident) _ = (findAssetPath "icons" config) <> "/" <> ident
-renderCaminoRoute config locales (ImgRoute img) _ = resolveLink (findAssetPath "images" config) img
+renderCaminoRoute config _locales (ImgRoute img) _ = resolveLink (findAssetPath "images" config) img
 renderCaminoRoute config locales (LinkRoute tl) _ = resolveLink (findAssetPath "links" config) (localise locales tl)
 renderCaminoRoute _config  _locales (LocationRoute location) _ = "#" <> pack (locationID location)
 renderCaminoRoute config  _locales MapTileRoute _ = maybe "invalid/map.png" mapTiles (getMap Nothing config)

@@ -20,7 +20,7 @@
 
 <div #location-help .card>
   <div .card-body>
-    <h2 .card-title>Locations
+    <h2 .card-title>Locations and Points of Interest
     <table .table .table-striped>
       <caption>Location Types
       <thead>
@@ -73,9 +73,69 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon Church}
+          <td>Church
+          <td>A church or chapel
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Cathedral}
+          <td>Cathedral
+          <td>A cathedral, basillica, shrine or other large religious building
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Cross}
+          <td>Cross
+          <td>A roadside crucifix
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Fountain}
+          <td>Fountain
+          <td>A fountain or spring
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Municipal}
+          <td>Municipal
+          <td>A town square, market place, town hall or other municipal building
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Museum}
+          <td>Museum
+          <td>A museum or gallery
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Historical}
+          <td>Historical
+          <td>A historical site, archaeological site, ruin or other historical point of interest
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Park}
+          <td>Park
+          <td>A park or garden
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Natural}
+          <td>Natural
+          <td>A nature park, area of natural beauty etc.
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Warning}
+          <td>Warning
+          <td>A road crossing, bridge etc. that needs to be treated with caution
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Poi}
           <td>Locality
-          <td>An unspecified waypoint
+          <td>An unspecified waypoint or point of interest
 
 <div #services-help .card>
   <div .card-body>

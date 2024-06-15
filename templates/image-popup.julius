@@ -1,0 +1,9 @@
+const imageModal = new bootstrap.Modal('#image-dialog');
+function showImagePopup(source, title, attribution) {
+  $('#image-dialog-title').html(title);
+  $('#image-dialog-attribution').html(attribution);
+  var image = $('#image-dialog-image')
+  image.attr("src", source);
+  image.attr("alt", title);
+  imageModal.show();
+}

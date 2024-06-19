@@ -85,7 +85,7 @@ testDescriptionToJSON1 =
 testDescriptionToJSON2 =
   let
     loc = localeFromIDOrError "en"
-    desc = Description Nothing (Just $ Localised [TaggedFormattedText loc (FormattedText PlainText ["Hello There"])]) [] Nothing Nothing
+    desc = Description Nothing (Just $ Localised [TaggedText loc "Hello There"]) [] Nothing Nothing
     et = encode desc
   in
     TestCase (do
@@ -96,7 +96,7 @@ testDescriptionToJSON2 =
 testDescriptionToJSON3 =
   let
     loc = localeFromIDOrError "en-US" 
-    desc = Description Nothing (Just $ Localised [TaggedFormattedText loc (FormattedText PlainText ["Hello There"])]) [] (Just $ Localised [TaggedURL loc (Hyperlink (fromJust $ parseURI "https://www.fish.com") (Just "Fish"))]) Nothing
+    desc = Description Nothing (Just $ Localised [TaggedText loc "Hello There"]) [] (Just $ Localised [TaggedURL loc (Hyperlink (fromJust $ parseURI "https://www.fish.com") (Just "Fish"))]) Nothing
     et = encode desc
   in
     TestCase (do
@@ -112,7 +112,7 @@ testLocalisedJSON = TestList [
 testLocalisedToJSON1 =
   let
     loc =  localeFromIDOrError "en"
-    desc = Description Nothing (Just $ Localised [TaggedFormattedText loc (FormattedText PlainText ["Hello There"])]) [] Nothing Nothing
+    desc = Description Nothing (Just $ Localised [TaggedText loc "Hello There"]) [] Nothing Nothing
     et = encode desc
   in
     TestCase (do
@@ -122,7 +122,7 @@ testLocalisedToJSON1 =
 testLocalisedToJSON2 =
   let
     loc =  localeFromIDOrError "en"
-    desc = Description Nothing (Just $ Localised [TaggedFormattedText loc (FormattedText PlainText ["Hello There"])]) [] (Just $ Localised [TaggedURL loc (Hyperlink (fromJust $ parseURI "urn:x-y:z") Nothing)]) Nothing
+    desc = Description Nothing (Just $ Localised [TaggedText loc "Hello There"]) [] (Just $ Localised [TaggedURL loc (Hyperlink (fromJust $ parseURI "urn:x-y:z") Nothing)]) Nothing
     et = encode desc
   in
     TestCase (do

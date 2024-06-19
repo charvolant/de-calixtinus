@@ -449,7 +449,7 @@ descriptionNote :: Note -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNote note = [ihamlet|
   <div .note .#{nc}>
     <div .description-icon .float-start>^{descriptionNoteTypeIcon nt}
-    _{TxtFormatted (noteText note)}
+    _{Txt (noteText note)}
   |]
   where
     nt = noteType note
@@ -473,7 +473,7 @@ descriptionBlock showAbout description = [ihamlet|
           <a .about href="@{LinkRoute about}" title="_{LinkTitle about}">
             <span .ca-link>
     $maybe txt <- descText description
-      _{TxtFormatted txt}
+      _{Txt txt}
     $forall note <- descNotes description
       ^{descriptionNote note}
   |]

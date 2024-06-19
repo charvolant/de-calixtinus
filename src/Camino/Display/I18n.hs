@@ -23,14 +23,13 @@ module Camino.Display.I18n (
 import Camino.Camino
 import Camino.Config
 import Camino.Planner
-import Data.Description
 import Data.Localised
 import Data.Text
 import Data.Time.Calendar hiding (Day)
 import Data.Time.Format
 import Data.Time.LocalTime
 import Formatting
-import Text.Blaze.Html (preEscapedToHtml, toHtml)
+import Text.Blaze.Html (toHtml)
 import Text.Hamlet
 
 -- | Message placeholders for the camino
@@ -181,7 +180,6 @@ data CaminoMsg =
   | TripleTitle
   | TripleWcTitle
   | Txt (Localised TaggedText)
-  | TxtFormatted (Localised TaggedFormattedText)
   | TxtPlain Bool Bool (Localised TaggedText)
   | UnfitTitle
   | UnusedLabel
@@ -393,23 +391,6 @@ renderLocalisedText locales attr js locd = let
     else
       [shamlet|<span lang="#{lang}">#{txt''}|]
 
-renderLocalisedFormattedText' :: Text -> FormattedText -> Html
-renderLocalisedFormattedText' lang (FormattedText PlainText txts) = [shamlet|
-  $forall txt <- txts
-    <p :hasLang:lang="#{lang}">
-      #{txt}
-  |]
-  where
-    hasLang = not $ Data.Text.null lang
-renderLocalisedFormattedText' _lang (FormattedText HtmlText txts) = preEscapedToHtml (intercalate " " txts)
-renderLocalisedFormattedText' _lang (FormattedText MarkdownText txts) = preEscapedToHtml (intercalate " " txts) -- TBD
-
-renderLocalisedFormattedText :: [Locale] -> Localised TaggedFormattedText -> Html
-renderLocalisedFormattedText locales locd =
-  case localise locales locd of
-    Nothing -> toHtml ("" :: Text)
-    (Just (TaggedFormattedText loc ftxt)) -> renderLocalisedFormattedText' (localeLanguageTag loc) ftxt
-
 renderLocalisedTime :: (FormatTime t) => [Locale] -> String -> t -> Html
 renderLocalisedTime [] fmt t = renderLocalisedTime [rootLocale] fmt t
 renderLocalisedTime (loc:_) fmt t = toHtml $ formatTime (localeTimeLocale loc) fmt t
@@ -439,6 +420,5 @@ renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales F
 renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
 renderCaminoMsg _config locales (Time time) = renderLocalisedTime locales "%H%M" time
 renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
-renderCaminoMsg _config locales (TxtFormatted locd) = renderLocalisedFormattedText locales locd
 renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg

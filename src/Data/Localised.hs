@@ -44,11 +44,11 @@ module Data.Localised (
 ) where
 
 import Data.Aeson
-import Data.Aeson.Types (typeMismatch)
+import Data.Aeson.Types (Parser, typeMismatch)
 import Data.Char (isAlpha)
-import Data.List (find, singleton)
+import Data.List (find, singleton, uncons)
 import Data.Maybe (catMaybes, fromJust, isNothing)
-import Data.Text (Text, breakOnEnd, dropEnd, null, pack, takeWhile, toLower, unpack)
+import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack)
 import Data.Time.Format
 import Data.Time.LocalTime
 import Network.URI
@@ -108,24 +108,92 @@ rootTimeLocale = TimeLocale {
         , ("December", "Dec")
         ]
     , amPm = ("AM", "PM")
-    , dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y"
-    , dateFmt = "%m/%d/%y"
+    , dateTimeFmt = "%Y-%m-%d %H:%M:%S %Z %Y"
+    , dateFmt = "%Y-%m-%d"
     , timeFmt = "%H:%M:%S"
     , time12Fmt = "%I:%M:%S %p"
     , knownTimeZones =
         [ TimeZone 0 False "UT"
         , TimeZone 0 False "GMT"
-        , TimeZone (-5 * 60) False "EST"
-        , TimeZone (-4 * 60) True "EDT"
-        , TimeZone (-6 * 60) False "CST"
-        , TimeZone (-5 * 60) True "CDT"
-        , TimeZone (-7 * 60) False "MST"
-        , TimeZone (-6 * 60) True "MDT"
-        , TimeZone (-8 * 60) False "PST"
-        , TimeZone (-7 * 60) True "PDT"
         ]
     }
-   
+
+portugueseTimeLocale :: TimeLocale
+portugueseTimeLocale = TimeLocale { 
+    wDays =
+        [ ("domingo", "dom")
+        , ("segunda-feira", "seg")
+        , ("terça-feira", "ter")
+        , ("quarta-feira", "qua")
+        , ("quinta-feira", "qui")
+        , ("sexta-feira", "sex")
+        , ("sábado", "sáb")
+        ]
+    , months =
+        [ ("janeiro", "jan")
+        , ("fevereiro", "fev")
+        , ("março", "março")
+        , ("abril", "abril")
+        , ("maio", "maio")
+        , ("junho", "junho")
+        , ("julho", "julho")
+        , ("agosto", "agosto")
+        , ("setembro", "set")
+        , ("outubro", "out")
+        , ("novembro", "nov")
+        , ("dezembro", "dez")
+        ]
+    , amPm = ("da manhã", "da tarde")
+    , dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y"
+    , dateFmt = "%d/%m/%y"
+    , timeFmt = "%H:%M:%S"
+    , time12Fmt = "%I:%M:%S %p"
+    , knownTimeZones =
+        [ TimeZone 0 False "WET"
+        , TimeZone 0 False "UT"
+        , TimeZone 0 False "GMT"
+        , TimeZone (1 * 60) False "WEST"
+        ]
+    }
+
+spanishTimeLocale :: TimeLocale
+spanishTimeLocale = TimeLocale { 
+    wDays =
+        [ ("domingo", "dom")
+        , ("lunes", "lun")
+        , ("martes", "mar")
+        , ("miércoles", "mié")
+        , ("jueves", "jue")
+        , ("viernes", "bie")
+        , ("sábado", "sáb")
+        ]
+    , months =
+        [ ("enero", "enero")
+        , ("febrero", "feb")
+        , ("marzo", "marzo")
+        , ("abril", "abr")
+        , ("mayo", "mayo")
+        , ("junio", "jun")
+        , ("julio", "jul")
+        , ("agosto", "agosto")
+        , ("septiembre", "sept")
+        , ("octobre", "okt")
+        , ("noviembre", "nov")
+        , ("deciembre", "dic")
+        ]
+    , amPm = ("de la mañana", "de la tarde")
+    , dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y"
+    , dateFmt = "%d/%m/%y"
+    , timeFmt = "%H:%M:%S"
+    , time12Fmt = "%I:%M:%S %p"
+    , knownTimeZones =
+        [ TimeZone 0 False "UT"
+        , TimeZone 0 False "GMT"
+        , TimeZone (1 * 60) False "CET"
+        , TimeZone (2 * 60) False "CEST" 
+        ]
+    }
+ 
 -- | The base, wildcard locale
 rootLocale :: Locale
 rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale)
@@ -135,8 +203,8 @@ englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_U
 englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing
 frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing Nothing
 galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing Nothing
-portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing Nothing
-spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing Nothing
+portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale)
+spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale)
 basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing Nothing
 
 -- | Decode a locale identifier into a locale specification
@@ -246,11 +314,18 @@ instance FromJSON TaggedText where
   parseJSON (String v) = do
     let (locale', text') = parseTagged v
     return $ TaggedText locale' text'
-  parseJSON v = typeMismatch "string" v
+  parseJSON v@(Array _) = do
+    txts' <- parseJSONList v :: Parser [Text]
+    let (locale', txts'') = maybe ("", txts') id (uncons txts')
+    let (locale'', txts''') = maybe (rootLocale, txts') (\l -> (l, txts'')) (localeFromID locale')
+    return $ TaggedText locale'' (intercalate "\n" txts''')
+  parseJSON v = typeMismatch "string or array" v
 
 instance ToJSON TaggedText where
-  toJSON (TaggedText locale' text') = toJSON $
-      if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
+  toJSON (TaggedText locale' text') = if isInfixOf "\n" text' then
+      toJSON $ (localeID locale'):(splitOn "\n" text')
+    else
+      toJSON $ if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
 
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)

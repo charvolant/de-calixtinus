@@ -42,8 +42,8 @@ testTaggedText = TestList [
   ]
 
 testTaggedTextJSON = TestList [
-  testTaggedTextFromJSON1, testTaggedTextFromJSON2, testTaggedTextFromJSON3,
-  testTaggedTextToJSON1, testTaggedTextToJSON2
+  testTaggedTextFromJSON1, testTaggedTextFromJSON2, testTaggedTextFromJSON3, testTaggedTextFromJSON4, testTaggedTextFromJSON5,
+  testTaggedTextToJSON1, testTaggedTextToJSON2, testTaggedTextToJSON3
   ]
 
 testTaggedTextFromJSON1 =
@@ -79,6 +79,28 @@ testTaggedTextFromJSON3 =
       assertEqual "TaggedTest FromJSON 3 3" "en-US" (localeID $ locale tt')
       )
 
+testTaggedTextFromJSON4 =
+  let
+    tt = decode "[\"en\",\"Hello\",\"There\"]" :: Maybe TaggedText
+  in
+    TestCase (do
+      assertBool "TaggedTest FromJSON 4 1" (isJust tt)
+      let tt' = fromJust tt
+      assertEqual "TaggedTest FromJSON 4 2" "Hello\nThere" (plainText tt')
+      assertEqual "TaggedTest FromJSON 4 3" "en" (localeID $ locale tt')
+      )
+
+testTaggedTextFromJSON5 =
+  let
+    tt = decode "[\"Hello\",\"There\"]" :: Maybe TaggedText
+  in
+    TestCase (do
+      assertBool "TaggedTest FromJSON 5 1" (isJust tt)
+      let tt' = fromJust tt
+      assertEqual "TaggedTest FromJSON 5 2" "Hello\nThere" (plainText tt')
+      assertEqual "TaggedTest FromJSON 5 3" "*" (localeID $ locale tt')
+      )
+
 testTaggedTextToJSON1 =
   let
     tt = TaggedText rootLocale "Hello There"
@@ -94,7 +116,16 @@ testTaggedTextToJSON2 =
     et = encode tt
   in
     TestCase (do
-      assertEqual "TaggedTest ToJSON 1 1" "\"Hello There@en\"" et
+      assertEqual "TaggedTest ToJSON 2 1" "\"Hello There@en\"" et
+      )
+
+testTaggedTextToJSON3 =
+  let
+    tt = TaggedText (localeFromIDOrError "en") "Hello\nThere"
+    et = encode tt
+  in
+    TestCase (do
+      assertEqual "TaggedTest ToJSON 3 1" "[\"en\",\"Hello\",\"There\"]" et
       )
 
 testLocalisedText = TestList [

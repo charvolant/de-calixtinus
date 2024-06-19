@@ -36,7 +36,7 @@ testMetadata1 = Metadata {
 testMetadata :: Test
 testMetadata = TestList [
     TestLabel "Encode Term" testEncodeTerm
-  , TestLabel "Decode Termt" testDecodeTerm
+  , TestLabel "Decode Term" testDecodeTerm
   , TestLabel "Read" testRead
   , TestLabel "Write" testWrite
  ]
@@ -60,7 +60,7 @@ testDecodeTerm2 = TestCase (assertEqual "decodeTerm 2" (Just dcTitle) (decodeTer
 
 
 testRead = TestList [
-  testRead1
+  testRead1, testRead2
   ]
 
 json1 = [r|
@@ -69,6 +69,10 @@ json1 = [r|
     {
       "prefix": "dc",
       "namespace": "http://purl.org/dc/elements/1.1/"
+    },
+    {
+      "prefix": "skos",
+      "namespace": "http://www.w3.org/2004/02/skos/core#"
     }
   ],
   "statements": [
@@ -87,6 +91,22 @@ json1 = [r|
     {
       "term": "http://purl.org/dc/terms/source",
       "value": "Nowhere special"
+    },
+    {
+      "term": "skos:example",
+      "value": "What? Me?"
+    }
+  ]
+}
+|] :: ByteString
+
+
+json2 = [r|
+{
+  "statements": [
+    {
+      "term": "dc:title",
+      "value": "A something title@en"
     }
   ]
 }
@@ -104,7 +124,7 @@ testRead1 =
     getLang _ = error "Invalid language"
   in
     TestCase (do
-      assertEqual "Read 1 1" 1 (Prelude.length $ metadataNamespaces metadata)
+      assertEqual "Read 1 1" 3 (Prelude.length $ metadataNamespaces metadata)
       assertEqual "Read 1 2" dcTitle (getTerm $ metadataStatements metadata !! 0)
       assertEqual "Read 1 3" "A something title" (getValue $ metadataStatements metadata !! 0)
       assertEqual "Read 1 4" "en" (getLang $ metadataStatements metadata !! 0)
@@ -114,6 +134,23 @@ testRead1 =
       assertEqual "Read 1 8" dctermsDescription (getTerm $ metadataStatements metadata !! 3)
       assertEqual "Read 1 9" "Nowhere special" (getValue $ metadataStatements metadata !! 3)
       assertEqual "Read 1 10" "" (getLang $ metadataStatements metadata !! 2)
+    )
+
+testRead2 =
+  let
+    mmetadata = eitherDecode json2 :: Either String Metadata
+    metadata = either error id mmetadata
+    getTerm (Statement term _value) = term
+    getTerm _ = error "Invalid term"
+    getValue (Statement _term value) = plainText value
+    getValue _ = error "Invalid value"
+    getLang (Statement _term value) = localeLanguageTag $ locale value
+    getLang _ = error "Invalid language"
+  in
+    TestCase (do
+      assertEqual "Read 2 1" 2 (Prelude.length $ metadataNamespaces metadata)
+      assertEqual "Read 2 2" dcTitle (getTerm $ metadataStatements metadata !! 0)
+      assertEqual "Read 2 3" "A something title" (getValue $ metadataStatements metadata !! 0)
     )
 
 testWrite = TestList [

@@ -127,8 +127,8 @@
         <tr>
           <td>
             <span .location-type-sample>
-              ^{caminoLocationTypeIcon Warning}
-          <td>Warning
+              ^{caminoLocationTypeIcon Hazard}
+          <td>Hazard
           <td>A road crossing, bridge etc. that needs to be treated with caution
         <tr>
           <td>

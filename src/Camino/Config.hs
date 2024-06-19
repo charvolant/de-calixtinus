@@ -110,7 +110,7 @@ data LinkType = Header -- ^ The link is part of the heading menu
 
 instance FromJSON LinkType
 instance ToJSON LinkType
-    
+
 -- | A link to an external, language-specific resource
 data LinkConfig = Link {
   linkId :: Text, -- ^ The link identifier
@@ -129,7 +129,7 @@ instance FromJSON LinkConfig where
 instance ToJSON LinkConfig where
   toJSON (Link id' type' links') =
     object [ "id" .= id', "type" .= type', "links" .= links' ]
-    
+
 -- | Configuration for what's needed to set up web pages and other resources
 data WebConfig = Web {
   webAssets :: [AssetConfig], -- ^ The assets needed to display the page properly
@@ -292,7 +292,7 @@ getLink :: Text -- ^ The link identifier
   -> [Locale] -- ^ The locale list
   -> Config -- ^ The configuration to query
   -> Maybe TaggedURL -- ^ The internationalised link
-getLink ident locales config = (localise locales . links) <$> getRecursive (Just ident) (webLinks . configWeb) linkId config
+getLink ident locales config = maybe Nothing (localise locales . links) (getRecursive (Just ident) (webLinks . configWeb) linkId config)
 
 -- | Get links, based on a link type
 --   The resulting links are in the order specifiedin the configuration, from parent to child

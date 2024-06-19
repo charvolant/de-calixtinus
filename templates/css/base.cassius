@@ -40,15 +40,16 @@ a
   color: #{toCssColour caminoBlue}
 .chosen-location-penance
   font-size: smaller
+.description-icon
+  color: #{toCssColour informationBlue}
+  padding-left: 0.5em;
+  padding-right: 1em;
+  padding-bottom: 1ex;
 .description-thumbnail
   width: 20%
   max-width: 100px;
   .card-footer
     font-size: smaller
-.information
-  margin-right: 1ex
-  font-size: larger
-  color: #{toCssColour caminoBlue}
 .location-tooltip
   .leg-to
     font-size: x-small
@@ -113,7 +114,7 @@ a
     h5
       font-weight: bolder
 .poi-types
-   color: #{toCssColour caminoBlue}
+   color: #{toCssColour informationBlue}
 .show-on-map
    color: #{toCssColour caminoBlue}
    font-size: larger

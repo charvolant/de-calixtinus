@@ -327,7 +327,7 @@ instance Yesod CaminoApp where
     let config = caminoAppConfig master
     let micons = C.getAsset "icons" config
     let css = C.getAssets C.Css config
-    let headLinks = map (localise locales . C.links) (C.getLinks C.Header config)
+    let headLinks = catMaybes $ map (localise locales . C.links) (C.getLinks C.Header config)
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render MsgHelpLabel

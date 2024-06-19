@@ -19,6 +19,7 @@ module Data.Metadata (
 
   decodeTerm,
   encodeTerm,
+  localisedValue,
   statementLabel,
   statementLang,
   statementTerm,
@@ -28,8 +29,9 @@ module Data.Metadata (
 import Data.Aeson
 import Data.Default.Class
 import Data.List (find)
-import Data.Localised (Tagged(..), TaggedText(..), localeLanguageTag)
+import Data.Localised (Locale(..), Localised(..), Tagged(..), TaggedText(..), localeLanguageTag, localise)
 import Data.Maybe (fromJust)
+import qualified Data.Set as S
 import qualified Data.Text as T (Text, concat, isPrefixOf, null, split, stripPrefix, stripSuffix, unpack, pack)
 import Network.URI
 
@@ -48,6 +50,14 @@ instance FromJSON Namespace where
 instance ToJSON Namespace where
   toJSON (Namespace prefix' namespace') = object [ "prefix" .= (fromJust $ T.stripSuffix ":" prefix'), "namespace" .= namespace' ]
 
+-- | Merge namespaces with the second entry overriding the first
+mergeNamespaces :: [Namespace] -> [Namespace] -> [Namespace]
+mergeNamespaces first second = let
+    known = S.fromList $ map namespacePrefix first
+    additions = filter (\ns -> not $ S.member (namespacePrefix ns) known) second
+  in
+    first ++ additions
+  
 decodeTerm :: [Namespace] -> T.Text -> Maybe URI
 decodeTerm namespaces term =
   let
@@ -91,9 +101,12 @@ statementTerm :: Statement -> URI
 statementTerm (RawStatement term _value) = maybe nullURI id (parseURI $ T.unpack term)
 statementTerm (Statement term _value) = term
 
+statementText :: Statement -> TaggedText
+statementText (RawStatement _term txt) = txt
+statementText (Statement _term txt) = txt
+
 statementValue :: Statement -> T.Text
-statementValue (RawStatement _term value) = plainText value
-statementValue (Statement _term value) = plainText value
+statementValue statement = plainText $ statementText statement
 
 statementLang :: Statement -> Maybe T.Text
 statementLang (RawStatement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ locale value
@@ -109,6 +122,8 @@ statementLabel statement =
   in
     if length broken == 0 then url else last broken
 
+-- | A full metadata 
+--  The namespaces from `def` (dc, dcterms) are automatically included if not present
 data Metadata = Metadata {
   metadataNamespaces :: [Namespace], -- ^ The list of namespaces
   metadataStatements :: [Statement] -- ^ The list of metadata statements
@@ -117,9 +132,10 @@ data Metadata = Metadata {
 instance FromJSON Metadata where
   parseJSON (Object v) = do
     namespaces' <- v .:? "namespaces" .!= []
+    let namespaces'' = mergeNamespaces (metadataNamespaces def) namespaces'
     statements' <- v .: "statements"
-    let statements'' =  map (fromRawStatement namespaces') statements'
-    return (Metadata { metadataNamespaces = namespaces', metadataStatements = statements'' })
+    let statements'' =  map (fromRawStatement namespaces'') statements'
+    return (Metadata { metadataNamespaces = namespaces'', metadataStatements = statements'' })
   parseJSON v = error ("Unable to parse metadata object " ++ show v)
 
 instance ToJSON Metadata where
@@ -138,3 +154,14 @@ instance Default Metadata where
     ],
     metadataStatements = []
   }
+
+-- | Find a localised version of a statement
+localisedValue :: URI -- ^ The term to find
+  -> [Locale] -- ^ The locales to try
+  -> Metadata -- ^ The metadata source
+  -> Maybe TaggedText -- ^ The resulting value, if found
+localisedValue term locales metadata = let
+    statements = filter (\s -> term == statementTerm s) (metadataStatements metadata)
+    texts = map statementText statements
+  in
+    localise locales (Localised texts)

@@ -23,10 +23,11 @@ module Camino.Display.I18n (
 import Camino.Camino
 import Camino.Config
 import Camino.Planner
+import Data.Description
 import Data.Localised
 import Data.Text
 import Formatting
-import Text.Blaze.Html (toHtml)
+import Text.Blaze.Html (preEscapedToHtml, toHtml)
 import Text.Hamlet
 
 -- | Message placeholders for the camino
@@ -36,6 +37,7 @@ data CaminoMsg =
   | AccommodationLabel
   | AccommodationPenanceMsg Penance
   | AccommodationPreferencesLabel
+  | AddressTitle
   | AscentMsg Float
   | AustereTitle
   | BankTitle
@@ -46,6 +48,7 @@ data CaminoMsg =
   | BreakfastTitle
   | BridgeTitle
   | BusTitle
+  | CalendarTitle
   | CampGroundTitle
   | CampingTitle
   | CampSiteTitle
@@ -83,14 +86,17 @@ data CaminoMsg =
   | GroceriesTitle
   | GuestHouseTitle
   | HandwashTitle
+  | HazardTitle
   | HeatingTitle
   | HelpLabel
   | HistoricalTitle
   | HomeStayTitle
   | HostelTitle
   | HotelTitle
+  | HoursTitle
   | HouseTitle
   | InformationLabel
+  | InformationTitle
   | InformationDescription
   | IntersectionTitle
   | KeyLabel
@@ -165,6 +171,7 @@ data CaminoMsg =
   | TripleTitle
   | TripleWcTitle
   | Txt (Localised TaggedText)
+  | TxtFormatted (Localised TaggedFormattedText)
   | TxtPlain Bool Bool (Localised TaggedText)
   | UnfitTitle
   | UnusedLabel
@@ -216,6 +223,7 @@ renderCaminoMsgDefault _ AccessibleTitle = "Accessible"
 renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
+renderCaminoMsgDefault _ AddressTitle = "Address"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
@@ -226,6 +234,7 @@ renderCaminoMsgDefault _ BoatTitle = "Boat/Canoe (paddled)"
 renderCaminoMsgDefault _ BreakfastTitle = "Breakfast"
 renderCaminoMsgDefault _ BridgeTitle = "Bridge"
 renderCaminoMsgDefault _ BusTitle = "Bus"
+renderCaminoMsgDefault _ CalendarTitle = "Calendar"
 renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
@@ -262,6 +271,7 @@ renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
+renderCaminoMsgDefault _ HazardTitle = "Hazard"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
 renderCaminoMsgDefault _ HistoricalTitle = "Historical site, archaeological site or ruin"
@@ -270,6 +280,7 @@ renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
 renderCaminoMsgDefault _ HouseTitle = "House"
 renderCaminoMsgDefault _ InformationLabel = "Information"
+renderCaminoMsgDefault _ InformationTitle = "Information"
 renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
 renderCaminoMsgDefault _ KeyLabel = "Key"
@@ -349,7 +360,7 @@ renderCaminoMsgDefault _ VeryUnfitTitle = "Very unfit"
 renderCaminoMsgDefault _ VillageTitle = "Village"
 renderCaminoMsgDefault _ WalkingTitle = "Walking"
 renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
-renderCaminoMsgDefault _ WarningTitle = "Warning"
+renderCaminoMsgDefault _ WarningTitle= "Warning"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
@@ -358,16 +369,33 @@ renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 renderLocalisedText :: (Tagged a) => [Locale] -> Bool -> Bool -> Localised a -> Html
 renderLocalisedText locales attr js locd = let
     elt = localise locales locd
-    txt = plainText elt
+    txt = maybe "" plainText elt
     txt' = if attr then replace "\"" "'" txt else txt
     txt'' = if js then replace "'" "\\'" txt' else txt'
-    loc = locale elt
+    loc = maybe rootLocale locale elt
     lang = localeLanguageTag loc
   in
     if attr || Data.Text.null lang then
       toHtml txt''
     else
       [shamlet|<span lang="#{lang}">#{txt''}|]
+
+renderLocalisedFormattedText' :: Text -> FormattedText -> Html
+renderLocalisedFormattedText' lang (FormattedText PlainText txts) = [shamlet|
+  $forall txt <- txts
+    <p :hasLang:lang="#{lang}">
+      #{txt}
+  |]
+  where
+    hasLang = not $ Data.Text.null lang
+renderLocalisedFormattedText' _lang (FormattedText HtmlText txts) = preEscapedToHtml (intercalate " " txts)
+renderLocalisedFormattedText' _lang (FormattedText MarkdownText txts) = preEscapedToHtml (intercalate " " txts) -- TBD
+
+renderLocalisedFormattedText :: [Locale] -> Localised TaggedFormattedText -> Html
+renderLocalisedFormattedText locales locd =
+  case localise locales locd of
+    Nothing -> toHtml ("" :: Text)
+    (Just (TaggedFormattedText loc ftxt)) -> renderLocalisedFormattedText' (localeLanguageTag loc) ftxt
 
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
@@ -385,5 +413,6 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
    finish' = renderLocalisedText locales False False (locationName $ finish day)
 renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales False False locd
 renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
+renderCaminoMsg _config locales (TxtFormatted locd) = renderLocalisedFormattedText locales locd
 renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg

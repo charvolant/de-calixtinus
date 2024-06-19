@@ -75,10 +75,20 @@
         "text": "Capital city of Portugal and the start of the Portuguese Camino",
         "about": "https://en.wikipedia.org/wiki/Lisbon",
         "image": {
-            "source": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Lisbon_Pra%C3%A7a_do_Com%C3%A9rcio_BW_2018-10-03_13-33-44_s.jpg",
-            "title": "Praça do Comércio@pt",
-            "rights": "Berthold Werner, via Wikimedia Commons",
-            "license": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+          "source": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Lisbon_Pra%C3%A7a_do_Com%C3%A9rcio_BW_2018-10-03_13-33-44_s.jpg",
+          "title": "Praça do Comércio@pt",
+          "metadata": {
+            "statements": [
+              {
+                "term": "dcterms:rights",
+                "value": "Berthold Werner, via Wikimedia Commons"
+              },
+              {
+                "term": "dcterms:license",
+                "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+              }
+            ]
+          }
         }
       },
       "type": "City",
@@ -91,7 +101,15 @@
           "description": {
             "text": "The start point for the Potuguese Camino",
             "notes": [
-              "You can obtain a pilgrim's credential from inside the cathedral, from 10am Mon-Sat"
+              "You can obtain a pilgrim's credential from inside the cathedral.",
+              {
+                "type": "Calendar",
+                "text": "Mon-Sat"
+              },
+              {
+                "type": "Hours",
+                "text": "1000-1800"
+              }
             ]
           },
           "type": "Cathedral",
@@ -3858,22 +3876,47 @@
       "pois": [
         {
           "name": [
-            "Catedral Basílica de Santiago de Compostela@gl",
+            "Catedral Basílica de Santiago de Compostela@ga",
             "Catedral Basílica de Santiago de Compostela@es",
             "Santiago de Compostela Cathedral@en"
           ],
           "description": {
             "text": "Journey's End@en",
+            "notes": [
+              {
+                "type": "Hours",
+                "text": "1000-2000"
+              }
+            ],
             "about": "https://catedraldesantiago.es/",
             "image": {
               "source": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Santiago_cathedral_2021.jpg",
               "title": "View from the Praza do Obradoiro",
-              "rights": "Fernando, via Wikimedia Commons",
-              "license": "CC BY-SA 4.0"
+              "metadata": {
+                "statements": [
+                  {
+                    "term": "dcterms:rights",
+                    "value": "Fernando, via Wikimedia Commons"
+                  },
+                  {
+                    "term": "dcterms:license",
+                    "value": "CC BY-SA 4.0"
+                  }
+                ]
+              }
             }
           },
           "type": "Cathedral",
           "position": { "latitude": 42.88060, "longitude": -8.54466 }
+        },
+        {
+          "name": "Praza das Platerias@ga",
+          "description": {
+            "summary": "The entrance point to the cathedral for those travelling the Portuguese Camino.@en",
+            "text": "The entrance point to the cathedral for those travelling the Portuguese Camino. The entrance way has the traditional alpha-omega signs inverted, indicating that this is the end of your journey and the start of a new life."
+          },
+          "type": "Municipal",
+          "position": { "latitude": 42.88019, "longitude":  -8.54431 }
         }
       ]
     },

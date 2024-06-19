@@ -17,8 +17,7 @@ as a wild-card localisation.
 -}
 
 module Data.Localised (
-    Description(..)
-  , Image(..)
+    Hyperlink(..)
   , Locale(..)
   , Localised(..)
   , Tagged(..)
@@ -28,15 +27,17 @@ module Data.Localised (
 
   , appendText
   , elements
-  , imageAttribution
+  , invalidLink
   , localeFromID
   , localeFromIDOrError
   , localeLanguageTag
+  , localeSeparator
   , localise
   , localiseDefault
   , localiseText
+  , parseTagged
   , rootLocale
-  , wildcardDescription
+  , uriToText
   , wildcardText
 ) where
 
@@ -45,8 +46,13 @@ import Data.Aeson.Types (typeMismatch)
 import Data.Char (isAlpha)
 import Data.List (find, singleton)
 import Data.Maybe (catMaybes, fromJust, isNothing)
-import Data.Text (Text, breakOnEnd, dropEnd, null, pack, replace, strip, takeWhile, toLower, unpack)
+import Data.Text (Text, breakOnEnd, dropEnd, null, pack, takeWhile, toLower, unpack)
 import Network.URI
+
+
+-- | Convert a URI to text
+uriToText :: URI -> Text
+uriToText uri = pack $ (uriToString id uri) ""
 
 -- | A locale specification
 data Locale = Locale {
@@ -139,16 +145,13 @@ localeSeparator :: Text
 localeSeparator = "@"
 
 -- | Parse a piece of text with an optional locale tage at the end into a locale/text pair
+--   For exampele @"Hello@fr"@ becomes @(french, "Hello")@ and @"Nothing"@ becomes @(root, "Nothing")@
 parseTagged :: Text -> (Locale, Text)
 parseTagged txt = (maybe rootLocale id locale'', txt'')
   where
     (txt', locale') = breakOnEnd localeSeparator txt
     locale'' = if Data.Text.null txt' || Data.Text.null locale' then Nothing else (localeFromID locale')
     txt'' = if isNothing locale'' then txt else dropEnd 1 txt'
-
--- | Convert a URI to text
-uriToText :: URI -> Text
-uriToText uri = pack $ (uriToString id uri) ""
 
 -- | Information that is tagged with a locale
 class Tagged a where
@@ -194,37 +197,45 @@ instance ToJSON TaggedText where
   toJSON (TaggedText locale' text') = toJSON $
       if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
 
+-- | A URL with an optional title
+data Hyperlink = Hyperlink URI (Maybe Text)
+  deriving (Show)
+
 -- | A URL with potential localisation and title
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
-data TaggedURL = TaggedURL Locale URI (Maybe Text)
+data TaggedURL = TaggedURL Locale Hyperlink
   deriving (Show)
 
 instance Tagged TaggedURL where
-  locale (TaggedURL loc _ _) = loc
-  plainText (TaggedURL _ _ title) = maybe "" id title
-  fromText txt = TaggedURL rootLocale (fromJust $ parseURI $ unpack $ txt) Nothing
-  addText tu@(TaggedURL loc uri _title) txt' = TaggedURL loc uri (Just $ plainText tu <> txt')
+  locale (TaggedURL loc _) = loc
+  plainText (TaggedURL _ (Hyperlink _ title)) = maybe "" id title
+  fromText txt = TaggedURL rootLocale (Hyperlink (fromJust $ parseURI $ unpack $ txt) Nothing)
+  addText (TaggedURL loc (Hyperlink uri title)) txt' = TaggedURL loc (Hyperlink uri (Just $ maybe "" id title <> txt'))
 
 instance TaggedLink TaggedURL where
-  link (TaggedURL _ url _) = url
+  link (TaggedURL _ (Hyperlink url _)) = url
+
+-- A link to an invalid or 404 page
+invalidLink :: TaggedURL
+invalidLink = TaggedURL rootLocale (Hyperlink (fromJust $ parseURI "invalid") (Just "Invalid"))
 
 instance FromJSON TaggedURL where
   parseJSON (String v) = do
     let (locale', url') = parseTagged v
-    return $ TaggedURL locale' (fromJust $ parseURI $ unpack url') Nothing
+    return $ TaggedURL locale' (Hyperlink (fromJust $ parseURI $ unpack url') Nothing)
   parseJSON (Object v) = do
     locale' <- v .: "locale"
     url' <- v .: "url"
     title' <- v .:? "title"
-    return $ TaggedURL (localeFromIDOrError locale') (fromJust $ parseURI url') title'
+    return $ TaggedURL (localeFromIDOrError locale') (Hyperlink (fromJust $ parseURI url') title')
   parseJSON v = typeMismatch "string or object" v
 
 instance ToJSON TaggedURL where
-  toJSON (TaggedURL locale' url' Nothing) = toJSON $
+  toJSON (TaggedURL locale' (Hyperlink url' Nothing)) = toJSON $
       if locale' == rootLocale then url'' else url'' <> localeSeparator <> (localeID locale')
       where
         url'' = uriToText url'
-  toJSON (TaggedURL locale' url' (Just title')) = object [
+  toJSON (TaggedURL locale' (Hyperlink url' (Just title'))) = object [
         "locale" .= localeID locale'
       , "url" .= uriToText url'
       , "title" .= title'
@@ -255,15 +266,15 @@ appendText (Localised elts) txt = Localised (map (\elt -> elt `addText` txt) elt
 -- | Choose the most appropriately localised piece of text for a list of locales
 --   If there is no matching text and the 
 --   If there is only one piece of text, then that is used regardless
-localise :: (Tagged a) => [Locale] -> Localised a -> a
-localise _ (Localised []) = fromText "" -- ^ Empty list of tags
-localise _ (Localised [elt]) = elt -- Default case for a singleton
+localise :: (Tagged a) => [Locale] -> Localised a -> Maybe a
+localise _ (Localised []) = Nothing -- ^ Empty list of tags
+localise _ (Localised [elt]) = Just elt -- Default case for a singleton
 localise [] lt@(Localised (tt:_)) = case localise' [rootLocale] lt of
-  Nothing -> tt
-  (Just tt') -> tt'
+  Nothing -> Just tt
+  tt' -> tt'
 localise locales lt = case localise' locales lt of
   Nothing -> localise rlocales lt where rlocales = catMaybes (map localeParent locales)
-  (Just tt') -> tt'
+  tt' -> tt'
 
 localise' :: (Tagged a) => [Locale] -> Localised a -> Maybe a
 localise' [] _ = Nothing
@@ -274,84 +285,13 @@ localise' (l:lr) lt@(Localised elts) = case find (\elt -> locale elt == l) elts 
 -- | Choose the most appropriately localised piece of text for a list of locales
 --   See @localise@
 localiseText :: (Tagged a) => [Locale] -> Localised a -> Text
-localiseText locales lt = plainText $ localise locales lt
+localiseText locales lt = maybe "" id (plainText <$> localise locales lt)
 
 -- | Choose the default text
 --   See @localiseText@
 localiseDefault :: (Tagged a) => Localised a -> Text
-localiseDefault lt = plainText $ localise [] lt
+localiseDefault lt = localiseText [] lt
 
 -- | Create a localised instance from a piece of text
 wildcardText :: (Tagged a) => Text -> Localised a
 wildcardText txt = Localised [fromText txt]
-
--- | An image descriptor
-data Image = Image {
-      imageSource :: URI
-    , imageTitle :: Localised TaggedText
-    , imageRights :: Maybe Text
-    , imageLicense :: Maybe Text
-  } deriving (Show)
-
-instance TaggedLink Image where
-  link = imageSource
-
-instance FromJSON Image where
-  parseJSON (Object v) = do
-    source' <- v .: "source"
-    title' <- v .: "title"
-    rights' <- v .:? "rights"
-    license' <- v .:? "license"
-    return $ Image (fromJust $ parseURI source') title' rights' license'
-  parseJSON v = typeMismatch "string or object" v
-
-instance ToJSON Image where
-  toJSON (Image source' title' rights' license') = object [
-        "source" .= uriToText source'
-      , "title" .= title'
-      , "rights" .= rights'
-      , "license" .= license'
-    ]
-
--- Construct an attribution statement
-imageAttribution :: Image -> Text
-imageAttribution image = let
-    rights = maybe "" id (imageRights image)
-    license = maybe "" id (imageLicense image)
-  in
-    replace "\"" "'" $ strip $ rights <> " " <> license
--- | A full description of something, inclusing links and other bits and pieces
-data Description = Description {
-      descText :: Maybe (Localised TaggedText) -- ^ Any descriptive text
-    , descNotes :: [(Localised TaggedText)] -- ^ Additional notes and comments
-    , descAbout :: Maybe (Localised TaggedURL) -- ^ A referencing URI, if resolvable then this can be make into a link
-    , descImage :: Maybe Image -- ^ A link to an image
-  }   
-  deriving (Show)
-
-instance FromJSON Description where
-  parseJSON (String v) = do
-    let (locale', text') = parseTagged v
-    let localised' = Localised [TaggedText locale' text']
-    return $ Description (Just localised') [] Nothing Nothing
-  parseJSON (Object v) = do
-    text' <- v .:? "text"
-    notes' <- v .:? "notes" .!= []
-    about' <- v .:? "about"
-    image' <- v .:? "image"
-    return $ Description text' notes' about' image'
-  parseJSON v = typeMismatch "string or object" v
-
-instance ToJSON Description where
-  toJSON (Description Nothing [] Nothing Nothing) = ""
-  toJSON (Description (Just (Localised [text'])) [] Nothing Nothing) = toJSON text'
-  toJSON (Description text' notes' about' image') = object [
-        "text" .= text'
-      , "notes" .= if Prelude.null notes' then Nothing else Just notes'
-      , "about" .= about'
-      , "image" .= image'
-    ]
-
--- | Create a localised instance from a piece of text
-wildcardDescription :: Text -> Description
-wildcardDescription txt = Description (Just (wildcardText txt)) [] Nothing Nothing

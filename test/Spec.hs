@@ -2,6 +2,7 @@
 import Test.HUnit
 import CaminoSpec
 import ConfigSpec
+import DescriptionSpec
 import WalkingSpec
 import PlannerSpec
 import GraphSpec
@@ -16,8 +17,9 @@ import Data.Map
 import Data.Placeholder
 import Camino.Camino
 import Camino.Preferences
+import Data.Description (wildcardDescription)
 import Data.Either (fromRight, isLeft)
-import Data.Localised (wildcardDescription, wildcardText)
+import Data.Localised (wildcardText)
 import Control.Monad (when)
 
 main :: IO ()
@@ -36,6 +38,7 @@ main = do
 testList prefs camino = TestList [
     TestLabel "Localised" testLocalised,
     TestLabel "Metadata" testMetadata,
+    TestLabel "Description" testDescription,
     TestLabel "Propositional" testPropositional,
     TestLabel "Config" testConfig,
     TestLabel "Camino" testCamino, 

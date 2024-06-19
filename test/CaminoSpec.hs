@@ -8,6 +8,7 @@ import Test.HUnit
 import Data.Aeson
 import Data.ByteString.Lazy (ByteString)
 import Data.Default.Class
+import Data.Description
 import Data.Localised
 import qualified Data.Map as M
 import Data.Placeholder

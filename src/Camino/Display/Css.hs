@@ -29,13 +29,17 @@ import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
 
--- The traditional blue file colour. Used as a primary darkish colour
+-- The traditional blue tile colour. Used as a primary darkish colour
 caminoBlue :: Colour Double
 caminoBlue = sRGB24read "1964c0"
 
--- The traditional blue file colour. Used as a primary darkish colour
+-- The traditional blue file colour. Used as a primary lightish colour
 caminoYellow :: Colour Double
 caminoYellow = sRGB24read "f9b34a"
+
+-- A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
+informationBlue :: Colour Double
+informationBlue = sRGB24read "1c9cf1"
 
 -- | Create a CSS-able colour
 toCssColour :: Colour Double -- ^ The colour to display
@@ -87,11 +91,14 @@ iconList = [
     ("ca-bicycle-storage", '\xe06a'),
     ("ca-bridge", '\xe004'),
     ("ca-bus", '\xe047'),
+    ("ca-calendar", '\xe095'),
     ("ca-campground", '\xe019'),
     ("ca-camping", '\xe019'),
     ("ca-cathedral", '\xe008'),
     ("ca-church", '\xe014'),
     ("ca-city", '\xe003'),
+    ("ca-clock", '\xe094'),
+    ("ca-cooling", '\xe071'),
     ("ca-cross", '\xe009'),
     ("ca-cycling", '\xe081'),
     ("ca-dinner", '\xe065'),
@@ -103,7 +110,7 @@ iconList = [
     ("ca-groceries", '\xe041'),
     ("ca-guesthouse", '\xe012'),
     ("ca-handwash", '\xe063'),
-    ("ca-heating", '\xe070'),
+    ("ca-hazard", '\xe093'),
     ("ca-heating", '\xe070'),
     ("ca-help", '\xe092'),
     ("ca-historical", '\xe00d'),
@@ -114,6 +121,7 @@ iconList = [
     ("ca-information", '\xe091'),
     ("ca-intersection", '\xe005'),
     ("ca-kitchen", '\xe06b'),
+    ("ca-link", '\xe096'),
     ("ca-lockers", '\xe066'),
     ("ca-natural", '\xe00f'),
     ("ca-mattress", '\xe028'),

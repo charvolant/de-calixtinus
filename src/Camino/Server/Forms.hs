@@ -41,8 +41,9 @@ import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
+import Data.Description (Description(..), descriptionSummary)
 import Data.List (find, partition, singleton, sortOn)
-import Data.Localised (Description(..), Locale(..), Tagged(..), localise, localiseText)
+import Data.Localised (Locale(..), Tagged(..), localise, localiseText)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
@@ -121,7 +122,7 @@ fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
 fullRoutes _ routes = routes
 
 descriptionText :: [Locale] -> Description -> Maybe Text
-descriptionText locales description = plainText <$> (localise locales) <$> (descText description)
+descriptionText locales description = plainText <$> localise locales (descriptionSummary description)
 
 
 -- Make a default set of preference data fields with everything hidden

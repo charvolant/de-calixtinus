@@ -22,13 +22,13 @@ import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
+import Data.Description
 import Data.Localised
-import Data.Maybe (fromJust, isJust, isNothing)
+import Data.Maybe (fromJust, isJust)
 import Data.Metadata
 import Graph.Graph (incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
-import Text.Julius
 import qualified Data.Text as T (concat, intercalate, null, pack, take, toLower, toUpper)
 import Formatting
 import qualified Data.Map as M
@@ -41,7 +41,7 @@ conditionalLabel label values = [ihamlet|
   $if not $ null values
     <div .row>
       <div .col>
-        <h6>_{label}
+        <h6 .pt-3>_{label}
   |]
 
 penanceSummary :: TravelPreferences -> CaminoPreferences -> Bool -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -155,7 +155,7 @@ caminoLocationTypeIcon Museum = [ihamlet| <span .location-type .ca-museum title=
 caminoLocationTypeIcon Historical = [ihamlet| <span .location-type .ca-historical title="_{HistoricalTitle}"> |]
 caminoLocationTypeIcon Park = [ihamlet| <span .location-type .ca-park title="_{ParkTitle}"> |]
 caminoLocationTypeIcon Natural = [ihamlet| <span .location-type .ca-natural title="_{NaturalTitle}"> |]
-caminoLocationTypeIcon Warning = [ihamlet| <span .location-type .ca-warning title="_{WarningTitle}"> |]
+caminoLocationTypeIcon Hazard = [ihamlet| <span .location-type .ca-hazard title="_{HazardTitle}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
 caminoLocationTypeLabel :: LocationType -> CaminoMsg
@@ -175,7 +175,7 @@ caminoLocationTypeLabel Museum = MuseumTitle
 caminoLocationTypeLabel Historical = HistoricalTitle
 caminoLocationTypeLabel Park = ParkTitle
 caminoLocationTypeLabel Natural = NaturalTitle
-caminoLocationTypeLabel Warning = WarningTitle
+caminoLocationTypeLabel Hazard = HazardTitle
 caminoLocationTypeLabel Poi = PoiTitle
 
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -398,10 +398,26 @@ solutionElements _camino (Just solution) = (
   ) where
     trip' = solutionTrip solution
 
+descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
+descriptionNoteTypeIcon Warning = [ihamlet| <span .note-type .ca-warning title="_{WarningTitle}">|]
+descriptionNoteTypeIcon Calendar = [ihamlet| <span .note-type .ca-calendar title="_{CalendarTitle}">|]
+descriptionNoteTypeIcon Hours = [ihamlet| <span .note-type .ca-clock title="_{HoursTitle}">|]
+descriptionNoteTypeIcon Address = [ihamlet| <span .note-type .ca-globe title="_{AddressTitle}">|]
+
+descriptionNote :: Note -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionNote note = [ihamlet|
+  <div .note .#{nc}>
+    <div .description-icon .float-start>^{descriptionNoteTypeIcon nt}
+    _{TxtFormatted (noteText note)}
+  |]
+  where
+    nt = noteType note
+    nc = "note-" <> (T.toLower $ T.pack $ show nt)
+
 descriptionLine :: Description -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionLine description = [ihamlet|
-  $maybe txt <- descText description
-    _{Txt txt}
+  _{Txt (descriptionSummary description)}
   |]
 
 -- Only partial. This should be enclosed in a .row since it allows extra stuff to be added
@@ -411,16 +427,15 @@ descriptionBlock showAbout description = [ihamlet|
       <div .description-thumbnail .card .float-end>
         <div .card-body>
           <img .rounded .img-fluid src="@{ImgRoute img}" alt="_{TxtPlain True False (imageTitle img)}" title="_{TxtPlain True False (imageTitle img)}" dc:rights="#{attribution}" onclick="showImagePopup('@{ImgRoute img}', '_{TxtPlain True True (imageTitle img)}', '#{attribution}')"">
-    <p>
-      $if showAbout
-        $maybe about <- descAbout description
-          <a .information href="@{LinkRoute about}" title="_{LinkTitle about}">
-            <span .ca-information>
-      $maybe txt <- descText description
-        _{Txt txt}
+    $if showAbout
+      $maybe about <- descAbout description
+        <div .float-start .description-icon>
+          <a .about href="@{LinkRoute about}" title="_{LinkTitle about}">
+            <span .ca-link>
+    $maybe txt <- descText description
+      _{TxtFormatted txt}
     $forall note <- descNotes description
-      <p>
-        _{Txt note}
+      ^{descriptionNote note}
   |]
   where
     mimg = descImage description
@@ -516,23 +531,22 @@ locationLegs preferences camino used location = [ihamlet|
     (usedOutgoingLegs, unusedOutgoingLegs) = L.partition (\l -> S.member l used) outgoingLegs
     incomingLegs = incoming camino' location
     (usedIncomingLegs, unusedIncomingLegs) = L.partition (\l -> S.member l used) incomingLegs
-    arrow = '\x2192'
 
 caminoPointOfInterestHtml :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPointOfInterestHtml poi = [ihamlet|
   <div .row>
     <div .card .g-0>
-      <h6 .card-header>
+      <div .card-header>
+        <span .poi-types>
+          ^{caminoLocationTypeIcon (poiType poi)}
         _{Txt (poiName poi)}
         $maybe pos <- poiPosition poi
-          &nbsp;#
-          <a .show-on-map .float-end onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
+          <a .description-icon .float-end onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
             <span .ca-globe title="_{ShowOnMapTitle}">
         $maybe d <- poiDescription poi
           $maybe about <- descAbout d
-            &nbsp;#
-            <a .information .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
-              <span .ca-information>            
+            <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
+              <span .ca-link>
       <div .card-body>
           $maybe d <- poiDescription poi
             ^{descriptionBlock False d}
@@ -581,7 +595,6 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
     accChoice = maybe Nothing (\s -> M.lookup location (solutionAccommodation s)) solution
-    locChoice = maybe Nothing (\s -> M.lookup location (solutionLocation s)) solution
     
 caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml preferences camino solution = [ihamlet|
@@ -961,7 +974,7 @@ caminoMapScript preferences camino solution = [ihamlet|
       , (Historical, (24, 17))
       , (Park, (24, 25))
       , (Natural, (24, 25))
-      , (Warning, (20, 18))
+      , (Hazard, (20, 18))
       , (Poi, (15, 24))
       ] :: [(LocationType, (Int, Int))]
 

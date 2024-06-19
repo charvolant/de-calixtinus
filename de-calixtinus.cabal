@@ -42,6 +42,8 @@ library
       Camino.Server.Settings
       Camino.Util
       Camino.Walking
+      Data.Description
+      Data.DublinCore
       Data.Event
       Data.Localised
       Data.Metadata
@@ -272,6 +274,7 @@ test-suite de-calixtinus-test
   other-modules:
       CaminoSpec
       ConfigSpec
+      DescriptionSpec
       GraphSpec
       LocalisedSpec
       MetadataSpec

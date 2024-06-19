@@ -76,8 +76,9 @@ import qualified Data.ByteString.Lazy as LB (readFile)
 import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
+import Data.Description (Description(..), wildcardDescription)
 import Data.List (find)
-import Data.Localised (Description(..), Localised(..), TaggedText(..), appendText, localiseDefault, wildcardDescription, wildcardText)
+import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
@@ -327,7 +328,7 @@ data LocationType = Village -- ^ A village
    | Historical -- ^ A historical or archaeological site
    | Park -- ^ A park or gardens
    | Natural -- ^ A site of natural beauty
-   | Warning -- ^ A dangerous location (busy road crossing, etc)
+   | Hazard -- ^ A dangerous location (busy road crossing, etc)
    | Poi -- ^ A generic point of interest
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  

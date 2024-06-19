@@ -7,6 +7,7 @@ import Camino.Planner
 import Camino.Camino
 import Camino.Preferences
 import TestUtils
+import Data.Description
 import Data.Localised
 import qualified Data.Map as M
 import qualified Data.Set as S

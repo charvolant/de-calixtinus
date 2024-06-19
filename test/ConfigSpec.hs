@@ -32,7 +32,7 @@ testConfig2 = Config {
       Link {
         linkId = "foo",
         linkType = Header,
-        links = Localised [TaggedURL (localeFromIDOrError "fr") (fromJust $ parseURI "foo-fr.html") (Just "Feu")]
+        links = Localised [TaggedURL (localeFromIDOrError "fr") (Hyperlink (fromJust $ parseURI "foo-fr.html") (Just "Feu"))]
       }
     ],
     webMaps = []

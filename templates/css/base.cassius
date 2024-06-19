@@ -146,3 +146,12 @@ a
   padding-left: 0
 .bar-separated-list li:not(:first-child)
   border-left: thin solid gray
+.comma-list
+  display: inline
+  list-style-type: none
+  padding: 0
+  margin: 0
+.comma-list li
+  display: inline
+.comma-list li:not(:first-child):before
+  content: ", "

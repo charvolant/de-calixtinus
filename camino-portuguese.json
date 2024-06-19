@@ -97,23 +97,20 @@
       "accommodation": [],
       "pois": [
         {
-          "name": "Lisbon Cathedral",
+          "name": "Lisbon Cathedral@en",
           "description": {
-            "text": "The start point for the Potuguese Camino",
+            "text": "The start point for the Portuguese Camino@en",
             "notes": [
-              "You can obtain a pilgrim's credential from inside the cathedral.",
-              {
-                "type": "Calendar",
-                "text": "Mon-Sat"
-              },
-              {
-                "type": "Hours",
-                "text": "1000-1800"
-              }
+              "You can obtain a pilgrim's credential from inside the cathedral.@en"
             ]
           },
           "type": "Cathedral",
-          "position": { "latitude": 38.70984, "longitude": -9.13291 }
+          "position": { "latitude": 38.70984, "longitude": -9.13291 },
+          "calendar": {
+            "type": "weekly",
+            "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+          },
+          "hours": "1000-1800"
         }
       ]
     },
@@ -924,7 +921,12 @@
             "about": "https://www.cm-penela.pt/museum/villa.html"
           },
           "type": "Historical",
-          "position": { "latitude": 40.03836, "longitude": -8.45767 }
+          "position": { "latitude": 40.03836, "longitude": -8.45767 },
+          "calendar": {
+            "type": "weekly",
+            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+          },
+          "hours": "1000-1300,1400-1800"
         }
       ]
     },
@@ -966,7 +968,8 @@
             "Conímbriga Roman Ruins and Museum@en"
           ],
           "type": "Museum",
-          "position": { "latitude": 40.09835, "longitude": -8.49050 }
+          "position": { "latitude": 40.09835, "longitude": -8.49050 },
+          "hours": "1000-1800"
         }
       ]
     },
@@ -3882,12 +3885,6 @@
           ],
           "description": {
             "text": "Journey's End@en",
-            "notes": [
-              {
-                "type": "Hours",
-                "text": "1000-2000"
-              }
-            ],
             "about": "https://catedraldesantiago.es/",
             "image": {
               "source": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Santiago_cathedral_2021.jpg",
@@ -3904,7 +3901,8 @@
                   }
                 ]
               }
-            }
+            },
+            "hours": "1000-2000"
           },
           "type": "Cathedral",
           "position": { "latitude": 42.88060, "longitude": -8.54466 }

@@ -23,6 +23,7 @@ import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
 import Data.Description
+import Data.Event
 import Data.Localised
 import Data.Maybe (fromJust, isJust)
 import Data.Metadata
@@ -398,12 +399,51 @@ solutionElements _camino (Just solution) = (
   ) where
     trip' = solutionTrip solution
 
+calendarBlock' :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
+calendarBlock' Daily = [ihamlet|_{DailyLabel}|]
+calendarBlock' (Weekly dow) = [ihamlet|
+  <ol .comma-list .days-of-week-list>
+    $forall d <- dow
+      <li>_{DayOfWeekName d}#
+  |]
+calendarBlock' (Monthly dom) = [ihamlet|
+  <ol .comma-list .days-of-month-list>
+    $forall d <- dom
+      <li>_{DayOfMonthName d}#
+  |]
+calendarBlock' (Yearly moy) = [ihamlet|
+  <ol .comma-list .months-of-year-list>
+    $forall m <- moy
+      <li>_{MonthOfYearName m}#
+  |]
+calendarBlock' (Conditional cal cond) = [ihamlet|
+  ^{calendarBlock' cal}
+  <div .calendar-condition>_{Txt cond}
+  |]
+
+calendarBlock :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
+calendarBlock calendar = [ihamlet|
+  <div .float-end .mx-1 .calendar>
+    <span .description-icon .ca-calendar title="_{CalendarTitle}">
+    ^{calendarBlock' calendar}
+|]
+
+
+hoursBlock :: EventTime -> HtmlUrlI18n CaminoMsg CaminoRoute
+hoursBlock (EventTime hours) = [ihamlet|
+  <div .float-end .mx-1 .hours>
+    <span .description-icon .ca-clock title="_{OpenHoursTitle}">
+    <ol .comma-list .open-hours-list>
+      $forall (from, to) <- hours
+        <li>_{Time from} - _{Time to}#
+  |]
+  where
+
 descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
 descriptionNoteTypeIcon Warning = [ihamlet| <span .note-type .ca-warning title="_{WarningTitle}">|]
-descriptionNoteTypeIcon Calendar = [ihamlet| <span .note-type .ca-calendar title="_{CalendarTitle}">|]
-descriptionNoteTypeIcon Hours = [ihamlet| <span .note-type .ca-clock title="_{HoursTitle}">|]
-descriptionNoteTypeIcon Address = [ihamlet| <span .note-type .ca-globe title="_{AddressTitle}">|]
+descriptionNoteTypeIcon Address = [ihamlet| <span .note-type .ca-map title="_{AddressTitle}">|]
+descriptionNoteTypeIcon Directions = [ihamlet| <span .note-type .ca-map title="_{DirectionsTitle}">|]
 
 descriptionNote :: Note -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNote note = [ihamlet|
@@ -548,6 +588,10 @@ caminoPointOfInterestHtml poi = [ihamlet|
             <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
               <span .ca-link>
       <div .card-body>
+          $maybe t <- poiHours poi
+            ^{hoursBlock t}
+          $maybe c <- poiCalendar poi
+            ^{calendarBlock c}
           $maybe d <- poiDescription poi
             ^{descriptionBlock False d}
   |]
@@ -595,7 +639,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
     accChoice = maybe Nothing (\s -> M.lookup location (solutionAccommodation s)) solution
-    
+
 caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml preferences camino solution = [ihamlet|
   <div .container-fluid>

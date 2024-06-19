@@ -130,9 +130,8 @@ firstLineTagged (TaggedFormattedText locale' ftxt) = TaggedText locale' (firstLi
 data NoteType =
     Information -- ^ A generic piece of information
   | Warning -- ^ A warning about the thing being described
-  | Calendar -- ^ Opening dates
-  | Hours -- ^ Opening hours
-  | Address -- ^ An address, how to get there etc.
+  | Address -- ^ An address
+  | Directions -- ^ How to get there etc.
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
 
 instance FromJSON NoteType

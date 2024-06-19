@@ -14,9 +14,9 @@ module Camino.Display.I18n (
 
   formatDistance,
   formatMaybeDistance,
-  formatMaybeTime,
+  formatMaybeHours,
   formatPenance,
-  formatTime,
+  formatHours,
   renderCaminoMsg
 ) where
 
@@ -26,6 +26,9 @@ import Camino.Planner
 import Data.Description
 import Data.Localised
 import Data.Text
+import Data.Time.Calendar hiding (Day)
+import Data.Time.Format
+import Data.Time.LocalTime
 import Formatting
 import Text.Blaze.Html (preEscapedToHtml, toHtml)
 import Text.Hamlet
@@ -60,12 +63,16 @@ data CaminoMsg =
   | ComfortLabel
   | CyclingTitle
   | CyclePathTitle
+  | DailyLabel
+  | DayOfMonthName DayOfMonth
+  | DayOfWeekName DayOfWeek
   | DayServicesPenanceMsg Penance
   | DayServicesPreferencesLabel
   | DaysMsg Int
   | DaySummaryMsg Day
   | DescentMsg Float
   | DinnerTitle
+  | DirectionsTitle
   | DistanceAdjustMsg Penance
   | DistanceFormatted Float
   | DistanceLabel
@@ -114,11 +121,13 @@ data CaminoMsg =
   | MedicalTitle
   | MiscPenanceMsg Penance
   | MonasteryTitle
+  | MonthOfYearName MonthOfYear
   | MunicipalTitle
   | MuseumTitle
   | NaturalTitle
   | PilgrimAlbergueTitle
   | NormalTitle
+  | OpenHoursTitle
   | OtherLabel
   | ParkTitle
   | PeakTitle
@@ -157,6 +166,7 @@ data CaminoMsg =
   | StopServicesPenanceMsg Penance
   | StopServicesPreferencesLabel
   | SuperFitTitle
+  | Time TimeOfDay
   | TimeAdjustMsg Penance
   | TimeMsg (Maybe Float)
   | TimePenaltyLabel
@@ -203,15 +213,15 @@ formatMaybeDistance :: (Real a) => Maybe a -> Html
 formatMaybeDistance Nothing = [shamlet|<span .distance .rejected title="Rejected">#{rejectSymbol}</span>#|]
 formatMaybeDistance (Just d) = formatDistance d
 
-formatTime :: (Real a) => a -> Html
-formatTime t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs</span>|]
+formatHours :: (Real a) => a -> Html
+formatHours t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs</span>|]
 
 formatDays :: Int -> Html
 formatDays d = [shamlet|<span .days>#{format int d}#{thinSpace}days</span>#|]
 
-formatMaybeTime :: (Real a) => Maybe a -> Html
-formatMaybeTime Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}</span>|]
-formatMaybeTime (Just t) = formatTime t
+formatMaybeHours :: (Real a) => Maybe a -> Html
+formatMaybeHours Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}</span>|]
+formatMaybeHours (Just t) = formatHours t
 
 formatHeight :: (Real a) => a -> Html
 formatHeight h = [shamlet|<span .height>#{format (fixed 0) h}#{thinSpace}m</span>|]
@@ -246,10 +256,12 @@ renderCaminoMsgDefault _ ComfortLabel = "Comfort"
 renderCaminoMsgDefault _ CrossTitle = "Cross"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
+renderCaminoMsgDefault _ DailyLabel = "Daily"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
 renderCaminoMsgDefault _ (DescentMsg ascent) = [shamlet|Descent ^{formatHeight ascent}|]
+renderCaminoMsgDefault _ DirectionsTitle = "Directions"
 renderCaminoMsgDefault _ DinnerTitle = "Dinner"
 renderCaminoMsgDefault _ (DistanceAdjustMsg penance') = [shamlet|Distance Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (DistanceMsg actual perceived) = [shamlet|Distance ^{formatDistance actual} (feels like ^{formatMaybeDistance perceived})|]
@@ -303,6 +315,7 @@ renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, et
 renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
+renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
 renderCaminoMsgDefault _ ParkTitle = "Park or garden"
 renderCaminoMsgDefault _ PeakTitle = "Peak, pass or lookout"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
@@ -341,7 +354,7 @@ renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
 renderCaminoMsgDefault _ StopServicesPreferencesLabel = "Missing Stop Services"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
-renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeTime time}|]
+renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
 renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
 renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
 renderCaminoMsgDefault _ TowelsTitle = "Towels"
@@ -397,21 +410,34 @@ renderLocalisedFormattedText locales locd =
     Nothing -> toHtml ("" :: Text)
     (Just (TaggedFormattedText loc ftxt)) -> renderLocalisedFormattedText' (localeLanguageTag loc) ftxt
 
+renderLocalisedTime :: (FormatTime t) => [Locale] -> String -> t -> Html
+renderLocalisedTime [] fmt t = renderLocalisedTime [rootLocale] fmt t
+renderLocalisedTime (loc:_) fmt t = toHtml $ formatTime (localeTimeLocale loc) fmt t
+
+renderLocalisedMonth :: [Locale] -> MonthOfYear -> Html
+renderLocalisedMonth [] t = renderLocalisedMonth [rootLocale] t
+renderLocalisedMonth (loc:_) t = toHtml $ snd $ (months $ localeTimeLocale loc) !! t
+
+
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
+renderCaminoMsg _config locales (DayOfWeekName dow) = renderLocalisedTime locales "%a" dow
+renderCaminoMsg _config _locales (DayOfMonthName dom) = [shamlet|#{dom}|]
 renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   #{start'} to #{finish'}
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
-  over ^{formatMaybeTime $ metricsTime metrics}
+  over ^{formatMaybeHours $ metricsTime metrics}
   |]
   where
    metrics = score day
    start' = renderLocalisedText locales False False (locationName $ start day)
    finish' = renderLocalisedText locales False False (locationName $ finish day)
 renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales False False locd
+renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
+renderCaminoMsg _config locales (Time time) = renderLocalisedTime locales "%H%M" time
 renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
 renderCaminoMsg _config locales (TxtFormatted locd) = renderLocalisedFormattedText locales locd
 renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd

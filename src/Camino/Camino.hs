@@ -77,6 +77,7 @@ import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
+import Data.Event
 import Data.List (find)
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
 import Data.Maybe (catMaybes, fromJust, isJust)
@@ -356,10 +357,13 @@ locationCampingDefault _ = True
 
 -- | A point of interest, attached to a parent location or leg
 data PointOfInterest = PointOfInterest {
-    poiName :: Localised TaggedText
-  , poiDescription :: Maybe Description
-  , poiType :: LocationType
-  , poiPosition :: Maybe LatLong
+    poiName :: Localised TaggedText -- ^ The name of the point of interest
+  , poiDescription :: Maybe Description -- ^ Detailed description
+  , poiType :: LocationType -- ^ The point of interest type, same as a location type
+  , poiPosition :: Maybe LatLong -- ^ Location, if it's that sort of thing
+  , poiCalendar :: Maybe EventCalendar -- ^ Dates when the point of interest is open
+  , poiHours :: Maybe EventTime -- ^ Opening hours
+  
 } deriving (Show)
 
 instance FromJSON PointOfInterest where
@@ -368,21 +372,27 @@ instance FromJSON PointOfInterest where
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
     position' <- v .:? "position"
+    calendar' <- v .:? "calendar"
+    hours' <- v .:? "hours"
     return PointOfInterest {
         poiName = name'
       , poiDescription = description'
       , poiType = type'
       , poiPosition = position'
+      , poiCalendar = calendar'
+      , poiHours = hours'
     }
   parseJSON v = typeMismatch "expecting object" v
 
 instance ToJSON PointOfInterest where
-    toJSON (PointOfInterest name' description' type' position') =
+    toJSON (PointOfInterest name' description' type' position' calendar' hours') =
       object [
           "name" .= name'
         , "description" .= description'
         , "type" .= type'
         , "position" .= position'
+        , "calendar" .= calendar'
+        , "hours" .= hours'
       ]
 
 -- | A location, usually a city/town/village that marks the start and end points of a leg

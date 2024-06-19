@@ -32,11 +32,13 @@ module Data.Localised (
   , localeFromIDOrError
   , localeLanguageTag
   , localeSeparator
+  , localeTimeLocale
   , localise
   , localiseDefault
   , localiseText
   , parseTagged
   , rootLocale
+  , rootTimeLocale
   , uriToText
   , wildcardText
 ) where
@@ -47,6 +49,8 @@ import Data.Char (isAlpha)
 import Data.List (find, singleton)
 import Data.Maybe (catMaybes, fromJust, isNothing)
 import Data.Text (Text, breakOnEnd, dropEnd, null, pack, takeWhile, toLower, unpack)
+import Data.Time.Format
+import Data.Time.LocalTime
 import Network.URI
 
 
@@ -61,6 +65,7 @@ data Locale = Locale {
   , localeMatches :: [Text] -- ^ Alternative IETF specifier that match the locale
   , localeLanguage :: Maybe [Text] -- ^ The language codes
   , localeCountry :: Maybe [Text] -- ^ The country codes
+  , localeTime :: Maybe TimeLocale -- ^ The time locale to use
 } deriving (Show)
 
 instance Eq Locale where
@@ -76,19 +81,63 @@ localeLanguageTag loc = if Prelude.null langs then
     head langs
   where
     langs = maybe [] id (localeLanguage loc)
-    
+
+rootTimeLocale :: TimeLocale
+rootTimeLocale = TimeLocale { 
+    wDays =
+        [ ("Sunday", "Sun")
+        , ("Monday", "Mon")
+        , ("Tuesday", "Tue")
+        , ("Wednesday", "Wed")
+        , ("Thursday", "Thu")
+        , ("Friday", "Fri")
+        , ("Saturday", "Sat")
+        ]
+    , months =
+        [ ("January", "Jan")
+        , ("February", "Feb")
+        , ("March", "Mar")
+        , ("April", "Apr")
+        , ("May", "May")
+        , ("June", "Jun")
+        , ("July", "Jul")
+        , ("August", "Aug")
+        , ("September", "Sep")
+        , ("October", "Oct")
+        , ("November", "Nov")
+        , ("December", "Dec")
+        ]
+    , amPm = ("AM", "PM")
+    , dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y"
+    , dateFmt = "%m/%d/%y"
+    , timeFmt = "%H:%M:%S"
+    , time12Fmt = "%I:%M:%S %p"
+    , knownTimeZones =
+        [ TimeZone 0 False "UT"
+        , TimeZone 0 False "GMT"
+        , TimeZone (-5 * 60) False "EST"
+        , TimeZone (-4 * 60) True "EDT"
+        , TimeZone (-6 * 60) False "CST"
+        , TimeZone (-5 * 60) True "CDT"
+        , TimeZone (-7 * 60) False "MST"
+        , TimeZone (-6 * 60) True "MDT"
+        , TimeZone (-8 * 60) False "PST"
+        , TimeZone (-7 * 60) True "PDT"
+        ]
+    }
+   
 -- | The base, wildcard locale
 rootLocale :: Locale
-rootLocale = Locale Nothing "*" ["root"] (Just []) (Just [])
+rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale)
 
-englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just [])
-englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"])
-englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"])
-frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing
-galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing
-portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing
-spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing
-basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing
+englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just []) Nothing
+englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"]) Nothing
+englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing
+frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing Nothing
+galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing Nothing
+portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing Nothing
+spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing Nothing
+basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing Nothing
 
 -- | Decode a locale identifier into a locale specification
 --   If the locale cannot be identifier, the @rootLocale@ is returned
@@ -143,6 +192,12 @@ localeFromIDOrError v = maybe
 -- | The separator in text that indicates a locale tagged onto the end of the string
 localeSeparator :: Text
 localeSeparator = "@"
+
+-- | Get the time locale for this locale, working up the parent structure if not immediately found
+localeTimeLocale :: Locale -> TimeLocale
+localeTimeLocale (Locale _ _ _ _ _ (Just tl)) = tl
+localeTimeLocale (Locale Nothing _ _ _ _ Nothing) = rootTimeLocale -- Should never happen
+localeTimeLocale (Locale (Just parent) _ _ _ _ Nothing) = localeTimeLocale parent
 
 -- | Parse a piece of text with an optional locale tage at the end into a locale/text pair
 --   For exampele @"Hello@fr"@ becomes @(french, "Hello")@ and @"Nothing"@ becomes @(root, "Nothing")@

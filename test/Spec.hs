@@ -3,6 +3,7 @@ import Test.HUnit
 import CaminoSpec
 import ConfigSpec
 import DescriptionSpec
+import EventSpec
 import WalkingSpec
 import PlannerSpec
 import GraphSpec
@@ -39,6 +40,7 @@ testList prefs camino = TestList [
     TestLabel "Localised" testLocalised,
     TestLabel "Metadata" testMetadata,
     TestLabel "Description" testDescription,
+    TestLabel "Event" testEvent,
     TestLabel "Propositional" testPropositional,
     TestLabel "Config" testConfig,
     TestLabel "Camino" testCamino, 

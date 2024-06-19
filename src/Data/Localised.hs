@@ -83,7 +83,7 @@ localeLanguageTag loc = if Prelude.null langs then
     langs = maybe [] id (localeLanguage loc)
 
 rootTimeLocale :: TimeLocale
-rootTimeLocale = TimeLocale { 
+rootTimeLocale = TimeLocale {
     wDays =
         [ ("Sunday", "Sun")
         , ("Monday", "Mon")
@@ -115,11 +115,13 @@ rootTimeLocale = TimeLocale {
     , knownTimeZones =
         [ TimeZone 0 False "UT"
         , TimeZone 0 False "GMT"
-        ]
+        , TimeZone (1 * 60) False "CET"
+        , TimeZone (2 * 60) True "CEST"
+       ]
     }
 
 portugueseTimeLocale :: TimeLocale
-portugueseTimeLocale = TimeLocale { 
+portugueseTimeLocale = rootTimeLocale {
     wDays =
         [ ("domingo", "dom")
         , ("segunda-feira", "seg")
@@ -144,20 +146,16 @@ portugueseTimeLocale = TimeLocale {
         , ("dezembro", "dez")
         ]
     , amPm = ("da manhã", "da tarde")
-    , dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y"
-    , dateFmt = "%d/%m/%y"
-    , timeFmt = "%H:%M:%S"
-    , time12Fmt = "%I:%M:%S %p"
     , knownTimeZones =
         [ TimeZone 0 False "WET"
         , TimeZone 0 False "UT"
         , TimeZone 0 False "GMT"
-        , TimeZone (1 * 60) False "WEST"
+        , TimeZone (1 * 60) True "WEST"
         ]
     }
 
 spanishTimeLocale :: TimeLocale
-spanishTimeLocale = TimeLocale { 
+spanishTimeLocale = rootTimeLocale {
     wDays =
         [ ("domingo", "dom")
         , ("lunes", "lun")
@@ -182,18 +180,92 @@ spanishTimeLocale = TimeLocale {
         , ("deciembre", "dic")
         ]
     , amPm = ("de la mañana", "de la tarde")
-    , dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y"
-    , dateFmt = "%d/%m/%y"
-    , timeFmt = "%H:%M:%S"
-    , time12Fmt = "%I:%M:%S %p"
-    , knownTimeZones =
-        [ TimeZone 0 False "UT"
-        , TimeZone 0 False "GMT"
-        , TimeZone (1 * 60) False "CET"
-        , TimeZone (2 * 60) False "CEST" 
-        ]
     }
- 
+
+frenchTimeLocale :: TimeLocale
+frenchTimeLocale = rootTimeLocale {
+    wDays =
+        [ ("dimanche", "dim")
+        , ("lundi", "lun")
+        , ("mardi", "mar")
+        , ("mercredi", "mer")
+        , ("jeudi", "jeu")
+        , ("vendredi", "ven")
+        , ("samedi", "sam")
+        ]
+    , months =
+        [ ("janvier", "janv")
+        , ("fécrier", "févr")
+        , ("mars", "mars")
+        , ("avril", "avril")
+        , ("mai", "mai")
+        , ("juin", "juni")
+        , ("juillet", "juil")
+        , ("août", "août")
+        , ("septembre", "sept")
+        , ("octobre", "oct")
+        , ("novembre", "nov")
+        , ("décembre", "déc")
+        ]
+    , amPm = ("du matin", "de l'après-midi")
+    }
+
+galacianTimeLocale :: TimeLocale
+galacianTimeLocale = rootTimeLocale {
+    wDays =
+        [ ("domingo", "dom")
+        , ("luns", "lun")
+        , ("martes", "mar")
+        , ("mércores", "mié")
+        , ("xoves", "jue")
+        , ("venres", "bie")
+        , ("sábado", "sáb")
+        ]
+    , months =
+        [ ("xaneiro", "xan")
+        , ("febreiro", "feb")
+        , ("marzo", "marzo")
+        , ("abril", "abril")
+        , ("maio", "maio")
+        , ("xuño", "xuño")
+        , ("xullo", "xullo")
+        , ("agosto", "agosto")
+        , ("setembro", "set")
+        , ("outubro", "out")
+        , ("novembro", "nov")
+        , ("decembro", "dec")
+        ]
+    , amPm = ("da mañá", "a tarde")
+    }
+
+basqueTimeLocale :: TimeLocale
+basqueTimeLocale = rootTimeLocale {
+    wDays =
+        [ ("igande", "iga")
+        , ("astelehen", "ahn")
+        , ("astearte", "ate")
+        , ("asteazken", "azn")
+        , ("ortzegun", "org")
+        , ("ortzirale", "orz")
+        , ("larunbat", "lar")
+        ]
+    , months =
+        [ ("urtarrila", "urt")
+        , ("otsaila", "ots")
+        , ("martxoa", "mar")
+        , ("apirila", "api")
+        , ("maiatza", "mai")
+        , ("ekaina", "eka")
+        , ("uztaila", "uzt")
+        , ("agorrila", "ago")
+        , ("iraila", "ira")
+        , ("urria", "urr")
+        , ("azaroa", "aza")
+        , ("abendua", "abe")
+        ]
+    , amPm = ("goizean", "arratsaldean")
+    }
+
 -- | The base, wildcard locale
 rootLocale :: Locale
 rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale)
@@ -201,11 +273,11 @@ rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocal
 englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just []) Nothing
 englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"]) Nothing
 englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing
-frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing Nothing
-galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing Nothing
+frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing (Just frenchTimeLocale)
+galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing (Just galacianTimeLocale)
 portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale)
 spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale)
-basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing Nothing
+basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing (Just basqueTimeLocale)
 
 -- | Decode a locale identifier into a locale specification
 --   If the locale cannot be identifier, the @rootLocale@ is returned

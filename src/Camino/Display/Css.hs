@@ -135,6 +135,7 @@ iconList = [
     ("ca-peak", '\xe007'),
     ("ca-pets", '\xe069'),
     ("ca-pharmacy", '\xe043'),
+    ("ca-pilgrim", '\xe072'),
     ("ca-poi", '\xe000'),
     ("ca-pool", '\xe06e'),
     ("ca-prayer", '\xe06f'),

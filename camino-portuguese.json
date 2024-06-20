@@ -936,7 +936,17 @@
       "type": "Village",
       "position": { "latitude": 40.05548, "longitude": -8.44599 },
       "services": [ ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [ "GuestHouse" ],
+      "pois": [
+        {
+          "name": "Refugio Peregrino Nicolau@pt",
+          "description": {
+            "text": "A rest point for pilgrims, run by volunteers.@en"
+          },
+          "type": "PilgrimResource",
+          "position": { "latitude":  40.06773, "longitude": -8.46059 }
+        }
+      ]
     },
     {
       "id": "P-P64",

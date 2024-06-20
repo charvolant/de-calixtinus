@@ -330,6 +330,7 @@ data LocationType = Village -- ^ A village
    | Park -- ^ A park or gardens
    | Natural -- ^ A site of natural beauty
    | Hazard -- ^ A dangerous location (busy road crossing, etc)
+   | PilgrimResource -- ^ An office, rest-spot etc. for pilgrims
    | Poi -- ^ A generic point of interest
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  

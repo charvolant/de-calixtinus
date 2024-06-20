@@ -137,6 +137,7 @@ data CaminoMsg =
   | PerceivedDistanceLabel
   | PetsTitle
   | PharmacyTitle
+  | PilgrimResourceTitle
   | PilgrimTitle
   | PlanLabel
   | PoiLabel
@@ -323,6 +324,7 @@ renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
 renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
 renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
+renderCaminoMsgDefault _ PilgrimResourceTitle = "Pilgrim Resource"
 renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
 renderCaminoMsgDefault _ PoiLabel = "Point of Interest"

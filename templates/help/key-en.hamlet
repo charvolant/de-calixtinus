@@ -133,6 +133,12 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon PilgrimResource}
+          <td>Pilgrim Resource
+          <td>A pilgrim's office, rest point, etc. specifically geared to pilgrims
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Poi}
           <td>Locality
           <td>An unspecified waypoint or point of interest

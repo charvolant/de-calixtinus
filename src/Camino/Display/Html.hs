@@ -157,6 +157,7 @@ caminoLocationTypeIcon Historical = [ihamlet| <span .location-type .ca-historica
 caminoLocationTypeIcon Park = [ihamlet| <span .location-type .ca-park title="_{ParkTitle}"> |]
 caminoLocationTypeIcon Natural = [ihamlet| <span .location-type .ca-natural title="_{NaturalTitle}"> |]
 caminoLocationTypeIcon Hazard = [ihamlet| <span .location-type .ca-hazard title="_{HazardTitle}"> |]
+caminoLocationTypeIcon PilgrimResource = [ihamlet| <span .location-type .ca-pilgrim title="_{PilgrimResourceTitle}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
 caminoLocationTypeLabel :: LocationType -> CaminoMsg
@@ -177,6 +178,7 @@ caminoLocationTypeLabel Historical = HistoricalTitle
 caminoLocationTypeLabel Park = ParkTitle
 caminoLocationTypeLabel Natural = NaturalTitle
 caminoLocationTypeLabel Hazard = HazardTitle
+caminoLocationTypeLabel PilgrimResource = PilgrimResourceTitle
 caminoLocationTypeLabel Poi = PoiTitle
 
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1019,6 +1021,7 @@ caminoMapScript preferences camino solution = [ihamlet|
       , (Park, (24, 25))
       , (Natural, (24, 25))
       , (Hazard, (20, 18))
+      , (PilgrimResource, (16, 24))
       , (Poi, (15, 24))
       ] :: [(LocationType, (Int, Int))]
 

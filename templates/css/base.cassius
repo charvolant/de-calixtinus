@@ -50,6 +50,12 @@ a
   max-width: 100px;
   .card-footer
     font-size: smaller
+.event
+  margin-top: 1ex
+.event-type
+  color: #{toCssColour informationBlue}
+.event-type.event-pilgrimmass
+  color: #{toCssColour caminoYellow}
 .location-tooltip
   .leg-to
     font-size: x-small

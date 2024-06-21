@@ -173,6 +173,36 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Real Colegiata de Santa Maria de Roncesvalles",
+          "description": {
+            "about": "https://roncesvalles.es/"
+          },
+          "type": "Church",
+          "position": { "latitude": 43.00999, "longitude": -1.31948 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass and Blessing",
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "2000-2100"
+            },
+            {
+              "name": "Pilgrim's Mass and Blessing (Weekends and Holidays)",
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday", "sunday" ]
+              },
+              "hours": "1800-1900"
+            }
+          ]
+        }
       ]
     },
     {
@@ -529,6 +559,24 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Prayer", "Towels" ],
           "sleeping": [ "Shared" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Iglesia de San Esteban",
+          "type": "Church",
+          "position": { "latitude": 42.85607, "longitude": -1.58170 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass, Prayer and Blessing",
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "saturday" ]
+              },
+              "hours": "1830-1930"
+            }
+          ]
+        }
       ]
     },
     {
@@ -608,7 +656,47 @@
       "type": "City",
       "position": { "latitude": 42.81831, "longitude": -1.645096 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus", "Train" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
+      "pois": [
+        {
+          "name": "Oratorio San Felipe Neri@es",
+          "type": "Church",
+          "position": { "latitude": 42.85607, "longitude": -1.58170 },
+          "events": [
+            {
+              "name": "Christian welcome to the pilgrim@en",
+              "description": {
+                "text": "There is a free guided tour of the church of San Saturnin, followed by a prayer session at the oratorio.@en",
+                "notes": [
+                  {
+                    "type": "Directions",
+                    "text": "To start the tour, meet volunteer guides at the tourist office, near the town hall.@en"
+                  }
+                ]
+              },
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "yearly",
+                "months": [ 3, 4, 5, 6, 7, 8, 9 ]
+              },
+              "hours": "1800-1930"
+            }
+          ]
+        }
+      ],
+      "events": [
+        {
+          "name": "Running of the Bulls@en",
+          "description": {
+            "about": "https://www.runningofthebulls.com/"
+          },
+          "type": "Festival",
+          "calendar": {
+            "type": "yearly",
+            "months": [ 6 ]
+          }
+        }
+      ]
     },
     {
       "id": "F-F27",
@@ -636,6 +724,24 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Iglesia Sanjuanista@es",
+          "type": "Church",
+          "position": {"latitude": 42.78873, "longitude": -1.67437 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass and Blessing@en",
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1830-1930"
+            }
+          ]
+        }
       ]
     },
     {
@@ -650,6 +756,14 @@
           "type": "PilgrimAlbergue",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alto del Perdón@es",
+          "description": "On the summit is a long metal sculpture dedicated to pilgrims.",
+          "type": "Peak",
+          "position": {"latitude": 42.73577, "longitude": -1.74244 }
         }
       ]
     },
@@ -743,6 +857,19 @@
           "type": "House",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "events": [
+        {
+          "name": [
+            "Misterio de Obanos@es",
+            "The Mystery of Obanos@en"
+          ],
+          "description": {
+            "text": "The \"Mystery of Obanos\" is a play staged occasionally in the main square with over 400 performers. The play is based on the life of St Felicia and her brother.@en",
+            "about": "https://misteriodeobanos.org/"
+          },
+          "type": "Performance"
         }
       ]
     },
@@ -938,6 +1065,15 @@
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant" ],
           "sleeping": [ "SleepingBag" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "The Wine Fountain@en",
+          "description": "Bodegas Irache winery has a fountain that produces both water and wine.@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.65087, "longitude": -2.04362 },
+          "hours": "0800-2000"
+        }
       ]
     },
     {
@@ -952,6 +1088,13 @@
           "type": "HomeStay",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Last Water Fountain until Los Arcos",
+          "type": "Fountain",
+          "position": { "latitude": 42.61446, "longitude": -2.11350 }
         }
       ]
     },
@@ -1005,6 +1148,24 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Iglesia de Santa María de Los Arcos@es",
+          "type": "Church",
+          "position": { "latitude":  42.56898, "longitude": -2.19272 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass and Blessing@en",
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "thursday", "saturday" ]
+              },
+              "hours": "2015-2115"
+            }
+          ]
+        }
       ]
     },
     {
@@ -1133,6 +1294,20 @@
           "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Iglesia de Santa María@es",
+          "type": "Church",
+          "position": { "latitude":  42.51510, "longitude": -2.37135 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass and Blessing@en",
+              "type": "PilgrimMass",
+               "hours": "2000-2100"
+            }
+          ]
+        }
       ]
     },
     {
@@ -1156,6 +1331,13 @@
         },
         "PrivateAlbergue",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Leisure Area with Drinking Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.41478, "longitude": -2.59448 }
+        }
       ]
     },
     {
@@ -1253,6 +1435,14 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Monasterio de Santa María la Real@es",
+          "type": "Monastery",
+          "position": { "latitude": 42.41665, "longitude": -2.73554 },
+          "hours": "1000-1330,1600-1900"
+        }
       ]
     },
     {

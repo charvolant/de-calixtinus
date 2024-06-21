@@ -139,6 +139,16 @@ caminoPoiTypeMapIcon lt =
   in
     IconRoute (T.concat ["poi-", name, ".png"])
 
+caminoEventTypeIcon :: EventType -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoEventTypeIcon Religious = [ihamlet| <span .event-type .event-religious .ca-bishop title="_{ReligiousEventTitle}"> |]
+caminoEventTypeIcon Food = [ihamlet| <span .event-type .event-food .ca-restaurant title="_{FoodEventTitle}"> |]
+caminoEventTypeIcon Music = [ihamlet| <span .event-type .event-music .ca-music title="_{MusicEventTitle}"> |]
+caminoEventTypeIcon Performance = [ihamlet| <span .event-type .event-performance .ca-theatre title="_{PerformanceEventTitle}"> |]
+caminoEventTypeIcon Festival = [ihamlet| <span .event-type .event-festival .ca-festival  title="_{FestivalEventTitle}"> |]
+caminoEventTypeIcon Holiday = [ihamlet| <span .event-type .event-holiday .ca-holiday title="_{HolidayEventTitle}"> |]
+caminoEventTypeIcon PilgrimMass= [ihamlet| <span .event-type .event-pilgrimmass .ca-altar title="_{PilgrimMassEventTitle}"> |]
+caminoEventTypeIcon Mass = [ihamlet| <span .event-type .event-mass .ca-altar title="_{MassEventTitle}"> |]
+
 caminoLocationTypeIcon :: LocationType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationTypeIcon Village = [ihamlet| <span .location-type .ca-village title="_{VillageTitle}"> |]
 caminoLocationTypeIcon Town = [ihamlet| <span .location-type .ca-town title="_{TownTitle}"> |]
@@ -574,6 +584,29 @@ locationLegs preferences camino used location = [ihamlet|
     incomingLegs = incoming camino' location
     (usedIncomingLegs, unusedIncomingLegs) = L.partition (\l -> S.member l used) incomingLegs
 
+caminoEventHtml :: Event -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoEventHtml event = [ihamlet|
+  <div .row .event .#{eventCss}>
+    <div .col>
+      <span .poi-types>
+      ^{caminoEventTypeIcon (eventType event)}
+        _{Txt (eventName event)}
+        $maybe d <- eventDescription event
+          $maybe about <- descAbout d
+            <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
+              <span .ca-link>
+        $maybe t <- eventHours event
+          ^{hoursBlock t}
+        $maybe c <- eventCalendar event
+          ^{calendarBlock c}
+  $maybe d <- eventDescription event
+    <div .row>
+      <div .col>
+        ^{descriptionBlock False d}
+  |]
+  where
+    eventCss = "event-" <> (T.toLower $ T.pack $ show $ eventType event)
+
 caminoPointOfInterestHtml :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPointOfInterestHtml poi = [ihamlet|
   <div .row>
@@ -596,6 +629,8 @@ caminoPointOfInterestHtml poi = [ihamlet|
             ^{calendarBlock c}
           $maybe d <- poiDescription poi
             ^{descriptionBlock False d}
+          $forall event <- poiEvents poi
+            ^{caminoEventHtml event}
   |]
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -616,6 +651,8 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
           <div .col-2 .poi-types>
             $forall poi <- locationPoiTypes location
               ^{caminoLocationTypeIcon poi}
+            $forall event <- locationEventTypes location
+              ^{caminoEventTypeIcon event}
           <div .col-1>
             $maybe pos <- locationPosition location
               <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
@@ -633,6 +670,9 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
         ^{conditionalLabel PoisLabel (locationPois location)}
         $forall poi <- locationPois location
           ^{caminoPointOfInterestHtml poi}
+        ^{conditionalLabel EventsLabel (locationEvents location)}
+        $forall event <- locationEvents location
+          ^{caminoEventHtml event}
   |]
   where
     camino' = preferenceCamino camino

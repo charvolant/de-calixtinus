@@ -82,10 +82,13 @@ data CaminoMsg =
   | DoubleTitle
   | DoubleWcTitle
   | DryerTitle
+  | EventsLabel
   | ExcludedStopsLabel
   | FerryTitle
+  | FestivalEventTitle
   | FitnessLabel
   | FitTitle
+  | FoodEventTitle
   | FrugalTitle
   | FountainTitle
   | GiteTitle
@@ -96,6 +99,7 @@ data CaminoMsg =
   | HeatingTitle
   | HelpLabel
   | HistoricalTitle
+  | HolidayEventTitle
   | HomeStayTitle
   | HostelTitle
   | HotelTitle
@@ -116,6 +120,7 @@ data CaminoMsg =
   | LockersTitle
   | LuxuriousTitle
   | MapLabel
+  | MassEventTitle
   | MattressTitle
   | MedicalTitle
   | MiscPenanceMsg Penance
@@ -123,8 +128,8 @@ data CaminoMsg =
   | MonthOfYearName MonthOfYear
   | MunicipalTitle
   | MuseumTitle
+  | MusicEventTitle
   | NaturalTitle
-  | PilgrimAlbergueTitle
   | NormalTitle
   | OpenHoursTitle
   | OtherLabel
@@ -135,8 +140,11 @@ data CaminoMsg =
   | PenanceReject
   | PenanceSummaryLabel
   | PerceivedDistanceLabel
+  | PerformanceEventTitle
   | PetsTitle
   | PharmacyTitle
+  | PilgrimAlbergueTitle
+  | PilgrimMassEventTitle
   | PilgrimResourceTitle
   | PilgrimTitle
   | PlanLabel
@@ -149,6 +157,7 @@ data CaminoMsg =
   | PrivateAlbergueTitle
   | QuadrupleTitle
   | QuadrupleWcTitle
+  | ReligiousEventTitle
   | RequiredStopsLabel
   | RestaurantTitle
   | RoadTitle
@@ -272,10 +281,13 @@ renderCaminoMsgDefault _ DistancePreferencesPerceivedLabel = "Perceived Distance
 renderCaminoMsgDefault _ DoubleTitle = "Double"
 renderCaminoMsgDefault _ DoubleWcTitle = "Double with WC"
 renderCaminoMsgDefault _ DryerTitle = "Dryer"
+renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
+renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
+renderCaminoMsgDefault _ FoodEventTitle = "Food"
 renderCaminoMsgDefault _ FountainTitle = "Fountain"
 renderCaminoMsgDefault _ FrugalTitle = "Frugal"
 renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
@@ -286,6 +298,7 @@ renderCaminoMsgDefault _ HazardTitle = "Hazard"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
 renderCaminoMsgDefault _ HistoricalTitle = "Historical site, archaeological site or ruin"
+renderCaminoMsgDefault _ HolidayEventTitle = "Holiday"
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
 renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
@@ -304,14 +317,15 @@ renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
 renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"
 renderCaminoMsgDefault _ MapLabel = "Map"
+renderCaminoMsgDefault _ MassEventTitle = "Mass"
 renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
 renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
 renderCaminoMsgDefault _ MunicipalTitle = "Town square, market, etc."
 renderCaminoMsgDefault _ MuseumTitle = "Museum or gallery"
+renderCaminoMsgDefault _ MusicEventTitle = "Music"
 renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, etc."
-renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
 renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
@@ -322,8 +336,11 @@ renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenanc
 renderCaminoMsgDefault _ PenanceReject = "Rejected"
 renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
 renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
+renderCaminoMsgDefault _ PerformanceEventTitle = "Performance"
 renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
+renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
+renderCaminoMsgDefault _ PilgrimMassEventTitle = "Pilgrim's Mass"
 renderCaminoMsgDefault _ PilgrimResourceTitle = "Pilgrim Resource"
 renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
@@ -336,6 +353,7 @@ renderCaminoMsgDefault _ PreferencesLabel = "Preferences"
 renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
+renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"

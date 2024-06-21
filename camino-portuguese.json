@@ -3915,7 +3915,14 @@
             "hours": "1000-2000"
           },
           "type": "Cathedral",
-          "position": { "latitude": 42.88060, "longitude": -8.54466 }
+          "position": { "latitude": 42.88060, "longitude": -8.54466 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass",
+              "type": "PilgrimMass",
+              "hours": "0730-0830,0930-1030,1200-1300,1930-2030"
+            }
+          ]
         },
         {
           "name": "Praza das Platerias@ga",

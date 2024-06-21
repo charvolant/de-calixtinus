@@ -21,6 +21,8 @@ module Camino.Camino (
   , AccommodationType(..)
   , Camino(..)
   , Comfort(..)
+  , Event(..)
+  , EventType(..)
   , Fitness(..)
   , LatLong(..)
   , Leg(..)
@@ -58,6 +60,7 @@ module Camino.Camino (
   , createProhibitsClauses
   , fitnessEnumeration
   , locationAccommodationTypes
+  , locationEventTypes
   , locationNameLabel
   , locationPoiTypes
   , locationStopTypeEnumeration
@@ -312,8 +315,60 @@ instance ToJSON Accommodation where
     toJSON (GenericAccommodation type' ) =
       toJSON type'
 
+-- | An event that takes place somewhere
+data EventType =
+    Religious -- ^ A religious festival, ceremony, saints day etc.
+  | Food -- ^ An event directed towards food and eating
+  | Music -- ^ A concert or musical festival
+  | Performance -- ^ A theatre or dance performance
+  | Festival -- ^ A festival, often municipal
+  | Holiday -- ^ A national or regional holiday
+  | PilgrimMass -- ^ A religious service directed towards pilgrims
+  | Mass -- ^ A religious service
+  deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
+
+instance FromJSON EventType
+instance ToJSON EventType
+
+-- | An event that occurs at a location or point of interest
+--   The location of the event is associated with the unclosing point
+data Event = Event {
+    eventName :: Localised TaggedText -- ^ The name of the event
+  , eventDescription :: Maybe Description -- ^ Detailed description
+  , eventType :: EventType -- ^ The event type
+  , eventCalendar :: Maybe EventCalendar -- ^ Dates when the event occurs
+  , eventHours :: Maybe EventTime -- ^ The times the event occurs
+  } deriving (Show)
+  
+instance FromJSON Event where
+  parseJSON (Object v) = do
+    name' <- v .: "name"
+    description' <- v .:? "description" .!= Nothing
+    type' <- v .: "type"
+    calendar' <- v .:? "calendar"
+    hours' <- v .:? "hours"
+    return Event {
+        eventName = name'
+      , eventDescription = description'
+      , eventType = type'
+      , eventCalendar = calendar'
+      , eventHours = hours'
+    }
+  parseJSON v = typeMismatch "expecting object" v
+
+instance ToJSON Event where
+    toJSON (Event name' description' type' calendar' hours') =
+      object [
+          "name" .= name'
+        , "description" .= description'
+        , "type" .= type'
+        , "calendar" .= calendar'
+        , "hours" .= hours'
+      ]
+
 -- | The type of location or point of interest
-data LocationType = Village -- ^ A village
+data LocationType =
+     Village -- ^ A village
    | Town -- ^ A town
    | City -- ^ A city
    | Monastery -- ^ A monastery/convent
@@ -364,7 +419,7 @@ data PointOfInterest = PointOfInterest {
   , poiPosition :: Maybe LatLong -- ^ Location, if it's that sort of thing
   , poiCalendar :: Maybe EventCalendar -- ^ Dates when the point of interest is open
   , poiHours :: Maybe EventTime -- ^ Opening hours
-  
+  , poiEvents :: [Event] -- ^ Associated events
 } deriving (Show)
 
 instance FromJSON PointOfInterest where
@@ -375,6 +430,7 @@ instance FromJSON PointOfInterest where
     position' <- v .:? "position"
     calendar' <- v .:? "calendar"
     hours' <- v .:? "hours"
+    events' <- v .:? "events" .!= []
     return PointOfInterest {
         poiName = name'
       , poiDescription = description'
@@ -382,11 +438,12 @@ instance FromJSON PointOfInterest where
       , poiPosition = position'
       , poiCalendar = calendar'
       , poiHours = hours'
+      , poiEvents = events'
     }
   parseJSON v = typeMismatch "expecting object" v
 
 instance ToJSON PointOfInterest where
-    toJSON (PointOfInterest name' description' type' position' calendar' hours') =
+    toJSON (PointOfInterest name' description' type' position' calendar' hours' events') =
       object [
           "name" .= name'
         , "description" .= description'
@@ -394,6 +451,7 @@ instance ToJSON PointOfInterest where
         , "position" .= position'
         , "calendar" .= calendar'
         , "hours" .= hours'
+        , "events" .= if null events' then Nothing else Just events'
       ]
 
 -- | A location, usually a city/town/village that marks the start and end points of a leg
@@ -408,6 +466,7 @@ data Location = Location {
   , locationServices :: S.Set Service
   , locationAccommodation :: [Accommodation]
   , locationPois :: [PointOfInterest]
+  , locationEvents :: [Event]
   , locationCamping :: Bool
 } deriving (Show)
 
@@ -422,6 +481,7 @@ instance Placeholder Camino Location where
     , locationServices = S.empty
     , locationAccommodation = []
     , locationPois = []
+    , locationEvents = []
     , locationCamping = False
   }
   normalise camino location = maybe location id (M.lookup (locationID location) (caminoLocations camino))
@@ -438,6 +498,7 @@ instance FromJSON Location where
     services' <- v .: "services"
     accommodation' <- v .: "accommodation"
     pois' <- v .:? "pois" .!= []
+    events' <- v .:? "events" .!= []
     camping' <- v .:? "camping" .!= locationCampingDefault type'
     return Location { 
         locationID = id'
@@ -448,12 +509,13 @@ instance FromJSON Location where
       , locationServices = services'
       , locationAccommodation = accommodation'
       , locationPois = pois'
+      , locationEvents = events'
       , locationCamping = camping'
     }
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' description' type' position' services' accommodation' pois' camping') =
+    toJSON (Location id' name' description' type' position' services' accommodation' pois' events' camping') =
       object [ 
           "id" .= id'
         , "name" .= name'
@@ -463,6 +525,7 @@ instance ToJSON Location where
         , "services" .= services'
         , "accommodation" .= accommodation'
         , "pois" .= pois'
+        , "events" .= events'
         , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
       ]
 
@@ -480,10 +543,19 @@ instance Ord Location where
 locationAccommodationTypes :: Location -> S.Set AccommodationType
 locationAccommodationTypes location = S.fromList $ map accommodationType (locationAccommodation location)
 
--- | Get the accommodation types available at a location
+-- | Get the point of interest types available at a location
 --   These are ordered into enumeration order
 locationPoiTypes :: Location -> S.Set LocationType
 locationPoiTypes location = S.fromList $ map poiType (locationPois location)
+
+-- | Get the event types available at a location from both the location itself and any points of interest
+--   These are ordered into enumeration order
+locationEventTypes :: Location -> S.Set EventType
+locationEventTypes location = let
+   locet = map eventType (locationEvents location)
+   poiets = map (\poi -> map eventType (poiEvents poi)) (locationPois location)
+ in
+  S.fromList $ concat $ locet:poiets
 
 -- | Get a simple text version of the location name
 locationNameLabel :: Location -> Text

@@ -339,7 +339,7 @@ data Event = Event {
   , eventCalendar :: Maybe EventCalendar -- ^ Dates when the event occurs
   , eventHours :: Maybe EventTime -- ^ The times the event occurs
   } deriving (Show)
-  
+
 instance FromJSON Event where
   parseJSON (Object v) = do
     name' <- v .: "name"
@@ -379,13 +379,17 @@ data LocationType =
    | Cathedral -- ^ A cathedral, basillica, shrine or similar large religious building
    | Cross -- ^ A crucifix or other religious monument
    | Fountain -- ^ A fountain or spring
+   | Statue -- ^ A statue, artwork, etc
    | Municipal -- ^ An office,m aquare, market etc
+   | PilgrimResource -- ^ An office, rest-spot etc. for pilgrims
+   | Junction -- ^ A junction in pilgrim routes
+   | Shop -- ^ A shop of some interest
+   | Winery -- ^ A winery or port warehouse
    | Museum -- ^ A museum or gallery
    | Historical -- ^ A historical or archaeological site
    | Park -- ^ A park or gardens
    | Natural -- ^ A site of natural beauty
    | Hazard -- ^ A dangerous location (busy road crossing, etc)
-   | PilgrimResource -- ^ An office, rest-spot etc. for pilgrims
    | Poi -- ^ A generic point of interest
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  

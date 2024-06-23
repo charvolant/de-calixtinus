@@ -15,6 +15,8 @@
           <a .nav-link .active href="#accommodation-help">Accommodation
         <li .nav-item>
           <a .nav-link .active href="#travel-help">Travel
+        <li .nav-item>
+          <a .nav-link .active href="#event-help">Events
 
 ^{caminoMapKeyHtml preferences camino}
 
@@ -97,9 +99,39 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon Statue}
+          <td>Statue
+          <td>A statue or artwork
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Municipal}
           <td>Municipal
           <td>A town square, market place, town hall or other municipal building
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon PilgrimResource}
+          <td>Pilgrim Resource
+          <td>A pilgrim's office, rest point, etc. specifically geared to pilgrims
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Junction}
+          <td>Junction
+          <td>A point where alternative routes diverge or the route is joined by another route
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Shop}
+          <td>Shop
+          <td>A shop of note or usefulness
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Winery}
+          <td>Winery
+          <td>A winery or port warehouse
         <tr>
           <td>
             <span .location-type-sample>
@@ -130,12 +162,6 @@
               ^{caminoLocationTypeIcon Hazard}
           <td>Hazard
           <td>A road crossing, bridge etc. that needs to be treated with caution
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon PilgrimResource}
-          <td>Pilgrim Resource
-          <td>A pilgrim's office, rest point, etc. specifically geared to pilgrims
         <tr>
           <td>
             <span .location-type-sample>
@@ -403,3 +429,46 @@
                  These connections are usually rowed or paddled and represent as much effort as walking.
                  Boat connections usually operate according to a schedule and may require booking.
 
+<div #event-help .card>
+  <div .card-body>
+    <h2 .card-title>Events
+    <table .table .table-striped>
+      <caption>Event Types
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Event Type
+           <th scope="col">Comments
+      <tbody>
+        <tr>
+          <td>^{caminoEventTypeIcon Religious}
+          <td>Religious
+          <td>A large religious event, parade or ceremony
+        <tr>
+          <td>^{caminoEventTypeIcon Food}
+          <td>Food
+          <td>A food or wine festival
+        <tr>
+          <td>^{caminoEventTypeIcon Music}
+          <td>Music
+          <td>A music festival or concert
+        <tr>
+          <td>^{caminoEventTypeIcon Performance}
+          <td>Performance
+          <td>A theatre or dance performace or festival
+        <tr>
+          <td>^{caminoEventTypeIcon Festival}
+          <td>Festival
+          <td>A generic festival
+        <tr>
+          <td>^{caminoEventTypeIcon Holiday}
+          <td>Holiday
+          <td>A national, regional or local holiday
+        <tr>
+          <td>^{caminoEventTypeIcon PilgrimMass}
+          <td>Pilgrim's Mass
+          <td>A mass or blessing for pilgrims
+        <tr>
+          <td>^{caminoEventTypeIcon Mass}
+          <td>Mass
+          <td>A general mass or eucharist

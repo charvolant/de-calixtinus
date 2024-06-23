@@ -107,6 +107,7 @@ iconList = [
     ("ca-dryer", '\xe062'),
     ("ca-ferry", '\xe082'),
     ("ca-festival", '\xe032'),
+    ("ca-food", '\xe036'),
     ("ca-fountain", '\xe00a'),
     ("ca-globe", '\xe090'),
     ("ca-gite", '\xe01a'),
@@ -125,6 +126,7 @@ iconList = [
     ("ca-house-small", '\xe098'),
     ("ca-information", '\xe091'),
     ("ca-intersection", '\xe005'),
+    ("ca-junction", '\xe01e'),
     ("ca-kitchen", '\xe06b'),
     ("ca-link", '\xe096'),
     ("ca-lockers", '\xe066'),
@@ -147,8 +149,10 @@ iconList = [
     ("ca-restaurant", '\xe040'),
     ("ca-rowing", '\xe083'),
     ("ca-shared", '\xe021'),
+    ("ca-shop", '\xe01d'),
     ("ca-sleeping-bag", '\xe028'),
     ("ca-stables", '\xe068'),
+    ("ca-statue", '\xe01b'),
     ("ca-tent", '\xe018'),
     ("ca-theatre", '\xe035'),
     ("ca-towels", '\xe06d'),
@@ -158,7 +162,8 @@ iconList = [
     ("ca-walking", '\xe080'),
     ("ca-warning", '\xe093'),
     ("ca-washing-machine", '\xe061'),
-    ("ca-wifi", '\xe060')
+    ("ca-wifi", '\xe060'),
+    ("ca-winery", '\xe01c')
   ]
   
 caminoIconCss :: [Render CaminoRoute -> Css]

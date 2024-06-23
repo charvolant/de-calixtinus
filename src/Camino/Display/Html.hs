@@ -141,7 +141,7 @@ caminoPoiTypeMapIcon lt =
 
 caminoEventTypeIcon :: EventType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoEventTypeIcon Religious = [ihamlet| <span .event-type .event-religious .ca-bishop title="_{ReligiousEventTitle}"> |]
-caminoEventTypeIcon Food = [ihamlet| <span .event-type .event-food .ca-restaurant title="_{FoodEventTitle}"> |]
+caminoEventTypeIcon Food = [ihamlet| <span .event-type .event-food .ca-food title="_{FoodEventTitle}"> |]
 caminoEventTypeIcon Music = [ihamlet| <span .event-type .event-music .ca-music title="_{MusicEventTitle}"> |]
 caminoEventTypeIcon Performance = [ihamlet| <span .event-type .event-performance .ca-theatre title="_{PerformanceEventTitle}"> |]
 caminoEventTypeIcon Festival = [ihamlet| <span .event-type .event-festival .ca-festival  title="_{FestivalEventTitle}"> |]
@@ -161,13 +161,17 @@ caminoLocationTypeIcon Church = [ihamlet| <span .location-type .ca-church title=
 caminoLocationTypeIcon Cathedral = [ihamlet| <span .location-type .ca-cathedral title="_{CathedralTitle}"> |]
 caminoLocationTypeIcon Cross = [ihamlet| <span .location-type .ca-cross title="_{CrossTitle}"> |]
 caminoLocationTypeIcon Fountain = [ihamlet| <span .location-type .ca-fountain title="_{FountainTitle}"> |]
+caminoLocationTypeIcon Statue = [ihamlet| <span .location-type .ca-statue title="_{StatueTitle}"> |]
 caminoLocationTypeIcon Municipal = [ihamlet| <span .location-type .ca-municipal title="_{MunicipalTitle}"> |]
+caminoLocationTypeIcon PilgrimResource = [ihamlet| <span .location-type .ca-pilgrim title="_{PilgrimResourceTitle}"> |]
+caminoLocationTypeIcon Junction = [ihamlet| <span .location-type .ca-junction title="_{JunctionTitle}"> |]
+caminoLocationTypeIcon Shop = [ihamlet| <span .location-type .ca-shop title="_{ShopTitle}"> |]
+caminoLocationTypeIcon Winery = [ihamlet| <span .location-type .ca-winery title="_{WineryTitle}"> |]
 caminoLocationTypeIcon Museum = [ihamlet| <span .location-type .ca-museum title="_{MuseumTitle}"> |]
 caminoLocationTypeIcon Historical = [ihamlet| <span .location-type .ca-historical title="_{HistoricalTitle}"> |]
 caminoLocationTypeIcon Park = [ihamlet| <span .location-type .ca-park title="_{ParkTitle}"> |]
 caminoLocationTypeIcon Natural = [ihamlet| <span .location-type .ca-natural title="_{NaturalTitle}"> |]
 caminoLocationTypeIcon Hazard = [ihamlet| <span .location-type .ca-hazard title="_{HazardTitle}"> |]
-caminoLocationTypeIcon PilgrimResource = [ihamlet| <span .location-type .ca-pilgrim title="_{PilgrimResourceTitle}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
 caminoLocationTypeLabel :: LocationType -> CaminoMsg
@@ -182,13 +186,17 @@ caminoLocationTypeLabel Church = ChurchTitle
 caminoLocationTypeLabel Cathedral = CathedralTitle
 caminoLocationTypeLabel Cross = CrossTitle
 caminoLocationTypeLabel Fountain = FountainTitle
+caminoLocationTypeLabel Statue = StatueTitle
 caminoLocationTypeLabel Municipal = MunicipalTitle
+caminoLocationTypeLabel PilgrimResource = PilgrimResourceTitle
+caminoLocationTypeLabel Junction = JunctionTitle
+caminoLocationTypeLabel Shop = ShopTitle
+caminoLocationTypeLabel Winery = WineryTitle
 caminoLocationTypeLabel Museum = MuseumTitle
 caminoLocationTypeLabel Historical = HistoricalTitle
 caminoLocationTypeLabel Park = ParkTitle
 caminoLocationTypeLabel Natural = NaturalTitle
 caminoLocationTypeLabel Hazard = HazardTitle
-caminoLocationTypeLabel PilgrimResource = PilgrimResourceTitle
 caminoLocationTypeLabel Poi = PoiTitle
 
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1055,13 +1063,17 @@ caminoMapScript preferences camino solution = [ihamlet|
       , (Cathedral, (19, 24))
       , (Cross, (15, 24))
       , (Fountain, (19, 24))
+      , (Statue, (12, 24))
       , (Municipal, (24, 21))
+      , (PilgrimResource, (16, 24))
+      , (Junction, (23, 24))
+      , (Shop, (24, 16))
+      , (Winery, (22, 24))
       , (Museum, (24, 22))
       , (Historical, (24, 17))
       , (Park, (24, 25))
       , (Natural, (24, 25))
       , (Hazard, (20, 18))
-      , (PilgrimResource, (16, 24))
       , (Poi, (15, 24))
       ] :: [(LocationType, (Int, Int))]
 

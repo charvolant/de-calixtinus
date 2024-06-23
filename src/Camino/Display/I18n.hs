@@ -109,6 +109,7 @@ data CaminoMsg =
   | InformationTitle
   | InformationDescription
   | IntersectionTitle
+  | JunctionTitle
   | KeyLabel
   | KitchenTitle
   | LegPenanceMsg Penance
@@ -165,10 +166,12 @@ data CaminoMsg =
   | RoutesLabel
   | ServicesLabel
   | SharedTitle
+  | ShopTitle
   | ShowOnMapTitle
   | SingleTitle
   | SleepingBagTitle
   | StablesTitle
+  | StatueTitle
   | StopLabel
   | StopPenanceMsg Penance
   | StopPreferencesLabel
@@ -202,6 +205,7 @@ data CaminoMsg =
   | WashingMachineTitle
   | WaypointLabel
   | WiFiTitle
+  | WineryTitle
   deriving (Show)
 
 rejectSymbol :: Text
@@ -307,6 +311,7 @@ renderCaminoMsgDefault _ InformationLabel = "Information"
 renderCaminoMsgDefault _ InformationTitle = "Information"
 renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
+renderCaminoMsgDefault _ JunctionTitle = "Junction"
 renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
 renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
@@ -361,10 +366,12 @@ renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ RoutesLabel = "Routes"
 renderCaminoMsgDefault _ ServicesLabel = "Services"
 renderCaminoMsgDefault _ SharedTitle = "Shared"
+renderCaminoMsgDefault _ ShopTitle = "Shop"
 renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
 renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
+renderCaminoMsgDefault _ StatueTitle = "Statue"
 renderCaminoMsgDefault _ StopLabel = "Stop"
 renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
@@ -395,6 +402,7 @@ renderCaminoMsgDefault _ WarningTitle= "Warning"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
+renderCaminoMsgDefault _ WineryTitle = "Winery"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 
 renderLocalisedText :: (Tagged a) => [Locale] -> Bool -> Bool -> Localised a -> Html

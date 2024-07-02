@@ -388,6 +388,7 @@ data LocationType =
    | Museum -- ^ A museum or gallery
    | Historical -- ^ A historical or archaeological site
    | Park -- ^ A park or gardens
+   | Beach -- ^ A beach
    | Natural -- ^ A site of natural beauty
    | Hazard -- ^ A dangerous location (busy road crossing, etc)
    | Poi -- ^ A generic point of interest

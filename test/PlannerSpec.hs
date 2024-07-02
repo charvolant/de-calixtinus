@@ -98,7 +98,8 @@ location1 = Location {
     locationPosition = Nothing,
     locationServices = S.empty,
     locationAccommodation = [],
-    locationPois = []
+    locationPois = [],
+    locationEvents = []
   }
 
 location2 = Location {
@@ -113,7 +114,8 @@ location2 = Location {
       GenericAccommodation PilgrimAlbergue,
       Accommodation (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
     ],
-    locationPois = []
+    locationPois = [],
+    locationEvents = []
   }
  
 location3 = Location {
@@ -127,7 +129,8 @@ location3 = Location {
     locationAccommodation = [
       Accommodation (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
     ],
-    locationPois = []
+    locationPois = [],
+    locationEvents = []
   }
   
   
@@ -142,7 +145,8 @@ location4 = Location {
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue
     ],
-    locationPois = [] 
+    locationPois = [],
+    locationEvents = []
   }
   
 

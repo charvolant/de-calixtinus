@@ -39,6 +39,7 @@ module Data.Localised (
   , parseTagged
   , rootLocale
   , rootTimeLocale
+  , textToUri
   , uriToText
   , wildcardText
 ) where
@@ -47,12 +48,24 @@ import Data.Aeson
 import Data.Aeson.Types (Parser, typeMismatch)
 import Data.Char (isAlpha)
 import Data.List (find, singleton, uncons)
-import Data.Maybe (catMaybes, fromJust, isNothing)
+import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack)
 import Data.Time.Format
 import Data.Time.LocalTime
 import Network.URI
 
+-- | Parse a URI, looking for the correct type
+textToUri :: Text -> URI
+textToUri txt = if isJust absolute' then
+    fromJust absolute'
+  else if isJust relative' then
+    fromJust relative'
+  else
+    nullURI
+  where
+      str = unpack txt
+      absolute' = parseURI str
+      relative' = parseURIReference str
 
 -- | Convert a URI to text
 uriToText :: URI -> Text
@@ -411,7 +424,7 @@ data TaggedURL = TaggedURL Locale Hyperlink
 instance Tagged TaggedURL where
   locale (TaggedURL loc _) = loc
   plainText (TaggedURL _ (Hyperlink _ title)) = maybe "" id title
-  fromText txt = TaggedURL rootLocale (Hyperlink (fromJust $ parseURI $ unpack $ txt) Nothing)
+  fromText txt = TaggedURL rootLocale (Hyperlink (textToUri $ txt) Nothing)
   addText (TaggedURL loc (Hyperlink uri title)) txt' = TaggedURL loc (Hyperlink uri (Just $ maybe "" id title <> txt'))
 
 instance TaggedLink TaggedURL where
@@ -419,17 +432,17 @@ instance TaggedLink TaggedURL where
 
 -- A link to an invalid or 404 page
 invalidLink :: TaggedURL
-invalidLink = TaggedURL rootLocale (Hyperlink (fromJust $ parseURI "invalid") (Just "Invalid"))
+invalidLink = TaggedURL rootLocale (Hyperlink (textToUri "invalid") (Just "Invalid"))
 
 instance FromJSON TaggedURL where
   parseJSON (String v) = do
     let (locale', url') = parseTagged v
-    return $ TaggedURL locale' (Hyperlink (fromJust $ parseURI $ unpack url') Nothing)
+    return $ TaggedURL locale' (Hyperlink (textToUri url') Nothing)
   parseJSON (Object v) = do
     locale' <- v .: "locale"
     url' <- v .: "url"
     title' <- v .:? "title"
-    return $ TaggedURL (localeFromIDOrError locale') (Hyperlink (fromJust $ parseURI url') title')
+    return $ TaggedURL (localeFromIDOrError locale') (Hyperlink (textToUri url') title')
   parseJSON v = typeMismatch "string or object" v
 
 instance ToJSON TaggedURL where

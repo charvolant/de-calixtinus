@@ -6,6 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="_{MsgCloseLabel}"></button>
       <div #image-dialog-contents .modal-body>
         <img #image-dialog-image .rounded .img-fluid src="" title="">
+        <div #image-dialog-origin .text-info .text-end>
         <div #image-dialog-attribution .attribution .text-secondary .text-end>
       <div .modal-footer>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">_{MsgCloseLabel}</button>

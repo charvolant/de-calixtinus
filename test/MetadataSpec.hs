@@ -11,13 +11,13 @@ import Network.URI
 import Text.RawString.QQ
 import Data.ByteString.Lazy
 
--- dcElements = fromJust $ parseURI "http://purl.org/dc/elements/1.1/"
+-- dcElements = textToUri "http://purl.org/dc/elements/1.1/"
 
-dcTitle = fromJust $ parseURI "http://purl.org/dc/elements/1.1/title"
+dcTitle = textToUri "http://purl.org/dc/elements/1.1/title"
 
-dcCreated = fromJust $ parseURI "http://purl.org/dc/elements/1.1/created"
+dcCreated = textToUri "http://purl.org/dc/elements/1.1/created"
 
-dctermsDescription = fromJust $ parseURI "http://purl.org/dc/terms/source"
+dctermsDescription = textToUri "http://purl.org/dc/terms/source"
 
 namespace1 = Namespace "dc:" "http://purl.org/dc/elements/1.1/"
 

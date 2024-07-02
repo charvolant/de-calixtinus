@@ -87,10 +87,8 @@ a
       display: inline-block
     .accommodation-types
       display: inline-block
-      margin-left: 2em
     .services
       display: inline-block
-      margin-left: 2em
 .location-summary
   display: inline-block
   .accommodation-types
@@ -119,6 +117,8 @@ a
   .accordion-header
     h5
       font-weight: bolder
+.note-type
+   color: #{toCssColour informationBlue}
 .poi-types
    color: #{toCssColour informationBlue}
 .show-on-map

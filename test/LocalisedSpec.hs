@@ -6,13 +6,14 @@ module LocalisedSpec(testLocalised) where
 import Test.HUnit
 import Data.Aeson
 import Data.Localised
-import Data.Maybe (fromJust, isJust, isNothing)
-import Network.URI (parseURI)
+import Data.Maybe (fromJust, isJust)
+import Network.URI (uriIsAbsolute)
 
 testLocalised :: Test
 testLocalised = TestList [
       TestLabel "Locale" testLocale
     , TestLabel "TaggedText" testTaggedText
+    , TestLabel "TaggedURL" testTaggedURL
     , TestLabel "Localised" testLocalisedText
   ]
 
@@ -127,6 +128,34 @@ testTaggedTextToJSON3 =
     TestCase (do
       assertEqual "TaggedTest ToJSON 3 1" "[\"en\",\"Hello\",\"There\"]" et
       )
+
+
+testTaggedURL = TestList [
+         TestLabel "Resolve" testResolveTaggedURL
+  ]
+
+testResolveTaggedURL = TestList [
+         testResolveTaggedURL1, testResolveTaggedURL2
+  ]
+
+testResolveTaggedURL1 =
+  let
+    turl = TaggedURL rootLocale (Hyperlink (textToUri "https://nothing.com/image1.jpg") Nothing)
+  in TestCase (do
+      assertBool "Resolve Tagged URL 1 0" (uriIsAbsolute $ link turl)
+      assertEqual "Resolve Tagged URL 1 1" "https://nothing.com/image1.jpg" (resolveLink "https://somewhere.com" turl)
+      assertEqual "Resolve Tagged URL 1 2" "https://nothing.com/image1.jpg" (resolveLink "" turl)
+    )
+
+testResolveTaggedURL2 =
+  let
+    turl = TaggedURL rootLocale (Hyperlink (textToUri "image1.jpg") Nothing)
+  in TestCase (do
+      assertBool "Resolve Tagged URL 2 0" (not $ uriIsAbsolute $ link turl)
+      assertEqual "Resolve Tagged URL 2 1" "https://somewhere.com/image1.jpg" (resolveLink "https://somewhere.com" turl)
+      assertEqual "Resolve Tagged URL 2 2" "/image1.jpg" (resolveLink "" turl)
+    )
+
 
 testLocalisedText = TestList [
          TestLabel "JSON" testLocalisedJSON

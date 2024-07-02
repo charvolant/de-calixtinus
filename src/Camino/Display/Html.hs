@@ -30,11 +30,15 @@ import Data.Metadata
 import Graph.Graph (incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
-import qualified Data.Text as T (concat, intercalate, null, pack, take, toLower, toUpper)
+import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, take, toLower, toUpper)
 import Formatting
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.List as L
+
+-- Make a javascript string out of possible text
+javascriptString :: Maybe T.Text -> T.Text
+javascriptString mtxt = maybe "null" (\t -> "'" <> (T.replace "\'" "\\'" $ T.replace "\"" "\'" t) <> "'") mtxt
 
 -- | Include a label row if some values are non-empty
 conditionalLabel :: CaminoMsg -> [a] -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -170,6 +174,7 @@ caminoLocationTypeIcon Winery = [ihamlet| <span .location-type .ca-winery title=
 caminoLocationTypeIcon Museum = [ihamlet| <span .location-type .ca-museum title="_{MuseumTitle}"> |]
 caminoLocationTypeIcon Historical = [ihamlet| <span .location-type .ca-historical title="_{HistoricalTitle}"> |]
 caminoLocationTypeIcon Park = [ihamlet| <span .location-type .ca-park title="_{ParkTitle}"> |]
+caminoLocationTypeIcon Beach = [ihamlet| <span .location-type .ca-beach title="_{BeachTitle}"> |]
 caminoLocationTypeIcon Natural = [ihamlet| <span .location-type .ca-natural title="_{NaturalTitle}"> |]
 caminoLocationTypeIcon Hazard = [ihamlet| <span .location-type .ca-hazard title="_{HazardTitle}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
@@ -195,6 +200,7 @@ caminoLocationTypeLabel Winery = WineryTitle
 caminoLocationTypeLabel Museum = MuseumTitle
 caminoLocationTypeLabel Historical = HistoricalTitle
 caminoLocationTypeLabel Park = ParkTitle
+caminoLocationTypeLabel Beach = BeachTitle
 caminoLocationTypeLabel Natural = NaturalTitle
 caminoLocationTypeLabel Hazard = HazardTitle
 caminoLocationTypeLabel Poi = PoiTitle
@@ -468,7 +474,7 @@ descriptionNoteTypeIcon Directions = [ihamlet| <span .note-type .ca-map title="_
 descriptionNote :: Note -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNote note = [ihamlet|
   <div .note .#{nc}>
-    <div .description-icon .float-start>^{descriptionNoteTypeIcon nt}
+    ^{descriptionNoteTypeIcon nt}
     _{Txt (noteText note)}
   |]
   where
@@ -486,7 +492,7 @@ descriptionBlock showAbout description = [ihamlet|
     $maybe img <- mimg
       <div .description-thumbnail .card .float-end>
         <div .card-body>
-          <img .rounded .img-fluid src="@{ImgRoute img}" alt="_{TxtPlain True False (imageTitle img)}" title="_{TxtPlain True False (imageTitle img)}" dc:rights="#{attribution}" onclick="showImagePopup('@{ImgRoute img}', '_{TxtPlain True True (imageTitle img)}', '#{attribution}')"">
+          <img .rounded .img-fluid src="@{ImgRoute img True}" alt="_{TxtPlain True False (imageTitle img)}" title="_{TxtPlain True False (imageTitle img)}" :isJust attribution:dc:rights="#{javascriptString attribution}" onclick="showImagePopup('@{ImgRoute img False}', '_{TxtPlain True True (imageTitle img)}', #{javascriptString attribution}, #{javascriptString origin})"">
     $if showAbout
       $maybe about <- descAbout description
         <div .float-start .description-icon>
@@ -499,7 +505,8 @@ descriptionBlock showAbout description = [ihamlet|
   |]
   where
     mimg = descImage description
-    attribution = maybe "" imageAttribution mimg
+    attribution = maybe Nothing imageAttribution mimg
+    origin= maybe Nothing imageOrigin mimg
 
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
@@ -594,7 +601,7 @@ locationLegs preferences camino used location = [ihamlet|
 
 caminoEventHtml :: Event -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoEventHtml event = [ihamlet|
-  <div .row .event .#{eventCss}>
+  <div .row .clearfix .event .#{eventCss}>
     <div .col>
       <span .poi-types>
       ^{caminoEventTypeIcon (eventType event)}
@@ -630,48 +637,58 @@ caminoPointOfInterestHtml poi = [ihamlet|
           $maybe about <- descAbout d
             <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
               <span .ca-link>
-      <div .card-body>
-          $maybe t <- poiHours poi
-            ^{hoursBlock t}
-          $maybe c <- poiCalendar poi
-            ^{calendarBlock c}
-          $maybe d <- poiDescription poi
-            ^{descriptionBlock False d}
-          $forall event <- poiEvents poi
-            ^{caminoEventHtml event}
+      $if hasBody
+        <div .card-body>
+            $maybe t <- poiHours poi
+              ^{hoursBlock t}
+            $maybe c <- poiCalendar poi
+              ^{calendarBlock c}
+            $maybe d <- poiDescription poi
+              ^{descriptionBlock False d}
+            $forall event <- poiEvents poi
+              ^{caminoEventHtml event}
   |]
+  where
+    hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc)
+    hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiCalendar poi) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .location-#{routeID route} :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
-      <div .row>
-        <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
-          <h5 .col-5>
-            ^{caminoLocationTypeIcon (locationType location)}
-            _{Txt (locationName location)}
-          <div .col-2 .services>
-            $forall service <- locationServices location
-              ^{caminoServiceIcon service}
-          <div .col-2 .accommodation-types>
-            $forall accommodation <- locationAccommodationTypes location
-              ^{caminoAccommodationTypeIcon accommodation}
-          <div .col-2 .poi-types>
-            $forall poi <- locationPoiTypes location
-              ^{caminoLocationTypeIcon poi}
-            $forall event <- locationEventTypes location
-              ^{caminoEventTypeIcon event}
-          <div .col-1>
-            $maybe pos <- locationPosition location
-              <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
-                <span .ca-globe title="_{ShowOnMapTitle}">
+      <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
+        <div .container-fluid>
+          <div .row>
+            <h5 .col-5>
+              ^{caminoLocationTypeIcon (locationType location)}
+              _{Txt (locationName location)}
+            <div .col-2 .services>
+              $forall service <- locationServices location
+                ^{caminoServiceIcon service}
+            <div .col-2 .accommodation-types>
+              $forall accommodation <- locationAccommodationTypes location
+                ^{caminoAccommodationTypeIcon accommodation}
+            <div .col-2 .poi-types>
+              $forall poi <- locationPoiTypes location
+                ^{caminoLocationTypeIcon poi}
+              $forall event <- locationEventTypes location
+                ^{caminoEventTypeIcon event}
+            <div .col-1>
+              <div .text-end>
+                $maybe d <- locationDescription location
+                  $maybe about <- descAbout d
+                    <a .description-icon .about href="@{LinkRoute about}" title="_{LinkTitle about}">
+                      <span .ca-link>
+                $maybe pos <- locationPosition location
+                  <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
+                    <span .ca-globe title="_{ShowOnMapTitle}">
     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
         ^{locationLegs preferences camino used location}
         $maybe d <- locationDescription location
           <div .row>
             <div .col>
-              ^{descriptionBlock True d}
+              ^{descriptionBlock False d}
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
           ^{caminoAccommodationHtml accommodation accChoice}
@@ -1072,6 +1089,7 @@ caminoMapScript preferences camino solution = [ihamlet|
       , (Museum, (24, 22))
       , (Historical, (24, 17))
       , (Park, (24, 25))
+      , (Beach, (24, 18))
       , (Natural, (24, 25))
       , (Hazard, (20, 18))
       , (Poi, (15, 24))
@@ -1213,7 +1231,7 @@ caminoHtmlSimple config camino =
           #{renderCss css }
       <div .row>
         <div .col .m-1>
-          ^{descriptionBlock True (caminoDescription camino')}
+          ^{descriptionLine (caminoDescription camino')}
       <div .row>
         <div .col>
           <div>

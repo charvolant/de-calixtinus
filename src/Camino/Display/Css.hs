@@ -79,6 +79,7 @@ iconList = [
     ("ca-albergue", '\xe010'),
     ("ca-altar", '\xe030'),
     ("ca-bank", '\xe042'),
+    ("ca-beach", '\xe01f'),
     ("ca-bed-double", '\xe022'),
     ("ca-bed-double-wc", '\xe023'),
     ("ca-bed-quadruple", '\xe026'),

@@ -24,7 +24,7 @@ import Data.Text
 -- | Common Camino routes
 data CaminoRoute = AssetRoute Text -- ^ An identified font or asset
   | IconRoute Text -- ^ A specific icon
-  | ImgRoute Image -- ^ The (locale specific) path for an image
+  | ImgRoute Image Bool -- ^ The (locale specific) path for an image
   | LinkRoute (Localised TaggedURL) -- ^ The (locale specific) path for a link
   | LocationRoute Location -- ^ A location
   | MapTileRoute -- ^ The route to the map tile
@@ -35,7 +35,7 @@ findAssetPath ident config = maybe ("invalid/" <> ident) assetPath (getAsset ide
 renderCaminoRoute :: Config -> [Locale] -> CaminoRoute -> [(Text, Text)] -> Text
 renderCaminoRoute config _locales (AssetRoute ident) _ = findAssetPath ident config
 renderCaminoRoute config _locales (IconRoute ident) _ = (findAssetPath "icons" config) <> "/" <> ident
-renderCaminoRoute config _locales (ImgRoute img) _ = resolveLink (findAssetPath "images" config) img
+renderCaminoRoute config _locales (ImgRoute img thumb) _ = resolveLink (findAssetPath "images" config) (imageToLink thumb img)
 renderCaminoRoute config locales (LinkRoute tl) _ = resolveLink (findAssetPath "links" config) (maybe invalidLink id (localise locales tl))
 renderCaminoRoute _config  _locales (LocationRoute location) _ = "#" <> pack (locationID location)
 renderCaminoRoute config  _locales MapTileRoute _ = maybe "invalid/map.png" mapTiles (getMap Nothing config)

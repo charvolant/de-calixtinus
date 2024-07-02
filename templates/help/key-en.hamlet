@@ -153,6 +153,12 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon Beach}
+          <td>Beach
+          <td>A beach (sea or river)
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Natural}
           <td>Natural
           <td>A nature park, area of natural beauty etc.

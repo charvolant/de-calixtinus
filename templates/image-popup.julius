@@ -1,7 +1,17 @@
 const imageModal = new bootstrap.Modal('#image-dialog');
-function showImagePopup(source, title, attribution) {
+function showImagePopup(source, title, attribution, origin) {
   $('#image-dialog-title').html(title);
-  $('#image-dialog-attribution').html(attribution);
+  if (attribution == null) {
+    $('#image-dialog-attribution').html('');
+  } else {
+    attribution = attribution.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    $('#image-dialog-attribution').html(attribution);
+  }
+  if (origin == null) {
+    $('#image-dialog-origin').html('');
+  } else {
+    $('#image-dialog-origin').html('<a href="' + origin + '"><span class="ca-link"></span></a>');
+  }
   var image = $('#image-dialog-image')
   image.attr("src", source);
   image.attr("alt", title);

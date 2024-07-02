@@ -19,6 +19,8 @@ module Data.Description (
 
   , descriptionSummary
   , imageAttribution
+  , imageOrigin
+  , imageToLink
   , wildcardDescription
 ) where
 
@@ -27,7 +29,7 @@ import Data.Aeson (FromJSON(..), ToJSON(..), Value(..), (.!=), (.:), (.:?), (.=)
 import Data.Aeson.Types (typeMismatch)
 import Data.DublinCore
 import Data.Localised
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, isJust, isNothing)
 import Data.Metadata
 import Data.Text
 import Network.URI
@@ -66,39 +68,69 @@ instance ToJSON Note where
 -- | An image descriptor
 data Image = Image {
       imageSource :: URI
+    , imageThumbnail :: Maybe URI
     , imageTitle :: Localised TaggedText
     , imageMetadata :: Maybe Metadata
   } deriving (Show)
 
-instance TaggedLink Image where
-  link = imageSource
-
 instance FromJSON Image where
   parseJSON (Object v) = do
     source' <- v .: "source"
+    thumbnail' <- v .:? "thumbnail"
     title' <- v .: "title"
     metadata' <- v .:? "metadata"
-    return $ Image (fromJust $ parseURI source') title' metadata'
+    return $ Image (textToUri source') (textToUri <$> thumbnail') title' metadata'
   parseJSON v = typeMismatch "object" v
 
 instance ToJSON Image where
-  toJSON (Image source' title' metadata') = object [
+  toJSON (Image source' thumbnail' title' metadata') = object [
         "source" .= uriToText source'
+      , "thumbnail" .= (uriToText <$> thumbnail')
       , "title" .= title'
       , "metadata" .= metadata'
      ]
 
--- Construct an attribution statement
-imageAttribution :: Image -> Text
-imageAttribution image = let
-        metadata = imageMetadata image
-        rights = maybe Nothing (localisedValue dctermsRights [rootLocale]) metadata
-        licence = maybe Nothing (localisedValue dctermsLicense [rootLocale]) metadata
-        rights' = maybe "" plainText rights
-        licence' = maybe "" plainText licence
-      in
-        replace "\"" "'" $ strip $ rights' <> " " <> licence'
+joinText :: Text -> Maybe TaggedText -> Maybe Text -> Maybe Text
+joinText sep mtt mtxt = maybe mtxt (\tt -> Just $ maybe (plainText tt) (\txt -> txt <> sep <> plainText tt) mtxt) mtt
 
+-- Construct an attribution statement, if there is something
+imageAttribution :: Image -> Maybe Text
+imageAttribution image = let
+      mmetadata = imageMetadata image
+     in
+      if isNothing mmetadata then
+        Nothing
+      else let
+          metadata = fromJust mmetadata
+          citation = localisedValue [dctermsBibliographicCitation] [rootLocale] metadata
+          rights = localisedValue [dctermsRights, dcRights] [rootLocale] metadata
+          creator = localisedValue [dctermsCreator, dcCreator] [rootLocale] metadata
+          rightsHolder = localisedValue [dctermsRightsHolder] [rootLocale] metadata
+          licence = localisedValue [dctermsLicense] [rootLocale] metadata
+          created = localisedValue [dctermsCreated] [rootLocale] metadata
+        in
+          if isJust citation then
+            plainText <$> citation
+          else if isJust rights then
+            plainText <$> rights
+          else
+            joinText ", " created $ joinText " via " rightsHolder $ joinText ", " licence $ joinText "" creator Nothing
+
+-- | Get the origin of the image, if available, from the metadata
+imageOrigin :: Image -> Maybe Text
+imageOrigin image = plainText <$> maybe Nothing (localisedValue [dctermsSource, dcSource] [rootLocale]) (imageMetadata image)
+
+-- | Convert an image to a hyperlink
+imageToLink :: Bool -> Image -> TaggedURL
+imageToLink thumb image = let
+    url = if
+        thumb
+      then
+        maybe (imageSource image) id (imageThumbnail image)
+      else
+        imageSource image
+  in
+    TaggedURL rootLocale (Hyperlink url Nothing)
 
 -- | A full description of something, including links and other bits and pieces
 --   The sumamry is intended for use instead of, rather than as well as, the descriptive text

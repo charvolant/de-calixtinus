@@ -29,7 +29,7 @@ module Data.Metadata (
 import Data.Aeson
 import Data.Default.Class
 import Data.List (find)
-import Data.Localised (Locale(..), Localised(..), Tagged(..), TaggedText(..), localeLanguageTag, localise)
+import Data.Localised (Locale(..), Localised(..), Tagged(..), TaggedText(..), localeLanguageTag, localise, textToUri)
 import Data.Maybe (fromJust)
 import qualified Data.Set as S
 import qualified Data.Text as T (Text, concat, isPrefixOf, null, split, stripPrefix, stripSuffix, unpack, pack)
@@ -64,7 +64,7 @@ decodeTerm namespaces term =
     namespace = find (\ns -> T.isPrefixOf (namespacePrefix ns) term) namespaces
     normalised = maybe term (\ns -> T.concat [(namespaceUri ns), (fromJust $ T.stripPrefix (namespacePrefix ns) term)]) namespace
   in
-    parseURI $ T.unpack normalised
+    parseURI $ T.unpack normalised -- Expecting an absolute URI at this point
 
 encodeTerm :: [Namespace] -> URI -> T.Text
 encodeTerm namespaces term =
@@ -98,7 +98,7 @@ toRawStatement _namespaces r@(RawStatement _ _) = r
 toRawStatement namespaces (Statement term value) = RawStatement (encodeTerm namespaces term) value
 
 statementTerm :: Statement -> URI
-statementTerm (RawStatement term _value) = maybe nullURI id (parseURI $ T.unpack term)
+statementTerm (RawStatement term _value) = textToUri term
 statementTerm (Statement term _value) = term
 
 statementText :: Statement -> TaggedText
@@ -156,12 +156,13 @@ instance Default Metadata where
   }
 
 -- | Find a localised version of a statement
-localisedValue :: URI -- ^ The term to find
+localisedValue :: [URI] -- ^ The terms to find
   -> [Locale] -- ^ The locales to try
   -> Metadata -- ^ The metadata source
-  -> Maybe TaggedText -- ^ The resulting value, if found
-localisedValue term locales metadata = let
-    statements = filter (\s -> term == statementTerm s) (metadataStatements metadata)
-    texts = map statementText statements
+  -> Maybe TaggedText -- ^ The resulting value, if found. The first term that has a value is returned
+localisedValue terms locales metadata = let
+    statements = metadataStatements metadata
+    statements' = filter (\s -> elem (statementTerm s) terms) statements
+    texts = map statementText statements'
   in
     localise locales (Localised texts)

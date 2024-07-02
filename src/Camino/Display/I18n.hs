@@ -43,6 +43,7 @@ data CaminoMsg =
   | AscentMsg Float
   | AustereTitle
   | BankTitle
+  | BeachTitle
   | BedlinenTitle
   | BicycleRepairTitle
   | BicycleStorageTitle
@@ -249,6 +250,7 @@ renderCaminoMsgDefault _ AddressTitle = "Address"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
+renderCaminoMsgDefault _ BeachTitle = "Beach"
 renderCaminoMsgDefault _ BedlinenTitle = "Bedlinen"
 renderCaminoMsgDefault _ BicycleRepairTitle = "Bicycle Repair"
 renderCaminoMsgDefault _ BicycleStorageTitle = "Bicycle Storage"

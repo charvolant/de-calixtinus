@@ -661,7 +661,7 @@
         {
           "name": "Oratorio San Felipe Neri@es",
           "type": "Church",
-          "position": { "latitude": 42.85607, "longitude": -1.58170 },
+          "position": { "latitude": 42.81755, "longitude": -1.64474 },
           "events": [
             {
               "name": "Christian welcome to the pilgrim@en",
@@ -1522,7 +1522,18 @@
         "House",
         "GuestHouse",
         "Hotel"
-       ]
+       ],
+      "pois": [
+        {
+          "name": "Catedral de Santo Domingo de la Calzada@es",
+          "description": {
+            "about": "https://www.catedralsantodomingo.org/"
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 42.44096, "longitude": -2.95362 },
+          "hours": "0900-2000"
+        }
+      ]
     },
     {
       "id": "F-F59",
@@ -1804,6 +1815,21 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Lockers", "Accessible", "BicycleStorage", "Pets", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Quadruple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Steep ascent@en",
+          "description": {
+            "notes": [
+              {
+              "type": "Warning",
+              "text": "The ascent may take three hours at a normal place. Ensure that you have water.@en"
+              }
+            ]
+          },
+          "type": "Hazard",
+          "position": { "latitude": 42.38811, "longitude": -3.30996 }
+        }
       ]
     },
     {
@@ -1830,6 +1856,34 @@
           "type": "Hotel",
           "services": [ "WiFi", "Heating", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.37626, "longitude": -3.44117 }
+        },
+        {
+          "name": "Monasterio de San Juan de Ortega@es",
+          "description": {
+            "about": "https://www.terranostrum.es/turismo/monasterio-de-san-juan-de-ortega"
+          },
+          "type": "Monastery",
+          "position": { "latitude": 42.37628, "longitude": -3.43662 },
+          "events": [
+            {
+              "name": "Equinoctial Miracle@en",
+              "description": {
+                "text": "At the Spring and Autumn equinoxes (March 21 and September 23) a ray of light touches the capital stone depicting the Annunciation.@en"
+              },
+              "type": "Religious",
+              "calendar": {
+                "type": "yearly",
+                "months": [2, 8]
+              }
+            }
+          ]
         }
       ]
     },
@@ -2076,6 +2130,46 @@
         "PrivateAlbergue",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Catedral de Burgos@es",
+          "description": {
+            "about": "https://catedraldeburgos.es/"
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 42.34079, "longitude": -3.70376 },
+          "hours": "0930-1830",
+          "events": [
+            {
+              "name": "Holy mass and pilgrim's blessing@en",
+              "description": {
+                "notes": [
+                  {
+                    "type": "Directions",
+                    "text": "The mass is held at the Chapel of the Holy Christ or Chapel of St Thecla. Both chapels are outside the fee-paying area and can be accessed from the Wester façade, through the gate of St Mary.@en"
+                  }
+                ]
+              },
+              "type": "PilgrimMass",
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "1930-2030"
+            }
+          ]
+        },
+        {
+          "name": "Museo de la Evolución Humana@es",
+          "description": {
+            "text": "Museum with displays on human evolution & the nearby Atapuerca fossil site.",
+            "about": "https://www.museoevolucionhumana.com/"
+          },
+          "type": "Museum",
+          "position": { "latitude": 42.33968, "longitude": -3.69720 },
+          "hours": "1000-1430,1630-2000"
+         }
       ]
     },
     {
@@ -2129,6 +2223,23 @@
           "type": "Hotel",
           "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Iglesia de \"Santa Marina\"@es",
+          "description": {
+            "about": "http://www.rabedelascalzadas.es/lugares-de-interes/iglesia-parroquial-de-santa-marina"
+          },
+          "type": "Church",
+          "position": { "latitude": 42.34049, "longitude": -3.83476 },
+          "events": [
+            {
+              "name": "Pilgrim's blessing@en",
+              "type": "PilgrimMass",
+              "hours": "0830-0930"
+            }
+          ]
         }
       ]
     },
@@ -2272,7 +2383,18 @@
         "HomeStay",
         "GuestHouse",
         "Hotel"
-       ]
+       ],
+      "pois": [
+        {
+          "name": "Castillo de Castrojeriz@en",
+          "description": {
+            "text": "The remains of a fortress built on previous Roman and Visigothic fortifications.@en",
+            "about": "http://www.castrojeriz.es/portfolio-item/castillo/"
+          },
+          "type": "Historical",
+          "position": { "latitude": 42.29201, "longitude": -4.13641 }
+        }
+      ]
     },
     {
       "id": "F-F88",
@@ -2452,6 +2574,18 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "description": {
+            "notes": [
+              "The route through Villovieco is longer ut has more shady stretches.@en"
+            ]
+          },
+          "type": "Junction",
+          "position": { "latitude": 42.26913, "longitude": -4.44925 }
+        }
       ]
     },
     {
@@ -2597,8 +2731,15 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Lockers", "BicycleStorage",  "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.34132, "longitude": -4.62210 }
+        }
       ]
-    },
+   },
     {
       "id": "F-F98",
       "name": "Calzadilla de la Cueza",
@@ -2650,6 +2791,13 @@
           "type": "PrivateAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.35367, "longitude": -4.86529 }
         }
       ]
     },
@@ -2737,7 +2885,12 @@
     {
       "id": "F-F106",
       "name": "Sahagún",
-      "type": "Village",
+      "description": {
+        "notes": [
+          "This is halfway. You can get a Carta Peregrina (pilgrim's certificate that sghows you have reached the halfway point) at the Santuario de la Virgen Peregrina@en"
+        ]
+      },
+      "type": "Town",
       "position": { "latitude": 42.37075, "longitude": -5.02954 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
@@ -2801,7 +2954,23 @@
           "services": [ "WiFi", "WashingMachine", "Handwash", "Restaurant", "Accessible", "BicycleStorage", "Pets",  "CampSite" ],
           "sleeping": [ "SleepingBag" ]
         }
-     ]
+     ],
+      "pois": [
+        {
+          "name": "Santuario de la Virgen Peregrina@en",
+          "description": {
+            "about": "https://www.turismosahagun.com/santuario-de-la-peregrina/"
+          },
+          "type": "Monastery",
+          "position": { "latitude": 42.36796, "longitude": -5.03256 },
+          "hours": "0900-1400,1630-1900"
+        },
+        {
+          "name": "Midpoint of the Camino Frances@en",
+          "type": "Statue",
+          "position": { "latitude": 42.37046, "longitude":  -5.00035 }
+        }
+      ]
     },
     {
       "id": "F-F107",
@@ -2815,6 +2984,13 @@
           "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Handwash", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.38282, "longitude": -5.07648 }
         }
       ]
     },
@@ -3096,6 +3272,16 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Catedral de León@es",
+          "description": {
+            "about": "http://www.catedraldeleon.org/"
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 42.60000, "longitude": -5.56712 }
+        }
       ]
     },
     {
@@ -3155,6 +3341,13 @@
           "type": "Hotel",
           "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.57779, "longitude": -5.64485 }
         }
       ]
     },
@@ -3398,6 +3591,13 @@
           "type": "CampGround",
           "services": [ ],
           "sleeping": [ "SleepingBag" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.45798, "longitude": -5.88681 }
         }
       ]
     },
@@ -3765,7 +3965,16 @@
     {
       "id": "F-F142",
       "name": "Cruz de Ferro",
-      "type": "Poi",
+      "description": {
+        "text": "This is the famous cross where you leave the stone the reopresents the sins that they carry.@en",
+        "notes": [
+          {
+            "type": "Warning",
+            "text": "Leave only a stone. Anything else is regarded as rubbish and will be cleared away.@en"
+          }
+        ]
+      },
+      "type": "Cross",
       "position": { "latitude": 42.48882, "longitude": -6.36145 },
       "services": [  ],
       "accommodation": [ ]
@@ -3782,6 +3991,22 @@
           "type": "PilgrimAlbergue",
           "services": [ "Kitchen", "Prayer" ],
           "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Tomás",
+          "description": {
+            "text": "Tomás, \"the last Knight Templar,\" welcomes each passing pilgrim at any time.@en",
+            "notes": [
+              {
+                "type": "Address",
+                "text": "At Manjarín Pilgrims Hostel"
+              }
+            ]
+          },
+          "type": "Poi",
+          "position": { "latitude": 42.49040, "longitude": -6.38674 }
         }
       ]
     },
@@ -3901,6 +4126,24 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": [
+            "Castillo de los Templarios@es",
+            "Castle of the Knights Templar@en"
+          ],
+          "description": {
+            "about": "http://www.castillodelostemplarios.com/"
+          },
+          "type": "Historical",
+          "position": { "latitude": 42.543539, "longitude": -6.59379 },
+          "calendar": {
+            "type": "weekly",
+            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+          },
+          "hours": "1000-1400,1630-2030"
+        }
       ]
     },
     {
@@ -3976,6 +4219,13 @@
           "services": [ "WiFi", "Heating", "Kitchen", "Restaurant", "Breakfast", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.58063, "longitude": -6.67112 }
+        }
       ]
     },
     {
@@ -4041,7 +4291,14 @@
       "type": "Village",
       "position": { "latitude": 42.60572, "longitude": -6.75000 },
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.60620, "longitude": -6.75513 }
+        }
+      ]
     },
     {
       "id": "F-F154",
@@ -4081,6 +4338,13 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Alternative Route@en",
+          "type": "Junction",
+          "position": { "latitude": 42.60934, "longitude": -6.81194 }
+        }
       ]
     },
     {
@@ -4351,6 +4615,13 @@
           "services": [ "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "BicycleStorage" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Steep Ascent@en",
+          "type": "Hazard",
+          "position": { "latitude": 42.68014, "longitude": -7.00376 }
+        }
       ]
     },
     {
@@ -4365,6 +4636,13 @@
           "type": "PilgrimAlbergue",
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Steep Ascent@en",
+          "type": "Hazard",
+          "position": { "latitude": 42.68919, "longitude": -7.01299 }
         }
       ]
     },
@@ -4386,6 +4664,12 @@
    {
       "id": "F-F166",
       "name": "O Cebreiro",
+      "description": {
+        "about": "https://www.editorialbuencamino.com/llegar-al-inicio-del-camino/camino-de-santiago-desde-o-cebreiro/",
+        "notes": [
+          "O Cebreiro is a popular start point for pilgrims walking the last 160km. See the link for more information.@en"
+        ]
+      },
       "type": "Village",
       "position": { "latitude": 42.70777, "longitude": -7.04460 },
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
@@ -4488,7 +4772,14 @@
       "type": "Village",
       "position": { "latitude": 42.71172, "longitude": -7.12268 },
       "services": [  ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Steep Ascent@en",
+          "type": "Hazard",
+          "position": { "latitude": 42.71231, "longitude": -7.12424 }
+        }
+      ]
     },
     {
       "id": "F-F170",
@@ -4691,6 +4982,13 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.75509, "longitude": -7.24354  }
+        }
       ]
     },
     {
@@ -4800,6 +5098,16 @@
           "type": "Hotel",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Mosteiro de San Xulián e San Xulián e Santa Basilisa de Samos@es",
+          "description": {
+            "about": "https://www.abadiadesamos.com/"
+          },
+          "type": "Monastery",
+          "position": { "latitude": 42.73265, "longitude": -7.32575 }
         }
       ]
     },
@@ -4967,6 +5275,11 @@
     {
       "id": "F-F196",
       "name": "Sarria",
+      "description": {
+        "notes": [
+          "Sarria is the closest major start point to the 100km limit for pilgrims wishing to get their Compostela certificate.@en"
+        ]
+      },
       "type": "Town",
       "position": { "latitude": 42.77641, "longitude": -7.41295 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus"  ],
@@ -5158,6 +5471,13 @@
           "services": [ "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Double" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.79658, "longitude": -7.60882  }
+        }
       ]
     },
     {
@@ -5178,6 +5498,13 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.80531, "longitude": -7.61999  }
+        }
       ]
     },
     {
@@ -5213,6 +5540,13 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "BicycleStorage", "CampSite", "Bedlinen" ],
           "sleeping": [ "Shared", "Double" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.82407, "longitude": -7.68978 }
+        }
       ]
     },
     {
@@ -5233,6 +5567,23 @@
           "type": "HomeStay",
           "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Castro de Castromaior@es",
+          "description": {
+            "text": "An iron-age hill fort@en",
+            "about": "http://castromaior.es/",
+            "notes": [
+              {
+                "type": "Directions",
+                "text": "A side-path from the main Camino rejoins the main route to the West of the fort.@en"
+              }
+            ]
+          },
+          "type": "Historical",
+          "position": { "latitude": 42.83363, "longitude": -7.71974 }
         }
       ]
     },
@@ -5345,20 +5696,69 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Iglesia de San Salvador de Vilar de Donas@es",
+          "description": {
+            "text": "A national monument, the site where the Chevaliers of St. James settled in the 12th century.@en",
+            "about": "http://www.diocesisdelugo.org/",
+            "notes": [
+              {
+                "type": "Directions",
+                "text": "Getting to the monastery involves a side-trip away from the main Camino route to Vilar de Donas, adding 3-4km to the route.@en"
+              }
+            ]
+          },
+          "type": "Monastery",
+          "position": { "latitude": 42.89256, "longitude": -7.80974 },
+          "calendar": {
+            "type": "weekly",
+            "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
+          },
+          "hours": "1200-1800"
+        }
       ]
     },
     {
       "id": "F-F218",
       "name": "Lestedo",
       "type": "Village",
-      "position": { "latitude": 42.87217, "longitude": -7.81414 },
-      "services": [ "Restaurant"],
+      "position": {"latitude": 42.87217, "longitude": -7.81414},
+      "services": ["Restaurant"],
       "accommodation": [
         {
           "name": "Rectoral de Lestedo",
           "type": "HomeStay",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+          "services": [
+            "WiFi", "Heating", "WashingMachine", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen",
+            "Towels"
+          ],
+          "sleeping": ["Single", "DoubleWC", "Triple"]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Temple of Santiago@en",
+          "description": {
+            "notes": [
+              "Served by the Comboni missionaries@en"
+            ]
+          },
+          "type": "Church",
+          "position": {"latitude": 42.87334, "longitude": -7.81663 },
+          "calendar": {
+            "type": "yearly",
+            "months": [2, 3, 4, 5, 6, 7, 8, 9]
+          },
+          "hours": "0730-1330,1530-2000",
+          "events": [
+            {
+              "name": "Pilgrims Mass@en",
+              "type": "PilgrimMass",
+              "hours": "1900-2000"
+            }
+          ]
         }
       ]
     },
@@ -5398,6 +5798,13 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Pilgrim Service Centre@en",
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.87376, "longitude": -7.85722 }
+        }
       ]
     },
     {
@@ -5418,6 +5825,25 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Igrexa de San Tirso de Palas de Rei@es",
+          "type": "Church",
+          "position": { "latitude": 42.87245, "longitude": -7.86796  },
+          "calendar": {
+            "type": "yearly",
+            "months": [2, 3, 4, 5, 6, 7, 8, 9]
+          },
+          "hours": "0730-1330,1530-2000",
+          "events": [
+            {
+              "name": "Pilgrims Mass@en",
+              "type": "PilgrimMass",
+              "hours": "1900-2000"
+            }
+          ]
+        }
       ]
     },
     {
@@ -5543,6 +5969,13 @@
         "PrivateAlbergue",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name": "Meeting of the Camino Frances and the Camino Primitivo@en",
+          "type": "Junction",
+          "position": { "latitude": 42.91424, "longitude": -8.01613 }
+        }
       ]
     },
     {
@@ -5551,7 +5984,14 @@
       "type": "Village",
       "position": { "latitude": 42.91142, "longitude": -8.02537 },
       "services": [ "Restaurant", "Groceries" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.91283, "longitude": -8.03758 }
+        }
+      ]
     },
     {
       "id": "F-F231",
@@ -5598,6 +6038,13 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast","BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Area de descanso de Peregrinos@es",
+          "type": "Park",
+          "position": { "latitude": 42.919093, "longitude": -8.08778 }
+        }
       ]
     },
     {
@@ -5630,6 +6077,13 @@
           "type": "House",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude": 42.92050, "longitude": -8.09240 }
         }
       ]
     },
@@ -5703,6 +6157,13 @@
         "GuestHouse",
         "Hotel",
         "CampGround"
+      ],
+      "pois": [
+        {
+          "name": "Merging of the Camino del Norte and the Camino Frances@en",
+          "type": "Junction",
+          "position": { "latitude": 42.92680, "longitude": -8.16383 }
+        }
       ]
     },
     {
@@ -6080,6 +6541,21 @@
           "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Accessible", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "TripleWC" ]
         }
+      ],
+      "pois": [
+        {
+          "name": "Monument to the Pilgrim@en",
+          "description": {
+            "notes": [
+              {
+                "type": "Directions",
+                "text": "Requires a 600m detour to the top of Monte do Gozo"
+              }
+            ]
+          },
+          "type": "Statue",
+          "position": { "latitude": 42.88455, "longitude": -8.49564 }
+        }
       ]
     },
     {
@@ -6088,7 +6564,83 @@
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
+      "pois": [
+        {
+          "name": [
+            "Catedral Basílica de Santiago de Compostela@ga",
+            "Catedral Basílica de Santiago de Compostela@es",
+            "Santiago de Compostela Cathedral@en"
+          ],
+          "description": {
+            "text": "Journey's End@en",
+            "about": "https://catedraldesantiago.es/",
+            "image": {
+              "source": "S-1-Cathedral.jpg",
+              "thumbnail": "S-1-Cathedral-thumbnail.jpg",
+              "title": "View from the Praza do Obradoiro",
+              "metadata": {
+                "statements": [
+                  {
+                    "term": "dcterms:creator",
+                    "value": "Fernando"
+                  },
+                  {
+                    "term": "dcterms:created",
+                    "value": "2021"
+                  },
+                  {
+                    "term": "dcterms:rightsHolder",
+                    "value": "Wikimedia Commons"
+                  },
+                  {
+                    "term": "dcterms:license",
+                    "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+                  },
+                  {
+                    "term": "dcterms:source",
+                    "value": "https://commons.wikimedia.org/wiki/File:Santiago_cathedral_2021.jpg"
+                  }
+                ]
+              }
+            },
+            "hours": "1000-2000"
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 42.88060, "longitude": -8.54466 },
+          "events": [
+            {
+              "name": "Pilgrim's Mass",
+              "type": "PilgrimMass",
+              "hours": "0730-0830,0930-1030,1200-1300,1930-2030"
+            }
+          ]
+        },
+        {
+          "name": "Praza do Obradoiro@ga",
+          "description": {
+            "text": "The main arrival point for pilgrims@en"
+          },
+          "type": "Municipal",
+          "position": { "latitude": 42.88046, "longitude":  -8.54572 }
+        },
+        {
+          "name": "Pilgrim Office@en",
+          "description": {
+            "text": "This is where you can pick up your Compostela (pilgrim's certificate).@en",
+            "about": "https://catedral.df-server.info/agencias/Banderas.aspx?ind=1",
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "This office can get very busy during the high season. Book a ticket ahead by using the link above.@en"
+              }
+            ]
+          },
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.88207, "longitude":  -8.546826 }
+        }
+      ]
+
     }
   ],
 

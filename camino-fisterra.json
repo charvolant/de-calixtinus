@@ -294,7 +294,14 @@
       "type": "Village",
       "position": { "latitude":  42.95666, "longitude":  -8.95715 },
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Alternative Routes@en",
+          "type": "Junction",
+          "position": { "latitude":  42.95664, "longitude":  -8.95717 }
+        }
+      ]
     },
     {
       "id": "FI-F17",
@@ -448,6 +455,26 @@
           "type": "PrivateAlbergue",
           "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared", "Double" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Alternative Routes (Muxia)@en",
+          "type": "Junction",
+          "position": { "latitude": 42.98626, "longitude": -9.08587 }
+        },
+        {
+          "name": "Punto de Información ao Peregrino de Hospital (Dumbría)@ga",
+          "description": {
+            "about": "http://www.dumbriaturismo.com/"
+          },
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.98289, "longitude": -9.07786 },
+          "calendar": {
+            "type": "yearly",
+            "months": [ 6, 7 ]
+          },
+          "hours": "0730-1400"
         }
       ]
     },
@@ -640,6 +667,11 @@
     {
       "id": "FI-F31",
       "name": "Fisterra",
+      "description": {
+        "notes": [
+          "You can get your pilgrim's document, the Finisterrana, at the tourism office or the lighthouse. The tourism office is closed during the low season and the Finisterrana can be obtained at the pilgrim albergue.@en"
+        ]
+      },
       "type": "Town",
       "position": {"latitude": 42.90501, "longitude":  -9.26437 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
@@ -654,6 +686,63 @@
         "House",
         "GuestHouse",
         "Hotel"
+      ],
+      "pois": [
+        {
+          "name":[
+            "Punto Información@ga",
+            "Tourism Office@en"
+          ],
+          "type": "PilgrimResource",
+          "position": {"latitude": 42.90564, "longitude": -9.26259 },
+          "hours": "1000-1400,1530-1830"
+        },
+        {
+          "name": "Castelo de San Carlos@ga",
+          "type": "Museum",
+          "position": {"latitude": 42.90461, "longitude":  -9.26082 },
+          "calendar": {
+            "type": "weekly",
+            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+          },
+          "hours": "1100-1400,1600-1900"
+        },
+        {
+          "name": "Monumento al Peregrino@ga",
+          "type": "Statue",
+          "position": {"latitude": 42.89418, "longitude": -9.26422 }
+        }
+      ]
+    },
+    {
+      "id": "FI-F32",
+      "name": "Faro de Fisterra",
+      "type": "Poi",
+      "position": {"latitude": 42.88264, "longitude":  -9.27187 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "O SemafORO Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Faro de Fisterra@ga",
+          "type": "Poi",
+          "position": {"latitude": 42.88264, "longitude":  -9.27187 },
+          "hours": "1100-1900"
+        },
+        {
+          "name": [
+            "Bota de Fisterra@ga",
+            "Pilgrim's Boot@en"
+          ],
+          "type": "Statue",
+          "position": {"latitude": 42.88193, "longitude": -9.27212 }
+        }
       ]
     },
 
@@ -802,6 +891,11 @@
     {
       "id": "FI-M12",
       "name": "Muxia",
+      "description": {
+        "notes": [
+          "You can get your pilgrim's document, the Muxiana, at the tourism office, the Bela Muxia hostel or the town hall.@en"
+        ]
+      },
       "type": "Town",
       "position": {"latitude": 43.10561, "longitude": -9.21746 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
@@ -871,6 +965,21 @@
           "type": "Hotel",
           "services": [ "WiFi", "Breakfast", "Dinner", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": [
+            "Oficina Municipal de Turismo de Muxía@ga",
+            "Tourism Office@en"
+          ],
+          "type": "PilgrimResource",
+          "position": {"latitude": 43.10722, "longitude": -9.21723 },
+          "calendar": {
+            "type": "weekly",
+            "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+          },
+          "hours": "0930-1330,1630-1900"
         }
       ]
     },
@@ -952,6 +1061,22 @@
           "type": "Hotel",
           "services": [ "WiFi", "Heating", "Handwash", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Coastal Route@en",
+          "description": {
+            "text": "An alternative route to just past A Canosa, following the estuary and coast. This route is approximately 1km longer than the standard route.@en",
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "Take care with navigation.@en"
+              }
+            ]
+          },
+          "type": "Junction",
+          "position": {"latitude": 42.99691, "longitude": -9.24468 }
         }
       ]
     },
@@ -1217,6 +1342,13 @@
       "ascent": 90,
       "descent": 70
     },
+    {
+      "from": "FI-F31",
+      "to": "FI-F32",
+      "distance": 2.9,
+      "ascent": 95,
+      "descent": 0
+    },
 
     {
       "from": "FI-F24",
@@ -1378,7 +1510,7 @@
         "FI-F1"
       ],
       "finishes": [
-        "FI-F31"
+        "FI-F32"
       ],
       "palette": {
         "colour": "fec953"

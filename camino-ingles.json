@@ -5,9 +5,9 @@
     "English Way@en"
   ],
   "description": {
-    "text": "The Camino Ingles is a short camino from Ferrol or A Coruna on the Northen coast of Spain. The route was traditionally used by pilgrims from Northern Europe.@en",
+    "text": "The Camino Ingles is a short camino from Ferrol or A Coruña on the Northen coast of Spain. The route was traditionally used by pilgrims from Northern Europe.@en",
     "notes": [
-      "The route from Ferrol is about 119km and that from A Coruna 75. Only the route from Ferrol qualifies for the Compostela certificate"
+      "The route from Ferrol is about 119km and that from A Coruña 75km. Only the route from Ferrol qualifies for the Compostela certificate.@en"
     ]
   },
   "metadata": {
@@ -635,7 +635,7 @@
           "position": { "latitude": 43.37096, "longitude": -8.39593 }
         },
         {
-          "name": "Tower of Hercules@en",
+          "name": "Alternative Route@en",
           "description": "The official route follows the N-550. This alternative route avoids the traffic.@en",
           "type": "Junction",
           "position": { "latitude": 43.33213, "longitude": -8.39119 }
@@ -1121,7 +1121,7 @@
     {
       "id": "I-RI",
       "name": "Camino Ingles",
-      "description": "The main Camino route starting in Ferrol or A Coruna ",
+      "description": "The main Camino route starting in Ferrol or A Coruña ",
       "stops": [
       ],
       "starts": [

@@ -54,7 +54,9 @@ import Yesod
 
 -- Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
-    resPrevTravel :: FormResult Travel 
+    resEasyMode :: FormResult Bool
+  , viewEasyMode :: FieldView CaminoApp
+  , resPrevTravel :: FormResult Travel
   , viewPrevTravel :: FieldView CaminoApp
   , resTravel :: FormResult Travel 
   , viewTravel :: FieldView CaminoApp
@@ -128,7 +130,8 @@ descriptionText locales description = plainText <$> localise locales (descriptio
 -- Make a default set of preference data fields with everything hidden
 defaultPreferenceFields :: CaminoApp -> Maybe PreferenceData -> MForm Handler PreferenceDataFields
 defaultPreferenceFields master prefs = do
-    (trpRes, trpView) <- mreq hiddenField "" (prefTravel <$> prefs) -- Start with original values
+    (emRes, emView) <- mreq hiddenField "" (prefEasyMode <$> prefs) -- Easy/detailed mode
+    (trpRes, trpView) <- mreq hiddenField "" (prefTravel <$> prefs) -- Original values
     (trRes, trView) <- mreq hiddenField "" (prefTravel <$> prefs)
     (fipRes, fipView) <- mreq hiddenField "" (prefFitness <$> prefs)
     (fiRes, fiView) <- mreq hiddenField "" (prefFitness <$> prefs)
@@ -151,7 +154,9 @@ defaultPreferenceFields master prefs = do
     (spRes, spView) <- mreq (parsingHiddenField (S.map (pack . locationID)) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
     (exRes, exView) <- mreq (parsingHiddenField (S.map (pack . locationID)) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
     return PreferenceDataFields {
-        resPrevTravel = trpRes
+        resEasyMode = emRes
+      , viewEasyMode = emView
+      , resPrevTravel = trpRes
       , viewPrevTravel = trpView
       , resTravel = trRes
       , viewTravel = trView
@@ -203,17 +208,21 @@ changed _ _ = False
 
 makePreferenceData :: CaminoApp -> PreferenceDataFields -> FormResult PreferenceData
 makePreferenceData _master fields = let
+    easy' = resEasyMode fields
+    easy'' = case easy' of
+      (FormSuccess e) -> e
+      _ -> False
     travel' = resTravel fields
     fitness' = resFitness fields
     comfort' = resComfort fields
     changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness') || (changed (resPrevComfort fields) comfort')
     dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort'
-    distance' = if changedTravel then preferenceDistance <$> dtp else resDistance fields
-    time' = if changedTravel then preferenceTime <$> dtp else resTime fields
-    location' = if changedTravel then preferenceLocation <$> dtp else resLocation fields
-    accommodation' = if changedTravel then preferenceAccommodation <$> dtp else resAccommodation fields
-    stopServices' = if changedTravel then preferenceStopServices <$> dtp else resStopServices fields
-    dayServices' = if changedTravel then preferenceDayServices <$> dtp else resDayServices fields
+    distance' = if easy'' || changedTravel then preferenceDistance <$> dtp else resDistance fields
+    time' = if easy'' || changedTravel then preferenceTime <$> dtp else resTime fields
+    location' = if easy'' || changedTravel then preferenceLocation <$> dtp else resLocation fields
+    accommodation' = if easy'' || changedTravel then preferenceAccommodation <$> dtp else resAccommodation fields
+    stopServices' = if easy'' || changedTravel then preferenceStopServices <$> dtp else resStopServices fields
+    dayServices' = if easy'' || changedTravel then preferenceDayServices <$> dtp else resDayServices fields
     changedCamino = changed (caminoId <$> resPrevCamino fields) (caminoId <$> resCamino fields)
     camino' = resCamino fields
     dcp = defaultCaminoPreferences <$> camino'
@@ -224,11 +233,12 @@ makePreferenceData _master fields = let
     finish' = if changedRoutes then preferenceFinish <$> dcp' else resFinish fields
     dcp'' = withStartFinish <$> dcp' <*> start' <*> finish'
     changedStart = changedRoutes || changed (locationID <$> resPrevStart fields) (locationID <$> start') || changed (locationID <$> resPrevFinish fields) (locationID <$> finish')
-    stops' = if changedStart then recommendedStops <$> dcp'' else resStops fields
-    excluded' = if changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
+    stops' = if easy'' || changedStart then recommendedStops <$> dcp'' else resStops fields
+    excluded' = if easy'' || changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
   in
     PreferenceData
-      <$> travel'
+      <$> easy'
+      <*> travel'
       <*> fitness'
       <*> comfort'
       <*> distance'
@@ -249,15 +259,20 @@ chooseFitnessForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (Fo
 chooseFitnessForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
+    mRender <- getMessageRender
     let render = renderCaminoMsg (caminoAppConfig master) locales
+    let  easyField =  extendedCheckboxField (toHtml . mRender) MsgEasyMode (Just MsgEasyModeText)
     let  travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let  fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let  comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
+    (emRes, emView) <- mreq easyField "" (prefEasyMode <$> prefs)
     (trRes, trView) <- mreq travelField (fieldSettingsLabel MsgSelectTravel) (prefTravel <$> prefs)
     (fRes, fView) <- mreq fitnessField (fieldSettingsLabel MsgSelectFitness) (prefFitness <$> prefs)
     (cRes, cView) <- mreq comfortField (fieldSettingsLabel MsgSelectComfort) (prefComfort <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
+      resEasyMode = emRes,
+      viewEasyMode = emView,
       resTravel = trRes,
       viewTravel = trView,
       resFitness = fRes,
@@ -268,6 +283,10 @@ chooseFitnessForm help prefs extra = do
     let res = makePreferenceData master fields
     let widget = [whamlet|
       #{extra}
+      $with view <- viewEasyMode fields
+        <div .row .mb-3>
+          <div .col>
+            ^{fvInput view}
       $with view <- viewTravel fields
         <div .row .mb-3>
           <div .col>
@@ -338,6 +357,7 @@ chooseRangeForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -419,6 +439,7 @@ chooseServicesForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -463,6 +484,7 @@ chooseCaminoForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -515,6 +537,7 @@ chooseRoutesForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -592,6 +615,7 @@ chooseStartForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -665,6 +689,7 @@ chooseStopsForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
@@ -697,6 +722,7 @@ confirmPreferencesForm _help prefs extra = do
     let res = makePreferenceData master fields
     let widget = [whamlet|
       #{extra}
+      ^{fvInput (viewEasyMode fields)}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewTravel fields)}
       ^{fvInput (viewPrevFitness fields)}

@@ -51,6 +51,7 @@ data PreferenceStep =
   | StartStep
   | StopsStep
   | ShowPreferencesStep
+  | PlanStep
   deriving (Eq, Ord, Enum, Bounded, Show, Read)
 
 homeP :: Handler Html
@@ -154,29 +155,39 @@ getHomeR = do
 
 postPlanR :: Handler Html
 postPlanR = do
-  ((result, widget), enctype) <- runFormPost $ (stepForm ShowPreferencesStep blankHelp) Nothing
-  case result of
-      FormSuccess prefs -> do
-         encodePreferences prefs
-         planPage prefs
-      FormFailure errs -> do
-        setMessage [shamlet|
-          $forall err <- errs
-            <div .text-danger>#{err}
-        |]
-        stepPage ShowPreferencesStep Nothing blankHelp widget enctype
-      _ ->
-        getHomeR
+  stepp <- lookupPostParam "_step"
+  case maybe Nothing (readMaybe . unpack) stepp of
+    Just step' -> do
+      ((result, widget), enctype) <- runFormPost $ (stepForm step' blankHelp) Nothing
+      case result of
+          FormSuccess prefs -> do
+             encodePreferences prefs
+             planPage prefs
+          FormFailure errs -> do
+            setMessage [shamlet|
+              $forall err <- errs
+                <div .text-danger>#{err}
+            |]
+            stepPage ShowPreferencesStep PlanStep Nothing blankHelp widget enctype
+          _ ->
+            getHomeR
+    _ ->
+      invalidArgs ["Bad preferences step"]
 
 postPlanKmlR :: Handler TypedContent
 postPlanKmlR = do
-  ((result, _widget), _enctype) <- runFormPost $ (stepForm ShowPreferencesStep blankHelp) Nothing
-  case result of
-      FormSuccess prefs -> do
-         encodePreferences prefs
-         planKml prefs
-      _ ->
-        invalidArgs ["Bad preferences data"]
+  stepp <- lookupPostParam "_step"
+  case maybe Nothing (readMaybe . unpack) stepp of
+    Just step' -> do
+      ((result, _widget), _enctype) <- runFormPost $ (stepForm step' blankHelp) Nothing
+      case result of
+          FormSuccess prefs -> do
+             encodePreferences prefs
+             planKml prefs
+          _ ->
+            invalidArgs ["Bad preferences data"]
+    _ -> do
+      invalidArgs ["Bad preferences step"]
 
 
 getPreferencesR :: Handler Html
@@ -186,35 +197,37 @@ getPreferencesR = do
     let prefs' = Just $ maybe (defaultPreferenceData master) id prefs
     (embedded, help) <- helpPopup FitnessStep
     ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm embedded prefs'
-    stepPage FitnessStep Nothing help widget enctype
+    stepPage FitnessStep RangeStep Nothing help widget enctype
 
 postPreferencesR :: Handler Html
 postPreferencesR = do
   stepp <- lookupPostParam "_step"
   nextp <- lookupPostParam "_next"
   let step' = maybe Nothing (readMaybe . unpack) stepp
-  let next' = maybe FitnessStep id $ maybe Nothing (readMaybe . unpack) nextp
   case step' of
     Nothing ->
       getPreferencesR
     Just step'' ->
-      nextStep step'' next'
+      nextStep step'' nextp
 
-nextStep :: PreferenceStep -> PreferenceStep -> Handler Html
-nextStep stepp nextp = do
+nextStep :: PreferenceStep -> Maybe Text -> Handler Html
+nextStep stepp dir = do
   (embedded, help) <- helpPopup stepp
   ((result, widget), enctype) <- runFormPost $ (stepForm stepp embedded) Nothing
   case result of
       FormSuccess prefs -> do
-         (embedded', help') <- helpPopup nextp
-         (widget', enctype') <- generateFormPost $ (stepForm nextp embedded') (Just prefs)
-         stepPage nextp (Just prefs) help' widget' enctype'
+        let easy = prefEasyMode prefs
+        let nextp = if maybe False (== "next") dir then stepForward easy stepp else stepBackward easy stepp
+        let nextp' = stepForward easy nextp
+        (embedded', help') <- helpPopup nextp
+        (widget', enctype') <- generateFormPost $ (stepForm nextp embedded') (Just prefs)
+        stepPage nextp nextp' (Just prefs) help' widget' enctype'
       FormFailure errs -> do
         setMessage [shamlet|
           $forall err <- errs
             <div .text-danger>#{err}
         |]
-        stepPage stepp Nothing help widget enctype
+        stepPage stepp (stepForward True stepp) Nothing help widget enctype
       _ ->
         getHomeR
 
@@ -227,36 +240,60 @@ stepForm RoutesStep help prefs = chooseRoutesForm help prefs
 stepForm StartStep help prefs = chooseStartForm help prefs
 stepForm StopsStep help prefs = chooseStopsForm help prefs
 stepForm ShowPreferencesStep help prefs = confirmPreferencesForm help prefs
+stepForm PlanStep help prefs = confirmPreferencesForm help prefs -- Shouldn't end up here, so go and confirm it
 
-stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> PreferenceStep -> Widget -> Widget -> Enctype -> Handler Html
-stepPage' title top bottom stepp prevp nextp help widget enctype = do
+stepForward :: Bool -> PreferenceStep -> PreferenceStep
+stepForward False FitnessStep = RangeStep
+stepForward True FitnessStep = CaminoStep
+stepForward _ RangeStep = ServicesStep
+stepForward _ ServicesStep = CaminoStep
+stepForward _ CaminoStep = RoutesStep
+stepForward _ RoutesStep = StartStep
+stepForward False StartStep = StopsStep
+stepForward True StartStep = PlanStep
+stepForward _ StopsStep = ShowPreferencesStep
+stepForward _ ShowPreferencesStep = PlanStep
+stepForward _ PlanStep = ShowPreferencesStep
+
+stepBackward :: Bool -> PreferenceStep -> PreferenceStep
+stepBackward _ FitnessStep = FitnessStep
+stepBackward _ RangeStep = FitnessStep
+stepBackward _ ServicesStep = RangeStep
+stepBackward False CaminoStep = ServicesStep
+stepBackward True CaminoStep = FitnessStep
+stepBackward _ RoutesStep = CaminoStep
+stepBackward _ StartStep = RoutesStep
+stepBackward _ StopsStep = StartStep
+stepBackward _ ShowPreferencesStep = StopsStep
+stepBackward _ PlanStep = ShowPreferencesStep
+
+stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> Maybe Widget -> Widget -> Widget -> Enctype -> Handler Html
+stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
   defaultLayout $ do
     setTitleI title
     toWidget help
     $(widgetFile "step")
 
-stepPage :: PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
-stepPage FitnessStep _ help widget enctype = stepPage' MsgFitnessTitle MsgFitnessText (Just MsgFitnessBottom) FitnessStep FitnessStep RangeStep help widget enctype
-stepPage RangeStep _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing RangeStep FitnessStep ServicesStep help widget enctype
-stepPage ServicesStep _ help widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing ServicesStep RangeStep CaminoStep help widget enctype
-stepPage CaminoStep _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing CaminoStep ServicesStep RoutesStep help widget enctype
-stepPage RoutesStep _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing RoutesStep CaminoStep StartStep help widget enctype
-stepPage StartStep _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing StartStep RoutesStep StopsStep help widget enctype
-stepPage StopsStep _ help widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing StopsStep StartStep ShowPreferencesStep help widget enctype
-stepPage ShowPreferencesStep (Just prefs) help widget enctype = let
-    preferences = travelPreferencesFrom prefs
-    camino = caminoPreferencesFrom prefs
-  in
-    defaultLayout $ do
-      master <- getYesod
-      locales <- getLocales
-      let config = caminoAppConfig master
-      let router = renderCaminoRoute config locales
-      let messages = renderCaminoMsg config locales
-      setTitleI MsgShowPreferencesTitle
-      toWidget help
-      $(widgetFile "show-preferences")
-stepPage ShowPreferencesStep _ help widget enctype = stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing ShowPreferencesStep StopsStep ShowPreferencesStep help widget enctype
+stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
+stepPage FitnessStep nextp _ help widget enctype = stepPage' MsgFitnessTitle MsgFitnessText1 (Just MsgFitnessText2) (Just MsgFitnessBottom) FitnessStep nextp Nothing help widget enctype
+stepPage RangeStep nextp _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
+stepPage ServicesStep nextp _ help widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing Nothing ServicesStep nextp Nothing help widget enctype
+stepPage CaminoStep nextp _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
+stepPage RoutesStep nextp _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
+stepPage StartStep nextp _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing Nothing StartStep nextp Nothing help widget enctype
+stepPage StopsStep nextp _ help widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing Nothing StopsStep nextp Nothing help widget enctype
+stepPage ShowPreferencesStep nextp (Just prefs) help widget enctype = do
+    master <- getYesod
+    locales <- getLocales
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
+    let preferences = travelPreferencesFrom prefs
+    let camino = caminoPreferencesFrom prefs
+    let display = toWidget $ (preferencesHtml False preferences camino) messages router
+    stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing Nothing ShowPreferencesStep nextp (Just display) help widget enctype
+stepPage ShowPreferencesStep nextp _ help widget enctype = stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing Nothing ShowPreferencesStep nextp Nothing help widget enctype
+stepPage PlanStep nextp prefs help widget enctype = stepPage ShowPreferencesStep nextp prefs help widget enctype
 
 
 -- For use where a help widget is required but not present

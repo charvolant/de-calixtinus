@@ -12,9 +12,12 @@ CaminoTitle: Select Camino
 CloseLabel: Close
 DayServicePreferencesLabel: Preferred Services during Day
 DistancePreferencesLabel: Distance Preferences (km)
+EasyMode: Easy Mode
+EasyModeText: Easy mode reduces the number of choices that you have to make and chooses sensible defaults for most things.
 ExcludedLabel: Locations not to stop at
 FinishLocationLabel: Trip End
-FitnessText: To begin with, choose the way you intend to travel. Then choose the level of fitness that you have.
+FitnessText1: To begin with, choose the way you intend to travel. Then choose the level of fitness that you have.
+FitnessText2: Easy mode allows you to fill out a few fields about your travel style and which routes you want to travel. Sensible defaults are then used for things like daily distance, accommodation preferences, must-see stops and the like. Detailed mode allows you to fine-tune your preferences in terms of distance, accommodation, where to stop. However, the detail can be quite complex. Use easy mode to start with and then uncheck this box to allow more detail once you are familiar with the system.
 FitnessBottom: Be careful with fitness. Normal is normal for a young walker with plenty of training; someone who can walk three hours at 5km/hr without tiring. If you have any doubts, choose Unfit.
 FitnessTitle: Travel Style and Fitness
 ForbiddenStopsLabel: Forbidden Stops

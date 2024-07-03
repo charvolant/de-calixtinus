@@ -1,3 +1,15 @@
+<h2 #easy-mode-help>Easy Mode
+
+<p>
+  The full camino planner allows a lot of room for precisely describing your preferences in terms of
+  \ distance travelled, the sort of comfort you want at the end of the day, special locations and on and on and on.
+  \ This can be a bit overwhelming for a first-time user.
+
+<p>
+  Easy mode takes basic information about how fit you are and what comfort levels you want, the Camino you want
+  \ to walk and uses sensible defaults for other parameters.
+  \ Once you have a plan, you can refine it by turning easy mode off and exploring other options in more detail.
+
 <h2 #travel-help>Travel Types
 
 <p>

@@ -2,7 +2,14 @@
   <div .row .m-5>
     <div .col>
       <p>
-        _{top}
+        _{top1}
+      $maybe top <- top2
+        <p>
+          _{top}
+  $maybe dw <- display
+    <div .row .m-5>
+      <div .col>
+        ^{dw}
   <div .row .justify-content-center>
     <div .col-10>
       <form .container-fluid method=post action=@{PreferencesR} enctype="#{enctype}">
@@ -10,9 +17,18 @@
         <input type=hidden name="_step" value="#{show stepp}">
         <div .btn-toolbar .justify-content-between>
           <div .btn-group>
-            <button type="submit" name="_next" value="#{show prevp}" .btn .btn-secondary>_{MsgBackLabel}
+            <button type="submit" name="_next" value="back" .btn .btn-secondary>_{MsgBackLabel}
           <div .btn-group>
-            <button type="submit" name="_next" value="#{show nextp}" .btn .btn-primary>_{MsgNextLabel}
+            $if nextp == PlanStep
+              <div .btn-group>
+                <button type="submit" name="_generate" formaction="@{PlanKmlR}" onclick="showWorking('plan-kml-spinner');" .btn .btn-outline-secondary title="_{MsgPlanKmlTitle}">
+                  <span #plan-kml-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
+                  _{MsgPlanKmlLabel}
+                <button type="submit" name="_generate" formaction="@{PlanR}" onclick="showWorking('plan-spinner');" .btn .btn-primary title="_{MsgPlanTitle}">
+                  <span #plan-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
+                  _{MsgPlanLabel}
+            $else
+              <button type="submit" name="_next" value="next" .btn .btn-primary>_{MsgNextLabel}
   $maybe bot <- bottom
     <div .row .m-5>
       <div .col>

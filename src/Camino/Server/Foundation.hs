@@ -164,7 +164,8 @@ data CaminoApp = CaminoApp {
 }
 
 data PreferenceData = PreferenceData {
-    prefTravel :: Travel -- ^ The travel mode
+    prefEasyMode :: Bool -- ^ Use easy preferences
+  , prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
   , prefComfort :: Comfort -- ^ The comfort level
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
@@ -183,6 +184,7 @@ data PreferenceData = PreferenceData {
 
 instance FromJSON PreferenceData where
    parseJSON (Object v) = do
+      easy' <- v .:? "easy" .!= True
       travel' <- v .: "travel"
       fitness' <- v .: "fitness"
       comfort' <- v .: "comfort"
@@ -205,7 +207,8 @@ instance FromJSON PreferenceData where
       let stops'' = S.map placeholder stops'
       let excluded'' = S.map placeholder excluded'
       return PreferenceData {
-          prefTravel = travel'
+          prefEasyMode = easy'
+        , prefTravel = travel'
         , prefFitness = fitness'
         , prefComfort = comfort'
         , prefDistance = distance'
@@ -226,7 +229,8 @@ instance FromJSON PreferenceData where
 instance ToJSON PreferenceData where
     toJSON prefs =
       object [
-          "travel" .= prefTravel prefs
+          "easy" .= prefEasyMode prefs
+        , "travel" .= prefTravel prefs
         , "fitness" .= prefFitness prefs
         , "comfort" .= prefComfort prefs
         , "distance" .= prefDistance prefs
@@ -253,7 +257,8 @@ defaultPreferenceData master = let
     dcp = defaultCaminoPreferences camino'
   in
     PreferenceData {
-        prefTravel = travel'
+        prefEasyMode = True
+      , prefTravel = travel'
       , prefFitness = fitness'
       , prefComfort = comfort'
       , prefDistance = preferenceDistance dtp

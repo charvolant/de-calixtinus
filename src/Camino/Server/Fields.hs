@@ -104,7 +104,7 @@ extendedRadioFieldList render options = extendedRadioFieldList' (renderOptions r
 -- | Create a checkbox with additional explanation
 extendedCheckboxField :: (msg -> Html) -- ^ The render function. Because basically composing monads makes my brain drop out
   -> msg -- ^ The label associated with the checkbox
-  -> Maybe msg -- ^ The possible options for the radio list, with a key (identifier), label, value and optional description
+  -> Maybe msg -- ^ The an optional explanation of the checkbox
   -> Field (HandlerFor site) Bool -- ^ The resulting field
 extendedCheckboxField render label mexp = Field
     { fieldParse = \e _ -> return $ checkBoxParser e

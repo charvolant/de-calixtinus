@@ -659,10 +659,10 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
       <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
         <div .container-fluid>
           <div .row>
-            <h5 .col-5>
+            <h5 .col-4>
               ^{caminoLocationTypeIcon (locationType location)}
               _{Txt (locationName location)}
-            <div .col-2 .services>
+            <div .col-3 .services>
               $forall service <- locationServices location
                 ^{caminoServiceIcon service}
             <div .col-2 .accommodation-types>

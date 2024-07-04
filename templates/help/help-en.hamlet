@@ -27,6 +27,10 @@
               <a .nav-link .active href="#services-help">Services
             <li .nav-item>
               <a .nav-link .active href="#accommodation-help">Accommodation
+            <li .nav-item>
+              <a .nav-link .active href="#poi-help">Points of Interest
+            <li .nav-item>
+              <a .nav-link .active href="#event-help">Events
         <li .nav-item>
           <a .nav-link .active href="#travel-help">Travel
         <li .nav-item>
@@ -79,6 +83,11 @@
   long and miserable or short and frustrating days the pilgrim has to walk.
 
 <p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    If you choose <em>Easy Mode</em> then the screens will be abbreviated.
+    The default preferences that you have made in terms of stop location and accommodation, desired services and
+    "must see" stops will be displayed on the Preferences tab, so you can see what has been chosen for you.
+
   When you start using the planner, you will be guided through a series of screens that allow you to specify
   your preferences.
   If you have previously specified some preferences, the screens will be set to your previous preferences.
@@ -570,77 +579,137 @@
   <a href="#stage-help">plan
   An example location is
 
-<div .card ..border .border-info .m-2 .p-2>
+<div .card .border .border-info .m-2 .p-2>
   <div .accordion .container-fluid>
     <div .row>
-      <div .accordion-item .location-default .location-stop .location #P119">
+      <div .accordion-item .location-P-RP .location-waypoint .location #P-P109>
         <div .accordion-header>
-          <div .row>
-            <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-P119" aria-expanded="false" aria-controls="location-body-P119">
-              <h5 .col-6>
-                <span .location-type .ca-town">
-                Oliveira de Azeméis
-              <div .col .services>
-                <span .service .ca-restaurant">
-                <span .service .ca-bank">
-                <span .service .ca-bicycle-repair">
-                <span .service .ca-groceries">
-                <span .service .ca-medical">
-                <span .service .ca-trail">
-                <span .service .ca-bus">
-              <div .col .accommodation-types>
-                <span .accommodation .hotel .ca-hotel>
-          <div .accordion-collapse .collapse" #location-body-P119 aria-labelledby="location-heading-P119" data-parent="#locations">
-            <div .accordion-body .container-fluid>
+          <button .accordion-button data-bs-toggle="collapse" data-bs-target="#location-body-P-P109" aria-expanded="true" aria-controls="location-body-P-P109">
+            <div .container-fluid>
               <div .row>
-                <div .col>
-                <div .col-2 .float-end>
-                  <button .btn .btn-primary .btn-sm onclick="">
-                    <span .ca-globe>
-              <div .row>
-                <div .col>
-                  <h6>Accommodation
-              <div .row .accommodation>
-                <div .offset-1 .col-5>
-                  <span .accommodation .hotel .ca-hotel>
-                  Hotel Dighton
-                  <span .best-accommodation .chosen-accomodation>
-                    <span .best-accommodation-penance>+<span .penance">0.4 km</span>
-                <div .col-4>
-                  <span .service .ca-wifi>
-                  <span .service .ca-restaurant>
-                  <span .service .ca-breakfast>
-                  <span .service .ca-accessible>
-                  <span .service .ca-bicycle-storage>
-                  <span .service .ca-bedlinen>
-                  <span .service .ca-towels>
-                  <span .service .ca-heating>
-                <div .col-2>
-                  <span .sleeping .ca-bed-single>
-                  <span .sleeping .ca-bed-double-wc>
-                  <span .sleeping .ca-bed-triple>
-                  <span .sleeping .ca-bed-quadruple>
-              <div .row>
-                <div .col>
-                  <h6>Route
-              <div .row>
-                <div .col .text-start .my-auto>
-                  <ul>
-                    <li .leg-to .leg-line .leg-used>
-                      <a href="#">Póvoa (Travaca)
-                      <span .leg-type>
-                      <span .leg-distance>3.0km
-                      <span .leg-ascent>105m
-                      <span .leg-descent>40m
-                <div .col .text-center .my-auto>Oliveira de Azeméis
-                <div .col .text-end .my-auto>
-                  <ul>
-                    <li .leg-to .leg-line .leg-used>
-                      <a href="#">Santiago de Riba-Ul
-                      <span .leg-type>
-                      <span .leg-distance>2.3km
-                      <span .leg-ascent>20m
-                      <span .leg-descent>70m
+                <h5 .col-5>
+                  <span .location-type .ca-town title="Town">
+                  Albergaria-a-Velha
+                <div .col-2 .services>
+                  <span .service .ca-restaurant title="Restaurant">
+                  <span .service .ca-pharmacy title="Pharmacy">
+                  <span .service .ca-bank title="Bank">
+                  <span .service .ca-bicycle-repair title="Bicycle Repair">
+                  <span .service .ca-groceries title="Groceries">
+                  <span .service .ca-medical title="Medical">
+                  <span .service .ca-train" title="Train">
+                  <span .service .ca-bus title="Bus">
+                <div .col-2 .accommodation-types>
+                  <span .accommodation .municipal-albergue .ca-albergue title="Pilgrim Albergue">
+                  <span .accommodation .private-albergue .ca-albergue title="Private Albergue">
+                  <span .accommodation .house .ca-house" title="House">
+                  <span .accommodation .hotel .ca-hotel" title="Hotel">
+                <div .col-2 .poi-types>
+                  <span .location-type .ca-statue title="Statue">
+                <div .col-1>
+                  <div .text-end>
+                    <a href="#" .show-on-map>
+                      <span .ca-globe title="Show on map">
+        <div .accordion-collapse .collapse .show #location-body-P-P109 aria-labelledby="location-heading-P-P109" data-parent="#locations">
+          <div .accordion-body .container-fluid>
+            <div .row>
+              <div .col .text-start .my-auto>
+                <ul>
+                  <li .leg-to .leg-line .leg-used">
+                    <a href="#">Serém de Cima
+                    <div .d-inline-block>
+                      <span .leg-type title="Road/path">
+                      <span .leg-distance>5.2km
+                      <span .leg-ascent>25m
+              <div .col .text-end .my-auto>
+                <ul>
+                  <li .leg-to .leg-line .leg-used>
+                    <a href="#">Urgueiras
+                    <div .d-inline-block>
+                      <span .leg-type title="Road/path">
+                      <span .leg-distance>1.7km
+                      <span .leg-ascent>35m
+            <div .row>
+              <div .col>
+                <h6 .pt-3>Accommodation
+            <div .row .accommodation>
+              <div .offset-1 .col-5>
+                <span .accommodation .municipal-albergue .ca-albergue title="Pilgrim Albergue">
+                Rainha D. Teresa Pilgrims Hostel
+                <span .best-accommodation>
+              <div .col-4>
+                <span .service .ca-wifi title="WiFi">
+                <span .service .ca-handwash title="Handwash">
+                <span .service .ca-kitchen title="Kitchen">
+                <span .service .ca-accessible title="Accessible">
+                <span .service .ca-stables title="Stables">
+                <span .service .ca-bicycle-storage title="Bicycle Storage">
+                <span .service .ca-heating title="Heating">
+              <div .col-2>
+                <span .sleeping .ca-shared title="Shared">
+            <div .row .accommodation>
+              <div .offset-1 .col-5>
+                <span .accommodation .private-albergue .ca-albergue title="Private Albergue">
+                Estalagem dos Padres
+              <div .col-4>
+                <span .service .ca-wifi title="WiFi">
+                <span .service .ca-kitchen title="Kitchen">
+                <span .service .ca-bedlinen title="Bedlinen">
+                <span .service .ca-towels title="Towels">
+                <span .service .ca-heating title="Heating">
+              <div .col-2>
+                <span .sleeping .ca-shared title="Shared">
+                <span .sleeping .ca-bed-double-wc title="Double with WC">
+            <div .row .accommodation>
+              <div .offset-1 .col-5>
+                <span .accommodation .house .ca-house title="House">
+                Estúdio Albergaria
+              <div .col-4>
+                <span .service .ca-wifi title="WiFi">
+                <span .service .ca-bicycle-storage title="Bicycle Storage">
+                <span .service .ca-bedlinen title="Bedlinen">
+                <span .service .ca-towels title="Towels">
+                <span .service .ca-heating title="Heating">
+              <div .col-2>
+                <span .sleeping .ca-bed-double-wc title="Double with WC">
+            <div .row .accommodation>
+              <div .offset-1 .col-5>
+                <span .accommodation .hotel .ca-hotel title="Hotel">
+                Ribeirotel
+              <div .col-4>
+                <span .service .ca-wifi title="WiFi">
+                <span .service .ca-accessible title="Accessible">
+                <span .service .ca-bedlinen title="Bedlinen">
+                <span .service .ca-towels title="Towels">
+                <span .service .ca-heating title="Heating">
+              <div .col-2>
+                <span .sleeping .ca-bed-double-wc title="Double with WC">
+            <div .row .accommodation>
+              <div .offset-1 .col-5>
+                <span .accommodation .hotel .ca-hotel title="Hotel">
+                Hotel Alameda
+              <div .col-4>
+                <span .service .ca-wifi title="WiFi">
+                <span .service .ca-accessible title="Accessible">
+                <span .service .ca-bedlinen title="Bedlinen">
+                <span .service .ca-towels title="Towels">
+                <span .service .ca-heating title="Heating">
+              <div .col-2>
+                <span .sleeping .ca-bed-single title="Single">
+                <span .sleeping .ca-bed-double-wc title="Double with WC">
+            <div .row>
+              <div .col>
+                <h6 .pt-3>Points of Interest
+            <div .row>
+              <div .card .g-0>
+                <div .card-header>
+                  <span .poi-types>
+                    <span .location-type .ca-statue title="Statue">
+                  <span lang="en">Statue of Queen Teresa
+                  <a href="#" .description-icon .float-end >
+                    <span .ca-globe. title="Show on map">
+                <div .card-body>
+                  <span lang="en">Albergaria-a-Velha, as the name suggests, was established by Queen Teresa to provide an albergue for pilgrims.
 
 <p>
   The first element on the header is an icon showing the type of location, followed by the name.
@@ -660,6 +729,27 @@
   that the location offers.
   There is usually a more detailed list of accommodation options available if you open the location.
 
+<p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    Points of interest that are between locations are generally associated with the departure location,
+    rather than the arrival location, so that you can see what is coming up.
+    This rule is broken any time it looks obviously silly.
+
+  The next element shows the types of any
+  <a href="#poi-help">points of interest
+  or
+  <a href="#event-help">events
+  that the location offers.
+  There is usually a more detailed list of points of interest and events available if you open the location.
+
+<p>
+  Finally, clicking on the globe
+  <span .ca-globe>
+  will show the location on the map.
+  If there is a link
+  <span .ca-link">
+  then clicking on the link will take you to a web page with more information.
+
 <h4 #location-detail-help>Location Detail
 
 <p>
@@ -667,14 +757,12 @@
   location.
 
 <p>
-  The
-  <button .btn .btn-primary .btn-sm onclick="">
-    <span .ca-globe>
-  \ button will take you to the location on the map.
-  If there is a figure, such as
-  <span .chosen-location><span .chosen-location-penance>+<span class=.penance>1.4 km
-  , beside the map button, it indicates that there is a better location nearby; the figure
-  gives the extra penance associated with staying in this location, rather than going to the nearby location.
+  The routes list gives what
+  <a href="#travel-help"> travel
+  legs lead in to the location and then out of the location and on to the next location.
+  Clicking on the location name will take you to the previous/next location.
+  There is usually only one leg available, unless the path forks into alternative routes or
+  large scale variants.
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
@@ -696,12 +784,11 @@
   Be prepared for some extra walking to get there.
 
 <p>
-  The routes list gives what
-  <a href="#travel-help"> travel
-  legs lead in to the location and then out of the location and on to the next location.
-  Clicking on the location name will take you to the previous/next location.
-  There is usually only one leg available, unless the path forks into alternative routes or
-  large scale variants.
+  If there are any points of interest or special events, there will be a list of
+  <a href="#poi-help">points of interest
+  and
+  <a href="#event-help">events.
+  These may contain more information about what is on offer, how to get there, opening hours etc.
 
 <h4 #services-help>Services
 
@@ -747,6 +834,88 @@
   Then that indicates that there is a better option nearby, with the number giving a sense of the combination
   of how much better and how far away that other option is.
   (See <a href="#accommodation-penance">above</a> for more information.)
+
+<h4 #poi-help>Points of Interest
+
+<p>
+   Points of interest are things that might be of interest to the pilgrim during their travels.
+   They are things like museums, historical sites, religious buildings, art works, warnings about
+   dangerous or difficult stretches, alternative routes and so on.
+
+<p>
+  Points of interest are marked on the map with a blue colour, for example
+  <span .poi-types>
+    <span .location-type .ca-cathedral>
+  Points of interest are associated with nearby locations and details appear as part of the location information.
+  Clicking on a point of interest on the map will take you to the relevant location.
+
+<p>
+  An example point of interest is
+  
+<div .card .m-2>
+  <div .card-header>
+    <span .poi-types>
+      <span .location-type .ca-museum title="Museum or gallery">
+    <span lang="es">Museo de la Evolución Humana
+    <a .description-icon .float-end href="#">
+      <span .ca-globe" title="Show on map">
+    <a .description-icon .about .float-end href="https://www.museoevolucionhumana.com/">
+      <span .ca-link>
+  <div .card-body>
+    <div .float-end .mx-1 .hours>
+      <span .description-icon .ca-clock" title="Open Hours">
+      <ol .comma-list .open-hours-list>
+        <li>1000 - 1430
+        <li>1630 - 2000
+    Museum with displays on human evolution &amp; the nearby Atapuerca fossil site.
+
+<p>
+  This shows the type and name of the point of interest at the top, followed by a link to more information and
+  a globe that will show the point of interest on the map.
+  Underneath the headline is a brief description and the museum's opening hours.
+
+<p>
+  Opening hours are marked with a
+  <span .description-icon .ca-clock>
+  symbol.
+  Places that do not open every day have the days or months open marked with a
+  <span .description-icon .ca-calendar>
+  symbol.
+
+<p>
+  There may also be additional notes attached, with
+  <span .description-icon .ca-information>
+  <span .description-icon .ca-warning>
+  <span .description-icon .ca-map>
+  indicating additional information, a warning of some sort or directions.
+
+<h3 #event-help>Events
+
+<p>
+  Some points or interest or locations have events associated with them.
+  An example of a church that has a special pilgrims' mass every Sunday at 1830 (6:30 pm) is
+  
+<div .card .m-2>
+  <div .card-header>
+    <span .poi-types>
+      <span .location-type .ca-church title="Church">
+    <span lang="es">Iglesia Sanjuanista
+    <a .description-icon .float-end href="#">
+      <span .ca-globe title="Show on map">
+  <div .card-body>
+    <div .row .clearfix .event .event-pilgrimmass>
+      <div .col>
+        <span poi-types>
+          <span .event-type .event-pilgrimmass .ca-altar title="Pilgrim's Mass">
+        <span lang="en">Pilgrim's Mass and Blessing
+        <div .float-end .mx-1 .hours>
+          <span .description-icon .ca-clock title="Open Hours">
+          <ol .comma-list .open-hours-list>
+            <li>1830 - 1930
+        <div .float-end .mx-1 .calendar>
+          <span .description-icon .ca-calendar title="Calendar">
+          <ol .comma-list days-of-week-list">
+            <li>Sun
 
 
 <h3 #travel-help>Travel
@@ -809,10 +978,19 @@
 <h2 #glossary-help>Glossary
 
 <dl>
+  <dt>Accommodation
+  <dd>
+    A place to stay, recover and sleep at then end of a day.
+    Accommodation can be anything from a tent on the wayside to a 5-star hotel.
+    <a href="accommodation-help">More
   <dt>Day
   <dd>
     A day's walking, sometimes also called a stage.
     A day will start from the last day's end, pass through a number locations and stop at a final location.
+  <dt>Event
+  <dd>
+    An occasion associated with a particular location or point of interest, such as a special mass for pilgrims.
+    <a href="#event-help">More
   <dt>Location
   <dd>
     A waypoint on the Camino.
@@ -832,12 +1010,21 @@
     what sort of services you would like to use throughout the day and so on is converted into a "penance"
     measured in terms of kilometres walked.
     <a href="#penance-help">More
+  <dt>Point of Interest
+  <dd>
+    A location that isn't part of the location waypoints, which are usually towns and villages, but which
+    might be of interest to a pilgrim.
+    <a href="#poi-help">More
   <dt>Preferences
   <dd>
     Your preferences as a walker in terms of how far and how long you would like to walk each day,
     what sort of services you will need along the way, what sort of accommodation you would prefer to stay in
     at the end of the day, and so on.
     <a href="#preferences-help">More
+  <dt>Route
+  <dd>
+    A variant route on a larger Camino.
+    For example, the coastal route on the Camino Portuguese diverts from the main route and follows the Atlantic coast.
   <dt>Service
   <dd>
     Something that you might need to use, such as an ATM for getting cash, a restaurant for eating or a washing machine.

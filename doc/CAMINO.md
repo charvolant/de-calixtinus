@@ -1,12 +1,23 @@
 # Camino File Format
 
+* [Metadata](#metadata)
+* [Localisation](#localisation)
+  * [Supported Languages](#supported-languages)
+  * [Tagged Text](#tagged-text)
+  * [Localised Text](#localised-text)
+  * [Localised URLs](#localised-urls)
+* [Description](#description)
+  * [Images](#images)
+  * [Notes](#notes)
+  * [Calendar and Times](#calendar-and-times)
 * [Header](#header)
   * [Identifiers and References](#identifiers-and-references)
-  * [Metadata](#metadata)
 * [Locations](#locations)
   * [Types, Services, etc.](#types-services-etc)
   * [Accommodation](#accommodation)
     * [Generic Accommodation](#generic-accommodation)
+  * [Points of Interest](#points-of-interest)
+  * [Events](#events)
 * [Legs](#legs)
 * [Routes](#routes)
 * [Route Logic](#route-logic)
@@ -58,36 +69,12 @@ are redundant.
 The consequences of multiple routes can get very complicated and the [logic](#route-logic)
 helps untangle what's in, what's out and where you can go.
 
-## Header
 
-The header contains descriptive information about the camino
+## Metadata
 
-* `id` The camino identifier. See [below](#identifiers-and-references)
-* `name` A short name for the camino. **TBD** Localised variants
-* `description` Descriptive information about the camino. 
-  **TBD** More structured information and localised variants.
-* `metadata` See [below](#metadata)
-
-### Identifiers and References
-
-Most significant parts of the camino have an identifier, given by the `id` JSON field.
-*Identifiers must be globally unique,* since users may mix up preferences across multiple  caminos.
-The convention used in the supplied file is to have a single identifier for the camino
-itself and then this is used as a prefix for the location and route identifiers.
-For example, if the identifier of the camino is "F" then the identifier for a location
-might be "F-M001" with the "F-" prefix ensuring that another camino doesn't have the same
-location identifier.
-
-In most cases, once a location or route has been defined, it can be referred to elsewhere
-by its identifier.
-So, for example, if a route wants to list the location above, it simply needs to put
-"F-M001", not repeat the location information.
-The camino parser will sort out all the references when it reads the file.
-
-### Metadata
-
-Metadata contains information about the camino file itself.
-In general, it allows you to encode information about the file, what it is for,
+Metadata contains information about the camino file itself, or things like
+images that need appropriate attribution.
+In general, it allows you to encode information about the something, what it is for,
 where it came from, how current it is, etc. in a form corresponding to standards
 such as [Dublin Core](https://www.dublincore.org/)
 An example metadata entry is
@@ -134,6 +121,8 @@ Terms in metadata statements are (preferably resolvable) URIs.
 The `namespaces` section allows you to define prefixes for these URIs so that you
 do not have to write out the entirety of a term.
 On the above example, `dcterms:modified` corresponds to `http://purl.org/dc/terms/modified`
+The `dc:` and `dcterms:` namespaces are automatically included and do not need to
+be declared.
 
 The `statements` section is just a list of metadata terms and their values.
 The `term` and `value` entries must be present.
@@ -141,6 +130,288 @@ An optional `lang` field allows you to specify the language the value is in.
 
 You can have multiple statements all using the same term.
 For example, multiple source statements are perfectly sensible.
+
+## Localisation
+
+Many parts of a camino file can be localised, with different names and descriptions
+appearing depending on the requested languages.
+
+### Supported Languages
+
+| Language   | Code | Messages | Camino | Date & Time |
+|------------|------|----------|--------| --- |
+| Basque     | eu   | N | N      | Y |
+| English    | en   | Y        | Y      | Y |
+| French     | fr   | N | N      | Y |
+| Gallacian  | ga   | N | Y      | Y |
+| Portuguese | pt   | N        | Y      | Y |
+| Spanish    | es   | N        | Y      | Y |
+
+Not all languages are fully supported.
+Messages mean that labels and text on the web pages can be expressed in the requested language.
+Languages supported on the Camino means that there are some names, descriptions etc.
+specifically in a Camino file.
+Date & Time means that months and days of the week have language-specific versions.
+
+### Tagged Text
+
+The key element for localisation is a piece of *tagged text* where a language-tag
+of the form "@code" at the end of the text denotes the language.
+For example,
+`mystery number one@en` is in English and
+`misterio número uno@es` is in Spanish.
+
+If there is no tag, then the tag is assumed to be the universal tag `*`.
+
+### Localised Text
+
+Tagged text can be grouped together to provide localisable variants by using a
+JSON list.
+For example:
+
+```json
+{
+  "name": [
+    "Lisboa@pt",
+    "Lisbon@en"
+  ]
+}
+```
+
+means that the name is *Lisboa* in Portuguese and *Lisbon* in English.
+
+If there is no matching language, then the first element of the list is chosen.
+Note that including an entry with a universal tag will always match a requested language.
+
+If there is only one entry, then a string can be used instead of an array.
+For example,
+
+```json
+"name": "Statue of King Denis I@en"
+```
+
+and
+
+```json
+"name": [
+  "Statue of King Denis I@en"
+]
+```
+
+are equivalent.
+
+### Localised URLs
+
+Localised URLs allow locale-specific links to external resources.
+A simple URL can be written as a string, for example
+
+```json
+"about": "https://wikipedia.org/wiki/Lisbon"
+```
+
+A group of localised URLs can be structured as a list, for example
+
+```json
+"about": [
+    {
+        "locale": "pt",
+        "url": "https://pt.wikipedia.org/wiki/Lisboa",
+        "title": "Lisboa"
+    }.
+    {
+        "locale": "en",
+        "url": "https://en.wikipedia.org/wiki/Lisbon",
+        "title": "Lisbon"
+    }.
+]
+```
+
+In the latter case, the element of each entry are:
+
+* `locale` A [language code](#supported-languages)
+* `url`: The localised URL
+* `title` An optional title giving link or title text
+
+## Description
+
+Descriptive information appears in multiple places and
+gathers together descriptive text, images, additional notes and links
+to external information.
+In general, if there is a `description` field then it will take this format.
+
+* `summary` A simple summary line, which may be [localised](#localisation). If absent the text is used where a summary is needed.
+* `text` Descriptive text, which may be [localised](#localisation). If descriptive text is used, then the summary is not.
+* `about` A URL link, which may be [localised](#localisation)
+* `image` An image associated with the description. See [below](#images)
+* `notes` A list of additional notes. See [below]()
+
+A description field can also be a simple [tagged](#tagged-text) string, in which case it will
+be created as a mostly empty description with `text`.
+
+### Images
+
+Images allow an image to be linked to descriptive text.
+In general a thumbnail of the image is shown alongside the description; 
+clicking on the thumbnail opens the full-sized image in a dialog box.
+
+Image URLs may be relative, in which case they are resolved against the
+`images` URL in the configuration.
+
+* `source` A URL to the full-size image source.
+* `thumbnail` An optional URL to a thumbnail of the image.
+* `title` An image title, which may be [localised](#localisation)
+* `metadata` [Metadata](#metadata) about the image. This should contain dcterms for things like rights, licensing etc.
+
+Since images are likely to have come from a third party, the metadata statement
+can be used to provide information on citation, attribution and licensing.
+These can be expressed in Dublin Core as `dcterms` or `dc` URIs and a suitable
+attribution statement will be assembled out of the elements.
+
+Example image JSON, for an image drawn from Wikipedia, is shown below
+
+```json
+{
+  "source": "P/P-P1-Lisbon.jpg",
+  "thumbnail": "P/P-P1-Lisbon-thumbnail.jpg",
+  "title": "Praça do Comércio@pt",
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:creator",
+        "value": "Berthold Werner"
+      },
+      {
+        "term": "dcterms:rightsHolder",
+        "value": "Wikimedia Commons"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://commons.wikimedia.org/wiki/File:Lisbon_Pra%C3%A7a_do_Com%C3%A9rcio_BW_2018-10-03_13-33-44_s.jpg"
+      }
+    ]
+  }
+}
+```
+
+### Notes
+
+Notes represent additional information that can be drawn away from the more
+general descriptive text.
+There are four types of notes: `Information`, `Warning`, `Address`, `Directions`
+with each note type providing a visual indication of the sort of thing the note
+is about.
+
+If the type is absent, `Information` is assumed and a piece of [tagged text](#tagged-text)
+is assumed to be an information note.
+Otherwise, a note is a JSON object with a `type` and `text` field. For example
+
+```json
+{
+  "notes": [
+    "The crossing is the only ",
+    {
+      "type": "Directions",
+      "text": "The crossing can be seen from the overpass. Go down the stairs to the left.@en"
+    }
+    {
+      "type": "Warning",
+      "text": [
+        "busy road@en",
+        "errepide okupatua@eu"
+      ]
+    }
+  ]
+}
+```
+
+contains a simple information note in English, directions in English and a 
+warning in both English and Basque.
+
+### Calendar and Times
+
+Some items occur only on certain days or at particular times.
+
+A calendar can be either daily (the default by implication) or
+occur on certain days of the week or month, or certain months in the year.
+
+The types of calendar are:
+
+```json
+[
+  {
+    "type": "daily"
+  },
+  {
+    "type": "weekly",
+    "days": [ "monday", "friday"]
+  },
+  {
+    "type": "monthly",
+    "days": [ 8, 15 ]
+  },
+  {
+    "type": "yearly",
+    "months": [ 5, 6, 7 ]
+  },
+  {
+    "type": "conditional",
+    "calendar":     {
+      "type": "weekly",
+      "days": [ "monday", "friday"]
+    },
+    "condition": "Except when Friday is the last day of the month.@en"
+  }
+]
+```
+
+* Weekly calendars occur on the listed days of the week.
+ The days of the week are in English and all lower-case.
+ In the example, the venue is open only Monday and Friday.
+* Monthly calendars occur on specific days of the month.
+  In the example, the venue is open only on the 8th and 15th of the month.
+* Yearly calendars occur in specific months of the year.
+  The months are month numbers, counting from 0 for January.
+  In the sample, the venue is open only in June, July and August.
+* A conditional calendar takes another calendar and adds a text condition.
+
+Times give the hour of the day that something happens, is open, etc.
+Times are represented by a string containing pairs of start and finish times.
+The times are local times using the 24-hour clock.
+Start and finish times are separated by a `-` and ranges by a `,`.
+For example: `"0830-1200,1400-1930"` means 8:30am to 12 noon and then
+2pm to 7:30pm.
+
+**TBD** More sophisticated calendars and times,
+The eventual aim here is to know when someone is passing by at the right time.
+
+## Header
+
+The header contains descriptive information about the camino
+
+* `id` The camino identifier. See [below](#identifiers-and-references)
+* `name` A short name for the camino. **TBD** Localised variants
+* `description` [Descriptive](#description) information about the camino. 
+* `metadata` See [above](#metadata)
+
+### Identifiers and References
+
+Most significant parts of the camino have an identifier, given by the `id` JSON field.
+*Identifiers must be globally unique,* since users may mix up preferences across multiple  caminos.
+The convention used in the supplied file is to have a single identifier for the camino
+itself and then this is used as a prefix for the location and route identifiers.
+For example, if the identifier of the camino is "F" then the identifier for a location
+might be "F-M001" with the "F-" prefix ensuring that another camino doesn't have the same
+location identifier.
+
+In most cases, once a location or route has been defined, it can be referred to elsewhere
+by its identifier.
+So, for example, if a route wants to list the location above, it simply needs to put
+"F-M001", not repeat the location information.
+The camino parser will sort out all the references when it reads the file.
 
 ## Locations
 
@@ -184,15 +455,15 @@ The elements are:
 * `id` The globally unique identifier for the location
 * `name` The name of the location
 * `description` Optional descriptive information
-* `href` An optional URL to more information
-  **TBD** Improve descriptive modelling.
 * `type` The type of location. See [below](#types-services-etc)
 * `position` The position of the location in decimal latitude and longitude.
-* `services` A list of the publically available services at the location. See [below](#types-services-etc).
+* `services` A list of the publicly available services at the location. See [below](#types-services-etc).
 * `accommodation` A list of the accommodation options. See [below](#accommodation)
+* `pois` A list of points of interest. See [below](#points-of-interest)
+* `events` A list of local events. See [below](#events)
 
 When you are constructing a location, the position can be difficult.
-Generally a latitude/logitude accurate to 5 decimal places identifies the position to
+Generally a latitude/longitude accurate to 5 decimal places identifies the position to
 within a metre.
 That enables you to place the location on a suitable road or intersection.
 What the "position" of a location actually is tends to be a matter of opinion.
@@ -222,7 +493,7 @@ A typical accommodation entry looks like:
 * The `name` is the name of the guest house, camp site, hotel, etc.
 * The `type` is the type of accommodation. See [above](#types-services-etc)
 * The `services` lists the services available to guests. See [above](#types-services-etc).
-  These can overlap with public servces.
+  These can overlap with public services.
 * `sleeping` lists the types of sleeping arrangements available. See [above](#types-services-etc)
 
 #### Generic Accommodation
@@ -238,6 +509,66 @@ For example:
 ```
 
 Creates a generic private albergue and a hotel with typical services and sleeping arrangements.
+
+### Points of Interest
+
+Points of interest (PoIs) are locations not directly connected with travelling the Camino
+but which might be of interest to pilgrims on the way:
+churches, cathedrals, statues, museums, parks etc.
+Generally, PoIs have the same types as locations and descriptive information.
+They may also have [calendar and times](#calendar-and-times) information 
+and attached [events]().
+
+And example PoI is
+
+```json
+{
+  "name": [
+    "Museu Nacional do Azulejo@pt",
+    "National Tile Museum@en"
+  ],
+  "type": "Museum",
+  "position": { "latitude": 38.72508, "longitude": -9.11347 },
+  "calendar": {
+    "type": "weekly",
+    "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+  },
+  "hours": "1000-1800"
+}
+```
+The fields are
+
+* `name` The name of the PoI, possibly [localised](#localisation)
+* `description` Any optional [descriptive](#description) information
+* `type` The PoI (location) type
+* `position` The latitude and longitude of the PoI
+* `calendar` An optional [calendar](#calendar-and-times) showing when the PoI is open
+* `hours` An optional [time range](#calendar-and-times) showing when the PoI is open
+* `events` An optional list of [events](#events) associated with the PoI
+
+### Events
+
+Events are things like festivals or ceremonies that might interest a pilgrim, if they happen
+to be there at the right time.
+Events can be attached to both locations, for things like a town festival, or 
+points of interest, for things like pilgrim masses and blessings.
+An example event is 
+
+```json
+{
+  "name": "Pilgrim's Mass",
+  "type": "PilgrimMass",
+  "hours": "0730-0830,0930-1030,1200-1300,1930-2030"
+}
+```
+
+The fields are
+
+* `name` The name of the event, possibly [localised](#localisation)
+* `description` Any optional [descriptive](#description) information
+* `type` The event type
+* `calendar` An optional [calendar](#calendar-and-times) showing when the event occurs
+* `hours` Optional [time ranges](#calendar-and-times) showing when the event occurs
 
 ## Legs
 
@@ -269,7 +600,7 @@ arriving `to` it.
 The planner chooses between alternative sequences of legs based on minimum penance.
 
 A more complex leg can include travel type and alter the time and distance calculations.
-For examople, a leg by ferry, rather than walking, might be:
+For example, a leg by ferry, rather than walking, might be:
 
 ```json
 {
@@ -281,7 +612,7 @@ For examople, a leg by ferry, rather than walking, might be:
   "distance": 0,
   "ascent": 0,
   "descent": 0,
-  "notes": "Pilgrim's ferry"
+  "description": "Pilgrim's ferry"
 }
 ```
 
@@ -293,7 +624,7 @@ For examople, a leg by ferry, rather than walking, might be:
   nasty part of the route for some reason or other and use it to influence the planner.
   For example, out of two routes, the most direct passes though a particularly miserable
   industrial area.
-* `notes` Allow you to add comments about the leg.
+* `description` Allow you to add additional description to the leg.
 
 ## Routes
 

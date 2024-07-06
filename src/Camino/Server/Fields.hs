@@ -461,7 +461,7 @@ extendedSelectionField categories = Field
       { fieldParse = parseHelper $ getValue
     , fieldView = \theId name _attrs val _isReq -> let
           merr = either Just (const Nothing) val
-          chosenKey = either (const "") (\v -> klookup M.! v) val
+          chosenKey = either (const "") (\v -> M.findWithDefault "" v klookup) val
       in [whamlet|
 $maybe err <- merr
   <div .alert .alert-danger>#{err}

@@ -28,7 +28,7 @@
             \ This is the distance or time that you wish to walk each day.
     <tr>
         <td>Upper
-        <td>The target
+        <td>The upper bound of acceptablity.
             \ This is the maximum distance or time that you would wish to walk.
     <tr>
         <td .text-danger>Maximum

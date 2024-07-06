@@ -41,8 +41,8 @@
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
-    However, we only have the data for two Caminos at the moment (the Portuguese route, along with all its various
-    alternative routes and options, and the Fisterra route.)
+    However, we only have the data for four Caminos at the moment, along with all the various
+    alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
   What you do is enter your <em>preferences</em> - how fit you are, how long would would like to walk each day,
@@ -55,7 +55,7 @@
 
 <p>
   The entire process is fairly quick.
-  In most cases, a walking plan will be generated in a couple of seconds.
+  In most cases, a walking plan will be generated in a few seconds.
   If you're prepared to camp by the roadside, then the process will take a few seconds more, as there are many more
   possible options to sift through.
   The planner can develop a plan from any start point to any end point, as long as you are travelling towards
@@ -333,7 +333,7 @@
       In most cases, the local option is the best option and the accommodation penance is 0km.
   <li #accommodation-penance>
     <p>
-      Accommodation penance works by seeing if there is a better option nearby.
+      Accommodation penance also works by seeing if there is a better option nearby.
     <p>
       The user can express preferences for certain types of accommodation and the most preferred
       accommodation in that location is chosen.
@@ -392,6 +392,13 @@
   Waypoints along the route are shown as yellow icons based on the <a href="#location-help">location type</a>.
   Stops are shown as white icons.
   Unused waypoints are shown as grey icons.
+  Points of interest are shown as blue icons.
+
+<p>
+  The level of detail shown depends on the zoom level.
+  Zoomed out, only the routes are shown.
+  As you zoom in, location icons appear.
+  As you zoom in further, points of interest are displayed.
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
@@ -455,6 +462,7 @@
 <p>
   If you click on the location, you will be scrolled to a more detailed location description
   on the Location tab.
+  If you click on a blue point of interest, you will be scrolled to the description in the location tab.
 
 <h3 #stage-help>Plan
 
@@ -587,10 +595,10 @@
           <button .accordion-button data-bs-toggle="collapse" data-bs-target="#location-body-P-P109" aria-expanded="true" aria-controls="location-body-P-P109">
             <div .container-fluid>
               <div .row>
-                <h5 .col-5>
+                <h5 .col-4 .location-type-sample>
                   <span .location-type .ca-town title="Town">
                   Albergaria-a-Velha
-                <div .col-2 .services>
+                <div .col-3 .services>
                   <span .service .ca-restaurant title="Restaurant">
                   <span .service .ca-pharmacy title="Pharmacy">
                   <span .service .ca-bank title="Bank">

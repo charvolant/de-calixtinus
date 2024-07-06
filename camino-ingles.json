@@ -5,10 +5,7 @@
     "English Way@en"
   ],
   "description": {
-    "text": "The Camino Ingles is a short camino from Ferrol or A Coruña on the Northen coast of Spain. The route was traditionally used by pilgrims from Northern Europe.@en",
-    "notes": [
-      "The route from Ferrol is about 119km and that from A Coruña 75km. Only the route from Ferrol qualifies for the Compostela certificate.@en"
-    ]
+    "text": "The Camino Ingles is a short camino from Ferrol or A Coruña on the Northen coast of Spain. The route was traditionally used by pilgrims from Northern Europe.@en"
   },
   "metadata": {
     "namespaces": [
@@ -40,7 +37,7 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-06-21"
+        "value": "2024-07-05"
       },
       {
         "term": "dcterms:version",
@@ -1121,11 +1118,11 @@
     {
       "id": "I-RI",
       "name": "Camino Ingles",
-      "description": "The main Camino route starting in Ferrol or A Coruña ",
+      "description": "The main Camino route starting in Ferrol.",
       "stops": [
       ],
       "starts": [
-        "I-I1", "I-I29"
+        "I-I1"
       ],
       "finishes": [
         "I-I39"
@@ -1134,9 +1131,44 @@
         "colour": "fec953"
       },
       "default": true
+    },
+    {
+      "id": "I-RC",
+      "name": "A Coruña Start",
+      "description": {
+        "text": "An alternative, shorter route starting at A Coruña.@en",
+        "notes": [
+          {
+            "type": "Warning",
+            "text": "At 75km, this route is shorter than the 100km required for a Compostela certificate. It may be possible to obtain a certificate via prior arrangements with your country's pilgrim society and walking the extra distance before arriving at A Coruña. These arrangements need to be organised well before your start.@en"
+          }
+        ]
+      },
+      "locations": [
+        "I-I29", "I-I30",
+        "I-I31", "I-I32", "I-I33", "I-I34", "I-I35", "I-I36", "I-I37", "I-I38"
+      ],
+      "stops": [
+      ],
+      "starts": [
+        "I-I29"
+      ],
+      "finishes": [
+      ],
+      "palette": {
+        "colour": "feda53"
+      }
     }
   ],
   "route-logic": [
+    {
+      "description": "Changes for the A Coruña start",
+      "condition": "I-RC",
+      "exclude": [
+        "I-I1",  "I-I2",  "I-I3",  "I-I4",  "I-I5",  "I-I6",  "I-I7",  "I-I8",  "I-I9",  "I-I10",
+        "I-I11", "I-I12", "I-I13", "I-I14", "I-I15", "I-I16", "I-I17", "I-I18"
+      ]
+    }
   ],
   "default-route": "I-RI"
 }

@@ -587,8 +587,8 @@ chooseStartForm help prefs extra = do
     let allowedStops = permittedStops <$> prefs <*> possibleStops
     let sortKey l = canonicalise $ localiseText locales (locationName l)
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
-    let rstarts = maybe [] suggestedStarts cprefs
-    let rfinishes = maybe [] suggestedFinishes cprefs
+    let rstarts = filter (\l -> maybe True (S.member l) possibleStops) $ maybe [] suggestedStarts cprefs
+    let rfinishes = filter (\l -> maybe True (S.member l) possibleStops) $ maybe [] suggestedFinishes cprefs
     let startOptions = makeOptions render (pack . locationID) ((localiseText locales) . locationName) rstarts stops
     let finishOptions = makeOptions render (pack . locationID) ((localiseText locales) . locationName) rfinishes stops
     (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'

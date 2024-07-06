@@ -4,7 +4,12 @@
     "Camino Fisterra@ga",
     "Camino Finisterre@es"
   ],
-  "description": "The Camino Fisterra leaves Santiago de Compestella and heads West, to Fisterra/Finisterre, the End of the World",
+  "description": {
+    "text": "The Camino Fisterra leaves Santiago de Compostella and heads West, to Fisterra/Finisterre, the End of the World@en",
+    "notes": [
+      "The final destination for the Camino Fisterra is the Faro de Fisterra lighthouse. This is about 3km from the town. To faithfully show the effort invoved, there are two \"Fisterra\"s. One represents the town you pass through on your way to the lighthouse. The other is journey's end."
+    ]
+  },
   "metadata" : {
     "namespaces": [
       {
@@ -666,14 +671,70 @@
     },
     {
       "id": "FI-F31",
-      "name": "Fisterra",
+      "name": "Fisterra (Outgoing)",
       "description": {
+        "text": "This is Fisterra as a waypoint, on the way to Faro de Fisterra. See \"Fisterra (Return)\" for the final point of the journey."
+      },
+      "type": "Town",
+      "position": {"latitude": 42.90501, "longitude":  -9.26437 },
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+        {
+          "name": "Monumento al Peregrino@ga",
+          "type": "Statue",
+          "position": {"latitude": 42.89418, "longitude": -9.26422 }
+        }
+      ]
+    },
+    {
+      "id": "FI-F32",
+      "name": "Faro de Fisterra",
+      "type": "Poi",
+      "position": {"latitude": 42.88264, "longitude":  -9.27187 },
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "O SemafORO Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "name": "Faro de Fisterra@ga",
+          "description": {
+            "notes": [
+              "You can get your pilgrim's document, the Finisterrana, at the lighthouse.@en"
+            ]
+          },
+          "type": "Poi",
+          "position": {"latitude": 42.88264, "longitude":  -9.27187 },
+          "hours": "1100-1900"
+        },
+        {
+          "name": [
+            "Bota de Fisterra@ga",
+            "Pilgrim's Boot@en"
+          ],
+          "type": "Statue",
+          "position": {"latitude": 42.88193, "longitude": -9.27212 }
+        }
+      ]
+    },
+    {
+      "id": "FI-F33",
+      "name": "Fisterra (Return)",
+      "description": {
+        "text": "This is Fisterra on return from the Faro de Fisterra. See \"Fisterra (Outgoing)\" for Fisterra as a waypoint.@en",
         "notes": [
           "You can get your pilgrim's document, the Finisterrana, at the tourism office or the lighthouse. The tourism office is closed during the low season and the Finisterrana can be obtained at the pilgrim albergue.@en"
         ]
       },
       "type": "Town",
-      "position": {"latitude": 42.90501, "longitude":  -9.26437 },
+      "position": {"latitude": 42.90593, "longitude":  -9.26266 },
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -706,42 +767,6 @@
             "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
           },
           "hours": "1100-1400,1600-1900"
-        },
-        {
-          "name": "Monumento al Peregrino@ga",
-          "type": "Statue",
-          "position": {"latitude": 42.89418, "longitude": -9.26422 }
-        }
-      ]
-    },
-    {
-      "id": "FI-F32",
-      "name": "Faro de Fisterra",
-      "type": "Poi",
-      "position": {"latitude": 42.88264, "longitude":  -9.27187 },
-      "services": [ "Restaurant", "Bus" ],
-      "accommodation": [
-        {
-          "name": "O SemafORO Hotel",
-          "type": "Hotel",
-          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC" ]
-        }
-      ],
-      "pois": [
-        {
-          "name": "Faro de Fisterra@ga",
-          "type": "Poi",
-          "position": {"latitude": 42.88264, "longitude":  -9.27187 },
-          "hours": "1100-1900"
-        },
-        {
-          "name": [
-            "Bota de Fisterra@ga",
-            "Pilgrim's Boot@en"
-          ],
-          "type": "Statue",
-          "position": {"latitude": 42.88193, "longitude": -9.27212 }
         }
       ]
     },
@@ -1349,6 +1374,13 @@
       "ascent": 95,
       "descent": 0
     },
+    {
+      "from": "FI-F32",
+      "to": "FI-F33",
+      "distance": 2.9,
+      "ascent": 0,
+      "descent": 95
+    },
 
     {
       "from": "FI-F24",
@@ -1510,7 +1542,7 @@
         "FI-F1"
       ],
       "finishes": [
-        "FI-F32"
+        "FI-F33"
       ],
       "palette": {
         "colour": "fec953"

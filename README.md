@@ -135,7 +135,7 @@ There's a bit of a way to go for that.
   * ~~Services available at the end-point and at accommodation (eg clothes washing facilities)~~
   * ~~Services available along the way (eg. an ATM somewhere during the day)~~
   * Handling the Sunday famine
-* Include points of interest
+* ~~Include points of interest~~
   * And make allowance for breaks so that people can visit
 
 ### Some design notes
@@ -169,3 +169,7 @@ There's a bit of a way to go for that.
 ## Build Notes
 
 See [doc/BUILD.md](doc/BUILD.md)
+
+## Making Your Own Camino
+
+See [doc/CAMINO.md](doc/CAMINO.md)

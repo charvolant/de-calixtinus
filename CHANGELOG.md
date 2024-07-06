@@ -6,7 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
-## Unreleased
+## 0.4 - 2024-07-07
+
+### Added
+
+* Camino Ingles
+* Extended support for localisation within the camino data files and for dates and times
+* Support an "Easy Mode" where you don't get asked detailed questions #[7](https://github.com/charvolant/de-calixtinus/issues/7)
+* Support for Points of Interest and Events
+* Detailed support for descriptive information
+
+### Changed
+
+* Multiple new location types to support points of interest
+* Fisterra camino now includes Faro de Fisterra
 
 ## 0.3 - 2024-06-04
 

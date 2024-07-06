@@ -798,17 +798,30 @@
             "text": "Journey's End@en",
             "about": "https://catedraldesantiago.es/",
             "image": {
-              "source": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Santiago_cathedral_2021.jpg",
+              "source": "S-1-Cathedral.jpg",
+              "thumbnail": "S-1-Cathedral-thumbnail.jpg",
               "title": "View from the Praza do Obradoiro",
               "metadata": {
                 "statements": [
                   {
-                    "term": "dcterms:rights",
-                    "value": "Fernando, via Wikimedia Commons"
+                    "term": "dcterms:creator",
+                    "value": "Fernando"
+                  },
+                  {
+                    "term": "dcterms:created",
+                    "value": "2021"
+                  },
+                  {
+                    "term": "dcterms:rightsHolder",
+                    "value": "Wikimedia Commons"
                   },
                   {
                     "term": "dcterms:license",
-                    "value": "CC BY-SA 4.0"
+                    "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+                  },
+                  {
+                    "term": "dcterms:source",
+                    "value": "https://commons.wikimedia.org/wiki/File:Santiago_cathedral_2021.jpg"
                   }
                 ]
               }
@@ -824,6 +837,29 @@
               "hours": "0730-0830,0930-1030,1200-1300,1930-2030"
             }
           ]
+        },
+        {
+          "name": "Praza do Obradoiro@ga",
+          "description": {
+            "text": "The main arrival point for pilgrims@en"
+          },
+          "type": "Municipal",
+          "position": { "latitude": 42.88046, "longitude":  -8.54572 }
+        },
+        {
+          "name": "Pilgrim Office@en",
+          "description": {
+            "text": "This is where you can pick up your Compostela (pilgrim's certificate).@en",
+            "about": "https://catedral.df-server.info/agencias/Banderas.aspx?ind=1",
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "This office can get very busy during the high season. Book a ticket ahead by using the link above.@en"
+              }
+            ]
+          },
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.88207, "longitude":  -8.546826 }
         }
       ]
     }

@@ -517,6 +517,11 @@ locationLine _preferences _camino location = [ihamlet|
     <span .services>
       $forall service <- locationServices location
         ^{caminoServiceIcon service}
+    <span .poi-types>
+      $forall poi <- locationPoiTypes location
+        ^{caminoLocationTypeIcon poi}
+      $forall event <- locationEventTypes location
+        ^{caminoEventTypeIcon event}
   |]
 
 poiLine :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute

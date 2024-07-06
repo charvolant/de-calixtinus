@@ -12,7 +12,7 @@ RUN stack install --local-bin-path /app/bin :camino-server-exe
 FROM debian:buster-slim
 LABEL title="De Calixtinus"
 LABEL description="A web server that allows users to enter travel preferences and creates a staged plan for the Camino Santiago"
-LABEL version=0.4
+LABEL version=0.5
 COPY --from=build /app /app
 EXPOSE 3000
 CMD /app/bin/camino-server-exe -s /app/lib/static -c /app/lib/config-static.yaml /app/lib/camino-frances.json /app/lib/camino-portuguese.json /app/lib/camino-fisterra.json /app/lib/camino-ingles.json

@@ -44,7 +44,7 @@
       },
       {
         "term": "dcterms:version",
-        "value": "0.4"
+        "value": "0.5"
       },
       {
         "term": "dcterms:license",

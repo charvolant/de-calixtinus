@@ -23,7 +23,7 @@ To create a docker image, make sure that you have the
 static files up to date and then use
 
 ```shell
-docker build . -t yourname/de-calixtinus:0.4
+docker build . -t yourname/de-calixtinus:0.5
 ```
 
 This builds the current source in a docker container and then

@@ -60,6 +60,7 @@ module Camino.Camino (
   , createProhibitsClauses
   , fitnessEnumeration
   , locationAccommodationTypes
+  , locationBbox
   , locationEventTypes
   , locationNameLabel
   , locationPoiTypes
@@ -81,6 +82,7 @@ import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
 import Data.Event
+import Data.Foldable (toList)
 import Data.List (find)
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
 import Data.Maybe (catMaybes, fromJust, isJust)
@@ -565,7 +567,17 @@ locationEventTypes location = let
 -- | Get a simple text version of the location name
 locationNameLabel :: Location -> Text
 locationNameLabel location = localiseDefault $ locationName location
- 
+
+
+-- | Get a bounding box for set of locations
+locationBbox :: (Foldable f) => f Location -- ^ The collection of locations
+ -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
+locationBbox locations = (LatLong (maximum lats) (minimum longs) def, LatLong (minimum lats) (maximum longs) def)
+  where
+    positions = catMaybes $ map locationPosition $ toList locations
+    lats = map latitude positions
+    longs = map longitude positions
+
 -- | The type of transport available on a leg
 data LegType = Road -- ^ Walk or cycle on a road or suitable path
    | Trail -- ^ Walking only path
@@ -979,12 +991,7 @@ caminoLocationList camino = M.elems $ caminoLocations camino
 -- | Get a bounding box for the camino
 caminoBbox :: Camino -- ^ The entire camino
  -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
-caminoBbox camino = (LatLong (maximum lats) (minimum longs) def, LatLong (minimum lats) (maximum longs) def)
-  where
-    positions = catMaybes $ map locationPosition $ M.elems $ caminoLocations camino
-    lats = map latitude positions
-    longs = map longitude positions
-  
+caminoBbox camino = locationBbox $ M.elems $ caminoLocations camino  
 
 -- | All the locations on the camino assumed to be part of the default route
 defaultRouteLocations :: [Location] -- ^ The possible locations

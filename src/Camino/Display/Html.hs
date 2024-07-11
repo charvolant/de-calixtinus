@@ -22,6 +22,8 @@ import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
+import Data.Colour (blend)
+import Data.Colour.Names (lightgrey)
 import Data.Description
 import Data.Event
 import Data.Localised
@@ -1052,7 +1054,7 @@ caminoMapScript preferences camino solution = [ihamlet|
           [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
           [#{maybe 0.0 latitude (locationPosition $ legTo leg)}, #{maybe 0.0 longitude (locationPosition $ legTo leg)}]
         ], {
-           color: '#{toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino' leg}',
+           color: '#{chooseColour leg}',
            weight: #{chooseWidth leg},
            opacity: #{chooseOpacity leg}
         });
@@ -1067,12 +1069,14 @@ caminoMapScript preferences camino solution = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
-    (tl, br) = caminoBbox camino'
     (_trip, stops, waypoints, usedLegs) = solutionElements camino' solution
+    (tl, br) = locationBbox waypoints
     chooseWidth leg | S.member leg usedLegs = 7 :: Int
       | otherwise = 5 :: Int
     chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
       | otherwise = 0.5 :: Float
+    chooseColour leg | S.member leg usedLegs = toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino' leg
+      | otherwise = toCssColour $ blend 0.5 lightgrey $ paletteColour $ routePalette $ caminoLegRoute camino' leg
     icons = [
         (Village, (16, 16))
       , (Town, (32, 20))

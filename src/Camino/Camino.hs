@@ -90,7 +90,7 @@ import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
 import Data.Placeholder
 import Data.Propositional
-import qualified Data.Set as S (Set, difference, empty, intersection, map, null, fromList, member, toList, union, unions, singleton)
+import qualified Data.Set as S (Set, difference, empty, intersection, map, null, fromList, member, union, unions, singleton)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Text (Text, unpack, pack)
 import Graph.Graph
@@ -842,7 +842,7 @@ normaliseRouteLogic camino logic = logic {
 
 createLogicClauses' :: RouteLogic -> S.Set Route -> [Formula Route]
 createLogicClauses' logic consequents =
-    map (\r -> Implies condition (Variable r)) (S.toList $ consequents)
+    map (\r -> Implies condition (Variable r)) (toList $ consequents)
   where
     condition = routeLogicCondition logic
 

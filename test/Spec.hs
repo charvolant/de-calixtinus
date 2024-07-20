@@ -37,15 +37,15 @@ main = do
     putStrLn $ show results
 
 testList prefs camino = TestList [
-    TestLabel "Localised" testLocalised,
-    TestLabel "Metadata" testMetadata,
-    TestLabel "Description" testDescription,
-    TestLabel "Event" testEvent,
-    TestLabel "Propositional" testPropositional,
-    TestLabel "Config" testConfig,
-    TestLabel "Camino" testCamino, 
-    TestLabel "Walking" testWalking, 
-    TestLabel "Graph" testGraph, 
-    TestLabel "Programming" testProgramming, 
-    TestLabel "Planner" (testPlanner prefs camino) 
+   TestLabel "Localised" testLocalised,
+   TestLabel "Metadata" testMetadata,
+   TestLabel "Description" testDescription,
+   TestLabel "Event" testEvent,
+   TestLabel "Propositional" testPropositional,
+   TestLabel "Config" testConfig,
+   TestLabel "Camino" testCamino, 
+   TestLabel "Walking" testWalking, 
+   TestLabel "Graph" testGraph, 
+   TestLabel "Programming" testProgramming, 
+   TestLabel "Planner" (testPlanner prefs camino) 
   ]

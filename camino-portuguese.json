@@ -115,11 +115,15 @@
           },
           "type": "Cathedral",
           "position": { "latitude": 38.70984, "longitude": -9.13291 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
-          },
-          "hours": "1000-1800"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1800"
+            }
+          ]
         },
         {
           "name": [
@@ -128,11 +132,15 @@
           ],
           "type": "Museum",
           "position": { "latitude": 38.72508, "longitude": -9.11347 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1000-1800"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1800"
+            }
+          ]
         }
       ]
     },
@@ -164,7 +172,14 @@
           ],
           "type": "Museum",
           "position": { "latitude":  38.76342, "longitude": -9.09372 },
-          "hours": "1000-1900"
+          "hours": [
+            {
+              "calendar": {
+                "type": "daily"
+              },
+              "hours": "1000-1900"
+            }
+          ]
         }
       ]
     },
@@ -363,10 +378,15 @@
             "text": "Five days of bull fights with related activities and horsemanship, popular entertainment and music.@en"
           },
           "type": "Festival",
-          "calendar": {
-            "type": "yearly",
-            "months": [ 4 ]
-          }
+          "hours": [
+            {
+              "calendar": {
+                "type": "yearly",
+                "months": [ 4 ]
+              },
+              "hours": "open"
+            }
+          ]
         }
       ]
     },
@@ -1009,11 +1029,15 @@
           },
           "type": "Historical",
           "position": { "latitude": 40.03836, "longitude": -8.45767 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1000-1300,1400-1800"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1300,1400-1800"
+            }
+          ]
         }
       ]
     },
@@ -1236,11 +1260,15 @@
           },
           "type": "Historical",
           "position": { "latitude": 40.20278, "longitude": -8.43333 },
-          "calendar": {
-            "type": "weekly",
-            "days": ["tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1000-1800"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": ["tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1800"
+            }
+          ]
         }
       ]
     },
@@ -1821,11 +1849,15 @@
           "name": "Museu da Chapelaria@pt",
           "type": "Museum",
           "position": { "latitude": 40.90330, "longitude": -8.49560 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1000-1230,1400-1730"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1230,1400-1730"
+            }
+          ]
         },
         {
           "name": "Museu do Calçado@pt",
@@ -1834,11 +1866,15 @@
           },
           "type": "Museum",
           "position": { "latitude": 40.90403, "longitude": -8.49579 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1000-1230,1400-1730"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1230,1400-1730"
+            }
+          ]
         }
       ]
     },
@@ -4096,10 +4132,14 @@
             "about": "https://pementodeherbon.com/"
           },
           "type": "Food",
-          "calendar": {
-            "type": "yearly",
-            "months": [ 7 ]
-          }
+          "hours": [
+            {
+              "calendar": {
+                "type": "yearly",
+                "months": [ 7 ]
+              }
+            }
+          ]
         }
       ]
      },

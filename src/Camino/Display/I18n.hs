@@ -24,8 +24,10 @@ import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Data.Localised
+import qualified Data.Map as M
+import Data.Region
 import Data.Text
-import Data.Time.Calendar hiding (Day)
+import Data.Time.Calendar
 import Data.Time.Format
 import Data.Time.LocalTime
 import Formatting
@@ -40,11 +42,13 @@ data CaminoMsg =
   | AccommodationPenanceMsg Penance
   | AccommodationPreferencesLabel
   | AddressTitle
+  | AfterText
   | AscentMsg Float
   | AustereTitle
   | BankTitle
   | BeachTitle
   | BedlinenTitle
+  | BeforeText
   | BicycleRepairTitle
   | BicycleStorageTitle
   | BoatTitle
@@ -58,18 +62,21 @@ data CaminoMsg =
   | CathedralTitle
   | ChurchTitle
   | CityTitle
+  | ClosedText
   | ComfortableTitle
   | CrossTitle
   | ComfortLabel
   | CyclingTitle
   | CyclePathTitle
   | DailyLabel
+  | DayText
+  | DateMsg Data.Time.Calendar.Day
   | DayOfMonthName DayOfMonth
   | DayOfWeekName DayOfWeek
   | DayServicesPenanceMsg Penance
   | DayServicesPreferencesLabel
   | DaysMsg Int
-  | DaySummaryMsg Day
+  | DaySummaryMsg Camino.Planner.Day
   | DescentMsg Float
   | DinnerTitle
   | DirectionsTitle
@@ -84,6 +91,7 @@ data CaminoMsg =
   | DoubleWcTitle
   | DryerTitle
   | EventsLabel
+  | ExceptText
   | ExcludedStopsLabel
   | FerryTitle
   | FestivalEventTitle
@@ -131,9 +139,14 @@ data CaminoMsg =
   | MunicipalTitle
   | MuseumTitle
   | MusicEventTitle
+  | NamedCalendarLabel Text
   | NaturalTitle
   | NormalTitle
+  | NthWeekdayText WeekOfMonth DayOfWeek
   | OpenHoursTitle
+  | OpenText
+  | OrdinalAfterWeekday Int DayOfWeek
+  | OrdinalBeforeAfter Int CaminoMsg
   | OtherLabel
   | ParkTitle
   | PeakTitle
@@ -157,6 +170,8 @@ data CaminoMsg =
   | PrayerTitle
   | PreferencesLabel
   | PrivateAlbergueTitle
+  | PublicHolidayLabel Text
+  | PublicHolidayText
   | QuadrupleTitle
   | QuadrupleWcTitle
   | ReligiousEventTitle
@@ -247,11 +262,13 @@ renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ AddressTitle = "Address"
+renderCaminoMsgDefault _ AfterText = "after"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
 renderCaminoMsgDefault _ BeachTitle = "Beach"
 renderCaminoMsgDefault _ BedlinenTitle = "Bedlinen"
+renderCaminoMsgDefault _ BeforeText = "before"
 renderCaminoMsgDefault _ BicycleRepairTitle = "Bicycle Repair"
 renderCaminoMsgDefault _ BicycleStorageTitle = "Bicycle Storage"
 renderCaminoMsgDefault _ BoatTitle = "Boat/Canoe (paddled)"
@@ -265,12 +282,14 @@ renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
 renderCaminoMsgDefault _ ChurchTitle = "Church"
 renderCaminoMsgDefault _ CityTitle = "City"
+renderCaminoMsgDefault _ ClosedText = "closed"
 renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
 renderCaminoMsgDefault _ ComfortLabel = "Comfort"
 renderCaminoMsgDefault _ CrossTitle = "Cross"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ DailyLabel = "Daily"
+renderCaminoMsgDefault _ DayText = "day"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
@@ -288,6 +307,7 @@ renderCaminoMsgDefault _ DoubleTitle = "Double"
 renderCaminoMsgDefault _ DoubleWcTitle = "Double with WC"
 renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ EventsLabel = "Events"
+renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
@@ -336,6 +356,7 @@ renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, et
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
 renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
+renderCaminoMsgDefault _ OpenText = "open"
 renderCaminoMsgDefault _ ParkTitle = "Park or garden"
 renderCaminoMsgDefault _ PeakTitle = "Peak, pass or lookout"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
@@ -358,6 +379,7 @@ renderCaminoMsgDefault _ PoolTitle = "Pool"
 renderCaminoMsgDefault _ PrayerTitle = "Prayer"
 renderCaminoMsgDefault _ PreferencesLabel = "Preferences"
 renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
+renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
 renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
@@ -419,7 +441,11 @@ renderLocalisedText locales attr js locd = let
     if attr || Data.Text.null lang then
       toHtml txt''
     else
-      [shamlet|<span lang="#{lang}">#{txt''}|]
+      [shamlet|<span lang="#{lang}">#{txt''}#|]
+
+renderLocalisedDate :: (FormatTime t) => [Locale] -> t -> Html
+renderLocalisedDate [] day = renderLocalisedDate [rootLocale] day
+renderLocalisedDate (loc:_) day = toHtml $ formatTime tl (dateFmt tl) day where tl = localeTimeLocale loc
 
 renderLocalisedTime :: (FormatTime t) => [Locale] -> String -> t -> Html
 renderLocalisedTime [] fmt t = renderLocalisedTime [rootLocale] fmt t
@@ -429,12 +455,39 @@ renderLocalisedMonth :: [Locale] -> MonthOfYear -> Html
 renderLocalisedMonth [] t = renderLocalisedMonth [rootLocale] t
 renderLocalisedMonth (loc:_) t = toHtml $ snd $ (months $ localeTimeLocale loc) !! t
 
+renderLocalisedOrdinal :: [Locale] -> Int -> Html
+renderLocalisedOrdinal [] o = renderLocalisedOrdinal [rootLocale] o
+renderLocalisedOrdinal (loc:_) o = toHtml $ (localeOrdinalRender loc) o
+
+renderLocalisedBeforeAfter :: Config -> [Locale] -> Int -> Html
+renderLocalisedBeforeAfter config [] n = renderLocalisedBeforeAfter config [rootLocale] n
+renderLocalisedBeforeAfter config locales n = renderCaminoMsg config locales $ if n < 0 then BeforeText else AfterText
+
+renderLocalisedWeekOfMonth :: [Locale] -> WeekOfMonth -> Html
+renderLocalisedWeekOfMonth [] wom = renderLocalisedWeekOfMonth [rootLocale] wom
+renderLocalisedWeekOfMonth (loc:_) wom = toHtml $ (localeWeekOfMonthRender loc) wom
+
+renderLocalisedDayOfWeek :: [Locale] -> DayOfWeek -> Html
+renderLocalisedDayOfWeek [] dow = renderLocalisedDayOfWeek [rootLocale] dow
+renderLocalisedDayOfWeek (loc:_) dow = let
+    idx = (fromEnum dow) - 1
+    names = wDays $ localeTimeLocale loc
+    name = names !! idx
+  in
+    toHtml $ snd name
+
+renderLocalisedPublicHoliday :: Config -> [Locale] -> Text -> Html
+renderLocalisedPublicHoliday config locs rid = [shamlet|^{renderCaminoMsg config locs PublicHolidayText} (^{name})|]
+  where
+    region = M.lookup rid (regionConfigMap $ getRegionConfig config)
+    name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False (regionName r)) region
 
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
+renderCaminoMsg _config locales (DateMsg day) = renderLocalisedDate locales day
 renderCaminoMsg _config locales (DayOfWeekName dow) = renderLocalisedTime locales "%a" dow
 renderCaminoMsg _config _locales (DayOfMonthName dom) = [shamlet|#{dom}|]
 renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
@@ -448,6 +501,11 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
    finish' = renderLocalisedText locales False False (locationName $ finish day)
 renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales False False locd
 renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
+renderCaminoMsg config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderLocalisedDayOfWeek locales dow} ^{renderLocalisedBeforeAfter config locales nth}|]
+renderCaminoMsg config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderCaminoMsg config locales unit} ^{renderLocalisedBeforeAfter config locales nth}|]
+renderCaminoMsg config locales (NamedCalendarLabel key) = renderLocalisedText locales False False $ getCalendarName config key
+renderCaminoMsg _config locales (NthWeekdayText nth dow) = [shamlet|^{renderLocalisedWeekOfMonth locales nth} ^{renderLocalisedDayOfWeek locales dow}|]
+renderCaminoMsg config locales (PublicHolidayLabel region) = renderLocalisedPublicHoliday config locales region
 renderCaminoMsg _config locales (Time time) = renderLocalisedTime locales "%H%M" time
 renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
 renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd

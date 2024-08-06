@@ -124,16 +124,16 @@ instance (Ord a, PathPiece a) => PathPiece (S.Set a) where
   toPathPiece v = toPathPiece $ S.toList v
 
 instance PathPiece Location where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
-  toPathPiece v = pack $ locationID v
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder v
+  toPathPiece v = locationID v
 
 instance PathPiece Camino.Camino.Route where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
-  toPathPiece v = pack $ routeID v
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder  v
+  toPathPiece v = routeID v
 
 instance PathPiece Camino where
-  fromPathPiece v = if v == "" then Nothing else Just $ placeholder $ unpack v
-  toPathPiece v = pack $ caminoId v
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder v
+  toPathPiece v = caminoId v
 
 instance (Show a, Read a) => PathPiece (PreferenceRange a) where
   fromPathPiece v =
@@ -375,7 +375,7 @@ instance Yesod CaminoApp where
                       <ul .dropdown-menu>
                         $forall camino <- caminoAppCaminos master
                           <li>
-                            <a target="_blank" .nav-link .dropdown-item href="@{CaminoR (pack $ caminoId camino)}">#{caminoTitle camino}
+                            <a target="_blank" .nav-link .dropdown-item href="@{CaminoR (caminoId camino)}">#{caminoTitle camino}
                     <li .nav-item>
                       <a target="_blank" .nav-link href=@{HelpR} title="#{render MsgHelpTitle}">#{helpLabel}
             $maybe msg <- message

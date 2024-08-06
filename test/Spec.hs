@@ -4,8 +4,10 @@ import CaminoSpec
 import ConfigSpec
 import DescriptionSpec
 import EventSpec
+import EventDateSpec
 import WalkingSpec
 import PlannerSpec
+import RegionSpec
 import GraphSpec
 import ProgrammingSpec
 import MetadataSpec
@@ -41,6 +43,8 @@ testList prefs camino = TestList [
    TestLabel "Metadata" testMetadata,
    TestLabel "Description" testDescription,
    TestLabel "Event" testEvent,
+   TestLabel "Region" testRegion,
+   TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
    TestLabel "Config" testConfig,
    TestLabel "Camino" testCamino, 

@@ -24,6 +24,7 @@ module Data.Localised (
   , TaggedLink(..)
   , TaggedText(..)
   , TaggedURL(..)
+  , WeekOfMonth(..)
 
   , appendText
   , elements
@@ -32,7 +33,9 @@ module Data.Localised (
   , localeFromIDOrError
   , localeLanguageTag
   , localeSeparator
+  , localeOrdinalRender
   , localeTimeLocale
+  , localeWeekOfMonthRender
   , localise
   , localiseDefault
   , localiseText
@@ -44,6 +47,7 @@ module Data.Localised (
   , wildcardText
 ) where
 
+import GHC.Generics
 import Data.Aeson
 import Data.Aeson.Types (Parser, typeMismatch)
 import Data.Char (isAlpha)
@@ -52,6 +56,7 @@ import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack)
 import Data.Time.Format
 import Data.Time.LocalTime
+import Formatting
 import Network.URI
 
 -- | Parse a URI, looking for the correct type
@@ -71,6 +76,19 @@ textToUri txt = if isJust absolute' then
 uriToText :: URI -> Text
 uriToText uri = pack $ (uriToString id uri) ""
 
+-- For making statements like "last Tuesday of the month" etc.
+data WeekOfMonth =
+    First
+  | Second
+  | Third
+  | Fourth
+  | Fifth
+  | Last
+  deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
+
+instance FromJSON WeekOfMonth
+instance ToJSON WeekOfMonth
+
 -- | A locale specification
 data Locale = Locale {
     localeParent :: Maybe Locale
@@ -79,7 +97,12 @@ data Locale = Locale {
   , localeLanguage :: Maybe [Text] -- ^ The language codes
   , localeCountry :: Maybe [Text] -- ^ The country codes
   , localeTime :: Maybe TimeLocale -- ^ The time locale to use
-} deriving (Show)
+  , localeOrdinals :: Maybe (Int -> Text)
+  , localeWeekOfMonth :: Maybe (WeekOfMonth -> Text)
+}
+
+instance Show Locale where
+  show (Locale _parent' id' _matches' _language' _country' _time' _ordinals' _wom') = "Locale:" ++ (unpack id')
 
 instance Eq Locale where
   a == b = localeID a == localeID b
@@ -279,18 +302,33 @@ basqueTimeLocale = rootTimeLocale {
     , amPm = ("goizean", "arratsaldean")
     }
 
+rootOrdinals :: Int -> Text
+rootOrdinals n
+  | n `mod` 10 == 1 = (sformat int n) <> "st"
+  | n `mod` 10 == 2 = (sformat int n) <> "nd"
+  | n `mod` 10 == 3 = (sformat int n) <> "rd"
+  | otherwise = (sformat int n) <> "th"
+
+rootWeekOfMonth :: WeekOfMonth -> Text
+rootWeekOfMonth First = "first"
+rootWeekOfMonth Second = "second"
+rootWeekOfMonth Third = "third"
+rootWeekOfMonth Fourth = "fourth"
+rootWeekOfMonth Fifth = "fifth"
+rootWeekOfMonth Last = "last"
+
 -- | The base, wildcard locale
 rootLocale :: Locale
-rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale)
+rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale) (Just rootOrdinals) (Just rootWeekOfMonth)
 
-englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just []) Nothing
-englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"]) Nothing
-englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing
-frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing (Just frenchTimeLocale)
-galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing (Just galacianTimeLocale)
-portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale)
-spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale)
-basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing (Just basqueTimeLocale)
+englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just []) Nothing Nothing Nothing
+englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"]) Nothing Nothing Nothing
+englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing Nothing Nothing
+frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing (Just frenchTimeLocale) Nothing Nothing
+galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing (Just galacianTimeLocale) Nothing Nothing
+portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale) Nothing Nothing
+spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale) Nothing Nothing
+basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing (Just basqueTimeLocale) Nothing Nothing
 
 -- | Decode a locale identifier into a locale specification
 --   If the locale cannot be identifier, the @rootLocale@ is returned
@@ -348,9 +386,21 @@ localeSeparator = "@"
 
 -- | Get the time locale for this locale, working up the parent structure if not immediately found
 localeTimeLocale :: Locale -> TimeLocale
-localeTimeLocale (Locale _ _ _ _ _ (Just tl)) = tl
-localeTimeLocale (Locale Nothing _ _ _ _ Nothing) = rootTimeLocale -- Should never happen
-localeTimeLocale (Locale (Just parent) _ _ _ _ Nothing) = localeTimeLocale parent
+localeTimeLocale (Locale _ _ _ _ _ (Just tl) _ _) = tl
+localeTimeLocale (Locale Nothing _ _ _ _ Nothing _ _) = rootTimeLocale -- Should never happen
+localeTimeLocale (Locale (Just parent) _ _ _ _ Nothing _ _) = localeTimeLocale parent
+
+-- | Get the time locale for this locale, working up the parent structure if not immediately found
+localeOrdinalRender :: Locale -> (Int -> Text)
+localeOrdinalRender (Locale _ _ _ _ _ _ (Just ordinals) _) = ordinals
+localeOrdinalRender (Locale Nothing _ _ _ _ _ Nothing _) = rootOrdinals -- Should never happen
+localeOrdinalRender (Locale (Just parent) _ _ _ _ _ Nothing _) = localeOrdinalRender parent
+
+-- | Get the time locale for this locale, working up the parent structure if not immediately found
+localeWeekOfMonthRender :: Locale -> (WeekOfMonth -> Text)
+localeWeekOfMonthRender (Locale _ _ _ _ _ _ _ (Just wom)) = wom
+localeWeekOfMonthRender (Locale Nothing _ _ _ _ _ _ Nothing) = rootWeekOfMonth -- Should never happen
+localeWeekOfMonthRender (Locale (Just parent) _ _ _ _ _ _ Nothing) = localeWeekOfMonthRender parent
 
 -- | Parse a piece of text with an optional locale tage at the end into a locale/text pair
 --   For exampele @"Hello@fr"@ becomes @(french, "Hello")@ and @"Nothing"@ becomes @(root, "Nothing")@
@@ -382,12 +432,12 @@ class TaggedLink a where
   linkText tu = uriToText $ link tu
   -- | Resolve this link against a base path, if the link URL is relative
   resolveLink :: Text -> a -> Text
-  resolveLink base tl = if uriIsAbsolute (link tl) then url' else base <> "/" <> url' where url' = linkText tl
+  resolveLink basel tl = if uriIsAbsolute (link tl) then url' else basel <> "/" <> url' where url' = linkText tl
 
 -- | A piece of localised text tgged by a locale specification
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedText = TaggedText Locale Text 
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance Tagged TaggedText where
   locale (TaggedText loc _) = loc
@@ -414,12 +464,12 @@ instance ToJSON TaggedText where
 
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)
-  deriving (Show)
+  deriving (Show, Eq)
 
 -- | A URL with potential localisation and title
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedURL = TaggedURL Locale Hyperlink
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance Tagged TaggedURL where
   locale (TaggedURL loc _) = loc
@@ -458,7 +508,7 @@ instance ToJSON TaggedURL where
 
 -- | A localised object containing (potentially) multiple localised instances of something
 data (Tagged a) => Localised a = Localised [a]
-    deriving (Show)
+    deriving (Show, Eq)
 
 instance (Tagged a, FromJSON a) => FromJSON (Localised a) where
   parseJSON v@(String _) = Localised <$> (singleton <$> parseJSON v)

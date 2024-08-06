@@ -48,7 +48,7 @@ import qualified Data.Map as M
 import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
-import Data.Text (Text, pack, unpack)
+import Data.Text (Text, pack)
 import Text.Hamlet
 import Yesod
 
@@ -103,15 +103,15 @@ data PreferenceDataFields = PreferenceDataFields {
 }
 
 findCaminoById :: [Camino] -> Text -> Maybe Camino
-findCaminoById caminos val = find (\c -> caminoId c == val') caminos where val' = unpack val
+findCaminoById caminos val = find (\c -> caminoId c == val) caminos
 
 findRouteById :: FormResult Camino -> Text -> Maybe Camino.Camino.Route
-findRouteById (FormSuccess camino) val = find (\r -> routeID r == val') (caminoRoutes camino) where val' = unpack val
-findRouteById _ val = Just $ placeholder $ unpack val
+findRouteById (FormSuccess camino) val = find (\r -> routeID r == val) (caminoRoutes camino)
+findRouteById _ val = Just $ placeholder val
 
 findLocationById :: FormResult Camino -> Text -> Maybe Location
-findLocationById (FormSuccess camino) val = M.lookup val' (caminoLocations camino) where val' = unpack val
-findLocationById _ val = Just $ placeholder $ unpack val
+findLocationById (FormSuccess camino) val = M.lookup val (caminoLocations camino)
+findLocationById _ val = Just $ placeholder val
 
 findSetById :: (Ord a) => FormResult Camino -> (FormResult Camino -> Text -> Maybe a) -> S.Set Text -> Maybe (S.Set a)
 findSetById cres finder val = let
@@ -143,16 +143,16 @@ defaultPreferenceFields master prefs = do
     (acRes, acView) <- mreq hiddenField "" (prefAccommodation <$> prefs)
     (ssRes, ssView) <- mreq hiddenField "" (prefStopServices <$> prefs)
     (dsRes, dsView) <- mreq hiddenField "" (prefDayServices <$> prefs)
-    (cpRes, cpView) <- mreq (parsingHiddenField (pack . caminoId) (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
-    (cRes, cView) <- mreq (parsingHiddenField (pack . caminoId) (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
-    (ropRes, ropView) <- mreq (parsingHiddenField (S.map (pack . routeID)) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
-    (roRes, roView) <- mreq (parsingHiddenField (S.map (pack . routeID)) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
-    (sapRes, sapView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefStart <$> prefs)
-    (saRes, saView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefStart <$> prefs)
-    (fnpRes, fnpView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefFinish <$> prefs)
-    (fnRes, fnView) <- mreq (parsingHiddenField (pack . locationID) (findLocationById cRes)) "" (prefFinish <$> prefs)
-    (spRes, spView) <- mreq (parsingHiddenField (S.map (pack . locationID)) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
-    (exRes, exView) <- mreq (parsingHiddenField (S.map (pack . locationID)) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
+    (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
+    (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
+    (ropRes, ropView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
+    (roRes, roView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
+    (sapRes, sapView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefStart <$> prefs)
+    (saRes, saView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefStart <$> prefs)
+    (fnpRes, fnpView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefFinish <$> prefs)
+    (fnRes, fnView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefFinish <$> prefs)
+    (spRes, spView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
+    (exRes, exView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
     return PreferenceDataFields {
         resEasyMode = emRes
       , viewEasyMode = emView
@@ -468,7 +468,7 @@ chooseCaminoForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
     let localised c = localiseText locales c
-    let  caminoField =  extendedRadioFieldList id (map (\c -> (pack $ caminoId c, toHtml $ localised $ caminoName c, c, toHtml <$> descriptionText locales (caminoDescription c))) (caminoAppCaminos master))
+    let  caminoField =  extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, toHtml <$> descriptionText locales (caminoDescription c))) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -521,7 +521,7 @@ chooseRoutesForm help prefs extra = do
     let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
-    let routeOptions = map (\r -> (pack $ routeID r, localised (routeName r), r, descriptionText locales (routeDescription r), maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
+    let routeOptions = map (\r -> (routeID r, localised (routeName r), r, descriptionText locales (routeDescription r), maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
     (roRes, roView) <- mreq (implyingCheckListField routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -589,8 +589,8 @@ chooseStartForm help prefs extra = do
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
     let rstarts = filter (\l -> maybe True (S.member l) possibleStops) $ maybe [] suggestedStarts cprefs
     let rfinishes = filter (\l -> maybe True (S.member l) possibleStops) $ maybe [] suggestedFinishes cprefs
-    let startOptions = makeOptions render (pack . locationID) ((localiseText locales) . locationName) rstarts stops
-    let finishOptions = makeOptions render (pack . locationID) ((localiseText locales) . locationName) rfinishes stops
+    let startOptions = makeOptions render locationID ((localiseText locales) . locationName) rstarts stops
+    let finishOptions = makeOptions render locationID ((localiseText locales) . locationName) rfinishes stops
     (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'
     (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish'
     df <- defaultPreferenceFields master prefs
@@ -660,7 +660,7 @@ chooseStopsForm help prefs extra = do
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
     let recommended = maybe S.empty recommendedStops cprefs'
     let (suggested, other) = Data.List.partition (\l -> S.member l recommended) stops
-    let mkOptions locs = map (\l -> (pack $ locationID l, localised l, l)) locs
+    let mkOptions locs = map (\l -> (locationID l, localised l, l)) locs
     let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise .localised) other))
     let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . localised) stops))
     let chosenStops = S.intersection <$> allowedStops <*> (prefStops <$> prefs)

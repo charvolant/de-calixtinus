@@ -186,20 +186,29 @@
             {
               "name": "Pilgrim's Mass and Blessing",
               "type": "PilgrimMass",
-              "calendar": {
-                "type": "weekly",
-                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
-              },
-              "hours": "2000-2100"
-            },
-            {
-              "name": "Pilgrim's Mass and Blessing (Weekends and Holidays)",
-              "type": "PilgrimMass",
-              "calendar": {
-                "type": "weekly",
-                "days": [ "saturday", "sunday" ]
-              },
-              "hours": "1800-1900"
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "public-holiday",
+                    "region": "Spain"
+                   },
+                  "hours": "1800-1900"
+                },
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+                  },
+                  "hours": "2000-2100"
+                },
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "saturday", "sunday" ]
+                  },
+                  "hours": "1800-1900"
+                }
+              ]
             }
           ]
         }
@@ -569,11 +578,15 @@
             {
               "name": "Pilgrim's Mass, Prayer and Blessing",
               "type": "PilgrimMass",
-              "calendar": {
-                "type": "weekly",
-                "days": [ "tuesday", "saturday" ]
-              },
-              "hours": "1830-1930"
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "tuesday", "saturday" ]
+                  },
+                  "hours": "1830-1930"
+                }
+              ]
             }
           ]
         }
@@ -675,11 +688,22 @@
                 ]
               },
               "type": "PilgrimMass",
-              "calendar": {
-                "type": "yearly",
-                "months": [ 3, 4, 5, 6, 7, 8, 9 ]
-              },
-              "hours": "1800-1930"
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "range",
+                    "from": {
+                      "type": "day-of-year",
+                      "days": [ "04-15" ]
+                    },
+                    "to": {
+                      "type": "day-of-year",
+                      "days": [ "10-29" ]
+                    }
+                  },
+                  "hours": "1800-1930"
+                }
+              ]
             }
           ]
         }
@@ -691,10 +715,14 @@
             "about": "https://www.runningofthebulls.com/"
           },
           "type": "Festival",
-          "calendar": {
-            "type": "yearly",
-            "months": [ 6 ]
-          }
+          "hours": [
+            {
+              "calendar": {
+                "type": "yearly",
+                "months": [ 6 ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -734,11 +762,15 @@
             {
               "name": "Pilgrim's Mass and Blessing@en",
               "type": "PilgrimMass",
-              "calendar": {
-                "type": "weekly",
-                "days": [ "sunday" ]
-              },
-              "hours": "1830-1930"
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": ["sunday"]
+                  },
+                  "hours": "1830-1930"
+                }
+              ]
             }
           ]
         }
@@ -1158,11 +1190,15 @@
             {
               "name": "Pilgrim's Mass and Blessing@en",
               "type": "PilgrimMass",
-              "calendar": {
-                "type": "weekly",
-                "days": [ "tuesday", "thursday", "saturday" ]
-              },
-              "hours": "2015-2115"
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "tuesday", "thursday", "saturday" ]
+                  },
+                  "hours": "2015-2115"
+                }
+              ]
             }
           ]
         }
@@ -1875,13 +1911,17 @@
             {
               "name": "Equinoctial Miracle@en",
               "description": {
-                "text": "At the Spring and Autumn equinoxes (March 21 and September 23) a ray of light touches the capital stone depicting the Annunciation.@en"
+                "text": "At the Spring and Autumn equinoxes, a ray of light touches the capital stone depicting the Annunciation.@en"
               },
               "type": "Religious",
-              "calendar": {
-                "type": "yearly",
-                "months": [2, 8]
-              }
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "day-of-year",
+                    "days": [ "03-21", "09-23" ]
+                  }
+                }
+              ]
             }
           ]
         }
@@ -2147,16 +2187,20 @@
                 "notes": [
                   {
                     "type": "Directions",
-                    "text": "The mass is held at the Chapel of the Holy Christ or Chapel of St Thecla. Both chapels are outside the fee-paying area and can be accessed from the Wester façade, through the gate of St Mary.@en"
+                    "text": "The mass is held at the Chapel of the Holy Christ or Chapel of St Thecla. Both chapels are outside the fee-paying area and can be accessed from the Western façade, through the gate of St Mary.@en"
                   }
                 ]
               },
               "type": "PilgrimMass",
-              "calendar": {
-                "type": "weekly",
-                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
-              },
-              "hours": "1930-2030"
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+                  },
+                  "hours": "1930-2030"
+                }
+              ]
             }
           ]
         },
@@ -4138,11 +4182,15 @@
           },
           "type": "Historical",
           "position": { "latitude": 42.543539, "longitude": -6.59379 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1000-1400,1630-2030"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1400,1630-2030"
+            }
+          ]
         }
       ]
     },
@@ -5712,11 +5760,15 @@
           },
           "type": "Monastery",
           "position": { "latitude": 42.89256, "longitude": -7.80974 },
-          "calendar": {
-            "type": "weekly",
-            "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
-          },
-          "hours": "1200-1800"
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1200-1800"
+            }
+          ]
         }
       ]
     },
@@ -5747,11 +5799,22 @@
           },
           "type": "Church",
           "position": {"latitude": 42.87334, "longitude": -7.81663 },
-          "calendar": {
-            "type": "yearly",
-            "months": [2, 3, 4, 5, 6, 7, 8, 9]
-          },
-          "hours": "0730-1330,1530-2000",
+          "hours": [
+            {
+              "calendar": {
+                "type": "range",
+                "from": {
+                  "type": "named",
+                  "key": "HolyWeek"
+                },
+                "to": {
+                  "type": "day-of-year",
+                  "days": [ "10-31" ]
+                }
+              },
+              "hours": "0730-1330,1530-2000"
+            }
+          ],
           "events": [
             {
               "name": "Pilgrims Mass@en",
@@ -5831,11 +5894,22 @@
           "name": "Igrexa de San Tirso de Palas de Rei@es",
           "type": "Church",
           "position": { "latitude": 42.87245, "longitude": -7.86796  },
-          "calendar": {
-            "type": "yearly",
-            "months": [2, 3, 4, 5, 6, 7, 8, 9]
-          },
-          "hours": "0730-1330,1530-2000",
+          "hours": [
+            {
+              "calendar": {
+                "type": "range",
+                "from": {
+                  "type": "named",
+                  "key": "HolyWeek"
+                },
+                "to": {
+                  "type": "day-of-year",
+                  "days": [ "10-31" ]
+                }
+              },
+              "hours": "0730-1330,1530-2000"
+            }
+          ],
           "events": [
             {
               "name": "Pilgrims Mass@en",

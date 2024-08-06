@@ -10,9 +10,9 @@ import Data.DublinCore
 import Data.Localised
 import Data.Maybe (fromJust, isJust, isNothing)
 import Data.Metadata
-import Network.URI (parseURI)
 
 
+testDescription :: Test
 testDescription = TestList [
         TestLabel "Image" testImage
       , TestLabel "JSON" testDescriptionJSON

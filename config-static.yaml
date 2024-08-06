@@ -12,3 +12,302 @@ web:
     - id: "Camino Icons"
       type: Font
       path: /static/fonts/Camino-Icons.woff
+calendar:
+  - key: EasterSunday
+    name:
+      - Easter Sunday@en
+      - Domingo de Páscoa@pt
+    calendar:
+      type: list
+      dates:
+        - 2022-04-17
+        - 2023-04-09
+        - 2024-03-31
+        - 2025-04-20
+        - 2026-04-05
+        - 2027-03-28
+        - 2028-04-16
+        - 2029-04-01
+        - 2030-04-21
+  - key: MaundayThursday
+    name:
+      - Maundy Thursday@en
+      - Jueves Santo@es
+    calendar:
+      type: nth-day-after
+      nth: -3
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: GoodFriday
+    name:
+      - Good Friday@en
+      - Viernes Santo@es
+      - Sexta-feira Santa@pt
+    calendar:
+      type: nth-day-after
+      nth: -2
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: CorpusChristi
+    name:
+      - Corpus Christi@en
+      - Viernes Santo@es
+      - Corpo de Deus@pt
+    calendar:
+      type: nth-day-after
+      nth: 60
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: HolyWeek
+    name: Holy Week@en
+    calendar:
+      type: range
+      from:
+        type: nth-day-after
+        nth: -6
+        calendar:
+          type: named
+          key: EasterSunday
+      to:
+        type: named
+        key: EasterSunday
+  - key: Carnival
+    name:
+      - Carnival@en
+      - Carnaval@pt
+    calendar:
+      type: range
+      from:
+        type: nth-day-after
+        nth: -48
+        calendar:
+          type: named
+          key: EasterSunday
+      to:
+        type: nth-day-after
+        nth: -47
+        calendar:
+          type: named
+          key: EasterSunday
+  - key: NewYear
+    name:
+      - New Years Day@en
+      - Año Nuevo@es
+      - Ano Novo@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 01-01
+  - key: Epiphany
+    name:
+      - Epiphany@en
+      - Epifanía del Señor@es
+    calendar:
+      type: day-of-year
+      days:
+        - 01-06
+  - key: FreedomDayPT
+    name:
+      - Freedom Day (Portugal)@en
+      - Dia da Liberdade@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 04-25
+  - key: LabourDay
+    name:
+      - Labour Day@en
+      - Día del Trabajador@es
+      - Dia do Trabalhador@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 05-01
+  - key: GalicianLiteratureDay
+    name:
+      - Galician Literature Day@en
+      - Día das Letras Galegas@ga
+    calendar:
+      type: day-of-year
+      days:
+        - 05-17
+  - key: PortugalDayPT
+    name:
+      - Portugal Day@en
+      - Dia de Portugal@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 06-10
+  - key: GalicianNationalDay
+    name:
+      - Galician National Day@en
+      - Santiago Apóstol o Día da Patria Galega@ga
+    calendar:
+      type: day-of-year
+      days:
+        - 07-25
+  - key: Assumption
+    name:
+      - Assumption@en
+      - Asunción@es
+      - Assunção de Nossa Senhora@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 08-15
+  - key: RepublicDayPT
+    name:
+      - Repulic Day (Portugal)@en
+      - Implantação da República@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 06-10
+  - key: NationalDayES
+    name:
+      - National Day (Spain)@en
+      - Fiesta Nacional de España@es
+    calendar:
+      type: day-of-year
+      days:
+        - 10-12
+  - key: AllSaints
+    name:
+      - All Saints Day@en
+      - Día de todos los Santos@es
+      - Dia de Todos-os-Santos@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 11-01
+  - key: RestorationOfIndependencePT
+    name:
+      - Restoration of Independence (Portugal)@en
+      - Restauração da Independência@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 12-01
+  - key: ConstitutionDayES
+    name:
+      - Constitution Day (Spain)@en
+      - Dia de la Constitucion Espanola@es
+    calendar:
+      type: day-of-year
+      days:
+        - 12-06
+  - key: ImmaculateConception
+    name:
+      - Immaculate Conception@en
+      - Inmaculada Concepción@es
+    calendar:
+      type: day-of-year
+      days:
+        - 12-08
+  - key: Christmas
+    name:
+      - Christmas Day@en
+      - Navidad@es
+      - Natal@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 12-25
+regions:
+  - id: World
+    name: "The Planet Earth@en"
+    type: Planet
+    locale: "*"
+  - id: Europe
+    name: "Europe@en"
+    type: Continent
+    parent: "World"
+  - id: "Spain"
+    name:
+      - España@es
+      - Spain@en
+      - Espagne@fr
+      - España@ga
+      - Espanha@pt
+    type: Country
+    parent: Europe
+    locale: es
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: Epiphany
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: LabourDay
+      - type: named
+        key: Assumption
+      - type: named
+        key: NationalDayES
+      - type: named
+        key: AllSaints
+      - type: named
+        key: ConstitutionDayES
+      - type: named
+        key: ImmaculateConception
+      - type: named
+        key: Christmas
+  - id: "Galicia"
+    name:
+      - Galicia@ga
+      - Galicia@es
+    type: Province
+    parent: Spain
+    locale: ga
+    holidays:
+      - type: named
+        key: GalicianLiteratureDay
+      - type: named
+        key: GalicianNationalDay
+  - id: "Portugal"
+    name: Portugal
+    type: Country
+    parent: Europe
+    locale: pt
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: Carnival
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: FreedomDayPT
+      - type: named
+        key: LabourDay
+      - type: named
+        key: CorpusChristi
+      - type: named
+        key: PortugalDayPT
+      - type: named
+        key: Assumption
+      - type: named
+        key: RepublicDayPT
+      - type: named
+        key: AllSaints
+      - type: named
+        key: RestorationOfIndependencePT
+      - type: named
+        key: ImmaculateConception
+      - type: named
+        key: Christmas
+  - id: "France"
+    name:
+      - France@fr
+      - France@en
+      - Francia@ga
+      - França@pt
+      - Francia@es
+    type: Country
+    parent: Europe
+    locale: fr

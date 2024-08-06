@@ -5,7 +5,6 @@ import Test.HUnit
 import Camino.Config
 import Data.Localised
 import Data.Maybe (fromJust, isJust)
-import Network.URI (parseURI)
 
 testConfig1 = Config {
   configParent = Just defaultConfig,
@@ -21,7 +20,9 @@ testConfig1 = Config {
     ],
     webLinks = [],
     webMaps = []
-  }
+  },
+  configCalendar = Nothing,
+  configRegions = Nothing
 }
 
 testConfig2 = Config {
@@ -36,7 +37,9 @@ testConfig2 = Config {
       }
     ],
     webMaps = []
-  }
+  },
+  configCalendar = Nothing,
+  configRegions = Nothing
 }
 
 testConfig :: Test

@@ -45,10 +45,12 @@ library
       Data.Description
       Data.DublinCore
       Data.Event
+      Data.Event.Date
       Data.Localised
       Data.Metadata
       Data.Placeholder
       Data.Propositional
+      Data.Region
       Graph.Graph
       Graph.Programming
   other-modules:
@@ -280,6 +282,7 @@ test-suite de-calixtinus-test
       CaminoSpec
       ConfigSpec
       DescriptionSpec
+      EventDateSpec
       EventSpec
       GraphSpec
       LocalisedSpec
@@ -287,6 +290,7 @@ test-suite de-calixtinus-test
       PlannerSpec
       ProgrammingSpec
       PropositionalSpec
+      RegionSpec
       TestUtils
       WalkingSpec
       Paths_de_calixtinus

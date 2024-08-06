@@ -47,7 +47,7 @@ module Camino.Preferences (
 import Data.Aeson
 import Data.List (find)
 import Data.Placeholder
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import Camino.Camino
 import Camino.Util
 import Camino.Walking
@@ -274,7 +274,7 @@ normalisePreferences :: [Camino] -- ^ A list of possible caminos
 normalisePreferences caminos preferences =
   let
     caminoId' = caminoId $ preferenceCamino preferences
-    camino = maybe (error ("Can't find camino with ID " ++ caminoId')) id (find (\c -> caminoId c == caminoId') caminos)
+    camino = maybe (error ("Can't find camino with ID " ++ unpack caminoId')) id (find (\c -> caminoId c == caminoId') caminos)
     locs = caminoLocations camino
     routes = M.fromList $ map (\r -> (routeID r, r)) (caminoRoutes camino)
   in
@@ -307,8 +307,8 @@ withStartFinish :: CaminoPreferences -> Location -> Location -> CaminoPreference
 withStartFinish preferences st fin = let
     camino' = preferenceCamino preferences
     routes' = preferenceRoutes preferences
-    start' = normalise camino' st
-    finish' = normalise camino' fin
+    start' = dereference camino' st
+    finish' = dereference camino' fin
     prefs' = preferences { preferenceStart = start', preferenceFinish = finish' }
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
     stops' = preferenceStops prefs' `S.intersection` allowed

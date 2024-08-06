@@ -27,6 +27,17 @@ a
   color: #2ab472
 .accommodation.home-stay
   color: #ff395c
+.and-list
+  display: inline
+  list-style-type: none
+  padding: 0
+  margin: 0
+.and-list li
+  display: inline
+.and-list li:not(:first-child):before
+  content: ", "
+.and-list li:not(:first-child):last-child:before
+  content: " and "
 .attribution
   font-size: x-small
 .best-accommodation
@@ -40,6 +51,15 @@ a
   color: #{toCssColour caminoBlue}
 .chosen-location-penance
   font-size: smaller
+.comma-list
+  display: inline
+  list-style-type: none
+  padding: 0
+  margin: 0
+.comma-list li
+  display: inline
+.comma-list li:not(:first-child):before
+  content: ", "
 .description-icon
   color: #{toCssColour informationBlue}
   padding-left: 0.5em;
@@ -52,6 +72,8 @@ a
     font-size: smaller
 .event
   margin-top: 1ex
+.event-hours
+  font-size: smaller
 .event-type
   color: #{toCssColour informationBlue}
 .event-type.event-pilgrimmass
@@ -119,6 +141,17 @@ a
       font-weight: bolder
 .note-type
    color: #{toCssColour informationBlue}
+.or-list
+  display: inline
+  list-style-type: none
+  padding: 0
+  margin: 0
+.or-list li
+  display: inline
+.or-list li:not(:first-child):before
+  content: ", "
+.or-list li:not(:first-child):last-child:before
+  content: " or "
 .poi-types
    color: #{toCssColour informationBlue}
 .show-on-map
@@ -152,12 +185,3 @@ a
   padding-left: 0
 .bar-separated-list li:not(:first-child)
   border-left: thin solid gray
-.comma-list
-  display: inline
-  list-style-type: none
-  padding: 0
-  margin: 0
-.comma-list li
-  display: inline
-.comma-list li:not(:first-child):before
-  content: ", "

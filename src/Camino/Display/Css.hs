@@ -24,7 +24,7 @@ import Data.Colour
 import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Localised (rootLocale)
-import Data.Text ()
+import Data.Text (Text)
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
@@ -46,7 +46,7 @@ toCssColour :: Colour Double -- ^ The colour to display
  -> String -- ^ A #rrggbb colour triple
 toCssColour = sRGB24show
 
-paletteCss :: String -> Palette -> Render CaminoRoute -> Css
+paletteCss :: Text -> Palette -> Render CaminoRoute -> Css
 paletteCss ident pal = [cassius|
 .#{ident}
   h1
@@ -196,4 +196,4 @@ caminoCss config camino = map (\c -> c router) (default':routes')
   where
     router = renderCaminoRoute config [rootLocale]
     default' = paletteCss "location-default" (routePalette $ caminoDefaultRoute camino)
-    routes' =  map (\r -> paletteCss ("location-" ++ (routeID r)) (routePalette r)) (caminoRoutes camino)
+    routes' =  map (\r -> paletteCss ("location-" <> routeID r) (routePalette r)) (caminoRoutes camino)

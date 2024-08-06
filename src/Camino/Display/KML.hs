@@ -102,8 +102,8 @@ locationStyles config locType iconBase = let
 caminoStyles :: Config -> CaminoPreferences -> [Node]
 caminoStyles config camino =
     foldr (\t -> \k -> k ++ locationStyles config t iconBase) [] locationStopTypeEnumeration ++
-    foldr (\r -> \k -> k ++ kmlRouteStyle (pack (routeID r <> "-used")) 8 1 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
-    foldr (\r -> \k -> k ++ kmlRouteStyle (pack (routeID r <> "-unused")) 4 0.5 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
+    foldr (\r -> \k -> k ++ kmlRouteStyle (routeID r <> "-used") 8 1 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
+    foldr (\r -> \k -> k ++ kmlRouteStyle (routeID r <> "-unused") 4 0.5 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
     kmlRouteStyle "default-used" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino') ++
     kmlRouteStyle "default-unused" 4 0.5 (paletteColour $ routePalette $ caminoDefaultRoute camino')
   where
@@ -163,7 +163,7 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
 
 caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationKml config preferences camino trip stops waypoints location = [xml|
-    <Placemark id="#{pack $ locationID location}">
+    <Placemark id="#{locationID location}">
       <name>#{locationNameLabel location}
       <description>^{caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints location}
       <styleUrl>#{caminoLocationStyle camino stops waypoints location}
@@ -180,7 +180,7 @@ caminoLegStyle camino _stops waypoints leg =
     used = if (S.member from' waypoints) && (S.member to' waypoints) then "-used" else "-unused"
     route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino')
   in
-    pack $ "#" ++ maybe "default" routeID route ++ used
+    "#" <> maybe "default" routeID route <> used
 
 caminoLegKml :: CaminoPreferences -> S.Set Location -> S.Set Location -> Leg -> [Node]
 caminoLegKml camino stops waypoints leg = [xml|

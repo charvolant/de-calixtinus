@@ -25,6 +25,7 @@ module Camino.Config (
   defaultConfig,
   getAsset,
   getAssets,
+  getCalendarName,
   getLink,
   getLinks,
   getMap,
@@ -32,11 +33,14 @@ module Camino.Config (
 ) where
 
 import GHC.Generics (Generic)
+import Control.Monad.Reader (runReader)
 import Data.Aeson
+import Data.Event (CalendarConfig(..), HasCalendarConfig(..), getNamedCalendarName)
 import qualified Data.Map as M
 import Data.Text (Text)
 import Data.List (find)
 import Data.Localised
+import Data.Region (HasRegionConfig(..), RegionConfig(..))
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
@@ -151,8 +155,10 @@ instance ToJSON WebConfig where
    
 -- | Configuration for what's needed to set up web pages and other resources
 data Config = Config {
-  configParent :: Maybe Config, -- ^ A parent configuration containing values that can over overridden by this configuration
-  configWeb :: WebConfig -- ^ Configuration for the web interface
+    configParent :: Maybe Config -- ^ A parent configuration containing values that can over overridden by this configuration
+  , configWeb :: WebConfig -- ^ Configuration for the web interface
+  , configCalendar :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
+  , configRegions:: Maybe RegionConfig -- ^ Common region definitions
 } deriving (Show)
 
 -- | The default configuration
@@ -237,18 +243,28 @@ defaultConfig = Config {
         mapTiles = "http://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
       }
     ]
-  }
+  },
+  configCalendar = Just (CalendarConfig [] M.empty),
+  configRegions = Just (RegionConfig [] M.empty)
 }
+
+instance HasCalendarConfig Config where
+  getCalendarConfig config = maybe (maybe (error "No calendar configuration") getCalendarConfig (configParent config)) id (configCalendar config)
+
+instance HasRegionConfig Config where
+  getRegionConfig config = maybe (maybe (error "No region configuration") getRegionConfig (configParent config)) id (configRegions config)
 
 instance FromJSON Config where
   parseJSON (Object v) = do
     web' <- v .: "web"
-    return $ Config  (Just defaultConfig) web'
+    calendar' <- v .:? "calendar"
+    regions' <- v .:? "regions"
+    return $ Config  (Just defaultConfig) web' calendar' regions'
   parseJSON v = unexpected v
     
 instance ToJSON Config where
-  toJSON (Config _parent' web') =
-    object [ "web" .= web' ]
+  toJSON (Config _parent' web' calendar' regions') =
+    object [ "web" .= web', "calendar" .= calendar', "regions" .= regions' ]
 
 getAssets' :: AssetType -> Config -> M.Map Text AssetConfig
 getAssets' asset config = let
@@ -316,6 +332,10 @@ getMap :: Maybe Text -- ^ The map identifier, if Nothing then the first map is c
   -> Config -- ^ The configuration
   -> Maybe MapConfig -- ^ The resulting map configuration
 getMap ident config = getRecursive ident (webMaps . configWeb) mapId config
+
+-- | Get the name of a calendar from the configuration
+getCalendarName :: Config -> Text -> Localised TaggedText
+getCalendarName config key = runReader (getNamedCalendarName key) config
 
 -- | Read a configuration from a YAML file
 --   The resulting configuration will have @defaultConfig@ as a parent.

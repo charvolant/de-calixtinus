@@ -427,45 +427,113 @@ solutionElements _camino (Just solution) = (
   ) where
     trip' = solutionTrip solution
 
-calendarBlock' :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
-calendarBlock' Daily = [ihamlet|_{DailyLabel}|]
-calendarBlock' (Weekly dow) = [ihamlet|
+calendarBlock :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
+calendarBlock Daily = [ihamlet|_{DailyLabel}|]
+calendarBlock (Weekly dow) = [ihamlet|
   <ol .comma-list .days-of-week-list>
     $forall d <- dow
       <li>_{DayOfWeekName d}#
   |]
-calendarBlock' (Monthly dom) = [ihamlet|
+calendarBlock (Monthly dom) = [ihamlet|
   <ol .comma-list .days-of-month-list>
     $forall d <- dom
       <li>_{DayOfMonthName d}#
   |]
-calendarBlock' (Yearly moy) = [ihamlet|
+calendarBlock (Yearly moy) = [ihamlet|
   <ol .comma-list .months-of-year-list>
     $forall m <- moy
       <li>_{MonthOfYearName m}#
   |]
-calendarBlock' (Conditional cal cond) = [ihamlet|
-  ^{calendarBlock' cal}
+calendarBlock (DayOfYear days) = [ihamlet|
+  <ol .comma-list .days-of-year-list>
+    $forall (month, day) <- days
+      <li>_{MonthOfYearName month} #{day}#
+  |]
+calendarBlock (RangeCalendar rfrom rto) = [ihamlet|
+  ^{calendarBlock rfrom} - ^{calendarBlock rto}
+  |]
+calendarBlock (UnionCalendar calendars) = [ihamlet|
+  <ol .or-list .days-of-year-list>
+    $forall cal <- calendars
+      <li>^{calendarBlock cal}#
+  |]
+calendarBlock (IntersectionCalendar calendars) = [ihamlet|
+  <ol .and-list .days-of-year-list>
+    $forall cal <- calendars
+      <li>^{calendarBlock cal}#
+  |]
+calendarBlock (InvertedCalendar calendar) = [ihamlet|
+  _{ExceptText} ^{calendarBlock calendar}
+  |]
+calendarBlock (NthDayAfter nth calendar) = [ihamlet|
+  _{OrdinalBeforeAfter nth DayText} ^{calendarBlock calendar}
+  |]
+calendarBlock (NthWeekday wom dow) = [ihamlet|
+  _{NthWeekdayText wom dow}
+  |]
+calendarBlock (NthWeekdayAfter nth dow calendar) = [ihamlet|
+  _{OrdinalAfterWeekday nth dow} ^{calendarBlock calendar}
+  |]
+calendarBlock (ListCalendar days) = [ihamlet|
+  <ol .comma-list .days-list>
+    $forall day <- days
+      _{DateMsg day}
+  |]
+calendarBlock (NamedCalendar key) = [ihamlet|
+  _{NamedCalendarLabel key}
+  |]
+calendarBlock (PublicHoliday region) = [ihamlet|
+  _{PublicHolidayLabel region}
+  |]
+calendarBlock (Conditional cal cond) = [ihamlet|
+  ^{calendarBlock cal}
   <div .calendar-condition>_{Txt cond}
   |]
 
-calendarBlock :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
-calendarBlock calendar = [ihamlet|
-  <div .float-end .mx-1 .calendar>
-    <span .description-icon .ca-calendar title="_{CalendarTitle}">
-    ^{calendarBlock' calendar}
-|]
-
-
-hoursBlock :: EventTime -> HtmlUrlI18n CaminoMsg CaminoRoute
-hoursBlock (EventTime hours) = [ihamlet|
-  <div .float-end .mx-1 .hours>
-    <span .description-icon .ca-clock title="_{OpenHoursTitle}">
-    <ol .comma-list .open-hours-list>
-      $forall (from, to) <- hours
-        <li>_{Time from} - _{Time to}#
+timeBlock :: EventTime -> HtmlUrlI18n CaminoMsg CaminoRoute
+timeBlock EventClosed = [ihamlet|_{ClosedText}|]
+timeBlock EventOpen = [ihamlet|_{OpenText}|]
+timeBlock (EventTime hours) = [ihamlet|
+  <ol .comma-list .open-hours-list>
+    $forall (from, to) <- hours
+      <li>_{Time from}-_{Time to}#
   |]
-  where
+
+
+hoursBlock :: OpenHours -> HtmlUrlI18n CaminoMsg CaminoRoute
+hoursBlock (OpenHours []) = [ihamlet||]
+hoursBlock (OpenHours [EventHours Daily time]) = [ihamlet|
+  <div .row .event-hours>
+    <div .col>
+    <div .col>
+      <span .description-icon .ca-clock title="_{OpenHoursTitle}">
+      ^{timeBlock time}
+  |]
+hoursBlock (OpenHours [EventHours calendar EventOpen]) = [ihamlet|
+  <div .row .event-hours>
+    <div .col>
+      <span .description-icon .ca-calendar title="_{CalendarTitle}">
+      ^{calendarBlock calendar}
+    <div .col>
+  |]
+hoursBlock (OpenHours hours) = [ihamlet|
+  $with (EventHours calendar time) <- head hours
+    <div .row .event-hours>
+      <div .col>
+        <span .description-icon .ca-calendar title="_{CalendarTitle}">
+        ^{calendarBlock calendar}
+      <div .col>
+        <span .description-icon .ca-clock title="_{OpenHoursTitle}">
+        ^{timeBlock time}
+  $forall (EventHours calendar time) <- tail hours
+    <div .row .event-hours>
+      <div .col>
+        <span .invisible .description-icon .ca-calendar title="_{CalendarTitle}">
+        ^{calendarBlock calendar}
+      <div .col>
+        <span .invisible .description-icon .ca-clock title="_{OpenHoursTitle}">
+        ^{timeBlock time}
+  |]
 
 descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
@@ -619,8 +687,6 @@ caminoEventHtml event = [ihamlet|
               <span .ca-link>
         $maybe t <- eventHours event
           ^{hoursBlock t}
-        $maybe c <- eventCalendar event
-          ^{calendarBlock c}
   $maybe d <- eventDescription event
     <div .row>
       <div .col>
@@ -646,10 +712,8 @@ caminoPointOfInterestHtml poi = [ihamlet|
               <span .ca-link>
       $if hasBody
         <div .card-body>
-            $maybe t <- poiHours poi
-              ^{hoursBlock t}
-            $maybe c <- poiCalendar poi
-              ^{calendarBlock c}
+            $maybe c <- poiHours poi
+              ^{hoursBlock c}
             $maybe d <- poiDescription poi
               ^{descriptionBlock False d}
             $forall event <- poiEvents poi
@@ -657,7 +721,7 @@ caminoPointOfInterestHtml poi = [ihamlet|
   |]
   where
     hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc)
-    hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiCalendar poi) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
+    hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiHours poi) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId stops waypoints used location = [ihamlet|

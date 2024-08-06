@@ -358,6 +358,97 @@ The types of calendar are:
     "months": [ 5, 6, 7 ]
   },
   {
+    "type": "day-of-year",
+    "days": [ "04-21", "10-23" ]
+  },
+  {
+    "type": "range",
+    "from": {
+      "type": "day-of-year",
+      "days": ["01-01"]
+    },
+    "to": {
+      "type": "weekly",
+      "days": ["friday"]
+    }
+  },
+  {
+    "type": "union",
+    "calendars": [
+      {
+        "type": "named",
+        "key": "Christmas"
+      },
+      {
+        "type": "named",
+        "key": "BoxingDay"
+      }
+    ]
+  },
+  {
+    "type": "intersection",
+    "calendars": [
+      {
+        "type": "monthly",
+        "days": [ 1, 8, 15 ]
+      },
+      {
+        "type": "weekly",
+        "days": [ "monday", "wednesday"]
+      }
+    ]
+  },
+  {
+    "type": "except",
+    "calendar": [
+      {
+        "type": "yearly",
+        "months": [ 1, 2, 3 ]
+      }
+    ]
+  },
+  {
+    "type": "nth-day-after",
+    "nth": 4,
+    "calendar": [
+      {
+        "type": "monthly",
+        "days": [ 1, 14, 21 ]
+      }
+    ]
+  },
+  {
+    "type": "nth-weekday",
+    "nth": "Last",
+    "day": "friday"
+  },
+  {
+    "type": "nth-weekday-after",
+    "nth": 2,
+    "day": "friday",
+    "calendar": {
+      "type": "named",
+      "key": "Christmas"
+    }
+  },
+  {
+    "type": "list",
+    "dates": [
+      "2023-10-11",
+      "2024-10-15",
+      "2025-10-09",
+      "2026-10-14"
+    ]
+  },
+  {
+    "type": "named",
+    "key": "EasterSunday"
+  },
+  {
+    "type": "public-holiday",
+    "region": "Galicia"
+  },
+  {
     "type": "conditional",
     "calendar":     {
       "type": "weekly",
@@ -376,17 +467,72 @@ The types of calendar are:
 * Yearly calendars occur in specific months of the year.
   The months are month numbers, counting from 0 for January.
   In the sample, the venue is open only in June, July and August.
+* Day of year calendars give dates that repeast every year, with days given in month-day format.
+  In the example, the calendar specifies the 21st of April and the 23rd of October every year.
+* Range calendars specify a range from the start of one calendar to the end of another, relative to the start point.
+  In the example, the range is from the 1st of January each year until the following (or on) Friday.
+* Union calendars are a collection of other calendars. Any matching calendar indicates a date in the calendar.
+  In the example, both Christmas and Boxing Day match.
+* Intersection calendars are a collection of other calendars. All the component calendars must match a date for it to be in the intersection.
+  In the example, the intersection is the 1st, 8th and 15th of the month when they fall on a Monday or Wednesday. 
+* An except calendar inverts the calendar. Any data not in the component calendar is a match.
+  In the example, January, February and March are excluded but any other day is in the calnedar.
+* The Nth-day-after calendar fits a data to a number of days after (or before, if the number is negative) a reference calendar.
+  In the example, the calendar days 4 days after the 1st, 14th or 21st of the month.
+* The Nth-weekday specifies dates such as "second Tuesday in the month". 
+  The nth value can be `First`, `Second`, `Third`, `Fouth` `Fifth` or `Last`, with the fifth being the same as the fourth if there is no fifth.
+  In the example, an even falls on the last Friday of every month.
+* The Nth-weekday-after calndar specifies the nth day of week after a reference calendar.
+  In the example, the calendar specifies the second Friday after Christmas.
+  If the value is negative then it means the nth weekday before the reference calendar.
+* A list calendar just gives up trying to specify a rule and just gives a list of dates in ISO-8601 format.
+  In the example, different days in October are specified for a number of years.
+* A named calendar has an external specification, usually in the configuration file.
+  The calendar has a key that can be used to look up the calendar definition.
+  These calndars can be configured to have locale-specific names (eg. Christmas or Navidad) and use a key, rather than a name.
+  The example refers to Easter Sunday, which moves about the calendar and is usually configured as a list.
+* A public holiday calendar refers to all the public holidays in a region, given by a region identifier.
+  The example refers to all public holidays take in Galicia, including Spanish national holidays.
 * A conditional calendar takes another calendar and adds a text condition.
 
-Times give the hour of the day that something happens, is open, etc.
+**Times** give the hour of the day that something happens, is open, etc.
 Times are represented by a string containing pairs of start and finish times.
 The times are local times using the 24-hour clock.
 Start and finish times are separated by a `-` and ranges by a `,`.
 For example: `"0830-1200,1400-1930"` means 8:30am to 12 noon and then
 2pm to 7:30pm.
 
-**TBD** More sophisticated calendars and times,
-The eventual aim here is to know when someone is passing by at the right time.
+The special text `"open"` means open all hours.
+The special text `"closed"` means that the location is closed.
+This can be used, in conjunction with hours (below) to indicate exceptions.
+
+**Hours** give the opening hours or event times for something and usually
+represent a paired calendar and set of times.
+If multiple hours are given, then the first one that matches the calendar
+applies.
+For example:
+
+```json
+"hours": [
+    {
+      "calendar": {
+        "type": "named",
+        "key": "Christmas"
+      },
+      "hours": "closed"
+    },
+    {
+      "calendar": {
+        "type": "weekly",
+        "days": [ "monday", "tuesday", "wednesday", "thursday" ]
+      },
+      "hours": "1000-1430,1630-200"
+    }
+]
+```
+
+means something that is open on weekdays from 10am to 2:30pm and then
+4:30pm to 8pm, except on Christmas Day, when it is closed.
 
 ## Header
 
@@ -529,11 +675,15 @@ And example PoI is
   ],
   "type": "Museum",
   "position": { "latitude": 38.72508, "longitude": -9.11347 },
-  "calendar": {
-    "type": "weekly",
-    "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-  },
-  "hours": "1000-1800"
+  "hours": [
+    {
+      "calendar": {
+        "type": "weekly",
+        "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+      },
+      "hours": "1000-1800"
+    }
+  ]
 }
 ```
 The fields are
@@ -542,8 +692,7 @@ The fields are
 * `description` Any optional [descriptive](#description) information
 * `type` The PoI (location) type
 * `position` The latitude and longitude of the PoI
-* `calendar` An optional [calendar](#calendar-and-times) showing when the PoI is open
-* `hours` An optional [time range](#calendar-and-times) showing when the PoI is open
+* `hours` An optional set of [opening hours](#calendar-and-times) showing when the PoI is open
 * `events` An optional list of [events](#events) associated with the PoI
 
 ### Events
@@ -567,8 +716,7 @@ The fields are
 * `name` The name of the event, possibly [localised](#localisation)
 * `description` Any optional [descriptive](#description) information
 * `type` The event type
-* `calendar` An optional [calendar](#calendar-and-times) showing when the event occurs
-* `hours` Optional [time ranges](#calendar-and-times) showing when the event occurs
+* `hours` Optional [hours](#calendar-and-times) showing when the event occurs
 
 ## Legs
 

@@ -145,10 +145,10 @@ subtractFloor _ Reject = mempty
 subtractFloor (Penance p1) (Penance p2) = if p2 > p1 then mempty else Penance (p1 - p2)
 
 -- | Spatial reference system
-data SRS = SRS String
+data SRS = SRS Text
   deriving (Eq, Show)
 
-srsID :: SRS -> String
+srsID :: SRS -> Text
 srsID (SRS sid) = sid
 
 instance Default SRS where
@@ -338,8 +338,7 @@ data Event = Event {
     eventName :: Localised TaggedText -- ^ The name of the event
   , eventDescription :: Maybe Description -- ^ Detailed description
   , eventType :: EventType -- ^ The event type
-  , eventCalendar :: Maybe EventCalendar -- ^ Dates when the event occurs
-  , eventHours :: Maybe EventTime -- ^ The times the event occurs
+  , eventHours :: Maybe OpenHours -- ^ Dates/times when the event occurs
   } deriving (Show)
 
 instance FromJSON Event where
@@ -347,24 +346,21 @@ instance FromJSON Event where
     name' <- v .: "name"
     description' <- v .:? "description" .!= Nothing
     type' <- v .: "type"
-    calendar' <- v .:? "calendar"
     hours' <- v .:? "hours"
     return Event {
         eventName = name'
       , eventDescription = description'
       , eventType = type'
-      , eventCalendar = calendar'
       , eventHours = hours'
     }
   parseJSON v = typeMismatch "expecting object" v
 
 instance ToJSON Event where
-    toJSON (Event name' description' type' calendar' hours') =
+    toJSON (Event name' description' type' hours') =
       object [
           "name" .= name'
         , "description" .= description'
         , "type" .= type'
-        , "calendar" .= calendar'
         , "hours" .= hours'
       ]
 
@@ -424,8 +420,7 @@ data PointOfInterest = PointOfInterest {
   , poiDescription :: Maybe Description -- ^ Detailed description
   , poiType :: LocationType -- ^ The point of interest type, same as a location type
   , poiPosition :: Maybe LatLong -- ^ Location, if it's that sort of thing
-  , poiCalendar :: Maybe EventCalendar -- ^ Dates when the point of interest is open
-  , poiHours :: Maybe EventTime -- ^ Opening hours
+  , poiHours :: Maybe OpenHours -- ^ Dates and times when the point of interest is open
   , poiEvents :: [Event] -- ^ Associated events
 } deriving (Show)
 
@@ -435,7 +430,6 @@ instance FromJSON PointOfInterest where
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
     position' <- v .:? "position"
-    calendar' <- v .:? "calendar"
     hours' <- v .:? "hours"
     events' <- v .:? "events" .!= []
     return PointOfInterest {
@@ -443,20 +437,18 @@ instance FromJSON PointOfInterest where
       , poiDescription = description'
       , poiType = type'
       , poiPosition = position'
-      , poiCalendar = calendar'
       , poiHours = hours'
       , poiEvents = events'
     }
   parseJSON v = typeMismatch "expecting object" v
 
 instance ToJSON PointOfInterest where
-    toJSON (PointOfInterest name' description' type' position' calendar' hours' events') =
+    toJSON (PointOfInterest name' description' type' position' hours' events') =
       object [
           "name" .= name'
         , "description" .= description'
         , "type" .= type'
         , "position" .= position'
-        , "calendar" .= calendar'
         , "hours" .= hours'
         , "events" .= if null events' then Nothing else Just events'
       ]
@@ -465,7 +457,7 @@ instance ToJSON PointOfInterest where
 --   and which may have accommodation and other services available.
 --   Locations form the vertexes on the travel graph
 data Location = Location {
-    locationID :: String
+    locationID :: Text
   , locationName :: Localised TaggedText
   , locationDescription :: Maybe Description
   , locationType :: LocationType
@@ -477,11 +469,11 @@ data Location = Location {
   , locationCamping :: Bool
 } deriving (Show)
 
-instance Placeholder Camino Location where
+instance Placeholder Text Location where
   placeholderID = locationID
   placeholder lid = Location {
       locationID = lid
-    , locationName = wildcardText $ pack ("Placeholder for " ++ lid)
+    , locationName = wildcardText $ ("Placeholder for " <> lid)
     , locationDescription = Nothing
     , locationType = Poi
     , locationPosition = Nothing
@@ -491,11 +483,10 @@ instance Placeholder Camino Location where
     , locationEvents = []
     , locationCamping = False
   }
-  normalise camino location = maybe location id (M.lookup (locationID location) (caminoLocations camino))
 
 instance FromJSON Location where
   parseJSON (String v) = do
-    return $ placeholder (unpack v)
+    return $ placeholder v
   parseJSON (Object v) = do
     id' <- v .: "id"
     name' <- v .: "name"
@@ -537,7 +528,7 @@ instance ToJSON Location where
       ]
 
 instance Vertex Location where
-  identifier = locationID
+  identifier v = unpack $ locationID v
 
 instance Eq Location where
   a == b = locationID a == locationID b
@@ -644,7 +635,7 @@ instance Ord Leg where
     | otherwise = legDistance a `compare` legDistance b
 
 -- | Ensure a leg has locations mapped correctly
-normaliseLeg :: M.Map String Location -> Leg -> Leg
+normaliseLeg :: M.Map Text Location -> Leg -> Leg
 normaliseLeg locs (Leg type' from to description distance time ascent descent penance) =
   Leg { legType = type', legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDescription = description, legDistance = distance, legTime = time, legAscent = ascent, legDescent = descent, legPenance = penance }
 
@@ -670,7 +661,7 @@ instance Default Palette where
 
 -- | A route, a sub-section of the camino with graphical information
 data Route = Route {
-    routeID :: String -- ^ An identifier for the route
+    routeID :: Text -- ^ An identifier for the route
   , routeName :: Localised TaggedText -- ^ The route name
   , routeDescription :: Description -- ^ The route description
   , routeLocations :: S.Set Location -- ^ The locations along the route
@@ -682,7 +673,7 @@ data Route = Route {
 
 instance FromJSON Route where
     parseJSON (String v) = do
-      return $ placeholder (unpack v)
+      return $ placeholder v
     parseJSON (Object v) = do
       id' <- v .: "id"
       name' <- v .: "name"
@@ -723,11 +714,11 @@ instance Eq Route where
 instance Ord Route where
   a `compare` b = routeID a `compare` routeID b
 
-instance Placeholder Camino Route where
+instance Placeholder Text Route where
   placeholderID = routeID
   placeholder rid = Route {
       routeID = rid
-    , routeName = wildcardText $ pack ("Placeholder for " ++ rid)
+    , routeName = wildcardText $ ("Placeholder for " <> rid)
     , routeDescription = wildcardDescription ""
     , routeLocations = S.empty
     , routeStops = S.empty
@@ -735,15 +726,17 @@ instance Placeholder Camino Route where
     , routeFinishes = []
     , routePalette = def
   }
+
+instance Normaliser Text Route Camino where
   normalise camino route = route {
-       routeLocations = remapsl (routeLocations route)
-     , routeStops = remapsl (routeStops route)
-     , routeStarts = remapl (routeStarts route)
-     , routeFinishes = remapl (routeFinishes route)
+       routeLocations = dereferenceS camino (routeLocations route)
+     , routeStops = dereferenceS camino  (routeStops route)
+     , routeStarts = dereferenceF camino (routeStarts route)
+     , routeFinishes = dereferenceF camino (routeFinishes route)
    }
-   where
-     remapsl = S.map (normalise camino)
-     remapl = map (normalise camino)
+
+instance Dereferencer Text Route Camino where
+  dereference camino route = maybe route id $ find (\r -> placeholderID r == rid) (caminoRoutes camino) where rid = placeholderID route
 
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
@@ -764,7 +757,7 @@ instance FromJSON (Formula Route) where
   parseJSON (Bool v) = do
     return $ if v then T else F
   parseJSON (String v) = do
-    return $ Variable $ placeholder (unpack v)
+    return $ Variable $ placeholder v
   parseJSON (Object v) = do
     and' <- v .:? "and"
     or' <- v .:? "or"
@@ -782,7 +775,7 @@ instance FromJSON (Formula Route) where
 instance ToJSON (Formula Route) where
   toJSON T = Bool True
   toJSON F = Bool False
-  toJSON (Variable route) = String $ pack $ placeholderID route
+  toJSON (Variable route) = String $ placeholderID route
   toJSON (And fs) = object [ "and" .= fs ]
   toJSON (Or fs) = object [ "or" .= fs ]
   toJSON (Not f) = object [ "not" .= f ]
@@ -822,22 +815,22 @@ instance ToJSON RouteLogic where
     where
       nonEmpty v = if S.null v then Nothing else Just v
 
-normaliseFormula :: Camino -> Formula Route -> Formula Route
-normaliseFormula camino (Variable route) = Variable $ normalise camino route    
-normaliseFormula camino (And fs) = And (map (normaliseFormula camino) fs)  
-normaliseFormula camino (Or fs) = Or (map (normaliseFormula camino) fs)  
-normaliseFormula camino (Not f) = Not $ normaliseFormula camino f 
-normaliseFormula camino (Implies p c) = Implies (normaliseFormula camino p) (normaliseFormula camino c) 
-normaliseFormula _camino f = f
+dereferenceFormula :: Camino -> Formula Route -> Formula Route
+dereferenceFormula camino (Variable route) = Variable $ dereference camino route
+dereferenceFormula camino (And fs) = And (map (dereferenceFormula camino) fs)
+dereferenceFormula camino (Or fs) = Or (map (dereferenceFormula camino) fs)
+dereferenceFormula camino (Not f) = Not $ dereferenceFormula camino f
+dereferenceFormula camino (Implies p c) = Implies (dereferenceFormula camino p) (dereferenceFormula camino c)
+dereferenceFormula _camino f = f
 
 normaliseRouteLogic :: Camino -> RouteLogic -> RouteLogic
 normaliseRouteLogic camino logic = logic {
-      routeLogicCondition = normaliseFormula camino (routeLogicCondition logic)
-    , routeLogicRequires = S.map (normalise camino) (routeLogicRequires logic)
-    , routeLogicAllows = S.map (normalise camino) (routeLogicAllows logic)
-    , routeLogicProhibits = S.map (normalise camino) (routeLogicProhibits logic)
-    , routeLogicInclude = S.map (normalise camino) (routeLogicInclude logic)
-    , routeLogicExclude = S.map (normalise camino) (routeLogicExclude logic)
+      routeLogicCondition = dereferenceFormula camino (routeLogicCondition logic)
+    , routeLogicRequires = S.map (dereference camino) (routeLogicRequires logic)
+    , routeLogicAllows = S.map (dereference camino) (routeLogicAllows logic)
+    , routeLogicProhibits = S.map (dereference camino) (routeLogicProhibits logic)
+    , routeLogicInclude = S.map (dereference camino) (routeLogicInclude logic)
+    , routeLogicExclude = S.map (dereference camino) (routeLogicExclude logic)
   }
 
 createLogicClauses' :: RouteLogic -> S.Set Route -> [Formula Route]
@@ -864,11 +857,11 @@ createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits lo
 -- | A way, consisting of a number of legs with a start and end
 --   The purpose of the Camino Planner is to divide a camino into 
 data Camino = Camino {
-    caminoId :: String
+    caminoId :: Text
   , caminoName :: Localised TaggedText
   , caminoDescription :: Description
   , caminoMetadata :: Metadata
-  , caminoLocations :: M.Map String Location -- ^ The camino locations
+  , caminoLocations :: M.Map Text Location -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
   , caminoRoutes :: [Route] -- ^ Named sub-routes
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
@@ -928,13 +921,13 @@ instance ToJSON Camino where
     ]
 
 instance Graph Camino Leg Location where
-  vertex camino vid = (caminoLocations camino) M.! vid
+  vertex camino vid = (caminoLocations camino) M.! (pack vid)
   edge camino loc1 loc2 = find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
   subgraph (Camino id' name' description' metadata' locations' legs' routes' routeLogic' defaultRoute') allowed  = 
     let
-      id'' = id' ++ "'"
+      id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
       locations'' = M.filter (\l -> S.member l allowed) locations'
       legs'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) legs'
@@ -945,17 +938,17 @@ instance Graph Camino Leg Location where
       Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoRoutes = routes'', caminoRouteLogic = routeLogic'', caminoDefaultRoute = defaultRoute'' }
   mirror camino =
     let
-      id'' = caminoId camino ++ "'"
+      id'' = caminoId camino <> "'"
       name'' = caminoName camino `appendText` " mirrored"
       legs'' = map (\l -> l { legFrom = legTo l, legTo = legFrom l, legAscent = legDescent l, legDescent = legAscent l}) (caminoLegs camino)
     in
       camino { caminoId = id'', caminoName = name'', caminoLegs = legs'' }
       
-instance Placeholder [Camino] Camino where
+instance Placeholder Text Camino where
   placeholderID = caminoId
   placeholder cid = Camino {
         caminoId = cid
-      , caminoName = wildcardText $ pack ("Placeholder for " ++ cid)
+      , caminoName = wildcardText $ "Placeholder for " <> cid
       , caminoDescription = wildcardDescription ""
       , caminoMetadata = Metadata [] []
       , caminoLocations = M.empty
@@ -965,7 +958,9 @@ instance Placeholder [Camino] Camino where
       , caminoDefaultRoute = dr
     }
     where
-      dr = placeholder ("DR-" ++ cid)
+      dr = placeholder ("DR-" <> cid)
+
+instance Normaliser Text Camino [Camino] where
   normalise caminos camino = let
       found = find (\c -> caminoId c == caminoId camino) caminos
     in
@@ -978,6 +973,9 @@ instance Placeholder [Camino] Camino where
       camino4 = camino3 { caminoRouteLogic = map (normaliseRouteLogic camino3) (caminoRouteLogic camino3)  }
     in
       camino4
+
+instance Dereferencer Text Location Camino where
+  dereference camino location = maybe location id (M.lookup (placeholderID location) (caminoLocations camino))
 
 -- | Get a simple text version of the camino name
 caminoNameLabel :: Camino -> Text
@@ -1119,7 +1117,7 @@ readCamino file = do
 
 -- Dump a camino as a semi-readable string
 caminoDump :: Camino -> String
-caminoDump camino = "Camino { " ++ caminoId camino ++ ": " ++ unpack (localiseDefault $ caminoName camino) ++
-  ", defaultRoute = " ++ (routeID $ caminoDefaultRoute camino) ++
+caminoDump camino = "Camino { " ++ unpack (caminoId camino) ++ ": " ++ unpack (localiseDefault $ caminoName camino) ++
+  ", defaultRoute = " ++ unpack (routeID $ caminoDefaultRoute camino) ++
   ", routes = " ++ show (map routeID $ caminoRoutes camino) ++
   ", locations = "++ show (M.keys $ caminoLocations camino)

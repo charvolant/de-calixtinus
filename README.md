@@ -173,3 +173,7 @@ See [doc/BUILD.md](doc/BUILD.md)
 ## Making Your Own Camino
 
 See [doc/CAMINO.md](doc/CAMINO.md)
+
+## Configuration
+
+See [doc/CONFIG.md](doc/CONFIG.md)

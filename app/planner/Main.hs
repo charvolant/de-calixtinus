@@ -21,11 +21,10 @@ import Camino.Display.Routes
 import Camino.Config
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
-import Data.List.Split
 import Data.Localised (localeFromIDOrError)
 import Data.Placeholder
 import qualified Data.Set as S
-import qualified Data.Text as ST (unpack)
+import qualified Data.Text as ST (pack, splitOn, unpack)
 import Options.Applicative
 import Text.XML
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
@@ -72,9 +71,9 @@ plan opts = do
     let output' = output opts
     let begin' = vertex camino' (begin opts)
     let end' = vertex camino' (end opts)
-    let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholder (splitOn "," (routes opts))
-    let stops' =  if stops opts == "" then S.empty else S.fromList $ map placeholder (splitOn "," (stops opts))
-    let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholder (splitOn "," (exclude opts))
+    let routes' = if routes opts == "" then S.empty else S.fromList $ map placeholder (ST.splitOn "," (ST.pack $ routes opts))
+    let stops' =  if stops opts == "" then S.empty else S.fromList $ map placeholder (ST.splitOn "," (ST.pack $ stops opts))
+    let excluded' = if exclude opts == "" then S.empty else S.fromList $ map placeholder (ST.splitOn "," (ST.pack $ exclude opts))
     let caminoPrefs' = withRoutes (defaultCaminoPreferences camino') routes'
     let caminoPrefs'' = normalisePreferences [camino'] $ caminoPrefs' {
        preferenceStart = begin',

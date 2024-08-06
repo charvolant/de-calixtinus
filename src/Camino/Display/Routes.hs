@@ -37,5 +37,5 @@ renderCaminoRoute config _locales (AssetRoute ident) _ = findAssetPath ident con
 renderCaminoRoute config _locales (IconRoute ident) _ = (findAssetPath "icons" config) <> "/" <> ident
 renderCaminoRoute config _locales (ImgRoute img thumb) _ = resolveLink (findAssetPath "images" config) (imageToLink thumb img)
 renderCaminoRoute config locales (LinkRoute tl) _ = resolveLink (findAssetPath "links" config) (maybe invalidLink id (localise locales tl))
-renderCaminoRoute _config  _locales (LocationRoute location) _ = "#" <> pack (locationID location)
+renderCaminoRoute _config  _locales (LocationRoute location) _ = "#" <> locationID location
 renderCaminoRoute config  _locales MapTileRoute _ = maybe "invalid/map.png" mapTiles (getMap Nothing config)

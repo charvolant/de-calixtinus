@@ -11,7 +11,7 @@ Portability : POSIX
 module Main (main) where
 
 import Camino.Camino
-import Data.Text.Lazy (pack, unpack, fromStrict)
+import Data.Text.Lazy (unpack, fromStrict)
 import Formatting
 
 import Options.Applicative
@@ -29,7 +29,7 @@ printLocation l = do
   putStr $ unpack $ locFormat id' name' lat' lon'
   where
     locFormat = format (text % " " % text % " " % fixed 5 % "," % fixed 5 % "\n")
-    id' = pack $ locationID l
+    id' = fromStrict $ locationID l
     name' = fromStrict $ locationNameLabel l
     position' = locationPosition l
     lat' = maybe 0.0 latitude position'

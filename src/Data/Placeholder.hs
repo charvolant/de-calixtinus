@@ -23,12 +23,11 @@ module Data.Placeholder (
     Dereferencer(..)
   , Normaliser(..)
   , Placeholder(..)
-  , ReferenceMap
 
   , normaliseReferences
 ) where
 
-import Data.List (partition)
+import Data.List (find, partition)
 import qualified Data.Map as M
 import qualified Data.Set as S
 
@@ -72,15 +71,26 @@ class (Placeholder k a) => Dereferencer k a ctx where
   dereferenceS ctx items = S.map (dereference ctx) items
 
 
-type ReferenceMap k a = M.Map k a
+-- | We can always make a dereferecer out of a list
+instance (Placeholder k a) => Dereferencer k a [a] where
+  dereference ctx v = maybe v id (find (\x -> placeholderID x == vid) ctx) where vid = placeholderID v
+
+
+-- | We can always make a dereferecer out of a map
+instance (Placeholder k a) => Dereferencer k a (M.Map k a) where
+  dereference ctx v = maybe v id (M.lookup (placeholderID v) ctx)
+
+-- | We can always make a dereferecer out of a mapping function
+instance (Placeholder k a) => Dereferencer k a (k -> Maybe a) where
+  dereference ctx v = maybe v id (ctx (placeholderID v))
 
 -- | Normalise internal references
 --   This takes a list of items with placeholder references and proceeds to rebuild the set with correct references.
 --   This implementation uses
-normaliseReferences :: (Normaliser k a (ReferenceMap k a)) => [a] -> [a]
+normaliseReferences :: (Normaliser k a (M.Map k a)) => [a] -> [a]
 normaliseReferences items = normaliseReferences' items M.empty
 
-normaliseReferences' :: (Normaliser k a (ReferenceMap k a)) => [a] -> ReferenceMap k a -> [a]
+normaliseReferences' :: (Normaliser k a (M.Map k a)) => [a] -> M.Map k a -> [a]
 normaliseReferences' [] seen = M.elems seen
 normaliseReferences' remaining seen = let
     known = M.keysSet seen

@@ -9,7 +9,6 @@ import Data.Description
 import Data.Event
 import Data.Localised
 import Data.Maybe (fromJust, isJust, isNothing)
-import qualified Data.Map as M
 import Data.Region
 import qualified Data.Set as S
 import Text.RawString.QQ
@@ -124,11 +123,11 @@ testRegionConfigFromJSON1 =
       assertBool "RegionConfig FromJSON 1 1" (isJust decoded)
       let decoded' = fromJust decoded
       assertEqual "RegionConfig FromJSON 1 2" 2 (length $ regionConfigRegions decoded')
-      let world = (regionConfigMap decoded') M.!? "World"
+      let world = (regionConfigLookup decoded') "World"
       assertBool "RegionConfig FromJSON 1 3" (isJust world)
       let world' = fromJust world
       assertEqual "RegionConfig FromJSON 1 4" "World" (regionID world')
-      let europe = (regionConfigMap decoded') M.!? "Europe"
+      let europe = (regionConfigLookup decoded') "Europe"
       assertBool "RegionConfig FromJSON 1 5" (isJust europe)
       let europe' = fromJust europe
       assertEqual "RegionConfig FromJSON 1 6" "Europe" (regionID europe')

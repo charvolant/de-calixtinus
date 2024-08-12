@@ -144,7 +144,7 @@ so there is a system for secondary membership of other regions.
 An example pair of regions is 
 
 ```yaml
-  - id: "Spain"
+  - id: "ES"
     name:
       - España@es
       - Spain@en
@@ -160,14 +160,14 @@ An example pair of regions is
       - type: named
         key: Epiphany
       # ...
-  - id: "Galicia"
+  - id: "ES-GA"
     name:
       - Galicia@ga
       - Galicia@es
     type: Province
-    parent: Spain
+    parent: ES
     member: 
-      - GaliciaNorthPortugalEuroregion
+      - GNPE
     locale: ga
     holidays:
       - type: named
@@ -179,17 +179,22 @@ An example pair of regions is
 
 The fields are
 
-| Field | Description                                                     | Example |
-| --- |-----------------------------------------------------------------| --- |
-| id | The region identifier, used so that the region can be referenced | `Europe` |
-| name | A localisable name for the region                               | `Europa@es` |
-| type | The type of region, see below                                   | `Sea` |
-| parent | An optional parent region, given by id                          | `World` |
-| member | A list of other, secondary, regional memberships                | `EU` |
-| locale | The locale, see [localisation](CONFIG.md#supported-languages)   | `pt` |
+| Field | Description                                                          | Example |
+| --- |----------------------------------------------------------------------| --- |
+| id | The region identifier, used so that the region can be referenced.    | `Europe` |
+| name | A localisable name for the region                                    | `Europa@es` |
+| type | The type of region, see below                                        | `Sea` |
+| parent | An optional parent region, given by id                               | `World` |
+| member | A list of other, secondary, regional memberships                     | `EU` |
+| locale | The locale, see [localisation](CONFIG.md#supported-languages)        | `pt` |
 | holidays | A list of observed holidays. These are usually [configured calendars](#calendars) | `Easter` |
 
-The hierarchy inherits or accumulates vaklues.
+For identifiers, using the [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) two letter codes for countries and
+[ISO-3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) codes for regions is a good idea.
+If you want something more complex, try the
+[Getty Thesaurus od Geographic Names](https://www.getty.edu/research/tools/vocabularies/tgn/).
+
+The hierarchy inherits or accumulates values.
 For example, the locales for Galicia would be `ga`, `es` and `*` in that order.
 Similarly, Galicia observes both Galician Literture Day and Epiphany as
 public holidays.

@@ -64,17 +64,24 @@ instance FromJSON CalendarConfigEntry where
 -- | Top-level calendar configureation for named calendars.
 --   This is intended to be embedded in a ReaderT so that readers and writers can access common calendar defintions
 data CalendarConfig = CalendarConfig {
-    configCalendars :: [CalendarConfigEntry]
-  , configCalendarMap :: M.Map Text CalendarConfigEntry
-} deriving (Show, Eq)
+    calendarConfigCalendars :: [CalendarConfigEntry]
+  , calendarConfigLookup :: Text -> Maybe CalendarConfigEntry
+}
 
+instance Show CalendarConfig where
+  show config = showString "CalendarConfig: " $ showList (calendarConfigCalendars config) ""
+
+instance Eq CalendarConfig where
+  config1 == config2 = (calendarConfigCalendars config1) == (calendarConfigCalendars config2)
+  
 instance ToJSON CalendarConfig where
-  toJSON config = toJSON $ configCalendars config
+  toJSON config = toJSON $ calendarConfigCalendars config
 
 instance FromJSON CalendarConfig where
   parseJSON v@(Array _) = do
     calendars' <- parseJSONList v :: Parser [CalendarConfigEntry]
-    return $ CalendarConfig calendars' (M.fromList $ map (\e -> (ceKey e, e)) calendars')
+    let calendarMap = M.fromList $ map (\e -> (ceKey e, e)) calendars'
+    return $ CalendarConfig calendars' (\k -> M.lookup k calendarMap)
   parseJSON v = typeMismatch "array of calendar entries" v
 
 class HasCalendarConfig a where
@@ -87,15 +94,16 @@ instance HasCalendarConfig CalendarConfig where
 createCalendarConfig :: [(Text, Localised TaggedText, EventCalendar)] -> CalendarConfig
 createCalendarConfig entries = let
     ces = map (\(k, n, c) -> CalendarConfigEntry k n c) entries
+    cesm = M.fromList $ map (\e -> (ceKey e, e)) ces
   in
-    CalendarConfig ces (M.fromList $ map (\e -> (ceKey e, e)) ces)
+    CalendarConfig ces (\k -> M.lookup k cesm)
     
 -- | Get a named calendar from an environment.
 --   Throws an error if the named calendar is not found
 getNamedCalendar :: (MonadReader env m, HasCalendarConfig env) => Text -> m EventCalendar
 getNamedCalendar key = do
   env <- ask
-  let mcal = M.lookup key (configCalendarMap $ getCalendarConfig env)
+  let mcal = (calendarConfigLookup $ getCalendarConfig env) key
   let cal = maybe (error ("Can't find named calendar with key " ++ show key)) ceCalendar mcal
   return cal
      
@@ -104,7 +112,7 @@ getNamedCalendar key = do
 getNamedCalendarName :: (MonadReader env m, HasCalendarConfig env) => Text -> m (Localised TaggedText)
 getNamedCalendarName key = do
   env <- ask
-  let mcal = M.lookup key (configCalendarMap $ getCalendarConfig env)
+  let mcal = (calendarConfigLookup $ getCalendarConfig env) key
   let name = maybe (error ("Can't find named calendar with key " ++ show key)) ceName mcal
   return name
   

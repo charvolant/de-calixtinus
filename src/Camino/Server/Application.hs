@@ -89,7 +89,7 @@ helpWidget (locale:rest)
 getCaminoR :: Text -> Handler Html
 getCaminoR cid = do
   master <- getYesod
-  let camino = findCaminoById (caminoAppCaminos master) cid
+  let camino = findCaminoById (caminoAppCaminoConfig master) cid
   case camino of
     Nothing -> do
       setMessageI MsgInvalidCamino

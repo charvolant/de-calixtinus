@@ -45,13 +45,12 @@ module Camino.Preferences (
 ) where
 
 import Data.Aeson
-import Data.List (find)
 import Data.Placeholder
-import Data.Text (Text, unpack)
+import Data.Text (Text)
 import Camino.Camino
 import Camino.Util
 import Camino.Walking
-import qualified Data.Map as M (Map, (!), fromList, singleton, union)
+import qualified Data.Map as M (Map, fromList, singleton, union)
 import qualified Data.Set as S (Set, delete, empty, insert, intersection, map, member, singleton, union, unions)
 import Graph.Graph (successors, predecessors)
 
@@ -268,23 +267,20 @@ instance ToJSON CaminoPreferences where
       object [ "camino" .= caminoId camino', "start" .= locationID start', "finish" .= locationID finish', "routes" .= routes'', "stops" .= stops'', "excluded" .= excluded'']
 
 -- | Normalise preferences to the correct locations and routes, based on placeholders
-normalisePreferences :: [Camino] -- ^ A list of possible caminos
+normalisePreferences :: CaminoConfig -- ^ The camino configutation
   -> CaminoPreferences -- ^ The preferences with placeholders
   -> CaminoPreferences -- ^ The preferences with locations updated
-normalisePreferences caminos preferences =
+normalisePreferences config preferences =
   let
-    caminoId' = caminoId $ preferenceCamino preferences
-    camino = maybe (error ("Can't find camino with ID " ++ unpack caminoId')) id (find (\c -> caminoId c == caminoId') caminos)
-    locs = caminoLocations camino
-    routes = M.fromList $ map (\r -> (routeID r, r)) (caminoRoutes camino)
+    camino = dereference config (preferenceCamino preferences)
   in
     preferences {
         preferenceCamino = camino
-      , preferenceStart = locs M.! (locationID $ preferenceStart preferences)
-      , preferenceFinish = locs M.! (locationID $ preferenceFinish preferences)
-      , preferenceRoutes = S.map (\r -> routes M.! (routeID r)) (preferenceRoutes preferences)
-      , preferenceStops = S.map (\l -> locs M.! (locationID l)) (preferenceStops preferences)
-      , preferenceExcluded = S.map (\l -> locs M.! (locationID l)) (preferenceExcluded preferences)
+      , preferenceStart = dereference camino (preferenceStart preferences)
+      , preferenceFinish = dereference camino (preferenceFinish preferences)
+      , preferenceRoutes = dereferenceS camino (preferenceRoutes preferences)
+      , preferenceStops = dereferenceS camino (preferenceStops preferences)
+      , preferenceExcluded = dereferenceS camino (preferenceExcluded preferences)
     }
 
 -- | Update with a new set of routes and, if necessary, start/finish/stops etc normalised

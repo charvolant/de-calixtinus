@@ -19,10 +19,12 @@ import Data.Default.Class
 import Data.Map
 import Data.Placeholder
 import Camino.Camino
+import Camino.Config
 import Camino.Preferences
 import Data.Description (wildcardDescription)
 import Data.Either (fromRight, isLeft)
 import Data.Localised (wildcardText)
+import Data.Maybe (fromJust)
 import Control.Monad (when)
 
 main :: IO ()
@@ -31,11 +33,13 @@ main = do
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
     let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoLocations = Data.Map.empty, caminoLegs = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X" }) ec
+    config <- readConfigFile "config-static.yaml"
+    let cconf = createCaminoConfig (fromJust $ configCalendars config) (fromJust $ configRegions config) [camino]
     pf <- B.readFile "test-preferences.json"
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)
     let shortPreferences = fromRight (defaultTravelPreferences Walking Normal Pilgrim) ep
-    results <- runTestTT (testList shortPreferences camino)
+    results <- runTestTT (testList shortPreferences (head $ caminoConfigCaminos cconf))
     putStrLn $ show results
 
 testList prefs camino = TestList [

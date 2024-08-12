@@ -85,14 +85,12 @@ instance Placeholder Text Region where
     }
   internalReferences region = maybe S.empty S.singleton (regionParent region) `S.union` regionMember region
 
-instance Normaliser Text Region (ReferenceMap Text Region) where
+instance Normaliser Text Region (M.Map Text Region) where
   normalise references region = region {
-      regionParent = fmap finder (regionParent region)
-    , regionMember = S.map finder (regionMember region)
+      regionParent = dereference references <$> regionParent region
+    , regionMember = dereferenceS references $ regionMember region
     }
-    where
-      finder item = maybe item id (M.lookup (placeholderID item) references)
- 
+
 instance ToJSON Region where
   toJSON (Region id' name' type' description' parent' member' locale' holidays') = object [
       "id" .= id'
@@ -130,9 +128,12 @@ getRegionalHolidays' region = regionHolidays region ++ (maybe [] getRegionalHoli
 
 -- | A region configuration, allowing regions to be looked up easily
 data RegionConfig = RegionConfig {
-    regionConfigRegions :: [Region]
-  , regionConfigMap :: M.Map Text Region
-} deriving (Show)
+    regionConfigRegions :: [Region] -- ^ The this of regions
+  , regionConfigLookup :: Text -> Maybe Region -- ^ Lookup a region based on identifier
+}
+
+instance Show RegionConfig where
+  show config = showString "RegionConfig: " $ showList (regionConfigRegions config) ""
 
 instance ToJSON RegionConfig where
   toJSON (RegionConfig regions' _) = toJSON regions'
@@ -143,24 +144,27 @@ instance FromJSON RegionConfig where
     return $ createRegionConfig regions'
   parseJSON v = typeMismatch "array" v
 
-
 class HasRegionConfig a where
   getRegionConfig :: a -> RegionConfig
 
 instance HasRegionConfig RegionConfig where
   getRegionConfig = id
+
+instance Dereferencer Text Region RegionConfig where
+  dereference config region = maybe region id ((regionConfigLookup config) (placeholderID region))
     
 -- | Get a region from an environment.
 --   Throws an error if the region id is not found
 getRegion :: (MonadReader env m, HasRegionConfig env) => Text -> m Region
 getRegion key = do
   env <- ask
-  let mregion = M.lookup key (regionConfigMap $ getRegionConfig env)
+  let mregion = (regionConfigLookup $ getRegionConfig env) key
   let region = maybe (error ("Can't find region with key " ++ show key)) id mregion
   return region
 
 -- | Create a region config from a set of regions, normalising as we go
 createRegionConfig :: [Region] -> RegionConfig
-createRegionConfig regions = RegionConfig regions' (M.fromList $ map (\r -> (placeholderID r, r)) regions')
+createRegionConfig regions = RegionConfig regions' regionLookup
   where
     regions' = normaliseReferences regions
+    regionLookup key = M.lookup key (M.fromList $ map (\r -> (placeholderID r, r)) regions')

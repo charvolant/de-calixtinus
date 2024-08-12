@@ -50,6 +50,17 @@ calendar:
       calendar:
         type: named
         key: EasterSunday
+  - key: EasterMonday
+    name:
+      - Easter Monday@en
+      - Lunes de Pascua@es
+      - Segunda-Feira da Páscoa@pt
+    calendar:
+      type: nth-day-after
+      nth: 1
+      calendar:
+        type: named
+        key: EasterSunday
   - key: CorpusChristi
     name:
       - Corpus Christi@en
@@ -142,6 +153,14 @@ calendar:
       type: day-of-year
       days:
         - 06-10
+  - key: LaRiojaDay
+    name:
+      - La Rioja Refgional Day@en
+      - Día de La Rioja@eu
+    calendar:
+      type: day-of-year
+      days:
+        - 06-09
   - key: GalicianNationalDay
     name:
       - Galician National Day@en
@@ -175,6 +194,14 @@ calendar:
       type: day-of-year
       days:
         - 10-12
+  - key: BasqueNationalDay
+    name:
+      - Basque National Day@en
+      - Euskadi Eguna@eu
+    calendar:
+      type: day-of-year
+      days:
+        - 10-25
   - key: AllSaints
     name:
       - All Saints Day@en
@@ -222,11 +249,11 @@ regions:
     name: "The Planet Earth@en"
     type: Planet
     locale: "*"
-  - id: Europe
+  - id: EU
     name: "Europe@en"
     type: Continent
     parent: "World"
-  - id: "Spain"
+  - id: ES
     name:
       - España@es
       - Spain@en
@@ -234,7 +261,7 @@ regions:
       - España@ga
       - Espanha@pt
     type: Country
-    parent: Europe
+    parent: EU
     locale: es
     holidays:
       - type: named
@@ -257,22 +284,60 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
-  - id: "Galicia"
+  - id: "ES-GA"
     name:
       - Galicia@ga
       - Galicia@es
     type: Province
-    parent: Spain
+    parent: ES
     locale: ga
     holidays:
       - type: named
         key: GalicianLiteratureDay
       - type: named
         key: GalicianNationalDay
-  - id: "Portugal"
+  - id: "ES-CL"
+    name:
+      - Castilla y León@es
+      - Castille and León@en
+      - Castilla e León@ga
+    type: Province
+    parent: ES
+  - id: "ES-NA"
+    name:
+      - Navarre@es
+    type: Province
+    parent: ES
+    holidays:
+      - type: named
+        key: EasterMonday
+  - id: "ES-PV"
+    name:
+      - Euskadi@eu
+      - Basque Country@en
+      - País Vasco@es
+    type: Province
+    parent: ES
+    locale: eu
+    holidays:
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: BasqueNationalDay
+  - id: "ES-RI"
+    name:
+      - La Rioja@es
+    type: Province
+    parent: ES
+    holidays:
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: LaRiojaDay
+  - id: PT
     name: Portugal
     type: Country
-    parent: Europe
+    parent: EU
     locale: pt
     holidays:
       - type: named
@@ -301,7 +366,7 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
-  - id: "France"
+  - id: FR
     name:
       - France@fr
       - France@en
@@ -309,5 +374,5 @@ regions:
       - França@pt
       - Francia@es
     type: Country
-    parent: Europe
+    parent: EU
     locale: fr

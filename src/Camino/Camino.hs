@@ -20,10 +20,12 @@ module Camino.Camino (
     Accommodation(..)
   , AccommodationType(..)
   , Camino(..)
+  , CaminoConfig(..)
   , Comfort(..)
   , Event(..)
   , EventType(..)
   , Fitness(..)
+  , HasCaminoConfig(..)
   , LatLong(..)
   , Leg(..)
   , LegType(..)
@@ -56,9 +58,11 @@ module Camino.Camino (
   , comfortEnumeration
   , completeRoutes
   , createAllowsClauses
+  , createCaminoConfig
   , createRequiresClauses
   , createProhibitsClauses
   , fitnessEnumeration
+  , getCamino
   , locationAccommodationTypes
   , locationBbox
   , locationEventTypes
@@ -74,6 +78,7 @@ module Camino.Camino (
 ) where
 
 import GHC.Generics (Generic)
+import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
 import qualified Data.ByteString.Lazy as LB (readFile)
@@ -85,11 +90,12 @@ import Data.Event
 import Data.Foldable (toList)
 import Data.List (find)
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
-import Data.Maybe (catMaybes, fromJust, isJust)
+import Data.Maybe (catMaybes, fromJust)
 import Data.Metadata
-import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup)
+import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup, map, unions)
 import Data.Placeholder
 import Data.Propositional
+import Data.Region
 import qualified Data.Set as S (Set, difference, empty, intersection, map, null, fromList, member, union, unions, singleton)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Text (Text, unpack, pack)
@@ -462,6 +468,7 @@ data Location = Location {
   , locationDescription :: Maybe Description
   , locationType :: LocationType
   , locationPosition :: Maybe LatLong
+  , locationRegion :: Maybe Region
   , locationServices :: S.Set Service
   , locationAccommodation :: [Accommodation]
   , locationPois :: [PointOfInterest]
@@ -477,12 +484,24 @@ instance Placeholder Text Location where
     , locationDescription = Nothing
     , locationType = Poi
     , locationPosition = Nothing
+    , locationRegion = Nothing
     , locationServices = S.empty
     , locationAccommodation = []
     , locationPois = []
     , locationEvents = []
     , locationCamping = False
   }
+  
+instance Normaliser Text Location CaminoConfig where
+  normalise config location = location {
+    locationRegion = dereference (caminoConfigRegions config) <$> (locationRegion location)
+  }
+
+instance Dereferencer Text Location CaminoConfig where
+  dereference config location = dereference (caminoConfigLocationLookup config) location
+
+instance Dereferencer Text Location Camino where
+  dereference camino location = dereference (caminoLocations camino) location
 
 instance FromJSON Location where
   parseJSON (String v) = do
@@ -493,6 +512,7 @@ instance FromJSON Location where
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
     position' <- v .:? "position"
+    region' <- v .:? "region"
     services' <- v .: "services"
     accommodation' <- v .: "accommodation"
     pois' <- v .:? "pois" .!= []
@@ -504,6 +524,7 @@ instance FromJSON Location where
       , locationDescription = description'
       , locationType = type'
       , locationPosition = position'
+      , locationRegion = placeholder <$> region'
       , locationServices = services'
       , locationAccommodation = accommodation'
       , locationPois = pois'
@@ -513,13 +534,14 @@ instance FromJSON Location where
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' description' type' position' services' accommodation' pois' events' camping') =
+    toJSON (Location id' name' description' type' position' region' services' accommodation' pois' events' camping') =
       object [ 
           "id" .= id'
         , "name" .= name'
         , "description" .= description'
         , "type" .= type'
         , "position" .= position'
+        , "region" .= (placeholderID <$> region')
         , "services" .= services'
         , "accommodation" .= accommodation'
         , "pois" .= pois'
@@ -634,10 +656,13 @@ instance Ord Leg where
     | legTo a /= legTo b = legTo a `compare` legTo b
     | otherwise = legDistance a `compare` legDistance b
 
--- | Ensure a leg has locations mapped correctly
-normaliseLeg :: M.Map Text Location -> Leg -> Leg
-normaliseLeg locs (Leg type' from to description distance time ascent descent penance) =
-  Leg { legType = type', legFrom = locs M.! locationID from, legTo = locs M.! locationID to, legDescription = description, legDistance = distance, legTime = time, legAscent = ascent, legDescent = descent, legPenance = penance }
+-- | Ensure a leg has locations mapped correctly within a camino
+normaliseLeg :: Camino -> Leg -> Leg
+normaliseLeg camino leg =
+  leg {
+      legFrom = dereference camino (legFrom leg)
+    , legTo = dereference camino (legTo leg)
+  }
 
 -- | A palette, graphical styles to use for displaying information
 data Palette = Palette {
@@ -736,8 +761,8 @@ instance Normaliser Text Route Camino where
    }
 
 instance Dereferencer Text Route Camino where
-  dereference camino route = maybe route id $ find (\r -> placeholderID r == rid) (caminoRoutes camino) where rid = placeholderID route
-
+  dereference camino route = dereference (caminoRoutes camino) route
+  
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
 --   can't have these. You'll also need to include these locations and remove those.
@@ -877,7 +902,6 @@ instance FromJSON Camino where
     locs <- v .: "locations"
     let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
     legs' <- v .: "legs"
-    let legs'' = map (normaliseLeg locMap) legs'
     routes' <- v .: "routes"
     routeLogic' <- v .: "route-logic"
     defaultRoute' <- v .:? "default-route" .!= (routeID $ head routes')
@@ -885,18 +909,17 @@ instance FromJSON Camino where
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
     let routes'' = defaultRoute''' : otherRoutes
-    let camino' = normalise [] $ Camino {
+    return $ Camino {
         caminoId = id'
       , caminoName = name'
       , caminoDescription = description'
       , caminoMetadata = metadata'
       , caminoLocations = locMap
-      , caminoLegs = legs''
+      , caminoLegs = legs'
       , caminoRoutes = routes''
       , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
     }
-    return camino'
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
 
@@ -960,23 +983,19 @@ instance Placeholder Text Camino where
     where
       dr = placeholder ("DR-" <> cid)
 
-instance Normaliser Text Camino [Camino] where
-  normalise caminos camino = let
-      found = find (\c -> caminoId c == caminoId camino) caminos
+instance Normaliser Text Camino CaminoConfig where
+  normalise config camino = let
+      camino1 = camino { caminoLocations = M.map (normalise config) (caminoLocations camino) }
+      camino2 = camino1 { caminoLegs = map (normaliseLeg camino1) (caminoLegs camino1) }
+      camino3 = camino2 { caminoRoutes = map (normalise camino2) (caminoRoutes camino2) }
+      camino4 = camino3 { caminoDefaultRoute = normalise camino3 (caminoDefaultRoute camino3) }
+      camino5 = camino4 { caminoRouteLogic = map (normaliseRouteLogic camino4) (caminoRouteLogic camino4)  }
     in
-      if isJust found then
-        fromJust found
-    else let
-      camino1 = camino { caminoLegs = map (normaliseLeg (caminoLocations camino)) (caminoLegs camino) }
-      camino2 = camino1 { caminoRoutes = map (normalise camino1) (caminoRoutes camino1) }
-      camino3 = camino2 { caminoDefaultRoute = normalise camino2 (caminoDefaultRoute camino2) }
-      camino4 = camino3 { caminoRouteLogic = map (normaliseRouteLogic camino3) (caminoRouteLogic camino3)  }
-    in
-      camino4
+      camino5
 
-instance Dereferencer Text Location Camino where
-  dereference camino location = maybe location id (M.lookup (placeholderID location) (caminoLocations camino))
-
+instance Dereferencer Text Camino CaminoConfig where
+  dereference config camino = dereference (caminoConfigLookup config) camino
+  
 -- | Get a simple text version of the camino name
 caminoNameLabel :: Camino -> Text
 caminoNameLabel camino = localiseDefault $ caminoName camino
@@ -1058,6 +1077,52 @@ caminoRouteLocations camino used =
   in
     foldl (\allowed -> \logic -> (allowed `S.union` routeLogicInclude logic) `S.difference` routeLogicExclude logic) baseLocations logics
 
+-- | A configuration environment for caminos
+data CaminoConfig = CaminoConfig {
+    caminoConfigCaminos :: [Camino] -- ^ The list of known caminos
+  , caminoConfigLookup :: Text -> Maybe Camino -- ^ Look up a camino by identifier
+  , caminoConfigLocationLookup :: Text -> Maybe Location -- ^ Look up a location by identifier
+  , caminoConfigCalendars :: CalendarConfig -- ^ Known calendar dates
+  , caminoConfigRegions :: RegionConfig -- ^ Known regions
+}
+
+-- | Has-class for ReaderT usage
+class HasCaminoConfig a where
+  getCaminoConfig :: a -> CaminoConfig
+
+instance HasCaminoConfig CaminoConfig where
+  getCaminoConfig = id
+  
+instance HasRegionConfig CaminoConfig where
+  getRegionConfig = caminoConfigRegions
+
+instance HasCalendarConfig CaminoConfig where
+  getCalendarConfig = caminoConfigCalendars 
+  
+-- | Get a camino from an environment.
+--   This returns a maybe instance
+getCamino :: (MonadReader env m, HasCaminoConfig env) => Text -> m (Maybe Camino)
+getCamino key = do
+  env <- ask
+  return $ (caminoConfigLookup $ getCaminoConfig env) key
+
+-- | Create a camino configuration
+--   This takes raw, un-normalised caminos and returns a configuraton with completely normalised and
+--   dereferenced results.
+createCaminoConfig :: CalendarConfig -> RegionConfig -> [Camino] -> CaminoConfig
+createCaminoConfig calendars regions caminos = let
+    config1 = CaminoConfig [] (const Nothing) (const Nothing) calendars regions
+    caminos1 = map (normalise config1) caminos
+    caminoMap1 = M.fromList $ map (\c -> (placeholderID c, c)) caminos1
+    locationMap1 = M.unions (map caminoLocations caminos1)
+  in
+    config1 {
+        caminoConfigCaminos = caminos1
+      , caminoConfigLookup = \k -> M.lookup k caminoMap1
+      , caminoConfigLocationLookup = \k -> M.lookup k locationMap1
+    }
+    
+
 -- | The travel function to use
 data Travel = Walking -- ^ Walking
    | Cycling -- ^ Cycling
@@ -1106,7 +1171,8 @@ instance ToJSON Comfort
 comfortEnumeration :: [Comfort]
 comfortEnumeration = [minBound .. maxBound]
 
--- Read a camino description from a file
+-- Read a camino description from a file, using an existing context
+-- This is an unnormalised camino with placeholders. It will  be normalised when placed in a camino configuration
 readCamino :: FilePath -> IO Camino
 readCamino file = do
   cf <- LB.readFile file

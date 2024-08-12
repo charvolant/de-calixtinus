@@ -160,8 +160,12 @@ data CaminoApp = CaminoApp {
   , caminoAppDevel :: Bool
   , caminoAppStatic :: Static
   , caminoAppConfig :: C.Config
-  , caminoAppCaminos :: [Camino]
+  , caminoAppCaminoConfig :: CaminoConfig
 }
+
+-- | Get a list if the available caminos
+caminoAppCaminos :: CaminoApp -> [Camino]
+caminoAppCaminos app = caminoConfigCaminos $ caminoAppCaminoConfig app
 
 data PreferenceData = PreferenceData {
     prefEasyMode :: Bool -- ^ Use easy preferences

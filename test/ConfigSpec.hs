@@ -21,7 +21,7 @@ testConfig1 = Config {
     webLinks = [],
     webMaps = []
   },
-  configCalendar = Nothing,
+  configCalendars = Nothing,
   configRegions = Nothing
 }
 
@@ -38,7 +38,7 @@ testConfig2 = Config {
     ],
     webMaps = []
   },
-  configCalendar = Nothing,
+  configCalendars = Nothing,
   configRegions = Nothing
 }
 

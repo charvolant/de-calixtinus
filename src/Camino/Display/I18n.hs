@@ -24,7 +24,6 @@ import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Data.Localised
-import qualified Data.Map as M
 import Data.Region
 import Data.Text
 import Data.Time.Calendar
@@ -479,7 +478,7 @@ renderLocalisedDayOfWeek (loc:_) dow = let
 renderLocalisedPublicHoliday :: Config -> [Locale] -> Text -> Html
 renderLocalisedPublicHoliday config locs rid = [shamlet|^{renderCaminoMsg config locs PublicHolidayText} (^{name})|]
   where
-    region = M.lookup rid (regionConfigMap $ getRegionConfig config)
+    region = (regionConfigLookup $ getRegionConfig config) rid
     name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False (regionName r)) region
 
 -- | Convert a message placeholder into actual HTML

@@ -102,8 +102,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewExcluded :: FieldView CaminoApp
 }
 
-findCaminoById :: [Camino] -> Text -> Maybe Camino
-findCaminoById caminos val = find (\c -> caminoId c == val) caminos
+findCaminoById :: CaminoConfig -> Text -> Maybe Camino
+findCaminoById config val = (caminoConfigLookup config) val
 
 findRouteById :: FormResult Camino -> Text -> Maybe Camino.Camino.Route
 findRouteById (FormSuccess camino) val = find (\r -> routeID r == val) (caminoRoutes camino)
@@ -143,8 +143,8 @@ defaultPreferenceFields master prefs = do
     (acRes, acView) <- mreq hiddenField "" (prefAccommodation <$> prefs)
     (ssRes, ssView) <- mreq hiddenField "" (prefStopServices <$> prefs)
     (dsRes, dsView) <- mreq hiddenField "" (prefDayServices <$> prefs)
-    (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
-    (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminos master))) "" (prefCamino <$> prefs)
+    (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) "" (prefCamino <$> prefs)
+    (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) "" (prefCamino <$> prefs)
     (ropRes, ropView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
     (roRes, roView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
     (sapRes, sapView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefStart <$> prefs)

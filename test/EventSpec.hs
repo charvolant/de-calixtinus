@@ -4,7 +4,6 @@
 module EventSpec(testEvent) where
 
 import Test.HUnit
-import Control.Monad.Reader
 import Data.Aeson
 import Data.Event
 import Data.Localised

@@ -13,34 +13,34 @@ The configuration can be read from a YAML file and overlay a default configurati
 -}
 
 module Camino.Config (
-  AssetConfig(..),
-  AssetType(..),
-  Config(..),
-  CrossOriginType(..),
-  LinkConfig(..),
-  LinkType(..),
-  MapConfig(..),
-  WebConfig(..),
+    AssetConfig(..)
+  , AssetType(..)
+  , Config(..)
+  , CrossOriginType(..)
+  , LinkConfig(..)
+  , LinkType(..)
+  , MapConfig(..)
+  , WebConfig(..)
 
-  defaultConfig,
-  getAsset,
-  getAssets,
-  getCalendarName,
-  getLink,
-  getLinks,
-  getMap,
-  readConfigFile
+  , defaultConfig
+  , getAsset
+  , getAssets
+  , getCalendarName
+  , getLink
+  , getLinks
+  , getMap
+  , readConfigFile
 ) where
 
 import GHC.Generics (Generic)
 import Control.Monad.Reader (runReader)
 import Data.Aeson
-import Data.Event (CalendarConfig(..), HasCalendarConfig(..), getNamedCalendarName)
+import Data.Event (CalendarConfig(..), HasCalendarConfig(..), createCalendarConfig, getNamedCalendarName)
 import qualified Data.Map as M
 import Data.Text (Text)
 import Data.List (find)
 import Data.Localised
-import Data.Region (HasRegionConfig(..), RegionConfig(..))
+import Data.Region (HasRegionConfig(..), RegionConfig(..), createRegionConfig)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
@@ -157,7 +157,7 @@ instance ToJSON WebConfig where
 data Config = Config {
     configParent :: Maybe Config -- ^ A parent configuration containing values that can over overridden by this configuration
   , configWeb :: WebConfig -- ^ Configuration for the web interface
-  , configCalendar :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
+  , configCalendars :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
   , configRegions:: Maybe RegionConfig -- ^ Common region definitions
 } deriving (Show)
 
@@ -244,12 +244,12 @@ defaultConfig = Config {
       }
     ]
   },
-  configCalendar = Just (CalendarConfig [] M.empty),
-  configRegions = Just (RegionConfig [] M.empty)
+  configCalendars = Just (createCalendarConfig []),
+  configRegions = Just (createRegionConfig [])
 }
 
 instance HasCalendarConfig Config where
-  getCalendarConfig config = maybe (maybe (error "No calendar configuration") getCalendarConfig (configParent config)) id (configCalendar config)
+  getCalendarConfig config = maybe (maybe (error "No calendar configuration") getCalendarConfig (configParent config)) id (configCalendars config)
 
 instance HasRegionConfig Config where
   getRegionConfig config = maybe (maybe (error "No region configuration") getRegionConfig (configParent config)) id (configRegions config)

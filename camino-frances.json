@@ -72,6 +72,7 @@
       "name": "Saint-Jean-Pied-de-Port",
       "type": "Town",
       "position": { "latitude": 43.16340, "longitude": -1.23579 },
+      "region": "FR-NAQ",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Gite", "GuestHouse", "Hotel" ]
     },
@@ -80,6 +81,7 @@
       "name": "Huntto",
       "type": "Village",
       "position": { "latitude": 43.12428, "longitude": -1.24495 },
+      "region": "FR-NAQ",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -95,6 +97,7 @@
       "name": "Orisson",
       "type": "Village",
       "position": { "latitude": 43.10871, "longitude": -1.23916 },
+      "region": "FR-NAQ",
       "services": [ ],
       "accommodation": [
         {
@@ -116,6 +119,7 @@
       "name": "Arnéguy (por Valcarlos)",
       "type": "Village",
       "position": { "latitude": 43.10874, "longitude": -1.28212 },
+      "region": "FR-NAQ",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
     },
@@ -124,6 +128,7 @@
       "name": "Luzaide/Valcarlos",
       "type": "Village",
       "position": { "latitude": 43.09297, "longitude": -1.30174 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -139,6 +144,7 @@
       "name": "Ibañeta",
       "type": "Peak",
       "position": { "latitude": 43.02009, "longitude": -1.32438 },
+      "region": "ES-NA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -147,6 +153,7 @@
       "name": "Roncesvalles (Orreaga)",
       "type": "Village",
       "position": { "latitude": 43.00870, "longitude": -1.31992 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -219,6 +226,7 @@
       "name": "Burguete (Auritz)",
       "type": "Town",
       "position": { "latitude": 42.98935, "longitude": -1.33585 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -270,6 +278,7 @@
       "name": "Espinal (Aurizberri)",
       "type": "Village",
       "position": { "latitude": 42.97913, "longitude": -1.36951 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -327,6 +336,7 @@
       "name": "Puerto de Mezkiritz",
       "type": "Peak",
       "position": { "latitude": 42.97990, "longitude": -1.38658 },
+      "region": "ES-NA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -335,6 +345,7 @@
       "name": "Bizkarreta (Gerendiain)",
       "type": "Village",
       "position": { "latitude": 42.96846, "longitude": -1.41700  },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -368,6 +379,7 @@
       "name": "Linzoáin (Lintzoain)",
       "type": "Village",
       "position": { "latitude": 42.96233, "longitude": -1.43779 },
+      "region": "ES-NA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -383,6 +395,7 @@
       "name": "Pass of Erro",
       "type": "Peak",
       "position": { "latitude": 42.94657, "longitude": -1.47826 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -391,6 +404,7 @@
       "name": "Zubiri",
       "type": "Village",
       "position": { "latitude": 42.93468, "longitude": -1.50356 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -466,6 +480,7 @@
       "name": "Ilarratz",
       "type": "Village",
       "position": { "latitude": 42.91102, "longitude": -1.51711 },
+      "region": "ES-NA",
       "services": [ ],
       "accommodation": [
         {
@@ -481,6 +496,7 @@
       "name": "Eskirotz",
       "type": "Village",
       "position": { "latitude": 42.90788, "longitude": -1.52487 },
+      "region": "ES-NA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -489,6 +505,7 @@
       "name": "Larrasoaña (Larrasoaina)",
       "type": "Village",
       "position": { "latitude": 42.90165, "longitude": -1.54123 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -522,6 +539,7 @@
       "name": "Aquerreta (Akerreta)",
       "type": "Village",
       "position": { "latitude": 42.89647, "longitude": -1.54365 },
+      "region": "ES-NA",
       "services": [ ],
       "accommodation": [
         {
@@ -537,6 +555,7 @@
       "name": "Zuriáin (Zuriain)",
       "type": "Village",
       "position": { "latitude": 42.87865, "longitude": -1.56617 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -552,6 +571,7 @@
       "name": "Iroz (Irotz)",
       "type": "Village",
       "position": { "latitude": 42.86179, "longitude": -1.57080 },
+      "region": "ES-NA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -560,6 +580,7 @@
       "name": "Zabaldica (Zabaldika)",
       "type": "Village",
       "position": { "latitude": 42.85597, "longitude": -1.58192 },
+      "region": "ES-NA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -597,6 +618,7 @@
       "name": "Arleta",
       "type": "Village",
       "position": { "latitude": 42.84776, "longitude": -1.58710 },
+      "region": "ES-NA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -605,6 +627,7 @@
       "name": "Trinidad de Arre",
       "type": "Town",
       "position": { "latitude": 42.83408, "longitude": -1.60576 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -620,6 +643,7 @@
       "name": "Vilava",
       "type": "Town",
       "position": { "latitude": 42.82814, "longitude": -1.61288 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -647,6 +671,7 @@
       "name": "Burlada",
       "type": "Town",
       "position": { "latitude": 42.82503, "longitude": -1.61722 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -668,6 +693,7 @@
       "name": "Pamplona",
       "type": "City",
       "position": { "latitude": 42.81831, "longitude": -1.645096 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus", "Train" ],
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
       "pois": [
@@ -731,6 +757,7 @@
       "name": "Cizur Menor",
       "type": "Town",
       "position": { "latitude": 42.78786, "longitude": -1.67617 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -781,6 +808,7 @@
       "name": "Zariquiegui",
       "type": "Village",
       "position": { "latitude": 42.74826, "longitude": -1.72271 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -804,6 +832,7 @@
       "name": "Cizur Mayor",
       "type": "Town",
       "position": { "latitude": 42.79298, "longitude": -1.69506 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -812,6 +841,7 @@
       "name": "Paternáin",
       "type": "Village",
       "position": { "latitude": 42.78627, "longitude": -1.74164 },
+      "region": "ES-NA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -820,6 +850,7 @@
       "name": "Astrain",
       "type": "Village",
       "position": { "latitude": 42.75644, "longitude": -1.74087 },
+      "region": "ES-NA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -828,6 +859,7 @@
       "name": "Uterga",
       "type": "Village",
       "position": { "latitude": 42.70860, "longitude": -1.76140 },
+      "region": "ES-NA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -843,6 +875,7 @@
       "name": "Muruzábal and Eunate",
       "type": "Town",
       "position": { "latitude": 42.68824, "longitude": -1.77053 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
       "accommodation": [
         {
@@ -858,6 +891,7 @@
       "name": "Obanos",
       "type": "Town",
       "position": { "latitude": 42.67947, "longitude": -1.78481 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -910,6 +944,7 @@
       "name": "Puente la Reina",
       "type": "Town",
       "position": { "latitude": 42.67373, "longitude": -1.81045 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -935,6 +970,7 @@
       "name": "Mañeru",
       "type": "Village",
       "position": { "latitude": 42.66896, "longitude": -1.86208 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -950,6 +986,7 @@
       "name": "Cirauqui",
       "type": "Village",
       "position": { "latitude": 42.67575, "longitude": -1.89239 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -965,6 +1002,7 @@
       "name": "Lorca",
       "type": "Village",
       "position": { "latitude": 42.67224, "longitude": -1.94580 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -998,6 +1036,7 @@
       "name": "Vilatuerta",
       "type": "Town",
       "position": { "latitude": 42.65936, "longitude": -1.99216 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1025,6 +1064,7 @@
       "name": "Estella",
       "type": "Town",
       "position": { "latitude": 42.66889, "longitude": -2.02993 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -1068,6 +1108,7 @@
       "name": "Ayegui",
       "type": "Town",
       "position": { "latitude": 42.65856, "longitude": -2.03788 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1089,6 +1130,7 @@
       "name": "Irache",
       "type": "Village",
       "position": { "latitude": 42.64573, "longitude": -2.05651 },
+      "region": "ES-NA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -1113,6 +1155,7 @@
       "name": "Ázqueta",
       "type": "Village",
       "position": { "latitude": 42.63521, "longitude": -2.08716 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -1135,6 +1178,7 @@
       "name": "Villamayor de Monjardin",
       "type": "Village",
       "position": { "latitude": 42.62924, "longitude": -2.10408 },
+      "region": "ES-NA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -1162,6 +1206,7 @@
       "name": "Los Arcos",
       "type": "Town",
       "position": { "latitude": 42.57035, "longitude": -2.19221 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1209,6 +1254,7 @@
       "name": "Zarapuz",
       "type": "Monastery",
       "position": { "latitude": 42.64500, "longitude": -2.01188 },
+      "region": "ES-NA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -1217,6 +1263,7 @@
       "name": "Luquin",
       "type": "Village",
       "position": { "latitude": 42.61227, "longitude": -2.09800 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Medical", "Bus" ],
       "accommodation": [
         {
@@ -1232,6 +1279,7 @@
       "name": "Sansol",
       "type": "Village",
       "position": { "latitude": 42.55375, "longitude": -2.26559 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1265,6 +1313,7 @@
       "name": "Torres del Rio",
       "type": "Village",
       "position": { "latitude": 42.55204, "longitude": -2.27123 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1298,6 +1347,7 @@
       "name": "Viana",
       "type": "Town",
       "position": { "latitude": 42.51496, "longitude": -2.37194 },
+      "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -1351,6 +1401,7 @@
       "name": "Logroño",
       "type": "City",
       "position": { "latitude": 42.46898, "longitude": -2.44319 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus", "Train" ],
       "accommodation": [
         {
@@ -1381,6 +1432,7 @@
       "name": "Navarrete",
       "type": "Town",
       "position": { "latitude": 42.42884, "longitude": -2.56153 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -1417,6 +1469,7 @@
       "name": "Sotés",
       "type": "Village",
       "position": { "latitude": 42.39969, "longitude": -2.60229 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [
         {
@@ -1438,6 +1491,7 @@
       "name": "Ventosa",
       "type": "Village",
       "position": { "latitude": 42.40420, "longitude": -2.62589 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -1459,6 +1513,7 @@
       "name": "Nájera",
       "type": "Town",
       "position": { "latitude": 42.41755, "longitude": -2.73342 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair"],
       "accommodation": [
         {
@@ -1486,6 +1541,7 @@
       "name": "Azofra",
       "type": "Village",
       "position": { "latitude": 42.423840, "longitude": -2.80000 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [
         {
@@ -1513,6 +1569,7 @@
       "name": "Cirueña",
       "type": "Village",
       "position": { "latitude": 42.41258, "longitude": -2.89638 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -1546,6 +1603,7 @@
       "name": "Santo Domingo de la Calzada",
       "type": "Town",
       "position": { "latitude": 42.44086, "longitude": -2.95368 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
       "accommodation": [
         {
@@ -1576,6 +1634,7 @@
       "name": "Grañón",
       "type": "Village",
       "position": { "latitude": 42.45034, "longitude": -3.02754 },
+      "region": "ES-RI",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [
         {
@@ -1627,6 +1686,7 @@
       "name": "Redecilla del Camino",
       "type": "Village",
       "position": { "latitude": 42.43832, "longitude": -3.06477 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1654,6 +1714,7 @@
       "name": "Castildelgado",
       "type": "Village",
       "position": { "latitude": 42.43660, "longitude": -3.08416 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1681,6 +1742,7 @@
       "name": "Viloria de Rioja",
       "type": "Village",
       "position": { "latitude": 42.42676, "longitude": -3.10032 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -1708,6 +1770,7 @@
       "name": "Villamayor del Rio",
       "type": "Village",
       "position": { "latitude": 42.42729, "longitude": -3.13681 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -1729,6 +1792,7 @@
       "name": "Belorado",
       "type": "Town",
       "position": { "latitude": 42.42054, "longitude": -3.18995 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [
         {
@@ -1768,6 +1832,7 @@
       "name": "Toasantos",
       "type": "Village",
       "position": { "latitude": 42.41391, "longitude": -3.24284 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
          {
@@ -1789,6 +1854,7 @@
       "name": "Villambistia",
       "type": "Village",
       "position": { "latitude": 42.40446, "longitude": -3.26211 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
          {
@@ -1804,6 +1870,7 @@
       "name": "Espinosa del Camino",
       "type": "Village",
       "position": { "latitude": 42.40551, "longitude": -3.27956 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -1825,6 +1892,7 @@
       "name": "Villafranca - Montes de Orca",
       "type": "Village",
       "position": { "latitude": 42.38879, "longitude": -3.30920 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Medical" ],
       "accommodation": [
         {
@@ -1873,6 +1941,7 @@
       "name": "San Juan de Ortega",
       "type": "Monastery",
       "position": { "latitude": 42.37570, "longitude": -3.43660 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -1932,6 +2001,7 @@
       "name": "Agés",
       "type": "Village",
       "position": { "latitude": 42.36983, "longitude": -3.478808 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -1965,6 +2035,7 @@
       "name": "Atapuerca",
       "type": "Village",
       "position": { "latitude": 42.37620, "longitude": -3.50719 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2010,6 +2081,7 @@
       "name": "Villalval",
       "type": "Village",
       "position": { "latitude": 42.36912, "longitude": -3.55281 },
+      "region": "ES-CL",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -2018,6 +2090,7 @@
       "name": "Cardeñuela Riopico",
       "type": "Village",
       "position": { "latitude": 42.35940, "longitude": -3.55971 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -2045,6 +2118,7 @@
       "name": "Orbaneja Riopico",
       "type": "Village",
       "position": { "latitude": 42.36013, "longitude": -3.58468 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2060,6 +2134,7 @@
       "name": "Villafria",
       "type": "Village",
       "position": { "latitude": 42.36557, "longitude": -3.61647 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
       "accommodation": [
          {
@@ -2087,6 +2162,7 @@
       "name": "Gamonal",
       "type": "City",
       "position": { "latitude": 42.35420, "longitude": -3.66634 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [ ]
     },
@@ -2095,6 +2171,7 @@
       "name": "Santovenia de Oca",
       "type": "Village",
       "position": { "latitude": 42.35695, "longitude": -3.46137 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2110,6 +2187,7 @@
       "name": "Zalduendo",
       "type": "Village",
       "position": { "latitude": 42.34684, "longitude": -3.48607 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -2118,6 +2196,7 @@
       "name": "Ibeas de Juarros",
       "type": "Village",
       "position": { "latitude": 42.33170, "longitude": -3.53633 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
       "accommodation": [ ]
     },
@@ -2126,6 +2205,7 @@
       "name": "Castañares",
       "type": "Village",
       "position": { "latitude": 42.34346, "longitude": -3.62634 },
+      "region": "ES-CL",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -2153,6 +2233,7 @@
       "name": "Burgos",
       "type": "City",
       "position": { "latitude": 42.34041, "longitude": -3.70384 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -2221,6 +2302,7 @@
       "name": "Tardajos",
       "type": "Town",
       "position": { "latitude": 42.34892, "longitude": -3.81593 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
       "accommodation": [
         {
@@ -2248,6 +2330,7 @@
       "name": "Rabé de las Calzadas",
       "type": "Village",
       "position": { "latitude": 42.34053, "longitude": -3.83435 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bank", "BicycleRepair" ],
       "accommodation": [
         {
@@ -2292,6 +2375,7 @@
       "name": "Hornillos de Camino",
       "type": "Village",
       "position": { "latitude": 42.33853, "longitude": -3.92638 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -2331,6 +2415,7 @@
       "name": "Arroyo San Bol",
       "type": "Intersection",
       "position": { "latitude": 42.32608, "longitude": -3.99034 },
+      "region": "ES-CL",
       "services": [  ],
       "accommodation": [
         {
@@ -2346,6 +2431,7 @@
       "name": "Hontanas",
       "type": "Village",
       "position": { "latitude": 42.31273, "longitude": -4.04409 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2403,6 +2489,7 @@
       "name": "Castrojeriz",
       "type": "Town",
       "position": { "latitude": 42.28779, "longitude": -4.13719 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [
         {
@@ -2445,6 +2532,7 @@
       "name": "Itero del Castillo (y Puente Fitero)",
       "type": "Bridge",
       "position": { "latitude": 42.27817, "longitude": -4.24586 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2466,6 +2554,7 @@
       "name": "Itero de la Vega",
       "type": "Village",
       "position": { "latitude": 42.28791, "longitude": -4.25763 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -2499,6 +2588,7 @@
       "name": "Boadilla del Camino",
       "type": "Village",
       "position": { "latitude": 42.25948, "longitude": -4.34651 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -2520,6 +2610,7 @@
       "name": "Frómista",
       "type": "Town",
       "position": { "latitude": 42.26607, "longitude": -4.40603 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
       "accommodation": [
         {
@@ -2610,6 +2701,7 @@
       "name": "Población de Campos",
       "type": "Village",
       "position": { "latitude": 42.26883, "longitude": -4.44752 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -2637,6 +2729,7 @@
       "name": "Revenga de Campos",
       "type": "Village",
       "position": { "latitude": 42.28513, "longitude": -4.48138 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
     },
@@ -2645,6 +2738,7 @@
       "name": "Villarmentero de Campos",
       "type": "Village",
       "position": { "latitude": 42.29770, "longitude": -4.49926 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2666,6 +2760,7 @@
       "name": "Villovieco",
       "type": "Village",
       "position": { "latitude": 42.29366, "longitude": -4.48151 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -2674,6 +2769,7 @@
       "name": "Villalcázar de Sirga",
       "type": "Village",
       "position": { "latitude": 42.31651, "longitude": -4.54311 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2707,6 +2803,7 @@
       "name": "Carrión de los Condes",
       "type": "Village",
       "position": { "latitude": 42.33712, "longitude": -4.60093 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -2789,6 +2886,7 @@
       "name": "Calzadilla de la Cueza",
       "type": "Village",
       "position": { "latitude": 42.32924, "longitude": -4.80436 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -2822,6 +2920,7 @@
       "name": "Lédigos",
       "type": "Village",
       "position": { "latitude": 42.35367, "longitude": -4.86529 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2850,6 +2949,7 @@
       "name": "Terradillos de los Templarios",
       "type": "Village",
       "position": { "latitude": 42.36248, "longitude": -4.89144 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2871,6 +2971,7 @@
       "name": "Moratinos",
       "type": "Village",
       "position": { "latitude": 42.36067, "longitude": -4.92632 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2892,6 +2993,7 @@
       "name": "San Nicolas de Real Camino",
       "type": "Village",
       "position": { "latitude": 42.36371, "longitude": -4.95178 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -2907,6 +3009,7 @@
       "name": "Calzada de los Molinos",
       "type": "Village",
       "position": { "latitude": 42.32756, "longitude": -4.65238 },
+      "region": "ES-CL",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -2915,6 +3018,7 @@
       "name": "Cervatos de la Cueza",
       "type": "Village",
       "position": { "latitude": 42.29055, "longitude": -4.76945 },
+      "region": "ES-CL",
       "services": [ "Restaurant"  ],
       "accommodation": [ ]
     },
@@ -2923,6 +3027,7 @@
       "name": "Villada",
       "type": "Town",
       "position": { "latitude": 42.25111, "longitude": -4.96723 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Bank", "Train"  ],
       "accommodation": [ ]
     },
@@ -2936,6 +3041,7 @@
       },
       "type": "Town",
       "position": { "latitude": 42.37075, "longitude": -5.02954 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
         {
@@ -3021,6 +3127,7 @@
       "name": "Calzada del Coto",
       "type": "Village",
       "position": { "latitude": 42.38745, "longitude": -5.07885 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -3043,6 +3150,7 @@
       "name": "Bercianos de Real Camino",
       "type": "Village",
       "position": { "latitude": 42.38783, "longitude": -5.14334 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -3088,6 +3196,7 @@
       "name": "El Burgo Ranero",
       "type": "Village",
       "position": { "latitude": 42.42129, "longitude": -5.217771 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
       "accommodation": [
         {
@@ -3139,6 +3248,7 @@
       "name": "Desvio a Villamarco",
       "type": "Village",
       "position": { "latitude": 42.44968, "longitude": -5.30768 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -3154,6 +3264,7 @@
       "name": "Reliegos",
       "type": "Village",
       "position": { "latitude": 42.47518, "longitude": -5.35463 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -3199,6 +3310,7 @@
       "name": "Mansilla de Las Mulas",
       "type": "Town",
       "position": { "latitude": 42.49772, "longitude": -5.41499 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -3219,6 +3331,7 @@
       "name": "Villamoros de Mansilla",
       "type": "Village",
       "position": { "latitude": 42.53533, "longitude": -5.44480 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [ ]
     },
@@ -3227,6 +3340,7 @@
       "name": "Puente Villarente",
       "type": "Village",
       "position": { "latitude": 42.544326, "longitude": -5.45646 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -3254,6 +3368,7 @@
       "name": "Arcahueja",
       "type": "Village",
       "position": { "latitude": 42.56715, "longitude": -5.49599 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -3275,6 +3390,7 @@
       "name": "Valdelafuente",
       "type": "Village",
       "position": { "latitude": 42.56947, "longitude":  -5.51426 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [ ]
     },
@@ -3283,6 +3399,7 @@
       "name": "Calzadilla de los Hermanillos",
       "type": "Village",
       "position": { "latitude": 42.43321, "longitude": -5.15500 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -3310,6 +3427,7 @@
       "name": "León",
       "type": "City",
       "position": { "latitude": 42.59897, "longitude": -5.56715 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
         "PrivateAlbergue",
@@ -3333,6 +3451,7 @@
       "name": "Trobajo del Camino",
       "type": "Town",
       "position": { "latitude": 42.59622, "longitude": -5.60800 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -3354,6 +3473,7 @@
       "name": "La Virgen del Camino",
       "type": "Village",
       "position": { "latitude": 42.58014, "longitude": -5.64082 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -3400,6 +3520,7 @@
       "name": "Valverde de la Virgen",
       "type": "Village",
       "position": { "latitude": 42.57070, "longitude": -5.67755 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -3415,6 +3536,7 @@
       "name": "San Miguel del Camino",
       "type": "Village",
       "position": { "latitude": 42.56179, "longitude": -5.69726 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -3423,6 +3545,7 @@
       "name": "Villadangos del Páramo",
       "type": "Village",
       "position": { "latitude": 42.51885, "longitude": -5.76524 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -3456,6 +3579,7 @@
       "name": "San Martin del Camino",
       "type": "Village",
       "position": { "latitude": 42.49521, "longitude": -5.80832 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [
         {
@@ -3489,6 +3613,7 @@
       "name": "Fresno del Camino",
       "type": "Village",
       "position": { "latitude": 42.56560, "longitude": -5.65373 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -3497,6 +3622,7 @@
       "name": "Oncina de la Valdoncina",
       "type": "Village",
       "position": { "latitude": 42.55227, "longitude": -5.66110 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -3518,6 +3644,7 @@
       "name": "Chozas de Abajo",
       "type": "Village",
       "position": { "latitude": 42.50842, "longitude": -5.68849 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -3526,6 +3653,7 @@
       "name": "Villar de Mazarife",
       "type": "Village",
       "position": { "latitude": 42.48304, "longitude": -5.72833 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -3553,6 +3681,7 @@
       "name": "Villavante",
       "type": "Village",
       "position": { "latitude": 42.46209, "longitude": -5.83499 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Train", "Bus" ],
       "accommodation": [
         {
@@ -3574,6 +3703,7 @@
       "name": "Hospital de Órbigo y Puente Órbigo",
       "type": "Village",
       "position": { "latitude": 42.45905, "longitude": -5.88100 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
       "accommodation": [
         {
@@ -3650,6 +3780,7 @@
       "name": "Villares de Órbigo",
       "type": "Village",
       "position": { "latitude": 42.47007, "longitude": -5.91001 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [
         {
@@ -3671,6 +3802,7 @@
       "name": "Santibáñez de Valdeiglesias",
       "type": "Village",
       "position": { "latitude": 42.45884, "longitude": -5.93017 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -3698,6 +3830,7 @@
       "name": "San Justo de la Vega",
       "type": "Village",
       "position": {"latitude": 42.45418, "longitude": -6.01480},
+      "region": "ES-CL",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Bus"],
       "accommodation": [
         {
@@ -3725,6 +3858,7 @@
       "name": "Astorga",
       "type": "Town",
       "position": { "latitude": 42.45642, "longitude": -6.05360 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
         {
@@ -3744,6 +3878,7 @@
       "name": "Valdeviejas",
       "type": "Intersection",
       "position": { "latitude": 42.45925, "longitude": -6.08093 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -3759,6 +3894,7 @@
       "name": "Murias de Rechivaldo",
       "type": "Village",
       "position": { "latitude": 42.459650, "longitude": -6.10489 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -3798,6 +3934,7 @@
       "name": "Castrillo de los Polvazares",
       "type": "Village",
       "position": { "latitude": 42.46512, "longitude": -6.12838 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -3819,6 +3956,7 @@
       "name": "Santa Catalina de Somoza",
       "type": "Village",
       "position": { "latitude": 42.45522, "longitude": -6.15862 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Bank" ],
       "accommodation": [
         {
@@ -3852,6 +3990,7 @@
       "name": "El Ganso",
       "type": "Village",
       "position": { "latitude": 42.46258, "longitude": -6.20836 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -3891,6 +4030,7 @@
       "name": "Rabanal del Camino",
       "type": "Village",
       "position": { "latitude": 42.48239, "longitude": -6.28506 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -3966,6 +4106,7 @@
       "name": "Foncebadón",
       "type": "Village",
       "position": { "latitude": 42.49145, "longitude": -6.34283 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -4020,6 +4161,7 @@
       },
       "type": "Cross",
       "position": { "latitude": 42.48882, "longitude": -6.36145 },
+      "region": "ES-CL",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -4028,6 +4170,7 @@
       "name": "Manjarín",
       "type": "Village",
       "position": { "latitude": 42.49029, "longitude": -6.38673 },
+      "region": "ES-CL",
       "services": [  ],
       "accommodation": [
         {
@@ -4059,6 +4202,7 @@
       "name": "El Acebo",
       "type": "Village",
       "position": { "latitude": 42.49891, "longitude": -6.45701 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4104,6 +4248,7 @@
       "name": "Riego de Ambrós",
       "type": "Village",
       "position": { "latitude": 42.52106, "longitude": -6.47875 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4119,6 +4264,7 @@
       "name": "Molinaseca",
       "type": "Village",
       "position": { "latitude": 42.53765, "longitude": -6.51921 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [
         {
@@ -4144,6 +4290,7 @@
       "name": "Campo de Ponferrada",
       "type": "Village",
       "position": { "latitude": 42.53855, "longitude": -6.56402 },
+      "region": "ES-CL",
       "services": [ "Bus" ],
       "accommodation": [ ]
     },
@@ -4152,6 +4299,7 @@
       "name": "Ponferrada",
       "type": "City",
       "position": { "latitude": 42.54301, "longitude": -6.59390 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
         {
@@ -4199,6 +4347,7 @@
       "name": "Columbrianos",
       "type": "Village",
       "position": { "latitude": 42.57349, "longitude": -6.61125 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -4220,6 +4369,7 @@
       "name": "Fuentes Nuevas",
       "type": "Village",
       "position": { "latitude": 42.57686, "longitude": -6.63859 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
       "accommodation": [
         {
@@ -4235,6 +4385,7 @@
       "name": "Camponaraya",
       "type": "Town",
       "position": { "latitude": 42.57603, "longitude": -6.66081 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -4281,6 +4432,7 @@
       "name": "Cacabelos",
       "type": "Town",
       "position": { "latitude": 42.59996, "longitude": -6.72782 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -4338,6 +4490,7 @@
       "name": "Pieros",
       "type": "Village",
       "position": { "latitude": 42.60572, "longitude": -6.75000 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
       "pois": [
@@ -4353,6 +4506,7 @@
       "name": "Valtuille de Arriba",
       "type": "Village",
       "position": { "latitude": 42.61579, "longitude": -6.76485 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4368,6 +4522,7 @@
       "name": "Villafranca del Bierzo",
       "type": "Town",
       "position": { "latitude": 42.60797, "longitude": -6.80864 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -4400,6 +4555,7 @@
       "name": "Pereje",
       "type": "Village",
       "position": { "latitude": 42.62609, "longitude": -6.84388 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4421,6 +4577,7 @@
       "name": "Pradela",
       "type": "Village",
       "position": { "latitude": 42.66107, "longitude": -6.86452 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -4436,6 +4593,7 @@
       "name": "Trabadelo",
       "type": "Village",
       "position": { "latitude": 42.64925, "longitude": -6.88051 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
       "accommodation": [
         {
@@ -4499,6 +4657,7 @@
       "name": "La Portela de Valcarce",
       "type": "Village",
       "position": { "latitude": 42.65995, "longitude": -6.92045 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4526,6 +4685,7 @@
       "name": "Ambasmestas",
       "type": "Village",
       "position": { "latitude": 42.66579, "longitude": -6.928539 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -4559,6 +4719,7 @@
       "name": "Vega de Valcarce",
       "type": "Village",
       "position": { "latitude": 42.66501, "longitude": -6.94577 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [
         {
@@ -4604,6 +4765,7 @@
       "name": "Ruitelán",
       "type": "Village",
       "position": { "latitude": 42.672957, "longitude": -6.96708 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4625,6 +4787,7 @@
       "name": "Las Herrerías",
       "type": "Village",
       "position": { "latitude": 42.67079, "longitude": -6.98107 },
+      "region": "ES-CL",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -4677,6 +4840,7 @@
       "name": "La Faba",
       "type": "Village",
       "position": { "latitude": 42.68467, "longitude": -7.00891 },
+      "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -4699,6 +4863,7 @@
       "name": "La Laguna de Castilla",
       "type": "Village",
       "position": { "latitude": 42.70140, "longitude": -7.02214 },
+      "region": "ES-CL",
       "services": [  ],
       "accommodation": [
         {
@@ -4720,6 +4885,7 @@
       },
       "type": "Village",
       "position": { "latitude": 42.70777, "longitude": -7.04460 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -4777,6 +4943,7 @@
       "name": "Liñares",
       "type": "Village",
       "position": { "latitude": 42.69904, "longitude": -7.07408 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
          {
@@ -4804,6 +4971,7 @@
       "name": "Hospital da Condesa",
       "type": "Village",
       "position": { "latitude": 42.70488, "longitude": -7.09990 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -4819,6 +4987,7 @@
       "name": "Padornelo",
       "type": "Village",
       "position": { "latitude": 42.71172, "longitude": -7.12268 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ],
       "pois": [
@@ -4834,6 +5003,7 @@
       "name": "Alto do Poio",
       "type": "Peak",
       "position": { "latitude": 42.712369, "longitude": -7.12601 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -4855,6 +5025,7 @@
       "name": "Fonfría",
       "type": "Village",
       "position": { "latitude": 42.73083, "longitude": -7.15645 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -4888,6 +5059,7 @@
       "name": "O Biduedo",
       "type": "Village",
       "position": { "latitude": 42.74386, "longitude": -7.17815 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -4909,6 +5081,7 @@
       "name": "Filobal",
       "type": "Village",
       "position": { "latitude": 42.74403, "longitude": -7.20472 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -4924,6 +5097,7 @@
       "name": "Pasantes",
       "type": "Village",
       "position": { "latitude": 42.75040, "longitude": -7.22048 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
     },
@@ -4932,6 +5106,7 @@
       "name": "Triacastela",
       "type": "Village",
       "position": { "latitude": 42.75593, "longitude": -7.23980 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -5044,6 +5219,7 @@
       "name": "San Christovo do Real",
       "type": "Village",
       "position": { "latitude": 42.74042, "longitude": -7.27282 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5059,6 +5235,7 @@
       "name": "Renche",
       "type": "Village",
       "position": { "latitude": 42.73966, "longitude": -7.29078 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -5067,6 +5244,7 @@
       "name": "Lastres",
       "type": "Village",
       "position": { "latitude": 42.74046, "longitude": -7.29530 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -5075,6 +5253,7 @@
       "name": "Freituxe",
       "type": "Village",
       "position": { "latitude": 42.74218, "longitude": -7.30741 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
     },
@@ -5083,6 +5262,7 @@
       "name": "San Martiño do Real",
       "type": "Village",
       "position": { "latitude": 42.73626, "longitude": -7.31649 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
     },
@@ -5091,6 +5271,7 @@
       "name": "Samos",
       "type": "Village",
       "position": { "latitude": 42.73057, "longitude": -7.32662 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -5164,6 +5345,7 @@
       "name": "Teiguín",
       "type": "Village",
       "position": { "latitude": 42.72453, "longitude": -7.34180 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -5172,6 +5354,7 @@
       "name": "Pascais",
       "type": "Poi",
       "position": { "latitude": 42.73368, "longitude": -7.34682 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5187,6 +5370,7 @@
       "name": "Gorolfe",
       "type": "Intersection",
       "position": { "latitude": 42.74012, "longitude": -7.35535 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5202,6 +5386,7 @@
       "name": "Veiga de Reiriz",
       "type": "Intersection",
       "position": { "latitude": 42.75182, "longitude": -7.35652 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5217,6 +5402,7 @@
       "name": "Perros",
       "type": "Village",
       "position": { "latitude": 42.77063, "longitude": -7.35679 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -5225,6 +5411,7 @@
       "name": "A Balsa",
       "type": "Village",
       "position": { "latitude": 42.76614, "longitude": -7.25382 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5240,6 +5427,7 @@
       "name": "San Xil",
       "type": "Village",
       "position": { "latitude": 42.766524, "longitude": -7.27210 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -5248,6 +5436,7 @@
       "name": "Montán",
       "type": "Village",
       "position": { "latitude": 42.76670, "longitude": -7.29748 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -5256,6 +5445,7 @@
       "name": "Fontearcuda",
       "type": "Intersection",
       "position": { "latitude": 42.76869, "longitude": -7.30945 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -5264,6 +5454,7 @@
       "name": "Furela",
       "type": "Village",
       "position": { "latitude": 42.77274, "longitude": -7.32120 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
     },
@@ -5272,6 +5463,7 @@
       "name": "Pintin",
       "type": "Village",
       "position": { "latitude": 42.77380, "longitude": -7.33924 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -5287,6 +5479,7 @@
       "name": "Calvor",
       "type": "Intersection",
       "position": { "latitude": 42.77386, "longitude": -7.35523 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -5302,6 +5495,7 @@
       "name": "Aguiada",
       "type": "Village",
       "position": { "latitude":42.77363, "longitude": -7.36182 },
+      "region": "ES-GA",
       "services": [ "Bus"  ],
       "accommodation": [
         {
@@ -5317,6 +5511,7 @@
       "name": "San Mamede do Camiño",
       "type": "Intersection",
       "position": { "latitude": 42.77396, "longitude": -7.37668 },
+      "region": "ES-GA",
       "services": [ "Bus"  ],
       "accommodation": [ ]
     },
@@ -5330,6 +5525,7 @@
       },
       "type": "Town",
       "position": { "latitude": 42.77641, "longitude": -7.41295 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus"  ],
       "accommodation": [
         {
@@ -5349,6 +5545,7 @@
       "name": "Barbadelo",
       "type": "Village",
       "position": { "latitude": 42.76592, "longitude": -7.45030 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5382,6 +5579,7 @@
       "name": "Rente",
       "type": "Village",
       "position": { "latitude": 42.76819, "longitude": -7.45932 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5397,6 +5595,7 @@
       "name": "Marzán",
       "type": "Intersection",
       "position": { "latitude": 42.77250, "longitude": -7.47984 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5412,6 +5611,7 @@
       "name": "Leimán",
       "type": "Village",
       "position": { "latitude": 42.78043, "longitude": -7.48326 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
     },
@@ -5420,6 +5620,7 @@
       "name": "Peruscallo",
       "type": "Village",
       "position": { "latitude": 42.78051, "longitude": -7.49341 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -5428,6 +5629,7 @@
       "name": "Morgade",
       "type": "Village",
       "position": { "latitude": 42.78231, "longitude": -7.52119 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5444,6 +5646,7 @@
       "name": "Ferreiros",
       "type": "Village",
       "position": { "latitude": 42.78379, "longitude": -7.52964 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5465,6 +5668,7 @@
       "name": "A Pena",
       "type": "Village",
       "position": { "latitude": 42.78546, "longitude": -7.54280 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -5480,6 +5684,7 @@
       "name": "Mercadoiro",
       "type": "Village",
       "position": { "latitude": 42.78976, "longitude": -7.57095 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5495,6 +5700,7 @@
       "name": "Moutrás",
       "type": "Village",
       "position": { "latitude": 42.79080, "longitude": -7.57222 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [ ]
     },
@@ -5503,6 +5709,7 @@
       "name": "A Parrocha",
       "type": "Village",
       "position": { "latitude": 42.79395, "longitude": -7.58788 },
+      "region": "ES-GA",
       "services": [ "Restaurant","Bus" ],
       "accommodation": [ ]
     },
@@ -5511,6 +5718,7 @@
       "name": "Vilachá",
       "type": "Village",
       "position": { "latitude": 42.79547, "longitude": -7.60358 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5533,6 +5741,7 @@
       "name": "Portomarín",
       "type": "Town",
       "position": { "latitude": 42.80755, "longitude": -7.61565 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -5560,6 +5769,7 @@
       "name": "San Roque",
       "type": "Village",
       "position": { "latitude": 42.79978, "longitude": -7.62650 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -5568,6 +5778,7 @@
       "name": "Gonzar",
       "type": "Village",
       "position": { "latitude": 42.82653, "longitude": -7.69628 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5602,6 +5813,7 @@
       "name": "Castromaior",
       "type": "Village",
       "position": { "latitude": 42.83172, "longitude": -7.70903 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -5640,6 +5852,7 @@
       "name": "Hospital da Cruz",
       "type": "Village",
       "position": { "latitude": 42.84077, "longitude": -7.73404 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5661,6 +5874,7 @@
       "name": "Ventas de Narón",
       "type": "Village",
       "position": { "latitude": 42.84429, "longitude": -7.74826 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -5688,6 +5902,7 @@
       "name": "Ligonde",
       "type": "Village",
       "position": { "latitude": 42.85892, "longitude": -7.77983 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -5715,6 +5930,7 @@
       "name": "Eirexe",
       "type": "Village",
       "position": { "latitude": 42.86469, "longitude": -7.78668 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -5736,6 +5952,7 @@
       "name": "Portos",
       "type": "Village",
       "position": { "latitude": 42.87363, "longitude": -7.80700 },
+      "region": "ES-GA",
       "services": [ "Restaurant"],
       "accommodation": [
         {
@@ -5777,6 +5994,7 @@
       "name": "Lestedo",
       "type": "Village",
       "position": {"latitude": 42.87217, "longitude": -7.81414},
+      "region": "ES-GA",
       "services": ["Restaurant"],
       "accommodation": [
         {
@@ -5830,6 +6048,7 @@
       "name": "Os Valos",
       "type": "Village",
       "position": { "latitude": 42.87308, "longitude": -7.82230 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -5845,6 +6064,7 @@
       "name": "Abenostre",
       "type": "Intersection",
       "position": { "latitude": 42.87500, "longitude": -7.82925 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [  ]
     },
@@ -5853,6 +6073,7 @@
       "name": "O Rosario",
       "type": "Village",
       "position": { "latitude": 42.87493, "longitude": -7.85101 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [
         {
@@ -5875,6 +6096,7 @@
       "name": "Palas de Rei",
       "type": "Town",
       "position": { "latitude": 42.87423, "longitude": -7.86865 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -5925,6 +6147,7 @@
       "name": "San Xulián do Camiño",
       "type": "Village",
       "position": { "latitude": 42.87450, "longitude": -7.90356 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -5946,6 +6169,7 @@
       "name": "Pontecampaña",
       "type": "Village",
       "position": { "latitude": 42.87837, "longitude": -7.91439 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -5961,6 +6185,7 @@
       "name": "Casanova",
       "type": "Village",
       "position": { "latitude": 42.87874, "longitude": -7.92801 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -5982,6 +6207,7 @@
       "name": "O Coto",
       "type": "Village",
       "position": { "latitude": 42.88474, "longitude": -7.95840 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -6003,6 +6229,7 @@
       "name": "Leboreiro",
       "type": "Village",
       "position": { "latitude": 42.88713, "longitude": -7.96488 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -6011,6 +6238,7 @@
       "name": "Furelos",
       "type": "Village",
       "position": { "latitude": 42.90906, "longitude": -7.99918 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6032,6 +6260,7 @@
       "name": "Melide",
       "type": "Town",
       "position": { "latitude": 42.91386, "longitude": -8.01474 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -6057,6 +6286,7 @@
       "name": "Santa María de Melide",
       "type": "Village",
       "position": { "latitude": 42.91142, "longitude": -8.02537 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ],
       "pois": [
@@ -6072,6 +6302,7 @@
       "name": "Parabispo",
       "type": "Intersection",
       "position": { "latitude": 42.91557, "longitude": -8.05665 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
     },
@@ -6080,6 +6311,7 @@
       "name": "Boente",
       "type": "Village",
       "position": { "latitude": 42.91606, "longitude": -8.07822 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6126,6 +6358,7 @@
       "name": "Castañeda",
       "type": "Village",
       "position": { "latitude": 42.92481, "longitude": -8.09732 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6166,6 +6399,7 @@
       "name": "Ribadiso",
       "type": "Village",
       "position": { "latitude": 42.93067, "longitude": -8.13067 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6211,6 +6445,7 @@
       "name": "Arzúa",
       "type": "Town",
       "position": { "latitude": 42.92732, "longitude": -8.16037 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -6245,6 +6480,7 @@
       "name": "Preguntoño",
       "type": "Village",
       "position": { "latitude": 42.92262, "longitude": -8.18571 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [  ]
     },
@@ -6253,6 +6489,7 @@
       "name": "A Peroxa",
       "type": "Village",
       "position": { "latitude": 42.92668, "longitude": -8.19499 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -6268,6 +6505,7 @@
       "name": "Taberna Bella (As Quintas)",
       "type": "Village",
       "position": { "latitude": 42.92848, "longitude": -8.21469 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -6289,6 +6527,7 @@
       "name": "Calzada",
       "type": "Village",
       "position": { "latitude": 42.92553, "longitude": -8.22406 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
     },
@@ -6297,6 +6536,7 @@
       "name": "A Calle",
       "type": "Village",
       "position": { "latitude": 42.91794, "longitude": -8.24437 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6324,6 +6564,7 @@
       "name": "Salceda",
       "type": "Village",
       "position": { "latitude": 42.92637, "longitude": -8.28026 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Pharmacy", "Bus" ],
       "accommodation": [
         {
@@ -6357,6 +6598,7 @@
       "name": "A Brea",
       "type": "Village",
       "position": { "latitude": 42.918836, "longitude": -8.30528  },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -6378,6 +6620,7 @@
       "name": "Santa Irene",
       "type": "Village",
       "position": { "latitude": 42.91679, "longitude": -8.33138  },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6411,6 +6654,7 @@
       "name": "A Rúa",
       "type": "Village",
       "position": { "latitude": 42.91452, "longitude": -8.35042 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -6450,6 +6694,7 @@
       "name": "O Pedrouzo (O Pino)",
       "type": "Town",
       "position": { "latitude": 42.90726, "longitude": -8.36406 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -6473,6 +6718,7 @@
       "name": "Amenal",
       "type": "Village",
       "position": { "latitude": 42.90593, "longitude": -8.39383 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -6500,6 +6746,7 @@
       "name": "San Paio",
       "type": "Village",
       "position": { "latitude": 42.90883, "longitude": -8.42626 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [  ]
     },
@@ -6508,6 +6755,7 @@
       "name": "Lavacolla",
       "type": "Village",
       "position": { "latitude": 42.90074, "longitude": -8.44485 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [
         {
@@ -6559,6 +6807,7 @@
       "name": "Vilamaior",
       "type": "Village",
       "position": { "latitude": 42.89142, "longitude": -8.45085 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -6574,6 +6823,7 @@
       "name": "San Marcos",
       "type": "Village",
       "position": { "latitude": 42.89066, "longitude": -8.49162 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -6589,6 +6839,7 @@
       "name": "Monte do Gozo",
       "type": "Village",
       "position": { "latitude": 42.88802, "longitude": -8.50179 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Medical", "Bank" ],
       "accommodation": [
         {
@@ -6637,6 +6888,7 @@
       "name": "Santiago de Compostela",
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
       "pois": [

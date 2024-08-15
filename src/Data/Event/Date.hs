@@ -105,9 +105,10 @@ calendarDateOnOrBefore c@(ListCalendar dates) day = calendarDateOnOrBefore'' c $
 calendarDateOnOrBefore (NamedCalendar name) day = do
   calendar <- getNamedCalendar name
   calendarDateOnOrBefore calendar day
-calendarDateOnOrBefore (PublicHoliday region) day = do
+calendarDateOnOrBefore c@(PublicHoliday region) day = do
   region' <- getRegion region
-  calendarDateOnOrBefore (getRegionalHolidays region') day
+  days <- mapM (\cc -> calendarDateOnOrBefore cc day) (getRegionalHolidays region')
+  calendarDateOnOrBefore'' c $ maximum days
 calendarDateOnOrBefore (Conditional calendar _note) day = calendarDateOnOrBefore calendar day
 
 -- Simple version for when we just have to search backwards
@@ -185,9 +186,10 @@ calendarDateOnOrAfter c@(ListCalendar dates) day = calendarDateOnOrAfter'' c $ i
 calendarDateOnOrAfter (NamedCalendar name) day = do
   calendar <- getNamedCalendar name
   calendarDateOnOrAfter calendar day
-calendarDateOnOrAfter (PublicHoliday region) day = do
+calendarDateOnOrAfter c@(PublicHoliday region) day = do
   region' <- getRegion region
-  calendarDateOnOrAfter (getRegionalHolidays region') day
+  days <- mapM (\cc -> calendarDateOnOrAfter cc day) (getRegionalHolidays region')
+  calendarDateOnOrAfter'' c $ minimum days
 calendarDateOnOrAfter (Conditional calendar _note) day = calendarDateOnOrAfter calendar day
 
 
@@ -244,7 +246,8 @@ inCalendar (NamedCalendar name) day = do
   inCalendar calendar day
 inCalendar (PublicHoliday region) day = do
   region' <- getRegion region
-  inCalendar (getRegionalHolidays region') day
+  matches <- mapM (\c -> inCalendar c day) (getRegionalHolidays region')
+  return $ any id matches
 inCalendar (Conditional calendar _note) day = inCalendar calendar day
 
 

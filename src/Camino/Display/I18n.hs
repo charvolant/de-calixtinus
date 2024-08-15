@@ -108,6 +108,7 @@ data CaminoMsg =
   | HelpLabel
   | HistoricalTitle
   | HolidayEventTitle
+  | HolidaysLabel
   | HomeStayTitle
   | HostelTitle
   | HotelTitle
@@ -173,6 +174,7 @@ data CaminoMsg =
   | PublicHolidayText
   | QuadrupleTitle
   | QuadrupleWcTitle
+  | RegionsLabel
   | ReligiousEventTitle
   | RequiredStopsLabel
   | RestaurantTitle
@@ -324,6 +326,7 @@ renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
 renderCaminoMsgDefault _ HistoricalTitle = "Historical site, archaeological site or ruin"
 renderCaminoMsgDefault _ HolidayEventTitle = "Holiday"
+renderCaminoMsgDefault _ HolidaysLabel = "Holidays"
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
 renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
@@ -381,6 +384,7 @@ renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
 renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
+renderCaminoMsgDefault _ RegionsLabel = "Regions"
 renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"

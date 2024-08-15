@@ -44,6 +44,7 @@ calendar:
       - Good Friday@en
       - Viernes Santo@es
       - Sexta-feira Santa@pt
+      - Vendredi saint@fr
     calendar:
       type: nth-day-after
       nth: -2
@@ -55,9 +56,30 @@ calendar:
       - Easter Monday@en
       - Lunes de Pascua@es
       - Segunda-Feira da Páscoa@pt
+      - Lundi de Pâques@fr
     calendar:
       type: nth-day-after
       nth: 1
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: Pentecost
+    name:
+      - Pentecost@en
+      - Pentecôte@fr
+    calendar:
+      type: nth-day-after
+      nth: 49
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: WhitMonday
+    name:
+      - Whit Monday@en
+      - Lundi de Pentecôte@fr
+    calendar:
+      type: nth-day-after
+      nth: 50
       calendar:
         type: named
         key: EasterSunday
@@ -108,6 +130,7 @@ calendar:
       - New Years Day@en
       - Año Nuevo@es
       - Ano Novo@pt
+      - Nouvel an@fr
     calendar:
       type: day-of-year
       days:
@@ -133,6 +156,15 @@ calendar:
       - Labour Day@en
       - Día del Trabajador@es
       - Dia do Trabalhador@pt
+      - Fête du Travail@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 05-01
+  - key: VictoryDayFR
+    name:
+      - Victory Day (France)@en
+      - Victoire 1945@fr
     calendar:
       type: day-of-year
       days:
@@ -155,12 +187,20 @@ calendar:
         - 06-10
   - key: LaRiojaDay
     name:
-      - La Rioja Refgional Day@en
+      - La Rioja Regional Day@en
       - Día de La Rioja@eu
     calendar:
       type: day-of-year
       days:
         - 06-09
+  - key: NationalDayFR
+    name:
+      - National Day (France)@en
+      - Fête Nationale Française@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 07-14
   - key: GalicianNationalDay
     name:
       - Galician National Day@en
@@ -174,6 +214,7 @@ calendar:
       - Assumption@en
       - Asunción@es
       - Assunção de Nossa Senhora@pt
+      - Assomption@fr
     calendar:
       type: day-of-year
       days:
@@ -207,10 +248,19 @@ calendar:
       - All Saints Day@en
       - Día de todos los Santos@es
       - Dia de Todos-os-Santos@pt
+      - Toussaint@fr
     calendar:
       type: day-of-year
       days:
         - 11-01
+  - key: Armistice
+    name:
+      - Armistice Day@en
+      - Armistice 1918@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 11-11
   - key: RestorationOfIndependencePT
     name:
       - Restoration of Independence (Portugal)@en
@@ -240,17 +290,45 @@ calendar:
       - Christmas Day@en
       - Navidad@es
       - Natal@pt
+      - Noël@fr
     calendar:
       type: day-of-year
       days:
         - 12-25
 regions:
   - id: World
-    name: "The Planet Earth@en"
+    name:
+      - "World@en"
+      - "Monde@fr"
+      - "Mundo@es"
+      - "Mundo@pt"
+      - "Mundo@ga"
+    description:
+      text:
+        - "The Planet Earth@en"
+        - "el planeta tierra@es"
+        - "O planeta Terra@ga"
+        - "O planeta Terra@pt"
+        - "La planète Terre@fr"
+        - "Lurra planeta@eu"
     type: Planet
     locale: "*"
   - id: EU
-    name: "Europe@en"
+    name:
+      - "Europe@en"
+      - "Europa@pt"
+      - "Europa@es"
+      - "Europa@ga"
+      - "Europe@fr"
+      - "Europa@eu"
+    description:
+      text:
+        - "The European continent@en"
+        - "El continente europeo@es"
+        - "O continente europeoa@ga"
+        - "O continente europeu@pt"
+        - "Le continent européen@fr"
+        - "Europako kontinentea@eu"
     type: Continent
     parent: "World"
   - id: ES
@@ -260,6 +338,10 @@ regions:
       - Espagne@fr
       - España@ga
       - Espanha@pt
+    description:
+      text:
+        - The Kingdom of Spain@en
+        - Reino de España@es
     type: Country
     parent: EU
     locale: es
@@ -288,6 +370,11 @@ regions:
     name:
       - Galicia@ga
       - Galicia@es
+    description:
+      text:
+        - The Autonomous Community of Galicia@en
+        - La Comunidad Autónoma de Galicia@es
+      about: https://www.xunta.gal/
     type: Province
     parent: ES
     locale: ga
@@ -301,11 +388,21 @@ regions:
       - Castilla y León@es
       - Castille and León@en
       - Castilla e León@ga
+    description:
+      text:
+        - The Autonomous Community of Castille and León@en
+        - La Comunidad Autónoma de Castilla y Leóna@es
+      about: http://www.jcyl.es/
     type: Province
     parent: ES
   - id: "ES-NA"
     name:
       - Navarre@es
+    description:
+      text:
+        - The Autonomous Community of Navarre@en
+        - La Comunidad Autónoma de Navarre@es
+      about: http://www.navarra.es/home_en/
     type: Province
     parent: ES
     holidays:
@@ -316,6 +413,11 @@ regions:
       - Euskadi@eu
       - Basque Country@en
       - País Vasco@es
+    description:
+      text:
+        - The Autonomous Community of the Basque Country@en
+        - La Comunidad Autónoma de País Vasco@es
+      about: http://www.euskadi.eus/
     type: Province
     parent: ES
     locale: eu
@@ -327,6 +429,11 @@ regions:
   - id: "ES-RI"
     name:
       - La Rioja@es
+    description:
+      text:
+        - The Autonomous Community of the La Rioja@en
+        - La Comunidad Autónoma de La Rioja@es
+      about: http://www.larioja.org/
     type: Province
     parent: ES
     holidays:
@@ -336,6 +443,10 @@ regions:
         key: LaRiojaDay
   - id: PT
     name: Portugal
+    description:
+      text:
+        - The Portuguese Republic@en
+        - A República Portuguesa@pt
     type: Country
     parent: EU
     locale: pt
@@ -373,6 +484,41 @@ regions:
       - Francia@ga
       - França@pt
       - Francia@es
+    description:
+      text:
+        - The French Republic@en
+        - la République française@fr
     type: Country
     parent: EU
     locale: fr
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: LabourDay
+      - type: named
+        key: VictoryDayFR
+      - type: named
+        key: NationalDayFR
+      - type: named
+        key: Assumption
+      - type: named
+        key: AllSaints
+      - type: named
+        key: Armistice
+      - type: named
+        key: Christmas
+  - id: FR-NAQ
+    name:
+      - Nouvelle-Aquitaine@fr
+    description:
+      text:
+        - The adminstrative region of Nouvelle-Aquitaine@en
+        - La région administrative française de Nouvelle-Aquitaine@fr
+      about: http://nouvelle-aquitaine.fr/
+    type: Province
+    parent: FR

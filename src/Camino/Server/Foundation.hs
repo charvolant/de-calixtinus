@@ -33,6 +33,7 @@ import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
+import Data.Time.Calendar (Day)
 import Data.Time.Clock (DiffTime, secondsToDiffTime)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Web.Cookie
@@ -184,6 +185,7 @@ data PreferenceData = PreferenceData {
   , prefFinish :: Location -- ^ The finish location
   , prefStops :: S.Set Location -- ^ Any explcit stops
   , prefExcluded :: S.Set Location -- ^ Any explicit exclusions
+  , prefStartDate :: Maybe Day
 } deriving (Show)
 
 instance FromJSON PreferenceData where
@@ -204,6 +206,7 @@ instance FromJSON PreferenceData where
       finish' <- v .: "finish"
       stops' <- v .: "stops"
       excluded' <- v .: "excluded"
+      startDate' <- v .:? "start-date"
       let camino'' = placeholder camino'
       let routes'' = S.map placeholder routes'
       let start'' = placeholder start'
@@ -227,6 +230,7 @@ instance FromJSON PreferenceData where
         , prefFinish = finish''
         , prefStops = stops''
         , prefExcluded = excluded''
+        , prefStartDate = startDate'
       }
    parseJSON v = error ("Unable to parse preferences data object " ++ show v)
 
@@ -249,6 +253,7 @@ instance ToJSON PreferenceData where
         , "finish" .= (locationID $ prefFinish prefs)
         , "stops" .= (S.map locationID (prefStops prefs))
         , "excluded" .= (S.map locationID (prefExcluded prefs))
+        , "start-date" .= prefStartDate prefs
       ]
 
 defaultPreferenceData :: CaminoApp -> PreferenceData
@@ -277,6 +282,7 @@ defaultPreferenceData master = let
       , prefFinish = preferenceFinish dcp
       , prefStops = preferenceStops dcp
       , prefExcluded = preferenceExcluded dcp
+      , prefStartDate = Nothing
     }
 
 travelPreferencesFrom :: PreferenceData -> TravelPreferences
@@ -301,6 +307,7 @@ caminoPreferencesFrom prefs = CaminoPreferences {
   , preferenceRoutes = prefRoutes prefs
   , preferenceStops = prefStops prefs
   , preferenceExcluded = prefExcluded prefs
+  , preferenceStartDate = prefStartDate prefs
 }
 
 -- | Find stops that do not have rejected accommodation

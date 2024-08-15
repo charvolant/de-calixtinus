@@ -53,6 +53,7 @@ module Camino.Camino (
   , caminoLegRoute
   , caminoLocationList
   , caminoNameLabel
+  , caminoRegions
   , caminoRoute
   , caminoRouteLocations
   , comfortEnumeration
@@ -96,7 +97,7 @@ import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, 
 import Data.Placeholder
 import Data.Propositional
 import Data.Region
-import qualified Data.Set as S (Set, difference, empty, intersection, map, null, fromList, member, union, unions, singleton)
+import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, null, fromList, member, union, unions, singleton)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Text (Text, unpack, pack)
 import Graph.Graph
@@ -491,7 +492,7 @@ instance Placeholder Text Location where
     , locationEvents = []
     , locationCamping = False
   }
-  
+
 instance Normaliser Text Location CaminoConfig where
   normalise config location = location {
     locationRegion = dereference (caminoConfigRegions config) <$> (locationRegion location)
@@ -762,7 +763,7 @@ instance Normaliser Text Route Camino where
 
 instance Dereferencer Text Route Camino where
   dereference camino route = dereference (caminoRoutes camino) route
-  
+
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
 --   can't have these. You'll also need to include these locations and remove those.
@@ -995,7 +996,7 @@ instance Normaliser Text Camino CaminoConfig where
 
 instance Dereferencer Text Camino CaminoConfig where
   dereference config camino = dereference (caminoConfigLookup config) camino
-  
+
 -- | Get a simple text version of the camino name
 caminoNameLabel :: Camino -> Text
 caminoNameLabel camino = localiseDefault $ caminoName camino
@@ -1077,6 +1078,11 @@ caminoRouteLocations camino used =
   in
     foldl (\allowed -> \logic -> (allowed `S.union` routeLogicInclude logic) `S.difference` routeLogicExclude logic) baseLocations logics
 
+-- | Get all the regions in the Camino.
+--  This does not include parent regions.
+caminoRegions :: Camino -> S.Set Region
+caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locationRegion l)) S.empty (M.elems $ caminoLocations camino)
+
 -- | A configuration environment for caminos
 data CaminoConfig = CaminoConfig {
     caminoConfigCaminos :: [Camino] -- ^ The list of known caminos
@@ -1092,13 +1098,13 @@ class HasCaminoConfig a where
 
 instance HasCaminoConfig CaminoConfig where
   getCaminoConfig = id
-  
+
 instance HasRegionConfig CaminoConfig where
   getRegionConfig = caminoConfigRegions
 
 instance HasCalendarConfig CaminoConfig where
-  getCalendarConfig = caminoConfigCalendars 
-  
+  getCalendarConfig = caminoConfigCalendars
+
 -- | Get a camino from an environment.
 --   This returns a maybe instance
 getCamino :: (MonadReader env m, HasCaminoConfig env) => Text -> m (Maybe Camino)
@@ -1121,7 +1127,7 @@ createCaminoConfig calendars regions caminos = let
       , caminoConfigLookup = \k -> M.lookup k caminoMap1
       , caminoConfigLocationLookup = \k -> M.lookup k locationMap1
     }
-    
+
 
 -- | The travel function to use
 data Travel = Walking -- ^ Walking

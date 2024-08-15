@@ -50,6 +50,7 @@ import Data.Text (Text)
 import Camino.Camino
 import Camino.Util
 import Camino.Walking
+import Data.Time.Calendar (Day)
 import qualified Data.Map as M (Map, fromList, singleton, union)
 import qualified Data.Set as S (Set, delete, empty, insert, intersection, map, member, singleton, union, unions)
 import Graph.Graph (successors, predecessors)
@@ -231,6 +232,7 @@ data CaminoPreferences = CaminoPreferences {
   , preferenceRoutes :: S.Set Route -- ^ The routes to use
   , preferenceStops :: S.Set Location -- ^ Locations that we must visit (end a day at)
   , preferenceExcluded :: S.Set Location -- ^ Locations that we will not visit (end a day at, although passing through is OK)
+  , preferenceStartDate :: Maybe Day -- ^ The proposed start date
 } deriving (Show)
 
 instance FromJSON CaminoPreferences where
@@ -241,6 +243,7 @@ instance FromJSON CaminoPreferences where
     routes' <- v .:? "routes" .!= S.empty
     stops' <- v .:? "stops" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
+    startDate' <- v .:? "start-date"
     let camino'' = placeholder camino'
     let start'' = placeholder start'
     let finish'' = placeholder finish'
@@ -254,17 +257,18 @@ instance FromJSON CaminoPreferences where
       , preferenceRoutes = routes''
       , preferenceStops = stops''
       , preferenceExcluded = excluded''
+      , preferenceStartDate = startDate'
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON CaminoPreferences where
-  toJSON (CaminoPreferences camino' start' finish' routes' stops' excluded') =
+  toJSON (CaminoPreferences camino' start' finish' routes' stops' excluded' startDate') =
     let
       routes'' = S.map routeID routes'
       stops'' = S.map locationID stops'
       excluded'' = S.map locationID excluded'
     in
-      object [ "camino" .= caminoId camino', "start" .= locationID start', "finish" .= locationID finish', "routes" .= routes'', "stops" .= stops'', "excluded" .= excluded'']
+      object [ "camino" .= caminoId camino', "start" .= locationID start', "finish" .= locationID finish', "routes" .= routes'', "stops" .= stops'', "excluded" .= excluded'', "start-date" .= startDate']
 
 -- | Normalise preferences to the correct locations and routes, based on placeholders
 normalisePreferences :: CaminoConfig -- ^ The camino configutation
@@ -294,8 +298,9 @@ withRoutes preferences routes = let
     finish' = if S.member (preferenceFinish prefs') allowed then preferenceFinish prefs' else head $ suggestedFinishes prefs'
     stops' = preferenceStops prefs' `S.intersection` allowed
     excluded' = preferenceExcluded prefs' `S.intersection` allowed
+    startDate' = preferenceStartDate preferences
   in
-    CaminoPreferences camino' start' finish' routes' stops' excluded'
+    CaminoPreferences camino' start' finish' routes' stops' excluded' startDate'
 
 
 -- | Update with a new start and finish and, if necessary, stops etc normalised
@@ -309,8 +314,9 @@ withStartFinish preferences st fin = let
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
     stops' = preferenceStops prefs' `S.intersection` allowed
     excluded' = preferenceExcluded prefs' `S.intersection` allowed
+    startDate' = preferenceStartDate preferences
   in
-    CaminoPreferences camino' start' finish' routes' stops' excluded'
+    CaminoPreferences camino' start' finish' routes' stops' excluded' startDate'
 
 -- | The list of routes selected, in camino order
 selectedRoutes :: CaminoPreferences -- ^ The preference set
@@ -646,4 +652,5 @@ defaultCaminoPreferences camino = let
         , preferenceRoutes = S.singleton dr
         , preferenceStops = routeStops dr
         , preferenceExcluded = S.empty
+        , preferenceStartDate = Nothing
       }

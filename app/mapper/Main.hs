@@ -11,6 +11,8 @@ Portability : POSIX
 module Main (main) where
 
 import Camino.Camino
+import Data.Localised
+import Data.Region
 import Data.Text.Lazy (unpack, fromStrict)
 import Formatting
 
@@ -26,14 +28,15 @@ arguments =  Map
 
 printLocation :: Location -> IO ()
 printLocation l = do
-  putStr $ unpack $ locFormat id' name' lat' lon'
+  putStr $ unpack $ locFormat id' name' lat' lon' region'
   where
-    locFormat = format (text % " " % text % " " % fixed 5 % "," % fixed 5 % "\n")
+    locFormat = format (text % " " % text % " " % fixed 5 % "," % fixed 5 % " " % text % "\n")
     id' = fromStrict $ locationID l
     name' = fromStrict $ locationNameLabel l
     position' = locationPosition l
     lat' = maybe 0.0 latitude position'
     lon' = maybe 0.0 longitude position'
+    region' = fromStrict $ maybe "-" (\r -> "(" <> (regionID r) <> ")") (locationRegion l)
 
 
 main :: IO ()

@@ -154,6 +154,11 @@ a
   content: " or "
 .poi-types
    color: #{toCssColour informationBlue}
+.region
+  font-size: smaller
+  color: #{toCssColour caminoBlue}
+  margin-left: 1ex
+  margin-right: 1ex
 .show-on-map
    color: #{toCssColour caminoBlue}
    font-size: larger

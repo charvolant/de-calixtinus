@@ -23,6 +23,7 @@ module Data.Region (
   , createRegionConfig
   , getRegionalHolidays
   , getRegion
+  , regionClosure
 ) where
 
 import GHC.Generics
@@ -119,12 +120,15 @@ instance FromJSON Region where
     return $ Region id' name' type' description' parent'' member'' locale'' holidays'
   parseJSON v = typeMismatch "object" v
 
--- | Get all the holidays associated with a region, working up through the region hierarchy for parent holidays
-getRegionalHolidays :: Region -> EventCalendar
-getRegionalHolidays region = UnionCalendar $ getRegionalHolidays' region
+-- | Get all the regions of a particular type, including parent regions
+regionClosure :: S.Set Region -> S.Set Region
+regionClosure regions = regionClosure' regions regions
 
-getRegionalHolidays' :: Region -> [EventCalendar]
-getRegionalHolidays' region = regionHolidays region ++ (maybe [] getRegionalHolidays' $ regionParent region)
+regionClosure' :: S.Set Region -> S.Set Region -> S.Set Region
+regionClosure' seen more = if S.null more then seen else regionClosure' (seen `S.union` more) (S.fold (\r -> \ms -> maybe ms (\p -> S.insert p ms) (regionParent r)) S.empty more)
+
+getRegionalHolidays :: Region -> [EventCalendar]
+getRegionalHolidays region = regionHolidays region ++ (maybe [] getRegionalHolidays $ regionParent region)
 
 -- | A region configuration, allowing regions to be looked up easily
 data RegionConfig = RegionConfig {

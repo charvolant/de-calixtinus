@@ -62,6 +62,7 @@
       "name": "Santiago de Compostela",
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
     },
@@ -70,6 +71,7 @@
       "name": "Sarela de Baixo",
       "type": "Village",
       "position": { "latitude":  42.87872, "longitude": -8.56837 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -78,6 +80,7 @@
       "name": "Quintáns",
       "type": "Village",
       "position": { "latitude":  42.88035, "longitude": -8.58761 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
       ]
@@ -87,6 +90,7 @@
       "name": "Alto do Vento",
       "type": "Village",
       "position": { "latitude":  42.88098, "longitude": -8.62415 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
       ]
@@ -96,6 +100,7 @@
       "name": "Lombao",
       "type": "Village",
       "position": { "latitude":  42.88642, "longitude": -8.63250 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -111,6 +116,7 @@
       "name": "Augapesada",
       "type": "Village",
       "position": { "latitude":  42.88858, "longitude": -8.65071 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [ ]
     },
@@ -119,6 +125,7 @@
       "name": "Trasmonte",
       "type": "Village",
       "position": { "latitude":  42.89324, "longitude": -8.68286 },
+      "region": "ES-GA",
       "services": ["Restaurant" ],
       "accommodation": [ ]
     },
@@ -127,6 +134,7 @@
       "name": "Ponte Maceira",
       "type": "Bridge",
       "position": { "latitude":  42.90536, "longitude": -8.69505 },
+      "region": "ES-GA",
       "services": ["Restaurant" ],
       "accommodation": [ ]
     },
@@ -135,6 +143,7 @@
       "name": "Barca",
       "type": "Village",
       "position": { "latitude":  42.90565, "longitude": -8.71560 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -143,6 +152,7 @@
       "name": "A Chancela",
       "type": "Village",
       "position": { "latitude":  42.90897, "longitude": -8.72922 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -164,6 +174,7 @@
       "name": "Negreira",
       "type": "Town",
       "position": { "latitude":  42.90957, "longitude": -8.73470 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
       "accommodation": [
         {
@@ -227,6 +238,7 @@
       "name": "A Pena",
       "type": "Village",
       "position": { "latitude":  42.93104, "longitude": -8.80939 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
          {
@@ -248,6 +260,7 @@
       "name": "Vilaserio",
       "type": "Village",
       "position": { "latitude":  42.94291, "longitude": -8.84989 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -269,6 +282,7 @@
       "name": "Maroñas",
       "type": "Village",
       "position": { "latitude":  42.96359, "longitude": -8.91163 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -277,6 +291,7 @@
       "name": "Santa Mariña",
       "type": "Village",
       "position": { "latitude":  42.95695, "longitude": -8.91911 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -298,6 +313,7 @@
       "name": "Vilar do Castro",
       "type": "Village",
       "position": { "latitude":  42.95666, "longitude":  -8.95715 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
       "pois": [
@@ -313,6 +329,7 @@
       "name": "Lago - Abeleiroas",
       "type": "Village",
       "position": { "latitude":  42.96275, "longitude": -8.98381 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
@@ -328,6 +345,7 @@
       "name": "San Cristovo de Corzón",
       "type": "Village",
       "position": { "latitude":  42.96193, "longitude": -9.00440 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -343,6 +361,7 @@
       "name": "Mallón",
       "type": "Village",
       "position": { "latitude":  42.96144, "longitude": -9.01666 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -358,6 +377,7 @@
       "name": "Ponte Olveira",
       "type": "Bridge",
       "position": { "latitude":  42.96252, "longitude": -9.01851 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -366,6 +386,7 @@
       "name": "Olveiroa",
       "type": "Village",
       "position": { "latitude":  42.96669, "longitude": -9.03956 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -411,6 +432,7 @@
       "name": "A Picota",
       "type": "Town",
       "position": { "latitude": 42.93870, "longitude": -8.99260 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -432,6 +454,7 @@
       "name": "Logoso",
       "type": "Village",
       "position": { "latitude": 42.97370, "longitude": -9.06745 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -453,6 +476,7 @@
       "name": "Hospital",
       "type": "Village",
       "position": { "latitude": 42.98450, "longitude": -9.07664 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -488,6 +512,7 @@
       "name": "Camiños Cháns",
       "type": "Village",
       "position": { "latitude": 42.947907, "longitude": -9.18031 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -503,6 +528,7 @@
       "name": "Cee",
       "type": "Town",
       "position": {"latitude": 42.95626, "longitude": -9.19055},
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
@@ -563,6 +589,7 @@
       "name": "Corcubión",
       "type": "Town",
       "position": {"latitude": 42.94451, "longitude": -9.19326 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries","Bank", "Bus"],
       "accommodation": [
         {
@@ -609,6 +636,7 @@
       "name": "O Vilar",
       "type": "Intersection",
       "position": {"latitude": 42.93778, "longitude": -9.20152 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [
         {
@@ -632,6 +660,7 @@
       "name": "Estorde",
       "type": "Village",
       "position": {"latitude": 42.94391, "longitude": -9.21790 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [
         {
@@ -653,6 +682,7 @@
       "name": "Sardiñeiro",
       "type": "Village",
       "position": {"latitude": 42.94302, "longitude":  -9.23268 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -677,6 +707,7 @@
       },
       "type": "Town",
       "position": {"latitude": 42.90501, "longitude":  -9.26437 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
       ],
@@ -724,6 +755,7 @@
       },
       "type": "Poi",
       "position": {"latitude": 42.88264, "longitude":  -9.27187 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -766,6 +798,7 @@
       },
       "type": "Town",
       "position": {"latitude": 42.90593, "longitude":  -9.26266 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -807,6 +840,7 @@
       "name": "As Carizas",
       "type": "Village",
       "position": {"latitude": 42.99880,  "longitude":  -9.10839 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -815,6 +849,7 @@
       "name": "Dumbria",
       "type": "Village",
       "position": {"latitude": 43.00924, "longitude":  -9.11521 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -842,6 +877,7 @@
       "name": "Trasufre",
       "type": "Village",
       "position": {"latitude": 43.02457, "longitude": -9.14137 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     },
@@ -850,6 +886,7 @@
       "name": "Senande",
       "type": "Village",
       "position": {"latitude": 43.04199, "longitude": -9.14857 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
     },
@@ -858,6 +895,7 @@
       "name": "A Grixa",
       "type": "Village",
       "position": {"latitude": 43.04875, "longitude": -9.153878 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -873,6 +911,7 @@
       "name": "Quintans",
       "type": "Village",
       "position": {"latitude": 43.08332, "longitude": -9.15188  },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [
         {
@@ -888,6 +927,7 @@
       "name": "San Martiño de Ozón",
       "type": "Village",
       "position": {"latitude": 43.08393, "longitude": -9.16776 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -903,6 +943,7 @@
       "name": "Vilar de Sobremonte",
       "type": "Village",
       "position": {"latitude": 43.08515, "longitude": -9.17173 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -911,6 +952,7 @@
       "name": "Merexo",
       "type": "Village",
       "position": {"latitude": 43.09883, "longitude": -9.17762 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -926,6 +968,7 @@
       "name": "Os Muiños",
       "type": "Village",
       "position": {"latitude": 43.08356, "longitude": -9.18947 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Pharmacy", "Bus" ],
       "accommodation": [ ]
     },
@@ -934,6 +977,7 @@
       "name": "Moraime",
       "type": "Village",
       "position": {"latitude": 43.08517, "longitude": -9.19982 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -954,6 +998,7 @@
       },
       "type": "Town",
       "position": {"latitude": 43.10561, "longitude": -9.21746 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -1044,6 +1089,7 @@
       "name": "Morquintián",
       "type": "Village",
       "position": {"latitude": 43.04690, "longitude": -9.23171 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -1059,6 +1105,7 @@
       "name": "Frixe",
       "type": "Village",
       "position": {"latitude": 43.01191, "longitude": -9.23350 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [
         {
@@ -1074,6 +1121,7 @@
       "name": "Lires",
       "type": "Village",
       "position": {"latitude": 42.99809, "longitude": -9.24338 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -1141,6 +1189,7 @@
       "name": "A Canosa",
       "type": "Village",
       "position": {"latitude": 42.98688, "longitude": -9.24798 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
     },
@@ -1149,6 +1198,7 @@
       "name": "Padris",
       "type": "Village",
       "position": {"latitude": 42.97227, "longitude": -9.25128 },
+      "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
     },
@@ -1157,6 +1207,7 @@
       "name": "Buxán",
       "type": "Village",
       "position": {"latitude": 42.95631, "longitude": -9.26259 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries"],
       "accommodation": [ ]
     },
@@ -1165,6 +1216,7 @@
       "name": "San Salvador",
       "type": "Village",
       "position": {"latitude": 42.93346, "longitude": -9.26924 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -1173,6 +1225,7 @@
       "name": "San Martiño de Duio",
       "type": "Village",
       "position": {"latitude":42.92022, "longitude": -9.27127 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [ ]
     }

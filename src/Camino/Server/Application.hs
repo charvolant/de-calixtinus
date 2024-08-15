@@ -34,6 +34,7 @@ import Camino.Server.Settings
 import Data.Default.Class
 import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
+import Data.Time.Clock (getCurrentTime, utctDay)
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
@@ -101,7 +102,9 @@ caminoPage :: Camino -> Handler Html
 caminoPage camino = do
     master <- getYesod
     locales <- getLocales
-    let cprefs = defaultCaminoPreferences camino
+    time <- liftIO getCurrentTime
+    let current = utctDay time
+    let cprefs = (defaultCaminoPreferences camino) { preferenceStartDate = Just current }
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
@@ -194,9 +197,12 @@ getPreferencesR :: Handler Html
 getPreferencesR = do
     master <- getYesod
     prefs <- decodePreferences
-    let prefs' = Just $ maybe (defaultPreferenceData master) id prefs
+    time <- liftIO getCurrentTime
+    let current = utctDay time
+    let prefs' = maybe (defaultPreferenceData master) id prefs
+    let prefs'' = prefs' { prefStartDate = Just $ maybe current id (prefStartDate prefs')}
     (embedded, help) <- helpPopup FitnessStep
-    ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm embedded prefs'
+    ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm embedded (Just prefs'')
     stepPage FitnessStep RangeStep Nothing help widget enctype
 
 postPreferencesR :: Handler Html

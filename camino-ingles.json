@@ -63,6 +63,7 @@
       "name": "Ferrol",
       "type": "City",
       "position": { "latitude":  43.478476, "longitude": -8.24376 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus" ],
       "accommodation": [
         {
@@ -99,6 +100,7 @@
       "name": "Polígono Gándara",
       "type": "City",
       "position": { "latitude":  43.49382, "longitude": -8.18834 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Bus"],
       "accommodation": [
         {
@@ -114,6 +116,7 @@
       "name": "Xubia",
       "type": "Town",
       "position": { "latitude":  43.51673, "longitude": -8.15104 },
+      "region": "ES-GA",
       "services": ["Restaurant", "BicycleRepair", "Bus"],
       "accommodation": [
         {
@@ -135,6 +138,7 @@
       "name": "Neda",
       "type": "Town",
       "position": { "latitude": 43.50401, "longitude": -8.15414 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus"],
       "accommodation": [
         {
@@ -156,6 +160,7 @@
       "name": "Fene",
       "type": "Town",
       "position": { "latitude": 43.47410, "longitude": -8.16234 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus"],
       "accommodation": [ ]
     },
@@ -164,6 +169,7 @@
       "name": "O Pereiro",
       "type": "Village",
       "position": { "latitude": 43.44282, "longitude": -8.16640 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Bus"],
       "accommodation": [ ]
     },
@@ -172,6 +178,7 @@
       "name": "Cabanas",
       "type": "Village",
       "position": { "latitude": 43.42006, "longitude": -8.17182 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Bus"],
       "accommodation": [
         {
@@ -187,6 +194,7 @@
       "name": "Pontedeume",
       "type": "Town",
       "position": { "latitude": 43.40631, "longitude": -8.17048 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
@@ -239,6 +247,7 @@
       "name": "Miño",
       "type": "Town",
       "position": { "latitude": 43.34701, "longitude": -8.20626 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus"],
       "accommodation": [
         {
@@ -260,6 +269,7 @@
       "name": "Ponte do Porco",
       "type": "Village",
       "position": { "latitude": 43.33557, "longitude": -8.20086 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Bus"],
       "accommodation": [
         {
@@ -275,6 +285,7 @@
       "name": "Porto Abaixo",
       "type": "Village",
       "position": { "latitude": 43.32388, "longitude": -8.19811 },
+      "region": "ES-GA",
       "services": ["Restaurant", "Bus"],
       "accommodation": [
       ]
@@ -284,6 +295,7 @@
       "name": "Betanzos",
       "type": "Town",
       "position": { "latitude": 43.279666, "longitude": -8.21027  },
+      "region": "ES-GA",
       "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus"],
       "accommodation": [
         {
@@ -329,6 +341,7 @@
       "name": "Xanrozo",
       "type": "Village",
       "position": { "latitude": 43.25502,  "longitude": -8.22868 },
+      "region": "ES-GA",
       "services": ["Bus" ],
       "accommodation": [ ],
       "pois": [
@@ -344,6 +357,7 @@
       "name": "Cos",
       "type": "Village",
       "position": { "latitude": 43.23378, "longitude": -8.24325 },
+      "region": "ES-GA",
       "services": ["Bus" ],
       "accommodation": [ ],
       "pois": [
@@ -359,6 +373,7 @@
       "name": "Meangos",
       "type": "Village",
       "position": { "latitude": 43.22451, "longitude": -8.25193 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
     },
@@ -367,6 +382,7 @@
       "name": "Presedo",
       "type": "Village",
       "position": { "latitude": 43.20418, "longitude": -8.262970 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -390,6 +406,7 @@
       "name": "Leiro",
       "type": "Village",
       "position": { "latitude": 43.19341, "longitude": -8.27473 },
+      "region": "ES-GA",
       "services": [  "Bus" ],
       "accommodation": [ ]
     },
@@ -398,6 +415,7 @@
       "name": "Beche",
       "type": "Village",
       "position": { "latitude": 43.183131, "longitude": -8.30713 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
       "pois": [
@@ -416,6 +434,7 @@
       "name": "As Travesas",
       "type": "Village",
       "position": { "latitude": 43.16970, "longitude": -8.35077 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
     },
@@ -424,6 +443,7 @@
       "name": "Hospital de Bruma",
       "type": "Village",
       "position": { "latitude": 43.15281, "longitude": -8.36326 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -452,6 +472,7 @@
       "name": "O Castro",
       "type": "Village",
       "position": { "latitude": 43.12643, "longitude": -8.37933777528290 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
       ]
@@ -461,6 +482,7 @@
       "name": "A Rúa (Buscás)",
       "type": "Village",
       "position": { "latitude": 43.09553, "longitude": -8.38199 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus"],
       "accommodation": [
         {
@@ -476,6 +498,7 @@
       "name": "O Outeiro (Poulo)",
       "type": "Village",
       "position": { "latitude": 43.07373, "longitude": -8.38113 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
         {
@@ -497,6 +520,7 @@
       "name": "A Calle (Poulo)",
       "type": "Village",
       "position": { "latitude": 43.05906, "longitude": -8.38075 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
       ]
@@ -506,6 +530,7 @@
       "name": "A Baxoia",
       "type": "Village",
       "position": { "latitude": 43.01958, "longitude": -8.41465 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
       ],
@@ -532,6 +557,7 @@
       "name": "Sigüeiro",
       "type": "Town",
       "position": { "latitude": 42.96894, "longitude": -8.44159 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
@@ -583,6 +609,7 @@
       "name": "Formarís",
       "type": "Village",
       "position": { "latitude": 42.920637, "longitude": -8.49220 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
@@ -598,6 +625,7 @@
       "name": "Polígono do Tambre",
       "type": "Intersection",
       "position": { "latitude": 42.902895, "longitude": -8.52777 },
+      "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
@@ -613,6 +641,7 @@
       "name": "A Coruña",
       "type": "City",
       "position": { "latitude": 43.36971, "longitude": -8.39396 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
         "GuestHouse",
@@ -644,6 +673,7 @@
       "name": "O Portádego",
       "type": "City",
       "position": { "latitude": 43.32609, "longitude": -8.38598 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [
         {
@@ -665,6 +695,7 @@
       "name": "O Burgo",
       "type": "Town",
       "position": { "latitude": 43.31507, "longitude": -8.36524 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
         {
@@ -692,6 +723,7 @@
       "name": "Alvedro",
       "type": "Town",
       "position": { "latitude": 43.30266,  "longitude": -8.37066 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
@@ -713,6 +745,7 @@
       "name": "Sigras",
       "type": "Village",
       "position": { "latitude": 43.28627, "longitude": -8.36524 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
       ]
@@ -722,6 +755,7 @@
       "name": "Drozo",
       "type": "Village",
       "position": { "latitude": 43.26753, "longitude": -8.36549 },
+      "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
       ]
@@ -731,6 +765,7 @@
       "name": "Montecarlo (Sergude)",
       "type": "Village",
       "position": { "latitude": 43.24633, "longitude": -8.34511 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
@@ -758,6 +793,7 @@
       "name": "Sarandóns",
       "type": "Village",
       "position": { "latitude": 43.22118, "longitude": -8.33478 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
       ]
@@ -767,6 +803,7 @@
       "name": "Bordelle",
       "type": "Village",
       "position": { "latitude": 43.21162, "longitude": -8.33534 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
       ]
@@ -776,6 +813,7 @@
       "name": "Abeleira",
       "type": "Intersection",
       "position": { "latitude": 43.19086, "longitude": -8.34599 },
+      "region": "ES-GA",
       "services": [  ],
       "accommodation": [
       ]
@@ -785,6 +823,7 @@
       "name": "Santiago de Compostela",
       "type": "City",
       "position": { "latitude": 42.88051, "longitude": -8.54556 },
+      "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
       "pois": [

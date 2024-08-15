@@ -49,6 +49,7 @@ import Data.Maybe (catMaybes, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, pack)
+import Data.Time.Calendar (Day)
 import Text.Hamlet
 import Yesod
 
@@ -100,6 +101,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewStops :: FieldView CaminoApp
   , resExcluded :: FormResult (S.Set Location)
   , viewExcluded :: FieldView CaminoApp
+  , resStartDate :: FormResult (Maybe Day)
+  , viewStartDate :: FieldView CaminoApp
 }
 
 findCaminoById :: CaminoConfig -> Text -> Maybe Camino
@@ -153,6 +156,7 @@ defaultPreferenceFields master prefs = do
     (fnRes, fnView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefFinish <$> prefs)
     (spRes, spView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
     (exRes, exView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
+    (sdRes, sdView) <- mreq hiddenField "" (prefStartDate <$> prefs)
     return PreferenceDataFields {
         resEasyMode = emRes
       , viewEasyMode = emView
@@ -200,6 +204,8 @@ defaultPreferenceFields master prefs = do
       , viewStops = spView
       , resExcluded = exRes
       , viewExcluded = exView
+      , resStartDate = sdRes
+      , viewStartDate = sdView
     }
 
 changed :: (Eq a) => FormResult a -> FormResult a -> Bool
@@ -235,6 +241,7 @@ makePreferenceData _master fields = let
     changedStart = changedRoutes || changed (locationID <$> resPrevStart fields) (locationID <$> start') || changed (locationID <$> resPrevFinish fields) (locationID <$> finish')
     stops' = if easy'' || changedStart then recommendedStops <$> dcp'' else resStops fields
     excluded' = if easy'' || changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
+    startDate' = resStartDate fields
   in
     PreferenceData
       <$> easy'
@@ -253,6 +260,7 @@ makePreferenceData _master fields = let
       <*> finish'
       <*> stops'
       <*> excluded'
+      <*> startDate'
 
 -- | Form to allow fitness settings to be chosen
 chooseFitnessForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
@@ -324,6 +332,7 @@ chooseFitnessForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 
@@ -378,6 +387,7 @@ chooseRangeForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 
@@ -458,6 +468,7 @@ chooseServicesForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 
@@ -506,6 +517,7 @@ chooseCaminoForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 
@@ -559,6 +571,7 @@ chooseRoutesForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 
@@ -580,7 +593,8 @@ chooseStartForm help prefs extra = do
     let routes = prefRoutes <$> prefs
     let start' = prefStart <$> prefs
     let finish' = prefFinish <$> prefs
-    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty
+    let startDate' = prefStartDate <$> prefs
+    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> startDate'
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
@@ -636,6 +650,7 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 
@@ -710,6 +725,7 @@ chooseStopsForm help prefs extra = do
       ^{fvInput (viewStart fields)}
       ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
     
@@ -745,5 +761,6 @@ confirmPreferencesForm _help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)

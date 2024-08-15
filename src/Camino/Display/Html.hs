@@ -14,6 +14,7 @@ Generate HTML descriptions of
 -}
 module Camino.Display.Html where
 
+import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
 import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Trip, tripLegs, tripStops, tripWaypoints)
@@ -26,9 +27,12 @@ import Data.Colour (blend)
 import Data.Colour.Names (lightgrey)
 import Data.Description
 import Data.Event
+import Data.Event.Date
+import Data.List (sortOn)
 import Data.Localised
-import Data.Maybe (fromJust, isJust)
+import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
+import Data.Region
 import Graph.Graph (incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
@@ -581,6 +585,9 @@ descriptionBlock showAbout description = [ihamlet|
 locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine _preferences _camino location = [ihamlet|
     _{Txt (locationName location)}
+    $maybe r <- locationRegion location
+      <span .region>
+        _{Txt (regionName r)}
     <span .accommodation-types>
       $forall accommodation <- locationAccommodationTypes location
         ^{caminoAccommodationTypeIcon accommodation}
@@ -746,6 +753,9 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
                 ^{caminoEventTypeIcon event}
             <div .col-1>
               <div .text-end>
+                $maybe r <- locationRegion location
+                  <span .region>
+                    _{Txt (regionName r)}
                 $maybe d <- locationDescription location
                   $maybe about <- descAbout d
                     <a .description-icon .about href="@{LinkRoute about}" title="_{LinkTitle about}">
@@ -1169,8 +1179,8 @@ caminoMapScript preferences camino solution = [ihamlet|
       ] :: [(LocationType, (Int, Int))]
 
 
-aboutHtml :: TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-aboutHtml _preferences camino = [ihamlet|
+aboutHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
+aboutHtml config _preferences camino = [ihamlet|
   <div .container-fluid>
     <h2>_{Txt (caminoName camino')}
     <div .row>
@@ -1181,8 +1191,44 @@ aboutHtml _preferences camino = [ihamlet|
       <div ##{routeID route} .row>
         <div .col>
           <span style="color: #{toCssColour $ paletteColour $ routePalette route}">_{Txt (routeName route)}
+      <div .row>
+        <div .offset-1 .col>
           ^{descriptionBlock True (routeDescription route)}
-    <h2>_{InformationLabel}
+    <h3>_{RegionsLabel}
+    $forall region <- regions
+      <div ##{regionID region} .row>
+        <div .col>
+          <span>
+            _{Txt (regionName region)}
+          $maybe parent <- regionParent region
+            <span>
+             (<a href="##{regionID parent}">_{Txt (regionName parent)}</a>)
+      $maybe description <- regionDescription region
+        <div .row>
+          <div .offset-1 .col>
+            ^{descriptionBlock True description}
+    <h3>_{HolidaysLabel}
+    <table .table .table-striped .>
+      <thead>
+        <tr>
+          <td>
+          <td>
+          $forall region <- holidayRegions
+            <td .text-center>
+              <a href="##{regionID region}">_{Txt (regionName region)}
+      <tbody>
+        $forall holiday <- holidays
+          <tr>
+            <td>
+              ^{calendarBlock (fst holiday)}
+            <td>
+              $maybe d <- snd holiday
+                _{DateMsg d}
+            $forall region <- holidayRegions
+              <td .text-center>
+                $if elem (fst holiday) (regionHolidays region)
+                  #{check}
+    <h3>_{InformationLabel}
     <p>_{InformationDescription}
     $with metadata <- caminoMetadata camino'
       $forall statement <- metadataStatements metadata
@@ -1196,6 +1242,13 @@ aboutHtml _preferences camino = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
+    regions = regionClosure $ caminoRegions camino'
+    holidayRegions = S.filter (\r -> not $ null $ regionHolidays r) regions
+    holidayKeys = S.fold S.union S.empty $ S.map (\r -> S.fromList $ catMaybes $ map calendarKey $ regionHolidays r) holidayRegions
+    startDate = preferenceStartDate camino
+    mapDate k = (c, (\d -> runReader (calendarDateOnOrAfter c d) config) <$> startDate) where c = NamedCalendar k
+    holidays = sortOn snd $ map mapDate $ S.toList holidayKeys
+    check = '\x2714'
 
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
@@ -1287,7 +1340,7 @@ caminoHtmlBase config preferences camino solution =
           <div .tab-pane role="tabpanel" id="preferences-tab">
             ^{preferencesHtml True preferences camino}
           <div .tab-pane role="tabpanel" id="about-tab">
-            ^{aboutHtml preferences camino}
+            ^{aboutHtml config preferences camino}
           <div .tab-pane role="tabpanel" id="key-tab">
             ^{keyHtml config preferences camino}
     ^{caminoMapScript preferences camino solution}
@@ -1323,7 +1376,7 @@ caminoHtmlSimple config camino =
               <div .tab-pane role="tabpanel" id="locations-tab">
                 ^{caminoLocationsHtml preferences camino Nothing}
               <div .tab-pane role="tabpanel" id="about-tab">
-                ^{aboutHtml preferences camino}
+                ^{aboutHtml config preferences camino}
               <div .tab-pane role="tabpanel" id="key-tab">
                 ^{keyHtml config preferences camino}
         ^{caminoMapScript preferences camino Nothing}

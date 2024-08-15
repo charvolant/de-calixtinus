@@ -22,6 +22,7 @@ module Data.Event (
   , HasCalendarConfig(..)
   , OpenHours(..)
   
+  , calendarKey
   , createCalendarConfig
   , getNamedCalendar
   , getNamedCalendarName
@@ -299,6 +300,12 @@ instance FromJSON EventCalendar where
 isDaily :: EventCalendar -> Bool
 isDaily Daily = True
 isDaily _ = False
+
+-- | Get the calendar key for a calendar
+--   Returns either just the key or nothing for a non-named calendar
+calendarKey :: EventCalendar -> Maybe Text
+calendarKey (NamedCalendar key) = Just key
+calendarKey _ = Nothing
 
 -- | The times an event can occur during a day  
 data EventTime =

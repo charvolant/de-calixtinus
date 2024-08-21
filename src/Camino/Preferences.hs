@@ -27,12 +27,14 @@ module Camino.Preferences (
   , reachableLocations
   , recommendedStops
   , rangeDistance
+  , selectedPois
   , selectedRoutes
   , suggestedAccommodation
   , suggestedDayServices
   , suggestedDistanceRange
   , suggestedFinishes
   , suggestedLocation
+  , suggestedPoiCategories
   , suggestedStarts
   , suggestedStopServices
   , suggestedTimeRange
@@ -52,7 +54,7 @@ import Camino.Util
 import Camino.Walking
 import Data.Time.Calendar (Day)
 import qualified Data.Map as M (Map, fromList, singleton, union)
-import qualified Data.Set as S (Set, delete, empty, insert, intersection, map, member, singleton, union, unions)
+import qualified Data.Set as S (Set, delete, disjoint, empty, fromList, insert, intersection, map, member, singleton, union, unions)
 import Graph.Graph (successors, predecessors)
 
 -- | Acceptable range boundaries for various parameters.
@@ -183,6 +185,7 @@ data TravelPreferences = TravelPreferences {
   , preferenceAccommodation :: M.Map AccommodationType Penance -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   , preferenceStopServices :: M.Map Service Penance -- ^ Desired services at a stop (absence implies zero desire)
   , preferenceDayServices :: M.Map Service Penance -- ^ Desired services during a day (absence implies zero desire)
+  , preferencePoiCategories :: S.Set PoiCategory -- ^ The types of Poi to visit
 } deriving (Show)
 
 instance FromJSON TravelPreferences where
@@ -196,6 +199,7 @@ instance FromJSON TravelPreferences where
     accommodation' <- v .: "accommodation"
     sstop' <- v .: "services-stop"
     sday' <- v .: "services-day"
+    pois' <- v .: "poi-categories"
     return TravelPreferences {
           preferenceTravel = travel'
         , preferenceFitness = fitness'
@@ -206,11 +210,12 @@ instance FromJSON TravelPreferences where
         , preferenceAccommodation = accommodation'
         , preferenceStopServices = sstop'
         , preferenceDayServices = sday'
+        , preferencePoiCategories = pois'
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' comfort' distance' time' location' accommodation' sstop' sday') =
+  toJSON (TravelPreferences travel' fitness' comfort' distance' time' location' accommodation' sstop' sday' pois') =
     object [ 
         "travel" .= travel'
       , "fitness" .= fitness'
@@ -221,9 +226,13 @@ instance ToJSON TravelPreferences where
       , "accommodation" .= accommodation'
       , "services-stop" .= sstop'
       , "services-day" .= sday'
+      , "poi-categories" .= pois'
     ]
 
-    
+-- | Show the points of interest at a particular location selected by the preferences
+selectedPois :: TravelPreferences -> Location -> [PointOfInterest]
+selectedPois preferences location = filter (\poi -> not $ prefPois `S.disjoint` poiCategories poi) (locationPois location) where prefPois = preferencePoiCategories preferences
+
 -- | Preferences for where to go and where to stop on a camino  
 data CaminoPreferences = CaminoPreferences {
     preferenceCamino :: Camino -- ^ The camino route to walk
@@ -588,6 +597,13 @@ suggestedDayServices Cycling fitness comfort = M.union
   (M.singleton BicycleRepair (Penance 3.0)) 
   (suggestedDayServices Walking fitness comfort)
 
+-- | Create a suggested set of point of interest prefereneces based on travel type, fitness and comfort level
+suggestedPoiCategories :: Travel -> Fitness -> Comfort -> S.Set PoiCategory
+suggestedPoiCategories _ _ Austere = S.fromList [ReligiousPoi, PilgrimPoi]
+suggestedPoiCategories _ _ Frugal = S.fromList [ReligiousPoi, CulturalPoi, PilgrimPoi]
+suggestedPoiCategories _ _ Pilgrim = S.fromList [ReligiousPoi, HistoricalPoi, CulturalPoi, RecreationPoi, PilgrimPoi]
+suggestedPoiCategories _ _ Comfortable = S.fromList [HistoricalPoi, CulturalPoi, RecreationPoi, PilgrimPoi]
+suggestedPoiCategories _ _ Luxurious = S.fromList [HistoricalPoi, CulturalPoi, RecreationPoi, PilgrimPoi]
 
 -- | Create a suggested range for times, based on the travel mode and fitness level.
 --   Derived from estimated time limits plus some sanity
@@ -635,6 +651,7 @@ defaultTravelPreferences travel fitness comfort = TravelPreferences {
     , preferenceAccommodation = suggestedAccommodation travel fitness comfort
     , preferenceStopServices = suggestedStopServices travel fitness comfort
     , preferenceDayServices = suggestedDayServices travel fitness comfort
+    , preferencePoiCategories = suggestedPoiCategories travel fitness comfort
   }
 
 

@@ -65,6 +65,7 @@ data CaminoMsg =
   | ComfortableTitle
   | CrossTitle
   | ComfortLabel
+  | CulturalPoiTitle
   | CyclingTitle
   | CyclePathTitle
   | DailyLabel
@@ -107,6 +108,7 @@ data CaminoMsg =
   | HeatingTitle
   | HelpLabel
   | HistoricalTitle
+  | HistoricalPoiTitle
   | HolidayEventTitle
   | HolidaysLabel
   | HomeStayTitle
@@ -140,6 +142,7 @@ data CaminoMsg =
   | MuseumTitle
   | MusicEventTitle
   | NamedCalendarLabel Text
+  | NaturalPoiTitle
   | NaturalTitle
   | NormalTitle
   | NthWeekdayText WeekOfMonth DayOfWeek
@@ -160,11 +163,13 @@ data CaminoMsg =
   | PharmacyTitle
   | PilgrimAlbergueTitle
   | PilgrimMassEventTitle
+  | PilgrimPoiTitle
   | PilgrimResourceTitle
   | PilgrimTitle
   | PlanLabel
   | PoiLabel
   | PoisLabel
+  | PoiTime (Maybe Float)
   | PoiTitle
   | PoolTitle
   | PrayerTitle
@@ -175,7 +180,9 @@ data CaminoMsg =
   | QuadrupleTitle
   | QuadrupleWcTitle
   | RegionsLabel
+  | RecreationPoiTitle
   | ReligiousEventTitle
+  | ReligiousPoiTitle
   | RequiredStopsLabel
   | RestaurantTitle
   | RoadTitle
@@ -198,6 +205,7 @@ data CaminoMsg =
   | Time TimeOfDay
   | TimeAdjustMsg Penance
   | TimeMsg (Maybe Float)
+  | TimeMsgPlain Float
   | TimePenaltyLabel
   | TimePreferencesLabel
   | TowelsTitle
@@ -287,6 +295,7 @@ renderCaminoMsgDefault _ ClosedText = "closed"
 renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
 renderCaminoMsgDefault _ ComfortLabel = "Comfort"
 renderCaminoMsgDefault _ CrossTitle = "Cross"
+renderCaminoMsgDefault _ CulturalPoiTitle = "Cultural"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ DailyLabel = "Daily"
@@ -324,6 +333,7 @@ renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HazardTitle = "Hazard"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
+renderCaminoMsgDefault _ HistoricalPoiTitle = "Historical"
 renderCaminoMsgDefault _ HistoricalTitle = "Historical site, archaeological site or ruin"
 renderCaminoMsgDefault _ HolidayEventTitle = "Holiday"
 renderCaminoMsgDefault _ HolidaysLabel = "Holidays"
@@ -354,6 +364,7 @@ renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
 renderCaminoMsgDefault _ MunicipalTitle = "Town square, market, etc."
 renderCaminoMsgDefault _ MuseumTitle = "Museum or gallery"
 renderCaminoMsgDefault _ MusicEventTitle = "Music"
+renderCaminoMsgDefault _ NaturalPoiTitle = "Natural"
 renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, etc."
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ OtherLabel = "Other"
@@ -371,11 +382,14 @@ renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
 renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ PilgrimMassEventTitle = "Pilgrim's Mass"
+renderCaminoMsgDefault _ PilgrimPoiTitle = "Pilgrim"
 renderCaminoMsgDefault _ PilgrimResourceTitle = "Pilgrim Resource"
 renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
 renderCaminoMsgDefault _ PoiLabel = "Point of Interest"
 renderCaminoMsgDefault _ PoisLabel = "Points of Interest"
+renderCaminoMsgDefault _ (PoiTime Nothing) = ""
+renderCaminoMsgDefault _ (PoiTime (Just time)) = [shamlet|(^{formatHours time} stops)|]
 renderCaminoMsgDefault _ PoiTitle = "Locality"
 renderCaminoMsgDefault _ PoolTitle = "Pool"
 renderCaminoMsgDefault _ PrayerTitle = "Prayer"
@@ -385,7 +399,9 @@ renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
 renderCaminoMsgDefault _ RegionsLabel = "Regions"
+renderCaminoMsgDefault _ RecreationPoiTitle = "Recreation"
 renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
+renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
@@ -407,6 +423,7 @@ renderCaminoMsgDefault _ StopServicesPreferencesLabel = "Missing Stop Services"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
+renderCaminoMsgDefault _ (TimeMsgPlain time) = formatHours time
 renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
 renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
 renderCaminoMsgDefault _ TowelsTitle = "Towels"

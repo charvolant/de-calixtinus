@@ -66,6 +66,10 @@ instance PathPiece AccommodationType where
   fromPathPiece = readValue
   toPathPiece = writeValue
 
+instance PathPiece PoiCategory where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
 instance PathPiece Service where
   fromPathPiece = readValue
   toPathPiece = writeValue
@@ -179,6 +183,7 @@ data PreferenceData = PreferenceData {
   , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accommodation type preferences
   , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
   , prefDayServices :: M.Map Service Penance -- ^ The during-day service preferences
+  , prefPoiCategories :: S.Set PoiCategory -- ^ Types of stop-off you're interested in
   , prefCamino :: Camino -- ^ The camino to travel
   , prefRoutes :: S.Set Camino.Camino.Route -- ^ The chosen routes
   , prefStart :: Location -- ^ The start location
@@ -200,6 +205,7 @@ instance FromJSON PreferenceData where
       accommodation' <- v .: "accommodation"
       stopServices' <- v .: "stop-services"
       dayServices' <- v .: "day-services"
+      poiCategories' <- v .: "poi-categories"
       camino' <- v .: "camino"
       routes' <- v .: "routes"
       start' <- v .: "start"
@@ -224,6 +230,7 @@ instance FromJSON PreferenceData where
         , prefAccommodation = accommodation'
         , prefStopServices = stopServices'
         , prefDayServices = dayServices'
+        , prefPoiCategories = poiCategories'
         , prefCamino = camino''
         , prefRoutes = routes''
         , prefStart = start''
@@ -247,6 +254,7 @@ instance ToJSON PreferenceData where
         , "accommodation" .= prefAccommodation prefs
         , "stop-services" .= prefStopServices prefs
         , "day-services" .= prefDayServices prefs
+        , "poi-categories" .= prefPoiCategories prefs
         , "camino" .= (caminoId $ prefCamino prefs)
         , "routes" .= (S.map routeID (prefRoutes prefs))
         , "start" .= (locationID $ prefStart prefs)
@@ -276,6 +284,7 @@ defaultPreferenceData master = let
       , prefAccommodation = preferenceAccommodation dtp
       , prefStopServices = preferenceStopServices dtp
       , prefDayServices = preferenceDayServices dtp
+      , prefPoiCategories = preferencePoiCategories dtp
       , prefCamino = camino'
       , prefRoutes = preferenceRoutes dcp
       , prefStart = preferenceStart dcp
@@ -296,6 +305,7 @@ travelPreferencesFrom prefs = TravelPreferences {
   , preferenceAccommodation = prefAccommodation prefs
   , preferenceStopServices = prefStopServices prefs
   , preferenceDayServices = prefDayServices prefs
+  , preferencePoiCategories = prefPoiCategories prefs
 }
 
 

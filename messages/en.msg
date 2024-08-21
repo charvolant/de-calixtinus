@@ -37,6 +37,8 @@ PlanKmlLabel: Plan (KML)
 PlanKmlTitle: Generate a plan as a KML file suitable for Google Earth
 PlanLabel: Plan
 PlanTitle: Generate a plan and display it
+PoiTitle: Point of Interest Preferences
+PoiText: Select the sorts of point of interest that you would be interested in stopping at while travelling. These stops will be built into the planning time.
 RangeTitle: Distance and Time Preferences
 RangeText: Select the ranges that you will accept for both distance travelled over a day (in km) and time taken (in hours). The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RequiredStopsLabel: Required Stops
@@ -46,6 +48,7 @@ RoutesTitle: Select Routes
 SelectCamino: Select a camino
 SelectComfort: Select a comfort level
 SelectFitness: Select a fitness level
+SelectPoiCategories: Select points of interest that you might visit
 SelectTravel: Select a travel type
 ServicesText: Select the cost for stopping at the end of the day and the desired accommodation and services at the end of the day and throughout the day. All preferences are measured in kilometres of walking and represent the amount of extra distance you would walk to get something you want.
 ServicesTitle: Select the Day's Travel Preferences

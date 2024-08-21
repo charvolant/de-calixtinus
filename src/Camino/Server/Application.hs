@@ -47,6 +47,7 @@ data PreferenceStep =
     FitnessStep
   | RangeStep
   | ServicesStep
+  | PoiStep
   | CaminoStep
   | RoutesStep
   | StartStep
@@ -241,6 +242,7 @@ stepForm :: PreferenceStep -> Widget -> Maybe PreferenceData -> (Html -> MForm H
 stepForm FitnessStep help prefs = chooseFitnessForm help prefs
 stepForm RangeStep help prefs = chooseRangeForm help prefs
 stepForm ServicesStep help prefs = chooseServicesForm help prefs
+stepForm PoiStep help prefs = choosePoiForm help prefs
 stepForm CaminoStep help prefs = chooseCaminoForm help prefs
 stepForm RoutesStep help prefs = chooseRoutesForm help prefs
 stepForm StartStep help prefs = chooseStartForm help prefs
@@ -252,7 +254,8 @@ stepForward :: Bool -> PreferenceStep -> PreferenceStep
 stepForward False FitnessStep = RangeStep
 stepForward True FitnessStep = CaminoStep
 stepForward _ RangeStep = ServicesStep
-stepForward _ ServicesStep = CaminoStep
+stepForward _ ServicesStep = PoiStep
+stepForward _ PoiStep = CaminoStep
 stepForward _ CaminoStep = RoutesStep
 stepForward _ RoutesStep = StartStep
 stepForward False StartStep = StopsStep
@@ -265,7 +268,8 @@ stepBackward :: Bool -> PreferenceStep -> PreferenceStep
 stepBackward _ FitnessStep = FitnessStep
 stepBackward _ RangeStep = FitnessStep
 stepBackward _ ServicesStep = RangeStep
-stepBackward False CaminoStep = ServicesStep
+stepBackward _ PoiStep = ServicesStep
+stepBackward False CaminoStep = PoiStep
 stepBackward True CaminoStep = FitnessStep
 stepBackward _ RoutesStep = CaminoStep
 stepBackward _ StartStep = RoutesStep
@@ -284,6 +288,7 @@ stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -
 stepPage FitnessStep nextp _ help widget enctype = stepPage' MsgFitnessTitle MsgFitnessText1 (Just MsgFitnessText2) (Just MsgFitnessBottom) FitnessStep nextp Nothing help widget enctype
 stepPage RangeStep nextp _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
 stepPage ServicesStep nextp _ help widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing Nothing ServicesStep nextp Nothing help widget enctype
+stepPage PoiStep nextp _ help widget enctype = stepPage' MsgPoiTitle MsgPoiText Nothing Nothing PoiStep nextp Nothing help widget enctype
 stepPage CaminoStep nextp _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
 stepPage RoutesStep nextp _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
 stepPage StartStep nextp _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing Nothing StartStep nextp Nothing help widget enctype
@@ -310,6 +315,7 @@ helpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoR
 helpPopup' FitnessStep _ = Just $(ihamletFile "templates/help/fitness-help-en.hamlet")
 helpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
 helpPopup' ServicesStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+helpPopup' PoiStep _ = Just $(ihamletFile "templates/help/poi-help-en.hamlet")
 helpPopup' RoutesStep _ = Just $(ihamletFile "templates/help/routes-help-en.hamlet")
 helpPopup' StartStep _ = Just $(ihamletFile "templates/help/start-help-en.hamlet")
 helpPopup' StopsStep _ = Just $(ihamletFile "templates/help/stops-help-en.hamlet")

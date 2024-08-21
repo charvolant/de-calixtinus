@@ -33,6 +33,7 @@ module Camino.Camino (
   , LocationType(..)
   , Palette(..)
   , Penance(..)
+  , PoiCategory(..)
   , PointOfInterest(..)
   , Route(..)
   , RouteLogic(..)
@@ -71,6 +72,7 @@ module Camino.Camino (
   , locationPoiTypes
   , locationStopTypeEnumeration
   , locationTypeEnumeration
+  , poiCategoryEnumeration
   , readCamino
   , serviceEnumeration
   , subtractFloor
@@ -421,13 +423,54 @@ locationCampingDefault Town = False
 locationCampingDefault City = False
 locationCampingDefault _ = True
 
+-- | Broad categories of points of interest, used to decide whether a pilgrim is likely to visit them.
+--   A single point of interest is quite likely to fit multiple classes.
+data PoiCategory =
+    ReligiousPoi -- ^ Religious or spiritual interest
+  | HistoricalPoi -- ^ Historical or archaeological interest
+  | CulturalPoi -- ^ Art galleries, cultural museums
+  | NaturalPoi -- ^ Natural attractions, parks and beauty spots
+  | PilgrimPoi -- ^ Something specifically geared to pilgrims
+  | RecreationPoi -- ^ A recreational resource
+  deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
+
+instance ToJSON PoiCategory
+instance FromJSON PoiCategory
+
+-- | Provide an enumeration of all poi categories
+poiCategoryEnumeration :: [PoiCategory]
+poiCategoryEnumeration = [minBound .. maxBound]
+
+-- | The default categories when not directly specified
+defaultPoiCategories :: LocationType -> S.Set PoiCategory
+defaultPoiCategories Monastery = S.fromList [ReligiousPoi, HistoricalPoi]
+defaultPoiCategories Bridge = S.fromList [HistoricalPoi]
+defaultPoiCategories Church = S.fromList [ReligiousPoi]
+defaultPoiCategories Cathedral = S.fromList [ReligiousPoi, HistoricalPoi]
+defaultPoiCategories Cross = S.fromList [ReligiousPoi]
+defaultPoiCategories Fountain = S.fromList [RecreationPoi]
+defaultPoiCategories Statue = S.fromList [HistoricalPoi]
+defaultPoiCategories Municipal = S.fromList [HistoricalPoi, RecreationPoi]
+defaultPoiCategories PilgrimResource = S.fromList [PilgrimPoi]
+defaultPoiCategories Shop = S.fromList [RecreationPoi]
+defaultPoiCategories Winery = S.fromList [RecreationPoi]
+defaultPoiCategories Museum = S.fromList [CulturalPoi]
+defaultPoiCategories Historical = S.fromList [HistoricalPoi]
+defaultPoiCategories Park = S.fromList [NaturalPoi, RecreationPoi]
+defaultPoiCategories Beach = S.fromList [NaturalPoi, RecreationPoi]
+defaultPoiCategories Natural = S.fromList [NaturalPoi]
+defaultPoiCategories _ = S.empty
+
+  
 -- | A point of interest, attached to a parent location or leg
 data PointOfInterest = PointOfInterest {
     poiName :: Localised TaggedText -- ^ The name of the point of interest
   , poiDescription :: Maybe Description -- ^ Detailed description
   , poiType :: LocationType -- ^ The point of interest type, same as a location type
+  , poiCategories :: S.Set PoiCategory -- ^ The broad categories that are of interest
   , poiPosition :: Maybe LatLong -- ^ Location, if it's that sort of thing
   , poiHours :: Maybe OpenHours -- ^ Dates and times when the point of interest is open
+  , poiTime :: Maybe Float -- ^ The amount of time, in hours that someone might spend investigating the Poi
   , poiEvents :: [Event] -- ^ Associated events
 } deriving (Show)
 
@@ -436,27 +479,33 @@ instance FromJSON PointOfInterest where
     name' <- v .: "name"
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
+    categories <- v .:? "categories" .!= defaultPoiCategories type'
     position' <- v .:? "position"
     hours' <- v .:? "hours"
+    time' <- v .:? "time"
     events' <- v .:? "events" .!= []
     return PointOfInterest {
         poiName = name'
       , poiDescription = description'
       , poiType = type'
+      , poiCategories = categories
       , poiPosition = position'
       , poiHours = hours'
+      , poiTime = time'
       , poiEvents = events'
     }
   parseJSON v = typeMismatch "expecting object" v
 
 instance ToJSON PointOfInterest where
-    toJSON (PointOfInterest name' description' type' position' hours' events') =
+    toJSON (PointOfInterest name' description' type' categories' position' hours' time' events') =
       object [
           "name" .= name'
         , "description" .= description'
         , "type" .= type'
+        , "categories" .= categories'
         , "position" .= position'
         , "hours" .= hours'
+        , "time" .= time'
         , "events" .= if null events' then Nothing else Just events'
       ]
 

@@ -17,6 +17,7 @@ A collection of fields for yesod forms that display data in ways that fit the Ca
 module Camino.Server.Fields (
     clickSelectionField
   , extendedCheckboxField
+  , extendedCheckboxFieldList
   , extendedRadioFieldList
   , extendedSelectionField
   , fieldSettingsLabelTooltip
@@ -82,10 +83,10 @@ extendedRadioFieldList' options = Field
       in [whamlet|
         $forall opt <- options
           <div .form-check>
-          <input .form-check-input type=radio name=#{name} value=#{opKey opt} id="#{theId}-#{opIndex opt}" :opKey opt == valkey:checked>
-          <label .form-check-label for="#{theId}-#{opIndex opt}">#{opLabel opt}
-          $maybe exp <- opExplanation opt
-           <div .form-text>#{exp}
+            <input .form-check-input type=radio name=#{name} value=#{opKey opt} id="#{theId}-#{opIndex opt}" :opKey opt == valkey:checked>
+            <label .form-check-label for="#{theId}-#{opIndex opt}">#{opLabel opt}
+            $maybe exp <- opExplanation opt
+              <div .form-text>#{exp}
       |]
     , fieldEnctype = UrlEncoded
   }
@@ -126,6 +127,41 @@ extendedCheckboxField render label mexp = Field
 
         showVal = either (\_ -> False)
 
+
+extendedCheckboxFieldList' :: (Ord a, RenderMessage site FormMessage) => [Option a] -> Field (HandlerFor site) (S.Set a)
+extendedCheckboxFieldList' options = Field
+    { fieldParse = \rawVals -> \_fileVals -> let
+             pvals = map getValue rawVals
+           in
+             if any isLeft pvals then
+               return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
+              else let
+                 vals = S.fromList $ rights pvals
+               in
+                 return $ Right $ Just $ vals
+    , fieldView = \theId name _attrs val _isReq -> let
+          chosen = either (const S.empty) id val
+        in [whamlet|
+          $forall option <- options
+            <div .form-check id="#{inputId theId (opIndex option)}-container">
+              <input .form-check-input type=checkbox name=#{name} value=#{opKey option} id="#{inputId theId (opIndex option)}" :S.member (opValue option) chosen:checked>
+              <label .form-check-label for="#{inputId theId (opIndex option)}">^{opLabel option}
+              $maybe exp <- opExplanation option
+                <div .form-text>^{exp}
+        |]
+    , fieldEnctype = UrlEncoded
+    }
+    where
+      rlookup = M.fromList $ map (\o -> (opKey o, opValue o)) options
+      inputId base idx = base <> "-" <> pack (show idx)
+      getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
+   
+-- | Create a series of checkbox for a series of options with additional explanation
+extendedCheckboxFieldList :: (Ord a, RenderMessage site FormMessage) =>
+     (msg -> Html) -- ^ The render function. Because basically composing monads makes my brain drop out
+  -> [(Text, msg, a, Maybe msg)] -- ^ The possible options for the radio list, with a key (identifier), label, value and optional description
+  -> Field (HandlerFor site) (S.Set a) -- ^ The resulting field
+extendedCheckboxFieldList render options = extendedCheckboxFieldList' (renderOptions render options)
 
 -- | Create a field that handles preference ranges
 rangeField :: (RenderMessage site FormMessage) => Float -> Float -> Float -> Field (HandlerFor site) (PreferenceRange Float)
@@ -262,7 +298,7 @@ createCheckFieldCondition :: (Ord a) => Text -> Text -> M.Map a Int -> Formula a
 createCheckFieldCondition base positive zlookup (Implies p (Variable v)) = [shamlet|if (#{preEscapedToHtml (createCheckFieldCondition' zlookup p)}) #{positive}.add("#{base}-#{idx}");|] where idx = zlookup M.! v
 createCheckFieldCondition _ _ _ _ = error "Only program clauses permitted"
 
--- | Create a series of radio buttons for a series of options
+-- | Create a series of checkboxes for a series of options
 implyingCheckListField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(Text, msg, a, Maybe msg, Bool)] -> [Formula a] -> [Formula a] -> [Formula a] -> Field (HandlerFor site) (S.Set a)
 implyingCheckListField options requiredClauses allowedClauses prohibitedClauses = Field
     { fieldParse = \rawVals -> \_fileVals -> let

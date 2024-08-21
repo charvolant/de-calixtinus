@@ -39,6 +39,7 @@ module Camino.Planner (
 import Camino.Walking
 import Camino.Camino
 import Camino.Preferences
+import Camino.Util (maybeSum)
 import Graph.Graph (available, incoming, mirror, reachable, subgraph)
 import Graph.Programming()
 import qualified Data.Map as M
@@ -46,9 +47,9 @@ import qualified Data.Set as S
 import Data.Maybe (isJust, fromJust, fromMaybe, mapMaybe)
 import qualified Data.Text as T
 
--- | A pre-selected choice for something
+-- | A pre-selected choice for a location, accommodation etc.
 data TripChoice v = TripChoice {
-      tripChoice :: v -- ^ The accommodation selected
+      tripChoice :: v -- ^ The element selected
     , tripChoiceServices :: S.Set Service -- ^ The additional services supplied by this choice
     , tripChoicePenance :: Penance -- ^ The penance associated with this choice
 } deriving (Show)
@@ -78,7 +79,8 @@ type TripChoiceTrail v = (TripChoice v, TripChoiceTail v)
 -- | The metrics for a day, segment or complete trip
 data Metrics = Metrics {
       metricsDistance :: Float -- ^ Actual distance in km
-    , metricsTime :: Maybe Float -- ^ Time taken in hours
+    , metricsTime :: Maybe Float -- ^ Total time taken in hours, including visits to points of interest
+    , metricsPoiTime :: Maybe Float -- ^ Any additional time spent visiting points of interest
     , metricsPerceivedDistance :: Maybe Float -- ^ Perceived distance in km (Nothing if the distance is too long)
     , metricsAscent :: Float -- ^ Ascent in metres
     , metricsDescent :: Float -- ^ Descent in metres
@@ -104,30 +106,31 @@ instance Ord Metrics where
   
 instance Semigroup Metrics where
   m1 <> m2 = Metrics {
-    metricsDistance = metricsDistance m1 + metricsDistance m2,
-    metricsTime = (+) <$> metricsTime m1 <*> metricsTime m2,
-    metricsPerceivedDistance = (+) <$> metricsPerceivedDistance m1 <*> metricsPerceivedDistance m2,
-    metricsAscent = metricsAscent m1 + metricsAscent m2,
-    metricsDescent = metricsDescent m1 + metricsDescent m2,
-    metricsStop = metricsStop m1 <> metricsStop m2,
-    metricsLocation = metricsLocation m1 <> metricsLocation m2,
-    metricsAccommodationChoice = metricsAccommodationChoice m1 <> metricsAccommodationChoice m2,
-    metricsAccommodation = metricsAccommodation m1 <> metricsAccommodation m2,
-    metricsMissingStopServices = metricsMissingStopServices m1 `S.union` metricsMissingStopServices m2,
-    metricsStopServices = metricsStopServices m1 <> metricsStopServices m2,
-    metricsMissingDayServices = metricsMissingDayServices m1 `S.union` metricsMissingDayServices m2,
-    metricsDayServices = metricsDayServices m1 <> metricsDayServices m2,
-    metricsDistanceAdjust = metricsDistanceAdjust m1 <> metricsDistanceAdjust m2,
-    metricsTimeAdjust = metricsTimeAdjust m1 <> metricsTimeAdjust m2,
-    metricsMisc = metricsMisc m1 <> metricsMisc m2,
-    metricsPenance = metricsPenance m1 <> metricsPenance m2
+      metricsDistance = metricsDistance m1 + metricsDistance m2
+    , metricsTime = metricsTime m1 `maybeSum` metricsTime m2
+    , metricsPoiTime = metricsPoiTime m1 `maybeSum` metricsPoiTime m2
+    , metricsPerceivedDistance = metricsPerceivedDistance m1 `maybeSum` metricsPerceivedDistance m2
+    , metricsAscent = metricsAscent m1 + metricsAscent m2
+    , metricsDescent = metricsDescent m1 + metricsDescent m2
+    , metricsStop = metricsStop m1 <> metricsStop m2
+    , metricsLocation = metricsLocation m1 <> metricsLocation m2
+    , metricsAccommodationChoice = metricsAccommodationChoice m1 <> metricsAccommodationChoice m2
+    , metricsAccommodation = metricsAccommodation m1 <> metricsAccommodation m2
+    , metricsMissingStopServices = metricsMissingStopServices m1 `S.union` metricsMissingStopServices m2
+    , metricsStopServices = metricsStopServices m1 <> metricsStopServices m2
+    , metricsMissingDayServices = metricsMissingDayServices m1 `S.union` metricsMissingDayServices m2
+    , metricsDayServices = metricsDayServices m1 <> metricsDayServices m2
+    , metricsDistanceAdjust = metricsDistanceAdjust m1 <> metricsDistanceAdjust m2
+    , metricsTimeAdjust = metricsTimeAdjust m1 <> metricsTimeAdjust m2
+    , metricsMisc = metricsMisc m1 <> metricsMisc m2
+    , metricsPenance = metricsPenance m1 <> metricsPenance m2
   }
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
 
 -- | A day's stage
 type Day = Chain Location Leg Metrics
@@ -207,8 +210,18 @@ travelAdditional :: TravelPreferences -- ^ The calculation preferences
   -> Penance -- ^ The total additional penance
 travelAdditional _preferences day = mconcat $ mapMaybe legPenance day
 
+-- | Calculate the amount of additional time spent visiting attractions
+-- The points of interest at the start and end of the leg are not included, as they are assumed to be done at the start/end of the day
+pointOfInterestTime :: TravelPreferences -- ^ The calculation preferences
+  -> [Leg] -- ^ The sequence of legs to use
+  -> Maybe Float
+pointOfInterestTime preferences day = let
+  dpois = foldl (\pois -> \location -> selectedPois preferences location ++ pois) [] $ map legFrom (tail day)
+ in
+  foldl maybeSum Nothing $ map poiTime dpois
+  
 -- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: TravelPreferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Bool)
+travelMetrics :: TravelPreferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Maybe Float, Bool)
 travelMetrics preferences day =
   let
     travelType = preferenceTravel preferences
@@ -222,9 +235,10 @@ travelMetrics preferences day =
     ascent = totalAscent preferences day
     descent = totalDescent preferences day
     perceived = (walkingSpeed *) <$> travelTime
+    pois = pointOfInterestTime preferences day
     nonTravel = hasNonTravel preferences day
   in
-    (normalSpeed, actualSpeed, (+) <$> travelTime <*> otherTime, distance, perceived, ascent, descent, nonTravel)
+    (normalSpeed, actualSpeed, travelTime `maybeSum` otherTime `maybeSum` pois, distance, perceived, ascent, descent, pois, nonTravel)
 
 -- | Work out what services are missing from the desired stop list
 missingStopServices :: TravelPreferences -- ^ The calculation preferences
@@ -317,11 +331,12 @@ penance :: TravelPreferences -- ^ The travel preferences
   -> Metrics -- ^ The penance value
 penance preferences camino accommodationMap locationMap day =
   let
-    (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, nonTravel) = travelMetrics preferences day
-    -- If there is no accommodation within this leg, then accept any distance. If not travelling or the last day, then skip lower bounds
+    (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics preferences day
+    -- If there is no accommodation within this leg, then accept any distance.
     atEnd = isLastDay (preferenceFinish camino) day
     walkingSpeed = nominalSpeed Walking Normal
     accommodationFree = isAccommodationFree preferences accommodationMap day
+    -- If not travelling or the last day, then skip lower bounds
     rangeFilter = (if accommodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if nonTravel then withoutLower else id)
     timePreferences = rangeFilter $ preferenceTime preferences
     distancePreferences = rangeFilter $ preferenceDistance preferences
@@ -341,6 +356,7 @@ penance preferences camino accommodationMap locationMap day =
     metrics = Metrics
       distance
       time
+      poi
       perceived
       ascent
       descent

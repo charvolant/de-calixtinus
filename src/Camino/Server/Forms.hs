@@ -23,6 +23,7 @@ module Camino.Server.Forms (
   , confirmPreferencesForm
   , chooseCaminoForm
   , chooseFitnessForm
+  , choosePoiForm
   , chooseRangeForm
   , chooseRoutesForm
   , chooseServicesForm
@@ -36,7 +37,7 @@ module Camino.Server.Forms (
 import Camino.Camino
 import Camino.Preferences
 import Camino.Util
-import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
+import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
 import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
@@ -81,6 +82,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewStopServices :: FieldView CaminoApp
   , resDayServices :: FormResult (M.Map Service Penance)
   , viewDayServices :: FieldView CaminoApp
+  , resPoiCategories :: FormResult (S.Set PoiCategory)
+  , viewPoiCategories :: FieldView CaminoApp
   , resPrevCamino :: FormResult Camino
   , viewPrevCamino :: FieldView CaminoApp
   , resCamino :: FormResult Camino 
@@ -146,6 +149,7 @@ defaultPreferenceFields master prefs = do
     (acRes, acView) <- mreq hiddenField "" (prefAccommodation <$> prefs)
     (ssRes, ssView) <- mreq hiddenField "" (prefStopServices <$> prefs)
     (dsRes, dsView) <- mreq hiddenField "" (prefDayServices <$> prefs)
+    (pcRes, pcView) <- mreq hiddenField "" (prefPoiCategories <$> prefs)
     (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) "" (prefCamino <$> prefs)
     (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) "" (prefCamino <$> prefs)
     (ropRes, ropView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
@@ -184,6 +188,8 @@ defaultPreferenceFields master prefs = do
       , viewStopServices = ssView
       , resDayServices = dsRes
       , viewDayServices = dsView
+      , resPoiCategories = pcRes
+      , viewPoiCategories = pcView
       , resPrevCamino = cpRes
       , viewPrevCamino = cpView
       , resCamino = cRes
@@ -229,6 +235,7 @@ makePreferenceData _master fields = let
     accommodation' = if easy'' || changedTravel then preferenceAccommodation <$> dtp else resAccommodation fields
     stopServices' = if easy'' || changedTravel then preferenceStopServices <$> dtp else resStopServices fields
     dayServices' = if easy'' || changedTravel then preferenceDayServices <$> dtp else resDayServices fields
+    poiCategories' = if easy'' || changedTravel then preferencePoiCategories <$> dtp else resPoiCategories fields
     changedCamino = changed (caminoId <$> resPrevCamino fields) (caminoId <$> resCamino fields)
     camino' = resCamino fields
     dcp = defaultCaminoPreferences <$> camino'
@@ -254,6 +261,7 @@ makePreferenceData _master fields = let
       <*> accommodation'
       <*> stopServices'
       <*> dayServices'
+      <*> poiCategories'
       <*> camino'
       <*> routes'
       <*> start'
@@ -322,6 +330,7 @@ chooseFitnessForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -377,6 +386,7 @@ chooseRangeForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -458,6 +468,7 @@ chooseServicesForm help prefs extra = do
       ^{fvInput (viewComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -472,6 +483,55 @@ chooseServicesForm help prefs extra = do
     |]
     return (res, widget)
 
+
+-- | Form to allow Poi preferences to be chosen
+choosePoiForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+choosePoiForm help prefs extra = do
+    master <- getYesod
+    locales <- getLocales
+    let render = renderCaminoMsg (caminoAppConfig master) locales
+    let  poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
+    (pcRes, pcView) <- mreq poiField (fieldSettingsLabel MsgSelectPoiCategories) (prefPoiCategories <$> prefs)
+    df <- defaultPreferenceFields master prefs
+    let fields = df {
+      resPoiCategories = pcRes,
+      viewPoiCategories = pcView
+    }
+    let res = makePreferenceData master fields
+    let widget = [whamlet|
+      #{extra}
+      $with view <- viewPoiCategories fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
+      ^{fvInput (viewPrevTravel fields)}
+      ^{fvInput (viewTravel fields)}
+      ^{fvInput (viewPrevFitness fields)}
+      ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
+      ^{fvInput (viewDistance fields)}
+      ^{fvInput (viewTime fields)}
+      ^{fvInput (viewLocation fields)}
+      ^{fvInput (viewAccommodation fields)}
+      ^{fvInput (viewStopServices fields)}
+      ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPrevCamino fields)}
+      ^{fvInput (viewCamino fields)}
+      ^{fvInput (viewPrevRoutes fields)}
+      ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
+      ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
+      ^{fvInput (viewFinish fields)}
+      ^{fvInput (viewStops fields)}
+      ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
+    |]
+    return (res, widget)
 
 -- | Form to allow the camino to be chosen
 chooseCaminoForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
@@ -508,6 +568,7 @@ chooseCaminoForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
       ^{fvInput (viewRoutes fields)}
@@ -562,6 +623,7 @@ chooseRoutesForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -642,6 +704,7 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -717,6 +780,7 @@ chooseStopsForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -751,6 +815,7 @@ confirmPreferencesForm _help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}

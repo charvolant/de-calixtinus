@@ -1,0 +1,38 @@
+<h2 #poi-help>Point of Interest Preferences
+
+<p>
+  Points of interest are locations that a pilgrim might like to stop at while on their way.
+  Not all pilgrims are alike, so the points of interest are divided up into broad categories,
+  indicating the sort of thing that a pilgrim might like to stop at.
+
+<p>
+  Points of interest might fall under multiple categories.
+  For example, a cathedral is (obviously) of religious interest but also of historical interest or
+  a park might be both an area of natural beauty and a recreational spot.
+
+<table .table .table-striped>
+  <caption>Point of Interest Categories
+  <thead>
+    <tr>
+       <th scope="col">Category
+       <th scope="col">Description
+  <tbody>
+    <tr>
+        <td>_{caminoPoiCategoryLabel ReligiousPoi}
+        <td>Something of religious significance, such as a chapel or shrine.
+    <tr>
+        <td>_{caminoPoiCategoryLabel HistoricalPoi}
+        <td>A location of historical significance, such as a castle, statue or town square
+    <tr>
+        <td>_{caminoPoiCategoryLabel CulturalPoi}
+        <td>Something of cultural significance, such as an art gallery or museum
+    <tr>
+        <td>_{caminoPoiCategoryLabel NaturalPoi}
+        <td>A location of natural beauty, such as a national park
+    <tr>
+        <td>_{caminoPoiCategoryLabel PilgrimPoi}
+        <td>A location specifically geared towards pilgrims, such as a pilgrim information office
+    <tr>
+        <td>_{caminoPoiCategoryLabel RecreationPoi}
+        <td>Recreational facilities, such as a shopping area, food and drink or
+

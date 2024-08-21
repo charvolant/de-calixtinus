@@ -14,6 +14,7 @@ module Camino.Util (
     canonicalise
   , categorise
   , listUnions
+  , maybeSum
   , partition
   , selectFromList
   , toFileName
@@ -159,3 +160,10 @@ categorise v = categorise' $ T.head $ canonicalise $ T.toUpper $ T.take 1 v
 -- | Convert a piece of text into something that will pass muster as a file name
 toFileName :: T.Text -> T.Text
 toFileName v = T.filter isLetter $ canonicalise v
+
+-- Add two maybe numbers together
+maybeSum :: (Num a) => Maybe a -> Maybe a -> Maybe a
+maybeSum Nothing Nothing = Nothing
+maybeSum Nothing a = a
+maybeSum a Nothing = a
+maybeSum (Just a) (Just b) = Just (a + b)

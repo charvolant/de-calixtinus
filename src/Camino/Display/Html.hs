@@ -100,8 +100,9 @@ metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int
 metricsSummary _preferences _camino metrics days = [ihamlet|
     _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
     _{TimeMsg (metricsTime metrics)}
+    _{PoiTime (metricsPoiTime metrics)} #
     $maybe d <- days
-      (_{DaysMsg d}) #
+      \ _{DaysMsg d} #
     _{AscentMsg (metricsAscent metrics)}
     _{DescentMsg (metricsDescent metrics)}
   |]
@@ -210,6 +211,14 @@ caminoLocationTypeLabel Beach = BeachTitle
 caminoLocationTypeLabel Natural = NaturalTitle
 caminoLocationTypeLabel Hazard = HazardTitle
 caminoLocationTypeLabel Poi = PoiTitle
+
+caminoPoiCategoryLabel :: PoiCategory -> CaminoMsg
+caminoPoiCategoryLabel ReligiousPoi  = ReligiousPoiTitle
+caminoPoiCategoryLabel HistoricalPoi  = HistoricalPoiTitle
+caminoPoiCategoryLabel CulturalPoi  = CulturalPoiTitle
+caminoPoiCategoryLabel NaturalPoi  = NaturalPoiTitle
+caminoPoiCategoryLabel PilgrimPoi  = PilgrimPoiTitle
+caminoPoiCategoryLabel RecreationPoi  = RecreationPoiTitle
 
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLegTypeIcon Trail = [ihamlet| <span .leg-type .ca-walking title="_{TrailTitle}"> |]
@@ -702,6 +711,15 @@ caminoEventHtml event = [ihamlet|
   where
     eventCss = "event-" <> (T.toLower $ T.pack $ show $ eventType event)
 
+-- | List suitable for attribute text
+caminoPoiCategoriesAttr :: S.Set PoiCategory -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoPoiCategoriesAttr categories = [ihamlet|$forall (category, i) <- zcategories
+  #{connector i}_{caminoPoiCategoryLabel category} #
+|]
+  where
+    zcategories = zip (S.toList categories) [1::Int ..]
+    connector i = (if i > 1 then ", " else "") :: T.Text
+
 caminoPointOfInterestHtml :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPointOfInterestHtml poi = [ihamlet|
   <div .row>
@@ -709,7 +727,8 @@ caminoPointOfInterestHtml poi = [ihamlet|
       <div .card-header>
         <span .poi-types>
           ^{caminoLocationTypeIcon (poiType poi)}
-        _{Txt (poiName poi)}
+        <span  title="^{caminoPoiCategoriesAttr (poiCategories poi)}">
+          _{Txt (poiName poi)}
         $maybe pos <- poiPosition poi
           <a .description-icon .float-end onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
             <span .ca-globe title="_{ShowOnMapTitle}">
@@ -877,6 +896,12 @@ preferencesHtml showLink preferences camino = [ihamlet|
           \ _{caminoServiceMsg sk}
         <div .col>_{PenanceFormatted (findDs preferences sk)}
     <div .row>
+      <div .col-4>_{PoisLabel}
+      <div .col>
+        <ul .bar-separated-list>
+          $forall c <- preferencePoiCategories preferences
+            <li>_{caminoPoiCategoryLabel c}
+    <div .row>
       <div .col-4>_{RouteLabel}
       <div .col>
         <ul .bar-separated-list>
@@ -965,6 +990,14 @@ caminoTripHtml preferences camino trip = [ihamlet|
                   ^{locationLine preferences camino (legTo leg)}
                 <div .leg-summary .leg-line>
                   ^{legLine preferences camino leg}
+                <div .poi-summary .bar-separated-list>
+                  <ul>
+                    $forall poi <- selectedPois preferences (legTo leg)
+                      <li>
+                        ^{caminoLocationTypeIcon (poiType poi)}
+                        _{Txt (poiName poi)}
+                        $maybe time <- poiTime poi
+                          \ _{TimeMsgPlain time}
          $forall accom <- metricsAccommodationChoice $ score day
             <p>
               ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}

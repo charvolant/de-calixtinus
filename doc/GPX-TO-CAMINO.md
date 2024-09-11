@@ -21,8 +21,9 @@ the GPX track into a CSV file, suitable for importing into a spreadsheet, such a
 Distances between the latitude/longitude points from the track need to be computed
 using the great-circle distance, the shortest point to point distance on the
 surface of the earth.
+
 Since the differences in lat/long between each point will be relatively small,
-the best approach is to use the [Haversine Formula](https://en.wikipedia.org/wiki/Haversine_formula).
+the most accurate approach is to use the [Haversine Formula](https://en.wikipedia.org/wiki/Haversine_formula).
 The following is a VBA function that performs the necessary calculation, taking lat/longs in degrees
 and returning a distance in metres:
 
@@ -44,7 +45,31 @@ Function LATLONGDISTANCE(lat1 As Double, long1 As Double, lat2 As Double, long2 
     hav = -1
   End If
   LATLONGDISTANCE = 2 * Radius * WorksheetFunction.Asin(hav)
-End Function```
+End Function
+```
+
+However, this does not seem to be the way GPS systems calculate distance.
+They seem to use an equirectangular approximation for small distances, which
+results in about a 20% smaller distance measurement.
+If you want to keep things in line with what someone's GPS is telling them,
+use:
+
+```
+Function LATLONGDISTANCE(lat1 As Double, long1 As Double, lat2 As Double, long2 As Double) As Double
+  lat1r = WorksheetFunction.Radians(lat1)
+  long1r = WorksheetFunction.Radians(long1)
+  lat2r = WorksheetFunction.Radians(lat2)
+  long2r = WorksheetFunction.Radians(long2)
+  midlat = (lat1r + lat2r) / 2
+  deltalat = lat2r - lat1r
+  deltalong = long2r - long1r
+  Radius = 6378137
+  x = deltalong * Cos(midlat)
+  y = deltalat
+  LATLONGDISTANCE = Radius * Sqr(x * x + y * y)
+End Function
+```
+
 
 ## Calculate Ascent and Descent
 

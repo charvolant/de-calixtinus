@@ -50,15 +50,15 @@ paletteCss :: Text -> Palette -> Render CaminoRoute -> Css
 paletteCss ident pal = [cassius|
 .#{ident}
   h1
-    color: #{toCssColour $ paletteColour pal}
+    color: #{toCssColour $ paletteTextColour pal}
   h2
-    color: #{toCssColour $ paletteColour pal}
+    color: #{toCssColour $ paletteTextColour pal}
   h3
-    color: #{toCssColour $ paletteColour pal}
+    color: #{toCssColour $ paletteTextColour pal}
   h4
-    color: #{toCssColour $ paletteColour pal}
+    color: #{toCssColour $ paletteTextColour pal}
   h5
-    color: #{toCssColour $ paletteColour pal}
+    color: #{toCssColour $ paletteTextColour pal}
   |]
   
 iconCss :: String -> Char -> Render CaminoRoute -> Css
@@ -163,6 +163,7 @@ iconList = [
     ("ca-walking", '\xe080'),
     ("ca-warning", '\xe093'),
     ("ca-washing-machine", '\xe061'),
+    ("ca-wharf", '\xe048'),
     ("ca-wifi", '\xe060'),
     ("ca-winery", '\xe01c')
   ]

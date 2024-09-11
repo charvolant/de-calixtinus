@@ -58,6 +58,7 @@ data CaminoMsg =
   | CampGroundTitle
   | CampingTitle
   | CampSiteTitle
+  | CasualTitle
   | CathedralTitle
   | ChurchTitle
   | CityTitle
@@ -229,6 +230,7 @@ data CaminoMsg =
   | WarningTitle
   | WashingMachineTitle
   | WaypointLabel
+  | WharfTitle
   | WiFiTitle
   | WineryTitle
   deriving (Show)
@@ -288,6 +290,7 @@ renderCaminoMsgDefault _ CalendarTitle = "Calendar"
 renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
+renderCaminoMsgDefault _ CasualTitle = "Casual"
 renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
 renderCaminoMsgDefault _ ChurchTitle = "Church"
 renderCaminoMsgDefault _ CityTitle = "City"
@@ -445,6 +448,7 @@ renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
 renderCaminoMsgDefault _ WarningTitle= "Warning"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
+renderCaminoMsgDefault _ WharfTitle = "Ferry Terminal or Wharf"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
 renderCaminoMsgDefault _ WineryTitle = "Winery"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]

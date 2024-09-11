@@ -1,0 +1,1801 @@
+{
+  "id": "BM",
+  "name": [
+    "Bondi to Manley Walk@en"
+  ],
+  "description": {
+    "text": "The Bondi to Manley walk is an 80km walk around Sydney Harbour.@en"
+  },
+  "metadata": {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Bondi to Manley Walk@en"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2024-08-25"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2024-08-25"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.5"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.bonditomanly.com/"
+      }
+    ]
+  },
+  "locations": [
+    {
+      "id": "BM-1",
+      "name": "Bondi Beach",
+      "type": "Town",
+      "position": { "latitude":  -33.89108,	"longitude": 151.27612 },
+      "region": "AU-NSW",
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [ "Hostel", "House", "Hotel" ],
+      "pois": [
+       ]
+    },
+    {
+      "id": "BM-2",
+      "name": "North Bondi",
+      "type": "Town",
+      "position": { "latitude":  -33.89051, "longitude": 151.28216 },
+      "region": "AU-NSW",
+      "services": ["Restaurant" ],
+      "accommodation": [ "House", "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-3",
+      "name": "Bamford Reserve",
+      "type": "Park",
+      "position": { "latitude":  -33.88340, "longitude": 151.28337 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-4",
+      "name": "Rodney Reserve",
+      "type": "Park",
+      "position": { "latitude":  -33.87313, "longitude": 151.28408 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-5",
+      "name": "Cliff-Top Walk",
+      "type": "Park",
+      "position": { "latitude":  -33.86666, "longitude": 151.28339 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-6",
+      "name": "Diamond Bay",
+      "type": "Village",
+      "position": { "latitude":  -33.86172, "longitude": 151.28178 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-7",
+      "name": "Lighthouse Reserve",
+      "type": "Park",
+      "position": { "latitude":  -33.85383, "longitude": 151.28609 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-8",
+      "name": "Gap Park",
+      "type": "Park",
+      "position": { "latitude": -33.84674, "longitude": 151.28623 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-9",
+      "name": "The Gap",
+      "type": "Park",
+      "position": { "latitude": -33.84303, "longitude": 151.28424 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-10",
+      "name": "Gap Bluff",
+      "type": "Peak",
+      "position": { "latitude": -33.84204, "longitude": 151.28493 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-11",
+      "name": "Gap Bluff Road",
+      "type": "Park",
+      "position": { "latitude": -33.84132, "longitude": 151.282464 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-12",
+      "name": "Camp Cove",
+      "type": "Beach",
+      "position": { "latitude": -33.83906, "longitude": 151.27965 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-13",
+      "name": "South Head",
+      "type": "Peak",
+      "position": { "latitude":  -33.83351, "longitude": 151.28093 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-14",
+      "name": "Camp Cove (Return)",
+      "type": "Beach",
+      "position": { "latitude": -33.83912, "longitude": 151.27959 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-15",
+      "name": "Green Point Reserve",
+      "type": "Beach",
+      "position": { "latitude": -33.84082, "longitude": 	151.27678 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-16",
+      "name": "Watson's Bay",
+      "type": "Village",
+      "position": { "latitude": -33.84330, "longitude": 151.28188 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "accommodation": [ "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-17",
+      "name": "Gibson's Beach",
+      "type": "Beach",
+      "position": { "latitude": -33.84657, "longitude": 151.28104 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-18",
+      "name": "Parsley Bay",
+      "type": "Bridge",
+      "position": { "latitude": -33.85068, "longitude": 151.27742 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-19",
+      "name": "Steele Point",
+      "type": "Park",
+      "position": { "latitude": -33.85102, "longitude": 151.26581 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+        {
+          "name": "Gardener's Cottage",
+          "type": "House",
+          "services": [ "Kitchen", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "Steele Point Cottage",
+          "type": "House",
+          "services": [ "Kitchen", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-20",
+      "name": "Milk Beach",
+      "type": "Beach",
+      "position": { "latitude": -33.85654, "longitude": 151.26729 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-21",
+      "name": "Queens Beach",
+      "type": "Beach",
+      "position": { "latitude": -33.86135, "longitude": 151.26897 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-22",
+      "name": "Hermitage Reserve",
+      "type": "Park",
+      "position": { "latitude": -33.86346, "longitude": 151.26947 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-23",
+      "name": "Rose Bay",
+      "type": "Town",
+      "position": { "latitude": -33.86851, "longitude": 151.26921 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus"  ],
+      "accommodation": [ "House" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-24",
+      "name": "Lyne Park",
+      "type": "Park",
+      "position": { "latitude": -33.87078, "longitude": 151.26245 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Wharf"  ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-25",
+      "name": "Rose Bay Park",
+      "type": "Park",
+      "position": { "latitude": -33.86993, "longitude": 151.25341 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus"  ],
+      "accommodation": [ "House" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-26",
+      "name": "Point Piper",
+      "type": "Village",
+      "position": { "latitude": -33.86455, "longitude": 151.25101 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-27",
+      "name": "Seven Schillings Beach",
+      "type": "Beach",
+      "position": { "latitude": -33.87152, "longitude": 151.24824 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-28",
+      "name": "Double Bay",
+      "type": "Town",
+      "position": { "latitude": -33.87392, "longitude": 151.24312 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Bus", "Wharf" ],
+      "accommodation": [ "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-29",
+      "name": "Darling Point",
+      "type": "Town",
+      "position": { "latitude": -33.86668, "longitude": 151.23960 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant",  "Bus", "Wharf" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-30",
+      "name": "Rushcutters Bay",
+      "type": "Town",
+      "position": { "latitude": -33.87429, "longitude": 151.23062 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant",  "Bus" ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-31",
+      "name": "Kings Cross",
+      "type": "City",
+      "position": { "latitude": -33.86920, "longitude": 151.22557 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [ "Hostel", "GuestHouse", "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-32",
+      "name": "Wooloomooloo",
+      "type": "City",
+      "position": { "latitude": -33.86920, "longitude": 151.22041 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
+      "accommodation": [ "GuestHouse", "House", "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-33",
+      "name": "Mrs Macquarie's Point",
+      "type": "Park",
+      "position": { "latitude": -33.85966, "longitude": 151.22260 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-34",
+      "name": "Farm Cove",
+      "type": "Park",
+      "position": { "latitude": -33.86334, "longitude": 151.21849 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-35",
+      "name": "Bennelong Point",
+      "type": "Poi",
+      "position": { "latitude": -33.85614, "longitude": 151.21523 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-36",
+      "name": "Circular Quay",
+      "type": "City",
+      "position": { "latitude": -33.86103, "longitude": 151.20966 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus", "Wharf" ],
+      "accommodation": [ "Hostel", "House", "Hotel"  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-37",
+      "name": "The Rocks",
+      "type": "City",
+      "position": { "latitude": -33.85449, "longitude": 151.20998 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-38",
+      "name": "Harbour Bridge (South)",
+      "type": "Bridge",
+      "position": { "latitude": -33.85868, "longitude": 151.20682 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-39",
+      "name": "Harbour Bridge (North)",
+      "type": "Bridge",
+      "position": { "latitude": -33.84626, "longitude": 151.21274 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [  ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-40",
+      "name": "Milsons Point",
+      "type": "Town",
+      "position": { "latitude": -33.84989, "longitude": 151.21159 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "accommodation": [ "House" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-41",
+      "name": "Kirribilli",
+      "type": "Town",
+      "position": { "latitude": -33.85094, "longitude": 151.21980 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "accommodation": [
+        {
+          "name": "Glenferrie Lodge",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Bedlinen", "Towels"  ],
+          "sleeping": [ "Single", "Double", "DoubleWC", "Triple", "TripleWC", "Quadruple" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-42",
+      "name": "Milson Park",
+      "type": "Park",
+      "position": { "latitude": -33.84453, "longitude": 151.21529 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-43",
+      "name": "Kesterton Park",
+      "type": "Park",
+      "position": { "latitude": -33.84500, "longitude": 151.21860 },
+      "region": "AU-NSW",
+      "services": [ "Wharf" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-44",
+      "name": "Anderson Park",
+      "type": "Park",
+      "position": { "latitude": -33.84034, "longitude": 151.21604 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-45",
+      "name": "Neutral Bay",
+      "type": "Town",
+      "position": { "latitude": -33.84099, "longitude": 151.21896 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Bus", "Wharf" ],
+      "accommodation": [
+        {
+          "name": "Neutral Bay Lodge",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Bedlinen", "Towels"  ],
+          "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Elevera Lodge @ Neutral Bay",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Bedlinen", "Towels"  ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-46",
+      "name": "Shellcove Beach",
+      "type": "Park",
+      "position": { "latitude": -33.83890, "longitude": 151.22496 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [
+      ],
+      "pois": [
+        {
+          "name": "Nutcote",
+          "description": {
+            "text": "The home of May Gibbs (1877-1969), author and illustrator of The Complete Adventures of Snugglepot & Cuddlepie.",
+            "about": "https://www.maygibbs.com.au/"
+          },
+          "type": "Museum",
+          "position": { "latitude": -33.84183, "longitude": 151.22168 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "public-holiday",
+                "region": "AU-NSW"
+              },
+              "hours": "closed"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1100-1500"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "BM-47",
+      "name": "Cremorne Point",
+      "type": "Village",
+      "position": { "latitude": -33.84865, "longitude": 151.23295 },
+      "region": "AU-NSW",
+      "services": [ "Bus", "Wharf" ],
+      "accommodation": [
+        {
+          "name": "Cremorne Point Manor",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Bedlinen", "Towels"  ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Sydney Harbour View Apartment",
+          "type": "House",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Bedlinen", "Towels", "Pool"  ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-48",
+      "name": "Mossman Bay",
+      "type": "Village",
+      "position": { "latitude": -33.83838, "longitude": 151.23281 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-49",
+      "name": "South Mossman",
+      "type": "Village",
+      "position": { "latitude": -33.84333, "longitude": 151.23379 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-50",
+      "name": "Sirius Cove",
+      "type": "Park",
+      "position": { "latitude": -33.83934, "longitude": 151.23704 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [ "Hotel"
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-51",
+      "name": "Taronga Zoo",
+      "type": "Park",
+      "position": { "latitude": -33.84576, "longitude": 151.23990 },
+      "region": "AU-NSW",
+      "services": [ "Bus", "Wharf" ],
+      "accommodation": [
+      ],
+      "pois": [
+        {
+          "name": "Taronga Zoo",
+          "description": {
+            "about": "https://taronga.org.au/sydney-zoo"
+          },
+          "type": "Park",
+          "position": {"latitude": -33.84328, "longitude": 151.24138},
+          "hours": [
+            {
+              "calendar": {
+                "type": "yearly",
+                "months": [0, 1, 2, 3, 8, 9, 10, 11]
+              },
+              "hours": "0900-1700"
+            },
+            {
+              "calendar": {
+                "type": "yearly",
+                "months": [4, 5, 6, 7]
+              },
+              "hours": "0900-1630"
+            }
+          ],
+          "time": 3.0
+        }
+      ]
+    },
+    {
+      "id": "BM-52",
+      "name": "Bradleys Head",
+      "type": "Natural",
+      "position": { "latitude": -33.85303, "longitude": 151.24633 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-53",
+      "name": "Taylors Bay",
+      "type": "Natural",
+      "position": { "latitude": -33.84237, "longitude": 151.24594 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-54",
+      "name": "Chowder Head",
+      "type": "Natural",
+      "position": { "latitude": -33.84355, "longitude": 151.25241 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-55",
+      "name": "Chowder Bay",
+      "type": "Village",
+      "position": { "latitude": -33.83834, "longitude": 151.25611 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-56",
+      "name": "HMAS Penguin",
+      "type": "Village",
+      "position": { "latitude": -33.83126, "longitude": 151.25835 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-57",
+      "name": "Middle Head – Gubbuh Gubbuh",
+      "type": "Park",
+      "position": { "latitude": -33.82737, "longitude": 151.26825 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Middle Head Officers Quarters",
+          "type": "House",
+          "services": [ "Heating", "Kitchen", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-58",
+      "name": "HMAS Penguin (Return)",
+      "type": "Village",
+      "position": { "latitude": -33.83124, "longitude": 151.25828 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-59",
+      "name": "Balmoral",
+      "type": "Village",
+      "position": { "latitude": -33.82791, "longitude": 151.25286 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-60",
+      "name": "Wyargine Point",
+      "type": "Village",
+      "position": { "latitude": -33.81640, "longitude": 151.25141 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-61",
+      "name": "Parriwi",
+      "type": "Village",
+      "position": { "latitude": -33.81305, "longitude": 151.24591 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-62",
+      "name": "The Spit",
+      "type": "Village",
+      "position": { "latitude": -33.80401, "longitude": 151.24614 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+      ],
+      "pois": [
+        {
+          "name": "Spit Bridge",
+          "type": "Bridge",
+          "position": { "latitude": -33.80255, "longitude": 151.24619 }
+        }
+      ]
+    },
+    {
+      "id": "BM-63",
+      "name": "Shell Cove Bay",
+      "type": "Park",
+      "position": { "latitude": -33.80000, "longitude": 151.25105 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-64",
+      "name": "Sandy Bay",
+      "type": "Village",
+      "position": { "latitude": -33.80455, "longitude": 151.25296 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant"  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-65",
+      "name": "Castle Rock",
+      "type": "Village",
+      "position": { "latitude": -33.80455, "longitude": 151.25296 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-66",
+      "name": "Grotto Point",
+      "type": "Natural",
+      "position": { "latitude": -33.81345, "longitude": 151.26176 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+        {
+          "name": "Rock Art",
+          "position": { "latitude": -33.81342, "longitude": 151.26294 },
+          "type": "Historical"
+        }
+      ]
+    },
+    {
+      "id": "BM-67",
+      "name": "Dobroyd Head",
+      "type": "Natural",
+      "position": { "latitude": -33.81053, "longitude": 151.27341 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-68",
+      "name": "Wellings Reserve",
+      "type": "Natural",
+      "position": { "latitude": -33.80055, "longitude": 151.26568 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "The Rangers Cottage",
+          "type": "House",
+          "services": [ "WiFi", "WashingMachine", "Heating", "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-69",
+      "name": "Fairlight",
+      "type": "Village",
+      "position": { "latitude": -33.79721, "longitude": 151.26837 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Fairlight Gardens",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-70",
+      "name": "Manly",
+      "type": "Town",
+      "position": { "latitude": -33.79948, "longitude": 151.28433 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus", "Wharf" ],
+      "accommodation": [ "GuestHouse", "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-71",
+      "name": "Little Manly Point",
+      "type": "Village",
+      "position": { "latitude": -33.80918, "longitude": 151.28706 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-72",
+      "name": "Spring Cove",
+      "type": "Natural",
+      "position": { "latitude": -33.80839, "longitude": 151.29159 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-73",
+      "name": "Scenic Drive",
+      "type": "Natural",
+      "position": { "latitude": -33.80703, "longitude": 151.29635 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-74",
+      "name": "The Barracks",
+      "type": "Historical",
+      "position": { "latitude": -33.81130, "longitude": 151.29760 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "The Q Station",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-75",
+      "name": "Third Quarantine Cemetary",
+      "type": "Historical",
+      "position": { "latitude": -33.81725, "longitude": 151.29470 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-76",
+      "name": "North Head",
+      "type": "Natural",
+      "position": { "latitude": -33.82107, "longitude": 151.29957 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-77",
+      "name": "North Head West",
+      "type": "Natural",
+      "position": { "latitude": -33.82296, "longitude": 151.29863 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Burragula Lookout",
+          "type": "Peak",
+          "position": { "latitude": -33.8232, "longitude": 151.29852 }
+        }
+      ]
+    },
+    {
+      "id": "BM-78",
+      "name": "North Head West",
+      "type": "Natural",
+      "position": { "latitude": -33.82190, "longitude": 151.30064 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Yiningma Lookout",
+          "type": "Peak",
+          "position": { "latitude": -33.82184, "longitude": 151.30076 }
+        }
+      ]
+    },
+    {
+      "id": "BM-79",
+      "name": "North Head (Return)",
+      "type": "Natural",
+      "position": { "latitude": -33.82107, "longitude": 151.29957 },
+      "region": "AU-NSW",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-80",
+      "name": "Hanging Swamp",
+      "type": "Natural",
+      "position": { "latitude": -33.81444, "longitude": 151.30148 },
+      "region": "AU-NSW",
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "No 1 Gun Emplacement South",
+          "type": "Historical",
+          "position": { "latitude": -33.81782, "longitude": 151.29847 }
+        },
+        {
+          "name": "No 2 Gun Emplacement North",
+          "type": "Historical",
+          "position": { "latitude": -33.81657, "longitude": 151.29899 }
+        }
+      ]
+    },
+    {
+      "id": "BM-81",
+      "name": "The Barracks (Return)",
+      "type": "Historical",
+      "position": { "latitude": -33.81131, "longitude": 151.29761 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-82",
+      "name": "Old Quarry Swamp",
+      "type": "Natural",
+      "position": { "latitude": -33.80500, "longitude": 151.30069 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "name": "Wall Gate",
+          "description": {
+            "notes": [
+              {
+                "type": "Directions",
+                "text": "Go through the gate towards the ocean.@en"
+              }
+            ]
+          },
+          "type": "Poi",
+          "position": { "latitude": -33.80278, "longitude": 151.30108 }
+        }
+      ]
+    },
+    {
+      "id": "BM-83",
+      "name": "Shelly Head",
+      "type": "Natural",
+      "position": { "latitude": -33.79933, "longitude": 151.29755 },
+      "region": "AU-NSW",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-84",
+      "name": "Shelly Beach",
+      "type": "Village",
+      "position": { "latitude": -33.80094, "longitude": 151.29841 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-85",
+      "name": "Manly Beach",
+      "type": "Town",
+      "position": { "latitude": -33.79695, "longitude": 151.28833 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [ "GuestHouse", "Hotel" ],
+      "pois": [
+      ]
+    }
+  ],
+
+  "legs": [
+    {
+      "from": "BM-1",
+      "to": "BM-2",
+      "distance": 0.60,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "BM-2",
+      "to": "BM-3",
+      "distance": 1.26,
+      "ascent": 50,
+      "descent": 0
+    },
+    {
+      "from": "BM-3",
+      "to": "BM-4",
+      "distance": 1.85,
+      "ascent": 25,
+      "descent": 50
+    },
+    {
+      "from": "BM-4",
+      "to": "BM-5",
+      "distance": 1.43,
+      "ascent": 35,
+      "descent": 55
+    },
+    {
+      "from": "BM-5",
+      "to": "BM-6",
+      "distance": 0.92,
+      "ascent": 45,
+      "descent": 25
+    },
+    {
+      "from": "BM-6",
+      "to": "BM-7",
+      "distance": 1.62,
+      "ascent": 90,
+      "descent": 80
+    },
+    {
+      "from": "BM-7",
+      "to": "BM-8",
+      "distance": 1.19,
+      "ascent": 40,
+      "descent": 50
+    },
+    {
+      "from": "BM-8",
+      "to": "BM-9",
+      "distance": 0.64,
+      "ascent": 20,
+      "descent": 45
+    },
+    {
+      "from": "BM-9",
+      "to": "BM-10",
+      "distance": 0.21,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "BM-10",
+      "to": "BM-11",
+      "distance": 0.40,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "BM-11",
+      "to": "BM-12",
+      "distance": 0.84,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "BM-12",
+      "to": "BM-13",
+      "distance": 1.02,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "BM-13",
+      "to": "BM-14",
+      "distance": 1.09,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "BM-14",
+      "to": "BM-15",
+      "distance": 0.44,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "BM-15",
+      "to": "BM-16",
+      "distance": 0.84,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "BM-16",
+      "to": "BM-17",
+      "distance": 0.52,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "BM-17",
+      "to": "BM-18",
+      "distance": 1.05,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "BM-18",
+      "to": "BM-19",
+      "distance": 2.56,
+      "ascent": 10,
+      "descent": 20
+    },
+    {
+      "from": "BM-19",
+      "to": "BM-20",
+      "distance": 1.09,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "BM-20",
+      "to": "BM-21",
+      "distance": 0.96,
+      "ascent": 20,
+      "descent": 10,
+      "type": "Trail"
+    },
+    {
+      "from": "BM-21",
+      "to": "BM-22",
+      "distance": 0.36,
+      "ascent": 0,
+      "descent": 5,
+      "type": "Trail"
+    },
+    {
+      "from": "BM-22",
+      "to": "BM-23",
+      "distance": 1.09,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "BM-23",
+      "to": "BM-24",
+      "distance": 1.06,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "BM-24",
+      "to": "BM-25",
+      "distance": 1.20,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "BM-25",
+      "to": "BM-26",
+      "distance": 0.99,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "BM-26",
+      "to": "BM-27",
+      "distance": 1.57,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "BM-27",
+      "to": "BM-28",
+      "distance": 1.27,
+      "ascent": 15,
+      "descent": 15
+    },
+    {
+      "from": "BM-28",
+      "to": "BM-29",
+      "distance": 1.88,
+      "ascent": 65,
+      "descent": 70,
+      "type": "Trail"
+    },
+    {
+      "from": "BM-29",
+      "to": "BM-30",
+      "distance": 1.95,
+      "ascent": 40,
+      "descent": 40
+    },
+    {
+      "from": "BM-30",
+      "to": "BM-31",
+      "distance": 1.06,
+      "ascent": 50,
+      "descent": 15
+    },
+    {
+      "from": "BM-31",
+      "to": "BM-32",
+      "distance": 0.63,
+      "ascent": 0,
+      "descent": 30
+    },
+    {
+      "from": "BM-32",
+      "to": "BM-33",
+      "distance": 1.68,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "BM-33",
+      "to": "BM-34",
+      "distance": 0.87,
+      "ascent": 20,
+      "descent": 35
+    },
+    {
+      "from": "BM-34",
+      "to": "BM-35",
+      "distance": 1.29,
+      "ascent": 35,
+      "descent": 25
+    },
+    {
+      "from": "BM-35",
+      "to": "BM-36",
+      "distance": 1.15,
+      "ascent": 5,
+      "descent": 15
+    },
+    {
+      "from": "BM-36",
+      "to": "BM-37",
+      "distance": 1.24,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "BM-37",
+      "to": "BM-38",
+      "distance": 1.01,
+      "ascent": 65,
+      "descent": 30
+    },
+    {
+      "from": "BM-38",
+      "to": "BM-39",
+      "distance": 2.07,
+      "ascent": 40,
+      "descent": 45
+    },
+    {
+      "from": "BM-39",
+      "to": "BM-40",
+      "distance": 0.66,
+      "ascent": 0,
+      "descent": 20
+    },
+    {
+      "from": "BM-40",
+      "to": "BM-41",
+      "distance": 1.28,
+      "ascent": 20,
+      "descent": 25
+    },
+    {
+      "from": "BM-41",
+      "to": "BM-42",
+      "distance": 1.35,
+      "ascent": 15,
+      "descent": 15
+    },
+    {
+      "from": "BM-42",
+      "to": "BM-43",
+      "distance": 0.47,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "BM-43",
+      "to": "BM-44",
+      "distance": 1.08,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "BM-44",
+      "to": "BM-45",
+      "distance": 0.34,
+      "ascent": 20,
+      "descent": 5
+    },
+    {
+      "from": "BM-45",
+      "to": "BM-46",
+      "distance": 1.31,
+      "ascent": 25,
+      "descent": 15
+    },
+    {
+      "from": "BM-46",
+      "to": "BM-47",
+      "distance": 1.80,
+      "ascent": 10,
+      "descent": 35
+    },
+    {
+      "from": "BM-47",
+      "to": "BM-48",
+      "distance": 2.76,
+      "ascent": 40,
+      "descent": 30
+    },
+    {
+      "from": "BM-48",
+      "to": "BM-49",
+      "distance": 0.92,
+      "ascent": 30,
+      "descent": 20
+    },
+    {
+      "from": "BM-49",
+      "to": "BM-50",
+      "distance": 0.90,
+      "ascent": 25,
+      "descent": 30
+    },
+    {
+      "from": "BM-50",
+      "to": "BM-51",
+      "distance": 1.17,
+      "ascent": 20,
+      "descent": 20
+    },
+    {
+      "from": "BM-51",
+      "to": "BM-52",
+      "distance": 1.63,
+      "ascent": 20,
+      "descent": 20
+    },
+    {
+      "from": "BM-52",
+      "to": "BM-53",
+      "distance": 1.79,
+      "ascent": 30,
+      "descent": 7
+    },
+    {
+      "from": "BM-53",
+      "to": "BM-54",
+      "distance": 0.76,
+      "ascent": 15,
+      "descent": 25
+    },
+    {
+      "from": "BM-54",
+      "to": "BM-55",
+      "distance": 1.28,
+      "ascent": 25,
+      "descent": 30
+    },
+    {
+      "from": "BM-55",
+      "to": "BM-56",
+      "distance": 1.41,
+      "ascent": 65,
+      "descent": 25
+    },
+    {
+      "from": "BM-56",
+      "to": "BM-57",
+      "distance": 1.40,
+      "ascent": 5,
+      "descent": 55
+    },
+    {
+      "from": "BM-57",
+      "to": "BM-58",
+      "distance": 1.89,
+      "ascent": 60,
+      "descent": 15
+    },
+    {
+      "from": "BM-58",
+      "to": "BM-59",
+      "distance": 0.96,
+      "ascent": 10,
+      "descent": 60
+    },
+    {
+      "from": "BM-59",
+      "to": "BM-60",
+      "distance": 1.96,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "BM-60",
+      "to": "BM-61",
+      "distance": 0.90,
+      "ascent": 30,
+      "descent": 20
+    },
+    {
+      "from": "BM-61",
+      "to": "BM-62",
+      "distance": 1.51,
+      "ascent": 0,
+      "descent": 30
+    },
+    {
+      "from": "BM-62",
+      "to": "BM-63",
+      "distance": 0.98,
+      "ascent": 60,
+      "descent": 35
+    },
+    {
+      "from": "BM-63",
+      "to": "BM-64",
+      "distance": 1.11,
+      "ascent": 5,
+      "descent": 20
+    },
+    {
+      "from": "BM-64",
+      "to": "BM-65",
+      "distance": 1.71,
+      "ascent": 35,
+      "descent": 20
+    },
+    {
+      "from": "BM-65",
+      "to": "BM-66",
+      "distance": 0.53,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "BM-66",
+      "to": "BM-67",
+      "distance": 1.65,
+      "ascent": 25,
+      "descent": 55
+    },
+    {
+      "from": "BM-67",
+      "to": "BM-68",
+      "distance": 0.99,
+      "ascent": 30,
+      "descent": 35
+    },
+    {
+      "from": "BM-68",
+      "to": "BM-69",
+      "distance": 0.87,
+      "ascent": 25,
+      "descent": 20
+    },
+    {
+      "from": "BM-69",
+      "to": "BM-70",
+      "distance": 2.15,
+      "ascent": 5,
+      "descent": 20
+    },
+    {
+      "from": "BM-70",
+      "to": "BM-71",
+      "distance": 1.73,
+      "ascent": 10,
+      "descent": 15
+    },
+    {
+      "from": "BM-71",
+      "to": "BM-72",
+      "distance": 0.61,
+      "ascent": 15,
+      "descent": 15
+    },
+    {
+      "from": "BM-72",
+      "to": "BM-73",
+      "distance": 1.20,
+      "ascent": 65,
+      "descent": 0
+    },
+    {
+      "from": "BM-73",
+      "to": "BM-74",
+      "distance": 0.69,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "BM-74",
+      "to": "BM-75",
+      "distance": 1.14,
+      "ascent": 5,
+      "descent": 0,
+      "type": "Trail"
+    },
+    {
+      "from": "BM-75",
+      "to": "BM-76",
+      "distance": 1.00,
+      "ascent": 0,
+      "descent": 20
+    },
+    {
+      "from": "BM-76",
+      "to": "BM-77",
+      "distance": 0.38,
+      "ascent": 0,
+      "descent": 25
+    },
+    {
+      "from": "BM-77",
+      "to": "BM-78",
+      "distance": 0.42,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "BM-78",
+      "to": "BM-79",
+      "distance": 0.22,
+      "ascent": 25,
+      "descent": 0
+    },
+    {
+      "from": "BM-79",
+      "to": "BM-80",
+      "distance": 1.23,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "BM-80",
+      "to": "BM-81",
+      "distance": 0.75,
+      "ascent": 15,
+      "descent": 15
+    },
+    {
+      "from": "BM-81",
+      "to": "BM-82",
+      "distance": 1.18,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "BM-82",
+      "to": "BM-83",
+      "distance": 1.08,
+      "ascent": 15,
+      "descent": 80
+    },
+    {
+      "from": "BM-83",
+      "to": "BM-84",
+      "distance": 0.31,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "BM-84",
+      "to": "BM-85",
+      "distance": 1.39,
+      "ascent": 0,
+      "descent": 0
+    }
+ ],
+  "routes": [
+    {
+      "id": "BM-BM",
+      "name": "Full Walk",
+      "description": "The full Bondi to Manley walk.",
+      "stops": [
+        "BM-36"
+      ],
+      "starts": [
+        "BM-1"
+      ],
+      "finishes": [
+        "BM-85"
+      ],
+      "palette": {
+        "colour": "fefb39",
+        "text-colour": "d0d000"
+      },
+      "default": true
+    }
+  ],
+  "route-logic": [
+  ],
+  "default-route": "BM-BM"
+}

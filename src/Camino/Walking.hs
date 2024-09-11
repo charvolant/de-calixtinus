@@ -47,6 +47,7 @@ cyclingSpeed VeryFit = 32.0
 cyclingSpeed Fit = 28.0
 cyclingSpeed Normal = 24.0
 cyclingSpeed Unfit = 20.0
+cyclingSpeed Casual = 18.0
 cyclingSpeed VeryUnfit = 16.0
 
 -- | Base cycling ascent rates for time estimates, using a 5% slope as a rough guide
@@ -56,6 +57,7 @@ cyclingAscent VeryFit = 1300.0
 cyclingAscent Fit = 1100.0
 cyclingAscent Normal = 900.0
 cyclingAscent Unfit = 700.0
+cyclingAscent Casual = 600.0
 cyclingAscent VeryUnfit = 400.0
 
 cycling :: (Ord a, Floating a) => Fitness  -- ^ The broad level of fitness
@@ -229,6 +231,7 @@ tranter' VeryFit = tranter20
 tranter' Fit = tranter25
 tranter' Normal = tranter30
 tranter' Unfit = tranter40
+tranter' Casual = tranter40
 tranter' VeryUnfit = tranter50
 
 -- | Tranter corrections based on fitness.
@@ -259,12 +262,14 @@ nominalSpeed Walking VeryFit = 5.5
 nominalSpeed Walking Fit = 4.5
 nominalSpeed Walking Normal = 4.0
 nominalSpeed Walking Unfit = 3.5
+nominalSpeed Walking Casual = 3.5
 nominalSpeed Walking VeryUnfit = 3.0
 nominalSpeed Cycling SuperFit = 40.0
 nominalSpeed Cycling VeryFit = 32.0
 nominalSpeed Cycling Fit = 25.0
 nominalSpeed Cycling Normal = 20.0
 nominalSpeed Cycling Unfit = 15.0
+nominalSpeed Cycling Casual = 15.0
 nominalSpeed Cycling VeryUnfit = 10.0
 
 -- | The perceived distance compared to the actual distance when walking over flat ground

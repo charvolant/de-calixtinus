@@ -372,12 +372,14 @@ suggestedDistanceRange Walking VeryFit = PreferenceRange Nothing 28.0 24.0 32.0 
 suggestedDistanceRange Walking Fit = PreferenceRange Nothing 24.0 20.0 28.0 (Just 12.0) (Just 36.0)
 suggestedDistanceRange Walking Normal = PreferenceRange Nothing 20.0 18.0 22.0 (Just 12.0) (Just 34.0)
 suggestedDistanceRange Walking Unfit = PreferenceRange Nothing 20.0 18.0 22.0 (Just 10.0) (Just 28.0)
+suggestedDistanceRange Walking Casual = PreferenceRange Nothing 16.0 14.0 18.0 (Just 8.0) (Just 24.0)
 suggestedDistanceRange Walking VeryUnfit = PreferenceRange Nothing 12.0 6.0 16.0 (Just 3.0) (Just 18.0)
 suggestedDistanceRange Cycling SuperFit = PreferenceRange Nothing 150.0 100.0 175.0 (Just 20.0) (Just 225.0)
 suggestedDistanceRange Cycling VeryFit = PreferenceRange Nothing 120.0 80.0 150.0 (Just 20.0) (Just 175)
 suggestedDistanceRange Cycling Fit = PreferenceRange Nothing 100.0 70.0 130.0 (Just 20.0) (Just 150.0)
 suggestedDistanceRange Cycling Normal = PreferenceRange Nothing 80.0 50.0 100.0 (Just 20.0) (Just 120.0)
 suggestedDistanceRange Cycling Unfit = PreferenceRange Nothing 50.0 30.0 80.0 (Just 20.0) (Just 100.0)
+suggestedDistanceRange Cycling Casual = PreferenceRange Nothing 40.0 30.0 60.0 (Just 20.0) (Just 80.0)
 suggestedDistanceRange Cycling VeryUnfit = PreferenceRange Nothing 30.0 20.0 40.0 (Just 10.0) (Just 50.0)
 
 -- | Base accommodation from comfort level
@@ -443,6 +445,7 @@ suggestedLocation t VeryFit comfort = suggestedLocation t SuperFit comfort
 suggestedLocation _ Fit comfort = suggestedLocation' comfort
 suggestedLocation t Normal comfort = suggestedLocation t Fit comfort
 suggestedLocation t Unfit comfort = suggestedLocation t Normal comfort
+suggestedLocation t Casual comfort = suggestedLocation t Unfit comfort
 suggestedLocation t VeryUnfit comfort = suggestedLocation t Unfit comfort
 
 -- | Base accommodation from comfort level
@@ -518,6 +521,7 @@ suggestedAccommodation t VeryFit comfort = suggestedAccommodation t SuperFit com
 suggestedAccommodation _ Fit comfort = suggestedAccommodation' comfort
 suggestedAccommodation t Normal comfort = suggestedAccommodation t Fit comfort
 suggestedAccommodation t Unfit comfort = suggestedAccommodation t Normal comfort
+suggestedAccommodation t Casual comfort = suggestedAccommodation t Unfit comfort
 suggestedAccommodation t VeryUnfit comfort = suggestedAccommodation t Unfit comfort
 
 -- Default services, based on comfort
@@ -615,6 +619,7 @@ suggestedTimeRange _ VeryFit = PreferenceRange Nothing 6.0 0.0 8.0 (Just 0.0) (J
 suggestedTimeRange _ Fit = PreferenceRange Nothing 6.0 0.0 8.0 (Just 0.0) (Just 10.0)
 suggestedTimeRange _ Normal = PreferenceRange Nothing 6.0 0.0 8.0 (Just 0.0) (Just 10.0)
 suggestedTimeRange _ Unfit = PreferenceRange Nothing 5.0 0.0 6.0 (Just 0.0) (Just 9.0)
+suggestedTimeRange _ Casual = PreferenceRange Nothing 4.0 0.0 6.0 (Just 0.0) (Just 8.0)
 suggestedTimeRange _ VeryUnfit = PreferenceRange Nothing 4.0 0.0 5.0 (Just 0.0) (Just 6.0)
 
 suggested :: (Route -> [Location]) -> CaminoPreferences -> [Location]

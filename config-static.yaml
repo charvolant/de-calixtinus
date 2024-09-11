@@ -143,10 +143,24 @@ calendar:
       type: day-of-year
       days:
         - 01-06
+  - key: AustraliaDay
+    name:
+      - Australia Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 01-26
   - key: FreedomDayPT
     name:
       - Freedom Day (Portugal)@en
       - Dia da Liberdade@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 04-25
+  - key: ANZACDay
+    name:
+      - ANZAC Day@en
     calendar:
       type: day-of-year
       days:
@@ -177,6 +191,17 @@ calendar:
       type: day-of-year
       days:
         - 05-17
+  - key: KingsBirthdayAU
+    name:
+      - King's Birthday@en
+    calendar:
+      type: nth-weekday-after
+      nth: 2
+      day: "monday"
+      calendar:
+        type: day-of-year
+        days:
+          - 06-01
   - key: PortugalDayPT
     name:
       - Portugal Day@en
@@ -219,6 +244,17 @@ calendar:
       type: day-of-year
       days:
         - 08-15
+  - key: LabourDayAU
+    name:
+      - Labour Day (Australia)@en
+    calendar:
+      type: nth-weekday-after
+      nth: 1
+      day: monday
+      calendar:
+        type: day-of-year
+        days:
+          - 10-01
   - key: RepublicDayPT
     name:
       - Repulic Day (Portugal)@en
@@ -295,6 +331,13 @@ calendar:
       type: day-of-year
       days:
         - 12-25
+  - key: BoxingDay
+    name:
+      - Boxing Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 12-26
 regions:
   - id: World
     name:
@@ -522,3 +565,48 @@ regions:
       about: http://nouvelle-aquitaine.fr/
     type: Province
     parent: FR
+  - id: OC
+    name:
+      - "Oceania@en"
+    description:
+      text:
+        - "The geographical region of Australasia, Melanesia, Micronesia and Polynesia@en"
+    type: Continent
+    parent: "World"
+  - id: AU
+    name:
+      - Australia@en
+    description:
+      text:
+        - The Commonwealth of Australia@en
+    type: Country
+    parent: OC
+    locale: en
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: AustraliaDay
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: ANZACDay
+      - type: named
+        key: Christmas
+      - type: named
+        key: BoxingDay
+  - id: AU-NSW
+    name:
+      - NSW@en
+    description:
+      text:
+        - The State of New South Wales@en
+    type: Country
+    parent: AU
+    holidays:
+      - type: named
+        key: KingsBirthdayAU
+      - type: named
+        key: LabourDayAU

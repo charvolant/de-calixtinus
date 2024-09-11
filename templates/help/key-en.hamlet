@@ -263,6 +263,9 @@
         <tr>
           <td>^{caminoServiceIcon Bus}
           <td>Bus stop
+        <tr>
+          <td>^{caminoServiceIcon Wharf}
+          <td>Ferry terminal or wharf
 
 <div #accommodation-help .card>
   <div .card-body>

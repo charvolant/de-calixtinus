@@ -815,6 +815,7 @@ An example route is:
   These are usually places that have some sort of significance and where it would be
   a shame for the planner to just propel the pilgrim past.
 * `palette` The colour denoting the route.
+  The `text-colour` field can be added to provide a more contrasting text colour, if needed.
 
 Locations not explicitly listed in other routes are assigned to the specified
 default route.

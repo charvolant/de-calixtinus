@@ -303,6 +303,7 @@ caminoServiceIcon Heating = [ihamlet| <span .service .ca-heating title="_{Heatin
 caminoServiceIcon Prayer = [ihamlet| <span .service .ca-prayer title="_{PrayerTitle}"> |]
 caminoServiceIcon Train = [ihamlet| <span .service .ca-train title="_{TrainTitle}"> |]
 caminoServiceIcon Bus = [ihamlet| <span .service .ca-bus title="_{BusTitle}"> |]
+caminoServiceIcon Wharf = [ihamlet| <span .service .ca-wharf title="_{WharfTitle}"> |]
 
 caminoServiceMsg :: Service -> CaminoMsg
 caminoServiceMsg WiFi = WiFiTitle
@@ -331,6 +332,7 @@ caminoServiceMsg Heating = HeatingTitle
 caminoServiceMsg Prayer = PrayerTitle
 caminoServiceMsg Train = TrainTitle
 caminoServiceMsg Bus = BusTitle
+caminoServiceMsg Wharf = WharfTitle
 
 caminoTravelMsg :: Travel -> CaminoMsg
 caminoTravelMsg Walking = WalkingTitle
@@ -346,6 +348,7 @@ caminoFitnessMsg VeryFit = VeryFitTitle
 caminoFitnessMsg Fit = FitTitle
 caminoFitnessMsg Normal = NormalTitle
 caminoFitnessMsg Unfit = UnfitTitle
+caminoFitnessMsg Casual = CasualTitle
 caminoFitnessMsg VeryUnfit = VeryUnfitTitle
 
 caminoFitnessLabel :: Fitness -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1177,7 +1180,7 @@ caminoMapScript preferences camino solution = [ihamlet|
   where
     camino' = preferenceCamino camino
     (_trip, stops, waypoints, usedLegs) = solutionElements camino' solution
-    (tl, br) = locationBbox waypoints
+    (tl, br) = if S.null waypoints then caminoBbox camino' else locationBbox waypoints
     chooseWidth leg | S.member leg usedLegs = 7 :: Int
       | otherwise = 5 :: Int
     chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
@@ -1223,7 +1226,7 @@ aboutHtml config _preferences camino = [ihamlet|
     $forall route <- caminoRoutes camino'
       <div ##{routeID route} .row>
         <div .col>
-          <span style="color: #{toCssColour $ paletteColour $ routePalette route}">_{Txt (routeName route)}
+          <span style="color: #{toCssColour $ paletteTextColour $ routePalette route}">_{Txt (routeName route)}
       <div .row>
         <div .offset-1 .col>
           ^{descriptionBlock True (routeDescription route)}

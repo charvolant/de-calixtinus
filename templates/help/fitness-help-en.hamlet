@@ -69,6 +69,11 @@
         <td>_{caminoFitnessMsg Unfit}
         <td>An average walker who has trained for the Camino.
             \ Consider this level if you have doubts about whether you're up to the normal level.
+    <tr>
+        <td>_{caminoFitnessMsg Casual}
+        <td>An average walker who wishes to smell the roses.
+            \ This fitness level is suitable for shorter Caminos and other walks where the traveller
+            \ wishes to spend more time enjoying themselves.
    <tr>
         <td>_{caminoFitnessMsg VeryUnfit}
         <td>An average walker without much training.

@@ -231,6 +231,7 @@ data Service = WiFi -- ^ Wireless internet available
   | Prayer -- ^ Community prayer/liturgy 
   | Train -- ^ Train station (or tram or subway)
   | Bus -- ^ Bus stop
+  | Wharf -- ^ Ferry terminal
   deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
 
 instance FromJSON Service
@@ -716,22 +717,31 @@ normaliseLeg camino leg =
 
 -- | A palette, graphical styles to use for displaying information
 data Palette = Palette {
-  paletteColour :: Colour Double -- ^ The basic colour of the element
+    paletteColour :: Colour Double -- ^ The basic colour of the element
+  , paletteTextColour :: Colour Double -- ^ The text colour of the element
 } deriving (Show)
       
 instance FromJSON Palette where
   parseJSON (Object v) = do
     colour' <- v .: "colour"
-    return Palette { paletteColour = sRGB24read colour' }
+    textColour' <- v .:? "text-colour" .!= colour'
+    return Palette { 
+        paletteColour = sRGB24read colour'
+      , paletteTextColour = sRGB24read textColour' 
+    }
   parseJSON v = error ("Unable to parse palette object " ++ show v)
 
 instance ToJSON Palette where
-  toJSON (Palette colour') =
-    object [ "colour" .= sRGB24show colour' ]
+  toJSON (Palette colour' textColour') =
+    object [ 
+        "colour" .= sRGB24show colour'
+      , "text-colour" .= sRGB24show textColour'
+    ]
 
 instance Default Palette where
   def = Palette {
-    paletteColour = sRGB24read "f9b34a" -- Camino yellow
+      paletteColour = sRGB24read "f9b34a" -- Camino yellow
+    , paletteTextColour = sRGB24read "f9b34a" -- Camino yellow
   }
 
 -- | A route, a sub-section of the camino with graphical information
@@ -1201,6 +1211,7 @@ data Fitness = SuperFit -- ^ 15 minutes for 1000ft over 1/2 a mile
   | Fit -- ^ 25 minutes for 1000ft over 1/2 a mile
   | Normal -- ^ 30 minutes for 1000ft over 1/2 a mile
   | Unfit -- ^ 40 minutes for 1000ft over 1/2 a mile 
+  | Casual -- ^ Recerational walking
   | VeryUnfit -- ^ 50 minutes for 1000ft over 1/2 a mile
   deriving (Generic, Read, Show, Eq, Ord, Enum, Bounded)
 

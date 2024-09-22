@@ -4,7 +4,43 @@
     "Bondi to Manley Walk@en"
   ],
   "description": {
-    "text": "The Bondi to Manley walk is an 80km walk around Sydney Harbour.@en"
+    "text": "The Bondi to Manley walk is an 80km walk around Sydney Harbour.@en",
+    "image": {
+      "source": "BM/BM-Harbour.png",
+      "thumbnail": "BM/BM-Harbour-thumbnail.png",
+      "title": "Sydney Harbour",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Rfsjim"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2008"
+          },
+          {
+            "term": "dcterms:rightsHolder",
+            "value": "Wikimedia Commons"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Sydney_harbour.png"
+          }
+        ]
+      }
+    },
+    "about": "https://www.bonditomanly.com/",
+    "notes": [
+      {
+        "type": "Warning",
+        "text": "The walk is not suitable for cyclists. There are numerous flights of stairs and foot trails.@en"
+      }
+    ]
   },
   "metadata": {
     "namespaces": [
@@ -40,7 +76,7 @@
       },
       {
         "term": "dcterms:license",
-        "value": "https://creativecommons.org/licenses/by/4.0/"
+        "value": "https://creativecommons.org/licenses/by-nc/4.0/"
       },
       {
         "term": "dcterms:source",
@@ -58,6 +94,11 @@
       "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [ "Hostel", "House", "Hotel" ],
       "pois": [
+        {
+          "name": "Bondi Beach",
+          "type": "Beach",
+          "position": { "latitude":  -33.89147,	"longitude": 151.27668 }
+        }
        ]
     },
     {
@@ -91,12 +132,17 @@
       "services": [ ],
       "accommodation": [ ],
       "pois": [
+        {
+          "name": "Radio Astronomy Site",
+          "type": "Historical",
+          "position": { "latitude":  -33.87345,	"longitude": 151.28425 }
+        }
       ]
     },
     {
       "id": "BM-5",
       "name": "Cliff-Top Walk",
-      "type": "Park",
+      "type": "Promontory",
       "position": { "latitude":  -33.86666, "longitude": 151.28339 },
       "region": "AU-NSW",
       "services": [ ],
@@ -124,6 +170,22 @@
       "services": [ "Bus" ],
       "accommodation": [ ],
       "pois": [
+        {
+          "name": "Macquarie Lighthouse",
+          "description": {
+            "about": "https://en.wikipedia.org/wiki/Macquarie_Lighthouse"
+          },
+          "type": "Historical",
+          "position": { "latitude":  -33.8539,	"longitude": 151.28519 }
+        },
+        {
+          "name": "South Head Signal Station",
+          "description": {
+            "about": "https://dictionaryofsydney.org/entry/south_head_signal_station"
+          },
+          "type": "Historical",
+          "position": { "latitude":  -33.85036,	"longitude": 151.2868 }
+        }
       ]
     },
     {
@@ -151,7 +213,7 @@
     {
       "id": "BM-10",
       "name": "Gap Bluff",
-      "type": "Peak",
+      "type": "Lookout",
       "position": { "latitude": -33.84204, "longitude": 151.28493 },
       "region": "AU-NSW",
       "services": [ ],
@@ -173,29 +235,64 @@
     {
       "id": "BM-12",
       "name": "Camp Cove",
-      "type": "Beach",
+      "type": "Village",
       "position": { "latitude": -33.83906, "longitude": 151.27965 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
       "pois": [
+        {
+          "name": "Camp Cove Beach",
+          "type": "Beach",
+          "position": { "latitude":  -33.83907,	"longitude": 151.27951 }
+        }
       ]
     },
     {
       "id": "BM-13",
       "name": "South Head",
-      "type": "Peak",
+      "type": "Promontory",
       "position": { "latitude":  -33.83351, "longitude": 151.28093 },
       "region": "AU-NSW",
       "services": [  ],
       "accommodation": [ ],
       "pois": [
+        {
+          "name": "Lady Bay Beach",
+          "description": {
+            "about": "https://www.nationalparks.nsw.gov.au/things-to-do/swimming-spots/lady-bay-beach",
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "Lady Bay Beach is a designated nude bathing area.@en"
+              }
+            ]
+          },
+          "type": "Beach",
+          "position": { "latitude":  -33.83553,	"longitude": 151.27943 }
+        },
+        {
+          "name": "Lightkeeper's Cottages",
+          "description": {
+            "about": "https://lighthouses.org.au/nsw/hornby-lighthouse/"
+          },
+          "type": "Historical",
+          "position": { "latitude":  -33.83352,	"longitude": 151.28009 }
+        },
+        {
+          "name": "Hornby Lighthouse",
+          "description": {
+            "about": "https://lighthouses.org.au/nsw/hornby-lighthouse/"
+          },
+          "type": "Historical",
+          "position": { "latitude": -33.8335, "longitude": 151.28092 }
+        }
       ]
     },
     {
       "id": "BM-14",
       "name": "Camp Cove (Return)",
-      "type": "Beach",
+      "type": "Village",
       "position": { "latitude": -33.83912, "longitude": 151.27959 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
@@ -206,12 +303,17 @@
     {
       "id": "BM-15",
       "name": "Green Point Reserve",
-      "type": "Beach",
+      "type": "Park",
       "position": { "latitude": -33.84082, "longitude": 	151.27678 },
       "region": "AU-NSW",
       "services": [  ],
       "accommodation": [ ],
       "pois": [
+        {
+          "name": "First Landing Obelisk",
+          "type": "Historical",
+          "position": { "latitude": -33.84068, "longitude": 151.27669 }
+        }
       ]
     },
     {
@@ -228,12 +330,17 @@
     {
       "id": "BM-17",
       "name": "Gibson's Beach",
-      "type": "Beach",
+      "type": "Village",
       "position": { "latitude": -33.84657, "longitude": 151.28104 },
       "region": "AU-NSW",
       "services": [  ],
       "accommodation": [  ],
       "pois": [
+        {
+          "name": "Gibson's Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.84655, "longitude": 151.28099 }
+        }
       ]
     },
     {
@@ -245,6 +352,40 @@
       "services": [  ],
       "accommodation": [  ],
       "pois": [
+        {
+          "name": "Vaucluse House",
+          "description": {
+            "about": "https://mhnsw.au/visit-us/vaucluse-house/"
+          },
+          "type": "Historical",
+          "position": { "latitude": -33.85581, "longitude": 151.27366 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "union",
+                "calendars": [
+                  {
+                    "type": "named",
+                    "key": "GoodFriday"
+                  },
+                  {
+                    "type": "named",
+                    "key": "Christmas"
+                  }
+                ]
+              },
+              "hours": "closed"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1600"
+            }
+          ],
+          "time": 1.0
+        }
       ]
     },
     {
@@ -274,25 +415,45 @@
     {
       "id": "BM-20",
       "name": "Milk Beach",
-      "type": "Beach",
+      "type": "Natural",
       "position": { "latitude": -33.85654, "longitude": 151.26729 },
       "region": "AU-NSW",
       "services": [  ],
       "accommodation": [
       ],
       "pois": [
+        {
+          "name": "Milk Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.85653, "longitude": 151.2673 }
+        },
+        {
+          "name": "Little Bay",
+          "type": "Beach",
+          "position": { "latitude": -33.85734, "longitude": 151.2681 }
+        },
+        {
+          "name": "Hermit Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.85875, "longitude": 151.26913 }
+        }
       ]
     },
     {
       "id": "BM-21",
       "name": "Queens Beach",
-      "type": "Beach",
+      "type": "Natural",
       "position": { "latitude": -33.86135, "longitude": 151.26897 },
       "region": "AU-NSW",
       "services": [  ],
       "accommodation": [
       ],
       "pois": [
+        {
+          "name": "Queens Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.86135, "longitude": 151.26887 }
+        }
       ]
     },
     {
@@ -316,6 +477,11 @@
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus"  ],
       "accommodation": [ "House" ],
       "pois": [
+        {
+          "name": "Rose Bay Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.86851, "longitude": 151.26899 }
+        }
       ]
     },
     {
@@ -338,6 +504,11 @@
       "services": [ "Restaurant", "Bus"  ],
       "accommodation": [ "House" ],
       "pois": [
+        {
+          "name": "Bellamy Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.86949, "longitude": 151.25346 }
+        }
       ]
     },
     {
@@ -354,12 +525,17 @@
     {
       "id": "BM-27",
       "name": "Seven Schillings Beach",
-      "type": "Beach",
+      "type": "Village",
       "position": { "latitude": -33.87152, "longitude": 151.24824 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
       "pois": [
+        {
+          "name": "Seven Schillings Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.87182, "longitude": 151.24781 }
+        }
       ]
     },
     {
@@ -371,6 +547,11 @@
       "services": [ "Restaurant", "Groceries", "Bus", "Wharf" ],
       "accommodation": [ "Hotel" ],
       "pois": [
+        {
+          "name": "Double Bay Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.87391, "longitude": 151.24364 }
+        }
       ]
     },
     {
@@ -415,6 +596,51 @@
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [ "GuestHouse", "House", "Hotel" ],
       "pois": [
+        {
+          "name": "Finger Wharf",
+          "description": {
+            "about": "https://en.wikipedia.org/wiki/Finger_Wharf"
+          },
+          "type": "Historical",
+          "position": { "latitude": -33.86905, "longitude": 151.22003 }
+        },
+        {
+          "name": "Art Gallery of New South Wales",
+          "description": {
+            "about": "https://www.artgallery.nsw.gov.au/"
+          },
+          "type": "Museum",
+          "position": { "latitude": -33.86880, "longitude": 151.21741 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "union",
+                "calendars": [
+                  {
+                    "type": "named",
+                    "key": "GoodFriday"
+                  },
+                  {
+                    "type": "named",
+                    "key": "Christmas"
+                  }
+                ]
+              },
+              "hours": "closed"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "wednesday" ]
+              },
+              "hours": "1000-2200"
+            },
+            {
+              "hours": "1000-1700"
+            }
+          ],
+          "time": 2.0
+        }
       ]
     },
     {
@@ -437,17 +663,37 @@
       "services": [  ],
       "accommodation": [  ],
       "pois": [
+        {
+          "name": "Royal Botanic Gardens",
+          "description": {
+            "about": "https://www.botanicgardens.org.au/"
+          },
+          "type": "Park",
+          "position": { "latitude": -33.86411, "longitude": 151.21751 },
+          "hours": "0700-1800",
+          "time": 1.0
+        }
       ]
     },
     {
       "id": "BM-35",
       "name": "Bennelong Point",
-      "type": "Poi",
+      "type": "Promontory",
       "position": { "latitude": -33.85614, "longitude": 151.21523 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
       "accommodation": [  ],
       "pois": [
+        {
+          "name": "Sydney Opera House",
+          "description": {
+            "about": "https://www.sydneyoperahouse.com/"
+          },
+          "type": "Theatre",
+          "position": { "latitude": -33.85678, "longitude": 151.21529 },
+          "hours": "0900-1700",
+          "time": 1.0
+        }
       ]
     },
     {
@@ -459,6 +705,24 @@
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus", "Wharf" ],
       "accommodation": [ "Hostel", "House", "Hotel"  ],
       "pois": [
+        {
+          "name": "Museum of Contemporary Art",
+          "description": {
+            "about": "https://www.mca.com.au/"
+          },
+          "type": "Museum",
+          "position": { "latitude": -33.85993, "longitude": 151.20902 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1700"
+            }
+          ],
+          "time": 2.0
+        }
       ]
     },
     {
@@ -501,7 +765,14 @@
       "position": { "latitude": -33.84989, "longitude": 151.21159 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus", "Wharf" ],
-      "accommodation": [ "House" ],
+      "accommodation": [
+        {
+          "name": "Milson's Serviced Apartments",
+          "type": "House",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC", "Quadruple" ]
+        }
+      ],
       "pois": [
       ]
     },
@@ -581,6 +852,11 @@
         }
       ],
       "pois": [
+        {
+          "name": "Hayes Street Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.84158, "longitude": 151.21937 }
+        }
       ]
     },
     {
@@ -643,6 +919,11 @@
         }
       ],
       "pois": [
+        {
+          "name": "Robertson's Point Lighthouse",
+          "type": "Historical",
+          "position": { "latitude": -33.84872, "longitude": 151.23301 }
+        }
       ]
     },
     {
@@ -679,6 +960,11 @@
       "accommodation": [ "Hotel"
       ],
       "pois": [
+        {
+          "name": "Sirius Cove Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.83953, "longitude": 151.23668 }
+        }
       ]
     },
     {
@@ -721,13 +1007,21 @@
     {
       "id": "BM-52",
       "name": "Bradleys Head",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.85303, "longitude": 151.24633 },
       "region": "AU-NSW",
       "services": [  ],
       "accommodation": [
       ],
       "pois": [
+        {
+          "name": "Rifle Wall",
+          "description": {
+            "about": "https://www.nationalparks.nsw.gov.au/things-to-do/historic-buildings-places/military-relics-at-bradleys-head"
+          },
+          "type": "Historical",
+          "position": { "latitude": -33.85212, "longitude": 151.24577 }
+        }
       ]
     },
     {
@@ -760,10 +1054,15 @@
       "type": "Village",
       "position": { "latitude": -33.83834, "longitude": 151.25611 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Bus" ],
       "accommodation": [
       ],
       "pois": [
+        {
+          "name": "Georges Head Lookout",
+          "type": "Lookout",
+          "position": { "latitude": -33.83655, "longitude": 151.25887 }
+        }
       ]
     },
     {
@@ -818,6 +1117,16 @@
       "accommodation": [
       ],
       "pois": [
+        {
+          "name": "Balmoral Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.82576, "longitude": 151.25158 }
+        },
+        {
+          "name": "Edwards Beach",
+          "type": "Beach",
+          "position": { "latitude": -33.82304, "longitude": 151.25277 }
+        }
       ]
     },
     {
@@ -900,7 +1209,7 @@
     {
       "id": "BM-66",
       "name": "Grotto Point",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.81345, "longitude": 151.26176 },
       "region": "AU-NSW",
       "services": [  ],
@@ -910,14 +1219,14 @@
         {
           "name": "Rock Art",
           "position": { "latitude": -33.81342, "longitude": 151.26294 },
-          "type": "Historical"
+          "type": "Artwork"
         }
       ]
     },
     {
       "id": "BM-67",
       "name": "Dobroyd Head",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.81053, "longitude": 151.27341 },
       "region": "AU-NSW",
       "services": [  ],
@@ -1038,7 +1347,7 @@
     {
       "id": "BM-76",
       "name": "North Head",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.82107, "longitude": 151.29957 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
@@ -1049,7 +1358,7 @@
     {
       "id": "BM-77",
       "name": "North Head West",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.82296, "longitude": 151.29863 },
       "region": "AU-NSW",
       "services": [  ],
@@ -1057,15 +1366,15 @@
       "pois": [
         {
           "name": "Burragula Lookout",
-          "type": "Peak",
+          "type": "Lookout",
           "position": { "latitude": -33.8232, "longitude": 151.29852 }
         }
       ]
     },
     {
       "id": "BM-78",
-      "name": "North Head West",
-      "type": "Natural",
+      "name": "North Head East",
+      "type": "Promontory",
       "position": { "latitude": -33.82190, "longitude": 151.30064 },
       "region": "AU-NSW",
       "services": [  ],
@@ -1073,7 +1382,7 @@
       "pois": [
         {
           "name": "Yiningma Lookout",
-          "type": "Peak",
+          "type": "Lookout",
           "position": { "latitude": -33.82184, "longitude": 151.30076 }
         }
       ]
@@ -1081,7 +1390,7 @@
     {
       "id": "BM-79",
       "name": "North Head (Return)",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.82107, "longitude": 151.29957 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
@@ -1148,7 +1457,7 @@
     {
       "id": "BM-83",
       "name": "Shelly Head",
-      "type": "Natural",
+      "type": "Promontory",
       "position": { "latitude": -33.79933, "longitude": 151.29755 },
       "region": "AU-NSW",
       "services": [ ],

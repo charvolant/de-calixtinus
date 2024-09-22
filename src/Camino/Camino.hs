@@ -382,18 +382,22 @@ data LocationType =
    | Monastery -- ^ A monastery/convent
    | Bridge -- ^ A bridge or underpass
    | Intersection -- ^ An intersection
-   | Peak -- ^ A peak, mountain pass or lookout
+   | Peak -- ^ A peak or mountain pass
+   | Lookout -- ^ A lookout or scenic view
+   | Promontory -- ^ A headland or promontory
    | Church -- ^ A church or chapel
    | Cathedral -- ^ A cathedral, basillica, shrine or similar large religious building
    | Cross -- ^ A crucifix or other religious monument
    | Fountain -- ^ A fountain or spring
    | Statue -- ^ A statue, artwork, etc
-   | Municipal -- ^ An office,m aquare, market etc
+   | Artwork -- ^ An artwork
+   | Municipal -- ^ An office, square, market etc
    | PilgrimResource -- ^ An office, rest-spot etc. for pilgrims
    | Junction -- ^ A junction in pilgrim routes
    | Shop -- ^ A shop of some interest
    | Winery -- ^ A winery or port warehouse
    | Museum -- ^ A museum or gallery
+   | Theatre -- ^ A theatre, opera house etc.
    | Historical -- ^ A historical or archaeological site
    | Park -- ^ A park or gardens
    | Beach -- ^ A beach
@@ -451,15 +455,18 @@ defaultPoiCategories Cathedral = S.fromList [ReligiousPoi, HistoricalPoi]
 defaultPoiCategories Cross = S.fromList [ReligiousPoi]
 defaultPoiCategories Fountain = S.fromList [RecreationPoi]
 defaultPoiCategories Statue = S.fromList [HistoricalPoi]
+defaultPoiCategories Artwork = S.fromList [CulturalPoi]
 defaultPoiCategories Municipal = S.fromList [HistoricalPoi, RecreationPoi]
 defaultPoiCategories PilgrimResource = S.fromList [PilgrimPoi]
 defaultPoiCategories Shop = S.fromList [RecreationPoi]
 defaultPoiCategories Winery = S.fromList [RecreationPoi]
 defaultPoiCategories Museum = S.fromList [CulturalPoi]
+defaultPoiCategories Theatre = S.fromList [CulturalPoi]
 defaultPoiCategories Historical = S.fromList [HistoricalPoi]
 defaultPoiCategories Park = S.fromList [NaturalPoi, RecreationPoi]
 defaultPoiCategories Beach = S.fromList [NaturalPoi, RecreationPoi]
 defaultPoiCategories Natural = S.fromList [NaturalPoi]
+defaultPoiCategories Lookout = S.fromList [NaturalPoi]
 defaultPoiCategories _ = S.empty
 
   

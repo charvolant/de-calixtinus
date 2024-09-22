@@ -71,7 +71,19 @@
             <span .location-type-sample>
               ^{caminoLocationTypeIcon Peak}
           <td>Peak
-          <td>A peak, mountain pass or lookout
+          <td>A peak or mountain pass
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Lookout}
+          <td>Lookout
+          <td>A lookout or scenic view
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Promontory}
+          <td>Promontory
+          <td>A promontory, cliff or headland
         <tr>
           <td>
             <span .location-type-sample>
@@ -101,7 +113,13 @@
             <span .location-type-sample>
               ^{caminoLocationTypeIcon Statue}
           <td>Statue
-          <td>A statue or artwork
+          <td>A statue or
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Artwork}
+          <td>Artwork
+          <td>A piece of art
         <tr>
           <td>
             <span .location-type-sample>
@@ -138,6 +156,12 @@
               ^{caminoLocationTypeIcon Museum}
           <td>Museum
           <td>A museum or gallery
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Theatre}
+          <td>Theatre
+          <td>A theatre or opera house
         <tr>
           <td>
             <span .location-type-sample>

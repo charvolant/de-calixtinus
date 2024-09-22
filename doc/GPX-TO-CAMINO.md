@@ -36,23 +36,17 @@ Function LATLONGDISTANCE(lat1 As Double, long1 As Double, lat2 As Double, long2 
   deltalat = lat2r - lat1r
   deltalong = long2r - long1r
   Radius = 6378137
-  hav2 = 1 - Cos(deltalat) + Cos(lat1r) * Cos(lat2r) * (1 - Cos(deltalong)) / 2
-  hav = Sqr(hav2)
-  If hav > 1 Then
-    hav = 1
-  End If
-  If hav < -1 Then
-    hav = -1
-  End If
-  LATLONGDISTANCE = 2 * Radius * WorksheetFunction.Asin(hav)
+  havlat = Sin(deltalat / 2)
+  havlong = Sin(deltalong / 2)
+  a = havlat * havlat + Cos(lat1r) * Cos(lat2r) * havlong * havlong
+  hav = 2 * WorksheetFunction.Atan2(Sqr(1 - a), Sqr(a))
+  LATLONGDISTANCE = Radius * hav
 End Function
 ```
 
-However, this does not seem to be the way GPS systems calculate distance.
-They seem to use an equirectangular approximation for small distances, which
-results in about a 20% smaller distance measurement.
-If you want to keep things in line with what someone's GPS is telling them,
-use:
+If you want a faster calculation for a very large number of points, the equirectangular distance
+calculation works well over the sort of differences in latitude and longitude that a GPS records,
+with approximately 0.04% difference over 800km.
 
 ```
 Function LATLONGDISTANCE(lat1 As Double, long1 As Double, lat2 As Double, long2 As Double) As Double

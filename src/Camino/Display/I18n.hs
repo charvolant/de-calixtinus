@@ -42,6 +42,7 @@ data CaminoMsg =
   | AccommodationPreferencesLabel
   | AddressTitle
   | AfterText
+  | ArtworkTitle
   | AscentMsg Float
   | AustereTitle
   | BankTitle
@@ -131,6 +132,7 @@ data CaminoMsg =
   | LocationPreferencesLabel
   | LocationsLabel
   | LockersTitle
+  | LookoutTitle
   | LuxuriousTitle
   | MapLabel
   | MassEventTitle
@@ -176,6 +178,7 @@ data CaminoMsg =
   | PrayerTitle
   | PreferencesLabel
   | PrivateAlbergueTitle
+  | PromontoryTitle
   | PublicHolidayLabel Text
   | PublicHolidayText
   | QuadrupleTitle
@@ -203,6 +206,7 @@ data CaminoMsg =
   | StopServicesPenanceMsg Penance
   | StopServicesPreferencesLabel
   | SuperFitTitle
+  | TheatreTitle
   | Time TimeOfDay
   | TimeAdjustMsg Penance
   | TimeMsg (Maybe Float)
@@ -274,6 +278,7 @@ renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommoda
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ AddressTitle = "Address"
 renderCaminoMsgDefault _ AfterText = "after"
+renderCaminoMsgDefault _ ArtworkTitle = "Art"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
@@ -357,6 +362,7 @@ renderCaminoMsgDefault _ (LocationPenanceMsg penance') = [shamlet|Location ^{for
 renderCaminoMsgDefault _ LocationPreferencesLabel = "Location Preferences"
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
+renderCaminoMsgDefault _ LookoutTitle = "Lookout"
 renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"
 renderCaminoMsgDefault _ MapLabel = "Map"
 renderCaminoMsgDefault _ MassEventTitle = "Mass"
@@ -398,6 +404,7 @@ renderCaminoMsgDefault _ PoolTitle = "Pool"
 renderCaminoMsgDefault _ PrayerTitle = "Prayer"
 renderCaminoMsgDefault _ PreferencesLabel = "Preferences"
 renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
+renderCaminoMsgDefault _ PromontoryTitle = "Promontory or Headland"
 renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
@@ -424,6 +431,7 @@ renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Se
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
 renderCaminoMsgDefault _ StopServicesPreferencesLabel = "Missing Stop Services"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
+renderCaminoMsgDefault _ TheatreTitle = "Theatre"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
 renderCaminoMsgDefault _ (TimeMsgPlain time) = formatHours time

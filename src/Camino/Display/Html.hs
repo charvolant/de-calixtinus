@@ -168,17 +168,21 @@ caminoLocationTypeIcon Bridge = [ihamlet| <span .location-type .ca-bridge title=
 caminoLocationTypeIcon Intersection = [ihamlet| <span .location-type .ca-intersection title="_{IntersectionTitle}"> |]
 caminoLocationTypeIcon Monastery = [ihamlet| <span .location-type .ca-monastery title="_{MonasteryTitle}"> |]
 caminoLocationTypeIcon Peak = [ihamlet| <span .location-type .ca-peak title="_{PeakTitle}"> |]
+caminoLocationTypeIcon Lookout = [ihamlet| <span .location-type .ca-lookout title="_{LookoutTitle}"> |]
+caminoLocationTypeIcon Promontory = [ihamlet| <span .location-type .ca-promontory title="_{PromontoryTitle}"> |]
 caminoLocationTypeIcon Church = [ihamlet| <span .location-type .ca-church title="_{ChurchTitle}"> |]
 caminoLocationTypeIcon Cathedral = [ihamlet| <span .location-type .ca-cathedral title="_{CathedralTitle}"> |]
 caminoLocationTypeIcon Cross = [ihamlet| <span .location-type .ca-cross title="_{CrossTitle}"> |]
 caminoLocationTypeIcon Fountain = [ihamlet| <span .location-type .ca-fountain title="_{FountainTitle}"> |]
 caminoLocationTypeIcon Statue = [ihamlet| <span .location-type .ca-statue title="_{StatueTitle}"> |]
+caminoLocationTypeIcon Artwork = [ihamlet| <span .location-type .ca-artwork title="_{ArtworkTitle}"> |]
 caminoLocationTypeIcon Municipal = [ihamlet| <span .location-type .ca-municipal title="_{MunicipalTitle}"> |]
 caminoLocationTypeIcon PilgrimResource = [ihamlet| <span .location-type .ca-pilgrim title="_{PilgrimResourceTitle}"> |]
 caminoLocationTypeIcon Junction = [ihamlet| <span .location-type .ca-junction title="_{JunctionTitle}"> |]
 caminoLocationTypeIcon Shop = [ihamlet| <span .location-type .ca-shop title="_{ShopTitle}"> |]
 caminoLocationTypeIcon Winery = [ihamlet| <span .location-type .ca-winery title="_{WineryTitle}"> |]
 caminoLocationTypeIcon Museum = [ihamlet| <span .location-type .ca-museum title="_{MuseumTitle}"> |]
+caminoLocationTypeIcon Theatre = [ihamlet| <span .location-type .ca-theatre title="_{TheatreTitle}"> |]
 caminoLocationTypeIcon Historical = [ihamlet| <span .location-type .ca-historical title="_{HistoricalTitle}"> |]
 caminoLocationTypeIcon Park = [ihamlet| <span .location-type .ca-park title="_{ParkTitle}"> |]
 caminoLocationTypeIcon Beach = [ihamlet| <span .location-type .ca-beach title="_{BeachTitle}"> |]
@@ -194,17 +198,21 @@ caminoLocationTypeLabel Bridge = BridgeTitle
 caminoLocationTypeLabel Intersection = IntersectionTitle
 caminoLocationTypeLabel Monastery = MonasteryTitle
 caminoLocationTypeLabel Peak = PeakTitle
+caminoLocationTypeLabel Lookout = LookoutTitle
+caminoLocationTypeLabel Promontory = PromontoryTitle
 caminoLocationTypeLabel Church = ChurchTitle
 caminoLocationTypeLabel Cathedral = CathedralTitle
 caminoLocationTypeLabel Cross = CrossTitle
 caminoLocationTypeLabel Fountain = FountainTitle
 caminoLocationTypeLabel Statue = StatueTitle
+caminoLocationTypeLabel Artwork = ArtworkTitle
 caminoLocationTypeLabel Municipal = MunicipalTitle
 caminoLocationTypeLabel PilgrimResource = PilgrimResourceTitle
 caminoLocationTypeLabel Junction = JunctionTitle
 caminoLocationTypeLabel Shop = ShopTitle
 caminoLocationTypeLabel Winery = WineryTitle
 caminoLocationTypeLabel Museum = MuseumTitle
+caminoLocationTypeLabel Theatre = TheatreTitle
 caminoLocationTypeLabel Historical = HistoricalTitle
 caminoLocationTypeLabel Park = ParkTitle
 caminoLocationTypeLabel Beach = BeachTitle
@@ -749,8 +757,8 @@ caminoPointOfInterestHtml poi = [ihamlet|
               ^{caminoEventHtml event}
   |]
   where
-    hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc)
-    hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiHours poi) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
+    hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc) || (not $ null $ descNotes desc)
+    hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId stops waypoints used location = [ihamlet|
@@ -1195,17 +1203,21 @@ caminoMapScript preferences camino solution = [ihamlet|
       , (Bridge, (24, 9))
       , (Intersection, (24, 22))
       , (Peak, (20, 18))
+      , (Lookout, (24, 13))
+      , (Promontory, (24, 17))
       , (Church, (24, 21))
       , (Cathedral, (19, 24))
       , (Cross, (15, 24))
       , (Fountain, (19, 24))
       , (Statue, (12, 24))
+      , (Artwork, (24, 24))
       , (Municipal, (24, 21))
       , (PilgrimResource, (16, 24))
       , (Junction, (23, 24))
       , (Shop, (24, 16))
       , (Winery, (22, 24))
       , (Museum, (24, 22))
+      , (Theatre, (24, 17))
       , (Historical, (24, 17))
       , (Park, (24, 25))
       , (Beach, (24, 18))

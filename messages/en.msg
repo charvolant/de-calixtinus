@@ -67,4 +67,6 @@ StopsTitle: Required and Excluded Stops
 SuggestedLabel: Suggested
 TestMessage: Currently under testing, see the About page
 TimePreferencesLabel: Time Preferences (hours)
+TransportLinks: Use Transport Links
+TransportLinksText: Allow the use of public transport to nearby accommodation and services
 

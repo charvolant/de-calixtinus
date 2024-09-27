@@ -177,6 +177,7 @@ data PreferenceData = PreferenceData {
   , prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
   , prefComfort :: Comfort -- ^ The comfort level
+  , prefTransportLinks :: Bool -- ^ Allow transport links
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
   , prefLocation :: M.Map LocationType Penance -- ^ The location type preferences
@@ -199,6 +200,7 @@ instance FromJSON PreferenceData where
       travel' <- v .: "travel"
       fitness' <- v .: "fitness"
       comfort' <- v .: "comfort"
+      transport' <- v .: "transport-links"
       distance' <- v .: "distance"
       time' <- v .: "time"
       location' <- v .: "location"
@@ -224,6 +226,7 @@ instance FromJSON PreferenceData where
         , prefTravel = travel'
         , prefFitness = fitness'
         , prefComfort = comfort'
+        , prefTransportLinks = transport'
         , prefDistance = distance'
         , prefTime = time'
         , prefLocation = location'
@@ -248,6 +251,7 @@ instance ToJSON PreferenceData where
         , "travel" .= prefTravel prefs
         , "fitness" .= prefFitness prefs
         , "comfort" .= prefComfort prefs
+        , "transport-links" .= prefTransportLinks prefs
         , "distance" .= prefDistance prefs
         , "time" .= prefTime prefs
         , "location" .= prefLocation prefs
@@ -278,6 +282,7 @@ defaultPreferenceData master = let
       , prefTravel = travel'
       , prefFitness = fitness'
       , prefComfort = comfort'
+      , prefTransportLinks = preferenceTransportLinks dtp
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
       , prefLocation = preferenceLocation dtp
@@ -299,6 +304,7 @@ travelPreferencesFrom prefs = TravelPreferences {
     preferenceTravel = prefTravel prefs
   , preferenceFitness = prefFitness prefs
   , preferenceComfort = prefComfort prefs
+  , preferenceTransportLinks = prefTransportLinks prefs
   , preferenceDistance = prefDistance prefs
   , preferenceTime = prefTime prefs
   , preferenceLocation = prefLocation prefs

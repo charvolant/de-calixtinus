@@ -288,7 +288,7 @@
           <td>^{caminoServiceIcon Bus}
           <td>Bus stop
         <tr>
-          <td>^{caminoServiceIcon Wharf}
+          <td>^{caminoServiceIcon Ferry}
           <td>Ferry terminal or wharf
 
 <div #accommodation-help .card>
@@ -447,20 +447,37 @@
             <td>
                 A cycle path that is only usable by cyclists
          <tr>
-             <td>^{caminoLegTypeIcon Ferry}
-             <td>Ferry
+             <td>^{caminoLegTypeIcon FerryLink}
+             <td>Ferry Link
              <td>
                  A ferry connection.
                  Ferry connections do not usually have a distance but have, instead, a ferry time measured
                  in hours.
                  Ferries usually operate according to a schedule and may require booking.
          <tr>
-             <td>^{caminoLegTypeIcon Boat}
+             <td>^{caminoLegTypeIcon BoatLink}
              <td>Boat or canoe
              <td>
                  A boat or canoe connection.
                  These connections are usually rowed or paddled and represent as much effort as walking.
                  Boat connections usually operate according to a schedule and may require booking.
+         <tr>
+             <td>^{caminoLegTypeIcon BusLink}
+             <td>Bus Link
+             <td>
+                 A bus connection.
+                 Bus links are not normally considered acceptable transport for those wanting to gain a certificate
+                 at the end of their Camino.
+                 Bus links are included for recreational travellers or non-Camino routes.
+         <tr>
+             <td>^{caminoLegTypeIcon TrainLink}
+             <td>Train Link
+             <td>
+                 A train connection.
+                 Trains usually operate according to a schedule and may require booking.
+                 Train links are not normally considered acceptable transport for those wanting to gain a certificate
+                 at the end of their Camino.
+                 Train links are included for recreational travellers or non-Camino routes.
 
 <div #event-help .card>
   <div .card-body>

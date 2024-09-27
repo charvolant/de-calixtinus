@@ -245,7 +245,7 @@ missingStopServices :: TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The camino model
   -> [Leg] -- ^ The sequence of legs to use
   -> S.Set Service -- ^ The list of desired but missing services from the stop location
-missingStopServices preferences _camino day = (M.keysSet $ preferenceStopServices preferences) `S.difference` (locationServices $ legTo $ last day)
+missingStopServices preferences camino day = (M.keysSet $ preferenceStopServices preferences) `S.difference` (completeLocationServices preferences camino $ legTo $ last day)
 
 -- | Work out what services are missing from the desired day list
 missingDayServices :: TravelPreferences -- ^ The calculation preferences
@@ -267,6 +267,18 @@ openSleeping = GenericAccommodation Camping
 invalidAccommodation :: TripChoice Accommodation
 invalidAccommodation = TripChoice openSleeping S.empty Reject
 
+completeLocationServices :: TravelPreferences -> Camino -> Location -> S.Set Service
+completeLocationServices preferences camino location = if preferenceTransportLinks preferences then
+    locationAllServices camino location
+  else
+    locationServices location
+
+completeLocationAccommodation :: TravelPreferences -> Camino -> Location -> [Accommodation]
+completeLocationAccommodation preferences  camino location = if preferenceTransportLinks preferences then
+    locationAllAccommodation camino location
+  else
+    locationAccommodation location
+
 -- Select the most favourable accommodation
 accommodationChoice' :: (M.Map AccommodationType Penance) -> S.Set Service -> Accommodation -> TripChoice Accommodation
 accommodationChoice' accPrefs services accom = let
@@ -276,13 +288,14 @@ accommodationChoice' accPrefs services accom = let
     TripChoice accom covered base
     
 accommodationChoice :: TravelPreferences -- ^ The calculation preferences
-  -> Location -- ^ The sequence of legs
+  -> Camino -- ^ The complete camino
+  -> Location -- ^ The location
   -> TripChoice Accommodation -- ^ The chosen accommodation for the location
-accommodationChoice preferences location = let
-    services = (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.difference` locationServices location
+accommodationChoice preferences camino location = let
+    services = (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.difference` completeLocationServices preferences camino location
     ap = preferenceAccommodation preferences
     defaultAccommodation = if locationCamping location then [openSleeping] else []
-    accommodationOptions = if null ao then defaultAccommodation else ao where ao = locationAccommodation location
+    accommodationOptions = if null ao then defaultAccommodation else ao where ao = completeLocationAccommodation preferences camino location
     lp = map (accommodationChoice' ap services) accommodationOptions
     choice = foldl (selectTripChoice accommodationServices) invalidAccommodation lp
   in
@@ -514,12 +527,13 @@ planCamino preferences camino  = Solution {
       , solutionTrip = trip
   }
   where
+    camino' = preferenceCamino camino
     allowed = allowedLocations camino
     select l = S.member l allowed
-    accommodationMap = buildTripChoiceMap (accommodationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
+    accommodationMap = buildTripChoiceMap (accommodationChoice preferences camino') preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
     locationMap = buildTripChoiceMap (locationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
     trip = program
-      (preferenceCamino camino)
+      camino'
       (caminoChoice preferences camino)
       (caminoAccept preferences camino)
       (caminoEvaluate preferences camino)

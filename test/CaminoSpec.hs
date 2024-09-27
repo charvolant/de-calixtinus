@@ -94,6 +94,7 @@ camino1 = Camino
   metadata1 
   (M.fromList $ map (\l -> (locationID l, l)) [location1, location2, location3, locationI1, locationI2]) 
   [leg1, leg2, leg3, leg4, leg5, leg6]
+  []
   [route1, route2, route3, route4]
   [logic1]
   route1

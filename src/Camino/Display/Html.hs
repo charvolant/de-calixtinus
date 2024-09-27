@@ -83,7 +83,7 @@ penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = 
        )
    $if metricsDayServices metrics /= mempty
      \ + _{DayServicesPenanceMsg (metricsDayServices metrics)}
-     if $serviceDetail
+     $if serviceDetail
        \ (
        $forall service <- metricsMissingDayServices metrics
           ^{caminoServiceIcon service}
@@ -231,8 +231,10 @@ caminoPoiCategoryLabel RecreationPoi  = RecreationPoiTitle
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLegTypeIcon Trail = [ihamlet| <span .leg-type .ca-walking title="_{TrailTitle}"> |]
 caminoLegTypeIcon CyclePath = [ihamlet| <span .leg-type .ca-cycling title="_{CyclePathTitle}"> |]
-caminoLegTypeIcon Ferry = [ihamlet| <span .leg-type .ca-ferry title="_{FerryTitle}"> |]
-caminoLegTypeIcon Boat = [ihamlet| <span .leg-type .ca-rowing title="_{BoatTitle}"> |]
+caminoLegTypeIcon FerryLink = [ihamlet| <span .leg-type .ca-ferry title="_{FerryTitle}"> |]
+caminoLegTypeIcon BoatLink = [ihamlet| <span .leg-type .ca-rowing title="_{BoatTitle}"> |]
+caminoLegTypeIcon BusLink = [ihamlet| <span .leg-type .ca-bus-link title="_{BusTitle}"> |]
+caminoLegTypeIcon TrainLink = [ihamlet| <span .leg-type .ca-train-link title="_{TrainTitle}"> |]
 caminoLegTypeIcon _ = [ihamlet| <span .leg-type title="_{RoadTitle}"> |]
 
 caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -311,7 +313,7 @@ caminoServiceIcon Heating = [ihamlet| <span .service .ca-heating title="_{Heatin
 caminoServiceIcon Prayer = [ihamlet| <span .service .ca-prayer title="_{PrayerTitle}"> |]
 caminoServiceIcon Train = [ihamlet| <span .service .ca-train title="_{TrainTitle}"> |]
 caminoServiceIcon Bus = [ihamlet| <span .service .ca-bus title="_{BusTitle}"> |]
-caminoServiceIcon Wharf = [ihamlet| <span .service .ca-wharf title="_{WharfTitle}"> |]
+caminoServiceIcon Ferry = [ihamlet| <span .service .ca-wharf title="_{FerryTitle}"> |]
 
 caminoServiceMsg :: Service -> CaminoMsg
 caminoServiceMsg WiFi = WiFiTitle
@@ -340,7 +342,7 @@ caminoServiceMsg Heating = HeatingTitle
 caminoServiceMsg Prayer = PrayerTitle
 caminoServiceMsg Train = TrainTitle
 caminoServiceMsg Bus = BusTitle
-caminoServiceMsg Wharf = WharfTitle
+caminoServiceMsg Ferry = FerryTitle
 
 caminoTravelMsg :: Travel -> CaminoMsg
 caminoTravelMsg Walking = WalkingTitle
@@ -760,6 +762,29 @@ caminoPointOfInterestHtml poi = [ihamlet|
     hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc) || (not $ null $ descNotes desc)
     hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
 
+caminoTransportLinkHtml :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoTransportLinkHtml preferences camino tlink = [ihamlet|
+  <div .row .transport-link>
+    <div .offset-1 .col-2>
+      <a href="##{tid}" onclick="showLocationDescription('#{tid}');">_{Txt (locationName target)}
+    <div .col-3 .services>
+      $forall service <- locationServices target
+        ^{caminoServiceIcon service}
+    <div .col-2 .accommodation-types>
+      $forall accommodation <- locationAccommodationTypes target
+        ^{caminoAccommodationTypeIcon accommodation}
+    <div .col-2 .poi-types>
+      $forall poi <- locationPoiTypes target
+        ^{caminoLocationTypeIcon poi}
+      $forall event <- locationEventTypes target
+        ^{caminoEventTypeIcon event}
+    <div .col-2>
+      ^{legLine preferences camino tlink}
+  |]
+  where
+    target = legTo tlink
+    tid = locationID target
+
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .location-#{routeID route} :isStop:.location-stop :isWaypoint:.location-waypoint .location>
@@ -771,16 +796,32 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
               ^{caminoLocationTypeIcon (locationType location)}
               _{Txt (locationName location)}
             <div .col-3 .services>
-              $forall service <- locationServices location
-                ^{caminoServiceIcon service}
+              <span .services>
+                $forall service <- locationServices location
+                  ^{caminoServiceIcon service}
+              <span .transport-link>
+                <span .services>
+                  $forall service <- locationAdditionalServices camino' location
+                    ^{caminoServiceIcon service}                  
             <div .col-2 .accommodation-types>
-              $forall accommodation <- locationAccommodationTypes location
-                ^{caminoAccommodationTypeIcon accommodation}
+              <span .accommodation-types>
+                $forall accommodation <- locationAccommodationTypes location
+                  ^{caminoAccommodationTypeIcon accommodation}
+              <span .transport-link>
+                <span .accommodation-types>
+                  $forall accommodation <- locationAdditionalAccommodationTypes camino' location
+                    ^{caminoAccommodationTypeIcon accommodation}
             <div .col-2 .poi-types>
-              $forall poi <- locationPoiTypes location
-                ^{caminoLocationTypeIcon poi}
-              $forall event <- locationEventTypes location
-                ^{caminoEventTypeIcon event}
+              <span .poi-types>
+                $forall poi <- locationPoiTypes location
+                  ^{caminoLocationTypeIcon poi}
+              <span .poi-types>
+                $forall event <- locationEventTypes  location
+                  ^{caminoEventTypeIcon event}
+              <span .transport-link>
+                <span .poi-types>
+                  $forall poi <- locationAdditionalPoiTypes camino' location
+                    ^{caminoLocationTypeIcon poi}
             <div .col-1>
               <div .text-end>
                 $maybe r <- locationRegion location
@@ -809,6 +850,9 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
         ^{conditionalLabel EventsLabel (locationEvents location)}
         $forall event <- locationEvents location
           ^{caminoEventHtml event}
+        ^{conditionalLabel TransportLinksLabel transportLinks}
+        $forall link <- transportLinks
+          ^{caminoTransportLinkHtml preferences camino link}
   |]
   where
     camino' = preferenceCamino camino
@@ -817,6 +861,7 @@ caminoLocationHtml preferences camino solution containerId stops waypoints used 
     isStop = S.member location stops
     isWaypoint = (not isStop) && (S.member location waypoints)
     accChoice = maybe Nothing (\s -> M.lookup location (solutionAccommodation s)) solution
+    transportLinks = locationTransportLinks camino' location
 
 caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml preferences camino solution = [ihamlet|
@@ -868,6 +913,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
     <div .row>
       <div .col-4>_{ComfortLabel}
       <div .col>^{caminoComfortLabel $ preferenceComfort preferences}
+    <div .row>
+      <div .col-4>_{TransportLinksLabel}
+      <div .col>#{preferenceTransportLinks preferences}
     <div .row>
       <div .col-4>_{DistancePreferencesLabel}
       <div .col>^{preferenceRangeHtml $ preferenceDistance preferences}

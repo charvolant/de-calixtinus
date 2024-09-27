@@ -752,7 +752,7 @@ For example, a leg by ferry, rather than walking, might be:
 
 ```json
 {
-  "type": "Ferry",
+  "type": "FerryLink",
   "from": "P-E22",
   "to": "P-P258",
   "time": 2.5,

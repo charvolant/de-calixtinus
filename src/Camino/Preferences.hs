@@ -181,6 +181,7 @@ data TravelPreferences = TravelPreferences {
   , preferenceComfort :: Comfort -- ^ The base comfort level
   , preferenceDistance :: PreferenceRange Float -- ^ The preferred distance range
   , preferenceTime :: PreferenceRange Float -- ^ The preferred time walking range
+  , preferenceTransportLinks :: Bool -- ^ Allow transport links for stops, accomodation and services
   , preferenceLocation :: M.Map LocationType Penance -- ^ Location stop preferences (absence implies zero preference)
   , preferenceAccommodation :: M.Map AccommodationType Penance -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   , preferenceStopServices :: M.Map Service Penance -- ^ Desired services at a stop (absence implies zero desire)
@@ -195,6 +196,7 @@ instance FromJSON TravelPreferences where
     comfort' <- v .: "comfort"
     distance' <- v .: "distance"
     time' <- v .: "time"
+    transport' <- v .:? "transport-links" .!= False
     location' <- v .: "location"
     accommodation' <- v .: "accommodation"
     sstop' <- v .: "services-stop"
@@ -206,6 +208,7 @@ instance FromJSON TravelPreferences where
         , preferenceComfort = comfort'
         , preferenceDistance = distance'
         , preferenceTime = time'
+        , preferenceTransportLinks = transport'
         , preferenceLocation = location'
         , preferenceAccommodation = accommodation'
         , preferenceStopServices = sstop'
@@ -215,13 +218,14 @@ instance FromJSON TravelPreferences where
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' comfort' distance' time' location' accommodation' sstop' sday' pois') =
+  toJSON (TravelPreferences travel' fitness' comfort' distance' time' transport' location' accommodation' sstop' sday' pois') =
     object [ 
         "travel" .= travel'
       , "fitness" .= fitness'
       , "comfort" .= comfort'
       , "distance" .= distance'
       , "time" .= time'
+      , "transport-links" .= transport'
       , "location" .= location'
       , "accommodation" .= accommodation'
       , "services-stop" .= sstop'
@@ -277,7 +281,15 @@ instance ToJSON CaminoPreferences where
       stops'' = S.map locationID stops'
       excluded'' = S.map locationID excluded'
     in
-      object [ "camino" .= caminoId camino', "start" .= locationID start', "finish" .= locationID finish', "routes" .= routes'', "stops" .= stops'', "excluded" .= excluded'', "start-date" .= startDate']
+      object [
+          "camino" .= caminoId camino'
+        , "start" .= locationID start'
+        , "finish" .= locationID finish'
+        , "routes" .= routes''
+        , "stops" .= stops''
+        , "excluded" .= excluded''
+        , "start-date" .= startDate'
+      ]
 
 -- | Normalise preferences to the correct locations and routes, based on placeholders
 normalisePreferences :: CaminoConfig -- ^ The camino configutation
@@ -622,6 +634,15 @@ suggestedTimeRange _ Unfit = PreferenceRange Nothing 5.0 0.0 6.0 (Just 0.0) (Jus
 suggestedTimeRange _ Casual = PreferenceRange Nothing 4.0 0.0 6.0 (Just 0.0) (Just 8.0)
 suggestedTimeRange _ VeryUnfit = PreferenceRange Nothing 4.0 0.0 5.0 (Just 0.0) (Just 6.0)
 
+-- | The default transport link choice. If it looks like you're going to be a bit slow, default to allow it
+suggestedTransportLinks :: Travel -> Fitness -> Comfort -> Bool
+suggestedTransportLinks Cycling _ _ = False
+suggestedTransportLinks _ Casual _ = True
+suggestedTransportLinks _ VeryUnfit _ = True
+suggestedTransportLinks _ _ Comfortable = True
+suggestedTransportLinks _ _ Luxurious = True
+suggestedTransportLinks _ _ _ = False
+
 suggested :: (Route -> [Location]) -> CaminoPreferences -> [Location]
 suggested accessor preferences  = foldl merge (accessor $ caminoDefaultRoute camino) (filter (\r -> S.member r selected) (caminoRoutes camino))
   where
@@ -652,6 +673,7 @@ defaultTravelPreferences travel fitness comfort = TravelPreferences {
     , preferenceComfort = comfort
     , preferenceDistance = suggestedDistanceRange travel fitness
     , preferenceTime = suggestedTimeRange travel fitness
+    , preferenceTransportLinks = suggestedTransportLinks travel fitness comfort
     , preferenceLocation = suggestedLocation travel fitness comfort
     , preferenceAccommodation = suggestedAccommodation travel fitness comfort
     , preferenceStopServices = suggestedStopServices travel fitness comfort

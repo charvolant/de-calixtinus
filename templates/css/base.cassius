@@ -169,6 +169,14 @@ a
    font-size: larger
 .sleeping
   color: #{toCssColour caminoBlue}
+.transport-link
+  color: #{toCssColour mutedBlue}
+  .accommodation
+    color: #{toCssColour mutedBlue}
+  .service
+    color: #{toCssColour mutedBlue}
+  .poi-types
+    color: #{toCssColour mutedBlue}
 .travel
   color: #{toCssColour caminoBlue}
 .travel.travel-walking-naismith

@@ -6,30 +6,26 @@
   "description": {
     "text": "The Bondi to Manley walk is an 80km walk around Sydney Harbour.@en",
     "image": {
-      "source": "BM/BM-Harbour.png",
-      "thumbnail": "BM/BM-Harbour-thumbnail.png",
+      "source": "BM/BM-Harbour.jpg",
+      "thumbnail": "BM/BM-Harbour-thumbnail.jpg",
       "title": "Sydney Harbour",
       "metadata": {
         "statements": [
           {
             "term": "dcterms:creator",
-            "value": "Rfsjim"
+            "value": "Robert Linsdell"
           },
           {
             "term": "dcterms:created",
-            "value": "2008"
-          },
-          {
-            "term": "dcterms:rightsHolder",
-            "value": "Wikimedia Commons"
+            "value": "2013"
           },
           {
             "term": "dcterms:license",
-            "value": "CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>"
+            "value": "CC BY 2.0 <https://creativecommons.org/licenses/by/2.0/>"
           },
           {
             "term": "dcterms:source",
-            "value": "https://commons.wikimedia.org/wiki/File:Sydney_harbour.png"
+            "value": "https://www.flickr.com/photos/boblinsdell/9443004234/"
           }
         ]
       }
@@ -322,7 +318,7 @@
       "type": "Village",
       "position": { "latitude": -33.84330, "longitude": 151.28188 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Bus", "Ferry" ],
       "accommodation": [ "Hotel" ],
       "pois": [
       ]
@@ -490,7 +486,7 @@
       "type": "Park",
       "position": { "latitude": -33.87078, "longitude": 151.26245 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Wharf"  ],
+      "services": [ "Restaurant", "Ferry"  ],
       "accommodation": [ ],
       "pois": [
       ]
@@ -544,7 +540,7 @@
       "type": "Town",
       "position": { "latitude": -33.87392, "longitude": 151.24312 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Groceries", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Groceries", "Bus", "Ferry" ],
       "accommodation": [ "Hotel" ],
       "pois": [
         {
@@ -560,7 +556,7 @@
       "type": "Town",
       "position": { "latitude": -33.86668, "longitude": 151.23960 },
       "region": "AU-NSW",
-      "services": [ "Restaurant",  "Bus", "Wharf" ],
+      "services": [ "Restaurant",  "Bus", "Ferry" ],
       "accommodation": [ ],
       "pois": [
       ]
@@ -702,7 +698,7 @@
       "type": "City",
       "position": { "latitude": -33.86103, "longitude": 151.20966 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus", "Ferry" ],
       "accommodation": [ "Hostel", "House", "Hotel"  ],
       "pois": [
         {
@@ -764,7 +760,7 @@
       "type": "Town",
       "position": { "latitude": -33.84989, "longitude": 151.21159 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Milson's Serviced Apartments",
@@ -782,7 +778,7 @@
       "type": "Town",
       "position": { "latitude": -33.85094, "longitude": 151.21980 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Glenferrie Lodge",
@@ -812,7 +808,7 @@
       "type": "Park",
       "position": { "latitude": -33.84500, "longitude": 151.21860 },
       "region": "AU-NSW",
-      "services": [ "Wharf" ],
+      "services": [ "Ferry" ],
       "accommodation": [
       ],
       "pois": [
@@ -836,7 +832,7 @@
       "type": "Town",
       "position": { "latitude": -33.84099, "longitude": 151.21896 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Groceries", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Groceries", "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Neutral Bay Lodge",
@@ -903,7 +899,7 @@
       "type": "Village",
       "position": { "latitude": -33.84865, "longitude": 151.23295 },
       "region": "AU-NSW",
-      "services": [ "Bus", "Wharf" ],
+      "services": [ "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Cremorne Point Manor",
@@ -932,7 +928,7 @@
       "type": "Village",
       "position": { "latitude": -33.83838, "longitude": 151.23281 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Bus", "Ferry" ],
       "accommodation": [
       ],
       "pois": [
@@ -973,7 +969,7 @@
       "type": "Park",
       "position": { "latitude": -33.84576, "longitude": 151.23990 },
       "region": "AU-NSW",
-      "services": [ "Bus", "Wharf" ],
+      "services": [ "Bus", "Ferry" ],
       "accommodation": [
       ],
       "pois": [
@@ -1277,7 +1273,7 @@
       "type": "Town",
       "position": { "latitude": -33.79948, "longitude": 151.28433 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus", "Wharf" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus", "Ferry" ],
       "accommodation": [ "GuestHouse", "Hotel" ],
       "pois": [
       ]
@@ -2083,6 +2079,125 @@
       "descent": 0
     }
  ],
+  "links": [
+    {
+      "type": "FerryLink",
+      "from": "BM-16",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-24",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-28",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-29",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.20
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-40",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.10
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-41",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.10
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-43",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.30
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-45",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.35
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-48",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.20
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-49",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.35
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-49",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.35
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-51",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.40
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-70",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.35
+    }
+  ],
   "routes": [
     {
       "id": "BM-BM",

@@ -33,13 +33,17 @@ import Text.Hamlet (Render)
 caminoBlue :: Colour Double
 caminoBlue = sRGB24read "1964c0"
 
--- The traditional blue file colour. Used as a primary lightish colour
+-- The traditional yellow tile colour. Used as a primary lightish colour
 caminoYellow :: Colour Double
 caminoYellow = sRGB24read "f9b34a"
 
 -- A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
 informationBlue :: Colour Double
 informationBlue = sRGB24read "1c9cf1"
+
+-- A muted blue indicating deprectaed information
+mutedBlue :: Colour Double
+mutedBlue = sRGB24read "a0b3ca"
 
 -- | Create a CSS-able colour
 toCssColour :: Colour Double -- ^ The colour to display
@@ -95,6 +99,7 @@ iconList = [
     ("ca-bicycle-storage", '\xe06a'),
     ("ca-bridge", '\xe004'),
     ("ca-bus", '\xe047'),
+    ("ca-bus-link", '\xe084'),
     ("ca-calendar", '\xe095'),
     ("ca-campground", '\xe019'),
     ("ca-camping", '\xe019'),
@@ -162,6 +167,7 @@ iconList = [
     ("ca-towels", '\xe06d'),
     ("ca-town", '\xe002'),
     ("ca-train", '\xe046'),
+    ("ca-train-link", '\xe085'),
     ("ca-village", '\xe001'),
     ("ca-walking", '\xe080'),
     ("ca-warning", '\xe093'),

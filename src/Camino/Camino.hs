@@ -66,11 +66,18 @@ module Camino.Camino (
   , fitnessEnumeration
   , getCamino
   , locationAccommodationTypes
+  , locationAdditionalAccommodationTypes
+  , locationAdditionalPoiTypes
+  , locationAdditionalServices
+  , locationAllAccommodation
+  , locationAllPois
+  , locationAllServices
   , locationBbox
   , locationEventTypes
   , locationNameLabel
   , locationPoiTypes
   , locationStopTypeEnumeration
+  , locationTransportLinks
   , locationTypeEnumeration
   , poiCategoryEnumeration
   , readCamino
@@ -231,7 +238,7 @@ data Service = WiFi -- ^ Wireless internet available
   | Prayer -- ^ Community prayer/liturgy 
   | Train -- ^ Train station (or tram or subway)
   | Bus -- ^ Bus stop
-  | Wharf -- ^ Ferry terminal
+  | Ferry -- ^ Ferry terminal
   deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
 
 instance FromJSON Service
@@ -635,6 +642,54 @@ locationEventTypes location = let
  in
   S.fromList $ concat $ locet:poiets
 
+-- | Get the additional resources available at a location via transport links
+locationAdditional :: (Ord a) => (Location -> S.Set a) -> Camino -> Location -> S.Set a
+locationAdditional resource camino location = let
+  locs = map legTo (locationTransportLinks camino location)
+  addn = S.unions (map resource locs)
+  in
+    addn `S.difference` resource location
+
+-- | Get additional accommodation types available from transport links
+locationAdditionalAccommodationTypes :: Camino -> Location -> S.Set AccommodationType
+locationAdditionalAccommodationTypes camino location = locationAdditional locationAccommodationTypes camino location
+
+-- | Get additional services available from transport links
+locationAdditionalServices :: Camino -> Location -> S.Set Service
+locationAdditionalServices camino location = locationAdditional locationServices camino location
+
+-- | Get additional points of interes available from transport links
+locationAdditionalPoiTypes :: Camino -> Location -> S.Set LocationType
+locationAdditionalPoiTypes camino location = locationAdditional locationPoiTypes camino location
+
+-- | Get the resources available at a location locally or via transport links
+locationAllSet :: (Ord a) => (Location -> S.Set a) -> Camino -> Location -> S.Set a
+locationAllSet resource camino location = let
+  locs = map legTo (locationTransportLinks camino location)
+  addn = S.unions (map resource locs)
+  in
+    addn `S.union` resource location
+    
+-- | Get all services accessible from a location
+locationAllServices :: Camino -> Location -> S.Set Service
+locationAllServices camino location = locationAllSet locationServices camino location
+
+-- | Get all possible resources available at a location locally or via transport links
+locationAll :: (Location -> [a]) -> Camino -> Location -> [a]
+locationAll resource camino location = let
+  locs = map legTo (locationTransportLinks camino location)
+  addn = concat (map resource locs)
+  in
+    resource location ++ addn
+
+-- | Get all accommodation accessible from a location
+locationAllAccommodation :: Camino -> Location -> [Accommodation]
+locationAllAccommodation camino location = locationAll locationAccommodation camino location
+
+-- | Get all pois accessible from a location
+locationAllPois :: Camino -> Location -> [PointOfInterest]
+locationAllPois camino location = locationAll locationPois camino location
+
 -- | Get a simple text version of the location name
 locationNameLabel :: Location -> Text
 locationNameLabel location = localiseDefault $ locationName location
@@ -653,8 +708,10 @@ locationBbox locations = (LatLong (maximum lats) (minimum longs) def, LatLong (m
 data LegType = Road -- ^ Walk or cycle on a road or suitable path
    | Trail -- ^ Walking only path
    | CyclePath -- ^ Cycling only route
-   | Ferry -- ^ Boat transfer
-   | Boat -- ^ Self-powered boat or canoe
+   | FerryLink -- ^ Boat transfer
+   | BoatLink -- ^ Self-powered boat or canoe
+   | BusLink -- ^ Bus transfer (not normally considered suitable for a Camino)
+   | TrainLink -- ^ Train transfer (not normally considered suitable for a Camino)
    deriving (Show, Generic, Eq, Ord, Enum, Bounded)
  
 instance FromJSON LegType
@@ -955,6 +1012,7 @@ data Camino = Camino {
   , caminoMetadata :: Metadata
   , caminoLocations :: M.Map Text Location -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
+  , caminoTransportLinks :: [Leg] -- ^ Transport links between locations
   , caminoRoutes :: [Route] -- ^ Named sub-routes
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
@@ -969,6 +1027,7 @@ instance FromJSON Camino where
     locs <- v .: "locations"
     let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
     legs' <- v .: "legs"
+    links' <- v .:? "links" .!= []
     routes' <- v .: "routes"
     routeLogic' <- v .: "route-logic"
     defaultRoute' <- v .:? "default-route" .!= (routeID $ head routes')
@@ -983,6 +1042,7 @@ instance FromJSON Camino where
       , caminoMetadata = metadata'
       , caminoLocations = locMap
       , caminoLegs = legs'
+      , caminoTransportLinks = links'
       , caminoRoutes = routes''
       , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
@@ -997,7 +1057,7 @@ instance Ord Camino where
   a `compare` b = caminoId a `compare` caminoId b
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' locations' legs' routes' routeLogic' defaultRoute') =
+  toJSON (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute') =
     object [ 
         "id" .= id'
       , "name" .= name'
@@ -1005,6 +1065,7 @@ instance ToJSON Camino where
       , "metadata" .= metadata'
       , "locations" .= (M.elems locations')
       , "legs" .= legs'
+      , "links" .= links'
       , "routes" .= routes'
       , "route-logic" .= routeLogic'
       , "default-route" .= routeID defaultRoute' 
@@ -1015,17 +1076,18 @@ instance Graph Camino Leg Location where
   edge camino loc1 loc2 = find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' locations' legs' routes' routeLogic' defaultRoute') allowed  = 
+  subgraph (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute') allowed  =
     let
       id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
       locations'' = M.filter (\l -> S.member l allowed) locations'
       legs'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) legs'
+      links'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) links'
       routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
       routeLogic'' = map (\l -> l { routeLogicInclude = routeLogicInclude l `S.intersection` allowed, routeLogicExclude = routeLogicExclude l `S.intersection` allowed}) routeLogic'
       defaultRoute'' = fromJust $ find (\r -> routeID r == routeID defaultRoute') routes'
     in
-      Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoRoutes = routes'', caminoRouteLogic = routeLogic'', caminoDefaultRoute = defaultRoute'' }
+      Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoTransportLinks = links'', caminoRoutes = routes'', caminoRouteLogic = routeLogic'', caminoDefaultRoute = defaultRoute'' }
   mirror camino =
     let
       id'' = caminoId camino <> "'"
@@ -1043,6 +1105,7 @@ instance Placeholder Text Camino where
       , caminoMetadata = Metadata [] []
       , caminoLocations = M.empty
       , caminoLegs = []
+      , caminoTransportLinks = []
       , caminoRoutes = [dr]
       , caminoRouteLogic = []
       , caminoDefaultRoute = dr
@@ -1053,7 +1116,10 @@ instance Placeholder Text Camino where
 instance Normaliser Text Camino CaminoConfig where
   normalise config camino = let
       camino1 = camino { caminoLocations = M.map (normalise config) (caminoLocations camino) }
-      camino2 = camino1 { caminoLegs = map (normaliseLeg camino1) (caminoLegs camino1) }
+      camino2 = camino1 {
+          caminoLegs = map (normaliseLeg camino1) (caminoLegs camino1)
+        , caminoTransportLinks = map (normaliseLeg camino1) (caminoTransportLinks camino1)
+      }
       camino3 = camino2 { caminoRoutes = map (normalise camino2) (caminoRoutes camino2) }
       camino4 = camino3 { caminoDefaultRoute = normalise camino3 (caminoDefaultRoute camino3) }
       camino5 = camino4 { caminoRouteLogic = map (normaliseRouteLogic camino4) (caminoRouteLogic camino4)  }
@@ -1148,6 +1214,10 @@ caminoRouteLocations camino used =
 --  This does not include parent regions.
 caminoRegions :: Camino -> S.Set Region
 caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locationRegion l)) S.empty (M.elems $ caminoLocations camino)
+
+-- | Get any transport links from this location
+locationTransportLinks :: Camino -> Location -> [Leg]
+locationTransportLinks camino location = filter (\l -> legFrom l == location) (caminoTransportLinks camino)
 
 -- | A configuration environment for caminos
 data CaminoConfig = CaminoConfig {

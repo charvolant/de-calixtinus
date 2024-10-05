@@ -735,7 +735,7 @@ caminoPoiCategoriesAttr categories = [ihamlet|$forall (category, i) <- zcategori
 
 caminoPointOfInterestHtml :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPointOfInterestHtml poi = [ihamlet|
-  <div .row>
+  <div id="#{poiID poi}" .row>
     <div .card .g-0>
       <div .card-header>
         <span .poi-types>
@@ -1006,6 +1006,19 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">_{Txt (locationName l)}
               $else
                 _{Txt (locationName l)}
+    <div .row>
+      <div .col-4>_{PoisLabel}
+      <div .col>
+        <ul .bar-separated-list>
+          $forall p <- preferencePois camino
+            <li>
+              $if showLink
+                $maybe (_, loc) <- M.lookup (poiID p) pois
+                  <a href="##{poiID p}" data-toggle="tab" onclick="showLocationDescription('#{locationID loc}')">_{Txt (poiName p)}
+                $nothing
+                  _{Txt (poiName p)}
+              $else
+                _{Txt (poiName p)}
   |]
   where
     locationTypes = locationStopTypeEnumeration
@@ -1014,6 +1027,7 @@ preferencesHtml showLink preferences camino = [ihamlet|
     findLoc prefs lk = M.findWithDefault mempty lk (preferenceLocation prefs)
     findSs prefs sk = (preferenceStopServices prefs) M.! sk
     findDs prefs sk = (preferenceDayServices prefs) M.! sk
+    pois = caminoPois $ preferenceCamino camino
 
 caminoTripHtml :: TravelPreferences -> CaminoPreferences -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTripHtml preferences camino trip = [ihamlet|
@@ -1051,7 +1065,7 @@ caminoTripHtml preferences camino trip = [ihamlet|
                   ^{legLine preferences camino leg}
                 <div .poi-summary .bar-separated-list>
                   <ul>
-                    $forall poi <- selectedPois preferences (legTo leg)
+                    $forall poi <- selectedPois camino (legTo leg)
                       <li>
                         ^{caminoLocationTypeIcon (poiType poi)}
                         _{Txt (poiName poi)}

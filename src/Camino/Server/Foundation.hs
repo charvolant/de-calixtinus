@@ -128,6 +128,10 @@ instance (Ord a, PathPiece a) => PathPiece (S.Set a) where
   fromPathPiece v = fmap S.fromList (fromPathPiece v)
   toPathPiece v = toPathPiece $ S.toList v
 
+instance PathPiece PointOfInterest where
+  fromPathPiece v = if v == "" then Nothing else Just $ placeholder v
+  toPathPiece v = poiID v
+
 instance PathPiece Location where
   fromPathPiece v = if v == "" then Nothing else Just $ placeholder v
   toPathPiece v = locationID v
@@ -191,6 +195,7 @@ data PreferenceData = PreferenceData {
   , prefFinish :: Location -- ^ The finish location
   , prefStops :: S.Set Location -- ^ Any explcit stops
   , prefExcluded :: S.Set Location -- ^ Any explicit exclusions
+  , prefPois :: S.Set PointOfInterest -- ^ The points of interest
   , prefStartDate :: Maybe Day
 } deriving (Show)
 
@@ -214,6 +219,7 @@ instance FromJSON PreferenceData where
       finish' <- v .: "finish"
       stops' <- v .: "stops"
       excluded' <- v .: "excluded"
+      pois' <- v .: "pois"
       startDate' <- v .:? "start-date"
       let camino'' = placeholder camino'
       let routes'' = S.map placeholder routes'
@@ -221,6 +227,7 @@ instance FromJSON PreferenceData where
       let finish'' = placeholder finish'
       let stops'' = S.map placeholder stops'
       let excluded'' = S.map placeholder excluded'
+      let pois'' = S.map placeholder pois'
       return PreferenceData {
           prefEasyMode = easy'
         , prefTravel = travel'
@@ -240,6 +247,7 @@ instance FromJSON PreferenceData where
         , prefFinish = finish''
         , prefStops = stops''
         , prefExcluded = excluded''
+        , prefPois = pois''
         , prefStartDate = startDate'
       }
    parseJSON v = error ("Unable to parse preferences data object " ++ show v)
@@ -265,6 +273,7 @@ instance ToJSON PreferenceData where
         , "finish" .= (locationID $ prefFinish prefs)
         , "stops" .= (S.map locationID (prefStops prefs))
         , "excluded" .= (S.map locationID (prefExcluded prefs))
+        , "pois" .= (S.map poiID (prefPois prefs))
         , "start-date" .= prefStartDate prefs
       ]
 
@@ -296,6 +305,7 @@ defaultPreferenceData master = let
       , prefFinish = preferenceFinish dcp
       , prefStops = preferenceStops dcp
       , prefExcluded = preferenceExcluded dcp
+      , prefPois = preferencePois dcp
       , prefStartDate = Nothing
     }
 
@@ -323,6 +333,7 @@ caminoPreferencesFrom prefs = CaminoPreferences {
   , preferenceRoutes = prefRoutes prefs
   , preferenceStops = prefStops prefs
   , preferenceExcluded = prefExcluded prefs
+  , preferencePois = prefPois prefs
   , preferenceStartDate = prefStartDate prefs
 }
 

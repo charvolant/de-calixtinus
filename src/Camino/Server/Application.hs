@@ -44,14 +44,14 @@ import Camino.Planner (planCamino)
 mkYesodDispatch "CaminoApp" resourcesCaminoApp
 
 data PreferenceStep =
-    FitnessStep
+    TravelStep
   | RangeStep
   | ServicesStep
-  | PoiStep
   | CaminoStep
   | RoutesStep
   | StartStep
   | StopsStep
+  | PoiStep
   | ShowPreferencesStep
   | PlanStep
   deriving (Eq, Ord, Enum, Bounded, Show, Read)
@@ -202,9 +202,9 @@ getPreferencesR = do
     let current = utctDay time
     let prefs' = maybe (defaultPreferenceData master) id prefs
     let prefs'' = prefs' { prefStartDate = Just $ maybe current id (prefStartDate prefs')}
-    (embedded, help) <- helpPopup FitnessStep
-    ((_result, widget), enctype) <- runFormPost $ chooseFitnessForm embedded (Just prefs'')
-    stepPage FitnessStep RangeStep Nothing help widget enctype
+    (embedded, help) <- helpPopup TravelStep
+    ((_result, widget), enctype) <- runFormPost $ chooseTravelForm embedded (Just prefs'')
+    stepPage TravelStep RangeStep Nothing help widget enctype
 
 postPreferencesR :: Handler Html
 postPreferencesR = do
@@ -239,42 +239,42 @@ nextStep stepp dir = do
         getHomeR
 
 stepForm :: PreferenceStep -> Widget -> Maybe PreferenceData -> (Html -> MForm Handler (FormResult PreferenceData, Widget))
-stepForm FitnessStep help prefs = chooseFitnessForm help prefs
+stepForm TravelStep help prefs = chooseTravelForm help prefs
 stepForm RangeStep help prefs = chooseRangeForm help prefs
 stepForm ServicesStep help prefs = chooseServicesForm help prefs
-stepForm PoiStep help prefs = choosePoiForm help prefs
 stepForm CaminoStep help prefs = chooseCaminoForm help prefs
 stepForm RoutesStep help prefs = chooseRoutesForm help prefs
 stepForm StartStep help prefs = chooseStartForm help prefs
 stepForm StopsStep help prefs = chooseStopsForm help prefs
+stepForm PoiStep help prefs = choosePoiForm help prefs
 stepForm ShowPreferencesStep help prefs = confirmPreferencesForm help prefs
 stepForm PlanStep help prefs = confirmPreferencesForm help prefs -- Shouldn't end up here, so go and confirm it
 
 stepForward :: Bool -> PreferenceStep -> PreferenceStep
-stepForward False FitnessStep = RangeStep
-stepForward True FitnessStep = CaminoStep
+stepForward False TravelStep = RangeStep
+stepForward True TravelStep = CaminoStep
 stepForward _ RangeStep = ServicesStep
-stepForward _ ServicesStep = PoiStep
-stepForward _ PoiStep = CaminoStep
+stepForward _ ServicesStep = CaminoStep
 stepForward _ CaminoStep = RoutesStep
 stepForward _ RoutesStep = StartStep
 stepForward False StartStep = StopsStep
 stepForward True StartStep = PlanStep
-stepForward _ StopsStep = ShowPreferencesStep
+stepForward _ StopsStep = PoiStep
+stepForward _ PoiStep = ShowPreferencesStep
 stepForward _ ShowPreferencesStep = PlanStep
 stepForward _ PlanStep = ShowPreferencesStep
 
 stepBackward :: Bool -> PreferenceStep -> PreferenceStep
-stepBackward _ FitnessStep = FitnessStep
-stepBackward _ RangeStep = FitnessStep
+stepBackward _ TravelStep = TravelStep
+stepBackward _ RangeStep = TravelStep
 stepBackward _ ServicesStep = RangeStep
-stepBackward _ PoiStep = ServicesStep
-stepBackward False CaminoStep = PoiStep
-stepBackward True CaminoStep = FitnessStep
+stepBackward False CaminoStep = ServicesStep
+stepBackward True CaminoStep = TravelStep
 stepBackward _ RoutesStep = CaminoStep
 stepBackward _ StartStep = RoutesStep
 stepBackward _ StopsStep = StartStep
-stepBackward _ ShowPreferencesStep = StopsStep
+stepBackward _ PoiStep = StopsStep
+stepBackward _ ShowPreferencesStep = PoiStep
 stepBackward _ PlanStep = ShowPreferencesStep
 
 stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> Maybe Widget -> Widget -> Widget -> Enctype -> Handler Html
@@ -285,14 +285,14 @@ stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
     $(widgetFile "step")
 
 stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
-stepPage FitnessStep nextp _ help widget enctype = stepPage' MsgFitnessTitle MsgFitnessText1 (Just MsgFitnessText2) (Just MsgFitnessBottom) FitnessStep nextp Nothing help widget enctype
+stepPage TravelStep nextp _ help widget enctype = stepPage' MsgTravelTitle MsgTravelText1 (Just MsgTravelText2) (Just MsgTravelBottom) TravelStep nextp Nothing help widget enctype
 stepPage RangeStep nextp _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
 stepPage ServicesStep nextp _ help widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing Nothing ServicesStep nextp Nothing help widget enctype
-stepPage PoiStep nextp _ help widget enctype = stepPage' MsgPoiTitle MsgPoiText Nothing Nothing PoiStep nextp Nothing help widget enctype
 stepPage CaminoStep nextp _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
 stepPage RoutesStep nextp _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
 stepPage StartStep nextp _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing Nothing StartStep nextp Nothing help widget enctype
 stepPage StopsStep nextp _ help widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing Nothing StopsStep nextp Nothing help widget enctype
+stepPage PoiStep nextp _ help widget enctype = stepPage' MsgPoiTitle MsgPoiText Nothing Nothing PoiStep nextp Nothing help widget enctype
 stepPage ShowPreferencesStep nextp (Just prefs) help widget enctype = do
     master <- getYesod
     locales <- getLocales
@@ -312,7 +312,7 @@ blankHelp :: Widget
 blankHelp = [whamlet||]
 
 helpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
-helpPopup' FitnessStep _ = Just $(ihamletFile "templates/help/fitness-help-en.hamlet")
+helpPopup' TravelStep _ = Just $(ihamletFile "templates/help/travel-help-en.hamlet")
 helpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
 helpPopup' ServicesStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
 helpPopup' PoiStep _ = Just $(ihamletFile "templates/help/poi-help-en.hamlet")

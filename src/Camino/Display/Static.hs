@@ -57,5 +57,9 @@ createHelpFiles config output = do
   let loc = localeFromIDOrError "en"
   createDirectoryIfMissing True output
   createStandAloneHelpFile config loc (output </> "help-en.html") $(ihamletFile "templates/help/help-en.hamlet") "Help"
-  createHelpFile config loc (output </> "fitness-help-en.html") $(ihamletFile "templates/help/fitness-help-en.hamlet")
+  createHelpFile config loc (output </> "travel-help-en.html") $(ihamletFile "templates/help/travel-help-en.hamlet")
   createHelpFile config loc (output </> "range-help-en.html") $(ihamletFile "templates/help/range-help-en.hamlet")
+  createHelpFile config loc (output </> "services-help-en.html") $(ihamletFile "templates/help/services-help-en.hamlet")
+  createHelpFile config loc (output </> "routes-help-en.html") $(ihamletFile "templates/help/routes-help-en.hamlet")
+  createHelpFile config loc (output </> "start-help-en.html") $(ihamletFile "templates/help/start-help-en.hamlet")
+  createHelpFile config loc (output </> "stops-help-en.html") $(ihamletFile "templates/help/stops-help-en.hamlet")

@@ -318,6 +318,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "FI-F16-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude":  42.95664, "longitude":  -8.95717 }
@@ -488,11 +489,13 @@
       ],
       "pois": [
         {
+          "id": "FI-F24-1",
           "name": "Alternative Routes (Muxia)@en",
           "type": "Junction",
           "position": { "latitude": 42.98626, "longitude": -9.08587 }
         },
         {
+          "id": "FI-F24-2",
           "name": "Punto de Información ao Peregrino de Hospital (Dumbría)@ga",
           "description": {
             "about": "http://www.dumbriaturismo.com/"
@@ -713,6 +716,7 @@
       ],
       "pois": [
         {
+          "id": "FI-F31-1",
           "name": "Monumento al Peregrino@ga",
           "type": "Statue",
           "position": {"latitude": 42.89418, "longitude": -9.26422 }
@@ -767,6 +771,7 @@
       ],
       "pois": [
         {
+          "id": "FI-F32-1",
           "name": "Faro de Fisterra@ga",
           "description": {
             "notes": [
@@ -778,6 +783,7 @@
           "hours": "1100-1900"
         },
         {
+          "id": "FI-F32-2",
           "name": [
             "Bota de Fisterra@ga",
             "Pilgrim's Boot@en"
@@ -814,6 +820,7 @@
       ],
       "pois": [
         {
+          "id": "FI-F33-1",
           "name":[
             "Punto Información@ga",
             "Tourism Office@en"
@@ -823,6 +830,7 @@
           "hours": "1000-1400,1530-1830"
         },
         {
+          "id": "FI-F33-2",
           "name": "Castelo de San Carlos@ga",
           "type": "Museum",
           "position": {"latitude": 42.90461, "longitude":  -9.26082 },
@@ -1070,6 +1078,7 @@
       ],
       "pois": [
         {
+          "id": "FI-M12-1",
           "name": [
             "Oficina Municipal de Turismo de Muxía@ga",
             "Tourism Office@en"
@@ -1169,6 +1178,7 @@
       ],
       "pois": [
         {
+          "id": "FI-M15-1",
           "name": "Coastal Route@en",
           "description": {
             "text": "An alternative route to just past A Canosa, following the estuary and coast. This route is approximately 1km longer than the standard route.@en",

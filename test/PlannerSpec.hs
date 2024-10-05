@@ -60,7 +60,8 @@ preferences1 = TravelPreferences {
     preferenceDayServices = M.fromList [
       (Pharmacy, (Penance 0.1)),
       (Bank, (Penance 0.1))
-    ]
+    ],
+    preferencePoiCategories = S.singleton ReligiousPoi
   }
 
 
@@ -87,7 +88,8 @@ preferences2 = TravelPreferences {
     preferenceDayServices = M.fromList [
       (Pharmacy, (Penance 0.1)),
       (Bank, (Penance 0.1))
-    ]
+    ],
+    preferencePoiCategories = S.singleton ReligiousPoi
   }
 
 
@@ -183,6 +185,7 @@ route1 = Route {
   routeStarts = [],
   routeFinishes = [],
   routeStops = S.empty,
+  routeSuggestedPois = S.empty,
   routePalette = def 
 }
 
@@ -196,7 +199,8 @@ camino1 = Camino {
   caminoTransportLinks = [],
   caminoRoutes = [route1],
   caminoRouteLogic = [],
-  caminoDefaultRoute = route1
+  caminoDefaultRoute = route1,
+  caminoPois = M.empty
 }
 
 cpreferences1 = CaminoPreferences {
@@ -205,7 +209,9 @@ cpreferences1 = CaminoPreferences {
   preferenceStart = location1,
   preferenceFinish = location3,
   preferenceStops = S.empty,
-  preferenceExcluded = S.empty
+  preferenceExcluded = S.empty,
+  preferencePois = S.empty,
+  preferenceStartDate = Nothing
 }
 
 accommodationMap1 = buildTripChoiceMap (accommodationChoice preferences1 camino1) preferences1 camino1 location1 location3 (const True)
@@ -284,7 +290,7 @@ testAccommodationSimple5 = let
       assertEqual "Accommodation Simple 5 2" (S.empty) (tripChoiceServices accom)
       assertPenanceEqual "Accommodation Simple 5 3" (Penance 1.5) (tripChoicePenance accom) 0.001
     )
-    
+
 testAccommodationSimple6 = let
     preferences1' = preferences1 { preferenceTransportLinks = False }
     camino1' = camino1 { caminoTransportLinks = links1 }
@@ -317,7 +323,9 @@ testPlanCamino1 preferences camino =
       preferenceStart = (caminoLocations camino) M.! "P-P1",
       preferenceFinish = (caminoLocations camino) M.! "P-P12",
       preferenceStops = S.empty,
-      preferenceExcluded = S.empty
+      preferenceExcluded = S.empty,
+      preferencePois = S.empty,
+      preferenceStartDate = Nothing
     }
     solution = planCamino preferences cpreferences
     etrip = solutionTrip solution

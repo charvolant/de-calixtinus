@@ -183,6 +183,7 @@
       ],
       "pois": [
         {
+          "id": "F-F7-1",
           "name": "Real Colegiata de Santa Maria de Roncesvalles",
           "description": {
             "about": "https://roncesvalles.es/"
@@ -592,6 +593,7 @@
       ],
       "pois": [
         {
+          "id": "F-F21-1",
           "name": "Iglesia de San Esteban",
           "type": "Church",
           "position": { "latitude": 42.85607, "longitude": -1.58170 },
@@ -698,6 +700,7 @@
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
       "pois": [
         {
+          "id": "F-F26-1",
           "name": "Oratorio San Felipe Neri@es",
           "type": "Church",
           "position": { "latitude": 42.81755, "longitude": -1.64474 },
@@ -782,6 +785,7 @@
       ],
       "pois": [
         {
+          "id": "F-F27-1",
           "name": "Iglesia Sanjuanista@es",
           "type": "Church",
           "position": {"latitude": 42.78873, "longitude": -1.67437 },
@@ -820,6 +824,7 @@
       ],
       "pois": [
         {
+          "id": "F-F28-1",
           "name": "Alto del Perdón@es",
           "description": "On the summit is a long metal sculpture dedicated to pilgrims.",
           "type": "Peak",
@@ -1142,6 +1147,7 @@
       ],
       "pois": [
         {
+          "id": "F-F42-1",
           "name": "The Wine Fountain@en",
           "description": "Bodegas Irache winery has a fountain that produces both water and wine.@en",
           "type": "Fountain",
@@ -1167,6 +1173,7 @@
       ],
       "pois": [
         {
+          "id": "F-F43-1",
           "name": "Last Water Fountain until Los Arcos",
           "type": "Fountain",
           "position": { "latitude": 42.61446, "longitude": -2.11350 }
@@ -1228,6 +1235,7 @@
       ],
       "pois": [
         {
+          "id": "F-F45-1",
           "name": "Iglesia de Santa María de Los Arcos@es",
           "type": "Church",
           "position": { "latitude":  42.56898, "longitude": -2.19272 },
@@ -1383,6 +1391,7 @@
       ],
       "pois": [
         {
+          "id": "F-F50-1",
           "name": "Iglesia de Santa María@es",
           "type": "Church",
           "position": { "latitude":  42.51510, "longitude": -2.37135 },
@@ -1421,6 +1430,7 @@
       ],
       "pois": [
         {
+          "id": "F-F51-1",
           "name": "Leisure Area with Drinking Fountain@en",
           "type": "Fountain",
           "position": { "latitude": 42.41478, "longitude": -2.59448 }
@@ -1529,6 +1539,7 @@
       ],
       "pois": [
         {
+          "id": "F-F55-1",
           "name": "Monasterio de Santa María la Real@es",
           "type": "Monastery",
           "position": { "latitude": 42.41665, "longitude": -2.73554 },
@@ -1619,13 +1630,15 @@
        ],
       "pois": [
         {
+          "id": "F-F58-1",
           "name": "Catedral de Santo Domingo de la Calzada@es",
           "description": {
             "about": "https://www.catedralsantodomingo.org/"
           },
           "type": "Cathedral",
           "position": { "latitude": 42.44096, "longitude": -2.95362 },
-          "hours": "0900-2000"
+          "hours": "0900-2000",
+          "time": 1.0
         }
       ]
     },
@@ -1922,6 +1935,7 @@
       ],
       "pois": [
         {
+          "id": "F-F68-1",
           "name": "Steep ascent@en",
           "description": {
             "notes": [
@@ -1965,17 +1979,20 @@
       ],
       "pois": [
         {
+          "id": "F-F69-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.37626, "longitude": -3.44117 }
         },
         {
+          "id": "F-F69-2",
           "name": "Monasterio de San Juan de Ortega@es",
           "description": {
             "about": "https://www.terranostrum.es/turismo/monasterio-de-san-juan-de-ortega"
           },
           "type": "Monastery",
           "position": { "latitude": 42.37628, "longitude": -3.43662 },
+          "time": 1.0,
           "events": [
             {
               "name": "Equinoctial Miracle@en",
@@ -2254,6 +2271,7 @@
       ],
       "pois": [
         {
+          "id": "F-F81-1",
           "name": "Catedral de Burgos@es",
           "description": {
             "about": "https://catedraldeburgos.es/"
@@ -2261,6 +2279,7 @@
           "type": "Cathedral",
           "position": { "latitude": 42.34079, "longitude": -3.70376 },
           "hours": "0930-1830",
+          "time": 1.0,
           "events": [
             {
               "name": "Holy mass and pilgrim's blessing@en",
@@ -2286,6 +2305,7 @@
           ]
         },
         {
+          "id": "F-F81-2",
           "name": "Museo de la Evolución Humana@es",
           "description": {
             "text": "Museum with displays on human evolution & the nearby Atapuerca fossil site.",
@@ -2293,7 +2313,8 @@
           },
           "type": "Museum",
           "position": { "latitude": 42.33968, "longitude": -3.69720 },
-          "hours": "1000-1430,1630-2000"
+          "hours": "1000-1430,1630-2000",
+          "time": 1.5
          }
       ]
     },
@@ -2354,6 +2375,7 @@
       ],
       "pois": [
         {
+          "id": "F-F83-1",
           "name": "Iglesia de \"Santa Marina\"@es",
           "description": {
             "about": "http://www.rabedelascalzadas.es/lugares-de-interes/iglesia-parroquial-de-santa-marina"
@@ -2517,13 +2539,15 @@
        ],
       "pois": [
         {
+          "id": "F-F87-1",
           "name": "Castillo de Castrojeriz@en",
           "description": {
             "text": "The remains of a fortress built on previous Roman and Visigothic fortifications.@en",
             "about": "http://www.castrojeriz.es/portfolio-item/castillo/"
           },
           "type": "Historical",
-          "position": { "latitude": 42.29201, "longitude": -4.13641 }
+          "position": { "latitude": 42.29201, "longitude": -4.13641 },
+          "time": 1.0
         }
       ]
     },
@@ -2713,6 +2737,7 @@
       ],
       "pois": [
         {
+          "id": "F-F92-1",
           "name": "Alternative Route@en",
           "description": {
             "notes": [
@@ -2875,6 +2900,7 @@
       ],
       "pois": [
         {
+          "id": "F-F97-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.34132, "longitude": -4.62210 }
@@ -2938,6 +2964,7 @@
       ],
       "pois": [
         {
+          "id": "F-F99-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.35367, "longitude": -4.86529 }
@@ -3107,15 +3134,18 @@
      ],
       "pois": [
         {
+          "id": "F-F106-1",
           "name": "Santuario de la Virgen Peregrina@en",
           "description": {
             "about": "https://www.turismosahagun.com/santuario-de-la-peregrina/"
           },
           "type": "Monastery",
           "position": { "latitude": 42.36796, "longitude": -5.03256 },
-          "hours": "0900-1400,1630-1900"
+          "hours": "0900-1400,1630-1900",
+          "time": 1.0
         },
         {
+          "id": "F-F106-2",
           "name": "Midpoint of the Camino Frances@en",
           "type": "Statue",
           "position": { "latitude": 42.37046, "longitude":  -5.00035 }
@@ -3139,6 +3169,7 @@
       ],
       "pois": [
         {
+          "id": "F-F107-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.38282, "longitude": -5.07648 }
@@ -3437,6 +3468,7 @@
       ],
       "pois": [
         {
+          "id": "F-F118-1",
           "name": "Catedral de León@es",
           "description": {
             "about": "http://www.catedraldeleon.org/"
@@ -3509,6 +3541,7 @@
       ],
       "pois": [
         {
+          "id": "F-F120-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.57779, "longitude": -5.64485 }
@@ -3769,6 +3802,7 @@
       ],
       "pois": [
         {
+          "id": "F-F130-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.45798, "longitude": -5.88681 }
@@ -4182,6 +4216,7 @@
       ],
       "pois": [
         {
+          "id": "F-F143-1",
           "name": "Tomás",
           "description": {
             "text": "Tomás, \"the last Knight Templar,\" welcomes each passing pilgrim at any time.@en",
@@ -4321,6 +4356,7 @@
       ],
       "pois": [
         {
+          "id": "F-F148-1",
           "name": [
             "Castillo de los Templarios@es",
             "Castle of the Knights Templar@en"
@@ -4338,7 +4374,8 @@
               },
               "hours": "1000-1400,1630-2030"
             }
-          ]
+          ],
+          "time": 2.0
         }
       ]
     },
@@ -4421,6 +4458,7 @@
       ],
       "pois": [
         {
+          "id": "F-F151-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.58063, "longitude": -6.67112 }
@@ -4495,6 +4533,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "F-F153-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.60620, "longitude": -6.75513 }
@@ -4544,6 +4583,7 @@
       ],
       "pois": [
         {
+          "id": "F-F155-1",
           "name": "Alternative Route@en",
           "type": "Junction",
           "position": { "latitude": 42.60934, "longitude": -6.81194 }
@@ -4829,6 +4869,7 @@
       ],
       "pois": [
         {
+          "id": "F-F163-1",
           "name": "Steep Ascent@en",
           "type": "Hazard",
           "position": { "latitude": 42.68014, "longitude": -7.00376 }
@@ -4852,6 +4893,7 @@
       ],
       "pois": [
         {
+          "id": "F-F164-1",
           "name": "Steep Ascent@en",
           "type": "Hazard",
           "position": { "latitude": 42.68919, "longitude": -7.01299 }
@@ -4992,6 +5034,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "F-F169-1",
           "name": "Steep Ascent@en",
           "type": "Hazard",
           "position": { "latitude": 42.71231, "longitude": -7.12424 }
@@ -5208,6 +5251,7 @@
       ],
       "pois": [
         {
+          "id": "F-F175-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.75509, "longitude": -7.24354  }
@@ -5331,12 +5375,14 @@
       ],
       "pois": [
         {
+          "id": "F-F181-1",
           "name": "Mosteiro de San Xulián e San Xulián e Santa Basilisa de Samos@es",
           "description": {
             "about": "https://www.abadiadesamos.com/"
           },
           "type": "Monastery",
-          "position": { "latitude": 42.73265, "longitude": -7.32575 }
+          "position": { "latitude": 42.73265, "longitude": -7.32575 },
+          "time": 1.0
         }
       ]
     },
@@ -5730,6 +5776,7 @@
       ],
       "pois": [
         {
+          "id": "F-F208-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.79658, "longitude": -7.60882  }
@@ -5758,6 +5805,7 @@
       ],
       "pois": [
         {
+          "id": "F-F209-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.80531, "longitude": -7.61999  }
@@ -5802,6 +5850,7 @@
       ],
       "pois": [
         {
+          "id": "F-F211-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.82407, "longitude": -7.68978 }
@@ -5831,6 +5880,7 @@
       ],
       "pois": [
         {
+          "id": "F-F212-1",
           "name": "Castro de Castromaior@es",
           "description": {
             "text": "An iron-age hill fort@en",
@@ -5843,7 +5893,8 @@
             ]
           },
           "type": "Historical",
-          "position": { "latitude": 42.83363, "longitude": -7.71974 }
+          "position": { "latitude": 42.83363, "longitude": -7.71974 },
+          "time": 1.5
         }
       ]
     },
@@ -5964,6 +6015,7 @@
       ],
       "pois": [
         {
+          "id": "F-F217-1",
           "name": "Iglesia de San Salvador de Vilar de Donas@es",
           "description": {
             "text": "A national monument, the site where the Chevaliers of St. James settled in the 12th century.@en",
@@ -6009,6 +6061,7 @@
       ],
       "pois": [
         {
+          "id": "F-F218-1",
           "name": "Temple of Santiago@en",
           "description": {
             "notes": [
@@ -6085,6 +6138,7 @@
       ],
       "pois": [
         {
+          "id": "F-F221-1",
           "name": "Pilgrim Service Centre@en",
           "type": "PilgrimResource",
           "position": { "latitude": 42.87376, "longitude": -7.85722 }
@@ -6113,6 +6167,7 @@
       ],
       "pois": [
         {
+          "id": "F-F222-1",
           "name": "Igrexa de San Tirso de Palas de Rei@es",
           "type": "Church",
           "position": { "latitude": 42.87245, "longitude": -7.86796  },
@@ -6275,6 +6330,7 @@
       ],
       "pois": [
         {
+          "id": "F-F229-1",
           "name": "Meeting of the Camino Frances and the Camino Primitivo@en",
           "type": "Junction",
           "position": { "latitude": 42.91424, "longitude": -8.01613 }
@@ -6291,6 +6347,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "F-F230-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.91283, "longitude": -8.03758 }
@@ -6347,6 +6404,7 @@
       ],
       "pois": [
         {
+          "id": "F-F232-1",
           "name": "Area de descanso de Peregrinos@es",
           "type": "Park",
           "position": { "latitude": 42.919093, "longitude": -8.08778 }
@@ -6388,6 +6446,7 @@
       ],
       "pois": [
         {
+          "id": "F-F233-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.92050, "longitude": -8.09240 }
@@ -6469,6 +6528,7 @@
       ],
       "pois": [
         {
+          "id": "F-F235-1",
           "name": "Merging of the Camino del Norte and the Camino Frances@en",
           "type": "Junction",
           "position": { "latitude": 42.92680, "longitude": -8.16383 }
@@ -6869,6 +6929,7 @@
       ],
       "pois": [
         {
+          "id": "F-F251-1",
           "name": "Monument to the Pilgrim@en",
           "description": {
             "notes": [
@@ -6893,6 +6954,7 @@
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
       "pois": [
         {
+          "id": "F-F252-1",
           "name": [
             "Catedral Basílica de Santiago de Compostela@ga",
             "Catedral Basílica de Santiago de Compostela@es",
@@ -6934,6 +6996,8 @@
           },
           "type": "Cathedral",
           "position": { "latitude": 42.88060, "longitude": -8.54466 },
+          "hours": "1000-2000",
+          "time": 2.0,
           "events": [
             {
               "name": "Pilgrim's Mass",
@@ -6943,6 +7007,7 @@
           ]
         },
         {
+          "id": "F-F252-2",
           "name": "Praza do Obradoiro@ga",
           "description": {
             "text": "The main arrival point for pilgrims@en"
@@ -6951,6 +7016,7 @@
           "position": { "latitude": 42.88046, "longitude":  -8.54572 }
         },
         {
+          "id": "F-F252-3",
           "name": "Pilgrim Office@en",
           "description": {
             "text": "This is where you can pick up your Compostela (pilgrim's certificate).@en",
@@ -8911,6 +8977,7 @@
       "finishes": [
         "F-F252"
       ],
+      "suggested-pois": [ "F-F58-1", "F-F69-2", "F-F81-1", "F-81-2", "F-87-1", "F-F106-1", "F-118-1", "F-F148-1", "F-212-1", "F-252-1" ],
       "palette": {
         "colour": "fec953"
       },
@@ -8948,6 +9015,7 @@
       "name": "Sarria via Samos",
       "description": "An alternative route towards Sarria that allows a visit to the monastery at Samos.",
       "locations": [ "F-F176", "F-F177", "F-178", "F-F179", "F-F180", "F-F181", "F-F182", "F-F183", "F-F184", "F-F185", "F-F186"],
+      "suggested-pois": [ "F-181-1" ],
       "palette": {
         "colour": "fe8d37"
       }

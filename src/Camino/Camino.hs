@@ -88,6 +88,7 @@ module Camino.Camino (
 ) where
 
 import GHC.Generics (Generic)
+import qualified Control.Exception as CE (evaluate)
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
@@ -479,7 +480,8 @@ defaultPoiCategories _ = S.empty
   
 -- | A point of interest, attached to a parent location or leg
 data PointOfInterest = PointOfInterest {
-    poiName :: Localised TaggedText -- ^ The name of the point of interest
+    poiID :: Text -- ^ The identifier of the point of interest
+  , poiName :: Localised TaggedText -- ^ The name of the point of interest
   , poiDescription :: Maybe Description -- ^ Detailed description
   , poiType :: LocationType -- ^ The point of interest type, same as a location type
   , poiCategories :: S.Set PoiCategory -- ^ The broad categories that are of interest
@@ -489,8 +491,28 @@ data PointOfInterest = PointOfInterest {
   , poiEvents :: [Event] -- ^ Associated events
 } deriving (Show)
 
+instance Placeholder Text PointOfInterest where
+  placeholderID = poiID
+  placeholder lid = PointOfInterest {
+      poiID = lid
+    , poiName = wildcardText $ ("Placeholder for " <> lid)
+    , poiDescription = Nothing
+    , poiType = Poi
+    , poiCategories = S.empty
+    , poiPosition = Nothing
+    , poiHours = Nothing
+    , poiTime = Nothing
+    , poiEvents = []
+  }
+
+instance Dereferencer Text PointOfInterest Camino where
+  dereference camino poi = maybe poi fst (M.lookup (placeholderID poi) (caminoPois camino))
+
 instance FromJSON PointOfInterest where
+  parseJSON (String v) = do
+    return $ placeholder v
   parseJSON (Object v) = do
+    id' <- v .: "id"
     name' <- v .: "name"
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
@@ -500,7 +522,8 @@ instance FromJSON PointOfInterest where
     time' <- v .:? "time"
     events' <- v .:? "events" .!= []
     return PointOfInterest {
-        poiName = name'
+        poiID = id'
+      , poiName = name'
       , poiDescription = description'
       , poiType = type'
       , poiCategories = categories
@@ -512,9 +535,10 @@ instance FromJSON PointOfInterest where
   parseJSON v = typeMismatch "expecting object" v
 
 instance ToJSON PointOfInterest where
-    toJSON (PointOfInterest name' description' type' categories' position' hours' time' events') =
+    toJSON (PointOfInterest id' name' description' type' categories' position' hours' time' events') =
       object [
-          "name" .= name'
+          "id" .= id'
+        , "name" .= name'
         , "description" .= description'
         , "type" .= type'
         , "categories" .= categories'
@@ -523,6 +547,12 @@ instance ToJSON PointOfInterest where
         , "time" .= time'
         , "events" .= if null events' then Nothing else Just events'
       ]
+
+instance Eq PointOfInterest where
+  a == b = poiID a == poiID b
+
+instance Ord PointOfInterest where
+  a `compare` b = poiID a `compare` poiID b
 
 -- | A location, usually a city/town/village that marks the start and end points of a leg
 --   and which may have accommodation and other services available.
@@ -669,7 +699,7 @@ locationAllSet resource camino location = let
   addn = S.unions (map resource locs)
   in
     addn `S.union` resource location
-    
+
 -- | Get all services accessible from a location
 locationAllServices :: Camino -> Location -> S.Set Service
 locationAllServices camino location = locationAllSet locationServices camino location
@@ -817,6 +847,7 @@ data Route = Route {
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
   , routeFinishes :: [Location] -- ^ A list of suggested finish points for the route
+  , routeSuggestedPois :: S.Set PointOfInterest -- ^ A list of suggested points of interest for the route
   , routePalette :: Palette
 } deriving (Show)
 
@@ -831,6 +862,7 @@ instance FromJSON Route where
       stops' <- v .:? "stops" .!= S.empty
       starts' <- v .:? "starts" .!= []
       finishes' <- v .:? "finishes" .!= []
+      pois' <- v .:? "suggested-pois" .!= S.empty
       palette' <- v .: "palette"
       return Route { 
           routeID = id'
@@ -840,12 +872,13 @@ instance FromJSON Route where
         , routeStops = stops'
         , routeStarts = starts'
         , routeFinishes = finishes'
-        , routePalette = palette' 
+        , routeSuggestedPois = pois'
+        , routePalette = palette'
       }
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' locations' stops' starts' finishes' palette') =
+    toJSON (Route id' name' description' locations' stops' starts' finishes' pois' palette') =
       object [ 
           "id" .= id'
         , "name" .= name'
@@ -854,7 +887,9 @@ instance ToJSON Route where
         , "stops" .= S.map locationID stops'
         , "starts" .= map locationID starts'
         , "finishes" .= map locationID finishes'
-        , "palette" .= palette' ]
+        , "suggested-pois" .= S.map poiID pois'
+        , "palette" .= palette'
+      ]
 
 
 instance Eq Route where
@@ -873,6 +908,7 @@ instance Placeholder Text Route where
     , routeStops = S.empty
     , routeStarts = []
     , routeFinishes = []
+    , routeSuggestedPois = S.empty
     , routePalette = def
   }
 
@@ -882,6 +918,7 @@ instance Normaliser Text Route Camino where
      , routeStops = dereferenceS camino  (routeStops route)
      , routeStarts = dereferenceF camino (routeStarts route)
      , routeFinishes = dereferenceF camino (routeFinishes route)
+     , routeSuggestedPois = dereferenceS camino (routeSuggestedPois route)
    }
 
 instance Dereferencer Text Route Camino where
@@ -1016,7 +1053,12 @@ data Camino = Camino {
   , caminoRoutes :: [Route] -- ^ Named sub-routes
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
+  , caminoPois :: M.Map Text (PointOfInterest, Location) -- ^ The camino points of interest
 } deriving (Show)
+
+-- Internal, construct the PoI map from a list of locations
+buildPoiMap :: [Location] -> M.Map Text (PointOfInterest, Location)
+buildPoiMap locs = M.fromList $ foldl (\ps -> \l -> map (\p -> (poiID p, (p, l))) (locationPois l) ++ ps)  [] locs
 
 instance FromJSON Camino where
   parseJSON (Object v) = do
@@ -1035,6 +1077,7 @@ instance FromJSON Camino where
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
     let routes'' = defaultRoute''' : otherRoutes
+    let pois' = buildPoiMap locs
     return $ Camino {
         caminoId = id'
       , caminoName = name'
@@ -1046,6 +1089,7 @@ instance FromJSON Camino where
       , caminoRoutes = routes''
       , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
+      , caminoPois = pois'
     }
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
@@ -1057,7 +1101,7 @@ instance Ord Camino where
   a `compare` b = caminoId a `compare` caminoId b
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute') =
+  toJSON (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute' _pois) =
     object [ 
         "id" .= id'
       , "name" .= name'
@@ -1076,7 +1120,7 @@ instance Graph Camino Leg Location where
   edge camino loc1 loc2 = find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute') allowed  =
+  subgraph (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute' _pois') allowed  =
     let
       id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
@@ -1086,8 +1130,21 @@ instance Graph Camino Leg Location where
       routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
       routeLogic'' = map (\l -> l { routeLogicInclude = routeLogicInclude l `S.intersection` allowed, routeLogicExclude = routeLogicExclude l `S.intersection` allowed}) routeLogic'
       defaultRoute'' = fromJust $ find (\r -> routeID r == routeID defaultRoute') routes'
+      pois'' = buildPoiMap $ M.elems locations'
     in
-      Camino { caminoId = id'', caminoName = name'', caminoDescription = description', caminoMetadata = metadata', caminoLocations = locations'', caminoLegs = legs'', caminoTransportLinks = links'', caminoRoutes = routes'', caminoRouteLogic = routeLogic'', caminoDefaultRoute = defaultRoute'' }
+      Camino {
+          caminoId = id''
+        , caminoName = name''
+        , caminoDescription = description'
+        , caminoMetadata = metadata'
+        , caminoLocations = locations''
+        , caminoLegs = legs''
+        , caminoTransportLinks = links''
+        , caminoRoutes = routes''
+        , caminoRouteLogic = routeLogic''
+        , caminoDefaultRoute = defaultRoute''
+        , caminoPois = pois''
+      }
   mirror camino =
     let
       id'' = caminoId camino <> "'"
@@ -1109,6 +1166,7 @@ instance Placeholder Text Camino where
       , caminoRoutes = [dr]
       , caminoRouteLogic = []
       , caminoDefaultRoute = dr
+      , caminoPois = M.empty
     }
     where
       dr = placeholder ("DR-" <> cid)
@@ -1119,6 +1177,7 @@ instance Normaliser Text Camino CaminoConfig where
       camino2 = camino1 {
           caminoLegs = map (normaliseLeg camino1) (caminoLegs camino1)
         , caminoTransportLinks = map (normaliseLeg camino1) (caminoTransportLinks camino1)
+        , caminoPois = buildPoiMap (caminoLocationList camino1)
       }
       camino3 = camino2 { caminoRoutes = map (normalise camino2) (caminoRoutes camino2) }
       camino4 = camino3 { caminoDefaultRoute = normalise camino3 (caminoDefaultRoute camino3) }
@@ -1320,6 +1379,7 @@ readCamino :: FilePath -> IO Camino
 readCamino file = do
   cf <- LB.readFile file
   let decoded = eitherDecode cf :: Either String Camino
+  _ <- CE.evaluate decoded
   return $ case decoded of
     Left msg -> error msg
     Right camino' -> camino'

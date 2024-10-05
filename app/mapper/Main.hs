@@ -13,7 +13,7 @@ module Main (main) where
 import Camino.Camino
 import Data.Localised
 import Data.Region
-import Data.Text.Lazy (unpack, fromStrict)
+import Data.Text (Text, intercalate, unpack)
 import Formatting
 
 import Options.Applicative
@@ -26,17 +26,25 @@ arguments :: Parser Map
 arguments =  Map
     <$> (argument str (metavar "CAMINO-FILE"))
 
+poiLabel :: PointOfInterest -> Text
+poiLabel poi =
+     poiID poi
+  <> " "
+  <> (maybe "?" plainText (localise [] (poiName poi)))
+  <> maybe "" (\t -> " " <> sformat (fixed 1) t) (poiTime poi)
+
 printLocation :: Location -> IO ()
 printLocation l = do
-  putStr $ unpack $ locFormat id' name' lat' lon' region'
+  putStr $ unpack $ locFormat id' name' lat' lon' region' pois'
   where
-    locFormat = format (text % " " % text % " " % fixed 5 % "," % fixed 5 % " " % text % "\n")
-    id' = fromStrict $ locationID l
-    name' = fromStrict $ locationNameLabel l
+    locFormat = sformat (stext % " " % stext % " " % fixed 5 % "," % fixed 5 % " " % stext % " " % stext % "\n")
+    id' = locationID l
+    name' = locationNameLabel l
     position' = locationPosition l
     lat' = maybe 0.0 latitude position'
     lon' = maybe 0.0 longitude position'
-    region' = fromStrict $ maybe "-" (\r -> "(" <> (regionID r) <> ")") (locationRegion l)
+    region' = maybe "-" (\r -> "(" <> (regionID r) <> ")") (locationRegion l)
+    pois' = intercalate ", " $ map poiLabel (locationPois l)
 
 
 main :: IO ()

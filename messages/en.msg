@@ -16,10 +16,6 @@ EasyMode: Easy Mode
 EasyModeText: Easy mode reduces the number of choices that you have to make and chooses sensible defaults for most things.
 ExcludedLabel: Locations not to stop at
 FinishLocationLabel: Trip End
-FitnessText1: To begin with, choose the way you intend to travel. Then choose the level of fitness that you have.
-FitnessText2: Easy mode allows you to fill out a few fields about your travel style and which routes you want to travel. Sensible defaults are then used for things like daily distance, accommodation preferences, must-see stops and the like. Detailed mode allows you to fine-tune your preferences in terms of distance, accommodation, where to stop and so on. However, the level of detail can be quite complex. Use easy mode to start with and then uncheck this box to allow more detail once you are familiar with the system.
-FitnessBottom: Be careful with fitness. Normal is normal for a young walker with plenty of training; someone who can walk three hours at 5km/hr without tiring. If you have any doubts, choose Unfit.
-FitnessTitle: Travel Style and Fitness
 ForbiddenStopsLabel: Forbidden Stops
 HelpLabel: Help
 HelpTitle: General Help
@@ -37,8 +33,9 @@ PlanKmlLabel: Plan (KML)
 PlanKmlTitle: Generate a plan as a KML file suitable for Google Earth
 PlanLabel: Plan
 PlanTitle: Generate a plan and display it
+PoisLabel: Points of Interest
 PoiTitle: Point of Interest Preferences
-PoiText: Select the sorts of point of interest that you would be interested in stopping at while travelling. These stops will be built into the planning time.
+PoiText: Select the significant point of interests that you intend to stop at while travelling. These stops will be built into the planning time.
 RangeTitle: Distance and Time Preferences
 RangeText: Select the ranges that you will accept for both distance travelled over a day (in km) and time taken (in hours). The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RequiredStopsLabel: Required Stops
@@ -69,4 +66,8 @@ TestMessage: Currently under testing, see the About page
 TimePreferencesLabel: Time Preferences (hours)
 TransportLinks: Use Transport Links
 TransportLinksText: Allow the use of public transport to nearby accommodation and services
+TravelText1: To begin with, choose the way you intend to travel. Then choose the level of fitness that you have.
+TravelText2: Easy mode allows you to fill out a few fields about your travel style and which routes you want to travel. Sensible defaults are then used for things like daily distance, accommodation preferences, must-see stops and the like. Detailed mode allows you to fine-tune your preferences in terms of distance, accommodation, where to stop and so on. However, the level of detail can be quite complex. Use easy mode to start with and then uncheck this box to allow more detail once you are familiar with the system.
+TravelBottom: Be careful with fitness. Normal is normal for a young walker with plenty of training; someone who can walk three hours at 5km/hr without tiring. If you have any doubts, choose Unfit.
+TravelTitle: Travel Style and Fitness
 

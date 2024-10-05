@@ -75,13 +75,13 @@ leg5 = Leg Road location1 location3 Nothing 1.3 Nothing 20.0 10.0 Nothing
 
 leg6 = Leg Road location1 location3 Nothing 1.3 Nothing 25.0 0.0 Nothing
 
-route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") (S.fromList [location1]) S.empty [] [] def
+route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") (S.fromList [location1]) S.empty [] [] S.empty def
 
-route2 = Route "R2" (wildcardText "Route 2") (wildcardDescription "Route 2") (S.fromList [location2]) S.empty [] [] def
+route2 = Route "R2" (wildcardText "Route 2") (wildcardDescription "Route 2") (S.fromList [location2]) S.empty [] [] S.empty def
 
-route3 = Route "R3" (wildcardText "Route 3") (wildcardDescription "Route 3") (S.fromList [location3]) S.empty [] [] def
+route3 = Route "R3" (wildcardText "Route 3") (wildcardDescription "Route 3") (S.fromList [location3]) S.empty [] [] S.empty def
 
-route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") (S.fromList [location1, location2]) S.empty [] [] def
+route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") (S.fromList [location1, location2]) S.empty [] [] S.empty def
 
 condition1 = And [Variable route1, Not $ Variable route2]
 
@@ -98,6 +98,7 @@ camino1 = Camino
   [route1, route2, route3, route4]
   [logic1]
   route1
+  M.empty
 
 testLegEqual = TestList [
   testLegEqual1, testLegEqual2, testLegEqual3, testLegEqual4, testLegEqual5, testLegEqual6

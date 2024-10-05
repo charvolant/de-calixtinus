@@ -107,6 +107,7 @@
       "accommodation": [ "Hostel", "GuestHouse", "Hotel" ],
       "pois": [
         {
+          "id": "P-P1-1",
           "name": "Lisbon Cathedral@en",
           "description": {
             "text": "The start point for the Portuguese Camino@en",
@@ -128,6 +129,7 @@
           "time": 0.5
         },
         {
+          "id": "P-P1-2",
           "name": [
             "Museu Nacional do Azulejo@pt",
             "National Tile Museum@en"
@@ -170,6 +172,7 @@
       ],
       "pois": [
         {
+          "id": "P-P2-1",
           "name": [
             "Oceanário de Lisboa@pt",
             "Lisbon Oceanarium@en"
@@ -526,12 +529,14 @@
       ],
       "pois": [
         {
+          "id": "P-P20-1",
           "name": "Igreja do Seminário ou de Nossa Senhora da Conceição do Colégio dos Jesuítas@pt",
           "type": "Cathedral",
           "position": { "latitude": 39.23696, "longitude": -8.68518 },
           "time": 1.0
         },
         {
+          "id": "P-P20-2",
           "name": "Jardim das Portos do Sol@pt",
           "type": "Park",
           "position": { "latitude": 39.23382, "longitude": -8.67573 },
@@ -539,6 +544,7 @@
           "time": 0.5
         },
         {
+          "id": "P-P20-3",
           "name": "Fátima Variant@en",
           "type": "Junction",
           "position": { "latitude": 39.23458, "longitude": -8.68591 }
@@ -790,6 +796,7 @@
       ],
       "pois": [
         {
+          "id": "P-P32-1",
           "name": "Castelo de Tomar@pt",
           "description": {
             "text": "The headquarters of the Knights Templar before their dissolution, built according to the latest 12th century standards.@en"
@@ -800,6 +807,7 @@
           "time": 2.0
         },
         {
+          "id": "P-P32-2",
           "name": "Convento de Cristo@pt",
           "description": {
             "text": "A Manueline-style, monastery with multiple cloisters.@en",
@@ -1085,6 +1093,7 @@
       "accommodation": [ "PrivateAlbergue" ],
       "pois": [
         {
+          "id": "P-P62-1",
           "name": [
             "Villa Romana do Rabaçal@pt",
             "Roman Villa of Rabaçal@en"
@@ -1121,6 +1130,7 @@
       "accommodation": [ "GuestHouse" ],
       "pois": [
         {
+          "id": "P-P63-1",
           "name": "Refugio Peregrino Nicolau@pt",
           "description": {
             "text": "A rest point for pilgrims, run by volunteers.@en"
@@ -1159,6 +1169,7 @@
       "accommodation": [  ],
       "pois": [
         {
+          "id": "P-P66-1",
           "name": [
             "Museu Monográfico de Conímbriga@pt",
             "Conímbriga Roman Ruins and Museum@en"
@@ -1322,6 +1333,7 @@
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
       "pois": [
         {
+          "id": "P-P78-1",
           "name": "Biblioteca Joanina@pt",
           "description": {
             "text": "A national monument. The Baroque library, part of the University of Coímbra, is considered to be one of the most beautiful libraries in the world.@en",
@@ -1337,6 +1349,7 @@
           "time": 1.0
         },
         {
+          "id": "P-P78-2",
           "name": "Jardim Botânico da Universidade de Coimbra@pt",
           "type": "Park",
           "position": { "latitude": 40.20576, "longitude": -8.42137 },
@@ -1344,6 +1357,7 @@
           "time": 1.0
         },
         {
+          "id": "P-P78-3",
           "name": "Mosteiro de Santa Clara-a-Velha@pt",
           "description": {
             "about": "https://www.culturacentro.gov.pt/mosteiro-santa-clara-a-velha/"
@@ -1650,6 +1664,7 @@
       ],
       "pois": [
         {
+          "id": "P-P101-1",
           "name": "Umbrella Sky Project@en",
           "type": "Statue",
           "position": { "latitude": 40.57211, "longitude": -8.44728 }
@@ -1709,6 +1724,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P106-1",
           "name": "Ponte medieval do Rio Marnel@pt",
           "type": "Bridge",
           "position": { "latitude": 40.63329, "longitude": -8.46943 }
@@ -1781,6 +1797,7 @@
       ],
       "pois": [
         {
+          "id": "P-P109-1",
           "name": "Statue of Queen Teresa@en",
           "description": {
             "text": "Albergaria-a-Velha, as the name suggests, was established by Queen Teresa to provide an albergue for pilgrims.@en"
@@ -1982,6 +1999,7 @@
       ],
       "pois": [
         {
+          "id": "P-P123-1",
           "name": "Museu da Chapelaria@pt",
           "type": "Museum",
           "position": { "latitude": 40.90330, "longitude": -8.49560 },
@@ -1997,6 +2015,7 @@
           "time": 1.0
         },
         {
+          "id": "P-P123-2",
           "name": "Museu do Calçado@pt",
           "description": {
             "about": "https://www.museu-do-calcado.pt/"
@@ -2140,6 +2159,7 @@
       ],
       "pois": [
         {
+          "id": "P-P133-1",
           "name": "Mosteiro de San Salvador de Grijó@pt",
           "type": "Monastery",
           "position": { "latitude": 41.02877, "longitude": -8.58005 }
@@ -2183,11 +2203,13 @@
       "accommodation": [ "PrivateAlbergue", "Hotel" ],
       "pois": [
         {
+          "id": "P-P137-1",
           "name": "Ponte de Dom Luís I@pt",
           "type": "Bridge",
           "position": { "latitude": 41.14011, "longitude": -8.60944 }
         },
         {
+          "id": "P-P137-2",
           "name": "Port Warehouses@en",
           "description": {
             "text": "There are numerous port warehouses or caves, where port is matured. Many warehouses offer tours.@en"
@@ -2244,6 +2266,7 @@
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
       "pois": [
         {
+          "id": "P-P138-1",
           "name": [
             "Catedral do Porto@pt",
             "Porto Cathedral@en"
@@ -2257,6 +2280,7 @@
           "time": 1.0
         },
         {
+          "id": "P-P138-2",
           "name": "Livraria Lello@pt",
           "description": {
             "about": "https://www.livrarialello.pt/",
@@ -2273,6 +2297,7 @@
           "time": 1.0
         },
         {
+          "id": "P-P138-3",
           "name": "Littoral Route@en",
           "type": "Junction",
           "position": { "latitude": 41.14276, "longitude": -8.61182 }
@@ -2289,6 +2314,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P139-1",
           "name": "Coastal Route@en",
           "type": "Junction",
           "position": { "latitude": 41.19334,"longitude": -8.63385 }
@@ -2392,6 +2418,7 @@
       ],
       "pois": [
         {
+          "id": "P-P146-1",
           "name": "Detour@en",
           "description": {
             "text": "Follow the route to the albergue to avoid walking along the, essentially shoulderless, N306"
@@ -2449,6 +2476,7 @@
       ],
       "pois": [
         {
+          "id": "P-P149-1",
           "name": "Alternative Route@en",
           "description": {
             "text": "An alternative route to Ponte Dom Zameiro"
@@ -2457,6 +2485,7 @@
           "position": { "latitude": 41.34591, "longitude": -8.67935 }
         },
         {
+          "id": "P-P149-2",
           "name": "Ponte de Dom Zameiro@pt",
           "type": "Bridge",
           "position": { "latitude": 41.35159, "longitude": -8.68140 }
@@ -2535,6 +2564,7 @@
       ],
       "pois": [
         {
+          "id": "P-P154-1",
           "name": "Igreja de São Pedro de Rates@pt",
           "description": {
             "text": "A Romanesque church classified as a national monument.@en",
@@ -2621,6 +2651,7 @@
       ],
       "pois": [
         {
+          "id": "P-P159-1",
           "name": "Ponte de Barcelos@pt",
           "type": "Bridge",
           "position": { "latitude": 41.52764, "longitude": -8.62226 }
@@ -2747,6 +2778,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P165-1",
           "name": "Bathing area in the River Neiva@en",
           "type": "Beach",
           "position": { "latitude": 41.63212, "longitude": -8.64268 },
@@ -2834,6 +2866,7 @@
       ],
       "pois": [
         {
+          "id": "P-P170-1",
           "name": "Alternative Ascent for Cyclists via Rúa de Reborido@en",
           "type": "Junction",
           "position": { "latitude": 41.68650, "longitude": -8.62092 }
@@ -2927,11 +2960,13 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P178-1",
           "name": "Ponte Romano-Gótica de Ponte de Lima@pt",
           "type": "Bridge",
           "position": { "latitude": 41.76940, "longitude": -8.58667 }
         },
         {
+          "id": "P-P178-2",
           "name": "Fonte Chafariz@pt",
           "type": "Fountain",
           "position": { "latitude": 41.76858, "longitude": -8.58437 }
@@ -3059,6 +3094,7 @@
       ],
       "pois": [
         {
+          "id": "P-P183-1",
           "name": "Alternative Route for Cyclists@en",
           "type": "Junction",
           "position": { "latitude": 41.81061, "longitude": -8.59872 }
@@ -3121,6 +3157,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P187-1",
           "name": "Alternative Route for Cyclists@en",
           "type": "Junction",
           "position": { "latitude": 41.84696, "longitude":-8.60200 }
@@ -3402,6 +3439,7 @@
       ],
       "pois": [
         {
+          "id": "P-P203-1",
           "name": "Ponte Rodo-Ferroviária de Valença@pt",
           "type": "Bridge",
           "position": { "latitude": 42.03643, "longitude": -8.64668 }
@@ -3497,6 +3535,7 @@
       ],
       "pois": [
         {
+          "id": "P-P204-1",
           "name": "Catedral de Santa María de Tui@es",
           "description": {
             "about": "https://www.catedraldetui.com/"
@@ -3568,6 +3607,7 @@
       ],
       "pois": [
         {
+          "id": "P-P209-1",
           "name": "Route via Ribadelouro@en",
           "type": "Junction",
           "position": { "latitude":42.10120, "longitude": -8.63467 }
@@ -3715,6 +3755,7 @@
       ],
       "pois": [
         {
+          "id": "P-P215-1",
           "name": "Fonte do Cristo@es",
           "type": "Fountain",
           "position": { "latitude": 42.16256, "longitude": -8.62130
@@ -3877,6 +3918,7 @@
       ],
       "pois": [
         {
+          "id": "P-P223-1",
           "name": "Junction of Central and Coastal Routes@en",
           "type": "Junction",
           "position": { "latitude": 42.27932, "longitude": -8.61055 }
@@ -3987,6 +4029,7 @@
       ],
       "pois": [
         {
+          "id": "P-P228-1",
           "name": "Praia da Xunqueira@es",
           "description": {
             "text": "A river-beach suitable for bathing.@en"
@@ -4043,6 +4086,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P233-1",
           "name": "Río Tomeza@es",
           "description": {
             "text": "The river route takes you along the banks of the Río Tomeza.@en",
@@ -4095,6 +4139,7 @@
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Hotel" ],
       "pois": [
         {
+          "id": "P-P236-1",
           "name": "Igrexa da Virxe Peregrina@es",
           "description": {
             "text": "A church dedicated to the Virgin of A Peregrina, patron saint of Pontevedra and the Portuguese Camino.@en"
@@ -4104,6 +4149,7 @@
           "time": 0.5
         },
         {
+          "id": "P-P236-2",
           "name": "Xunqueira de Alba@es",
           "type": "Natural",
           "position": { "latitude": 42.44997, "longitude": -8.64198 },
@@ -4130,6 +4176,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P238-1",
           "name": [
             "Variante Espiritual@es",
             "Spiritual Variant@en"
@@ -4201,6 +4248,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-P244-1",
           "name": "Fervenzas do Barosa@es",
           "type": "Natural",
           "position": { "latitude": 42.55586, "longitude": -8.63082 },
@@ -4370,6 +4418,7 @@
       ],
       "pois": [
         {
+          "id": "P-P258-1",
           "name": "Herbón Route@en",
           "descriptiom": {
             "text": "Detour to the monastery and hostel at Herbón@en"
@@ -4378,11 +4427,12 @@
           "position": { "latitude": 42.72613, "longitude": -8.65092 }
         },
         {
+          "id": "P-P258-2",
           "name": "Porto de Pontecesures@es",
           "description": {
             "text": "Disembarkation point for the ferry from Vilanova de Arousa@en"
           },
-          "type": "Junction",
+          "type": "Poi",
           "position": { "latitude": 42.72153, "longitude":  -8.65390 }
         }
      ]
@@ -4760,6 +4810,7 @@
       "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
       "pois": [
         {
+          "id": "P-P284-1",
           "name": [
             "Catedral Basílica de Santiago de Compostela@ga",
             "Catedral Basílica de Santiago de Compostela@es",
@@ -4811,6 +4862,7 @@
           ]
         },
         {
+          "id": "P-P284-2",
           "name": "Praza das Platerias@ga",
           "description": {
             "summary": "The entrance point to the cathedral for those travelling the Portuguese Camino.@en",
@@ -4820,6 +4872,7 @@
           "position": { "latitude": 42.88019, "longitude":  -8.54431 }
         },
         {
+          "id": "P-P284-3",
           "name": "Praza do Obradoiro@ga",
           "description": {
             "text": "The main arrival point for pilgrims@en"
@@ -4828,6 +4881,7 @@
           "position": { "latitude": 42.88046, "longitude":  -8.54572 }
         },
         {
+          "id": "P-P284-4",
           "name": "Pilgrim Office@en",
           "description": {
             "text": "This is where you can pick up your Compostela (pilgrim's certificate).@en",
@@ -5018,6 +5072,7 @@
       ],
       "pois": [
         {
+          "id": "P-F10-1",
           "name": [
             "Santuário de Fátima@pt",
             "Sanctuary of Fátima@en"
@@ -5716,7 +5771,7 @@
       "type": "Poi",
       "position": { "latitude": 42.56467, "longitude": -8.83447  },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [ "Ferry" ],
       "accommodation": [ ]
     },
 
@@ -5891,6 +5946,7 @@
       ],
       "pois": [
         {
+          "id": "P-C12-1",
           "name": "Link to the central route",
           "description": {
             "text": "This link allows those wishing to visit the church at São Pedro de Rates to transfer to the central route.@en",
@@ -5963,6 +6019,7 @@
       ],
       "pois": [
         {
+          "id": "P-C14-1",
           "name": "No water until Apúlia",
           "type": "Hazard",
           "position": { "latitude": 41.41626, "longitude": -8.78563 }
@@ -6181,6 +6238,7 @@
       ],
       "pois": [
         {
+          "id": "P-C24-1",
           "name": "Igreja de Santiago@pt",
           "description": {
             "text": "The first church consecrated to Santiago outside Spain@en"
@@ -6381,6 +6439,7 @@
       ],
       "pois": [
         {
+          "id": "P-C32-1",
           "name": "View of the Atlantic Ocean@en",
           "type": "Peak",
           "position": { "latitude": 41.77680, "longitude": -8.84777 }
@@ -6410,6 +6469,7 @@
       ],
       "pois": [
         {
+          "id": "P-C33-1",
           "name": "Ponte da Torre@pt",
           "type": "Bridge",
           "position": { "latitude": 41.80609, "longitude": -8.84990 }
@@ -6460,6 +6520,7 @@
       "accommodation": [ ],
       "pois": [
         {
+          "id": "P-C35-1",
           "name": "Praia de Moledo@pt",
           "type": "Beach",
           "position": { "latitude": 41.84967, "longitude": -8.86650 }
@@ -6531,6 +6592,7 @@
       ],
       "pois": [
         {
+          "id": "P-C36-1",
           "name": "Igreja Matriz de Caminha@pt",
           "description": {
             "text": "Notable for the side door, allowing parishioners to attend church without being fired upon by canon on the Spanish side of the Minho.@en"
@@ -6547,7 +6609,7 @@
       "type": "Poi",
       "position": { "latitude": 41.87867, "longitude": -8.83637  },
       "region": "PT",
-      "services": [ ],
+      "services": [ "Ferry" ],
       "accommodation": [ ]
     },
     {
@@ -6567,6 +6629,7 @@
       ],
       "pois": [
         {
+          "id": "P-C38-1",
           "name": "Castro de Santa Trega@es",
           "description": {
             "text": "An Iron-age hill fort.@en",
@@ -7272,6 +7335,7 @@
       ],
       "pois": [
         {
+          "id": "P-L4-1",
           "name": "Praia de Matosinhos@pt",
           "type": "Beach",
           "position": { "latitude": 41.17698, "longitude": -8.69259 }
@@ -10846,6 +10910,9 @@
       "finishes": [
         "P-P284"
       ],
+      "suggested-pois": [
+        "P-P1-1", "P-P2-1", "P-P32-1", "P-P66-1", "P-P78-1", "P-P123-1", "P-P123-2", "P-P138-2", "P-P284-1"
+      ],
       "palette": {
         "colour": "fec953"
       },
@@ -10861,6 +10928,9 @@
       ],
       "stops": [
         "P-F10"
+      ],
+      "pois": [
+        "P-F10-1"
       ],
        "palette": {
         "colour": "2a78ff"

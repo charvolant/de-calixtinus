@@ -22,13 +22,13 @@ module Camino.Server.Forms (
   , caminoPreferencesFrom
   , confirmPreferencesForm
   , chooseCaminoForm
-  , chooseFitnessForm
   , choosePoiForm
   , chooseRangeForm
   , chooseRoutesForm
   , chooseServicesForm
   , chooseStartForm
   , chooseStopsForm
+  , chooseTravelForm
   , defaultPreferenceData
   , findCaminoById
   , travelPreferencesFrom
@@ -46,11 +46,12 @@ import Data.Description (Description(..), descriptionSummary)
 import Data.List (find, partition, singleton, sortOn)
 import Data.Localised (Locale(..), Tagged(..), localise, localiseText)
 import qualified Data.Map as M
-import Data.Maybe (catMaybes, isNothing)
+import Data.Maybe (catMaybes, isJust, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, pack)
 import Data.Time.Calendar (Day)
+import Formatting
 import Text.Hamlet
 import Yesod
 
@@ -106,6 +107,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewStops :: FieldView CaminoApp
   , resExcluded :: FormResult (S.Set Location)
   , viewExcluded :: FieldView CaminoApp
+  , resPois :: FormResult (S.Set PointOfInterest)
+  , viewPois :: FieldView CaminoApp
   , resStartDate :: FormResult (Maybe Day)
   , viewStartDate :: FieldView CaminoApp
 }
@@ -121,11 +124,19 @@ findLocationById :: FormResult Camino -> Text -> Maybe Location
 findLocationById (FormSuccess camino) val = M.lookup val (caminoLocations camino)
 findLocationById _ val = Just $ placeholder val
 
+findPointOfInterestById :: FormResult Camino -> Text -> Maybe PointOfInterest
+findPointOfInterestById (FormSuccess camino) val = fst <$> M.lookup val (caminoPois camino)
+findPointOfInterestById _ val = Just $ placeholder val
+
 findSetById :: (Ord a) => FormResult Camino -> (FormResult Camino -> Text -> Maybe a) -> S.Set Text -> Maybe (S.Set a)
 findSetById cres finder val = let
     results = map (finder cres) (S.toList val)
   in
     if any isNothing results then Nothing else Just $ S.fromList $ catMaybes results
+
+findLocationByPoi :: Maybe Camino -> PointOfInterest -> Maybe Location
+findLocationByPoi Nothing _poi = Nothing
+findLocationByPoi (Just camino) poi = snd <$> M.lookup (poiID poi) (caminoPois camino)
 
 fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Camino.Route
 fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
@@ -163,6 +174,7 @@ defaultPreferenceFields master prefs = do
     (fnRes, fnView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefFinish <$> prefs)
     (spRes, spView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
     (exRes, exView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
+    (poRes, poView) <- mreq (parsingHiddenField (S.map poiID) (findSetById cRes findPointOfInterestById)) "" (prefPois <$> prefs)
     (sdRes, sdView) <- mreq hiddenField "" (prefStartDate <$> prefs)
     return PreferenceDataFields {
         resEasyMode = emRes
@@ -215,6 +227,8 @@ defaultPreferenceFields master prefs = do
       , viewStops = spView
       , resExcluded = exRes
       , viewExcluded = exView
+      , resPois = poRes
+      , viewPois = poView
       , resStartDate = sdRes
       , viewStartDate = sdView
     }
@@ -254,6 +268,7 @@ makePreferenceData _master fields = let
     changedStart = changedRoutes || changed (locationID <$> resPrevStart fields) (locationID <$> start') || changed (locationID <$> resPrevFinish fields) (locationID <$> finish')
     stops' = if easy'' || changedStart then recommendedStops <$> dcp'' else resStops fields
     excluded' = if easy'' || changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
+    pois' = if easy'' || changedCamino || changedRoutes then recommendedPois <$> dtp <*> dcp'' else resPois fields
     startDate' = resStartDate fields
   in
     PreferenceData
@@ -275,11 +290,12 @@ makePreferenceData _master fields = let
       <*> finish'
       <*> stops'
       <*> excluded'
+      <*> pois'
       <*> startDate'
 
--- | Form to allow fitness settings to be chosen
-chooseFitnessForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseFitnessForm help prefs extra = do
+-- | Form for basic travel preferences
+chooseTravelForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseTravelForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
     mRender <- getMessageRender
@@ -289,23 +305,27 @@ chooseFitnessForm help prefs extra = do
     let fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
     let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
+    let  poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
     (emRes, emView) <- mreq easyField "" (prefEasyMode <$> prefs)
     (trRes, trView) <- mreq travelField (fieldSettingsLabel MsgSelectTravel) (prefTravel <$> prefs)
     (fRes, fView) <- mreq fitnessField (fieldSettingsLabel MsgSelectFitness) (prefFitness <$> prefs)
     (cRes, cView) <- mreq comfortField (fieldSettingsLabel MsgSelectComfort) (prefComfort <$> prefs)
     (tlRes, tlView) <- mreq transportLinksField "" (prefTransportLinks <$> prefs)
+    (pcRes, pcView) <- mreq poiField (fieldSettingsLabel MsgSelectPoiCategories) (prefPoiCategories <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
-      resEasyMode = emRes,
-      viewEasyMode = emView,
-      resTravel = trRes,
-      viewTravel = trView,
-      resFitness = fRes,
-      viewFitness = fView,
-      resComfort = cRes,
-      viewComfort = cView,
-      resTransportLinks = tlRes,
-      viewTransportLinks = tlView
+        resEasyMode = emRes
+      , viewEasyMode = emView
+      , resTravel = trRes
+      , viewTravel = trView
+      , resFitness = fRes
+      , viewFitness = fView
+      , resComfort = cRes
+      , viewComfort = cView
+      , resTransportLinks = tlRes
+      , viewTransportLinks = tlView
+      , resPoiCategories = pcRes
+      , viewPoiCategories = pcView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
@@ -336,6 +356,12 @@ chooseFitnessForm help prefs extra = do
         <div .row .mb-3>
           <div .col>
             ^{fvInput view}
+      $with view <- viewPoiCategories fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
       ^{fvInput (viewPrevTravel fields)}
       ^{fvInput (viewPrevFitness fields)}
       ^{fvInput (viewPrevComfort fields)}
@@ -345,7 +371,6 @@ chooseFitnessForm help prefs extra = do
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
       ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
       ^{fvInput (viewPrevRoutes fields)}
@@ -356,6 +381,7 @@ chooseFitnessForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
@@ -413,6 +439,7 @@ chooseRangeForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
@@ -496,57 +523,7 @@ chooseServicesForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewStartDate fields)}
-    |]
-    return (res, widget)
-
-
--- | Form to allow Poi preferences to be chosen
-choosePoiForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-choosePoiForm help prefs extra = do
-    master <- getYesod
-    locales <- getLocales
-    let render = renderCaminoMsg (caminoAppConfig master) locales
-    let  poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
-    (pcRes, pcView) <- mreq poiField (fieldSettingsLabel MsgSelectPoiCategories) (prefPoiCategories <$> prefs)
-    df <- defaultPreferenceFields master prefs
-    let fields = df {
-      resPoiCategories = pcRes,
-      viewPoiCategories = pcView
-    }
-    let res = makePreferenceData master fields
-    let widget = [whamlet|
-      #{extra}
-      $with view <- viewPoiCategories fields
-        <div .row .mb-3>
-          <div .col>
-            <label for="#{fvId view}">
-              ^{fvLabel view} ^{help}
-            ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
@@ -597,6 +574,7 @@ chooseCaminoForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
@@ -653,6 +631,7 @@ chooseRoutesForm help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
@@ -676,7 +655,7 @@ chooseStartForm help prefs extra = do
     let start' = prefStart <$> prefs
     let finish' = prefFinish <$> prefs
     let startDate' = prefStartDate <$> prefs
-    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> startDate'
+    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> startDate'
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
@@ -734,6 +713,7 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
@@ -811,10 +791,93 @@ chooseStopsForm help prefs extra = do
       ^{fvInput (viewStart fields)}
       ^{fvInput (viewPrevFinish fields)}
       ^{fvInput (viewFinish fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
-    
+
+poiLabel :: [Locale] -> Maybe Location -> PointOfInterest -> Text
+poiLabel locales location poi = poil
+  <> (case locl of
+    Nothing -> ""
+    Just ll -> if ll == poil then "" else ", " <> ll
+    )
+  <> (case poiTime poi of
+    Nothing -> ""
+    Just time -> ", " <> sformat (fixed 1) time <> "hrs"
+    )
+  where
+    poil = localiseText locales $ poiName poi
+    locl = localiseText locales <$> locationName <$> location
+
+-- | Form to allow Poi preferences to be chosen
+choosePoiForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+choosePoiForm help prefs extra = do
+    master <- getYesod
+    render <- getMessageRender
+    locales <- getLocales
+    let tprefs = travelPreferencesFrom <$> prefs
+    let localised p = localiseText locales $ poiName p
+    let camino = prefCamino <$> prefs
+    let routes = prefRoutes <$> prefs
+    let start' = prefStart <$> prefs
+    let finish' = prefFinish <$> prefs
+    let cprefs = withRoutes <$> (defaultCaminoPreferences <$> camino) <*> routes
+    let cprefs' = withStartFinish <$> cprefs <*> start' <*> finish'
+    let caminos = maybe (caminoAppCaminos master) singleton camino
+    let allPois = S.unions (map (S.fromList . (map fst) . M.elems . caminoPois) caminos)
+    let possiblePois = S.filter (\p -> isJust $ poiTime p) $ maybe allPois reachablePois cprefs'
+    let sortKey p = canonicalise $ localised p
+    let pois = sortOn sortKey $ S.toList possiblePois
+    let recommended = maybe S.empty id $ recommendedPois <$> tprefs <*> cprefs'
+    let (suggested, other) = Data.List.partition (\p -> S.member p recommended) pois
+    let mkOptions ps = map (\p -> (poiID p, poiLabel locales (findLocationByPoi camino p) p, p)) ps
+    let poiOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise .localised) other))
+    let chosenPois = S.intersection possiblePois <$> (prefPois <$> prefs)
+    (poRes, poView) <- mreq (clickSelectionField poiOptions) (fieldSettingsLabel MsgPoisLabel) chosenPois
+    df <- defaultPreferenceFields master prefs
+    let fields = df {
+      resPois = poRes,
+      viewPois = poView
+    }
+    let res = makePreferenceData master fields
+    let widget = [whamlet|
+      #{extra}
+      $with view <- viewPois fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      ^{fvInput (viewEasyMode fields)}
+      ^{fvInput (viewPrevTravel fields)}
+      ^{fvInput (viewTravel fields)}
+      ^{fvInput (viewPrevFitness fields)}
+      ^{fvInput (viewFitness fields)}
+      ^{fvInput (viewPrevComfort fields)}
+      ^{fvInput (viewComfort fields)}
+      ^{fvInput (viewTransportLinks fields)}
+      ^{fvInput (viewDistance fields)}
+      ^{fvInput (viewTime fields)}
+      ^{fvInput (viewLocation fields)}
+      ^{fvInput (viewAccommodation fields)}
+      ^{fvInput (viewStopServices fields)}
+      ^{fvInput (viewDayServices fields)}
+      ^{fvInput (viewPoiCategories fields)}
+      ^{fvInput (viewPrevCamino fields)}
+      ^{fvInput (viewCamino fields)}
+      ^{fvInput (viewPrevRoutes fields)}
+      ^{fvInput (viewRoutes fields)}
+      ^{fvInput (viewPrevStart fields)}
+      ^{fvInput (viewStart fields)}
+      ^{fvInput (viewPrevFinish fields)}
+      ^{fvInput (viewFinish fields)}
+      ^{fvInput (viewStops fields)}
+      ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewStartDate fields)}
+    |]
+    return (res, widget)
+
 
 -- | Form to ensure preferences have been confirmed
 confirmPreferencesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
@@ -849,6 +912,7 @@ confirmPreferencesForm _help prefs extra = do
       ^{fvInput (viewFinish fields)}
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
+      ^{fvInput (viewPois fields)}
       ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)

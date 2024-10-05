@@ -212,17 +212,17 @@ travelAdditional _preferences day = mconcat $ mapMaybe legPenance day
 
 -- | Calculate the amount of additional time spent visiting attractions
 -- The points of interest at the start and end of the leg are not included, as they are assumed to be done at the start/end of the day
-pointOfInterestTime :: TravelPreferences -- ^ The calculation preferences
+pointOfInterestTime :: CaminoPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Maybe Float
-pointOfInterestTime preferences day = let
-  dpois = foldl (\pois -> \location -> selectedPois preferences location ++ pois) [] $ map legFrom (tail day)
+pointOfInterestTime camino day = let
+  dpois = foldl (\pois -> \location -> selectedPois camino location ++ pois) [] $ map legFrom (tail day)
  in
   foldl maybeSum Nothing $ map poiTime dpois
   
 -- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: TravelPreferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Maybe Float, Bool)
-travelMetrics preferences day =
+travelMetrics :: TravelPreferences -> CaminoPreferences -> [Leg] -> (Float, Float, Maybe Float, Float, Maybe Float, Float, Float, Maybe Float, Bool)
+travelMetrics preferences camino day =
   let
     travelType = preferenceTravel preferences
     fitness = preferenceFitness preferences
@@ -235,7 +235,7 @@ travelMetrics preferences day =
     ascent = totalAscent preferences day
     descent = totalDescent preferences day
     perceived = (walkingSpeed *) <$> travelTime
-    pois = pointOfInterestTime preferences day
+    pois = pointOfInterestTime camino day
     nonTravel = hasNonTravel preferences day
   in
     (normalSpeed, actualSpeed, travelTime `maybeSum` otherTime `maybeSum` pois, distance, perceived, ascent, descent, pois, nonTravel)
@@ -344,7 +344,7 @@ penance :: TravelPreferences -- ^ The travel preferences
   -> Metrics -- ^ The penance value
 penance preferences camino accommodationMap locationMap day =
   let
-    (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics preferences day
+    (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics preferences camino day
     -- If there is no accommodation within this leg, then accept any distance.
     atEnd = isLastDay (preferenceFinish camino) day
     walkingSpeed = nominalSpeed Walking Normal

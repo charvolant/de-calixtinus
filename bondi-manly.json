@@ -1,10 +1,10 @@
 {
   "id": "BM",
   "name": [
-    "Bondi to Manley Walk@en"
+    "Bondi to Manly Walk@en"
   ],
   "description": {
-    "text": "The Bondi to Manley walk is an 80km walk around Sydney Harbour.@en",
+    "text": "The Bondi to Manly walk is an 80km walk around Sydney Harbour.@en",
     "image": {
       "source": "BM/BM-Harbour.jpg",
       "thumbnail": "BM/BM-Harbour-thumbnail.jpg",
@@ -52,7 +52,7 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Bondi to Manley Walk@en"
+        "value": "Bondi to Manly Walk@en"
       },
       {
         "term": "dcterms:creator",
@@ -2233,7 +2233,7 @@
     {
       "id": "BM-BM",
       "name": "Full Walk",
-      "description": "The full Bondi to Manley walk.",
+      "description": "The full Bondi to Manly walk.",
       "stops": [
         "BM-36"
       ],

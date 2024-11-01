@@ -92,7 +92,7 @@ penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = 
      \ + _{MiscPenanceMsg (metricsMisc metrics)}
    |]
   where
-    acServices = maybe S.empty (tripChoiceServices . fst) (L.uncons $ metricsAccommodationChoice metrics)
+    acServices = maybe S.empty (tripChoiceFeatures . fst) (L.uncons $ metricsAccommodationChoice metrics)
     hasAccommodationServices = accommodationDetail && not (S.null acServices)
     showAccommodation = metricsLocation metrics /= mempty || hasAccommodationServices
 
@@ -405,14 +405,14 @@ caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
   |]
   where
       type' = accommodationType accommodation
-      services' = maybe S.empty (tripChoiceServices . fst) (L.uncons $ metricsAccommodationChoice metrics)
+      services' = maybe S.empty (tripChoiceFeatures . fst) (L.uncons $ metricsAccommodationChoice metrics)
       hasServices = not (S.null services')
 
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
 caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping) = [ihamlet|_{Txt name'}|]
 
-caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation) ->HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation Service) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|
   <div .row .accommodation>
     <div .offset-1 .col-5>
@@ -922,6 +922,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
     <div .row>
       <div .col-4>_{TimePreferencesLabel}
       <div .col>^{preferenceRangeHtml $ preferenceTime preferences}
+    <div .row>
+      <div .col-4>_{RestPreferencesLabel}
+      <div .col>^{preferenceRangeHtml $ preferenceRest preferences}
     <div .row>
       <div .col-4>_{LocationPreferencesLabel}
     $forall lk <- locationTypes

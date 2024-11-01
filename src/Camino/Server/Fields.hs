@@ -42,6 +42,14 @@ import Yesod.Form.Types
 import Yesod.Form.Functions
 import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
 
+parseVal :: (Read a) => Text -> Either FormMessage a
+parseVal s = case (reads $ unpack s) of
+        [(v, "")] -> Right v
+        _ -> Left $ MsgInvalidNumber s
+
+parseMaybeVal :: (Read a) => Text -> Either FormMessage (Maybe a)
+parseMaybeVal s = if (s  == (""::Text) || s == ("--"::Text)) then Right Nothing else (Just <$> parseVal s)
+
 -- | Generate a 'FieldSettings' from the given label and tooltip message.
 fieldSettingsLabelTooltip :: RenderMessage site msg => msg -- ^ The label message
   -> msg -- ^ The tooptip message
@@ -164,17 +172,17 @@ extendedCheckboxFieldList :: (Ord a, RenderMessage site FormMessage) =>
 extendedCheckboxFieldList render options = extendedCheckboxFieldList' (renderOptions render options)
 
 -- | Create a field that handles preference ranges
-rangeField :: (RenderMessage site FormMessage) => Float -> Float -> Float -> Field (HandlerFor site) (PreferenceRange Float)
+rangeField :: (RenderMessage site FormMessage, Read a, Show a, Ord a, ToMarkup a) => a -> a -> a -> Field (HandlerFor site) (PreferenceRange a)
 rangeField minv maxv stepv = Field
     { fieldParse = \rawVals -> \_fileVals -> case rawVals of
       [min', lower', target', upper', max'] -> let
             range = PreferenceRange
              <$> pure Nothing
-             <*> parseFloat target'
-             <*> parseFloat lower'
-             <*> parseFloat upper'
-             <*> parseMaybeFloat min'
-             <*> parseMaybeFloat max'
+             <*> parseVal target'
+             <*> parseVal lower'
+             <*> parseVal upper'
+             <*> parseMaybeVal min'
+             <*> parseMaybeVal max'
 
           in
             return $ either (Left . SomeMessage) (Right . Just) (validate range)
@@ -200,10 +208,6 @@ rangeField minv maxv stepv = Field
     , fieldEnctype = UrlEncoded
     }
     where
-      parseFloat s = case (reads $ unpack s) of
-        [(v, "")] -> Right v
-        _ -> Left $ MsgInvalidNumber s
-      parseMaybeFloat s = if (s  == (""::Text) || s == ("--"::Text)) then Right Nothing else (Just <$> parseFloat s)
       showFloat f v = either id (pack . show . f) v
       showMaybeFloat f v = either id (\x -> maybe "--" (pack . show) (f x)) v
       validate e@(Left _msg) = e

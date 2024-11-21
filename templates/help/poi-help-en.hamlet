@@ -1,38 +1,25 @@
 <h2 #poi-help>Point of Interest Preferences
 
 <p>
-  Points of interest are locations that a pilgrim might like to stop at while on their way.
-  Not all pilgrims are alike, so the points of interest are divided up into broad categories,
-  indicating the sort of thing that a pilgrim might like to stop at.
+  Points of interest (PoIs) are locations that a pilgrim might like to stop at while on their way.
+  Many PoIs are a quick visit and do no affect the planning process.
+  This page allows you to include the time it will take to visit some places along the way.
 
 <p>
-  Points of interest might fall under multiple categories.
-  For example, a cathedral is (obviously) of religious interest but also of historical interest or
-  a park might be both an area of natural beauty and a recreational spot.
+  The significant PoIs are listed, along with a nearby location and the estimated time it will take
+  to visit.
+  Clicking on a name will put it into the list at the top of the field and will select it for inclusion in planning.
+  Similarly, clicking on a name in the selected list will remove it.
 
-<table .table .table-striped>
-  <caption>Point of Interest Categories
-  <thead>
-    <tr>
-       <th scope="col">Category
-       <th scope="col">Description
-  <tbody>
-    <tr>
-        <td>_{caminoPoiCategoryLabel ReligiousPoi}
-        <td>Something of religious significance, such as a chapel or shrine.
-    <tr>
-        <td>_{caminoPoiCategoryLabel HistoricalPoi}
-        <td>A location of historical significance, such as a castle, statue or town square
-    <tr>
-        <td>_{caminoPoiCategoryLabel CulturalPoi}
-        <td>Something of cultural significance, such as an art gallery or museum
-    <tr>
-        <td>_{caminoPoiCategoryLabel NaturalPoi}
-        <td>A location of natural beauty, such as a national park
-    <tr>
-        <td>_{caminoPoiCategoryLabel PilgrimPoi}
-        <td>A location specifically geared towards pilgrims, such as a pilgrim information office
-    <tr>
-        <td>_{caminoPoiCategoryLabel RecreationPoi}
-        <td>Recreational facilities, such as a shopping area, food and drink or
+<p>
+  The suggested PoIs are based on the broad categories that you chose at the start of
+  preference selection and known attractions.
+  However, you do not have to restrict yourself to these suggestions.
+
+<p>
+  If you have a PoI mid-stage, the time taken to visit will be added to the total time for the day.
+  If the PoI is located at day's-end, the time isn't added, since it is assumed that you will visit after
+  having a rest.
+
+
 

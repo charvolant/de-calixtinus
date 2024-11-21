@@ -60,8 +60,8 @@
   (Or maximise, if you're that sort of pilgrim, but I haven't implemented that yet.)
 
 <p>
-  The base unit of penance is the distance you walk or cycle each day, with adjustments made for things like
-  hill climbing and fitness levels.
+  The base unit of penance is a kilometre of walking on flat ground at the start of the day.
+  As the day and terrain wear on, adjustments are made for things like hill climbing, descents and fitness levels.
   If a day is particularly short or long, an additional amount of discomfort penance is added.
   After that, preferences in terms of the type of accommodation you want at the end of the day are expressed in
   terms of "I would walk an extra <em>x</em> kilometres to get to a better option nearby."
@@ -84,8 +84,10 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is only source data for two caminos: the Camino Portuguese, the one we walked; and
-  the Camino Fisterra, a nice short one to add to the list.
+  Currently, there is only source data for four caminos:
+  the Camino Portuguese, the one we walked; the Camino Frances; the Camino Ingles and the Camino Fisterra.
+  I've also added in the Bondi-Manly walk, about as far away from the Camino Santiago as you can get, both
+  figuratively and physically, for funsies.
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
   over 9,000 lines of JSON.
   More routes are planned.
@@ -109,7 +111,7 @@
 
 <p>
  A secondary source is <cite>The Camino Portugués</cite> by Kat Davis (Cicerone, 2019), which we
-  used as a planning book.
+  \ used as a planning book.
 
 <p>
   Good-old Google Maps was used to estimate total ascent and descent between
@@ -118,7 +120,11 @@
 
 <p>
   The <a href="https://stingynomads.com/camino-fatima-walk-lisbon-porto/">Stingy Nomads</a> aided us on
-  our route to Fátima.
+  \ our route to Fátima.
+
+<p>
+  The <a href="https://www.bonditomanly.com/">Bondi to Manly Walk</a> website provides detailed information
+  \ on that walk.
 
 <p>
   And, of course, we did our own stuff.

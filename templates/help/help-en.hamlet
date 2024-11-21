@@ -41,7 +41,8 @@
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
-    However, we only have the data for four Caminos at the moment, along with all the various
+    See the Bondi-Manly walk for an example.
+    However, we only have the data for four actual Caminos at the moment, along with all the various
     alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
@@ -58,8 +59,8 @@
   In most cases, a walking plan will be generated in a few seconds.
   If you're prepared to camp by the roadside, then the process will take a few seconds more, as there are many more
   possible options to sift through.
-  The planner can develop a plan from any start point to any end point, as long as you are travelling towards
-  Santiago de Compostella.
+  The planner can develop a plan from any start point to any end point, as long as you are travelling onwards, towards
+  Santiago de Compostella in most cases but whatever the end-point is for other walks.
   This means that, if your plans change mid-pilgrimage - perhaps you want to walk a little faster or find that
   you're not quite up to very long stages - you can re-generate a plan, based on where you currently are.
 
@@ -121,6 +122,11 @@
         <td>Comfort
         <td>
             The broad comfort level in terms of accommodation and services that the pilgrim would like.
+     <tr>
+        <td>Point of Interest Types
+        <td>
+            The broad types of points of interest and attractions that you might like
+            to visit along the way.
    <tr>
       <td>Distance Preferences
       <td>
@@ -152,14 +158,14 @@
         The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
         detailed description.
     <tr>
-      <td>Missing Stop Services
+      <td>Preferred Services at Day's End
       <td>
         A list of the services, either in the location you are staying or in the accommodation that you choose,
         \ that you would like to be present in the place that you stop for the day.
         \ Each service is associated with the penance added if that service is <em>not</em> available,
         \ suggesting that you would be prepared to walk further to get that service.
     <tr>
-      <td>Missing Day Services
+      <td>Preferred Services During Day
       <td>
         A list of the services that you would like to be present somewhere along the day's route, including
         \ the start and end locations.
@@ -195,6 +201,11 @@
       <td>
         A list of the stops where you want the planner to ensure that you <em>don't</em> finish there at
         \ the end of a day.
+    <tr>
+      <td>Points of Interest
+      <td>
+        A list of the significant points of interest (those that would take a chunk out of your walking time
+        \ that you wish to include in the plan.
 
 <h3 #preference-range-help>Preference Ranges
 
@@ -576,7 +587,7 @@
 
 <h3 #location-help>Locations
 
-<p>
+<p .clearfix>
   <div .aside .col-2 .m-1 .p-1 .float-end>
     The locations are initially shown collapsed, so that you can easily scroll through them.
     Click on the line to fully open the location detail.
@@ -587,7 +598,7 @@
   <a href="#stage-help">plan
   An example location is
 
-<div .card .border .border-info .m-2 .p-2>
+<div .card .border .border-info .m-2 .p-2 style="clear: both;">
   <div .accordion .container-fluid>
     <div .row>
       <div .accordion-item .location-P-RP .location-waypoint .location #P-P109>
@@ -616,6 +627,7 @@
                   <span .location-type .ca-statue title="Statue">
                 <div .col-1>
                   <div .text-end>
+                    <span .region>Portugal
                     <a href="#" .show-on-map>
                       <span .ca-globe title="Show on map">
         <div .accordion-collapse .collapse .show #location-body-P-P109 aria-labelledby="location-heading-P-P109" data-parent="#locations">
@@ -751,12 +763,143 @@
   There is usually a more detailed list of points of interest and events available if you open the location.
 
 <p>
+  The larger region this location is in is shown on the right.
+  Regions are used as a guide to which holidays are observed at the location, important if something
+  is likely to be shut when you arrive.
+  Detailed information about regions and holidays can be found on the About tab.
+
+<p>
   Finally, clicking on the globe
   <span .ca-globe>
   will show the location on the map.
   If there is a link
   <span .ca-link">
   then clicking on the link will take you to a web page with more information.
+
+<p>
+  Another example location is
+
+<div .card .border .border-info .m-2 .p-2 style="clear: both;">
+  <div .accordion .container-fluid>
+    <div .row>
+      <div .accordion-item .location-BM-BM .location-waypoint .location id="BM-28">
+        <div .accordion-header>
+          <button .accordion-button data-bs-toggle="collapse" data-bs-target="#location-body-BM-28" aria-expanded="true" aria-controls="location-body-BM-28">
+            <div .container-fluid>
+              <div .row>
+                <h5 .col-4>
+                  <span .location-type .ca-town title="Town">
+                  Double Bay
+                <div .col-3 .services>
+                  <span .services>
+                    <span .service .ca-restaurant title="Restaurant">
+                    <span .service .ca-groceries title="Groceries">
+                    <span .service .ca-bus title="Bus">
+                    <span .service .ca-wharf title="Ferry">
+                  <span .transport-link>
+                    <span .services>
+                      <span .service .ca-pharmacy title="Pharmacy">
+                      <span .service .ca-bank title="Bank">
+                      <span .service .ca-train title="Train">
+                <div .col-2 .accommodation-types>
+                  <span .accommodation-types>
+                    <span .accommodation .hotel .ca-hotel title="Hotel">
+                  <span .transport-link>
+                    <span .accommodation-types>
+                      <span .accommodation .hostel .ca-hostel title="Hostel">
+                      <span .accommodation .house .ca-house title="House">
+                <div .col-2 .poi-types>
+                  <span .poi-types>
+                    <span .location-type .ca-beach title="Beach">
+                  <span .transport-link>
+                    <span .poi-types>
+                      <span .location-type .ca-museum title="Museum or gallery">
+                <div .col-1>
+                  <div .text-end>
+                    <span .region>
+                      <span lang="en">NSW
+                    <a .show-on-map href="#">
+                      <span .ca-globe title="Show on map">
+        <div .accordion-collapse .collapse .show id="location-body-BM-28" aria-labelledby="location-heading-BM-28" data-parent="#locations" style="">
+          <div .accordion-body .container-fluid>
+            <div .row>
+              <div .col .text-start .my-auto>
+                <ul>
+                  <li .leg-to .leg-line .leg-used>
+                    <a href="#">Seven Schillings Beach
+                    <div .d-inline-block>
+                      <span .leg-type title="Road/path">
+                      <span .leg-distance>1.1km
+                      <span .leg-ascent>15m
+                      <span .leg-descent>15m
+              <div .col .text-end .my-auto>
+                <ul>
+                  <li .leg-to .leg-line .leg-used>
+                    <a href="#">Darling Point
+                    <div .d-inline-block>
+                      <span .leg-type .ca-walking title="Trail (walkers only)">
+                      <span .leg-distance>1.5km
+                      <span .leg-ascent>65m
+                      <span .leg-descent>70m
+            <div .row>
+              <div .col>
+                <h6 .pt-3>Accommodation
+            <div .row .accommodation>
+              <div .offset-1 .col-5>
+                <span .accommodation .hotel .ca-hotel title="Hotel">
+                Hotel
+              <div .col-4>
+                <span .service .ca-wifi title="WiFi">
+                <span .service .ca-restaurant title="Restaurant">
+                <span .service .ca-breakfast title="Breakfast">
+                <span .service .ca-dinner title="Dinner">
+                <span .service .ca-bedlinen title="Bedlinen">
+                <span .service .ca-towels title="Towels">
+              <div .col-2>
+                <span .sleeping .ca-bed-double-wc title="Double with WC">
+            <div .row>
+              <div .col>
+                <h6 .pt-3>Points of Interest
+            <div .row id="BM-28-1">
+              <div .card .g-0>
+                <div .card-header>
+                  <span .poi-types>
+                    <span .location-type .ca-beach title="Beach">
+                  <span title="Natural , Recreation ">Double Bay Beach
+                  <a .description-icon .float-end href="#">
+                    <span .ca-globe title="Show on map">
+            <div .row>
+              <div .col>
+                <h6 .pt-3>Transport Links
+            <div .row .transport-link>
+              <div .offset-1 .col-2>
+                <a href="#">Circular Quay
+              <div .col-3 .services>
+                <span .service .ca-restaurant title="Restaurant">
+                <span .service .ca-pharmacy title="Pharmacy">
+                <span .service .ca-bank title="Bank">
+                <span .service .ca-groceries title="Groceries">
+                <span .service .ca-train title="Train">
+                <span .service .ca-bus title="Bus">
+                <span .service .ca-wharf title="Ferry">
+              <div .col-2 .accommodation-types>
+                <span .accommodation .hostel .ca-hostel title="Hostel">
+                <span .accommodation .house .ca-house title="House">
+                <span .accommodation .hotel .ca-hotel title="Hotel">
+              <div .col-2 poi-types>
+                <span .location-type .ca-museum title="Museum or gallery">
+              <div .col-2>
+                <div .d-inline-block>
+                  <span .leg-type .ca-ferry title="Ferry">
+                  <span .leg-time>0.3hrs
+
+<p>
+  This location has a transport link to another location.
+  Using the transport link (a ferry taking about 18 minutes) will take you to Circular Quay, which has
+  additional services and accommodation options.
+  The items available to the location via the transport link are greyed, to indicate that they are not
+  directly usable.
+  (See the note about the Compostella Certificate before using transport links.)
 
 <h4 #location-detail-help>Location Detail
 
@@ -859,22 +1002,25 @@
 
 <p>
   An example point of interest is
-  
-<div .card .m-2>
+
+<div .card .g-0>
   <div .card-header>
     <span .poi-types>
       <span .location-type .ca-museum title="Museum or gallery">
-    <span lang="es">Museo de la Evolución Humana
+    <span title="Cultural">
+      <span lang="es">Museo de la Evolución Humana
     <a .description-icon .float-end href="#">
-      <span .ca-globe" title="Show on map">
+      <span .ca-globe title="Show on map">
     <a .description-icon .about .float-end href="https://www.museoevolucionhumana.com/">
       <span .ca-link>
   <div .card-body>
-    <div .float-end .mx-1 .hours>
-      <span .description-icon .ca-clock" title="Open Hours">
-      <ol .comma-list .open-hours-list>
-        <li>1000 - 1430
-        <li>1630 - 2000
+    <div .row .event-hours>
+      <div .col>
+      <div .col>
+        <span .description-icon .ca-clock title="Open Hours">
+        <ol .comma-list .open-hours-list>
+          <li>1000-1430
+          <li>1630-2000
     Museum with displays on human evolution &amp; the nearby Atapuerca fossil site.
 
 <p>
@@ -902,29 +1048,29 @@
 <p>
   Some points or interest or locations have events associated with them.
   An example of a church that has a special pilgrims' mass every Sunday at 1830 (6:30 pm) is
-  
-<div .card .m-2>
+
+<div .card .g-0>
   <div .card-header>
     <span .poi-types>
       <span .location-type .ca-church title="Church">
-    <span lang="es">Iglesia Sanjuanista
-    <a .description-icon .float-end href="#">
-      <span .ca-globe title="Show on map">
+    <span title="Religious">
+      <span lang="es">Iglesia Sanjuanista
+    <a .description-icon .float-end onclick="#"><span .ca-globe title="Show on map">
   <div .card-body>
     <div .row .clearfix .event .event-pilgrimmass>
       <div .col>
-        <span poi-types>
-          <span .event-type .event-pilgrimmass .ca-altar title="Pilgrim's Mass">
+        <span .poi-types>
+        <span .event-type .event-pilgrimmass .ca-altar title="Pilgrim's Mass">
         <span lang="en">Pilgrim's Mass and Blessing
-        <div .float-end .mx-1 .hours>
-          <span .description-icon .ca-clock title="Open Hours">
-          <ol .comma-list .open-hours-list>
-            <li>1830 - 1930
-        <div .float-end .mx-1 .calendar>
-          <span .description-icon .ca-calendar title="Calendar">
-          <ol .comma-list days-of-week-list">
-            <li>Sun
-
+        <div .row .event-hours>
+          <div .col>
+            <span .description-icon .ca-calendar title="Calendar">
+            <ol .comma-list .days-of-week-list>
+              <li>Sun
+          <div .col>
+            <span .description-icon .ca-clock title="Open Hours">
+            <ol .comma-list .open-hours-list>
+              <li>1830-1930
 
 <h3 #travel-help>Travel
 

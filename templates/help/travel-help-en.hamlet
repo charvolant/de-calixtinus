@@ -81,7 +81,8 @@
 <h3 #estimating-fitness>Estimating Fitness
 
 <p>
-  The standard definition for fitness levels is the amount of time it takes to climb 1000 feet (300m) over half a mile (800m).
+  The standard definition for fitness levels (other than Casual) is the amount of time it takes to climb
+  \ 1000 feet (300m) over half a mile (800m).
   \ For example, using the following table, if it took you 25 minutes to climb 1000 feet, you would be classified as fit.
   \ Another way to estimate fitness is to measure the time you can walk at a nominal 5km/hr (or 3mi/hr) before noticeably tiring.
 
@@ -124,6 +125,9 @@
      <td>3.5
      <td>3.5
      <td>11.5
+   <tr>
+     <td>Casual
+     <td colspan="4">N/A
     <tr>
      <td>Very Unfit
      <td>50
@@ -171,6 +175,9 @@
      <td>Unfit
      <td>20
      <td>700
+   <tr>
+     <td>Casual
+     <td colspan="2">N/A
     <tr>
      <td>Very Unfit
      <td>16
@@ -269,4 +276,4 @@
         <td>A location specifically geared towards pilgrims, such as a pilgrim information office
     <tr>
         <td>_{caminoPoiCategoryLabel RecreationPoi}
-        <td>Recreational facilities, such as a shopping area, food and drink or municipal park
+        <td>Recreational facilities, such as a shopping area, food and drink or a municipal park

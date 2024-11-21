@@ -24,7 +24,7 @@
             \ This is the minimum distance or time that you would wish to walk.
     <tr>
         <td .text-success>Target
-        <td>The target
+        <td>The target.
             \ This is the distance or time that you wish to walk each day.
     <tr>
         <td>Upper

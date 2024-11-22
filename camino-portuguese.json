@@ -6441,7 +6441,7 @@
         {
           "id": "P-C32-1",
           "name": "View of the Atlantic Ocean@en",
-          "type": "Peak",
+          "type": "Lookout",
           "position": { "latitude": 41.77680, "longitude": -8.84777 }
         }
       ]
@@ -10911,7 +10911,7 @@
         "P-P284"
       ],
       "suggested-pois": [
-        "P-P1-1", "P-P2-1", "P-P32-1", "P-P66-1", "P-P78-1", "P-P123-1", "P-P123-2", "P-P138-2", "P-P284-1"
+        "P-P1-1", "P-P2-1", "P-P32-1", "P-P32-2", "P-P63-1", "P-P66-1", "P-P78-1", "P-P123-1", "P-P123-2", "P-P138-2", "P-P284-1"
       ],
       "palette": {
         "colour": "fec953"

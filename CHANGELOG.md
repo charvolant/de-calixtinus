@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.5 - 2024-11-22
+
+### Added
+
+* Bondi-Manly walk
+* Calendars, regions and locality-based public holidays.
+* Allow users to use public transport to switch to places where
+  they can get accommodation.
+  This violates the spirit of the Camino but lots of people do it
+  and it's necessary for the Bondi-Manly walk.
+* Include time spent at points of interest during planning.
+* Allow the user to pick points of interest from a menu.
+
+### Changed
+
+* Reworked opening hours to take account of holidays
+* Additional location types for localities and points of interest
+
 ## 0.4 - 2024-07-07
 
 ### Added

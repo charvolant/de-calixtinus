@@ -13,3 +13,602 @@ web:
     - id: "Camino Icons"
       type: Font
       path: ../fonts/Camino-Icons.woff
+calendar:
+  - key: EasterSunday
+    name:
+      - Easter Sunday@en
+      - Domingo de Páscoa@pt
+    calendar:
+      type: list
+      dates:
+        - 2022-04-17
+        - 2023-04-09
+        - 2024-03-31
+        - 2025-04-20
+        - 2026-04-05
+        - 2027-03-28
+        - 2028-04-16
+        - 2029-04-01
+        - 2030-04-21
+  - key: MaundayThursday
+    name:
+      - Maundy Thursday@en
+      - Jueves Santo@es
+    calendar:
+      type: nth-day-after
+      nth: -3
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: GoodFriday
+    name:
+      - Good Friday@en
+      - Viernes Santo@es
+      - Sexta-feira Santa@pt
+      - Vendredi saint@fr
+    calendar:
+      type: nth-day-after
+      nth: -2
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: EasterMonday
+    name:
+      - Easter Monday@en
+      - Lunes de Pascua@es
+      - Segunda-Feira da Páscoa@pt
+      - Lundi de Pâques@fr
+    calendar:
+      type: nth-day-after
+      nth: 1
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: Pentecost
+    name:
+      - Pentecost@en
+      - Pentecôte@fr
+    calendar:
+      type: nth-day-after
+      nth: 49
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: WhitMonday
+    name:
+      - Whit Monday@en
+      - Lundi de Pentecôte@fr
+    calendar:
+      type: nth-day-after
+      nth: 50
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: CorpusChristi
+    name:
+      - Corpus Christi@en
+      - Viernes Santo@es
+      - Corpo de Deus@pt
+    calendar:
+      type: nth-day-after
+      nth: 60
+      calendar:
+        type: named
+        key: EasterSunday
+  - key: HolyWeek
+    name: Holy Week@en
+    calendar:
+      type: range
+      from:
+        type: nth-day-after
+        nth: -6
+        calendar:
+          type: named
+          key: EasterSunday
+      to:
+        type: named
+        key: EasterSunday
+  - key: Carnival
+    name:
+      - Carnival@en
+      - Carnaval@pt
+    calendar:
+      type: range
+      from:
+        type: nth-day-after
+        nth: -48
+        calendar:
+          type: named
+          key: EasterSunday
+      to:
+        type: nth-day-after
+        nth: -47
+        calendar:
+          type: named
+          key: EasterSunday
+  - key: NewYear
+    name:
+      - New Years Day@en
+      - Año Nuevo@es
+      - Ano Novo@pt
+      - Nouvel an@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 01-01
+  - key: Epiphany
+    name:
+      - Epiphany@en
+      - Epifanía del Señor@es
+    calendar:
+      type: day-of-year
+      days:
+        - 01-06
+  - key: AustraliaDay
+    name:
+      - Australia Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 01-26
+  - key: FreedomDayPT
+    name:
+      - Freedom Day (Portugal)@en
+      - Dia da Liberdade@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 04-25
+  - key: ANZACDay
+    name:
+      - ANZAC Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 04-25
+  - key: LabourDay
+    name:
+      - Labour Day@en
+      - Día del Trabajador@es
+      - Dia do Trabalhador@pt
+      - Fête du Travail@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 05-01
+  - key: VictoryDayFR
+    name:
+      - Victory Day (France)@en
+      - Victoire 1945@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 05-01
+  - key: GalicianLiteratureDay
+    name:
+      - Galician Literature Day@en
+      - Día das Letras Galegas@ga
+    calendar:
+      type: day-of-year
+      days:
+        - 05-17
+  - key: KingsBirthdayAU
+    name:
+      - King's Birthday@en
+    calendar:
+      type: nth-weekday-after
+      nth: 2
+      day: "monday"
+      calendar:
+        type: day-of-year
+        days:
+          - 06-01
+  - key: PortugalDayPT
+    name:
+      - Portugal Day@en
+      - Dia de Portugal@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 06-10
+  - key: LaRiojaDay
+    name:
+      - La Rioja Regional Day@en
+      - Día de La Rioja@eu
+    calendar:
+      type: day-of-year
+      days:
+        - 06-09
+  - key: NationalDayFR
+    name:
+      - National Day (France)@en
+      - Fête Nationale Française@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 07-14
+  - key: GalicianNationalDay
+    name:
+      - Galician National Day@en
+      - Santiago Apóstol o Día da Patria Galega@ga
+    calendar:
+      type: day-of-year
+      days:
+        - 07-25
+  - key: Assumption
+    name:
+      - Assumption@en
+      - Asunción@es
+      - Assunção de Nossa Senhora@pt
+      - Assomption@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 08-15
+  - key: LabourDayAU
+    name:
+      - Labour Day (Australia)@en
+    calendar:
+      type: nth-weekday-after
+      nth: 1
+      day: monday
+      calendar:
+        type: day-of-year
+        days:
+          - 10-01
+  - key: RepublicDayPT
+    name:
+      - Repulic Day (Portugal)@en
+      - Implantação da República@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 06-10
+  - key: NationalDayES
+    name:
+      - National Day (Spain)@en
+      - Fiesta Nacional de España@es
+    calendar:
+      type: day-of-year
+      days:
+        - 10-12
+  - key: BasqueNationalDay
+    name:
+      - Basque National Day@en
+      - Euskadi Eguna@eu
+    calendar:
+      type: day-of-year
+      days:
+        - 10-25
+  - key: AllSaints
+    name:
+      - All Saints Day@en
+      - Día de todos los Santos@es
+      - Dia de Todos-os-Santos@pt
+      - Toussaint@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 11-01
+  - key: Armistice
+    name:
+      - Armistice Day@en
+      - Armistice 1918@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 11-11
+  - key: RestorationOfIndependencePT
+    name:
+      - Restoration of Independence (Portugal)@en
+      - Restauração da Independência@pt
+    calendar:
+      type: day-of-year
+      days:
+        - 12-01
+  - key: ConstitutionDayES
+    name:
+      - Constitution Day (Spain)@en
+      - Dia de la Constitucion Espanola@es
+    calendar:
+      type: day-of-year
+      days:
+        - 12-06
+  - key: ImmaculateConception
+    name:
+      - Immaculate Conception@en
+      - Inmaculada Concepción@es
+    calendar:
+      type: day-of-year
+      days:
+        - 12-08
+  - key: Christmas
+    name:
+      - Christmas Day@en
+      - Navidad@es
+      - Natal@pt
+      - Noël@fr
+    calendar:
+      type: day-of-year
+      days:
+        - 12-25
+  - key: BoxingDay
+    name:
+      - Boxing Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 12-26
+regions:
+  - id: World
+    name:
+      - "World@en"
+      - "Monde@fr"
+      - "Mundo@es"
+      - "Mundo@pt"
+      - "Mundo@ga"
+    description:
+      text:
+        - "The Planet Earth@en"
+        - "el planeta tierra@es"
+        - "O planeta Terra@ga"
+        - "O planeta Terra@pt"
+        - "La planète Terre@fr"
+        - "Lurra planeta@eu"
+    type: Planet
+    locale: "*"
+  - id: EU
+    name:
+      - "Europe@en"
+      - "Europa@pt"
+      - "Europa@es"
+      - "Europa@ga"
+      - "Europe@fr"
+      - "Europa@eu"
+    description:
+      text:
+        - "The European continent@en"
+        - "El continente europeo@es"
+        - "O continente europeoa@ga"
+        - "O continente europeu@pt"
+        - "Le continent européen@fr"
+        - "Europako kontinentea@eu"
+    type: Continent
+    parent: "World"
+  - id: ES
+    name:
+      - España@es
+      - Spain@en
+      - Espagne@fr
+      - España@ga
+      - Espanha@pt
+    description:
+      text:
+        - The Kingdom of Spain@en
+        - Reino de España@es
+    type: Country
+    parent: EU
+    locale: es
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: Epiphany
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: LabourDay
+      - type: named
+        key: Assumption
+      - type: named
+        key: NationalDayES
+      - type: named
+        key: AllSaints
+      - type: named
+        key: ConstitutionDayES
+      - type: named
+        key: ImmaculateConception
+      - type: named
+        key: Christmas
+  - id: "ES-GA"
+    name:
+      - Galicia@ga
+      - Galicia@es
+    description:
+      text:
+        - The Autonomous Community of Galicia@en
+        - La Comunidad Autónoma de Galicia@es
+      about: https://www.xunta.gal/
+    type: Province
+    parent: ES
+    locale: ga
+    holidays:
+      - type: named
+        key: GalicianLiteratureDay
+      - type: named
+        key: GalicianNationalDay
+  - id: "ES-CL"
+    name:
+      - Castilla y León@es
+      - Castille and León@en
+      - Castilla e León@ga
+    description:
+      text:
+        - The Autonomous Community of Castille and León@en
+        - La Comunidad Autónoma de Castilla y Leóna@es
+      about: http://www.jcyl.es/
+    type: Province
+    parent: ES
+  - id: "ES-NA"
+    name:
+      - Navarre@es
+    description:
+      text:
+        - The Autonomous Community of Navarre@en
+        - La Comunidad Autónoma de Navarre@es
+      about: http://www.navarra.es/home_en/
+    type: Province
+    parent: ES
+    holidays:
+      - type: named
+        key: EasterMonday
+  - id: "ES-PV"
+    name:
+      - Euskadi@eu
+      - Basque Country@en
+      - País Vasco@es
+    description:
+      text:
+        - The Autonomous Community of the Basque Country@en
+        - La Comunidad Autónoma de País Vasco@es
+      about: http://www.euskadi.eus/
+    type: Province
+    parent: ES
+    locale: eu
+    holidays:
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: BasqueNationalDay
+  - id: "ES-RI"
+    name:
+      - La Rioja@es
+    description:
+      text:
+        - The Autonomous Community of the La Rioja@en
+        - La Comunidad Autónoma de La Rioja@es
+      about: http://www.larioja.org/
+    type: Province
+    parent: ES
+    holidays:
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: LaRiojaDay
+  - id: PT
+    name: Portugal
+    description:
+      text:
+        - The Portuguese Republic@en
+        - A República Portuguesa@pt
+    type: Country
+    parent: EU
+    locale: pt
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: Carnival
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: FreedomDayPT
+      - type: named
+        key: LabourDay
+      - type: named
+        key: CorpusChristi
+      - type: named
+        key: PortugalDayPT
+      - type: named
+        key: Assumption
+      - type: named
+        key: RepublicDayPT
+      - type: named
+        key: AllSaints
+      - type: named
+        key: RestorationOfIndependencePT
+      - type: named
+        key: ImmaculateConception
+      - type: named
+        key: Christmas
+  - id: FR
+    name:
+      - France@fr
+      - France@en
+      - Francia@ga
+      - França@pt
+      - Francia@es
+    description:
+      text:
+        - The French Republic@en
+        - la République française@fr
+    type: Country
+    parent: EU
+    locale: fr
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: LabourDay
+      - type: named
+        key: VictoryDayFR
+      - type: named
+        key: NationalDayFR
+      - type: named
+        key: Assumption
+      - type: named
+        key: AllSaints
+      - type: named
+        key: Armistice
+      - type: named
+        key: Christmas
+  - id: FR-NAQ
+    name:
+      - Nouvelle-Aquitaine@fr
+    description:
+      text:
+        - The adminstrative region of Nouvelle-Aquitaine@en
+        - La région administrative française de Nouvelle-Aquitaine@fr
+      about: http://nouvelle-aquitaine.fr/
+    type: Province
+    parent: FR
+  - id: OC
+    name:
+      - "Oceania@en"
+    description:
+      text:
+        - "The geographical region of Australasia, Melanesia, Micronesia and Polynesia@en"
+    type: Continent
+    parent: "World"
+  - id: AU
+    name:
+      - Australia@en
+    description:
+      text:
+        - The Commonwealth of Australia@en
+    type: Country
+    parent: OC
+    locale: en
+    holidays:
+      - type: named
+        key: NewYear
+      - type: named
+        key: AustraliaDay
+      - type: named
+        key: GoodFriday
+      - type: named
+        key: EasterMonday
+      - type: named
+        key: ANZACDay
+      - type: named
+        key: Christmas
+      - type: named
+        key: BoxingDay
+  - id: AU-NSW
+    name:
+      - NSW@en
+    description:
+      text:
+        - The State of New South Wales@en
+    type: Country
+    parent: AU
+    holidays:
+      - type: named
+        key: KingsBirthdayAU
+      - type: named
+        key: LabourDayAU
+

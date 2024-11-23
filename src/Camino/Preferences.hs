@@ -183,6 +183,7 @@ data TravelPreferences = TravelPreferences {
   , preferenceComfort :: Comfort -- ^ The base comfort level
   , preferenceDistance :: PreferenceRange Float -- ^ The preferred distance range
   , preferenceTime :: PreferenceRange Float -- ^ The preferred time walking range
+  , preferenceRest :: PreferenceRange Int -- ^ The preferred amount of days walking before a rest
   , preferenceTransportLinks :: Bool -- ^ Allow transport links for stops, accomodation and services
   , preferenceLocation :: M.Map LocationType Penance -- ^ Location stop preferences (absence implies zero preference)
   , preferenceAccommodation :: M.Map AccommodationType Penance -- ^ Accommodation preferences (absence implies unacceptable accommodation)
@@ -198,6 +199,7 @@ instance FromJSON TravelPreferences where
     comfort' <- v .: "comfort"
     distance' <- v .: "distance"
     time' <- v .: "time"
+    rest' <- v .: "rest"
     transport' <- v .:? "transport-links" .!= False
     location' <- v .: "location"
     accommodation' <- v .: "accommodation"
@@ -210,6 +212,7 @@ instance FromJSON TravelPreferences where
         , preferenceComfort = comfort'
         , preferenceDistance = distance'
         , preferenceTime = time'
+        , preferenceRest = rest'
         , preferenceTransportLinks = transport'
         , preferenceLocation = location'
         , preferenceAccommodation = accommodation'
@@ -220,13 +223,14 @@ instance FromJSON TravelPreferences where
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' comfort' distance' time' transport' location' accommodation' sstop' sday' pois') =
+  toJSON (TravelPreferences travel' fitness' comfort' distance' time' rest' transport' location' accommodation' sstop' sday' pois') =
     object [ 
         "travel" .= travel'
       , "fitness" .= fitness'
       , "comfort" .= comfort'
       , "distance" .= distance'
       , "time" .= time'
+      , "rest" .= rest'
       , "transport-links" .= transport'
       , "location" .= location'
       , "accommodation" .= accommodation'
@@ -420,6 +424,19 @@ suggestedDistanceRange Cycling Normal = PreferenceRange Nothing 80.0 50.0 100.0 
 suggestedDistanceRange Cycling Unfit = PreferenceRange Nothing 50.0 30.0 80.0 (Just 20.0) (Just 100.0)
 suggestedDistanceRange Cycling Casual = PreferenceRange Nothing 40.0 30.0 60.0 (Just 20.0) (Just 80.0)
 suggestedDistanceRange Cycling VeryUnfit = PreferenceRange Nothing 30.0 20.0 40.0 (Just 10.0) (Just 50.0)
+
+
+-- | Create a suggested rest period, based on the travel mode and fitness level.
+suggestedRestRange :: Travel -- ^ The method of travel
+  -> Fitness -- ^ The fitness level
+  -> PreferenceRange Int -- ^ The suggested distance ranges
+suggestedRestRange _ SuperFit = PreferenceRange Nothing 7 6 9 (Just 5) (Just 10)
+suggestedRestRange _ VeryFit = PreferenceRange Nothing 7 6 8 (Just 5) (Just 9)
+suggestedRestRange _ Fit = PreferenceRange Nothing 6 5 8 (Just 4) (Just 9)
+suggestedRestRange _ Normal = PreferenceRange Nothing 6 5 7 (Just 3) (Just 8)
+suggestedRestRange _ Unfit = PreferenceRange Nothing 6 4 7 (Just 2) (Just 8)
+suggestedRestRange _ Casual = PreferenceRange Nothing 5 4 6 (Just 2) (Just 7)
+suggestedRestRange _ VeryUnfit = PreferenceRange Nothing 4 3 5 (Just 2) (Just 6)
 
 -- | Base accommodation from comfort level
 suggestedLocation' :: Comfort -> M.Map LocationType Penance
@@ -699,6 +716,7 @@ defaultTravelPreferences travel fitness comfort = TravelPreferences {
     , preferenceComfort = comfort
     , preferenceDistance = suggestedDistanceRange travel fitness
     , preferenceTime = suggestedTimeRange travel fitness
+    , preferenceRest = suggestedRestRange travel fitness
     , preferenceTransportLinks = suggestedTransportLinks travel fitness comfort
     , preferenceLocation = suggestedLocation travel fitness comfort
     , preferenceAccommodation = suggestedAccommodation travel fitness comfort

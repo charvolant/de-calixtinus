@@ -189,6 +189,7 @@ data CaminoMsg =
   | ReligiousPoiTitle
   | RequiredStopsLabel
   | RestaurantTitle
+  | RestPreferencesLabel
   | RoadTitle
   | RouteLabel
   | RoutesLabel
@@ -414,6 +415,7 @@ renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
 renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
+renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ RoutesLabel = "Routes"

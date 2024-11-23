@@ -41,21 +41,21 @@ import Camino.Camino
 import Camino.Preferences
 import Camino.Util (maybeSum)
 import Graph.Graph (available, incoming, mirror, reachable, subgraph)
-import Graph.Programming()
+import Graph.Programming
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Maybe (isJust, fromJust, fromMaybe, mapMaybe)
 import qualified Data.Text as T
 
 -- | A pre-selected choice for a location, accommodation etc.
-data TripChoice v = TripChoice {
+data (Ord f) => TripChoice v f = TripChoice {
       tripChoice :: v -- ^ The element selected
-    , tripChoiceServices :: S.Set Service -- ^ The additional services supplied by this choice
+    , tripChoiceFeatures :: S.Set f -- ^ The additional features (services, points of interest etc) supplied by this choice
     , tripChoicePenance :: Penance -- ^ The penance associated with this choice
 } deriving (Show)
 
 -- | Select trip choice based on penance / services covered / services available
-selectTripChoice :: (v -> S.Set Service) -> TripChoice v -> TripChoice v -> TripChoice v
+selectTripChoice :: (Ord f) => (v -> S.Set f) -> TripChoice v f -> TripChoice v f -> TripChoice v f
 selectTripChoice _ c1@(TripChoice _ s1 Reject) c2@(TripChoice _ s2 Reject) =
   if S.size s1 > S.size s2 then c1 else c2
 selectTripChoice _ (TripChoice _ _ Reject) c2 = c2
@@ -70,11 +70,11 @@ selectTripChoice services c1@(TripChoice a1 s1 p1) c2@(TripChoice a2 s2 p2)
   | otherwise = c1
 
 -- A map of choices for each location
-type TripChoiceMap v = M.Map Location (TripChoice v)
+type TripChoiceMap v f = M.Map Location (TripChoice v f)
 -- | The trail of past/future choices
-type TripChoiceTail v = [(TripChoice v, Penance)]
+type TripChoiceTail v f = [(TripChoice v f, Penance)]
 -- | The tail of past/future choices
-type TripChoiceTrail v = (TripChoice v, TripChoiceTail v)
+type TripChoiceTrail v f = (TripChoice v f, TripChoiceTail v f)
 
 -- | The metrics for a day, segment or complete trip
 data Metrics = Metrics {
@@ -86,7 +86,7 @@ data Metrics = Metrics {
     , metricsDescent :: Float -- ^ Descent in metres
     , metricsStop :: Penance -- ^ The penance associated with day's end
     , metricsLocation :: Penance -- ^ The penance associated with the location
-    , metricsAccommodationChoice :: [TripChoice Accommodation] -- ^ The places to stay on the way
+    , metricsAccommodationChoice :: [TripChoice Accommodation Service] -- ^ The places to stay on the way
     , metricsAccommodation :: Penance -- ^ Accommodation penance in km-equivalent. This represents the distance you would be prepared to walk to avoid this accommodation
     , metricsMissingStopServices :: S.Set Service -- ^ The services missing at the end of the day
     , metricsStopServices :: Penance -- ^ Adjustment to penance in km-equivalnet caused by missing services at the stop point
@@ -133,16 +133,16 @@ instance Score Metrics where
   invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
 
 -- | A day's stage
-type Day = Chain Location Leg Metrics
+type Day = Chain Location Leg Metrics (NullCut Metrics)
 
 -- | The complete camino stages
-type Trip = Chain Location Day Metrics
+type Trip = Chain Location Day Metrics (NullCut Metrics)
 
 -- | A complete solution, including accommodation and location metrics
 data Solution = Solution {
     solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
-  , solutionAccommodation :: TripChoiceMap Accommodation -- ^ The penance costs for accommodation in various locations
-  , solutionLocation :: TripChoiceMap Location -- ^ The penance costs for various locations
+  , solutionAccommodation :: TripChoiceMap Accommodation Service -- ^ The penance costs for accommodation in various locations
+  , solutionLocation :: TripChoiceMap Location Service -- ^ The penance costs for various locations
   , solutionTrip :: Either Location Trip -- ^ Either a trip solution or a place where something has gone wrong
 }
 
@@ -250,12 +250,12 @@ missingStopServices preferences camino day = (M.keysSet $ preferenceStopServices
 -- | Work out what services are missing from the desired day list
 missingDayServices :: TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The camino model
-  -> TripChoice Accommodation -- ^ The chosen accommodation
+  -> TripChoice Accommodation Service -- ^ The chosen accommodation
   -> [Leg] -- ^ The sequence of legs to use
   -> S.Set Service -- ^ The list of desired but missing services from the stop location
 missingDayServices preferences _camino accom day = let
     desired = M.keysSet $ preferenceDayServices preferences
-    desired' = desired `S.difference` tripChoiceServices accom
+    desired' = desired `S.difference` tripChoiceFeatures accom
   in
     foldl (S.difference) desired' $ map locationServices (dayLocations day)
 
@@ -264,7 +264,7 @@ openSleeping :: Accommodation
 openSleeping = GenericAccommodation Camping
 
 -- | Invalid accommodation choice
-invalidAccommodation :: TripChoice Accommodation
+invalidAccommodation :: TripChoice Accommodation Service
 invalidAccommodation = TripChoice openSleeping S.empty Reject
 
 completeLocationServices :: TravelPreferences -> Camino -> Location -> S.Set Service
@@ -280,7 +280,7 @@ completeLocationAccommodation preferences  camino location = if preferenceTransp
     locationAccommodation location
 
 -- Select the most favourable accommodation
-accommodationChoice' :: (M.Map AccommodationType Penance) -> S.Set Service -> Accommodation -> TripChoice Accommodation
+accommodationChoice' :: (M.Map AccommodationType Penance) -> S.Set Service -> Accommodation -> TripChoice Accommodation Service
 accommodationChoice' accPrefs services accom = let
     base = M.findWithDefault Reject (accommodationType accom) accPrefs
     covered = services `S.intersection` (accommodationServices accom)
@@ -290,7 +290,7 @@ accommodationChoice' accPrefs services accom = let
 accommodationChoice :: TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The complete camino
   -> Location -- ^ The location
-  -> TripChoice Accommodation -- ^ The chosen accommodation for the location
+  -> TripChoice Accommodation Service -- ^ The chosen accommodation for the location
 accommodationChoice preferences camino location = let
     services = (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.difference` completeLocationServices preferences camino location
     ap = preferenceAccommodation preferences
@@ -302,11 +302,11 @@ accommodationChoice preferences camino location = let
     choice
 
 -- Does this leg have no acceptable accommodation (except possibly at the start and end)
-isAccommodationFree :: TravelPreferences -> TripChoiceMap Accommodation -> [Leg] -> Bool
+isAccommodationFree :: TravelPreferences -> TripChoiceMap Accommodation Service -> [Leg] -> Bool
 isAccommodationFree _preferences accommodationMap day = all (\l -> (tripChoicePenance $ M.findWithDefault invalidAccommodation (legFrom l) accommodationMap) == Reject) (tail day)
 
 -- Make a choice based on the location
-locationChoice :: TravelPreferences -> Location -> TripChoice Location
+locationChoice :: TravelPreferences -> Location -> TripChoice Location Service
 locationChoice preferences location = let
     services' =  (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.intersection` locationServices location
     penance' = M.findWithDefault mempty (locationType location) (preferenceLocation preferences)
@@ -326,7 +326,7 @@ stopPenance' Luxurious = Penance 0.0
 stopPenance :: TravelPreferences -> Camino -> [Leg] -> Penance
 stopPenance preferences _camino _day = stopPenance' (preferenceComfort preferences)
 
-locationPenance :: TravelPreferences -> Camino -> TripChoiceMap Location -> [Leg] -> Penance
+locationPenance :: TravelPreferences -> Camino -> TripChoiceMap Location Service -> [Leg] -> Penance
 locationPenance _preferences _camino locationMap day = maybe Reject tripChoicePenance $ M.lookup (legTo $ last day) locationMap
 
 adjustment :: PreferenceRange Float -> Float -> Float -> Float -> Penance
@@ -338,11 +338,12 @@ adjustment range bscale rscale value
 -- | Calculate the total penance implicit in a sequence of legs
 penance :: TravelPreferences -- ^ The travel preferences
   -> CaminoPreferences -- ^ The camino travelled
-  -> TripChoiceMap Accommodation -- ^ The map of accommodation choices
-  -> TripChoiceMap Location -- ^ The map of location choices
+  -> TripChoiceMap Accommodation Service -- ^ The map of accommodation choices
+  -> TripChoiceMap Location Service -- ^ The map of location choices
   -> [Leg] -- ^ The sequence of legs
+  -> Maybe (NullCut Metrics) -- ^ The cut
   -> Metrics -- ^ The penance value
-penance preferences camino accommodationMap locationMap day =
+penance preferences camino accommodationMap locationMap day _cut =
   let
     (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics preferences camino day
     -- If there is no accommodation within this leg, then accept any distance.
@@ -357,7 +358,7 @@ penance preferences camino accommodationMap locationMap day =
     distanceAdjust = adjustment distancePreferences 0.0 walkingSpeed distance
     stopMissing = missingStopServices preferences (preferenceCamino camino) day
     accom = M.findWithDefault invalidAccommodation (legTo $ last day) accommodationMap -- preferred accommodation penance
-    stopMissing' = stopMissing `S.difference` tripChoiceServices accom
+    stopMissing' = stopMissing `S.difference` tripChoiceFeatures accom
     stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
     dayMissing = missingDayServices preferences (preferenceCamino camino) accom day
     dayMissingCost = missingServicePenance (preferenceStopServices preferences) dayMissing
@@ -392,7 +393,7 @@ penance preferences camino accommodationMap locationMap day =
 -- | Accept a day's stage as a possibility
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits and all locations are part of the selected routes.
 --   Or if there is no acceptable accommodation available.
-dayAccept :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation -> [Leg] -> Bool
+dayAccept :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> [Leg] -> Bool
 dayAccept preferences camino accommodationMap day =
   let
     atEnd = isLastDay (preferenceFinish camino) day
@@ -407,7 +408,7 @@ dayAccept preferences camino accommodationMap day =
 
 -- | Evaluate a day's stage for penance
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
-dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation -> TripChoiceMap Location -> [Leg] -> Metrics
+dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Leg] -> Maybe (NullCut Metrics) -> Metrics
 dayEvaluate = penance
 
 -- | Choose a day's stage based on minimum penance
@@ -426,8 +427,8 @@ caminoAccept _preferences _camino days =
 -- | Evaluate a complete camino 
 --   Currently, the sum of all day scores
 --   Refuse any camino that doesn't include all required stops and exclude all excluded stops
-caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
-caminoEvaluate _preferences camino days =
+caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Maybe (NullCut Metrics) -> Metrics
+caminoEvaluate _preferences camino days _cut =
   let
     final = finish $ last days
     waypoints = if final == (preferenceFinish camino) then preferenceStops camino else foldl (S.union) S.empty (map passed days)
@@ -471,7 +472,7 @@ caminoChoice _preferences camino trip1 trip2 =
     -- trace ("Choice between " ++ (T.unpack $ tripLabel trip1) ++ " and " ++ (T.unpack $ tripLabel trip2) ++ " is " ++ (T.unpack $ tripLabel selection)) selection
     selection
 
-rundownTail :: M.Map Location (TripChoiceTrail v) -> Leg -> TripChoiceTail v
+rundownTail :: M.Map Location (TripChoiceTrail v f) -> Leg -> TripChoiceTail v f
 rundownTail trail leg = let
     feed = maybe [] snd (M.lookup (legFrom leg) trail)
     distance = Penance (legDistance leg)
@@ -479,7 +480,7 @@ rundownTail trail leg = let
   in
     feed'
 
-buildTripChoiceMap'' :: (Location -> TripChoice v) -> TravelPreferences -> Camino -> M.Map Location (TripChoiceTrail v) -> Location -> TripChoiceTrail v
+buildTripChoiceMap'' :: (Ord f) => (Location -> TripChoice v f) -> TravelPreferences -> Camino -> M.Map Location (TripChoiceTrail v f) -> Location -> TripChoiceTrail v f
 buildTripChoiceMap'' chooser _preferences camino trail location = let
     legs = incoming camino location
     feed = concat $ map (rundownTail trail) legs
@@ -495,7 +496,7 @@ buildTripChoiceMap'' chooser _preferences camino trail location = let
         (best { tripChoicePenance = score' }, feed')
 
 
-buildTripChoiceMap' :: (Location -> TripChoice v) -> TravelPreferences -> Camino -> S.Set Location -> S.Set Location -> S.Set Location -> M.Map Location (TripChoiceTrail v) -> TripChoiceMap v
+buildTripChoiceMap' :: (Ord f) => (Location -> TripChoice v f) -> TravelPreferences -> Camino -> S.Set Location -> S.Set Location -> S.Set Location -> M.Map Location (TripChoiceTrail v f) -> TripChoiceMap v f
 buildTripChoiceMap' chooser preferences camino reachable' visited next current = if S.null next
   then
     M.map (\(c, _t) -> c) current
@@ -508,7 +509,7 @@ buildTripChoiceMap' chooser preferences camino reachable' visited next current =
 
 -- Build a forward map of accommodation choices and a backward map of choices and then choose the
 -- entry with the highest penance (meaning that there's a better option either before or after this spot)
-buildTripChoiceMap :: (Location -> TripChoice v) -> TravelPreferences -> Camino -> Location -> Location -> (Location -> Bool) -> TripChoiceMap v
+buildTripChoiceMap :: (Ord f) => (Location -> TripChoice v f) -> TravelPreferences -> Camino -> Location -> Location -> (Location -> Bool) -> TripChoiceMap v f
 buildTripChoiceMap chooser preferences camino begin end select = let
     reachable' = reachable camino begin end select
     sgf = subgraph camino reachable'
@@ -537,9 +538,11 @@ planCamino preferences camino  = Solution {
       (caminoChoice preferences camino)
       (caminoAccept preferences camino)
       (caminoEvaluate preferences camino)
+      nullCutFunction
       (dayChoice preferences camino)
       (dayAccept preferences camino accommodationMap)
       (dayEvaluate preferences camino accommodationMap locationMap)
+      nullCutFunction
       select
       (preferenceStart camino)
       (preferenceFinish camino)

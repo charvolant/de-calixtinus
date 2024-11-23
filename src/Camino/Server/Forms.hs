@@ -75,6 +75,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewDistance :: FieldView CaminoApp
   , resTime :: FormResult (PreferenceRange Float)
   , viewTime :: FieldView CaminoApp
+  , resRest :: FormResult (PreferenceRange Int)
+  , viewRest :: FieldView CaminoApp
   , resLocation :: FormResult (M.Map LocationType Penance)
   , viewLocation :: FieldView CaminoApp
   , resAccommodation :: FormResult (M.Map AccommodationType Penance)
@@ -159,6 +161,7 @@ defaultPreferenceFields master prefs = do
     (tlRes, tlView) <- mreq hiddenField "" (prefTransportLinks <$> prefs)
     (diRes, diView) <- mreq hiddenField "" (prefDistance <$> prefs)
     (tiRes, tiView) <- mreq hiddenField "" (prefTime <$> prefs)
+    (reRes, reView) <- mreq hiddenField "" (prefRest <$> prefs)
     (loRes, loView) <- mreq hiddenField "" (prefLocation <$> prefs)
     (acRes, acView) <- mreq hiddenField "" (prefAccommodation <$> prefs)
     (ssRes, ssView) <- mreq hiddenField "" (prefStopServices <$> prefs)
@@ -195,6 +198,8 @@ defaultPreferenceFields master prefs = do
       , viewDistance = diView
       , resTime = tiRes
       , viewTime = tiView
+      , resRest = reRes
+      , viewRest = reView
       , resLocation = loRes
       , viewLocation = loView
       , resAccommodation = acRes
@@ -251,6 +256,7 @@ makePreferenceData _master fields = let
     dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort'
     distance' = if easy'' || changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if easy'' || changedTravel then preferenceTime <$> dtp else resTime fields
+    rest' = if easy'' || changedTravel then preferenceRest <$> dtp else resRest fields
     location' = if easy'' || changedTravel then preferenceLocation <$> dtp else resLocation fields
     accommodation' = if easy'' || changedTravel then preferenceAccommodation <$> dtp else resAccommodation fields
     stopServices' = if easy'' || changedTravel then preferenceStopServices <$> dtp else resStopServices fields
@@ -279,6 +285,7 @@ makePreferenceData _master fields = let
       <*> transportLinks'
       <*> distance'
       <*> time'
+      <*> rest'
       <*> location'
       <*> accommodation'
       <*> stopServices'
@@ -367,6 +374,7 @@ chooseTravelForm help prefs extra = do
       ^{fvInput (viewPrevComfort fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -392,14 +400,18 @@ chooseRangeForm help prefs extra = do
     master <- getYesod
     let distanceRangeField = if maybe Walking prefTravel prefs == Cycling then rangeField 0.0 250.0 1.0 else rangeField 0.0 50.0 0.5
     let timeRangeField = rangeField 0.0 16.0 0.1
+    let restRangeField = rangeField 0 10 1
     (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabel MsgDistancePreferencesLabel) (prefDistance <$> prefs)
     (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabel MsgTimePreferencesLabel) (prefTime <$> prefs)
+    (reRes, reView) <- mreq restRangeField (fieldSettingsLabel MsgRestPreferencesLabel) (prefRest <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
-      resDistance = diRes,
-      viewDistance = diView,
-      resTime = tiRes,
-      viewTime = tiView
+        resDistance = diRes
+      , viewDistance = diView
+      , resTime = tiRes
+      , viewTime = tiView
+      , resRest = reRes
+      , viewRest = reView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
@@ -411,6 +423,12 @@ chooseRangeForm help prefs extra = do
               ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewTime fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      $with view <- viewRest fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
@@ -512,6 +530,7 @@ chooseServicesForm help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewPoiCategories fields)}
       ^{fvInput (viewPrevCamino fields)}
       ^{fvInput (viewCamino fields)}
@@ -560,6 +579,7 @@ chooseCaminoForm help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -617,6 +637,7 @@ chooseRoutesForm help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -700,6 +721,7 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -778,6 +800,7 @@ chooseStopsForm help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -859,6 +882,7 @@ choosePoiForm help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}
@@ -897,6 +921,7 @@ confirmPreferencesForm _help prefs extra = do
       ^{fvInput (viewTransportLinks fields)}
       ^{fvInput (viewDistance fields)}
       ^{fvInput (viewTime fields)}
+      ^{fvInput (viewRest fields)}
       ^{fvInput (viewLocation fields)}
       ^{fvInput (viewAccommodation fields)}
       ^{fvInput (viewStopServices fields)}

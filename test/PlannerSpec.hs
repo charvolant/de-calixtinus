@@ -34,14 +34,19 @@ testPlanner preferences camino = TestList [
   TestLabel "Plan Camino" (testPlanCamino preferences camino)
   ]
 
-distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
+distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0) :: PreferenceRange Float
+
+timeRange1 = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0) :: PreferenceRange Float
+
+restRange1 = PreferenceRange Nothing 6 5 7 Nothing (Just 8) :: PreferenceRange Int
 
 preferences1 = TravelPreferences {
     preferenceTravel = Walking,
     preferenceFitness = Normal,
     preferenceComfort = Pilgrim,
     preferenceDistance = distanceRange1,
-    preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
+    preferenceTime = timeRange1,
+    preferenceRest = restRange1,
     preferenceTransportLinks = True,
     preferenceLocation = M.fromList [
        (Village, (Penance 1.5)),
@@ -70,7 +75,8 @@ preferences2 = TravelPreferences {
     preferenceFitness = Normal,
     preferenceComfort = Pilgrim,
     preferenceDistance = distanceRange1,
-    preferenceTime = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0),
+    preferenceTime = timeRange1,
+    preferenceRest = restRange1,
     preferenceTransportLinks = False,
     preferenceLocation = M.fromList [
        (Village, (Penance 1.5)),
@@ -254,7 +260,7 @@ testAccommodationSimple1 = let
   in
     TestCase (do
       assertEqual "Accommodation Simple 1 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
-      assertEqual "Accommodation Simple 1 2" S.empty (tripChoiceServices accom)
+      assertEqual "Accommodation Simple 1 2" S.empty (tripChoiceFeatures accom)
       assertPenanceEqual "Accommodation Simple 1 3" (Penance 1.5) (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple2 = let
@@ -262,7 +268,7 @@ testAccommodationSimple2 = let
   in
     TestCase (do
       assertEqual "Accommodation Simple 2 1" Camping (accommodationType $ tripChoice accom)
-      assertEqual "Accommodation Simple 2 2" S.empty (tripChoiceServices accom)
+      assertEqual "Accommodation Simple 2 2" S.empty (tripChoiceFeatures accom)
       assertPenanceEqual "Accommodation Simple 2 3" Reject (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple3 = let
@@ -270,7 +276,7 @@ testAccommodationSimple3 = let
   in
     TestCase (do
       assertEqual "Accommodation Simple 3 1" Hotel (accommodationType $ tripChoice accom)
-      assertEqual "Accommodation Simple 3 2" (S.singleton Restaurant) (tripChoiceServices accom)
+      assertEqual "Accommodation Simple 3 2" (S.singleton Restaurant) (tripChoiceFeatures accom)
       assertPenanceEqual "Accommodation Simple 3 3" (Penance 0.5) (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple4 = let
@@ -278,7 +284,7 @@ testAccommodationSimple4 = let
   in
     TestCase (do
       assertEqual "Accommodation Simple 4 1" Hotel (accommodationType $ tripChoice accom)
-      assertEqual "Accommodation Simple 4 2" (S.singleton Restaurant) (tripChoiceServices accom)
+      assertEqual "Accommodation Simple 4 2" (S.singleton Restaurant) (tripChoiceFeatures accom)
       assertPenanceEqual "Accommodation Simple 4 3" Reject (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple5 = let
@@ -287,7 +293,7 @@ testAccommodationSimple5 = let
   in
     TestCase (do
       assertEqual "Accommodation Simple 5 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
-      assertEqual "Accommodation Simple 5 2" (S.empty) (tripChoiceServices accom)
+      assertEqual "Accommodation Simple 5 2" (S.empty) (tripChoiceFeatures accom)
       assertPenanceEqual "Accommodation Simple 5 3" (Penance 1.5) (tripChoicePenance accom) 0.001
     )
 
@@ -298,20 +304,20 @@ testAccommodationSimple6 = let
   in
     TestCase (do
       assertEqual "Accommodation Simple 6 1" Camping (accommodationType $ tripChoice accom)
-      assertEqual "Accommodation Simple 6 2" (S.empty) (tripChoiceServices accom)
+      assertEqual "Accommodation Simple 6 2" (S.empty) (tripChoiceFeatures accom)
       assertPenanceEqual "Accommodation Simple 6 3" Reject (tripChoicePenance accom) 0.001
     )
 
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0 Nothing) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1 Nothing) 0.1)
 
-testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0 Nothing) 0.1)
 
-testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1 Nothing) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 

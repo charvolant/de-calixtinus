@@ -51,6 +51,7 @@ library
       Data.Placeholder
       Data.Propositional
       Data.Region
+      Debug.Util
       Graph.Graph
       Graph.Programming
   other-modules:

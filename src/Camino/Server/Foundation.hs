@@ -184,6 +184,7 @@ data PreferenceData = PreferenceData {
   , prefTransportLinks :: Bool -- ^ Allow transport links
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
+  , prefRest :: PreferenceRange Int -- ^ The rest day preferences
   , prefLocation :: M.Map LocationType Penance -- ^ The location type preferences
   , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accommodation type preferences
   , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
@@ -208,6 +209,7 @@ instance FromJSON PreferenceData where
       transport' <- v .: "transport-links"
       distance' <- v .: "distance"
       time' <- v .: "time"
+      rest' <- v .: "rest"
       location' <- v .: "location"
       accommodation' <- v .: "accommodation"
       stopServices' <- v .: "stop-services"
@@ -236,6 +238,7 @@ instance FromJSON PreferenceData where
         , prefTransportLinks = transport'
         , prefDistance = distance'
         , prefTime = time'
+        , prefRest = rest'
         , prefLocation = location'
         , prefAccommodation = accommodation'
         , prefStopServices = stopServices'
@@ -262,6 +265,7 @@ instance ToJSON PreferenceData where
         , "transport-links" .= prefTransportLinks prefs
         , "distance" .= prefDistance prefs
         , "time" .= prefTime prefs
+        , "rest" .= prefRest prefs
         , "location" .= prefLocation prefs
         , "accommodation" .= prefAccommodation prefs
         , "stop-services" .= prefStopServices prefs
@@ -294,6 +298,7 @@ defaultPreferenceData master = let
       , prefTransportLinks = preferenceTransportLinks dtp
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
+      , prefRest = preferenceRest dtp
       , prefLocation = preferenceLocation dtp
       , prefAccommodation = preferenceAccommodation dtp
       , prefStopServices = preferenceStopServices dtp
@@ -317,6 +322,7 @@ travelPreferencesFrom prefs = TravelPreferences {
   , preferenceTransportLinks = prefTransportLinks prefs
   , preferenceDistance = prefDistance prefs
   , preferenceTime = prefTime prefs
+  , preferenceRest = prefRest prefs
   , preferenceLocation = prefLocation prefs
   , preferenceAccommodation = prefAccommodation prefs
   , preferenceStopServices = prefStopServices prefs

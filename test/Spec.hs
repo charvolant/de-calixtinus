@@ -54,6 +54,6 @@ testList prefs camino = TestList [
    TestLabel "Camino" testCamino, 
    TestLabel "Walking" testWalking, 
    TestLabel "Graph" testGraph, 
-   TestLabel "Programming" testProgramming,
+   TestLabel "Programming" testProgramming, 
    TestLabel "Planner" (testPlanner prefs camino) 
   ]

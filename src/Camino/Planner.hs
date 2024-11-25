@@ -41,7 +41,7 @@ import Camino.Camino
 import Camino.Preferences
 import Camino.Util (maybeSum)
 import Graph.Graph (available, incoming, mirror, reachable, subgraph)
-import Graph.Programming
+import Graph.Programming()
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Maybe (isJust, fromJust, fromMaybe, mapMaybe)
@@ -133,10 +133,10 @@ instance Score Metrics where
   invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
 
 -- | A day's stage
-type Day = Chain Location Leg Metrics (NullCut Metrics)
+type Day = Chain Location Leg Metrics
 
 -- | The complete camino stages
-type Trip = Chain Location Day Metrics (NullCut Metrics)
+type Trip = Chain Location Day Metrics
 
 -- | A complete solution, including accommodation and location metrics
 data Solution = Solution {
@@ -341,9 +341,8 @@ penance :: TravelPreferences -- ^ The travel preferences
   -> TripChoiceMap Accommodation Service -- ^ The map of accommodation choices
   -> TripChoiceMap Location Service -- ^ The map of location choices
   -> [Leg] -- ^ The sequence of legs
-  -> Maybe (NullCut Metrics) -- ^ The cut
   -> Metrics -- ^ The penance value
-penance preferences camino accommodationMap locationMap day _cut =
+penance preferences camino accommodationMap locationMap day =
   let
     (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics preferences camino day
     -- If there is no accommodation within this leg, then accept any distance.
@@ -408,7 +407,7 @@ dayAccept preferences camino accommodationMap day =
 
 -- | Evaluate a day's stage for penance
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
-dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Leg] -> Maybe (NullCut Metrics) -> Metrics
+dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Leg] -> Metrics
 dayEvaluate = penance
 
 -- | Choose a day's stage based on minimum penance
@@ -427,8 +426,8 @@ caminoAccept _preferences _camino days =
 -- | Evaluate a complete camino 
 --   Currently, the sum of all day scores
 --   Refuse any camino that doesn't include all required stops and exclude all excluded stops
-caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Maybe (NullCut Metrics) -> Metrics
-caminoEvaluate _preferences camino days _cut =
+caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
+caminoEvaluate _preferences camino days =
   let
     final = finish $ last days
     waypoints = if final == (preferenceFinish camino) then preferenceStops camino else foldl (S.union) S.empty (map passed days)
@@ -538,11 +537,9 @@ planCamino preferences camino  = Solution {
       (caminoChoice preferences camino)
       (caminoAccept preferences camino)
       (caminoEvaluate preferences camino)
-      nullCutFunction
       (dayChoice preferences camino)
       (dayAccept preferences camino accommodationMap)
       (dayEvaluate preferences camino accommodationMap locationMap)
-      nullCutFunction
       select
       (preferenceStart camino)
       (preferenceFinish camino)

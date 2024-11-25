@@ -34,11 +34,11 @@ testPlanner preferences camino = TestList [
   TestLabel "Plan Camino" (testPlanCamino preferences camino)
   ]
 
-distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0) :: PreferenceRange Float
+distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
 
-timeRange1 = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0) :: PreferenceRange Float
+timeRange1 = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0)
 
-restRange1 = PreferenceRange Nothing 6 5 7 Nothing (Just 8) :: PreferenceRange Int
+restRange1 = PreferenceRange Nothing 6.0 5.0 7.0 Nothing (Just 8.0)
 
 preferences1 = TravelPreferences {
     preferenceTravel = Walking,
@@ -311,13 +311,13 @@ testAccommodationSimple6 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0 Nothing) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1 Nothing) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
 
-testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0 Nothing) 0.1)
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
 
-testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1 Nothing) 0.1)
+testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
 
 testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
 

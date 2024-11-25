@@ -18,13 +18,6 @@ instance Monoid Int where
     
 instance Semigroup Int where
   a <> b = min invalid (a + b)
-
-data TestCut = TestCut {
-  testCut :: Int
-} deriving (Show)
-
-instance Cut TestCut Int where
-  cutScore = testCut
   
 data TestVertex = Vertex Int deriving (Eq, Ord, Show)
 
@@ -70,16 +63,9 @@ graph2 = TestGraph [
   ]
   
 chains1 = [
-  Chain (Vertex 1) (Vertex 2) [Edge 1 2] 1 Nothing,
-  Chain (Vertex 2) (Vertex 3) [Edge 2 3] 1 Nothing,
-  Chain (Vertex 1) (Vertex 3) [Edge 1 2, Edge 2 3] 2 Nothing
-  ]
-  
-chains2 = [
-  Chain (Vertex 1) (Vertex 2) [Edge 1 2] 1 Nothing,
-  Chain (Vertex 2) (Vertex 3) [Edge 2 3] 1 Nothing,
-  Chain (Vertex 1) (Vertex 3) [Edge 1 2, Edge 2 3] 2 Nothing,
-  Chain (Vertex 1) (Vertex 4) [Edge 1 2, Edge 2 3, Edge 3 4] 3 Nothing
+  Chain (Vertex 1) (Vertex 2) [Edge 1 2] 1,
+  Chain (Vertex 2) (Vertex 3) [Edge 2 3] 1,
+  Chain (Vertex 1) (Vertex 3) [Edge 1 2, Edge 2 3] 2
   ]
 
 accept1 :: AcceptFunction e
@@ -88,20 +74,14 @@ accept1 aseq = length aseq < 3
 accept2 :: AcceptFunction e
 accept2 _seq = True
 
-evaluate1 :: EvaluationFunction TestEdge Int TestCut
-evaluate1 eseq _ = sum $ map testValue eseq
+evaluate1 :: EvaluationFunction TestEdge Int
+evaluate1 eseq = sum $ map testValue eseq
 
-pevaluate1 :: EvaluationFunction (Chain TestVertex TestEdge Int TestCut) Int TestCut
-pevaluate1 eseq _ = sum $ map score eseq
+pevaluate1 :: EvaluationFunction (Chain TestVertex TestEdge Int) Int
+pevaluate1 eseq = sum $ map score eseq
 
-choice1 :: (Edge e v) => ChoiceFunction v e Int TestCut
+choice1 :: (Edge e v) => ChoiceFunction v e Int
 choice1 s1 s2 = if score s1 < score s2 then s1 else s2
-
-cut1 :: CutFunction TestVertex TestEdge Int TestCut
-cut1 chain = if finish chain == (Vertex 5) then Just (chain { score = score chain - 1, cut = Just (TestCut 1) }) else Nothing
-
-cut2 :: CutFunction TestVertex TestEdge Int TestCut
-cut2 chain = if finish chain == (Vertex 2) then Just (chain { score = score chain - 2, cut = Just (TestCut 1) }) else Nothing
 
 select1 _v = True
 
@@ -115,52 +95,33 @@ testProgramming = TestList [
   TestLabel "Program" testProgram
   ]
   
-testExtend = TestList [testExtend1, testExtend2, testExtend3]
+testExtend = TestList [testExtend1, testExtend2]
 
 testExtend1 =
   let
-    extended = extend accept1 evaluate1 nullCutFunction (chains1 !! 1) (Edge 3 4)
+    extended = extend accept1 evaluate1 (chains1 !! 1) (Edge 3 4)
   in
     TestCase (do
-      assertEqual "Extend 1 1" 1 (length extended)
-      assertEqual "Extend 1 2" (Vertex 2) (start $ head extended)
-      assertEqual "Extend 1 3" (Vertex 4) (finish $ head extended)
-      assertEqual "Extend 1 4" 2 (length $ path $ head extended)
-      assertEqual "Extend 1 5" 7 (score $ head extended)
-      assertBool "Extend 1 6" (isNothing $ cut $ head extended)
+      assertBool "Extend 1 1" (isJust extended)
+      assertEqual "Extend 1 2" (Vertex 2) (start $ fromJust extended)
+      assertEqual "Extend 1 3" (Vertex 4) (finish $ fromJust extended)
+      assertEqual "Extend 1 4" 2 (length $ path $ fromJust extended)
+      assertEqual "Extend 1 5" 7 (score $ fromJust extended)
     )
 
 
 testExtend2 =
   let
-    extended = extend accept1 evaluate1 nullCutFunction (chains1 !! 2) (Edge 3 4)
+    extended = extend accept1 evaluate1 (chains1 !! 2) (Edge 3 4)
   in
-    TestCase (assertBool "Extend 2 1" (null extended))
-
-testExtend3 =
-  let
-    extended = extend accept2 evaluate1 cut1 (chains2 !! 3) (Edge 4 5)
-  in
-    TestCase (do
-      assertEqual "Extend 3 1" 2 (length extended)
-      assertEqual "Extend 3 2" (Vertex 1) (start $ (extended !! 0))
-      assertEqual "Extend 3 3" (Vertex 5) (finish $ (extended !! 0))
-      assertEqual "Extend 3 4" 4 (length $ path $ (extended !! 0))
-      assertEqual "Extend 3 5" 14 (score $ (extended !! 0))
-      assertBool "Extend 3 6" (isNothing $ cut $ (extended !! 0))
-      assertEqual "Extend 3 7" (Vertex 1) (start $ (extended !! 1))
-      assertEqual "Extend 3 8" (Vertex 5) (finish $ (extended !! 1))
-      assertEqual "Extend 3 9" 4 (length $ path $ (extended !! 1))
-      assertEqual "Extend 3 10" 13 (score $ (extended !! 1))
-      assertBool "Extend 3 11" (isJust $ cut $ (extended !! 1))
-   )
+    TestCase (assertBool "Extend 2 1" (isNothing extended))
 
 
-testPaths = TestList [testPaths1, testPaths2, testPaths3]
+testPaths = TestList [testPaths1, testPaths2]
 
 testPaths1 =
   let
-    paths' = paths graph1 accept1 evaluate1 nullCutFunction chains1 (Vertex 4)
+    paths' = paths graph1 accept1 evaluate1 chains1 (Vertex 4)
   in
     TestCase (do
       assertEqual "Paths 1 1" 1 (length paths')
@@ -173,7 +134,7 @@ testPaths1 =
 
 testPaths2 =
   let
-    paths' = paths graph1 accept2 evaluate1 nullCutFunction chains1 (Vertex 4)
+    paths' = paths graph1 accept2 evaluate1 chains1 (Vertex 4)
   in
     TestCase (do
        assertEqual "Paths 2 1" 2 (length paths')
@@ -183,34 +144,15 @@ testPaths2 =
        assertEqual "Paths 2 5" 9 (score $ paths' !! 1)
    )
 
-
-testPaths3 =
-  let
-    paths' = paths graph2 accept2 evaluate1 cut1 chains2 (Vertex 5)
-  in
-    TestCase (do
-       assertEqual "Paths 3 4" 4 (length paths')
-       assertEqual "Paths 3 2" (Vertex 2) (start (paths' !! 0))
-       assertEqual "Paths 3 3" (Vertex 5) (finish (paths' !! 0))
-       assertEqual "Paths 3 4" 2 (length $ path $ paths' !! 0)
-       assertEqual "Paths 3 5" 8 (score $ paths' !! 0)
-       assertBool "Paths 3 6" (isNothing $ cut $ paths' !! 0)
-       assertEqual "Paths 3 7" (Vertex 1) (start (paths' !! 3))
-       assertEqual "Paths 3 8" (Vertex 5) (finish (paths' !! 3))
-       assertEqual "Paths 3 9" 3 (length $ path $ paths' !! 3)
-       assertEqual "Paths 3 10" 9 (score $ paths' !! 3)
-       assertBool "Paths 3 11" (isJust $ cut $ paths' !! 3)
-   )
-   
-testStep = TestList [testStep1, testStep2, testStep3, testStep4, testStep5, testStep6]
+testStep = TestList [testStep1, testStep2, testStep3, testStep4, testStep5]
 
 testStep1 = 
   let
     reach = successors graph1 (Vertex 1)
     current = [
-        (Chain (Vertex 1) (Vertex 1) [] 0 Nothing)
+        (Chain (Vertex 1) (Vertex 1) [] 0)
       ]
-    chains = step graph1 choice1 accept1 evaluate1 nullCutFunction reach current
+    chains = step graph1 choice1 accept1 evaluate1 reach current
   in
     TestCase (do
       assertEqual "Step 1 1" 3 (length chains)
@@ -230,11 +172,11 @@ testStep2 =
     vertex2 = Vertex 2
     reach = successors graph1 vertex1
     current = [
-        (Chain vertex1 vertex1 [] 0 Nothing),
-        (Chain vertex2 vertex2 [] 0 Nothing),
-        (Chain vertex1 vertex2 [Edge 1 2] 0 Nothing)
+        (Chain vertex1 vertex1 [] 0),
+        (Chain vertex2 vertex2 [] 0),
+        (Chain vertex1 vertex2 [Edge 1 2] 0)
       ]
-    chains = step graph1 choice1 accept1 evaluate1 nullCutFunction reach current
+    chains = step graph1 choice1 accept1 evaluate1 reach current
   in
     TestCase (do
       assertEqual "Step 2 1" 6 (length chains)
@@ -252,14 +194,14 @@ testStep3 =
     vertex5 = Vertex 5
     reach = successors graph1 vertex1
     current = [
-        (Chain vertex1 vertex1 [] 0 Nothing),
-        (Chain vertex2 vertex2 [] 0 Nothing),
-        (Chain vertex3 vertex3 [] 0 Nothing),
-        (Chain vertex1 vertex2 [Edge 1 2] 2 Nothing),
-        (Chain vertex1 vertex3 [Edge 1 2, Edge 2 3] 5 Nothing),
-        (Chain vertex2 vertex3 [Edge 2 3] 3 Nothing)
+        (Chain vertex1 vertex1 [] 0),
+        (Chain vertex2 vertex2 [] 0),
+        (Chain vertex3 vertex3 [] 0),
+        (Chain vertex1 vertex2 [Edge 1 2] 2),
+        (Chain vertex1 vertex3 [Edge 1 2, Edge 2 3] 5),
+        (Chain vertex2 vertex3 [Edge 2 3] 3)
       ]
-    chains = step graph1 choice1 accept1 evaluate1 nullCutFunction reach current
+    chains = step graph1 choice1 accept1 evaluate1 reach current
   in
     TestCase (do
       assertEqual "Step 3 1" 12 (length chains)
@@ -282,16 +224,16 @@ testStep4 =
     vertex5 = Vertex 5
     reach = successors graph1 vertex1
     current = [
-        (Chain vertex1 vertex1 [] 0 Nothing),
-        (Chain vertex2 vertex2 [] 0 Nothing),
-        (Chain vertex3 vertex3 [] 0 Nothing),
-        (Chain vertex4 vertex4 [] 0 Nothing),
-        (Chain vertex1 vertex2 [Edge 1 2] 2 Nothing),
-        (Chain vertex1 vertex3 [Edge 1 2, Edge 2 3] 5 Nothing),
-        (Chain vertex2 vertex3 [Edge 2 3] 3 Nothing),
-        (Chain vertex2 vertex4 [Edge 2 3, Edge 3 4] 7 Nothing)
+        (Chain vertex1 vertex1 [] 0),
+        (Chain vertex2 vertex2 [] 0),
+        (Chain vertex3 vertex3 [] 0),
+        (Chain vertex4 vertex4 [] 0),
+        (Chain vertex1 vertex2 [Edge 1 2] 2),
+        (Chain vertex1 vertex3 [Edge 1 2, Edge 2 3] 5),
+        (Chain vertex2 vertex3 [Edge 2 3] 3),
+        (Chain vertex2 vertex4 [Edge 2 3, Edge 3 4] 7)
       ]
-    chains = step graph1 choice1 accept1 evaluate1 nullCutFunction reach current
+    chains = step graph1 choice1 accept1 evaluate1 reach current
   in
     TestCase (do
       assertEqual "Step 4 1" 11 (length chains)
@@ -309,21 +251,21 @@ testStep5 =
     vertex6 = Vertex 6
     reach = successors graph1 vertex1
     current = [
-        (Chain vertex1 vertex1 [] 0 Nothing),
-        (Chain vertex1 vertex1 [] 0 Nothing),
-        (Chain vertex2 vertex2 [] 0 Nothing),
-        (Chain vertex3 vertex3 [] 0 Nothing),
-        (Chain vertex4 vertex4 [] 0 Nothing),
-        (Chain vertex5 vertex5 [] 0 Nothing),
-        (Chain vertex1 vertex2 [Edge 1 2] 2 Nothing),
-        (Chain vertex1 vertex3 [Edge 1 2, Edge 2 3] 5 Nothing),
-        (Chain vertex2 vertex3 [Edge 2 3] 3 Nothing),
-        (Chain vertex2 vertex4 [Edge 3 4] 4 Nothing),
-        (Chain vertex2 vertex5 [Edge 3 5] 5 Nothing),
-        (Chain vertex1 vertex4 [Edge 2 3, Edge 3 4] 7 Nothing),
-        (Chain vertex1 vertex5 [Edge 2 3, Edge 3 5] 8 Nothing)
+        (Chain vertex1 vertex1 [] 0),
+        (Chain vertex1 vertex1 [] 0),
+        (Chain vertex2 vertex2 [] 0),
+        (Chain vertex3 vertex3 [] 0),
+        (Chain vertex4 vertex4 [] 0),
+        (Chain vertex5 vertex5 [] 0),
+        (Chain vertex1 vertex2 [Edge 1 2] 2),
+        (Chain vertex1 vertex3 [Edge 1 2, Edge 2 3] 5),
+        (Chain vertex2 vertex3 [Edge 2 3] 3),
+        (Chain vertex2 vertex4 [Edge 3 4] 4),
+        (Chain vertex2 vertex5 [Edge 3 5] 5),
+        (Chain vertex1 vertex4 [Edge 2 3, Edge 3 4] 7),
+        (Chain vertex1 vertex5 [Edge 2 3, Edge 3 5] 8)
       ]
-    chains = step graph1 choice1 accept1 evaluate1 nullCutFunction reach current
+    chains = step graph1 choice1 accept1 evaluate1 reach current
   in
     TestCase (do
       assertEqual "Step 5 1" 17 (length chains)
@@ -333,40 +275,14 @@ testStep5 =
       assertEqual "Step 5 5" 6 (score $ chains !! 16)
     )
 
-testStep6 =
-  let
-    vertex2 = Vertex 2
-    vertex3 = Vertex 3
-    vertex4 = Vertex 4
-    vertex5 = Vertex 5
-    reach = successors graph1 vertex2
-    current = [
-        (Chain vertex2 vertex2 [] 0 Nothing),
-        (Chain vertex3 vertex3 [] 0 Nothing),
-        (Chain vertex4 vertex4 [] 0 Nothing),
-        (Chain vertex2 vertex3 [Edge 2 3] 3 Nothing),
-        (Chain vertex2 vertex4 [Edge 2 3, Edge 3 4] 7 Nothing)
-      ]
-    chains = step graph1 choice1 accept2 evaluate1 cut1 reach current
-  in
-    TestCase (do
-      assertEqual "Step 6 1" 10 (length chains)
-      assertEqual "Step 6 2" vertex2 (start (chains !! 6))
-      assertEqual "Step 6 3" vertex5 (finish (chains !! 6))
-      assertBool "Step 6 4" (isNothing $ cut (chains !! 6))
-      assertEqual "Step 6 5" vertex3 (start (chains !! 9))
-      assertEqual "Step 6 6" vertex5 (finish (chains !! 9))
-      assertBool "Step 6 7" (isJust $ cut (chains !! 9))
-    )
-
-chainGraphSize :: (Edge e v, Cut c s) => ChainGraph v e s c -> Int
+chainGraphSize :: Edge e v => ChainGraph v e s -> Int
 chainGraphSize chains = M.foldl (\s -> \v -> s + length v) 0 (forwards chains)
 
-testConstructTable = TestList [testConstructTable1, testConstructTable2, testConstructTable3, testConstructTable4]
+testConstructTable = TestList [testConstructTable1, testConstructTable2, testConstructTable3]
 
 testConstructTable1 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertEqual "ConstructTable 1 1" 10 (chainGraphSize chains)
@@ -385,7 +301,7 @@ testConstructTable1 =
 
 testConstructTable2 =
   let
-    chains = constructTable graph1 choice1 accept2 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertEqual "ConstructTable 2 1" 14 (chainGraphSize chains)
@@ -409,42 +325,22 @@ testConstructTable2 =
 
 testConstructTable3 =
   let
-    chains = constructTable graph2 choice1 accept2 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 4)
+    chains = constructTable graph2 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 4)
   in
     TestCase (do
-      assertEqual "ConstructTable 3 1" 3 (chainGraphSize chains)
+      assertEqual "ConstructTable 2 1" 3 (chainGraphSize chains)
       let chain1 = fromJust $ edge chains (Vertex 1) (Vertex 4)
-      assertEqual "ConstructTable 3 2" (Vertex 1) (start chain1)
-      assertEqual "ConstructTable 3 3" (Vertex 4) (finish chain1)
-      assertEqual "ConstructTable 3 4" 2 (length $ path chain1)
-      assertEqual "ConstructTable 3 5" 6 (score chain1)
-   )
-
-testConstructTable4 =
-  let
-    chains = constructTable graph2 choice1 accept2 evaluate1 cut1 select1 (Vertex 1) (Vertex 5)
-  in
-    TestCase (do
-      assertEqual "ConstructTable 4 1" 6 (chainGraphSize chains)
-      let chain1 = fromJust $ edge chains (Vertex 1) (Vertex 3)
-      assertEqual "ConstructTable 4 2" (Vertex 1) (start chain1)
-      assertEqual "ConstructTable 4 3" (Vertex 3) (finish chain1)
-      assertEqual "ConstructTable 4 4" 2 (length $ path chain1)
-      assertEqual "ConstructTable 4 5" 5 (score chain1)
-      assertBool "ConstructTable 4 6" (isNothing $ cut chain1)
-      let chain2 = fromJust $ edge chains (Vertex 2) (Vertex 5)
-      assertEqual "ConstructTable 4 7" (Vertex 2) (start chain2)
-      assertEqual "ConstructTable 4 8" (Vertex 5) (finish chain2)
-      assertEqual "ConstructTable 4 9" 2 (length $ path chain2)
-      assertEqual "ConstructTable 4 10" 7 (score chain2)
-      assertBool "ConstructTable 4 11" (isJust $ cut chain2)
+      assertEqual "ConstructTable 2 2" (Vertex 1) (start chain1)
+      assertEqual "ConstructTable 2 3" (Vertex 4) (finish chain1)
+      assertEqual "ConstructTable 2 4" 2 (length $ path chain1)
+      assertEqual "ConstructTable 2 5" 6 (score chain1)
    )
 
 testChainGraph = TestList [testChainGraph1, testChainGraph2, testChainGraph3, testChainGraph4]
 
 testChainGraph1 =
   let
-    chains = constructTable graph1 choice1 accept2 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertEqual "ChainGraph 1 1" (Vertex 5) (vertex chains "5")
@@ -453,7 +349,7 @@ testChainGraph1 =
 
 testChainGraph2 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       let incoming1 = incoming chains (Vertex 4)
@@ -467,7 +363,7 @@ testChainGraph2 =
 
 testChainGraph3 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       let outgoing1 = outgoing chains (Vertex 1)
@@ -480,7 +376,7 @@ testChainGraph3 =
 
 testChainGraph4 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       let sources1 = sources chains (Vertex 4)
@@ -488,11 +384,11 @@ testChainGraph4 =
     )
 
 
-testProgram = TestList [testProgram1, testProgram2, testProgram3, testProgram4]
+testProgram = TestList [testProgram1, testProgram2, testProgram3]
 
 testProgram1 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 nullCutFunction choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 3)
+    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 3)
   in
     TestCase (do
       assertBool "Program 1 1" (isRight optimal)
@@ -505,7 +401,7 @@ testProgram1 =
    
 testProgram2 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 nullCutFunction choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 4)
+    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 4)
   in
     TestCase (do
       assertBool "Program 2 1" (isRight optimal)
@@ -518,7 +414,7 @@ testProgram2 =
 
 testProgram3 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 nullCutFunction choice1 accept1 evaluate1 nullCutFunction select1 (Vertex 1) (Vertex 6)
+    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
       assertBool "Program 3 1" (isRight optimal)
@@ -527,20 +423,5 @@ testProgram3 =
       assertEqual "Program 3 3" (Vertex 6) (finish accepted)
       assertEqual "Program 3 4" 2 (length $ path accepted)
       assertEqual "Program 3 5" 12 (score accepted)
-   )
-
-testProgram4 =
-  let
-    optimal = program graph2 choice1 accept2 pevaluate1 nullCutFunction choice1 accept1 evaluate1 cut2 select1 (Vertex 1) (Vertex 6)
-  in
-    TestCase (do
-      assertBool "Program 4 1" (isRight optimal)
-      let accepted = fromRight (error "Bad route") optimal
-      assertEqual "Program 4 2" (Vertex 1) (start accepted)
-      assertEqual "Program 4 3" (Vertex 6) (finish accepted)
-      assertEqual "Program 4 4" 2 (length $ path accepted)
-      assertEqual "Program 4 5" 10 (score accepted)
-      assertBool "Program 4 6" (isJust $ cut $ (path accepted) !! 0)
-      assertBool "Program 4 7" (isNothing $ cut $ (path accepted) !! 1)
    )
 

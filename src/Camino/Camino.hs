@@ -43,6 +43,7 @@ module Camino.Camino (
 
   , module Graph.Programming
 
+  , accommodationMulti
   , accommodationName
   , accommodationNameLabel
   , accommodationType
@@ -212,6 +213,12 @@ instance ToJSONKey AccommodationType where
 accommodationTypeEnumeration :: [AccommodationType]
 accommodationTypeEnumeration = [minBound .. maxBound]
 
+-- | Default multi-day stay for the type of accomodation
+--   False for pilgrim albergues, true for anything else
+accommodationDefaultMulti :: AccommodationType -> Bool
+accommodationDefaultMulti PilgrimAlbergue = False
+accommodationDefaultMulti _ = True
+
 -- | Services available in a location or accommodation
 data Service = WiFi -- ^ Wireless internet available
   | Restaurant -- ^ Bar and/or Restaurant
@@ -276,12 +283,12 @@ instance ToJSON Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
-  Accommodation (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) -- ^ Fully described accommodation
+  Accommodation (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) (Maybe Bool) -- ^ Fully described accommodation
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
   deriving (Show)
   
 accommodationName :: Accommodation -> (Localised TaggedText)
-accommodationName (Accommodation name' _type _services _sleeping) = name'
+accommodationName (Accommodation name' _type _services _sleeping _multi) = name'
 accommodationName (GenericAccommodation type') = wildcardText $ pack ("Generic " ++ show type')
 
 -- | Get a simple text version of the accommodation name
@@ -289,11 +296,11 @@ accommodationNameLabel :: Accommodation -> Text
 accommodationNameLabel accommodation = localiseDefault $ accommodationName accommodation
 
 accommodationType :: Accommodation -> AccommodationType
-accommodationType (Accommodation _name type' _services _sleeping) = type'
+accommodationType (Accommodation _name type' _services _sleeping _multi) = type'
 accommodationType (GenericAccommodation type') = type'
 
 accommodationServices :: Accommodation -> S.Set Service
-accommodationServices (Accommodation _name _type services' _sleeping) = services'
+accommodationServices (Accommodation _name _type services' _sleeping _multi) = services'
 accommodationServices (GenericAccommodation PilgrimAlbergue) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation PrivateAlbergue) = S.fromList [ Handwash, WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hostel) = S.fromList [ WiFi, Kitchen, Bedlinen, Towels ]
@@ -306,7 +313,7 @@ accommodationServices (GenericAccommodation CampGround) = S.fromList [ Handwash 
 accommodationServices (GenericAccommodation Camping) = S.empty
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
-accommodationSleeping (Accommodation _name _type _services sleeping') = sleeping'
+accommodationSleeping (Accommodation _name _type _services sleeping' _multi) = sleeping'
 accommodationSleeping (GenericAccommodation PilgrimAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation PrivateAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation Hostel) = S.fromList [ Shared ]
@@ -318,6 +325,13 @@ accommodationSleeping (GenericAccommodation Gite) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation CampGround) = S.fromList [ SleepingBag ]
 accommodationSleeping (GenericAccommodation Camping) = S.fromList [ SleepingBag ]
 
+-- | Allow a multi-day stay?
+--   If the accommodation does not allow a specific override, then `accommodationDefaultMulti` is used.
+accommodationMulti :: Accommodation -> Bool
+accommodationMulti (Accommodation _name _type _services _sleeping (Just multi')) = multi'
+accommodationMulti (Accommodation _name type' _services _sleeping Nothing) = accommodationDefaultMulti type'
+accommodationMulti (GenericAccommodation type') = accommodationDefaultMulti type'
+
 instance FromJSON Accommodation where
    parseJSON t@(String _v) = do
      type' <- parseJSON t
@@ -327,11 +341,12 @@ instance FromJSON Accommodation where
      type' <- v .: "type"
      services' <- v .: "services"
      sleeping' <- v .: "sleeping"
-     return $ Accommodation name' type' services' sleeping'
+     multi' <- v .:? "multi-day"
+     return $ Accommodation name' type' services' sleeping' multi'
    parseJSON v = error ("Unable to parse accommodation object " ++ show v)
 instance ToJSON Accommodation where
-    toJSON (Accommodation name' type' services' sleeping') =
-      object [ "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping' ]
+    toJSON (Accommodation name' type' services' sleeping' multi') =
+      object [ "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping', "multi-day" .= multi' ]
     toJSON (GenericAccommodation type' ) =
       toJSON type'
 

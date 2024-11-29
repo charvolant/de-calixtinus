@@ -124,7 +124,7 @@ location2 = Location {
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue,
-      Accommodation (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ])
+      Accommodation (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ]) Nothing
     ],
     locationPois = [],
     locationEvents = []
@@ -140,7 +140,7 @@ location3 = Location {
     locationRegion = Nothing,
     locationServices = S.empty,
     locationAccommodation = [
-      Accommodation (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ])
+      Accommodation (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ]) Nothing
     ],
     locationPois = [],
     locationEvents = []
@@ -220,9 +220,9 @@ cpreferences1 = CaminoPreferences {
   preferenceStartDate = Nothing
 }
 
-accommodationMap1 = buildTripChoiceMap (accommodationChoice preferences1 camino1) preferences1 camino1 location1 location3 (const True)
+accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) preferences1 camino1) preferences1 camino1 location1 location3 (const True)
 
-locationMap1 = buildTripChoiceMap (locationChoice preferences1) preferences1 camino1 location1 location3 (const True)
+locationMap1 = buildTripChoiceMap (locationChoice preferenceStopServices preferences1) preferences1 camino1 location1 location3 (const True)
 
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3, testHoursSimple4, testHoursSimple5, testHoursSimple6]
 
@@ -256,7 +256,7 @@ testAccommodationMapSimple1 = TestCase (do
 testAccommodationSimple = TestList [ testAccommodationSimple1, testAccommodationSimple2, testAccommodationSimple3, testAccommodationSimple4, testAccommodationSimple5, testAccommodationSimple6 ]
 
 testAccommodationSimple1 = let
-    accom = accommodationChoice preferences1 camino1 location2
+    accom = accommodationChoice (const True) preferences1 camino1 location2
   in
     TestCase (do
       assertEqual "Accommodation Simple 1 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
@@ -264,7 +264,7 @@ testAccommodationSimple1 = let
       assertPenanceEqual "Accommodation Simple 1 3" (Penance 1.5) (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple2 = let
-    accom = accommodationChoice preferences1 camino1 location1
+    accom = accommodationChoice (const True) preferences1 camino1 location1
   in
     TestCase (do
       assertEqual "Accommodation Simple 2 1" Camping (accommodationType $ tripChoice accom)
@@ -272,7 +272,7 @@ testAccommodationSimple2 = let
       assertPenanceEqual "Accommodation Simple 2 3" Reject (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple3 = let
-    accom = accommodationChoice preferences1 camino1 location3
+    accom = accommodationChoice (const True) preferences1 camino1 location3
   in
     TestCase (do
       assertEqual "Accommodation Simple 3 1" Hotel (accommodationType $ tripChoice accom)
@@ -280,7 +280,7 @@ testAccommodationSimple3 = let
       assertPenanceEqual "Accommodation Simple 3 3" (Penance 0.5) (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple4 = let
-    accom = accommodationChoice preferences2 camino1 location3
+    accom = accommodationChoice (const True) preferences2 camino1 location3
   in
     TestCase (do
       assertEqual "Accommodation Simple 4 1" Hotel (accommodationType $ tripChoice accom)
@@ -289,7 +289,7 @@ testAccommodationSimple4 = let
     )
 testAccommodationSimple5 = let
     camino1' = camino1 { caminoTransportLinks = links1 }
-    accom = accommodationChoice preferences1 camino1' location1
+    accom = accommodationChoice (const True) preferences1 camino1' location1
   in
     TestCase (do
       assertEqual "Accommodation Simple 5 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
@@ -300,7 +300,7 @@ testAccommodationSimple5 = let
 testAccommodationSimple6 = let
     preferences1' = preferences1 { preferenceTransportLinks = False }
     camino1' = camino1 { caminoTransportLinks = links1 }
-    accom = accommodationChoice preferences1' camino1' location1
+    accom = accommodationChoice (const True) preferences1' camino1' location1
   in
     TestCase (do
       assertEqual "Accommodation Simple 6 1" Camping (accommodationType $ tripChoice accom)

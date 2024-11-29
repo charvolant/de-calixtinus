@@ -77,7 +77,7 @@ type TripChoiceTail v f = [(TripChoice v f, Penance)]
 -- | The tail of past/future choices
 type TripChoiceTrail v f = (TripChoice v f, TripChoiceTail v f)
 
--- | The metrics for a day, segment or complete trip
+-- | The metrics for a day, journey or complete pilgrimage
 data Metrics = Metrics {
       metricsDistance :: Float -- ^ Actual distance in km
     , metricsTime :: Maybe Float -- ^ Total time taken in hours, including visits to points of interest
@@ -296,15 +296,16 @@ accommodationChoice' accPrefs services accom = let
   in
     TripChoice accom covered base
     
-accommodationChoice :: TravelPreferences -- ^ The calculation preferences
+accommodationChoice :: (Accommodation -> Bool) -- ^ The accommodation filter
+  -> TravelPreferences -- ^ The calculation preferences
   -> Camino -- ^ The complete camino
   -> Location -- ^ The location
   -> TripChoice Accommodation Service -- ^ The chosen accommodation for the location
-accommodationChoice preferences camino location = let
+accommodationChoice select preferences camino location = let
     services = (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.difference` completeLocationServices preferences camino location
     ap = preferenceAccommodation preferences
     defaultAccommodation = if locationCamping location then [openSleeping] else []
-    accommodationOptions = if null ao then defaultAccommodation else ao where ao = completeLocationAccommodation preferences camino location
+    accommodationOptions = filter select $  if null ao then defaultAccommodation else ao where ao = completeLocationAccommodation preferences camino location
     lp = map (accommodationChoice' ap services) accommodationOptions
     choice = foldl (selectTripChoice accommodationServices) invalidAccommodation lp
   in
@@ -315,18 +316,10 @@ isAccommodationFree :: TravelPreferences -> TripChoiceMap Accommodation Service 
 isAccommodationFree _preferences accommodationMap day = all (\l -> (tripChoicePenance $ M.findWithDefault invalidAccommodation (legFrom l) accommodationMap) == Reject) (tail day)
 
 -- Make a choice based on the location
-locationChoice :: TravelPreferences -> Location -> TripChoice Location Service
-locationChoice preferences location = let
-    services' =  (M.keysSet $ M.filter (/= mempty) (preferenceStopServices preferences)) `S.intersection` locationServices location
+locationChoice :: (TravelPreferences -> M.Map Service Penance) -> TravelPreferences -> Location -> TripChoice Location Service
+locationChoice select preferences location = let
+    services' =  (M.keysSet $ M.filter (/= mempty) (select preferences)) `S.intersection` locationServices location
     penance' = M.findWithDefault mempty (locationType location) (preferenceLocation preferences)
-  in
-    TripChoice location services' penance'
-
--- Make a choice based on the location for rest stops
-restLocationChoice :: TravelPreferences -> Location -> TripChoice Location Service
-restLocationChoice preferences location = let
-    services' =  (M.keysSet $ M.filter (/= mempty) (preferenceRestServices preferences)) `S.intersection` locationServices location
-    penance' = M.findWithDefault mempty (locationType location) (preferenceRestLocation preferences)
   in
     TripChoice location services' penance'
 
@@ -594,9 +587,10 @@ planCamino preferences camino  = Solution {
     camino' = preferenceCamino camino
     allowed = allowedLocations camino
     select l = S.member l allowed
-    accommodationMap = buildTripChoiceMap (accommodationChoice preferences camino') preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
-    locationMap = buildTripChoiceMap (locationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
-    restLocationMap = buildTripChoiceMap (restLocationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
+    accommodationMap = buildTripChoiceMap (accommodationChoice (const True) preferences camino') preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
+    locationMap = buildTripChoiceMap (locationChoice preferenceStopServices preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
+    restAccommodationMap = buildTripChoiceMap (accommodationChoice accommodationMulti preferences camino') preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
+    restLocationMap = buildTripChoiceMap (locationChoice preferenceRestServices preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
     journey = program
       camino'
       (caminoChoice preferences camino)
@@ -615,7 +609,7 @@ planCamino preferences camino  = Solution {
         (pilgrimageEvaluate preferences camino)
         (stageChoice preferences camino)
         (stageAccept preferences camino)
-        (stageEvaluate preferences camino accommodationMap restLocationMap)
+        (stageEvaluate preferences camino restAccommodationMap restLocationMap)
         select
         (start j)
         (finish j)

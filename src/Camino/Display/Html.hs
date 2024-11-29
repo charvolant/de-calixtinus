@@ -384,7 +384,7 @@ caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoR
 caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
     ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
   |]
-caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping') = [ihamlet|
+caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping' _multi) = [ihamlet|
     <span .accommodation>
       <span .pr-4>
         ^{caminoAccommodationTypeIcon type'} _{Txt (accommodationName a)}
@@ -416,7 +416,7 @@ caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
 
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
-caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping) = [ihamlet|_{Txt name'}|]
+caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping _multi) = [ihamlet|_{Txt name'}|]
 
 caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation Service) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|

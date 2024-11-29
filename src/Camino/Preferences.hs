@@ -38,6 +38,8 @@ module Camino.Preferences (
   , suggestedFinishes
   , suggestedLocation
   , suggestedPoiCategories
+  , suggestedRestLocation
+  , suggestedRestServices
   , suggestedStarts
   , suggestedStopServices
   , suggestedTimeRange
@@ -203,8 +205,10 @@ data TravelPreferences = TravelPreferences {
   , preferenceRest :: PreferenceRange Int -- ^ The preferred amount of days walking before a rest
   , preferenceTransportLinks :: Bool -- ^ Allow transport links for stops, accomodation and services
   , preferenceLocation :: M.Map LocationType Penance -- ^ Location stop preferences (absence implies zero preference)
+  , preferenceRestLocation :: M.Map LocationType Penance -- ^ Location rest preferences (absence implies zero preference)
   , preferenceAccommodation :: M.Map AccommodationType Penance -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   , preferenceStopServices :: M.Map Service Penance -- ^ Desired services at a stop (absence implies zero desire)
+  , preferenceRestServices :: M.Map Service Penance -- ^ Desired services at a rest point (absence implies zero desire)
   , preferenceDayServices :: M.Map Service Penance -- ^ Desired services during a day (absence implies zero desire)
   , preferencePoiCategories :: S.Set PoiCategory -- ^ The types of Poi to visit
 } deriving (Show)
@@ -219,8 +223,10 @@ instance FromJSON TravelPreferences where
     rest' <- v .: "rest"
     transport' <- v .:? "transport-links" .!= False
     location' <- v .: "location"
+    rlocation' <- v .: "location-rest"
     accommodation' <- v .: "accommodation"
     sstop' <- v .: "services-stop"
+    srest' <- v .: "services-rest"
     sday' <- v .: "services-day"
     pois' <- v .: "poi-categories"
     return TravelPreferences {
@@ -232,15 +238,17 @@ instance FromJSON TravelPreferences where
         , preferenceRest = rest'
         , preferenceTransportLinks = transport'
         , preferenceLocation = location'
+        , preferenceRestLocation = rlocation'
         , preferenceAccommodation = accommodation'
         , preferenceStopServices = sstop'
+        , preferenceRestServices = srest'
         , preferenceDayServices = sday'
         , preferencePoiCategories = pois'
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' comfort' distance' time' rest' transport' location' accommodation' sstop' sday' pois') =
+  toJSON (TravelPreferences travel' fitness' comfort' distance' time' rest' transport' location' rlocation' accommodation' sstop' srest' sday' pois') =
     object [ 
         "travel" .= travel'
       , "fitness" .= fitness'
@@ -250,8 +258,10 @@ instance ToJSON TravelPreferences where
       , "rest" .= rest'
       , "transport-links" .= transport'
       , "location" .= location'
+      , "location-rest" .= rlocation'
       , "accommodation" .= accommodation'
       , "services-stop" .= sstop'
+      , "services-rest" .= srest'
       , "services-day" .= sday'
       , "poi-categories" .= pois'
     ]
@@ -451,11 +461,11 @@ suggestedRestRange _ SuperFit = PreferenceRange Nothing 7 6 9 (Just 5) (Just 10)
 suggestedRestRange _ VeryFit = PreferenceRange Nothing 7 6 8 (Just 5) (Just 9)
 suggestedRestRange _ Fit = PreferenceRange Nothing 6 5 8 (Just 4) (Just 9)
 suggestedRestRange _ Normal = PreferenceRange Nothing 6 5 7 (Just 3) (Just 8)
-suggestedRestRange _ Unfit = PreferenceRange Nothing 6 4 7 (Just 2) (Just 8)
+suggestedRestRange _ Unfit = PreferenceRange Nothing 5 4 7 (Just 3) (Just 8)
 suggestedRestRange _ Casual = PreferenceRange Nothing 5 4 6 (Just 2) (Just 7)
 suggestedRestRange _ VeryUnfit = PreferenceRange Nothing 4 3 5 (Just 2) (Just 6)
 
--- | Base accommodation from comfort level
+-- | Base location preferences from comfort level
 suggestedLocation' :: Comfort -> M.Map LocationType Penance
 suggestedLocation' Austere = M.fromList [
     (Village, Penance 6.0),
@@ -520,6 +530,72 @@ suggestedLocation t Normal comfort = suggestedLocation t Fit comfort
 suggestedLocation t Unfit comfort = suggestedLocation t Normal comfort
 suggestedLocation t Casual comfort = suggestedLocation t Unfit comfort
 suggestedLocation t VeryUnfit comfort = suggestedLocation t Unfit comfort
+
+-- | Base location preferences from comfort level
+suggestedRestLocation' :: Comfort -> M.Map LocationType Penance
+suggestedRestLocation' Austere = M.fromList [
+    (Village, Penance 2.0),
+    (Town, Penance 2.0),
+    (City, Penance 3.0),
+    (Monastery, Penance 0.0),
+    (Bridge, Reject),
+    (Intersection, Reject),
+    (Peak, Reject),
+    (Poi, Reject)
+  ]
+suggestedRestLocation' Frugal = M.fromList [
+    (Village, Penance 1.0),
+    (Town, Penance 4.0),
+    (City, Penance 5.0),
+    (Monastery, Penance 0.0),
+    (Bridge, Reject),
+    (Intersection, Reject),
+    (Peak, Reject),
+    (Poi, Reject)
+  ]
+suggestedRestLocation' Pilgrim = M.fromList [
+    (Town, Penance 0.0),
+    (City, Penance 5.0),
+    (Village, Reject),
+    (Monastery, Reject),
+    (Bridge, Reject),
+    (Intersection, Reject),
+    (Peak, Reject),
+    (Poi, Reject)
+  ]
+suggestedRestLocation' Comfortable = M.fromList [
+    (Town, Penance 0.0),
+    (City, Penance 8.0),
+    (Village, Reject),
+    (Monastery, Reject),
+    (Bridge, Reject),
+    (Intersection, Reject),
+    (Peak, Reject),
+    (Poi, Reject)
+  ]
+suggestedRestLocation' Luxurious = M.fromList [
+    (Town, Penance 0.0),
+    (City, Penance 20.0),
+    (Village, Reject),
+    (Monastery, Reject),
+    (Bridge, Reject),
+    (Intersection, Reject),
+    (Peak, Reject),
+    (Poi, Reject)
+  ]
+
+-- | Create a suggested penance map for location type, based on travel type and fitness level
+suggestedRestLocation :: Travel -- ^ The style of travel
+  -> Fitness -- ^ The fitness level
+  -> Comfort -- ^ The comfort level
+  -> M.Map LocationType Penance -- ^ The suggested location map
+suggestedRestLocation _ SuperFit comfort = suggestedRestLocation' comfort
+suggestedRestLocation t VeryFit comfort = suggestedRestLocation t SuperFit comfort
+suggestedRestLocation _ Fit comfort = suggestedRestLocation' comfort
+suggestedRestLocation t Normal comfort = suggestedRestLocation t Fit comfort
+suggestedRestLocation t Unfit comfort = suggestedRestLocation t Normal comfort
+suggestedRestLocation t Casual comfort = suggestedRestLocation t Unfit comfort
+suggestedRestLocation t VeryUnfit comfort = suggestedRestLocation t Unfit comfort
 
 -- | Base accommodation from comfort level
 suggestedAccommodation' :: Comfort -> M.Map AccommodationType Penance
@@ -663,6 +739,66 @@ suggestedDayServices' Luxurious = M.fromList [
     , (Bank, Penance 0.5)
     , (Bus, Penance 1.0)
   ]
+  
+-- Default rest services, based on comfort
+suggestedRestServices'  :: Comfort -> M.Map Service Penance -- ^ The suggested services map
+suggestedRestServices' Austere = M.fromList [
+      (Kitchen, Penance 5.0)
+    , (Groceries, Penance 5.0)
+    , (Pharmacy, Penance 3.0)
+    , (Medical, Penance 2.0)
+    , (Handwash, Penance 2.0)
+  ]
+suggestedRestServices' Frugal = M.fromList [
+      (Kitchen, Penance 4.0)
+    , (Restaurant, Penance 1.0)
+    , (Groceries, Penance 5.0)
+    , (Pharmacy, Penance 3.0)
+    , (Medical, Penance 3.0)
+    , (Bank, Penance 1.0)
+    , (Handwash, Penance 1.0)
+    , (WashingMachine, Penance 1.0)
+  ]
+suggestedRestServices' Pilgrim = M.fromList [
+      (Kitchen, Penance 2.0)
+    , (Restaurant, Penance 4.0)
+    , (Groceries, Penance 5.0)
+    , (Pharmacy, Penance 3.0)
+    , (Medical, Penance 3.0)
+    , (Bank, Penance 2.0)
+    , (Bedlinen, Penance 2.0)
+    , (WashingMachine, Penance 3.0)
+ ]
+suggestedRestServices' Comfortable = M.fromList [
+      (Restaurant, Penance 6.0)
+    , (Groceries, Penance 5.0)
+    , (Pharmacy, Penance 3.0)
+    , (Medical, Penance 3.0)
+    , (Bank, Penance 2.0)
+    , (Bedlinen, Penance 3.0)
+    , (WashingMachine, Penance 3.0)
+  ]
+suggestedRestServices' Luxurious = M.fromList [
+      (Restaurant, Penance 6.0)
+    , (Groceries, Penance 5.0)
+    , (Pharmacy, Penance 3.0)
+    , (Medical, Penance 3.0)
+    , (Bank, Penance 2.0)
+    , (Bedlinen, Penance 5.0)
+    , (WashingMachine, Penance 5.0)
+    , (Breakfast, Penance 2.0)
+    , (Dinner, Penance 2.0)
+  ]
+
+-- | Create a suggested penance map for stop services, based on travel type and fitness level
+suggestedRestServices :: Travel -- ^ The style of travel
+  -> Fitness -- ^ The fitness level
+  -> Comfort -- ^ The comfort level
+  -> M.Map Service Penance -- ^ The suggested services map
+suggestedRestServices Walking _ comfort = suggestedRestServices' comfort
+suggestedRestServices Cycling fitness comfort = M.union 
+  (M.singleton BicycleStorage (Penance 2.0)) 
+  (suggestedRestServices Walking fitness comfort)
 
 -- | Create a suggested penance map for stop services, based on travel type and fitness level
 suggestedDayServices :: Travel -- ^ The style of travel
@@ -736,8 +872,10 @@ defaultTravelPreferences travel fitness comfort = TravelPreferences {
     , preferenceRest = suggestedRestRange travel fitness
     , preferenceTransportLinks = suggestedTransportLinks travel fitness comfort
     , preferenceLocation = suggestedLocation travel fitness comfort
+    , preferenceRestLocation = suggestedRestLocation travel fitness comfort
     , preferenceAccommodation = suggestedAccommodation travel fitness comfort
     , preferenceStopServices = suggestedStopServices travel fitness comfort
+    , preferenceRestServices = suggestedRestServices travel fitness comfort
     , preferenceDayServices = suggestedDayServices travel fitness comfort
     , preferencePoiCategories = suggestedPoiCategories travel fitness comfort
   }

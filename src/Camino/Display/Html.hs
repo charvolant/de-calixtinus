@@ -88,6 +88,10 @@ penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = 
        $forall service <- metricsMissingDayServices metrics
           ^{caminoServiceIcon service}
        )
+   $if metricsFatigue metrics /= mempty
+     \ + _{FatiguePenanceMsg (metricsFatigue metrics)}
+   $if metricsRest metrics /= mempty
+     \ + _{RestPenanceMsg (metricsRest metrics)}
    $if metricsMisc metrics /= mempty
      \ + _{MiscPenanceMsg (metricsMisc metrics)}
    |]
@@ -936,6 +940,14 @@ preferencesHtml showLink preferences camino = [ihamlet|
           \ _{caminoLocationTypeLabel lk}
         <div .col>_{PenanceFormatted (findLoc preferences lk)}
     <div .row>
+      <div .col-4>_{RestLocationPreferencesLabel}
+    $forall lk <- locationTypes
+      <div .row>
+        <div .col-3 .offset-1>
+          <span .location-type-sample>^{caminoLocationTypeIcon lk}
+          \ _{caminoLocationTypeLabel lk}
+        <div .col>_{PenanceFormatted (findRestLoc preferences lk)}
+    <div .row>
       <div .col-4>_{AccommodationPreferencesLabel}
     $forall ak <- accommodationTypes
       <div .row>
@@ -951,6 +963,14 @@ preferencesHtml showLink preferences camino = [ihamlet|
           ^{caminoServiceIcon sk}
           \ _{caminoServiceMsg sk}
         <div .col>_{PenanceFormatted (findSs preferences sk)}
+    <div .row>
+      <div .col-4>_{RestServicesPreferencesLabel}
+    $forall sk <- M.keys $ preferenceRestServices preferences
+      <div .row>
+        <div .col-3 .offset-1>
+          ^{caminoServiceIcon sk}
+          \ _{caminoServiceMsg sk}
+        <div .col>_{PenanceFormatted (findRs preferences sk)}
     <div .row>
       <div .col-4>_{DayServicesPreferencesLabel}
     $forall sk <- M.keys $ preferenceDayServices preferences
@@ -1030,7 +1050,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
     accommodationTypes = accommodationTypeEnumeration
     findAcc prefs ak = M.findWithDefault mempty ak (preferenceAccommodation prefs)
     findLoc prefs lk = M.findWithDefault mempty lk (preferenceLocation prefs)
+    findRestLoc prefs lk = M.findWithDefault mempty lk (preferenceRestLocation prefs)
     findSs prefs sk = (preferenceStopServices prefs) M.! sk
+    findRs prefs sk = (preferenceRestServices prefs) M.! sk
     findDs prefs sk = (preferenceDayServices prefs) M.! sk
     pois = caminoPois $ preferenceCamino camino
 

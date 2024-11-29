@@ -95,6 +95,8 @@ data Metrics = Metrics {
     , metricsDayServices :: Penance -- ^ Adjustment to penance in km-equivalnet caused by missing services throughout the day
     , metricsDistanceAdjust :: Penance -- ^ Adjustments to distance cost in km-equivalent caused by going over/under target
     , metricsTimeAdjust :: Penance -- ^ Adjustments to time cost in km-equivalent caused by going over/under target
+    , metricsFatigue :: Penance -- ^ Cost of accumulated fatigue
+    , metricsRest :: Penance -- ^ Cost of taking a rest
     , metricsMisc :: Penance -- ^ Additional miscellaneous penance costs and causes
     , metricsPenance :: Penance -- ^ Total penance for this leg of the metrics
   } deriving (Show)
@@ -123,15 +125,17 @@ instance Semigroup Metrics where
     , metricsDayServices = metricsDayServices m1 <> metricsDayServices m2
     , metricsDistanceAdjust = metricsDistanceAdjust m1 <> metricsDistanceAdjust m2
     , metricsTimeAdjust = metricsTimeAdjust m1 <> metricsTimeAdjust m2
+    , metricsFatigue = metricsFatigue m1 <> metricsFatigue m2
+    , metricsRest = metricsRest m1 <> metricsRest m2
     , metricsMisc = metricsMisc m1 <> metricsMisc m2
     , metricsPenance = metricsPenance m1 <> metricsPenance m2
   }
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty Reject Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty Reject Reject
 
 -- | A day's stage
 type Day = Chain Location Leg Metrics
@@ -318,6 +322,14 @@ locationChoice preferences location = let
   in
     TripChoice location services' penance'
 
+-- Make a choice based on the location for rest stops
+restLocationChoice :: TravelPreferences -> Location -> TripChoice Location Service
+restLocationChoice preferences location = let
+    services' =  (M.keysSet $ M.filter (/= mempty) (preferenceRestServices preferences)) `S.intersection` locationServices location
+    penance' = M.findWithDefault mempty (locationType location) (preferenceRestLocation preferences)
+  in
+    TripChoice location services' penance'
+
 missingServicePenance :: M.Map Service Penance -> S.Set Service -> Penance
 missingServicePenance prefs services = mconcat $ map (\s -> M.findWithDefault mempty s prefs) $ S.toList services
 
@@ -388,6 +400,8 @@ penance preferences camino accommodationMap locationMap day =
       dayMissingCost
       distanceAdjust
       timeAdjust
+      mempty
+      mempty
       misc
       total
   in
@@ -484,13 +498,20 @@ stageAccept preferences _camino stage =
 
 
 -- | Evaluate a stage for penance
-stageEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
-stageEvaluate preferences _camino stage = let
+stageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Day] -> Metrics
+stageEvaluate preferences camino accommodationMap locationMap stage = let
   total = mconcat $ map score stage
   stageLength = length stage
   restPrefs = withoutMinimum $ preferenceRest preferences
   fatigue = if isOutOfRange restPrefs stageLength then Reject else Penance ((rangeTarget $ preferenceDistance preferences) * (rangeDistanceInt restPrefs stageLength))
-  metrics = mempty { metricsMisc = fatigue, metricsPenance = fatigue }
+  stopMissing = missingStopServices preferences (preferenceCamino camino) (path $ last stage)
+  accom = M.findWithDefault invalidAccommodation (finish $ last stage) accommodationMap
+  stopMissing' = stopMissing `S.difference` tripChoiceFeatures accom
+  stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
+  stopCost = stopPenance preferences (preferenceCamino camino) (path $ last stage)
+  locationCost = locationPenance preferences (preferenceCamino camino) locationMap (path $ last stage)
+  stop = stopMissingCost <> stopCost <> locationCost
+  metrics = mempty { metricsFatigue = fatigue, metricsRest = stop, metricsPenance = fatigue <> stop }
   in
     total <> metrics
 
@@ -501,13 +522,13 @@ stageChoice _preferences _camino stage1 stage2 = if score stage1 < score stage2 
 -- | Accept a pilgrimage as a possibility
 --   Acceptable if the the length of all stages are within range
 pilgrimageAccept :: TravelPreferences -> CaminoPreferences -> [Journey] -> Bool
-pilgrimageAccept preferences camino pilgrimage =
+pilgrimageAccept preferences _camino pilgrimage =
   all (\j -> not $ isOutOfRange (preferenceRest preferences) (length $ path j)) pilgrimage
 
 
 -- | Evaluate a stage for penance
 pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> [Journey] -> Metrics
-pilgrimageEvaluate preferences _camino pilgrimage = mconcat $ map score pilgrimage
+pilgrimageEvaluate _preferences _camino pilgrimage = mconcat $ map score pilgrimage
 
 -- | Choose a day's stage based on minimum penance
 pilgrimageChoice :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> Pilgrimage -> Pilgrimage
@@ -575,6 +596,7 @@ planCamino preferences camino  = Solution {
     select l = S.member l allowed
     accommodationMap = buildTripChoiceMap (accommodationChoice preferences camino') preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
     locationMap = buildTripChoiceMap (locationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
+    restLocationMap = buildTripChoiceMap (restLocationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
     journey = program
       camino'
       (caminoChoice preferences camino)
@@ -593,7 +615,7 @@ planCamino preferences camino  = Solution {
         (pilgrimageEvaluate preferences camino)
         (stageChoice preferences camino)
         (stageAccept preferences camino)
-        (stageEvaluate preferences camino)
+        (stageEvaluate preferences camino accommodationMap restLocationMap)
         select
         (start j)
         (finish j)

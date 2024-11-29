@@ -39,7 +39,9 @@ PoiText: Select the significant point of interests that you intend to stop at wh
 RangeTitle: Distance and Time Preferences
 RangeText: Select the ranges that you will accept for both distance travelled over a day (in km) and time taken (in hours). The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RequiredStopsLabel: Required Stops
+RestLocationPreferencesLabel: Rest Location Preferences
 RestPreferencesLabel: Rest Preferences (days travelled)
+RestServicePreferencesLabel: Rest Services
 RoutePreferencesLabel: Routes
 RoutesText: Select the route variants that you wish to walk. The standard route is always selected. Some routes require other routes or cannot be done in conjunction with other routes.
 RoutesTitle: Select Routes

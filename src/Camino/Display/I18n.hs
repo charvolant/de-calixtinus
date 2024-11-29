@@ -95,6 +95,7 @@ data CaminoMsg =
   | EventsLabel
   | ExceptText
   | ExcludedStopsLabel
+  | FatiguePenanceMsg Penance
   | FerryTitle
   | FestivalEventTitle
   | FitnessLabel
@@ -190,7 +191,10 @@ data CaminoMsg =
   | RequiredStopsLabel
   | RestaurantTitle
   | RestLabel
+  | RestLocationPreferencesLabel
+  | RestPenanceMsg Penance
   | RestPreferencesLabel
+  | RestServicesPreferencesLabel
   | RoadTitle
   | RouteLabel
   | RoutesLabel
@@ -333,6 +337,7 @@ renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
+renderCaminoMsgDefault _ (FatiguePenanceMsg penance') = [shamlet|Fatigue ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
@@ -421,7 +426,10 @@ renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
 renderCaminoMsgDefault _ RestLabel = "Rest"
+renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferences"
+renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
+renderCaminoMsgDefault _ RestServicesPreferencesLabel = "Missing Rest Services"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ RoutesLabel = "Routes"

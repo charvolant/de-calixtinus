@@ -15,7 +15,8 @@ module Camino.Planner (
     Day
   , Metrics(..)
   , Solution(..)
-  , Trip
+  , Journey
+  , Pilgrimage
   , TripChoice(..)
   , TripChoiceMap
 
@@ -136,14 +137,18 @@ instance Score Metrics where
 type Day = Chain Location Leg Metrics
 
 -- | The complete camino stages
-type Trip = Chain Location Day Metrics
+type Journey = Chain Location Day Metrics
+
+-- | A full pilgrimage, broken into stages
+type Pilgrimage = Chain Location Journey Metrics
 
 -- | A complete solution, including accommodation and location metrics
 data Solution = Solution {
     solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
   , solutionAccommodation :: TripChoiceMap Accommodation Service -- ^ The penance costs for accommodation in various locations
   , solutionLocation :: TripChoiceMap Location Service -- ^ The penance costs for various locations
-  , solutionTrip :: Either Location Trip -- ^ Either a trip solution or a place where something has gone wrong
+  , solutionJourney :: Either Location Journey -- ^ Either a journey solution or a place where something has gone wrong
+  , solutionPilgrimage :: Either Location Pilgrimage -- ^ Either a journey solution or a place where something has gone wrong
 }
 
 -- Is this the last day's travel?
@@ -442,7 +447,7 @@ caminoEvaluate _preferences camino days =
 -- | Choose a camino stage.
 --   First check that one or the other has passed through a required stop.
 --   Otherwise based on minimum penance
-caminoChoice :: TravelPreferences -> CaminoPreferences -> Trip -> Trip -> Trip
+caminoChoice :: TravelPreferences -> CaminoPreferences -> Journey -> Journey -> Journey
 caminoChoice _preferences camino trip1 trip2 =
   let 
     req = preferenceStops camino
@@ -470,6 +475,43 @@ caminoChoice _preferences camino trip1 trip2 =
   in
     -- trace ("Choice between " ++ (T.unpack $ tripLabel trip1) ++ " and " ++ (T.unpack $ tripLabel trip2) ++ " is " ++ (T.unpack $ tripLabel selection)) selection
     selection
+
+-- | Accept a stage as a possibility
+--   Acceptable if the the length of the stage is below the maximum
+stageAccept :: TravelPreferences -> CaminoPreferences -> [Day] -> Bool
+stageAccept preferences _camino stage =
+  isInsideMaximum (preferenceRest preferences) (length stage)
+
+
+-- | Evaluate a stage for penance
+stageEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
+stageEvaluate preferences _camino stage = let
+  total = mconcat $ map score stage
+  stageLength = length stage
+  restPrefs = withoutMinimum $ preferenceRest preferences
+  fatigue = if isOutOfRange restPrefs stageLength then Reject else Penance ((rangeTarget $ preferenceDistance preferences) * (rangeDistanceInt restPrefs stageLength))
+  metrics = mempty { metricsMisc = fatigue, metricsPenance = fatigue }
+  in
+    total <> metrics
+
+-- | Choose a day's stage based on minimum penance
+stageChoice :: TravelPreferences -> CaminoPreferences -> Journey -> Journey -> Journey
+stageChoice _preferences _camino stage1 stage2 = if score stage1 < score stage2 then stage1 else stage2
+
+-- | Accept a pilgrimage as a possibility
+--   Acceptable if the the length of all stages are within range
+pilgrimageAccept :: TravelPreferences -> CaminoPreferences -> [Journey] -> Bool
+pilgrimageAccept preferences camino pilgrimage =
+  all (\j -> not $ isOutOfRange (preferenceRest preferences) (length $ path j)) pilgrimage
+
+
+-- | Evaluate a stage for penance
+pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> [Journey] -> Metrics
+pilgrimageEvaluate preferences _camino pilgrimage = mconcat $ map score pilgrimage
+
+-- | Choose a day's stage based on minimum penance
+pilgrimageChoice :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> Pilgrimage -> Pilgrimage
+pilgrimageChoice _preferences _camino pilgrimage1 pilgrimage2 = if score pilgrimage1 < score pilgrimage2 then pilgrimage1 else pilgrimage2
 
 rundownTail :: M.Map Location (TripChoiceTrail v f) -> Leg -> TripChoiceTail v f
 rundownTail trail leg = let
@@ -524,7 +566,8 @@ planCamino preferences camino  = Solution {
         solutionLocations = allowed
       , solutionAccommodation = accommodationMap
       , solutionLocation = locationMap
-      , solutionTrip = trip
+      , solutionJourney = journey
+      , solutionPilgrimage = pilgrimage
   }
   where
     camino' = preferenceCamino camino
@@ -532,7 +575,7 @@ planCamino preferences camino  = Solution {
     select l = S.member l allowed
     accommodationMap = buildTripChoiceMap (accommodationChoice preferences camino') preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
     locationMap = buildTripChoiceMap (locationChoice preferences) preferences (preferenceCamino camino) (preferenceStart camino) (preferenceFinish camino) select
-    trip = program
+    journey = program
       camino'
       (caminoChoice preferences camino)
       (caminoAccept preferences camino)
@@ -543,17 +586,29 @@ planCamino preferences camino  = Solution {
       select
       (preferenceStart camino)
       (preferenceFinish camino)
+    pilgrimage = either Left (\j -> program
+        (fromChains (const mempty) (path j))
+        (pilgrimageChoice preferences camino)
+        (pilgrimageAccept preferences camino)
+        (pilgrimageEvaluate preferences camino)
+        (stageChoice preferences camino)
+        (stageAccept preferences camino)
+        (stageEvaluate preferences camino)
+        select
+        (start j)
+        (finish j)
+      ) journey
 
 -- | Get all the stops (ie start and finish locations) on a trip in order
-tripStops :: Trip -> [Location]
+tripStops :: Journey -> [Location]
 tripStops trip = (start trip) : (map finish $ path trip)
 
 -- | Get all the waypoints on a trip in order
-tripWaypoints :: Trip -> [Location]
+tripWaypoints :: Journey -> [Location]
 tripWaypoints trip = foldr (\c -> \w -> w ++ map legTo (path c)) [start trip] (path trip)
 
 -- | Get all the legs actually used by a trip
-tripLegs :: Trip -> [Leg]
+tripLegs :: Journey -> [Leg]
 tripLegs trip = foldr (\c -> \w -> w ++ path c) [] (path trip)
 
 -- | Useful label for a day sequence
@@ -561,5 +616,5 @@ daysLabel :: [Day] -> T.Text
 daysLabel days = T.concat [locationNameLabel $ start $ head days, " -> ", locationNameLabel $ finish $ last days, " [", T.intercalate "," (map (locationNameLabel . start) (tail $ days)), "]" ]
 
 -- | Useful label for trips
-tripLabel :: Trip -> T.Text
+tripLabel :: Journey -> T.Text
 tripLabel trip = T.concat [daysLabel $ path trip, " <", T.pack $ show $ metricsPenance $ score trip, ">"]

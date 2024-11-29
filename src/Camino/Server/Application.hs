@@ -21,7 +21,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Planner (Solution(..), Trip)
+import Camino.Planner (Solution(..), Journey)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Html
@@ -345,7 +345,7 @@ helpPopup stepp = do
 imagePopup :: Widget
 imagePopup = $(widgetFile "image-popup")
 
-addError :: Either Location Trip -> Handler ()
+addError :: Either Location Journey -> Handler ()
 addError (Left loc) = do
   locales <- getLocales
   setMessage [shamlet|
@@ -367,7 +367,7 @@ planPage prefs = do
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
-    addError (solutionTrip solution)
+    addError (solutionJourney solution)
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ locationName (preferenceStart cprefs)} - #{localiseText locales $ locationName (preferenceFinish cprefs)}|]
       (toWidget html)
@@ -378,7 +378,7 @@ kmlType :: ContentType
 kmlType = "application/vnd.google-earth.kml+xml"
 
 -- | Generate a file name for this
-kmlFileName :: CaminoPreferences -> Maybe Trip -> Text
+kmlFileName :: CaminoPreferences -> Maybe Journey -> Text
 kmlFileName camino Nothing = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".kml"
 kmlFileName camino (Just trip) = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> "-" <> (toFileName $ locationNameLabel $ start trip) <> "-" <> (toFileName $ locationNameLabel $ finish trip) <> ".kml"
 
@@ -388,11 +388,11 @@ planKml prefs = do
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
     let solution = planCamino tprefs cprefs
-    let trip = either (const Nothing) (Just) (solutionTrip solution)
+    let journey = either (const Nothing) (Just) (solutionJourney solution)
     let config = caminoAppConfig master
-    let kml = createCaminoDoc config tprefs cprefs trip
+    let kml = createCaminoDoc config tprefs cprefs journey
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
-    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs trip <> "\"")
+    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs journey <> "\"")
     return $ TypedContent kmlType (toContent result)
 
 runCaminoApp :: CaminoApp -> IO ()

@@ -38,7 +38,7 @@ distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
 
 timeRange1 = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0)
 
-restRange1 = PreferenceRange Nothing 6.0 5.0 7.0 Nothing (Just 8.0)
+restRange1 = PreferenceRange Nothing 6 5 7 Nothing (Just 8)
 
 preferences1 = TravelPreferences {
     preferenceTravel = Walking,
@@ -334,11 +334,11 @@ testPlanCamino1 preferences camino =
       preferenceStartDate = Nothing
     }
     solution = planCamino preferences cpreferences
-    etrip = solutionTrip solution
+    ejourney = solutionJourney solution
   in
     TestCase (do
-      assertBool "Plan Camino 1 1" (isRight etrip)
-      let route = fromRight (error "Bad route") etrip
+      assertBool "Plan Camino 1 1" (isRight ejourney)
+      let route = fromRight (error "Bad route") ejourney
       assertEqual "Plan Camino 1 2" (preferenceStart cpreferences) (start route)
       assertEqual "Plan Camino 1 3" (preferenceFinish cpreferences) (finish route)
       assertEqual "Plan Camino 1 4" 2 (length $ path route)

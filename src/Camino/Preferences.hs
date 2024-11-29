@@ -24,11 +24,12 @@ module Camino.Preferences (
   , isOutOfRange
   , normalisePreferences
   , perceivedDistanceRange
+  , rangeDistance
+  , rangeDistanceInt
   , reachableLocations
   , reachablePois
   , recommendedPois
   , recommendedStops
-  , rangeDistance
   , selectedPois
   , selectedRoutes
   , suggestedAccommodation
@@ -155,14 +156,30 @@ boundsDistance (PreferenceRange _derived targ lower upper _mini _maxi) value
   | value < targ = ((targ - value) / (targ - lower))
   | otherwise = ((value - targ) / (upper - targ))
 
--- | Get the normalised distance to the outer range of a value
+-- | Get the normalised distance to the outer range of a value for fractional values
 -- 
 -- The scale of the range is from the target to the lower or upper bounds, with 0 being at the bound and 1 being a scale away
 rangeDistance :: (Ord a, Fractional a) => PreferenceRange a -> a -> a
-rangeDistance (PreferenceRange _derived targ lower upper _mini _maxi) value
-  | value < targ = ((targ - value) / (targ - lower)) - 1
-  | otherwise = ((value - targ) / (upper - targ)) - 1
-  
+rangeDistance (PreferenceRange _derived targ lower upper _mini _maxi) value =
+  if value < targ then
+    max 0 ((targ - value) / (targ - lower) - 1)
+  else
+    max 0 ((value - targ) / (upper  - targ) - 1)
+
+ -- | Get the normalised distance to the outer range of a value for integer values
+ --
+ -- The scale of the range is from the target to the lower or upper bounds, with 0 being at the bound and 1 being a scale away
+rangeDistanceInt :: PreferenceRange Int -> Int -> Float
+rangeDistanceInt (PreferenceRange _derived targ lower upper _mini _maxi) value = let
+    tf = fromIntegral targ :: Float
+    lf = fromIntegral lower :: Float
+    uf = fromIntegral upper :: Float
+    vf = fromIntegral value :: Float
+  in
+    if value < targ then
+      max 0 ((tf - vf) / (tf - lf) - 1)
+    else
+      max 0 ((vf - tf) / (uf  - tf) - 1)
 
 -- | Convert a normal distance range into a perceived distance range      
 perceivedDistanceRange :: Travel -> Fitness -> PreferenceRange Float -> PreferenceRange Float

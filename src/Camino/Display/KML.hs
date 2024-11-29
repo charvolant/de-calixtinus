@@ -137,7 +137,7 @@ caminoLocationStyle _camino stops waypoints location
   | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "-unused"
 
 
-caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Journey -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
   <div>
     <h4>#{locationNameLabel location}
@@ -161,7 +161,7 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
     route = renderCaminoRoute config locales
     day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
 
-caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Journey -> S.Set Location -> S.Set Location -> Location -> [Node]
 caminoLocationKml config preferences camino trip stops waypoints location = [xml|
     <Placemark id="#{locationID location}">
       <name>#{locationNameLabel location}
@@ -198,7 +198,7 @@ useCDATA (ContentText v) = isPrefixOf "<html>" v || isPrefixOf "<div>" v
 
 
 -- Create a KML document of a camino
-createCaminoDoc :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Trip -> Document
+createCaminoDoc :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Journey -> Document
 createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing []) kml []
   where
     camino' = preferenceCamino camino

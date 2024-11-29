@@ -189,6 +189,7 @@ data CaminoMsg =
   | ReligiousPoiTitle
   | RequiredStopsLabel
   | RestaurantTitle
+  | RestLabel
   | RestPreferencesLabel
   | RoadTitle
   | RouteLabel
@@ -200,6 +201,7 @@ data CaminoMsg =
   | SingleTitle
   | SleepingBagTitle
   | StablesTitle
+  | StagesMsg Int
   | StatueTitle
   | StopLabel
   | StopPenanceMsg Penance
@@ -262,6 +264,9 @@ formatHours t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs</span>
 
 formatDays :: Int -> Html
 formatDays d = [shamlet|<span .days>#{format int d}#{thinSpace}days</span>#|]
+
+formatStages :: Int -> Html
+formatStages s = [shamlet|<span .stages>#{format int s}#{thinSpace}stages</span>#|]
 
 formatMaybeHours :: (Real a) => Maybe a -> Html
 formatMaybeHours Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}</span>|]
@@ -415,6 +420,7 @@ renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
 renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
+renderCaminoMsgDefault _ RestLabel = "Rest"
 renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
@@ -426,6 +432,7 @@ renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
 renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
+renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
 renderCaminoMsgDefault _ StatueTitle = "Statue"
 renderCaminoMsgDefault _ StopLabel = "Stop"
 renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]

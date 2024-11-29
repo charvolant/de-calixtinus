@@ -17,7 +17,7 @@ module Camino.Display.Html where
 import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
-import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Trip, tripLegs, tripStops, tripWaypoints)
+import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Journey, Pilgrimage, tripLegs, tripStops, tripWaypoints)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
@@ -96,18 +96,20 @@ penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = 
     hasAccommodationServices = accommodationDetail && not (S.null acServices)
     showAccommodation = metricsLocation metrics /= mempty || hasAccommodationServices
 
-metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
-metricsSummary _preferences _camino metrics days = [ihamlet|
+metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
+metricsSummary _preferences _camino metrics days stages = [ihamlet|
     _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
     _{TimeMsg (metricsTime metrics)}
     _{PoiTime (metricsPoiTime metrics)} #
     $maybe d <- days
       \ _{DaysMsg d} #
+    $maybe s <- stages
+      \ _{StagesMsg s} #
     _{AscentMsg (metricsAscent metrics)}
     _{DescentMsg (metricsDescent metrics)}
   |]
 
-daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Trip -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
+daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Journey -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
 daySummary _preferences _camino _trip day = [ihamlet|
     <p>_{DaySummaryMsg day}
     <ol>
@@ -115,7 +117,7 @@ daySummary _preferences _camino _trip day = [ihamlet|
         <li>_{Txt (locationName loc)}
   |]
 
-tripSummary :: TravelPreferences -> CaminoPreferences -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
+tripSummary :: TravelPreferences -> CaminoPreferences -> Journey -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripSummary _preferences _camino trip = [ihamlet|
     <h1>From _{Txt (locationName $ start trip)} to _{Txt (locationName $ finish trip)}
     <h2>Stages
@@ -438,7 +440,7 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
      choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
 
 -- | Get elements of a possible solution
-solutionElements :: Camino -> Maybe Solution -> (Either Location Trip, S.Set Location, S.Set Location, S.Set Leg)
+solutionElements :: Camino -> Maybe Solution -> (Either Location Journey, S.Set Location, S.Set Location, S.Set Leg)
 solutionElements camino Nothing = (
     Left (head $ routeStarts $ caminoDefaultRoute camino),
     S.empty,
@@ -446,12 +448,12 @@ solutionElements camino Nothing = (
     S.fromList $ caminoLegs camino
   )
 solutionElements _camino (Just solution) = (
-    trip',
-    either (const S.empty) (S.fromList . tripStops) trip',
-    either (const S.empty) (S.fromList . tripWaypoints) trip',
-    either (const S.empty) (S.fromList . tripLegs) trip'
+    journey',
+    either (const S.empty) (S.fromList . tripStops) journey',
+    either (const S.empty) (S.fromList . tripWaypoints) journey',
+    either (const S.empty) (S.fromList . tripLegs) journey'
   ) where
-    trip' = solutionTrip solution
+    journey' = solutionJourney solution
 
 calendarBlock :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
 calendarBlock Daily = [ihamlet|_{DailyLabel}|]
@@ -1032,52 +1034,83 @@ preferencesHtml showLink preferences camino = [ihamlet|
     findDs prefs sk = (preferenceDayServices prefs) M.! sk
     pois = caminoPois $ preferenceCamino camino
 
-caminoTripHtml :: TravelPreferences -> CaminoPreferences -> Trip -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoTripHtml preferences camino trip = [ihamlet|
+caminoTripHtml :: TravelPreferences -> CaminoPreferences -> Journey -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoTripHtml preferences camino journey pilgrimage = [ihamlet|
   <div .container-fluid>
     <div .row .trip-summary>
       <div .col>
+        <ul .trip-stages>
+          $forall stage <- path pilgrimage
+            <li><a href="#leg-#{locationID $ start stage}">_{Txt (locationName $ start stage)}
+              $forall l <- map finish $ path stage
+                \ - <a href="#leg-#{locationID l}">_{Txt (locationName l)}
         <p>
-          _{Txt (locationName $ start trip)}
-          $forall l <- map finish $ path trip
-            \  - <a href="#leg-#{locationID l}">_{Txt (locationName l)}
-        <p>
-          ^{metricsSummary preferences camino (score trip) (Just $ length $ path trip)}
-          _{PenanceMsg (metricsPenance (score trip))}
-    $forall day <- path trip
-      <div .card .day .p-1>
-        <h4 id="leg-#{locationID (finish day)}">
-          <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
-          \   -
-          <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
-          _{DistanceFormatted (metricsDistance $ score day)}
+          ^{metricsSummary preferences camino (score pilgrimage) (Just $ length $ path journey) (Just $ length $ path pilgrimage)}
+          _{PenanceMsg (metricsPenance (score pilgrimage))}
+    $forall stage <- path pilgrimage
+      <div .card .stage .border-primary .mt-2>
         <div .card-body>
-         <p>
-            ^{metricsSummary preferences camino (score day) Nothing}
+          <h3 id="stage-#{locationID (start stage)}" .card-title>
+            <a href="@{LocationRoute (start stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start stage)}
+            \   -
+            <a href="@{LocationRoute (finish stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish stage)}
+          <p .card-text>
+            ^{metricsSummary preferences camino (score stage) (Just $ length $ path stage) Nothing}
             <br>
-            ^{penanceSummary preferences camino False True $ score day}
-         <ul>
-            <li>
-              <div .location-summary>
-                ^{locationLine preferences camino (start day)}
-            $forall leg <- path day
+            ^{penanceSummary preferences camino False False $ score stage}
+      $forall day <- path stage
+        <div .card .day .ms-1>
+          <div .card-header>
+            <h4 id="leg-#{locationID (finish day)}">
+              <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
+              \   -
+              <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
+              _{DistanceFormatted (metricsDistance $ score day)}
+          <div .card-body>
+           <p .card-text>
+              ^{metricsSummary preferences camino (score day) Nothing Nothing}
+              <br>
+              ^{penanceSummary preferences camino False True $ score day}
+           <ul .card-text>
               <li>
                 <div .location-summary>
-                  ^{locationLine preferences camino (legTo leg)}
-                <div .leg-summary .leg-line>
-                  ^{legLine preferences camino leg}
+                  ^{locationLine preferences camino (start day)}
+              $forall leg <- path day
+                $with loc <- legTo leg
+                  <li>
+                    <div .location-summary>
+                      ^{locationLine preferences camino loc}
+                    <div .leg-summary .leg-line>
+                      ^{legLine preferences camino leg}
+                    $if loc /= finish stage
+                      <div .poi-summary .bar-separated-list>
+                        <ul>
+                          $forall poi <- selectedPois camino loc
+                            <li>
+                              ^{caminoLocationTypeIcon (poiType poi)}
+                              _{Txt (poiName poi)}
+                              $maybe time <- poiTime poi
+                                \ _{TimeMsgPlain time}
+           $forall accom <- metricsAccommodationChoice $ score day
+              <p .card-text>
+                ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
+      <div .card .rest .ms-1>
+        <div .card-header>
+          <h4>_{RestLabel}
+        <div .card-body>
+          <div .card-text>
+            $with loc <- finish stage
+                <div .location-summary>
+                  ^{locationLine preferences camino loc}
                 <div .poi-summary .bar-separated-list>
                   <ul>
-                    $forall poi <- selectedPois camino (legTo leg)
+                    $forall poi <- locationPois loc
                       <li>
                         ^{caminoLocationTypeIcon (poiType poi)}
                         _{Txt (poiName poi)}
                         $maybe time <- poiTime poi
                           \ _{TimeMsgPlain time}
-         $forall accom <- metricsAccommodationChoice $ score day
-            <p>
-              ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
-   |]
+ |]
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapHtml _preferences _camino _solution = [ihamlet|
@@ -1431,7 +1464,7 @@ caminoHtmlBase config preferences camino solution =
         <ul .nav .nav-tabs role="tablist">
           <li .nav-item role="presentation">
             <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
-          $maybe _t <- trip
+          $maybe _p <- pilgrimage
             <li .nav-item role="presentation">
               <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
           <li .nav-item role="presentation">
@@ -1445,9 +1478,10 @@ caminoHtmlBase config preferences camino solution =
         <div .tab-content>
           <div .tab-pane .active role="tabpanel" id="map-tab">
             ^{caminoMapHtml preferences camino solution}
-          $maybe t <- trip
-            <div .tab-pane role="tabpanel" id="plan-tab">
-              ^{caminoTripHtml preferences camino t}
+          $maybe j <- journey
+            $maybe p <- pilgrimage
+              <div .tab-pane role="tabpanel" id="plan-tab">
+                ^{caminoTripHtml preferences camino j p}
           <div .tab-pane role="tabpanel" id="locations-tab">
             ^{caminoLocationsHtml preferences camino solution}
           <div .tab-pane role="tabpanel" id="preferences-tab">
@@ -1459,7 +1493,8 @@ caminoHtmlBase config preferences camino solution =
     ^{caminoMapScript preferences camino solution}
   |]
   where
-    trip = maybe Nothing (\s -> either (const Nothing) Just (solutionTrip s)) solution
+    journey = maybe Nothing (\s -> either (const Nothing) Just (solutionJourney s)) solution
+    pilgrimage = maybe Nothing (\s -> either (const Nothing) Just (solutionPilgrimage s)) solution
 
 -- | Display a camino wihout a chosen route
 caminoHtmlSimple :: Config -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute

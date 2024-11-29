@@ -23,6 +23,7 @@ module Graph.Programming (
 
   , extend
   , forwards
+  , fromChains
   , constructTable
   , passed
   , paths

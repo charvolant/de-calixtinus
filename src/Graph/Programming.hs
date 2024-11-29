@@ -104,8 +104,8 @@ instance (Edge e v, Score s) => Graph (ChainGraph v e s) (Chain v e s) v where
 -- | Accept a sequence of elements as a possible part
 type AcceptFunction e = [e] -> Bool
 
--- | Evaluate a sequence of elements to give a score
-type EvaluationFunction e s = [e] -> s
+-- | Evaluate a sequence of elements to give a possibly modified sequence and a score
+type EvaluationFunction e s = [e] -> ([e], s)
 
 -- | Choose a preferred chain out of two possibilities
 type ChoiceFunction v e s = Chain v e s -> Chain v e s -> Chain v e s
@@ -117,7 +117,7 @@ type SelectFunction v = v -> Bool
 fromChains :: (Edge e v, Score s) => EvaluationFunction e s -> [Chain v e s] -> ChainGraph v e s
 fromChains evaluate chains  =
   let
-     chains' = filter (\c -> start c /= finish c && evaluate (path c) /= invalid) chains
+     chains' = filter (\c -> start c /= finish c && snd (evaluate (path c)) /= invalid) chains
      starts = nub $ map start chains'
      finishes = nub $ map finish chains'
   in ChainGraph {
@@ -135,13 +135,15 @@ extend accept evaluate chain edg =
   let
     path' = (path chain) ++ [edg]
   in
-    if accept path' then
-      Just (Chain {
-        start = start chain,
-        finish = target edg,
-        path = path',
-        score = evaluate path'
-      })
+    if accept path' then let
+        (path'', score') = evaluate path'
+      in
+        Just (Chain {
+          start = start chain,
+          finish = target edg,
+          path = path'',
+          score = score'
+        })
     else
       Nothing
 

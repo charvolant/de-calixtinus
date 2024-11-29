@@ -53,6 +53,10 @@ preferences1 = TravelPreferences {
        (Town, (Penance 0.9)),
        (City, (Penance 0.5))
      ],
+    preferenceRestLocation = M.fromList [
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+     ],
     preferenceAccommodation = M.fromList [
         (PilgrimAlbergue, (Penance 1.5)),
         (PrivateAlbergue, (Penance 0.9)),
@@ -61,6 +65,10 @@ preferences1 = TravelPreferences {
     preferenceStopServices = M.fromList [
       (Restaurant, (Penance 0.2)),
       (Groceries, (Penance 0.3))
+    ],
+    preferenceRestServices = M.fromList [
+      (Restaurant, (Penance 0.5)),
+      (Groceries, (Penance 0.5))
     ],
     preferenceDayServices = M.fromList [
       (Pharmacy, (Penance 0.1)),
@@ -83,6 +91,10 @@ preferences2 = TravelPreferences {
        (Town, (Penance 0.9)),
        (City, (Penance 0.5))
      ],
+    preferenceRestLocation = M.fromList [
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+     ],
     preferenceAccommodation = M.fromList [
         (PilgrimAlbergue, (Penance 4.0)),
         (PrivateAlbergue, (Penance 3.0))
@@ -90,6 +102,10 @@ preferences2 = TravelPreferences {
     preferenceStopServices = M.fromList [
       (Restaurant, (Penance 0.2)),
       (Groceries, (Penance 0.3))
+    ],
+    preferenceRestServices = M.fromList [
+      (Restaurant, (Penance 0.5)),
+      (Groceries, (Penance 0.5))
     ],
     preferenceDayServices = M.fromList [
       (Pharmacy, (Penance 0.1)),

@@ -419,8 +419,8 @@ dayAccept preferences camino accommodationMap day =
 
 -- | Evaluate a day's stage for penance
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
-dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Leg] -> Metrics
-dayEvaluate = penance
+dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Leg] -> ([Leg], Metrics)
+dayEvaluate preferences camino accommodationMap locationMap legs = (legs, penance preferences camino accommodationMap locationMap legs)
 
 -- | Choose a day's stage based on minimum penance
 dayChoice :: TravelPreferences -> CaminoPreferences -> Day -> Day -> Day
@@ -438,7 +438,7 @@ caminoAccept _preferences _camino days =
 -- | Evaluate a complete camino 
 --   Currently, the sum of all day scores
 --   Refuse any camino that doesn't include all required stops and exclude all excluded stops
-caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> Metrics
+caminoEvaluate :: TravelPreferences -> CaminoPreferences -> [Day] -> ([Day], Metrics)
 caminoEvaluate _preferences camino days =
   let
     final = finish $ last days
@@ -449,7 +449,7 @@ caminoEvaluate _preferences camino days =
     evaluation = if not requiredOk || not excludedOk then invalid else total
   in
     -- trace ("Evaluate " ++ (T.unpack $ daysLabel days) ++ " = " ++ (show $ metricsPenance evaluation) ++ " requiredOk=" ++ show requiredOk ++ " excludedOk=" ++ show excludedOk ++ " total=" ++ show total ) evaluation
-    evaluation
+    (days, evaluation)
 
 -- | Choose a camino stage.
 --   First check that one or the other has passed through a required stop.
@@ -491,7 +491,7 @@ stageAccept preferences _camino stage =
 
 
 -- | Evaluate a stage for penance
-stageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Day] -> Metrics
+stageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Day] -> ([Day], Metrics)
 stageEvaluate preferences camino accommodationMap locationMap stage = let
   total = mconcat $ map score stage
   stageLength = length stage
@@ -506,7 +506,7 @@ stageEvaluate preferences camino accommodationMap locationMap stage = let
   stop = stopMissingCost <> stopCost <> locationCost
   metrics = mempty { metricsFatigue = fatigue, metricsRest = stop, metricsPenance = fatigue <> stop }
   in
-    total <> metrics
+    (stage, total <> metrics)
 
 -- | Choose a day's stage based on minimum penance
 stageChoice :: TravelPreferences -> CaminoPreferences -> Journey -> Journey -> Journey
@@ -520,8 +520,8 @@ pilgrimageAccept preferences _camino pilgrimage =
 
 
 -- | Evaluate a stage for penance
-pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> [Journey] -> Metrics
-pilgrimageEvaluate _preferences _camino pilgrimage = mconcat $ map score pilgrimage
+pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> [Journey] -> ([Journey], Metrics)
+pilgrimageEvaluate _preferences _camino pilgrimage = (pilgrimage, mconcat $ map score pilgrimage)
 
 -- | Choose a day's stage based on minimum penance
 pilgrimageChoice :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> Pilgrimage -> Pilgrimage

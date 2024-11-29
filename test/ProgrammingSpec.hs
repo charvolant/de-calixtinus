@@ -9,6 +9,7 @@ import Data.Maybe
 import qualified Data.List as L
 import qualified Data.Map as M
 import qualified Data.Set as S
+import Debug.Trace (traceShowId)
 
 instance Score Int where
   invalid = 10000
@@ -75,10 +76,17 @@ accept2 :: AcceptFunction e
 accept2 _seq = True
 
 evaluate1 :: EvaluationFunction TestEdge Int
-evaluate1 eseq = sum $ map testValue eseq
+evaluate1 eseq = (eseq, sum $ map testValue eseq)
 
 pevaluate1 :: EvaluationFunction (Chain TestVertex TestEdge Int) Int
-pevaluate1 eseq = sum $ map score eseq
+pevaluate1 eseq = (eseq, sum $ map score eseq)
+
+-- | Modify sequence
+pevaluate2 :: EvaluationFunction (Chain TestVertex TestEdge Int) Int
+pevaluate2 (h:t) = let
+    eseq' = (h { score = 10 }):t
+  in
+    (eseq', sum $ map score eseq')
 
 choice1 :: (Edge e v) => ChoiceFunction v e Int
 choice1 s1 s2 = if score s1 < score s2 then s1 else s2
@@ -384,7 +392,7 @@ testChainGraph4 =
     )
 
 
-testProgram = TestList [testProgram1, testProgram2, testProgram3]
+testProgram = TestList [testProgram1, testProgram2, testProgram3, testProgram4]
 
 testProgram1 =
   let
@@ -413,15 +421,30 @@ testProgram2 =
    )
 
 testProgram3 =
+    let
+      optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
+    in
+      TestCase (do
+        assertBool "Program 3 1" (isRight optimal)
+        let accepted = fromRight (error "Bad route") optimal
+        assertEqual "Program 3 2" (Vertex 1) (start accepted)
+        assertEqual "Program 3 3" (Vertex 6) (finish accepted)
+        assertEqual "Program 3 4" 2 (length $ path accepted)
+        assertEqual "Program 3 5" 2 (score $ head $ path accepted)
+        assertEqual "Program 3 6" 12 (score accepted)
+     )
+
+testProgram4 =
   let
-    optimal = program graph2 choice1 accept2 pevaluate1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
+    optimal = program graph2 choice1 accept2 pevaluate2 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      assertBool "Program 3 1" (isRight optimal)
+      assertBool "Program 4 1" (isRight optimal)
       let accepted = fromRight (error "Bad route") optimal
-      assertEqual "Program 3 2" (Vertex 1) (start accepted)
-      assertEqual "Program 3 3" (Vertex 6) (finish accepted)
-      assertEqual "Program 3 4" 2 (length $ path accepted)
-      assertEqual "Program 3 5" 12 (score accepted)
+      assertEqual "Program 4 2" (Vertex 1) (start accepted)
+      assertEqual "Program 4 3" (Vertex 6) (finish accepted)
+      assertEqual "Program 4 4" 2 (length $ path accepted)
+      assertEqual "Program 4 5" 10 (score $ head $ path accepted)
+      assertEqual "Program 4 6" 16 (score accepted)
    )
 

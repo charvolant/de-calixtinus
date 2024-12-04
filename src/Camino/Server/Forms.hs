@@ -732,7 +732,7 @@ chooseStartForm help prefs extra = do
     let finishOptions = makeOptions render locationID ((localiseText locales) . locationName) rfinishes stops
     (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'
     (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish'
-    (sdRes, sdView) <- mreq (dayField) (fieldSettingsLabel MsgStartDateLabel) startDate'
+    (sdRes, sdView) <- mreq (dateField) (fieldSettingsLabel MsgStartDateLabel) startDate'
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStart = stRes,

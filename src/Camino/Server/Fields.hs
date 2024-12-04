@@ -16,6 +16,7 @@ A collection of fields for yesod forms that display data in ways that fit the Ca
 
 module Camino.Server.Fields (
     clickSelectionField
+  , dateField
   , extendedCheckboxField
   , extendedCheckboxFieldList
   , extendedRadioFieldList
@@ -37,7 +38,9 @@ import qualified Data.Map as M
 import Data.Propositional
 import qualified Data.Set as S
 import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
+import Data.Time.Calendar (Day)
 import Yesod.Core
+import Yesod.Form.Fields (parseDate)
 import Yesod.Form.Types
 import Yesod.Form.Functions
 import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
@@ -520,3 +523,14 @@ $maybe err <- merr
       klookup = M.fromList $ map (\(key, _, v) -> (v, key)) options
       rlookup = M.fromList $ map (\(key, _, v) -> (key, v)) options
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
+
+dateField :: Monad m => RenderMessage (HandlerSite m) FormMessage => Field m Day
+dateField = Field
+    { fieldParse = parseHelper $ parseDate . unpack
+    , fieldView = \theId name attrs val isReq -> toWidget [hamlet|
+$newline never
+<input .form-control id="#{theId}" name="#{name}" *{attrs} type="date" :isReq:required value="#{showVal val}">
+|]
+    , fieldEnctype = UrlEncoded
+    }
+  where showVal = either id (pack . show)

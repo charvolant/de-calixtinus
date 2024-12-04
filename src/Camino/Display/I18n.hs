@@ -73,6 +73,7 @@ data CaminoMsg =
   | DailyLabel
   | DayText
   | DateMsg Data.Time.Calendar.Day
+  | DateRangeMsg Data.Time.Calendar.Day Data.Time.Calendar.Day
   | DayOfMonthName DayOfMonth
   | DayOfWeekName DayOfWeek
   | DayServicesPenanceMsg Penance
@@ -492,9 +493,13 @@ renderLocalisedText locales attr js locd = let
     else
       [shamlet|<span lang="#{lang}">#{txt''}#|]
 
-renderLocalisedDate :: (FormatTime t) => [Locale] -> t -> Html
-renderLocalisedDate [] day = renderLocalisedDate [rootLocale] day
-renderLocalisedDate (loc:_) day = toHtml $ formatTime tl (dateFmt tl) day where tl = localeTimeLocale loc
+renderLocalisedDate :: (FormatTime t) => Bool -> [Locale] -> t -> Html
+renderLocalisedDate weekDay [] day = renderLocalisedDate weekDay [rootLocale] day
+renderLocalisedDate weekDay (loc:_) day = toHtml $ if weekDay then dwf ++ df else df
+  where
+    tl = localeTimeLocale loc
+    df = formatTime tl (dateFmt tl) day
+    dwf = formatTime tl "%a " day
 
 renderLocalisedTime :: (FormatTime t) => [Locale] -> String -> t -> Html
 renderLocalisedTime [] fmt t = renderLocalisedTime [rootLocale] fmt t
@@ -536,7 +541,12 @@ renderCaminoMsg :: Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
-renderCaminoMsg _config locales (DateMsg day) = renderLocalisedDate locales day
+renderCaminoMsg _config locales (DateMsg day) = [shamlet|<span .date>^{renderLocalisedDate True locales day}|]
+renderCaminoMsg _config locales (DateRangeMsg day1 day2) = [shamlet|
+  <span .date-range>^{renderLocalisedDate True locales day1}#
+    $if day1 /= day2
+      \ - ^{renderLocalisedDate True locales day2}#
+  |]
 renderCaminoMsg _config locales (DayOfWeekName dow) = renderLocalisedTime locales "%a" dow
 renderCaminoMsg _config _locales (DayOfMonthName dom) = [shamlet|#{dom}|]
 renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|

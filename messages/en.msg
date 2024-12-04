@@ -54,6 +54,7 @@ ServicesText: Select the cost for stopping at the end of the day and the desired
 ServicesTitle: Select the Day's Travel Preferences
 ShowPreferencesText: If you are happy with these preferences, you can generate a plan. Otherwise, use the Back button to change your choices.
 ShowPreferencesTitle: Review Preferences
+StartDateLabel: Start Date
 StartLabel: Start!
 StartLocationLabel: Trip Start
 StartText: Select the start location and finish location for your trip.

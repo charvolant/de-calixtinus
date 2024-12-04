@@ -115,7 +115,7 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewExcluded :: FieldView CaminoApp
   , resPois :: FormResult (S.Set PointOfInterest)
   , viewPois :: FieldView CaminoApp
-  , resStartDate :: FormResult (Maybe Day)
+  , resStartDate :: FormResult Day
   , viewStartDate :: FieldView CaminoApp
 }
 
@@ -719,7 +719,7 @@ chooseStartForm help prefs extra = do
     let start' = prefStart <$> prefs
     let finish' = prefFinish <$> prefs
     let startDate' = prefStartDate <$> prefs
-    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> startDate'
+    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> pure startDate'
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
@@ -732,12 +732,15 @@ chooseStartForm help prefs extra = do
     let finishOptions = makeOptions render locationID ((localiseText locales) . locationName) rfinishes stops
     (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'
     (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish'
+    (sdRes, sdView) <- mreq (dayField) (fieldSettingsLabel MsgStartDateLabel) startDate'
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStart = stRes,
       viewStart = stView,
       resFinish = fiRes,
-      viewFinish = fiView
+      viewFinish = fiView,
+      resStartDate = sdRes,
+      viewStartDate = sdView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
@@ -749,6 +752,12 @@ chooseStartForm help prefs extra = do
               ^{fvLabel view} ^{help}
             ^{fvInput view}
       $with view <- viewFinish fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      $with view <- viewStartDate fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
@@ -781,7 +790,6 @@ chooseStartForm help prefs extra = do
       ^{fvInput (viewStops fields)}
       ^{fvInput (viewExcluded fields)}
       ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
     |]
     return (res, widget)
 

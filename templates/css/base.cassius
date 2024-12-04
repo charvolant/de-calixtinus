@@ -4,15 +4,6 @@
   padding: 1em
 a
   text-decoration: none
-.day
-  h4
-    .distance
-      margin-left: 1em
-      font-size: initial
-    .penance-summary
-      margin-left: 1em
-      font-size: initial
-      display: inline-block
 .rejected
   color: #c5321b
 .service
@@ -60,6 +51,21 @@ a
   display: inline
 .comma-list li:not(:first-child):before
   content: ", "
+.day
+  h1,h2,h3,h4,h5,h6
+    .distance
+      margin-left: 1em
+      font-size: initial
+    .date-range
+      margin-left: 1em
+      font-size: initial
+    .penance-summary
+      margin-left: 1em
+      font-size: initial
+      display: inline-block
+    .ca-rest
+      margin-left: 1em
+      color: #{toCssColour recreationGreen}
 .description-icon
   color: #{toCssColour informationBlue}
   padding-left: 0.5em;
@@ -169,6 +175,18 @@ a
    font-size: larger
 .sleeping
   color: #{toCssColour caminoBlue}
+.stage
+  h1,h2,h3,h4,h5,h6
+    .distance
+      margin-left: 1em
+      font-size: initial
+    .date-range
+      margin-left: 1em
+      font-size: initial
+    .penance-summary
+      margin-left: 1em
+      font-size: initial
+      display: inline-block
 .transport-link
   color: #{toCssColour mutedBlue}
   .accommodation

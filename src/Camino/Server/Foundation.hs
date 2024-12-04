@@ -33,7 +33,7 @@ import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
-import Data.Time.Calendar (Day)
+import Data.Time.Calendar (Day, fromGregorian)
 import Data.Time.Clock (DiffTime, secondsToDiffTime)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Web.Cookie
@@ -44,6 +44,9 @@ import Text.Hamlet (HtmlUrlI18n, ihamletFile)
 import Text.Read (readMaybe)
 import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
 
+-- | Generic placeholder date
+placeholderDate :: Day
+placeholderDate = fromGregorian 1970 1 1
 
 readValue :: (Read a) => Text -> Maybe a
 readValue v = readMaybe $ unpack v
@@ -199,7 +202,7 @@ data PreferenceData = PreferenceData {
   , prefStops :: S.Set Location -- ^ Any explcit stops
   , prefExcluded :: S.Set Location -- ^ Any explicit exclusions
   , prefPois :: S.Set PointOfInterest -- ^ The points of interest
-  , prefStartDate :: Maybe Day
+  , prefStartDate :: Day -- ^ The start date
 } deriving (Show)
 
 instance FromJSON PreferenceData where
@@ -226,7 +229,7 @@ instance FromJSON PreferenceData where
       stops' <- v .: "stops"
       excluded' <- v .: "excluded"
       pois' <- v .: "pois"
-      startDate' <- v .:? "start-date"
+      startDate' <- v .:? "start-date" .!= placeholderDate
       let camino'' = placeholder camino'
       let routes'' = S.map placeholder routes'
       let start'' = placeholder start'
@@ -289,8 +292,8 @@ instance ToJSON PreferenceData where
         , "start-date" .= prefStartDate prefs
       ]
 
-defaultPreferenceData :: CaminoApp -> PreferenceData
-defaultPreferenceData master = let
+defaultPreferenceData :: CaminoApp -> Day -> PreferenceData
+defaultPreferenceData master current = let
     travel' = Walking
     fitness' = Unfit
     comfort' = Pilgrim
@@ -321,7 +324,7 @@ defaultPreferenceData master = let
       , prefStops = preferenceStops dcp
       , prefExcluded = preferenceExcluded dcp
       , prefPois = preferencePois dcp
-      , prefStartDate = Nothing
+      , prefStartDate = current
     }
 
 travelPreferencesFrom :: PreferenceData -> TravelPreferences
@@ -352,7 +355,7 @@ caminoPreferencesFrom prefs = CaminoPreferences {
   , preferenceStops = prefStops prefs
   , preferenceExcluded = prefExcluded prefs
   , preferencePois = prefPois prefs
-  , preferenceStartDate = prefStartDate prefs
+  , preferenceStartDate = Just $ prefStartDate prefs
 }
 
 -- | Find stops that do not have rejected accommodation

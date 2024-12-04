@@ -137,8 +137,8 @@ caminoLocationStyle _camino stops waypoints location
   | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "-unused"
 
 
-caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Journey -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
+caminoLocationHtmlForPlacemark :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationHtmlForPlacemark config preferences camino pilgrimage _stops _waypoints location = singleton $ NodeContent (toStrict $ renderHtml $ [ihamlet|
   <div>
     <h4>#{locationNameLabel location}
     $maybe d <- locationDescription location
@@ -152,20 +152,20 @@ caminoLocationHtmlForPlacemark config preferences camino trip _stops _waypoints 
             ^{caminoAccommodationTypeIcon accommodation}
     $maybe d <- day
       <div style="margin-top: 1ex;">
-        ^{daySummary preferences camino trip d}
+        ^{daySummary preferences camino pilgrimage d}
 |] message route)
   where
     langs = ["en", ""]
     locales = catMaybes $ map localeFromID langs
     message = renderCaminoMsg config locales
     route = renderCaminoRoute config locales
-    day = maybe Nothing (\t -> find (\d -> start d == location) (path t)) trip
+    day = maybe Nothing (\p -> findDay p location) pilgrimage
 
-caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Journey -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationKml config preferences camino trip stops waypoints location = [xml|
+caminoLocationKml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml config preferences camino pilgrimage stops waypoints location = [xml|
     <Placemark id="#{locationID location}">
       <name>#{locationNameLabel location}
-      <description>^{caminoLocationHtmlForPlacemark config preferences camino trip stops waypoints location}
+      <description>^{caminoLocationHtmlForPlacemark config preferences camino pilgrimage stops waypoints location}
       <styleUrl>#{caminoLocationStyle camino stops waypoints location}
       ^{pointKml $ locationPosition location}
   |]
@@ -198,22 +198,22 @@ useCDATA (ContentText v) = isPrefixOf "<html>" v || isPrefixOf "<div>" v
 
 
 -- Create a KML document of a camino
-createCaminoDoc :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Journey -> Document
-createCaminoDoc config preferences camino trip = Document (Prologue [] Nothing []) kml []
+createCaminoDoc :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Document
+createCaminoDoc config preferences camino pilgrimage = Document (Prologue [] Nothing []) kml []
   where
     camino' = preferenceCamino camino
-    stops = maybe S.empty (S.fromList . tripStops) trip
-    waypoints = maybe S.empty (S.fromList . tripWaypoints) trip
+    stops = maybe S.empty (S.fromList . pilgrimageStops) pilgrimage
+    waypoints = maybe S.empty (S.fromList . pilgrimageWaypoints) pilgrimage
     ns = M.fromList [ ("xmlns", "http://www.opengis.net/kml/2.2"), ("xmlns:gx", "http://www.google.com/kml/ext/2.2") ]
     divider = " - "
     kml = Element "kml" ns
       [xml|
         <Document>
-          $maybe t <- trip
-            <name>#{locationNameLabel $ start t}#{divider}#{locationNameLabel $ finish t}
+          $maybe p <- pilgrimage
+            <name>#{locationNameLabel $ start p}#{divider}#{locationNameLabel $ finish p}
           ^{caminoStyles config camino}
           $forall location <- caminoLocationList camino'
-            ^{caminoLocationKml config preferences camino trip stops waypoints location}
+            ^{caminoLocationKml config preferences camino pilgrimage stops waypoints location}
           $forall leg <- caminoLegs camino'
             ^{caminoLegKml camino stops waypoints leg}
       |]

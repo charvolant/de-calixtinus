@@ -23,18 +23,19 @@ module Camino.Planner (
   , accommodationChoice
   , buildTripChoiceMap
   , daysLabel
+  , findDay
   , locationChoice
   , hasNonTravel
   , nonTravelHours
   , penance
   , openSleeping
+  , pilgrimageLegs
+  , pilgrimageStops
+  , pilgrimageWaypoints
   , planCamino
   , travel
   , travelHours
   , tripLabel
-  , tripLegs
-  , tripStops
-  , tripWaypoints
 ) where
 
 import Camino.Walking
@@ -43,10 +44,13 @@ import Camino.Preferences
 import Camino.Util (maybeSum)
 import Graph.Graph (available, incoming, mirror, reachable, subgraph)
 import Graph.Programming()
+import qualified Data.List as L
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Maybe (isJust, fromJust, fromMaybe, mapMaybe)
 import qualified Data.Text as T
+import qualified Data.Time.Calendar as C
+import Debug.Trace
 
 -- | A pre-selected choice for a location, accommodation etc.
 data (Ord f) => TripChoice v f = TripChoice {
@@ -98,6 +102,7 @@ data Metrics = Metrics {
     , metricsFatigue :: Penance -- ^ Cost of accumulated fatigue
     , metricsRest :: Penance -- ^ Cost of taking a rest
     , metricsMisc :: Penance -- ^ Additional miscellaneous penance costs and causes
+    , metricsDate :: Maybe (C.Day, C.Day) -- ^ An associated date range for this location
     , metricsPenance :: Penance -- ^ Total penance for this leg of the metrics
   } deriving (Show)
 
@@ -128,14 +133,22 @@ instance Semigroup Metrics where
     , metricsFatigue = metricsFatigue m1 <> metricsFatigue m2
     , metricsRest = metricsRest m1 <> metricsRest m2
     , metricsMisc = metricsMisc m1 <> metricsMisc m2
+    , metricsDate = combineDates (metricsDate m1) (metricsDate m2)
     , metricsPenance = metricsPenance m1 <> metricsPenance m2
   }
 
+-- Combine date ranges
+combineDates :: Maybe (C.Day, C.Day) -> Maybe (C.Day, C.Day) -> Maybe (C.Day, C.Day)
+combineDates Nothing Nothing = Nothing
+combineDates Nothing r2 = r2
+combineDates r1 Nothing = r1
+combineDates (Just (min1, max1)) (Just (min2, max2)) = Just (min min1 min2, max max1 max2)
+
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty Nothing mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty Reject Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty Reject Nothing Reject
 
 -- | A day's stage
 type Day = Chain Location Leg Metrics
@@ -151,7 +164,6 @@ data Solution = Solution {
     solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
   , solutionAccommodation :: TripChoiceMap Accommodation Service -- ^ The penance costs for accommodation in various locations
   , solutionLocation :: TripChoiceMap Location Service -- ^ The penance costs for various locations
-  , solutionJourney :: Either Location Journey -- ^ Either a journey solution or a place where something has gone wrong
   , solutionPilgrimage :: Either Location Pilgrimage -- ^ Either a journey solution or a place where something has gone wrong
 }
 
@@ -396,6 +408,7 @@ penance preferences camino accommodationMap locationMap day =
       mempty
       mempty
       misc
+      Nothing
       total
   in
     -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head day) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last day) ++ " = " ++ (show $ metricsPenance metrics) ++ ", " ++ show metrics ++ (if atEnd then  " [end-trip]" else "") ++ (if accommodationFree then  " [accommodation-free]" else "") ++ (if nonTravel then  " [non-travel]" else "")) metrics
@@ -485,7 +498,7 @@ caminoChoice _preferences camino trip1 trip2 =
 
 -- | Accept a stage as a possibility
 --   Acceptable if the the length of the stage is below the maximum
-stageAccept :: TravelPreferences -> CaminoPreferences -> [Day] -> Bool
+stageAccept :: TravelPreferences -> CaminoPreferences -> [Day] ->  Bool
 stageAccept preferences _camino stage =
   isInsideMaximum (preferenceRest preferences) (length stage)
 
@@ -493,16 +506,17 @@ stageAccept preferences _camino stage =
 -- | Evaluate a stage for penance
 stageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Day] -> ([Day], Metrics)
 stageEvaluate preferences camino accommodationMap locationMap stage = let
+  last' = last stage
   total = mconcat $ map score stage
   stageLength = length stage
   restPrefs = withoutMinimum $ preferenceRest preferences
   fatigue = if isOutOfRange restPrefs stageLength then Reject else Penance ((rangeTarget $ preferenceDistance preferences) * (rangeDistanceInt restPrefs stageLength))
-  stopMissing = missingStopServices preferences (preferenceCamino camino) (path $ last stage)
-  accom = M.findWithDefault invalidAccommodation (finish $ last stage) accommodationMap
+  stopMissing = missingStopServices preferences (preferenceCamino camino) (path last')
+  accom = M.findWithDefault invalidAccommodation (finish $ last') accommodationMap
   stopMissing' = stopMissing `S.difference` tripChoiceFeatures accom
   stopMissingCost = missingServicePenance (preferenceStopServices preferences) stopMissing'
-  stopCost = stopPenance preferences (preferenceCamino camino) (path $ last stage)
-  locationCost = locationPenance preferences (preferenceCamino camino) locationMap (path $ last stage)
+  stopCost = stopPenance preferences (preferenceCamino camino) (path last')
+  locationCost = locationPenance preferences (preferenceCamino camino) locationMap (path last')
   stop = stopMissingCost <> stopCost <> locationCost
   metrics = mempty { metricsFatigue = fatigue, metricsRest = stop, metricsPenance = fatigue <> stop }
   in
@@ -514,14 +528,44 @@ stageChoice _preferences _camino stage1 stage2 = if score stage1 < score stage2 
 
 -- | Accept a pilgrimage as a possibility
 --   Acceptable if the the length of all stages are within range
+--   And there is multi-day accommodation at the end of each stage
 pilgrimageAccept :: TravelPreferences -> CaminoPreferences -> [Journey] -> Bool
 pilgrimageAccept preferences _camino pilgrimage =
   all (\j -> not $ isOutOfRange (preferenceRest preferences) (length $ path j)) pilgrimage
 
+-- | Evaluate an entire pilgrimage for penance
+pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Journey] -> ([Journey], Metrics)
+pilgrimageEvaluate preferences camino accommodationMap locationMap pilgrimage = let
+    startDate = maybe (error "No start date") id (preferenceStartDate camino)
+    pilgrimage' = pilgrimageEvaluate' preferences camino accommodationMap locationMap startDate pilgrimage
+  in
+    (pilgrimage', mconcat $ map score pilgrimage')
 
--- | Evaluate a stage for penance
-pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> [Journey] -> ([Journey], Metrics)
-pilgrimageEvaluate _preferences _camino pilgrimage = (pilgrimage, mconcat $ map score pilgrimage)
+-- Recast stages to take advantage of better accomodation options
+pilgrimageEvaluate' :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> C.Day -> [Journey] -> [Journey]
+pilgrimageEvaluate' _preferences _camino _accommodationMap _locationMap _current [] = []
+pilgrimageEvaluate' preferences camino accommodationMap locationMap current (stage:rest) =  let
+    path' = pilgrimageEvaluate'' preferences camino accommodationMap locationMap current (path stage)
+    stage' = stage { path = path' }
+    last' = last path'
+    prec' = init path'
+    accom = M.findWithDefault invalidAccommodation (finish $ last') accommodationMap
+    accom' = if tripChoicePenance accom == Reject then metricsAccommodationChoice $ score last' else [accom]
+    lastDay = snd $ fromJust $ metricsDate $ score last'
+    restDay = C.addDays 1 lastDay
+    last'' = last' { score = (score last') { metricsAccommodationChoice = accom', metricsDate = Just (lastDay, restDay) } }
+    score' =  (score stage') { metricsAccommodationChoice = (init $ metricsAccommodationChoice $ score stage') ++ accom', metricsDate = Just (current, restDay) }
+    stage'' = stage' { path = prec' ++ [last''], score = score' }
+  in
+    stage'':(pilgrimageEvaluate' preferences camino accommodationMap locationMap (C.addDays 1 restDay) rest)
+
+-- Fill out dates of arrival
+pilgrimageEvaluate'' :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> C.Day -> [Day] -> [Day]
+pilgrimageEvaluate'' _preferences _camino _accommodationMap _locationMap _current [] = []
+pilgrimageEvaluate'' preferences camino accommodationMap locationMap current (day:rest) =  let
+    day' = day { score = (score day) { metricsDate = Just (current, current) } }
+  in
+    day':(pilgrimageEvaluate'' preferences camino accommodationMap locationMap (C.addDays 1 current) rest)
 
 -- | Choose a day's stage based on minimum penance
 pilgrimageChoice :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> Pilgrimage -> Pilgrimage
@@ -580,7 +624,6 @@ planCamino preferences camino  = Solution {
         solutionLocations = allowed
       , solutionAccommodation = accommodationMap
       , solutionLocation = locationMap
-      , solutionJourney = journey
       , solutionPilgrimage = pilgrimage
   }
   where
@@ -606,7 +649,7 @@ planCamino preferences camino  = Solution {
         (fromChains (const mempty) (path j))
         (pilgrimageChoice preferences camino)
         (pilgrimageAccept preferences camino)
-        (pilgrimageEvaluate preferences camino)
+        (pilgrimageEvaluate preferences camino restAccommodationMap restLocationMap)
         (stageChoice preferences camino)
         (stageAccept preferences camino)
         (stageEvaluate preferences camino restAccommodationMap restLocationMap)
@@ -616,16 +659,23 @@ planCamino preferences camino  = Solution {
       ) journey
 
 -- | Get all the stops (ie start and finish locations) on a trip in order
-tripStops :: Journey -> [Location]
-tripStops trip = (start trip) : (map finish $ path trip)
+pilgrimageStops :: Pilgrimage -> [Location]
+pilgrimageStops pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> (start d):s') s (path j)) [finish pilgrimage] (path pilgrimage)
 
--- | Get all the waypoints on a trip in order
-tripWaypoints :: Journey -> [Location]
-tripWaypoints trip = foldr (\c -> \w -> w ++ map legTo (path c)) [start trip] (path trip)
+-- | Get all the waypoints on a pilgrimage in order
+pilgrimageWaypoints :: Pilgrimage -> [Location]
+pilgrimageWaypoints pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> foldr (\l -> \s'' -> (legTo l):s'') s' (path d)) s (path j)) [finish pilgrimage] (path pilgrimage)
 
 -- | Get all the legs actually used by a trip
-tripLegs :: Journey -> [Leg]
-tripLegs trip = foldr (\c -> \w -> w ++ path c) [] (path trip)
+pilgrimageLegs :: Pilgrimage -> [Leg]
+pilgrimageLegs pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> path d ++ s') s (path j)) [] (path pilgrimage)
+
+-- | Find the day that starts at a location
+findDay :: Pilgrimage -> Location -> Maybe Day
+findDay pilgrimage location = findDay' (path pilgrimage) location
+
+findDay' [] _location = Nothing
+findDay' (stage:rest) location = maybe (findDay' rest location) Just (L.find (\d -> start d == location) (path stage))
 
 -- | Useful label for a day sequence
 daysLabel :: [Day] -> T.Text

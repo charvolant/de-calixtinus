@@ -41,6 +41,10 @@ caminoYellow = sRGB24read "f9b34a"
 informationBlue :: Colour Double
 informationBlue = sRGB24read "1c9cf1"
 
+-- A green indicating rest and recreation
+recreationGreen :: Colour Double
+recreationGreen = sRGB24read "00b820"
+
 -- A muted blue indicating deprectaed information
 mutedBlue :: Colour Double
 mutedBlue = sRGB24read "a0b3ca"
@@ -155,6 +159,7 @@ iconList = [
     ("ca-pool", '\xe06e'),
     ("ca-prayer", '\xe06f'),
     ("ca-promontory", '\xe052'),
+    ("ca-rest", '\xe073'),
     ("ca-restaurant", '\xe040'),
     ("ca-rowing", '\xe083'),
     ("ca-shared", '\xe021'),

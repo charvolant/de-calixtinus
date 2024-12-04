@@ -21,7 +21,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Planner (Solution(..), Journey)
+import Camino.Planner (Solution(..), Pilgrimage)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Html
@@ -200,10 +200,9 @@ getPreferencesR = do
     prefs <- decodePreferences
     time <- liftIO getCurrentTime
     let current = utctDay time
-    let prefs' = maybe (defaultPreferenceData master) id prefs
-    let prefs'' = prefs' { prefStartDate = Just $ maybe current id (prefStartDate prefs')}
+    let prefs' = maybe (defaultPreferenceData master current) id prefs
     (embedded, help) <- helpPopup TravelStep
-    ((_result, widget), enctype) <- runFormPost $ chooseTravelForm embedded (Just prefs'')
+    ((_result, widget), enctype) <- runFormPost $ chooseTravelForm embedded (Just prefs')
     stepPage TravelStep RangeStep Nothing help widget enctype
 
 postPreferencesR :: Handler Html
@@ -345,7 +344,7 @@ helpPopup stepp = do
 imagePopup :: Widget
 imagePopup = $(widgetFile "image-popup")
 
-addError :: Either Location Journey -> Handler ()
+addError :: Either Location Pilgrimage -> Handler ()
 addError (Left loc) = do
   locales <- getLocales
   setMessage [shamlet|
@@ -367,7 +366,7 @@ planPage prefs = do
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
-    addError (solutionJourney solution)
+    addError (solutionPilgrimage solution)
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ locationName (preferenceStart cprefs)} - #{localiseText locales $ locationName (preferenceFinish cprefs)}|]
       (toWidget html)
@@ -378,7 +377,7 @@ kmlType :: ContentType
 kmlType = "application/vnd.google-earth.kml+xml"
 
 -- | Generate a file name for this
-kmlFileName :: CaminoPreferences -> Maybe Journey -> Text
+kmlFileName :: CaminoPreferences -> Maybe Pilgrimage -> Text
 kmlFileName camino Nothing = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".kml"
 kmlFileName camino (Just trip) = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> "-" <> (toFileName $ locationNameLabel $ start trip) <> "-" <> (toFileName $ locationNameLabel $ finish trip) <> ".kml"
 
@@ -388,11 +387,11 @@ planKml prefs = do
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
     let solution = planCamino tprefs cprefs
-    let journey = either (const Nothing) (Just) (solutionJourney solution)
+    let pilgrimage = either (const Nothing) (Just) (solutionPilgrimage solution)
     let config = caminoAppConfig master
-    let kml = createCaminoDoc config tprefs cprefs journey
+    let kml = createCaminoDoc config tprefs cprefs pilgrimage
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
-    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs journey <> "\"")
+    addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs pilgrimage <> "\"")
     return $ TypedContent kmlType (toContent result)
 
 runCaminoApp :: CaminoApp -> IO ()

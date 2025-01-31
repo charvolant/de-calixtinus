@@ -267,6 +267,7 @@ caminoAccommodationTypeIcon House = [ihamlet| <span .accommodation .house .ca-ho
 caminoAccommodationTypeIcon Hotel = [ihamlet| <span .accommodation .hotel .ca-hotel title="_{HotelTitle}"> |]
 caminoAccommodationTypeIcon Gite = [ihamlet| <span .accommodation .gite .ca-gite title="_{GiteTitle}"> |]
 caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accommodation .camp-ground .ca-campground title="_{CampGroundTitle}"> |]
+caminoAccommodationTypeIcon Refuge = [ihamlet| <span .accommodation .refuge .ca-refuge title="_{RefugeTitle}"> |]
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accommodation .camping .ca-tent title="_{CampingTitle}"> |]
 
 caminoAccommodationTypeMsg :: AccommodationType -> CaminoMsg
@@ -279,6 +280,7 @@ caminoAccommodationTypeMsg House = HouseTitle
 caminoAccommodationTypeMsg Hotel = HotelTitle
 caminoAccommodationTypeMsg Gite = GiteTitle
 caminoAccommodationTypeMsg CampGround = CampGroundTitle
+caminoAccommodationTypeMsg Refuge = RefugeTitle
 caminoAccommodationTypeMsg Camping = CampingTitle
 
 caminoAccommodationLabel :: Accommodation -> CaminoMsg
@@ -291,6 +293,7 @@ caminoAccommodationLabel (GenericAccommodation House) = HouseTitle
 caminoAccommodationLabel (GenericAccommodation Hotel) = HotelTitle
 caminoAccommodationLabel (GenericAccommodation Gite) = GiteTitle
 caminoAccommodationLabel (GenericAccommodation CampGround) = CampGroundTitle
+caminoAccommodationLabel (GenericAccommodation Refuge) = RefugeTitle
 caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
 caminoAccommodationLabel _ = AccommodationLabel
 
@@ -446,9 +449,9 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
      choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
 
 -- | Get elements of a possible solution
-solutionElements :: Camino -> Maybe Solution -> (Either Location Pilgrimage, S.Set Location, S.Set Location, S.Set Leg)
+solutionElements :: Camino -> Maybe Solution -> (Either (Failure Location) Pilgrimage, S.Set Location, S.Set Location, S.Set Leg)
 solutionElements camino Nothing = (
-    Left (head $ routeStarts $ caminoDefaultRoute camino),
+    Left $ simpleFailure "Solution not present" Nothing,
     S.empty,
     S.fromList $ caminoLocationList camino,
     S.fromList $ caminoLegs camino

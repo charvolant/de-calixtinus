@@ -18,6 +18,8 @@ a
   color: #2ab472
 .accommodation.home-stay
   color: #ff395c
+.accommodation.refuge
+  color: #ff201c
 .and-list
   display: inline
   list-style-type: none

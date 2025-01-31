@@ -199,6 +199,7 @@ data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local vol
   | Hotel -- ^ A dedicated hotel
   | Gite -- ^ A gîtes d'etape, a stage lodging for walkers or cyclists
   | CampGround -- ^ A dedicated camping ground with services
+  | Refuge -- ^ A remote-area refuge without facilities
   | Camping -- ^ Roadside camping (with a tent or without, depending on what carried)
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
 
@@ -310,7 +311,9 @@ accommodationServices (GenericAccommodation House) = S.fromList [ WiFi, Bedlinen
 accommodationServices (GenericAccommodation Hotel) = S.fromList [ WiFi, Breakfast, Dinner, Restaurant, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Gite) = S.fromList [ Kitchen, BicycleStorage ]
 accommodationServices (GenericAccommodation CampGround) = S.fromList [ Handwash ]
+accommodationServices (GenericAccommodation Refuge) = S.empty
 accommodationServices (GenericAccommodation Camping) = S.empty
+
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
 accommodationSleeping (Accommodation _name _type _services sleeping' _multi) = sleeping'
@@ -323,6 +326,7 @@ accommodationSleeping (GenericAccommodation House) = S.fromList [ Single, Double
 accommodationSleeping (GenericAccommodation Hotel) = S.fromList [ DoubleWC ]
 accommodationSleeping (GenericAccommodation Gite) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation CampGround) = S.fromList [ SleepingBag ]
+accommodationSleeping (GenericAccommodation Refuge) = S.fromList [ SleepingBag ]
 accommodationSleeping (GenericAccommodation Camping) = S.fromList [ SleepingBag ]
 
 -- | Allow a multi-day stay?
@@ -1350,7 +1354,7 @@ instance ToJSON Travel
 -- | Provide an enumeration of all travel types
 travelEnumeration :: [Travel]
 travelEnumeration = [minBound .. maxBound]
-  
+
 -- | An approximate level of fitness.
 -- 
 --   In the Tranter corrections, the levels of fitness are defined by

@@ -97,7 +97,7 @@ extendedRadioFieldList' options = Field
             <input .form-check-input type=radio name=#{name} value=#{opKey opt} id="#{theId}-#{opIndex opt}" :opKey opt == valkey:checked>
             <label .form-check-label for="#{theId}-#{opIndex opt}">#{opLabel opt}
             $maybe exp <- opExplanation opt
-              <div .form-text>#{exp}
+              <div .clearfix .form-text>#{exp}
       |]
     , fieldEnctype = UrlEncoded
   }
@@ -125,7 +125,7 @@ extendedCheckboxField render label mexp = Field
           <input .form-check-input id=#{theId} *{attrs} type=checkbox name=#{name} value=yes :showVal id val:checked>
           <label .form-check-label for="#{theId}">^{render label}
           $maybe exp <- mexp
-           <div .form-text>^{render exp}
+           <div .clearfix .form-text>^{render exp}
 |]
     , fieldEnctype = UrlEncoded
     }
@@ -158,7 +158,7 @@ extendedCheckboxFieldList' options = Field
               <input .form-check-input type=checkbox name=#{name} value=#{opKey option} id="#{inputId theId (opIndex option)}" :S.member (opValue option) chosen:checked>
               <label .form-check-label for="#{inputId theId (opIndex option)}">^{opLabel option}
               $maybe exp <- opExplanation option
-                <div .form-text>^{exp}
+                <div .clearfix .form-text>^{exp}
         |]
     , fieldEnctype = UrlEncoded
     }
@@ -306,8 +306,8 @@ createCheckFieldCondition base positive zlookup (Implies p (Variable v)) = [sham
 createCheckFieldCondition _ _ _ _ = error "Only program clauses permitted"
 
 -- | Create a series of checkboxes for a series of options
-implyingCheckListField :: (Ord a, ToMarkup msg, RenderMessage site FormMessage) => [(Text, msg, a, Maybe msg, Bool)] -> [Formula a] -> [Formula a] -> [Formula a] -> Field (HandlerFor site) (S.Set a)
-implyingCheckListField options requiredClauses allowedClauses prohibitedClauses = Field
+implyingCheckListField :: (Ord a, RenderMessage site FormMessage) => (msg -> Html) -> [(Text, msg, a, Maybe msg, Bool)] -> [Formula a] -> [Formula a] -> [Formula a] -> Field (HandlerFor site) (S.Set a)
+implyingCheckListField render options requiredClauses allowedClauses prohibitedClauses = Field
     { fieldParse = \rawVals -> \_fileVals -> let
              pvals = map getValue rawVals
            in
@@ -333,9 +333,9 @@ $maybe err <- merr
 $forall (idx, (key, label, opt, mexp, _req)) <- zoptions
   <div .form-check id="#{inputId theId idx}-container" :S.member opt required:.text-secondary>
     <input .form-check-input type=checkbox name=#{name} value=#{key} id="#{inputId theId idx}" onchange="changed_#{theId}()" :not (S.member opt initialAllowed):disabled :S.member opt chosen:checked>
-    <label .form-check-label for="#{inputId theId idx}">#{label}
+    <label .form-check-label for="#{inputId theId idx}">#{render label}
     $maybe exp <- mexp
-      <div .form-text>#{exp}
+      <div .clearfix .form-text>#{render exp}
       |]
            toWidgetBody [hamlet|
 <script>

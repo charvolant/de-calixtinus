@@ -5,7 +5,36 @@
     "Camino Portugués@es",
     "Portuguese Way@en"
   ],
-  "description": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the French route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
+  "description": {
+    "text": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the French route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
+    "image": {
+      "source": "P/P-Rabcal-Flowers.jpg",
+      "thumbnail": "P/P-Rabcal-Flowers-thumbnail.jpg",
+      "title": [
+        "Flowers near Rabçal@en"
+      ],
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Doug Palmer"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2023"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY 4.0 <https://creativecommons.org/licenses/by/4.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://photos.app.goo.gl/r7m94JsshkW6fadKA"
+          }
+        ]
+      }
+    }
+  },
   "metadata" : {
     "namespaces": [
       {
@@ -40,11 +69,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-06-06"
+        "value": "2025-01-27"
       },
       {
         "term": "dcterms:version",
-        "value": "0.5"
+        "value": "0.6"
       },
       {
         "term": "dcterms:license",

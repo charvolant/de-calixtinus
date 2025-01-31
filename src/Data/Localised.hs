@@ -302,6 +302,34 @@ basqueTimeLocale = rootTimeLocale {
     , amPm = ("goizean", "arratsaldean")
     }
 
+asturianTimeLocale :: TimeLocale
+asturianTimeLocale = rootTimeLocale {
+    wDays =
+        [ ("domingu", "dom")
+        , ("llunes", "lun")
+        , ("martes", "mar")
+        , ("miércoles", "mié")
+        , ("xueves", "xue")
+        , ("vienres", "bie")
+        , ("sábadu", "sáb")
+        ]
+    , months =
+        [ ("xineru", "xin")
+        , ("febreru", "feb")
+        , ("marzu", "marzu")
+        , ("abril", "abril")
+        , ("mayu", "mayu")
+        , ("xunu", "xunu")
+        , ("xunetu", "xunetu")
+        , ("agostu", "agostu")
+        , ("setiembre", "set")
+        , ("ochobre", "och")
+        , ("payares", "pay")
+        , ("avientu", "dec")
+        ]
+    , amPm = ("da mane", "a tarde")
+    }
+
 rootOrdinals :: Int -> Text
 rootOrdinals n
   | n `mod` 10 == 1 = (sformat int n) <> "st"
@@ -329,6 +357,7 @@ galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) No
 portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale) Nothing Nothing
 spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale) Nothing Nothing
 basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing (Just basqueTimeLocale) Nothing Nothing
+asturianLocale = Locale (Just rootLocale) "ast" [ ] (Just ["ast"]) Nothing (Just asturianTimeLocale) Nothing Nothing
 
 -- | Decode a locale identifier into a locale specification
 --   If the locale cannot be identifier, the @rootLocale@ is returned
@@ -338,6 +367,7 @@ localeFromID :: Text -- ^ The locale identifier
   -> Maybe Locale -- ^ The resulting locale, if there is one
 localeFromID "" = Just rootLocale
 localeFromID "*" = Just rootLocale
+localeFromID "ast" = Just asturianLocale
 localeFromID "eu" = Just basqueLocale
 localeFromID "eus" = Just basqueLocale
 localeFromID "baq" = Just basqueLocale

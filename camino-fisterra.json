@@ -8,7 +8,32 @@
     "text": "The Camino Fisterra leaves Santiago de Compostella and heads West, to Fisterra/Finisterre, the End of the World@en",
     "notes": [
       "The final destination for the Camino Fisterra is the Faro de Fisterra lighthouse. This is about 3km from the town. To faithfully show the effort invoved, there are two \"Fisterra\"s. One represents the town you pass through on your way to the lighthouse. The other is journey's end."
-    ]
+    ],
+    "image": {
+      "source": "FI/FI-Coast.jpg",
+      "thumbnail": "FI/FI-Coast-thumbnail.jpg",
+      "title": "Fisterra Coastal View@en",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "nesimo"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2022"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://www.flickr.com/photos/nesimo/52383375894"
+          }
+        ]
+      }
+    }
   },
   "metadata" : {
     "namespaces": [
@@ -40,11 +65,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-06-06"
+        "value": "2025-01-27"
       },
       {
         "term": "dcterms:version",
-        "value": "0.5"
+        "value": "0.6"
       },
       {
         "term": "dcterms:license",

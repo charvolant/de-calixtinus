@@ -42,7 +42,7 @@ import Camino.Walking
 import Camino.Camino
 import Camino.Preferences
 import Camino.Util (maybeSum)
-import Graph.Graph (available, incoming, mirror, reachable, subgraph)
+import Graph.Graph (Edge(..), Vertex(..), available, incoming, mirror, reachable, subgraph)
 import Graph.Programming()
 import qualified Data.List as L
 import qualified Data.Map as M
@@ -164,7 +164,7 @@ data Solution = Solution {
     solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
   , solutionAccommodation :: TripChoiceMap Accommodation Service -- ^ The penance costs for accommodation in various locations
   , solutionLocation :: TripChoiceMap Location Service -- ^ The penance costs for various locations
-  , solutionPilgrimage :: Either Location Pilgrimage -- ^ Either a journey solution or a place where something has gone wrong
+  , solutionPilgrimage :: Either (Failure Location) Pilgrimage -- ^ Either a journey solution or a place where something has gone wrong
 }
 
 -- Is this the last day's travel?
@@ -414,12 +414,22 @@ penance preferences camino accommodationMap locationMap day =
     -- trace ("From " ++ (T.unpack $ locationName $ legFrom $ head day) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last day) ++ " = " ++ (show $ metricsPenance metrics) ++ ", " ++ show metrics ++ (if atEnd then  " [end-trip]" else "") ++ (if accommodationFree then  " [accommodation-free]" else "") ++ (if nonTravel then  " [non-travel]" else "")) metrics
     metrics
 
+-- | Accept a leg for a specific travel type
+legAccept :: TravelPreferences -> Leg -> Bool
+legAccept tprefs leg = legAccept' (preferenceTravel tprefs) (legType leg)
+
+legAccept' :: Travel -> LegType -> Bool
+legAccept' Walking CyclePath = False
+legAccept' Cycling Trail = False
+legAccept' _ _ = True
+
 -- | Accept a day's stage as a possibility
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits and all locations are part of the selected routes.
 --   Or if there is no acceptable accommodation available.
 dayAccept :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> [Leg] -> Bool
 dayAccept preferences camino accommodationMap day =
   let
+    legs = all (legAccept preferences) day
     atEnd = isLastDay (preferenceFinish camino) day
     accommodationFree = isAccommodationFree preferences accommodationMap day
     time = travelHours preferences day
@@ -427,7 +437,7 @@ dayAccept preferences camino accommodationMap day =
     inside = isJust time && isInsideMaximum (preferenceDistance preferences) distance && isInsideMaximum (preferenceTime preferences) (fromJust time)
   in
    -- trace ("Day from " ++ (T.unpack $ locationName $ legFrom $ head day) ++ " -> " ++ (T.unpack $ locationName $ legTo $ last day) ++ " accept=" ++ show (atEnd || inside || accommodationFree) ++ " distance= " ++ show distance ++ " time=" ++ show time ++ " end=" ++ show atEnd ++  " inside=" ++ show inside ++ " accommodation free=" ++ show accommodationFree) (atEnd || inside || accommodationFree)
-   atEnd || inside || accommodationFree
+   legs && (atEnd || inside || accommodationFree)
 
 
 -- | Evaluate a day's stage for penance
@@ -531,7 +541,9 @@ stageChoice _preferences _camino stage1 stage2 = if score stage1 < score stage2 
 --   And there is multi-day accommodation at the end of each stage
 pilgrimageAccept :: TravelPreferences -> CaminoPreferences -> [Journey] -> Bool
 pilgrimageAccept preferences _camino pilgrimage =
-  all (\j -> not $ isOutOfRange (preferenceRest preferences) (length $ path j)) pilgrimage
+    all (\j -> test (length $ path j)) pilgrimage
+  where
+    test = if length pilgrimage == 1 then isInsideMaximum (preferenceRest preferences) else (\stage -> not $ isOutOfRange (preferenceRest preferences) stage)
 
 -- | Evaluate an entire pilgrimage for penance
 pilgrimageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoiceMap Accommodation Service -> TripChoiceMap Location Service -> [Journey] -> ([Journey], Metrics)
@@ -645,7 +657,9 @@ planCamino preferences camino  = Solution {
       select
       (preferenceStart camino)
       (preferenceFinish camino)
-    pilgrimage = either Left (\j -> program
+    pilgrimage = either
+      (\f -> Left (compoundFailure "Unable to build journey" Nothing f))
+      (\j -> program
         (fromChains (const mempty) (path j))
         (pilgrimageChoice preferences camino)
         (pilgrimageAccept preferences camino)

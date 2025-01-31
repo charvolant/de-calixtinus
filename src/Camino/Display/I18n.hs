@@ -185,6 +185,7 @@ data CaminoMsg =
   | PublicHolidayText
   | QuadrupleTitle
   | QuadrupleWcTitle
+  | RefugeTitle
   | RegionsLabel
   | RecreationPoiTitle
   | ReligiousEventTitle
@@ -420,6 +421,7 @@ renderCaminoMsgDefault _ PromontoryTitle = "Promontory or Headland"
 renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
+renderCaminoMsgDefault _ RefugeTitle = "Refuge"
 renderCaminoMsgDefault _ RegionsLabel = "Regions"
 renderCaminoMsgDefault _ RecreationPoiTitle = "Recreation"
 renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"

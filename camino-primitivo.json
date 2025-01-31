@@ -1,0 +1,3041 @@
+{
+  "id": "PR",
+  "name": [
+    "Camino Primitivo@es"
+  ],
+  "description": {
+
+    "text": "The Camino Primitivo, or Original Camino is the oldest of the Camino routes to Santiago de Compostella. King Alfosno II of Asturias is considered its first pilgrim in the 9th century.@en",
+    "notes": [
+      {
+        "type": "Warning",
+        "text": "The Camino Primitivo involves many steep ascents and descents. Consider dropping your per-day distance target by 2-4km."
+      }
+     ],
+    "image": {
+      "source": "PR/PR-Lavadoira.jpg",
+      "thumbnail": "PR/PR-Lavadoira-thumbnail.jpg",
+      "title": [
+        "Camino Primitivo in Lavadoira, Asturias, Spain@en",
+        "Camino Primitivo de Santiago en Lavadoira, Asturias, España@es"
+      ],
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Simon Burchell"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2019"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Camino_Primitivo,_Lavadoira_02.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Camino Primitivo@es"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2024-12-29"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-01-27"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.6"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "Camino del Norte and Camino Primitivo, Dave Whitson and Laura Perazzoli, Cicerone, 2022"
+      }
+    ]
+  },
+  "locations": [
+    {
+      "id": "PR-P1",
+      "name": "Oviedo",
+      "type": "City",
+      "position": { "latitude": 43.36238, "longitude": -5.84392 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
+      "pois": [
+        {
+          "id": "PR-P1-1",
+          "name": "Cathedral of San Salvador@en",
+          "description": {
+            "about": "https://catedraldeoviedo.com/"
+          },
+          "type": "Cathedral",
+          "position": { "latitude": 43.36252, "longitude": -5.84367 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1300,1600-1700"
+            }
+          ],
+          "time": 1.0,
+          "events": [
+            {
+              "name": "Mass@en",
+              "type": "Mass",
+              "hours": "0915-1015,1200-1300"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P2",
+      "name": "San Lázaro de Paniceres",
+      "type": "Village",
+      "position": { "latitude": 43.37062, "longitude": -5.88441 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P3",
+      "name": "Lampajúa",
+      "type": "Village",
+      "position": { "latitude": 43.37597, "longitude": -5.91069 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P4",
+      "name": "Loriana",
+      "type": "Village",
+      "position": { "latitude": 43.37888, "longitude": -5.92109 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P5",
+      "name": "La Bolguina",
+      "type": "Village",
+      "position": { "latitude": 43.37953, "longitude": -5.92631  },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P6",
+      "name": "Escamplero",
+      "type": "Village",
+      "position": { "latitude": 43.39143, "longitude": -5.94847 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Escamplero Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Kitchen", "Lockers", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Pensión El Tendejón de Fernando",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P6-1",
+          "name": "Puente medieval de Gallegos@es",
+          "type": "Bridge",
+          "position": { "latitude": 43.38313, "longitude": -5.931143 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P7",
+      "name": "Premoño",
+      "type": "Village",
+      "position": { "latitude": 43.39463, "longitude": -5.98929  },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P7-1",
+          "name": [
+            "Termas romanas de Valduno@es",
+            "Roman Baths of Valdunu@en"],
+          "type": "Historical",
+          "position": { "latitude": 43.39123, "longitude": -6.00526  }
+        }
+      ]
+    },
+    {
+      "id": "PR-P8",
+      "name": "Paladín",
+      "type": "Village",
+      "position": { "latitude": 43.39900, "longitude": -6.01406 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Villa Palatina",
+          "type": "PrivateAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Pool" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P9",
+      "name": "Puerma",
+      "type": "Village",
+      "position": { "latitude": 43.39730, "longitude": -6.02199 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P10",
+      "name": "Peñaflor",
+      "type": "Village",
+      "position": { "latitude": 43.40275, "longitude": -6.04443 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Train", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P10-1",
+          "name": "Medieval Pass@en",
+          "type": "Bridge",
+          "position": { "latitude": 43.40357, "longitude": -6.04091 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P11",
+      "name": "Grado",
+      "type": "Town",
+      "position": { "latitude": 43.39001, "longitude": -6.06799 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+         {
+          "name": "Villa de Grado Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Lockers" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Quintana Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Accessible", "Lockers", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Double" ]
+        },
+        {
+          "name": "Mirador de Miranda Rural Spa",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Accessible", "Lockers", "BicycleStorage", "Pool", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Hotel Areces",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Auto Bar Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+
+      ]
+    },
+    {
+      "id": "PR-P12",
+      "name": "San Juan de Vilapañada (Cabruñana)",
+      "type": "Village",
+      "position": { "latitude": 43.38789, "longitude": -6.10525 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "San Juan de Vilapañada Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Handwash", "Kitchen", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Cabruñana Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Handwash", "Kitchen", "Restaurant", "Lockers", "Stables" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P13",
+      "name": "El Fresno",
+      "type": "Village",
+      "position": { "latitude": 43.38438, "longitude": -6.12102 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P14",
+      "name": "San Marcelo",
+      "type": "Village",
+      "position": { "latitude": 43.38990, "longitude": -6.13235 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Mandala",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Handwash", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Pets" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P15",
+      "name": "Santa Eulalia de Doriga",
+      "type": "Village",
+      "position": { "latitude": 43.39547, "longitude": -6.14447 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Ca'Pacita Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Breakfast", "Dinner" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P16",
+      "name": "Casas del Puente",
+      "type": "Village",
+      "position": { "latitude": 43.40419, "longitude": -6.150403 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "La Casona de Escandina",
+          "type": "House",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P17",
+      "name": "Cornellana",
+      "type": "Town",
+      "position": { "latitude": 43.41214, "longitude": -6.15787 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Roca Madre Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Monesterio de Cornellana Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Stables", "Pets" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hotel Cornellana",
+          "type": "Hotel",
+          "services": [ "WashingMachine", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P18",
+      "name": "Sobrerriba",
+      "type": "Village",
+      "position": { "latitude": 43.40512, "longitude": -6.16459 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P19",
+      "name": "Llamas",
+      "type": "Village",
+      "position": { "latitude": 43.40417,  "longitude": -6.18764 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P20",
+      "name": "Quintana",
+      "type": "Village",
+      "position": { "latitude": 43.40692, "longitude": -6.21017 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P21",
+      "name": "Casazorrina",
+      "type": "Village",
+      "position": { "latitude": 43.40352, "longitude": -6.23325 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "La Figal de Xugabolos",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P22",
+      "name": "Salas",
+      "type": "Town",
+      "position": { "latitude": 43.40882, "longitude": -6.26036 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Salas Pilgrim Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "BicycleStorage", "Bedlinen", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Tulipán de Salas Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Villa de Salas Alojamientos",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC", "Quadruple" ]
+        },
+        {
+          "name": "Valle del Nonaya Hostel and Boarding House",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Double" ]
+        },
+        {
+          "name": "Casa Sueño",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Castillo de Valdés Salas Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Soto Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P22-1",
+          "name": "Collegiate Church of St Mary@en",
+          "type": "Church",
+          "position": { "latitude": 43.40875, "longitude": -6.26065 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P23",
+      "name": "Porciles",
+      "type": "Village",
+      "position": { "latitude": 43.40988, "longitude": -6.30891 },
+      "region": "ES-AS",
+      "services": [  ],
+      "accommodation": [
+        {
+          "name": "Fontenonaya Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P24",
+      "name": "Bodenaya",
+      "type": "Village",
+      "position": { "latitude": 43.40037, "longitude": -6.32382 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Bodenaya Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "Pets" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P25",
+      "name": "La Espina",
+      "type": "Town",
+      "position": { "latitude": 43.39461, "longitude": -6.33653 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "El Cruce Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Texu Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Stables", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Aladino Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P26",
+      "name": "La Pereda",
+      "type": "Village",
+      "position": { "latitude": 43.38990, "longitude": -6.34347  },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "El Minero Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Stables", "Pets", "Bedlinen", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P27",
+      "name": "Bedures",
+      "type": "Village",
+      "position": { "latitude": 43.38012, "longitude": -6.35852 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P27-1",
+          "name": "Molín de Bedures",
+          "type": "Natural",
+          "position": { "latitude": 43.37970, "longitude": -6.36093 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P28",
+      "name": "La Millariega",
+      "type": "Village",
+      "position": { "latitude": 43.37737, "longitude": -6.36168 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P28-1",
+          "name": "Punto de Descanso de Peregrinos@es",
+          "type": "Shop",
+          "description": {
+            "text": "A coffee vending machine@en"
+          },
+          "position": { "latitude": 43.37534, "longitude": -6.36452 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P29",
+      "name": "El Pedrigal",
+      "type": "Village",
+      "position": {"latitude": 43.37203, "longitude": -6.36613 },
+      "region": "ES-AS",
+      "services": ["Restaurant", "Groceries", "Bus"],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P30",
+      "name": "Tineo",
+      "type": "Town",
+      "position": { "latitude": 43.335289, "longitude": -6.41520 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Mater Christi Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "BicycleStorage", "Stables", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Plaza Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Pajulón",
+          "type": "House",
+          "services": [ ],
+          "sleeping": [ "Single" ]
+        },
+        {
+          "name": "La Posada Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double" ]
+        },
+        {
+          "name": "La Posada II",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Triple" ]
+        },
+        {
+          "name": "Palacio de Meras Hotel & Spa",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Handwash", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Don Miguel Hotel",
+          "type": "Hotel",
+          "services": [ "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P30-1",
+          "name": "Church of St Peter and Museum of Religious Art",
+          "type": "Museum",
+          "position": { "latitude": 43.33529, "longitude": -6.41513 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P31",
+      "name": "Obona",
+      "description": {
+        "notes": [
+          "The Camino route passes some way South of the actual village.@en"
+        ]
+      },
+      "type": "Village",
+      "position": {"latitude": 43.33582, "longitude": -6.48464 },
+      "region": "ES-AS",
+      "services": ["Restaurant", "Bus" ],
+      "accommodation": [],
+      "pois": [
+        {
+          "id": "PR-P31-1",
+          "name": "Monastery of Obona",
+          "type": "Historical",
+          "position": { "latitude": 43.34042, "longitude": -6.47965 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P32",
+      "name": "Villaluz",
+      "type": "Village",
+      "position": {"latitude": 43.341259, "longitude": -6.49756 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P33",
+      "name": "Vega de Rey",
+      "type": "Village",
+      "position": {"latitude": 43.33658, "longitude": -6.50366 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P34",
+      "name": "Berrugoso",
+      "type": "Village",
+      "position": {"latitude": 43.33720, "longitude": -6.50964 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P35",
+      "name": "Campiello",
+      "description": {
+        "notes": [
+          {
+            "type": "Warning",
+            "text": "If taking the Hospital Route, no groceries are available until Berducedo@en"
+          }
+        ]
+      },
+      "type": "Village",
+      "position": {"latitude": 43.33646, "longitude": -6.52518 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Ricardo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Lockers", "BicycleStorage", "Stables", "CampSite" ],
+          "sleeping": [ "Shared", "Double" ]
+        },
+        {
+          "name": "Casa Herminia Hostel and Hotel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P36",
+      "name": "El Espin",
+      "type": "Village",
+      "position": {"latitude": 43.33716, "longitude": -6.53563 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Pascual",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P37",
+      "name": "Borres",
+      "type": "Village",
+      "position": {"latitude": 43.33601, "longitude": -6.55554 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Santa Maria de Borres Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Handwash", "BicycleStorage", "Pets" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Montera Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P31-1",
+          "name": "Hospital Route",
+          "type": "Junction",
+          "position": { "latitude": 43.32924, "longitude": -6.56596 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P38",
+      "name": "Samblismo",
+      "type": "Village",
+      "position": {"latitude": 43.32655, "longitude": -6.56846 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Samblismo Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P39",
+      "name": "La Mortera",
+      "type": "Village",
+      "position": {"latitude": 43.32271, "longitude": -6.58157 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P40",
+      "name": "Colinas de Arriba",
+      "type": "Village",
+      "position": {"latitude": 43.31331, "longitude": -6.59231 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Los Hospitales Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P41",
+      "name": "Porciles",
+      "type": "Village",
+      "position": {"latitude": 43.30155, "longitude": -6.59874 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P42",
+      "name": "Lavadoira",
+      "type": "Village",
+      "position": {"latitude": 43.29279, "longitude": -6.60236 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P43",
+      "name": "Ferroy",
+      "type": "Village",
+      "position": {"latitude": 43.27960, "longitude": -6.60288 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P44",
+      "name": "Pola de Allande",
+      "type": "Town",
+      "position": {"latitude": 43.27199, "longitude": -6.61090 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Donativo Polagrino",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Pets", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Pola de Allande Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Casita de Aba",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Nueva Allandesa Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Lozano Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+
+      ]
+    },
+    {
+      "id": "PR-P45",
+      "name": "Peñaseita",
+      "type": "Village",
+      "position": {"latitude": 43.28299, "longitude": -6.63614 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Peñaseita Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Stables" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P46",
+      "name": "Alto de El Palo",
+      "type": "Peak",
+      "position": {"latitude": 43.27324, "longitude": -6.67810 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Refugio del Puerto del Palo",
+          "type": "Refuge",
+          "services": [ ],
+          "sleeping": [ "SleepingBag" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P47",
+      "name": "Montefurado",
+      "type": "Lookout",
+      "position": {"latitude": 43.26440, "longitude": -6.69777 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P48",
+      "name": "Lago",
+      "type": "Village",
+      "position": {"latitude": 43.25347, "longitude": -6.73258 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P49",
+      "name": "Hospital de Paradiella",
+      "type": "Historical",
+      "position": {"latitude": 43.30974, "longitude": -6.61618 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P50",
+      "name": "Hospital de Fonfaraón",
+      "type": "Historical",
+      "position": {"latitude": 43.30034, "longitude": -6.63744 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P51",
+      "name": "Hospital de Valparaíso",
+      "type": "Historical",
+      "position": {"latitude": 43.30434, "longitude": -6.65379 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P52",
+      "name": "Alto de La Marta",
+      "type": "Peak",
+      "position": {"latitude": 43.29564, "longitude": -6.67109 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P53",
+      "name": "Berducedo",
+      "type": "Town",
+      "position": {"latitude": 43.23379, "longitude": -6.76720 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Berducedo Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Camino Primitivo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Marqués Boarding House, Hostel, Bar",
+          "type": "PrivateAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Camín Antguo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "Heating", "WashingMachine", "Kitchen", "Lockers", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Uria",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "Casa de Aldea Araceli",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "El Valledor Apartments",
+          "type": "House",
+          "services": [ "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P54",
+      "name": "La Mesa",
+      "type": "Village",
+      "position": {"latitude": 43.21809, "longitude": -6.80365 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Miguelín Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P55",
+      "name": "Buspol",
+      "type": "Village",
+      "position": {"latitude": 43.22469, "longitude": -6.82178 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P56",
+      "name": "Vistalegre",
+      "type": "Village",
+      "position": {"latitude": 43.23371, "longitude": -6.85314 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Las Grandas Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P57",
+      "name": "Grandas de Salime",
+      "type": "Town",
+      "position": {"latitude": 43.21762, "longitude": -6.87587 },
+      "region": "ES-AS",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Grandas de Salime Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Porta de Grandas Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Casa Sánchez Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostel Occidente",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers" ],
+          "sleeping": [ "Single" ]
+        },
+        {
+          "name": "Hotel La Barra",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Fonda A Reigada",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "BicycleStorage" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P57-1",
+          "name": "Ethnographic Museum@en",
+          "description": {
+            "about": "http://www.museodegrandas.es/"
+          },
+          "type": "Museum",
+          "position": { "latitude": 43.21793, "longitude": -6.87455 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1100-1400,1600-1830"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1500"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "PR-P58",
+      "name": "La Farrapa",
+      "type": "Village",
+      "position": {"latitude": 43.21148, "longitude": -6.88975 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P59",
+      "name": "Carreijeira",
+      "type": "Village",
+      "position": {"latitude": 43.21206, "longitude": -6.90222 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P60",
+      "name": "Maineira",
+      "type": "Village",
+      "position": {"latitude": 43.20715, "longitude": -6.91509 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P61",
+      "name": "Castro",
+      "type": "Village",
+      "position": {"latitude": 43.20024, "longitude": -6.92173 },
+      "region": "ES-AS",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Castro Youth Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "San Julián Country Lodge",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Casa Ferreiro",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Chao Samartín Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P61-1",
+          "name": "Castro Chao Samartin@es",
+          "description": {
+            "about": "https://www.castrosdeasturias.es/castros/16/el-castro-de-chao-samartin"
+          },
+          "type": "Historical",
+          "position": { "latitude": 43.19880, "longitude": -6.92571 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1100-1730"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "PR-P62",
+      "name": "Padraira",
+      "type": "Village",
+      "position": {"latitude": 43.19156, "longitude": -6.92251 },
+      "region": "ES-AS",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P63",
+      "name": "Gestoselo",
+      "type": "Village",
+      "position": {"latitude": 43.17782, "longitude": -6.91898 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P63-1",
+          "name": [
+            "Petroglifos de A Xorenga III@es",
+            "La Xorengas Petroglyphs@en"
+          ],
+          "type": "Historical",
+          "position": { "latitude": 43.18408, "longitude": -6.91171 }
+         },
+        {
+          "id": "PR-P63-2",
+          "name": [
+            "Túmulo prehistórico de El Canadeiro@es",
+            "Burial Mounds of El Canadeiro@en"
+          ],
+          "type": "Historical",
+          "position": { "latitude": 43.18083, "longitude": -6.91676 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P64",
+      "name": "Peñafuente",
+      "type": "Village",
+      "position": {"latitude": 43.16339, "longitude": -6.93513 },
+      "region": "ES-AS",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P64-1",
+          "name": [
+            "Galerías mineras de Penafurada@es",
+            "Tunnels of Penafurada@en"
+          ],
+          "description": {
+            "text": "Large tunnels used by the Romans to take water to the gold mines. Some tunnels run for tens of kilometres.",
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "These tunnels are 4km from the main Camino route"
+              }
+            ]
+          },
+          "type": "Historical",
+          "position": { "latitude": 43.15066, "longitude": -6.93702 }
+        }
+     ]
+    },
+    {
+      "id": "PR-P65",
+      "name": "O Acebo",
+      "type": "Village",
+      "position": {"latitude": 43.143944, "longitude": -6.96893 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P66",
+      "name": "Cabreira",
+      "type": "Village",
+      "position": {"latitude": 43.13623, "longitude": -6.98685 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P67",
+      "name": "Fonfria",
+      "type": "Village",
+      "position": {"latitude": 43.148291, "longitude": -7.00106 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P68",
+      "name": "Barbeitos",
+      "type": "Village",
+      "position": {"latitude": 43.14914, "longitude": -7.01769 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P69",
+      "name": "Silvela",
+      "type": "Village",
+      "position": {"latitude": 43.14281, "longitude": -7.03310 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P70",
+      "name": "Paradanova",
+      "type": "Village",
+      "position": {"latitude": 43.13494, "longitude": -7.05577 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P68-1",
+          "name": "Alternate routes to A Fonsagrada@en",
+          "type": "Junction",
+          "position": {"latitude": 43.13492, "longitude": -7.05620 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P71",
+      "name": "A Fonsagrada",
+      "type": "Town",
+      "position": {"latitude": 43.12602, "longitude": -7.06750 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Romón Rodríguez Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Handwash", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Cuartel Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        },
+        {
+          "name": "Cantábrico Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Os Chaos Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Cantábrico Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa Manolo Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Pórtico",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "A Fonsagrada Camping",
+          "type": "CampGround",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "Pets", "Pool", "CampSite" ],
+          "sleeping": [ "SleepingBag", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P69-1",
+          "name": "Pilgrims Office@en",
+          "type": "PilgrimResource",
+          "position": {"latitude": 43.12571, "longitude": -7.06747 },
+          "hours": [
+            {
+              "calendar" : {
+                "type": "intersection",
+                "calendars": [
+                  {
+                    "type": "weekly",
+                    "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+                  },
+                  {
+                    "type": "yearly",
+                    "months": [ 6, 7, 8, 9 ]
+                  }
+                ]
+              },
+              "hours": "1430-2000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P72",
+      "name": "Padrón",
+      "type": "Village",
+      "position": {"latitude": 43.11717, "longitude": -7.07812 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Xunta de Galicia Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Stables", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa de Lembranza",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P73",
+      "name": "O Piñeiral",
+      "type": "Village",
+      "position": {"latitude": 43.10752, "longitude": -7.09455 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Pomplejo O Piñeiral",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P74",
+      "name": "Villardongo",
+      "type": "Village",
+      "position": {"latitude": 43.10859, "longitude": -7.10690 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P75",
+      "name": "Burón",
+      "type": "Village",
+      "position": {"latitude": 43.140189, "longitude": -7.08517 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa da Bastida",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P76",
+      "name": "Montouto",
+      "type": "Village",
+      "position": {"latitude": 43.09495, "longitude": -7.143965 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P76-1",
+          "name": "Ancient Pilgrims Hospital and Dolmen@en",
+          "type": "Historical",
+          "position": {"latitude": 43.09530, "longitude": -7.14401 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P77",
+      "name": "Paradavella",
+      "type": "Village",
+      "position": {"latitude": 43.07789, "longitude": -7.17482 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P78",
+      "name": "A Degolada",
+      "type": "Village",
+      "position": {"latitude": 43.06729, "longitude": -7.17481 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P79",
+      "name": "O Couto",
+      "type": "Village",
+      "position": {"latitude": 43.05776, "longitude": -7.17267 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P80",
+      "name": "A Lastra",
+      "type": "Village",
+      "position": {"latitude": 43.05068, "longitude": -7.18276 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P81",
+      "name": "Fontaneira",
+      "type": "Village",
+      "position": {"latitude": 43.03391, "longitude": -7.20002 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P82",
+      "name": "O Cádavo - Baleira",
+      "type": "Town",
+      "position": {"latitude": 43.01537, "longitude": -7.24505 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Xunta de Calicia Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "San Mateo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Porta Santa Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Porta Santa Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Eligio Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Moneda Hotel Restaurant",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P83",
+      "name": "Pradeda",
+      "type": "Village",
+      "position": {"latitude": 43.01247, "longitude": -7.25545 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P83-1",
+          "name": "Alternative Routes to Castroverde@en",
+          "type": "Junction",
+          "position": { "latitude": 43.01709, "longitude": -7.27053 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P84",
+      "name": "Vilalle",
+      "type": "Village",
+      "position": {"latitude": 43.02214, "longitude": -7.29954 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P85",
+      "name": "Vilabade",
+      "type": "Village",
+      "position": {"latitude": 43.03571, "longitude": -7.30057 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P86",
+      "name": "Castroverde",
+      "type": "Town",
+      "position": {"latitude": 43.02975, "longitude": -7.32587 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Xunta de Calicia Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Lameliña",
+          "type": "House",
+          "services": [ "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double", "DoubleWC" ]
+        },
+        {
+          "name": "Pensión Roma",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Cortes Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P87",
+      "name": "San Miguel do Camino",
+      "type": "Village",
+      "position": {"latitude": 43.02704, "longitude": -7.33824},
+      "region": "ES-GA",
+      "services": [],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P88",
+      "name": "Souto de Torres",
+      "type": "Village",
+      "position": {"latitude": 43.01935, "longitude": -7.36502 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P89",
+      "name": "Nadela",
+      "type": "Village",
+      "position": {"latitude": 43.01749, "longitude": -7.38325},
+      "region": "ES-GA",
+      "services": [],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P90",
+      "name": "Vilar de Cas",
+      "type": "Village",
+      "position": {"latitude": 43.01743, "longitude": -7.39208 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "A Pociña de Muñiz Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Shared", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P91",
+      "name": "Soutomerille",
+      "type": "Village",
+      "position": {"latitude": 43.017578, "longitude": -7.39709 },
+      "region": "ES-GA",
+      "services": [],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P92",
+      "name": "Gondar",
+      "type": "Village",
+      "position": {"latitude": 43.02151, "longitude": -7.42259 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Rectoral de Romeán Pilgrims Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "Single", "Double", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P92-1",
+          "name": "Oasis Primitivo Rest Area@en",
+          "type": "PilgrimResource",
+          "position": { "latitude": 43.022627, "longitude": -7.418868 }
+        },
+        {
+          "id": "PR-P92-2",
+          "name": "Vending Machines@en",
+          "description": "The last source of supplies before Lugo@en",
+          "type": "Shop",
+          "position": { "latitude": 43.02146, "longitude": -7.42261 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P93",
+      "name": "Bascuas",
+      "type": "Village",
+      "position": {"latitude": 43.01758, "longitude": -7.45525 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P94",
+      "name": "As Casas da Viña",
+      "type": "Village",
+      "position": {"latitude": 43.01910, "longitude": -7.49756 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": []
+    },
+    {
+      "id": "PR-P95",
+      "name": "Lugo",
+      "type": "City",
+      "position": {"latitude": 43.00962, "longitude": -7.55815},
+      "region": "ES-GA",
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus", "Train"],
+      "accommodation": [
+        {
+          "name": "Xunta de Galicia Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": ["WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Bedlinen"],
+          "sleeping": ["Shared"]
+        },
+        "PrivateAlbergue",
+        "Hostel",
+        "GuestHouse",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "PR-P95-1",
+          "name": [
+            "Lugo Cathedral@en",
+            "Catedral de Lugo@es"
+          ],
+          "description": {
+            "about": "http://catedraldelugo.es/"
+          },
+          "type": "Cathedral",
+          "position": {"latitude": 43.00941, "longitude": -7.558019},
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": ["monday", "tuesday", "wednesday", "thursday"]
+              },
+              "hours": "0900-1830"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": ["friday", "saturday"]
+              },
+              "hours": "0900-1900"
+            }
+          ],
+          "time": 1.0,
+          "events": [
+            {
+              "name": "Mass@en",
+              "type": "Mass",
+              "hours": "0900-1000,1015-1115,1100-1200,1200-1300,1300-1400,2000-2100"
+            }
+          ]
+        },
+        {
+          "id": "PR-P95-2",
+          "name": "Roman Walls@en",
+          "type": "Historical",
+          "position": {"latitude": 43.00888, "longitude": -7.55922}
+        }
+      ]
+    },
+    {
+      "id": "PR-P96",
+      "name": "San Vicente do Burgo",
+      "type": "Village",
+      "position": {"latitude": 42.96887, "longitude": -7.64518 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P97",
+      "name": "Santa Eulalia de Bóveda",
+      "type": "Intersection",
+      "position": {"latitude": 42.96495, "longitude": -7.66630 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "PR-P97-1",
+          "name": "Temple of Santalla de Bóveda@en",
+          "description": {
+            "notes": [
+              {
+                "type": "Directions",
+                "text": "Requires a 2.5km walk there and a similar return. Follow the LU-2903 to the temple and the red arrows to return to the main route."
+              }
+            ]
+          },
+          "type": "Historical",
+          "position": {"latitude": 42.98069, "longitude": -7.68604 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1500"
+            }
+          ],
+          "time": 2.0
+        }
+      ]
+    },
+    {
+      "id": "PR-P98",
+      "name": "Bacurin",
+      "type": "Intersection",
+      "position": {"latitude": 42.96727, "longitude": -7.68823 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P99",
+      "name": "San Romao de Retorta",
+      "type": "Village",
+      "position": {"latitude": 42.95522, "longitude": -7.73976 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Xunta de Galicia Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "O Cándido Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Pets", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "O Albergue",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Castrelo",
+          "type": "HomeStay",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Casa de Baixo Rural Tourism",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "O Lar do Alecrín Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "CampSite" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Fogar de Breogán",
+          "type": "GuestHouse",
+          "services": [ "Kitchen", "Lockers" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel O Cruce do Burgo",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P99-1",
+          "name": "Church and Roman Millarium@en",
+          "type": "Historical",
+          "position": {"latitude": 42.95506, "longitude": -7.73875 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P100",
+      "name": "Ferreira",
+      "type": "Village",
+      "position": {"latitude": 42.94605, "longitude":  -7.81723 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Ponte Ferreira Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "A Nave de Ferreira Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Cruz Ferreira Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa do Cuco",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Casa de Ponte Country Lodge",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Pension Km 73",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels", "CampSite" ],
+          "sleeping": [ "Shared", "DoubleWC", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "PR-P100-1",
+          "name": "Ponte Romana de Ferreira@es",
+          "type": "Historical",
+          "position": {"latitude": 42.94618, "longitude": -7.81701 }
+        }
+      ]
+    },
+    {
+      "id": "PR-P101",
+      "name": "Leboreira (Augas Santas)",
+      "type": "Village",
+      "position": {"latitude": 42.94378, "longitude": -7.84467 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Ablergue Merlin",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P102",
+      "name": "Merlán",
+      "type": "Village",
+      "position": {"latitude": 42.94213, "longitude": -7.87259 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P103",
+      "name": "As Seixas",
+      "type": "Village",
+      "position": {"latitude": 42.94263, "longitude": -7.88220 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "As Seixas Xunta de Galcia Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Stables", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "A Toqueira Cantina Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Restaurant", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P104",
+      "name": "Casacamiño",
+      "type": "Village",
+      "position": {"latitude": 42.94185, "longitude": -7.89691 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa Camiño Country Lodge",
+          "type": "HomeStay",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "PR-P105",
+      "name": "O Hospital",
+      "type": "Village",
+      "position": {"latitude": 42.95096, "longitude": -7.90217 },
+      "region": "ES-GA",
+      "services": [  ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P106",
+      "name": "Vilouriz",
+      "type": "Village",
+      "position": {"latitude": 42.94261,"longitude": -7.93332 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "PR-P107",
+      "name": "Vilamor",
+      "type": "Village",
+      "position": {"latitude": 42.94312, "longitude": -7.95172 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "F-F229",
+      "name": "Melide",
+      "type": "Town",
+      "position": { "latitude": 42.91386, "longitude": -8.01474 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Xunta de Galacia Melide Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        "PrivateAlbergue",
+        "GuestHouse",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "F-F229-1",
+          "name": "Meeting of the Camino Frances and the Camino Primitivo@en",
+          "type": "Junction",
+          "position": { "latitude": 42.91424, "longitude": -8.01613 }
+        }
+      ]
+    }
+  ],
+
+  "legs": [
+    {
+      "from": "PR-P1",
+      "to": "PR-P2",
+      "distance": 4.40,
+      "ascent": 45,
+      "descent": 45
+    },
+    {
+      "from": "PR-P2",
+      "to": "PR-P3",
+      "distance": 2.44,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "PR-P3",
+      "to": "PR-P4",
+      "distance": 1.3,
+      "ascent": 30,
+      "descent": 85
+    },
+    {
+      "from": "PR-P4",
+      "to": "PR-P5",
+      "distance": 0.63,
+      "ascent": 0,
+      "descent": 60
+    },
+    {
+      "from": "PR-P5",
+      "to": "PR-P6",
+      "distance": 3.87,
+      "ascent": 145,
+      "descent": 0
+    },
+    {
+      "from": "PR-P6",
+      "to": "PR-P7",
+      "type": "Trail",
+      "description": "Via original Camino route@en",
+      "distance": 6.1,
+      "ascent": 30,
+      "descent": 145
+    },
+    {
+      "from": "PR-P6",
+      "to": "PR-P7",
+      "type": "CyclePath",
+      "description": "Via road for cycles@en",
+      "distance": 4.65,
+      "ascent": 50,
+      "descent": 170
+    },
+    {
+      "from": "PR-P7",
+      "to": "PR-P8",
+      "distance": 2.63,
+      "ascent": 10,
+      "descent": 80
+    },
+    {
+      "from": "PR-P8",
+      "to": "PR-P9",
+      "distance": 0.87,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "PR-P9",
+      "to": "PR-P10",
+      "distance": 2.39,
+      "ascent": 5,
+      "descent": 30
+    },
+    {
+      "from": "PR-P10",
+      "to": "PR-P11",
+      "distance": 3.05,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "PR-P11",
+      "to": "PR-P12",
+      "distance": 3.64,
+      "ascent": 175,
+      "descent": 5
+    },
+    {
+      "from": "PR-P12",
+      "to": "PR-P13",
+      "distance": 1.44,
+      "ascent": 130,
+      "descent": 0
+    },
+    {
+      "from": "PR-P13",
+      "to": "PR-P14",
+      "distance": 1.37,
+      "ascent": 0,
+      "descent": 160
+    },
+    {
+      "from": "PR-P14",
+      "to": "PR-P15",
+      "distance": 1.42,
+      "ascent": 0,
+      "descent": 90
+    },
+    {
+      "from": "PR-P15",
+      "to": "PR-P16",
+      "distance": 1.45,
+      "ascent": 5,
+      "descent": 65
+    },
+    {
+      "from": "PR-P16",
+      "to": "PR-P17",
+      "distance": 1.99,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "PR-P17",
+      "to": "PR-P18",
+      "distance": 1.47,
+      "ascent": 70,
+      "descent": 5
+    },
+    {
+      "from": "PR-P18",
+      "to": "PR-P19",
+      "distance": 2.32,
+      "ascent": 35,
+      "descent": 55
+    },
+    {
+      "from": "PR-P19",
+      "to": "PR-P20",
+      "distance": 2.34,
+      "ascent": 30,
+      "descent": 15
+    },
+    {
+      "from": "PR-P20",
+      "to": "PR-P21",
+      "distance": 1.97,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "PR-P21",
+      "to": "PR-P22",
+      "distance": 3.10,
+      "ascent": 80,
+      "descent": 0
+    },
+    {
+      "from": "PR-P22",
+      "to": "PR-P23",
+      "distance": 5.63,
+      "ascent": 400,
+      "descent": 0
+    },
+    {
+      "from": "PR-P23",
+      "to": "PR-P24",
+      "distance": 1.49,
+      "ascent": 20,
+      "descent": 25
+    },
+    {
+      "from": "PR-P24",
+      "to": "PR-P25",
+      "distance": 1.22,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "PR-P25",
+      "to": "PR-P26",
+      "distance": 1.19,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "PR-P26",
+      "to": "PR-P27",
+      "distance": 1.77,
+      "ascent": 80,
+      "descent": 50
+    },
+    {
+      "from": "PR-P27",
+      "to": "PR-P28",
+      "distance": 0.40,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "PR-P28",
+      "to": "PR-P29",
+      "distance": 0.74,
+      "ascent": 20,
+      "descent": 30
+    },
+    {
+      "from": "PR-P29",
+      "to": "PR-P30",
+      "distance": 7.26,
+      "ascent": 245,
+      "descent": 285
+    },
+    {
+      "from": "PR-P30",
+      "to": "PR-P31",
+      "distance": 8.04,
+      "ascent": 185,
+      "descent": 155
+    },
+    {
+      "from": "PR-P31",
+      "to": "PR-P32",
+      "distance": 1.82,
+      "ascent": 0,
+      "descent": 70
+    },
+    {
+      "from": "PR-P32",
+      "to": "PR-P33",
+      "distance": 0.70,
+      "ascent": 10,
+      "descent": 40
+    },
+    {
+      "from": "PR-P33",
+      "to": "PR-P34",
+      "distance": 0.59,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "PR-P34",
+      "to": "PR-P35",
+      "distance": 1.59,
+      "ascent": 20,
+      "descent": 15
+    },
+    {
+      "from": "PR-P35",
+      "to": "PR-P36",
+      "distance": 0.88,
+      "ascent": 0,
+      "descent": 30
+    },
+    {
+      "from": "PR-P36",
+      "to": "PR-P37",
+      "distance": 2.03,
+      "ascent": 35,
+      "descent": 5
+    },
+    {
+      "from": "PR-P37",
+      "to": "PR-P38",
+      "distance": 2.03,
+      "ascent": 85,
+      "descent": 0
+    },
+    {
+      "from": "PR-P38",
+      "to": "PR-P39",
+      "distance": 1.28,
+      "ascent": 5,
+      "descent": 15
+    },
+    {
+      "from": "PR-P39",
+      "to": "PR-P40",
+      "distance": 1.64,
+      "ascent": 70,
+      "descent": 0
+    },
+    {
+      "from": "PR-P40",
+      "to": "PR-P41",
+      "distance": 1.89,
+      "ascent": 20,
+      "descent": 25
+    },
+    {
+      "from": "PR-P41",
+      "to": "PR-P42",
+      "distance": 1.40,
+      "ascent": 60,
+      "descent": 10
+    },
+    {
+      "from": "PR-P42",
+      "to": "PR-P43",
+      "type": "Trail",
+      "distance": 1.89,
+      "ascent": 20,
+      "descent": 185
+    },
+    {
+      "from": "PR-P43",
+      "to": "PR-P44",
+      "type": "Trail",
+      "distance": 1.30,
+      "ascent": 0,
+      "descent": 100
+    },
+    {
+      "from": "PR-P42",
+      "to": "PR-P44",
+      "type": "CyclePath",
+      "distance": 4.4,
+      "ascent": 0,
+      "descent": 265
+    },
+    {
+      "from": "PR-P44",
+      "to": "PR-P45",
+      "distance": 2.49,
+      "ascent": 130,
+      "descent": 10
+    },
+    {
+      "from": "PR-P45",
+      "to": "PR-P46",
+      "distance": 5.71,
+      "ascent": 580,
+      "descent": 80
+    },
+    {
+      "from": "PR-P38",
+      "to": "PR-P49",
+      "distance": 5.42,
+      "ascent": 310,
+      "descent": 0
+    },
+    {
+      "from": "PR-P49",
+      "to": "PR-P50",
+      "distance": 2.19,
+      "ascent": 85,
+      "descent": 0
+    },
+    {
+      "from": "PR-P50",
+      "to": "PR-P51",
+      "distance": 1.51,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "PR-P51",
+      "to": "PR-P52",
+      "distance": 1.87,
+      "ascent": 155,
+      "descent": 0
+    },
+    {
+      "from": "PR-P52",
+      "to": "PR-P46",
+      "distance": 2.68,
+      "ascent": 75,
+      "descent": 40
+    },
+    {
+      "from": "PR-P46",
+      "to": "PR-P47",
+      "distance": 1.74,
+      "ascent": 0,
+      "descent": 235
+    },
+    {
+      "from": "PR-P47",
+      "to": "PR-P48",
+      "distance": 3.79,
+      "ascent": 40,
+      "descent": 65
+    },
+    {
+      "from": "PR-P48",
+      "to": "PR-P53",
+      "distance": 3.66,
+      "ascent": 45,
+      "descent": 40
+    },
+    {
+      "from": "PR-P53",
+      "to": "PR-P54",
+      "distance": 4.42,
+      "ascent": 85,
+      "descent": 110
+    },
+    {
+      "from": "PR-P54",
+      "to": "PR-P55",
+      "distance": 2.33,
+      "ascent": 165,
+      "descent": 50
+    },
+    {
+      "from": "PR-P55",
+      "to": "PR-P56",
+      "distance": 8.16,
+      "ascent": 55,
+      "descent": 760
+    },
+    {
+      "from": "PR-P55",
+      "to": "PR-P56",
+      "distance": 8.16,
+      "ascent": 55,
+      "descent": 760,
+      "description": "Steep descent@en"
+    },
+    {
+      "from": "PR-P56",
+      "to": "PR-P57",
+      "distance": 5.16,
+      "ascent": 280,
+      "descent": 0
+    },
+    {
+      "from": "PR-P57",
+      "to": "PR-P58",
+      "distance": 1.6,
+      "ascent": 110,
+      "descent": 0
+    },
+    {
+      "from": "PR-P58",
+      "to": "PR-P59",
+      "distance": 1.34,
+      "ascent": 0,
+      "descent": 33
+    },
+    {
+      "from": "PR-P59",
+      "to": "PR-P60",
+      "distance": 1.42,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "PR-P60",
+      "to": "PR-P61",
+      "distance": 0.95,
+      "ascent": 25,
+      "descent": 0
+    },
+    {
+      "from": "PR-P61",
+      "to": "PR-P62",
+      "distance": 1.04,
+      "ascent": 30,
+      "descent": 0
+    },
+    {
+      "from": "PR-P62",
+      "to": "PR-P63",
+      "distance": 1.65,
+      "ascent": 35,
+      "descent": 20
+    },
+    {
+      "from": "PR-P63",
+      "to": "PR-P64",
+      "distance": 1.93,
+      "ascent": 135,
+      "descent": 0
+    },
+    {
+      "from": "PR-P64",
+      "to": "PR-P65",
+      "distance": 4.22,
+      "ascent": 255,
+      "descent": 85
+    },
+    {
+      "from": "PR-P65",
+      "to": "PR-P66",
+      "distance": 2.06,
+      "ascent": 20,
+      "descent": 60
+    },
+    {
+      "from": "PR-P66",
+      "to": "PR-P67",
+      "distance": 2.06,
+      "ascent": 10,
+      "descent": 50
+    },
+    {
+      "from": "PR-P67",
+      "to": "PR-P68",
+      "distance": 1.60,
+      "ascent": 15,
+      "descent": 35
+    },
+    {
+      "from": "PR-P68",
+      "to": "PR-P69",
+      "distance": 1.54,
+      "ascent": 0,
+      "descent": 60
+    },
+    {
+      "from": "PR-P69",
+      "to": "PR-P70",
+      "distance": 2.54,
+      "ascent": 30,
+      "descent": 50
+    },
+    {
+      "from": "PR-P70",
+      "to": "PR-P71",
+      "distance": 1.43,
+      "ascent": 105,
+      "descent": 0
+    },
+    {
+      "from": "PR-P71",
+      "to": "PR-P72",
+      "distance": 1.5,
+      "ascent": 5,
+      "descent": 75
+    },
+    {
+      "from": "PR-P72",
+      "to": "PR-P73",
+      "distance": 1.91,
+      "ascent": 15,
+      "descent": 10
+    },
+    {
+      "from": "PR-P73",
+      "to": "PR-P74",
+      "distance": 1.11,
+      "ascent": 40,
+      "descent": 15
+    },
+    {
+      "from": "PR-P74",
+      "to": "PR-P76",
+      "distance": 3.92,
+      "ascent": 140,
+      "descent": 30
+    },
+    {
+      "from": "PR-P70",
+      "to": "PR-P75",
+      "distance": 2.99,
+      "ascent": 110,
+      "descent": 270
+    },
+    {
+      "from": "PR-P75",
+      "to": "PR-P76",
+      "distance": 8.20,
+      "ascent": 435,
+      "descent": 105
+    },
+    {
+      "from": "PR-P76",
+      "to": "PR-P77",
+      "distance": 3.80,
+      "ascent": 0,
+      "descent": 330
+    },
+    {
+      "from": "PR-P77",
+      "to": "PR-P78",
+      "distance": 1.63,
+      "ascent": 55,
+      "descent": 30
+    },
+    {
+      "from": "PR-P78",
+      "to": "PR-P79",
+      "distance": 0.49,
+      "ascent": 55,
+      "descent": 105
+    },
+    {
+      "from": "PR-P79",
+      "to": "PR-P80",
+      "distance": 2.72,
+      "ascent": 205,
+      "descent": 65
+    },
+    {
+      "from": "PR-P80",
+      "to": "PR-P81",
+      "distance": 2.35,
+      "ascent": 120,
+      "descent": 25
+    },
+    {
+      "from": "PR-P81",
+      "to": "PR-P82",
+      "distance": 4.80,
+      "ascent": 20,
+      "descent": 200
+    },
+    {
+      "from": "PR-P82",
+      "to": "PR-P83",
+      "distance": 0.98,
+      "ascent": 25,
+      "descent": 15
+    },
+    {
+      "from": "PR-P83",
+      "to": "PR-P84",
+      "distance": 4.16,
+      "ascent": 75,
+      "descent": 160
+    },
+    {
+      "from": "PR-P84",
+      "to": "PR-P86",
+      "distance": 2.42,
+      "ascent": 5,
+      "descent": 65
+    },
+    {
+      "from": "PR-P83",
+      "to": "PR-P85",
+      "distance": 5.07,
+      "ascent": 160,
+      "descent": 230
+    },
+    {
+      "from": "PR-P85",
+      "to": "PR-P86",
+      "distance": 2.46,
+      "ascent": 10,
+      "descent": 90
+    },
+    {
+      "from": "PR-P86",
+      "to": "PR-P87",
+      "distance": 1.27,
+      "ascent": 5,
+      "descent": 55
+    },
+    {
+      "from": "PR-P87",
+      "to": "PR-P88",
+      "distance": 2.54,
+      "ascent": 50,
+      "descent": 70
+    },
+    {
+      "from": "PR-P88",
+      "to": "PR-P89",
+      "distance": 1.73,
+      "ascent": 30,
+      "descent": 40
+    },
+    {
+      "from": "PR-P89",
+      "to": "PR-P90",
+      "distance": 0.67,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "PR-P90",
+      "to": "PR-P91",
+      "distance": 0.52,
+      "ascent": 0,
+      "descent": 10
+    },
+    {
+      "from": "PR-P91",
+      "to": "PR-P92",
+      "distance": 2.16,
+      "ascent": 15,
+      "descent": 45
+    },
+    {
+      "from": "PR-P92",
+      "to": "PR-P93",
+      "distance": 3.04,
+      "ascent": 65,
+      "descent": 40
+    },
+    {
+      "from": "PR-P93",
+      "to": "PR-P94",
+      "distance": 3.86,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "PR-P94",
+      "to": "PR-P95",
+      "distance": 6.28,
+      "ascent": 75,
+      "descent": 120
+    },
+    {
+      "from": "PR-P95",
+      "to": "PR-P96",
+      "distance": 7.41,
+      "ascent": 195,
+      "descent": 115
+    },
+    {
+      "from": "PR-P96",
+      "to": "PR-P97",
+      "distance": 1.83,
+      "ascent": 20,
+      "descent": 10
+    },
+    {
+      "from": "PR-P97",
+      "to": "PR-P98",
+      "distance": 2.11,
+      "ascent": 20,
+      "descent": 35
+    },
+    {
+      "from": "PR-P98",
+      "to": "PR-P99",
+      "distance": 5.69,
+      "ascent": 90,
+      "descent": 35
+    },
+    {
+      "from": "PR-P99",
+      "to": "PR-P100",
+      "distance": 7.16,
+      "ascent": 135,
+      "descent": 200
+    },
+    {
+      "from": "PR-P100",
+      "to": "PR-P101",
+      "distance": 2.43,
+      "ascent": 95,
+      "descent": 10
+    },
+    {
+      "from": "PR-P101",
+      "to": "PR-P102",
+      "distance": 2.57,
+      "ascent": 35,
+      "descent": 90
+    },
+    {
+      "from": "PR-P102",
+      "to": "PR-P103",
+      "distance": 0.81,
+      "ascent": 35,
+      "descent": 0
+    },
+    {
+      "from": "PR-P103",
+      "to": "PR-P104",
+      "distance": 1.26,
+      "ascent": 55,
+      "descent": 10
+    },
+    {
+      "from": "PR-P104",
+      "to": "PR-P105",
+      "distance": 1.15,
+      "ascent": 45,
+      "descent": 5
+    },
+    {
+      "from": "PR-P105",
+      "to": "PR-P106",
+      "distance": 3.20,
+      "ascent": 30,
+      "descent": 135
+    },
+    {
+      "from": "PR-P106",
+      "to": "PR-P107",
+      "distance": 1.76,
+      "ascent": 10,
+      "descent": 80
+    },
+    {
+      "from": "PR-P107",
+      "to": "F-F229",
+      "distance": 6.74,
+      "ascent": 50,
+      "descent": 95
+    }
+  ],
+  "routes": [
+    {
+      "id": "PR-P",
+      "name": "Camino Primitivo",
+      "description": "The main Camino route starting in Oviedo and ending at Stantiago de Compostella and following the Southern route",
+      "stops": [
+      ],
+      "starts": [
+        "PR-P1"
+      ],
+      "finishes": [
+        "F-F229"
+      ],
+      "palette": {
+        "colour": "fec953"
+      },
+      "default": true
+    },
+    {
+      "id": "PR-H",
+      "name": [
+        "Hospital Route@en",
+        "Variante de Los Hospitales@es"
+      ],
+      "description": {
+        "text": "Orginally the main route, the Hospital Route is a mountainous track to Berducedo. It passes the ruins of hospitals - pilgrim's inns - from when this was the main route.@en",
+        "notes": [
+          {
+            "type": "Warning",
+            "text": "The route is long and there are no services. Ensure you have sufficient food and water.@en"
+          }
+        ]
+      },
+      "locations": [
+        "PR-P49", "PR-P50", "PR-P51", "PR-P52"
+      ],
+      "palette": {
+        "colour": "fe8d37"
+      }
+    },
+    {
+      "id": "PR-B",
+      "name": [
+        "Burón Route@en"
+      ],
+      "description": {
+        "text": "Burón was the original centre of this region and the original pilgrimage route passed through this location.@en"
+      },
+      "locations": [
+        "PR-P75"
+      ],
+      "palette": {
+        "colour": "fe8d37"
+      }
+    }
+  ],
+  "route-logic": [
+    {
+      "description": "Changes for the Hospital variant",
+      "condition": "PR-H",
+      "exclude": [
+        "PR-P39", "PR-P74", "PR-P41", "PR-P42", "PR-P43", "PR-P44", "PR-P45"
+      ]
+    },
+    {
+      "description": "Changes for the Burón variant",
+      "condition": "PR-B",
+      "exclude": [
+        "PR-P71", "PR-P72", "PR-P73", "PR-P74"
+      ]
+    }
+  ],
+  "default-route": "PR-P"
+}

@@ -19,15 +19,18 @@ module Graph.Programming (
   , ChainGraph
   , ChoiceFunction
   , EvaluationFunction
+  , Failure(..)
   , Score(..)
 
   , extend
   , forwards
   , fromChains
+  , compoundFailure
   , constructTable
   , passed
   , paths
   , program
+  , simpleFailure
   , step
 ) where
 
@@ -37,6 +40,8 @@ import Graph.Graph
 import Data.Aeson
 import Data.Maybe
 import Data.List (nub, find)
+import Options.Applicative (failureCode)
+import Data.Text (Text)
 
 -- | A measure that can be used to evaluate a programming solution.
 --   Scores follow the rules of an ordered monoid, with @mempty@ indicating a zero
@@ -47,6 +52,14 @@ class (Eq s, Ord s, Show s, Monoid s) => Score s where
   -- | Construct an invalid score - a score that indicates that the solution cannot be used
   invalid :: s
 
+data (Vertex v) => Failure v = Failure Text (Maybe v) (Maybe (Failure v))
+ deriving (Show)
+
+simpleFailure :: (Vertex v) => Text -> Maybe v -> Failure v
+simpleFailure msg v = Failure msg v Nothing
+
+compoundFailure :: (Vertex v) => Text -> Maybe v -> Failure v -> Failure v
+compoundFailure msg v root = Failure msg v (Just root)
   
 -- | Describe a chain (path with a score) in
 data (Edge e v, Score s) => Chain v e s = Chain {
@@ -194,22 +207,22 @@ constructTable graph choice accept eval select begin end =
     -- trace ("Reachable = " ++ (show $ S.map identifier reachable) ++ " subgraph " ++ graphSummary sg reachable) result
     result
 
-findBreak' :: (Graph g e v) => g -> v -> v -> S.Set v -> S.Set v -> v
+findBreak' :: (Graph g e v) => g -> v -> v -> S.Set v -> S.Set v -> Maybe v
 findBreak' chain begin end visited horizon =
   let 
     missing' = S.toList $ S.filter (null . (outgoing chain)) horizon
     visited' = visited `S.union` horizon
     next' = (S.unions $ S.map (targets chain) horizon) `S.difference` visited'
   in
-    if S.member end visited then
-      end
+    if S.member end visited' then
+      Nothing
     else if not $ null missing' then
-      head missing'
+      Just (head missing')
     else
       findBreak' chain begin end visited' next'
 
 -- | Find the break in a chain where things can't continue      
-findBreak :: (Graph g e v) => g -> v -> v -> v
+findBreak :: (Graph g e v) => g -> v -> v -> Maybe v
 findBreak chain begin end = findBreak' chain begin end S.empty (S.singleton begin)
 
 -- | Construct a program consisting of a chain of chains that gives the optimal value for traversing the graph from begin to end
@@ -223,11 +236,25 @@ program :: (Graph g e v, Score s1, Score s2) => g -- ^ The graph to traverse
   -> SelectFunction v  -- ^ The function that determines which vertices can be used
   -> v -- ^ The start vertex
   -> v -- ^ The finish vertex
-  -> Either v (Chain v (Chain v e s2) s1) -- ^ A program that splits the traversal into a sequence of chains
+  -> Either (Failure v) (Chain v (Chain v e s2) s1) -- ^ A program that splits the traversal into a sequence of chains
 program graph programChoice programAccept programEval chainChoice chainAccept chainEval select begin end =
   let
     table = constructTable graph chainChoice chainAccept chainEval select begin end
     programs = constructTable table programChoice programAccept programEval select begin end
     route = edge programs begin end
   in
-    maybe (Left $ findBreak table begin end) Right route
+    if isJust route then
+      Right (fromJust route)
+    else let
+        break' = findBreak table begin end
+      in
+        if isJust break' then
+          Left $ simpleFailure "No path at " break'
+        else let
+            break'' = findBreak programs begin end
+          in
+            if isJust break'' then
+              Left $ simpleFailure "No chain at " break''
+            else
+              Left $ simpleFailure "Unable to find break point" Nothing
+

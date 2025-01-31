@@ -355,6 +355,12 @@
                 Camp grounds will usually have toilet facilities and showers and may offer other services,
                 such as clothes washing facilities or cafés.
         <tr>
+            <td>^{caminoAccommodationTypeIcon Refuge}
+            <td>Refuge
+            <td>
+                A remote refuge providing shelter against the elements.
+                Refuges typically provide no resources other than a chance to get away from the weather for the night.
+        <tr>
             <td>^{caminoAccommodationTypeIcon Camping}
             <td>Camping
             <td>

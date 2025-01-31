@@ -159,6 +159,7 @@ iconList = [
     ("ca-pool", '\xe06e'),
     ("ca-prayer", '\xe06f'),
     ("ca-promontory", '\xe052'),
+    ("ca-refuge", '\xe01a'),
     ("ca-rest", '\xe073'),
     ("ca-restaurant", '\xe040'),
     ("ca-rowing", '\xe083'),

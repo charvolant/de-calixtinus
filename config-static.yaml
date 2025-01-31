@@ -244,6 +244,14 @@ calendar:
       type: day-of-year
       days:
         - 08-15
+  - key: DayOfAsturias
+    name:
+      - Day of Asturias@en
+      - Día de Asturias@ast
+    calendar:
+      type: day-of-year
+      days:
+        - 09-08
   - key: LabourDayAU
     name:
       - Labour Day (Australia)@en
@@ -409,6 +417,23 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
+  - id: "ES-AS"
+    name:
+      - Asturies@ast
+      - Asturias@es
+    description:
+      text:
+        - The Principality of Asturias@en
+        - Principáu d'Asturies@ast
+        - Principado de Asturias@es
+        - Principao d'Asturias@ga
+      about: https://www.xunta.gal/
+    type: Province
+    parent: ES
+    locale: ast
+    holidays:
+      - type: named
+        key: DayOfAsturias
   - id: "ES-GA"
     name:
       - Galicia@ga

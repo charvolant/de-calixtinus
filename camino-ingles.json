@@ -5,7 +5,34 @@
     "English Way@en"
   ],
   "description": {
-    "text": "The Camino Ingles is a short camino from Ferrol or A Coruña on the Northen coast of Spain. The route was traditionally used by pilgrims from Northern Europe.@en"
+    "text": "The Camino Ingles is a short camino from Ferrol or A Coruña on the Northen coast of Spain. The route was traditionally used by pilgrims from Northern Europe.@en",
+    "image": {
+      "source": "I/I-Camino-Ingles.jpg",
+      "thumbnail": "I/I-Camino-Ingles-thumbnail.jpg",
+      "title": [
+        "Camiño De Santiago Inglés Ou Do Faro@es"
+      ],
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "David Albela"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2016"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Cami%C3%B1o_De_Santiago_Ingl%C3%A9s_Ou_Do_Faro_(169940475).jpeg"
+          }
+        ]
+      }
+    }
   },
   "metadata": {
     "namespaces": [
@@ -37,11 +64,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-07-05"
+        "value": "2025-01-27"
       },
       {
         "term": "dcterms:version",
-        "value": "0.5"
+        "value": "0.6"
       },
       {
         "term": "dcterms:license",

@@ -7,7 +7,34 @@
     "French Way@en",
     "Frantses bidea@eu"
   ],
-  "description": "The Camino Frances is the most popular Camino route, running from Saint-Jean-Pied-de-Port in France to Santiago de Compostella.",
+  "description": {
+    "text": "The Camino Frances is the most popular Camino route, running from Saint-Jean-Pied-de-Port in France to Santiago de Compostella.",
+    "image": {
+      "source": "F/F-Alto-del-Perdon.jpg",
+      "thumbnail": "F/F-Alto-del-Perdon-thumbnail.jpg",
+      "title": "Alto del Perdon@es",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Birgitta Hellman Magnusson"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2018"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Alto_del_Perdon.jpg"
+          }
+        ]
+      }
+    }
+  },
   "metadata" : {
     "namespaces": [
       {
@@ -50,11 +77,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2024-06-06"
+        "value": "2025-01-27"
       },
       {
         "term": "dcterms:version",
-        "value": "0.5"
+        "value": "0.6"
       },
       {
         "term": "dcterms:license",

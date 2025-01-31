@@ -37,7 +37,7 @@ module Camino.Server.Forms (
 import Camino.Camino
 import Camino.Preferences
 import Camino.Util
-import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg)
+import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg, descriptionBlock)
 import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
@@ -591,8 +591,12 @@ chooseCaminoForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (For
 chooseCaminoForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
     let localised c = localiseText locales c
-    let  caminoField =  extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, toHtml <$> descriptionText locales (caminoDescription c))) (caminoAppCaminos master))
+    let description d = Just $ (descriptionBlock False d) messages router
+    let  caminoField = extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, description $ caminoDescription c)) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
@@ -646,14 +650,18 @@ chooseRoutesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (For
 chooseRoutesForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
     let localised r = localiseText locales r
+    let description d = Just $ (descriptionBlock False d) messages router
     let camino = prefCamino <$> prefs
     let routes = maybe (Prelude.concat (map caminoRoutes (caminoAppCaminos master))) caminoRoutes camino
     let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
-    let routeOptions = map (\r -> (routeID r, localised (routeName r), r, descriptionText locales (routeDescription r), maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
-    (roRes, roView) <- mreq (implyingCheckListField routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
+    let routeOptions = map (\r -> (routeID r, toHtml $ localised $ routeName r, r, description $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
+    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resRoutes = roRes,

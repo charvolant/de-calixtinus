@@ -35,6 +35,7 @@ import Data.Default.Class
 import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
+import Graph.Programming (Failure(..))
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
@@ -282,6 +283,7 @@ stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
     setTitleI title
     toWidget help
     $(widgetFile "step")
+    imagePopup
 
 stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
 stepPage TravelStep nextp _ help widget enctype = stepPage' MsgTravelTitle MsgTravelText1 (Just MsgTravelText2) (Just MsgTravelBottom) TravelStep nextp Nothing help widget enctype
@@ -344,12 +346,21 @@ helpPopup stepp = do
 imagePopup :: Widget
 imagePopup = $(widgetFile "image-popup")
 
-addError :: Either Location Pilgrimage -> Handler ()
-addError (Left loc) = do
+addError' :: Failure Location -> [Locale] -> Html
+addError' (Failure msg loc root) locales = [shamlet|
+  #{msg}
+  $maybe l <- loc
+    #{locationID l} #{localiseText locales $ locationName l}
+  $maybe r <- root
+    : ^{addError' r locales}
+|]
+
+addError :: Either (Failure Location) Pilgrimage -> Handler ()
+addError (Left failure) = do
   locales <- getLocales
   setMessage [shamlet|
     <div ..alert .alert-warning role="alert">
-      Break at #{locationID loc} #{localiseText locales $ locationName loc}
+      ^{addError' failure locales}
     |]
   return ()
 addError _ = do

@@ -9,7 +9,6 @@ import Data.Maybe
 import qualified Data.List as L
 import qualified Data.Map as M
 import qualified Data.Set as S
-import Debug.Trace (traceShowId)
 
 instance Score Int where
   invalid = 10000

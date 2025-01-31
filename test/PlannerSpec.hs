@@ -350,15 +350,16 @@ testPlanCamino1 preferences camino =
       preferenceStartDate = Nothing
     }
     solution = planCamino preferences cpreferences
-    ejourney = solutionJourney solution
+    epilgrimage = solutionPilgrimage solution
   in
     TestCase (do
-      assertBool "Plan Camino 1 1" (isRight ejourney)
-      let route = fromRight (error "Bad route") ejourney
-      assertEqual "Plan Camino 1 2" (preferenceStart cpreferences) (start route)
-      assertEqual "Plan Camino 1 3" (preferenceFinish cpreferences) (finish route)
-      assertEqual "Plan Camino 1 4" 2 (length $ path route)
-      -- assertPenanceEqual "Plan Camino 1 5" (Penance 0) (score route) 0.01
+      assertBool "Plan Camino 1 1" (isRight epilgrimage)
+      let pilgrimage = fromRight (error "Bad route") epilgrimage
+      assertEqual "Plan Camino 1 2" (preferenceStart cpreferences) (start pilgrimage)
+      assertEqual "Plan Camino 1 3" (preferenceFinish cpreferences) (finish pilgrimage)
+      assertEqual "Plan Camino 1 4" 1 (length $ path pilgrimage)
+      let route = path pilgrimage !! 0
+      assertEqual "Plan Camino 1 5" 2 (length $ path route)
       let day1 = path route !! 0
       assertEqual "Plan Camino 1 6" "P-P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P-P7" (identifier $ finish day1)

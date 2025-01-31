@@ -26,7 +26,7 @@ import Data.Localised (localeFromIDOrError)
 import Data.Placeholder
 import Data.Region
 import qualified Data.Set as S
-import qualified Data.Text as ST (pack, splitOn, unpack)
+import qualified Data.Text as ST (pack, splitOn)
 import Options.Applicative
 import Text.XML
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
@@ -91,9 +91,9 @@ plan opts = do
     let router = renderCaminoRoute config' locales
     let messages = renderCaminoMsg config' locales
     let solution = planCamino preferences' caminoPrefs'''
-    let journey = either (\v -> error ("Unable to find solution, break at " ++ identifier v ++ " " ++ (ST.unpack $ locationNameLabel v))) Just (solutionJourney solution)
+    let pilgrimage = either (\f -> error ("Unable to find solution, cause " ++ show f)) Just (solutionPilgrimage solution)
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences' caminoPrefs''' journey
+    let kml = createCaminoDoc config' preferences' caminoPrefs''' pilgrimage
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml)
     let html = caminoHtml config' preferences' caminoPrefs''' solution

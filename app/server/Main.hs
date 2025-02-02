@@ -14,8 +14,10 @@ import Camino.Camino
 import Camino.Config
 import Camino.Server.Application
 import Camino.Server.Foundation
+import Network.HTTP.Simple
 import Options.Applicative
 import Yesod.Static
+import Formatting (bytes)
 
 data Server = Server {
     config :: FilePath
@@ -23,7 +25,6 @@ data Server = Server {
   , devel :: Bool
   , root :: String
   , port :: Int
-  , caminos :: [FilePath]
 }
 
 arguments :: Parser Server
@@ -33,13 +34,17 @@ arguments = Server
     <*> flag False True (long "devel" <> short 'd' <> help "True if in development mode")
     <*> strOption (long "root" <> short 'r' <> value "http://localhost:3000" <> metavar "URL" <> showDefault <> help "The root URL for links")
     <*> option auto (long "port" <> short 'p' <> value 3000 <> metavar "PORT" <> showDefault <> help "The port to listen on")
-    <*> some (argument str (metavar "CAMINO-FILE"))
+
+loadCamino :: AssetConfig -> IO Camino
+loadCamino asset = do
+  result <- readAsset asset
+  return $ readCamino result
 
 main :: IO ()
 main = do
   opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "De Calixtinus")
-  caminos' <- mapM readCamino (caminos opts)
   config' <- readConfigFile (config opts)
+  caminos' <- mapM loadCamino (configCaminos config')
   let config'' = createCaminoConfig (getCalendarConfig config') (getRegionConfig config') caminos'
   static' <- (if devel opts then staticDevel else static) (staticDir opts)
   runCaminoApp (CaminoApp (pack $ root opts) (port opts) (devel opts) static' config' config'')

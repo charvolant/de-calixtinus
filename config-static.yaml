@@ -12,6 +12,31 @@ web:
     - id: "Camino Icons"
       type: Font
       path: /static/fonts/Camino-Icons.woff
+caminos:
+  - id: I-ST
+    type: CaminoDefinition
+    path: "file:import-santiago.json"
+  - id: I-MS
+    type: CaminoDefinition
+    path: "file:import-melide-santiago.json"
+  - id: F
+    type: CaminoDefinition
+    path: "file:camino-frances.json"
+  - id: P
+    type: CaminoDefinition
+    path: "file:camino-portuguese.json"
+  - id: PR
+    type: CaminoDefinition
+    path: "file:camino-primitivo.json"
+  - id: I
+    type: CaminoDefinition
+    path: "file:camino-ingles.json"
+  - id: FI
+    type: CaminoDefinition
+    path: "file:camino-fisterra.json"
+  - id: BM
+    type: CaminoDefinition
+    path: "file:bondi-manly.json"
 calendar:
   - key: EasterSunday
     name:

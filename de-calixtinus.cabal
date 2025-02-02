@@ -49,6 +49,7 @@ library
       Data.Event.Date
       Data.Localised
       Data.Metadata
+      Data.Partial
       Data.Placeholder
       Data.Propositional
       Data.Region
@@ -74,6 +75,7 @@ library
     , file-embed
     , filepath
     , formatting
+    , http-conduit
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -119,6 +121,7 @@ executable camino-map-exe
     , file-embed
     , filepath
     , formatting
+    , http-conduit
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -164,6 +167,7 @@ executable camino-planner-exe
     , file-embed
     , filepath
     , formatting
+    , http-conduit
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -209,6 +213,7 @@ executable camino-server-exe
     , file-embed
     , filepath
     , formatting
+    , http-conduit
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -254,6 +259,7 @@ executable generate-static-exe
     , file-embed
     , filepath
     , formatting
+    , http-conduit
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -288,6 +294,7 @@ test-suite de-calixtinus-test
       GraphSpec
       LocalisedSpec
       MetadataSpec
+      PartialSpec
       PlannerSpec
       ProgrammingSpec
       PropositionalSpec
@@ -315,6 +322,7 @@ test-suite de-calixtinus-test
     , file-embed
     , filepath
     , formatting
+    , http-conduit
     , mtl
     , network-uri
     , numeric-tools ==0.2.*

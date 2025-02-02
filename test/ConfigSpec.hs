@@ -21,6 +21,15 @@ testConfig1 = Config {
     webLinks = [],
     webMaps = []
   },
+  configCaminos = [
+    Asset {
+      assetId = "C1",
+      assetType = CaminoDefinition,
+      assetPath = "c1.json",
+      assetIntegrity = Nothing,
+      assetCrossOrigin = Unused
+    }
+  ],
   configCalendars = Nothing,
   configRegions = Nothing
 }

@@ -91,7 +91,9 @@ camino1 = Camino
   "C1" 
   (wildcardText "Camino 1")
   (wildcardDescription "Test camino 1")
-  metadata1 
+  metadata1
+  False
+  []
   (M.fromList $ map (\l -> (locationID l, l)) [location1, location2, location3, locationI1, locationI2]) 
   [leg1, leg2, leg3, leg4, leg5, leg6]
   []

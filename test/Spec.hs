@@ -9,6 +9,7 @@ import WalkingSpec
 import PlannerSpec
 import RegionSpec
 import GraphSpec
+import PartialSpec
 import ProgrammingSpec
 import MetadataSpec
 import PropositionalSpec
@@ -32,7 +33,7 @@ main = do
     cf <- B.readFile "camino-portuguese.json"
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
-    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoLocations = Data.Map.empty, caminoLegs = [], caminoTransportLinks = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X", caminoPois = Data.Map.empty }) ec
+    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoFragment = False, caminoImports = [], caminoLocations = Data.Map.empty, caminoLegs = [], caminoTransportLinks = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X", caminoPois = Data.Map.empty }) ec
     config <- readConfigFile "config-static.yaml"
     let cconf = createCaminoConfig (fromJust $ configCalendars config) (fromJust $ configRegions config) [camino]
     pf <- B.readFile "test-preferences.json"
@@ -43,6 +44,7 @@ main = do
     putStrLn $ show results
 
 testList prefs camino = TestList [
+   TestLabel "Partial" testPartial,
    TestLabel "Localised" testLocalised,
    TestLabel "Metadata" testMetadata,
    TestLabel "Description" testDescription,

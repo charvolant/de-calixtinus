@@ -29,6 +29,7 @@ module Camino.Config (
   , getLink
   , getLinks
   , getMap
+  , readAsset
   , readConfigFile
 ) where
 
@@ -37,13 +38,15 @@ import Control.Monad.Reader (runReader)
 import Data.Aeson
 import Data.Event (CalendarConfig(..), HasCalendarConfig(..), createCalendarConfig, getNamedCalendarName)
 import qualified Data.Map as M
-import Data.Text (Text)
+import Data.Text (Text, breakOn, drop, unpack)
 import Data.List (find)
 import Data.Localised
 import Data.Region (HasRegionConfig(..), RegionConfig(..), createRegionConfig)
 import Data.Yaml (ParseException, decodeEither')
 import qualified Data.ByteString as B (readFile)
 import Data.Aeson.Types (unexpected)
+import qualified Data.ByteString.Lazy as LB (ByteString, readFile)
+import Network.HTTP.Simple
 
 -- | Configuration for a map provider
 data MapConfig = Map {
@@ -68,6 +71,7 @@ data AssetType = JavaScript
   | Css
   | Font
   | Icon
+  | CaminoDefinition
   | Directory
   deriving (Eq, Ord, Show, Generic)
 
@@ -105,6 +109,24 @@ instance FromJSON AssetConfig where
 instance ToJSON AssetConfig where
   toJSON (Asset id' type' path' integrity' cors') =
     object [ "id" .= id', "type" .= type', "path" .= path', "integrity" .= integrity', "crossorigin" .= cors' ]
+
+-- | Read an asset via it's path, via HTTP or as a file, depending on prefix
+readAsset :: AssetConfig -> IO LB.ByteString
+readAsset asset = let
+    path = assetPath asset
+    path' = unpack path
+    (scheme, path'') = breakOn ":" path
+  in
+    if scheme == "file" then
+      LB.readFile (unpack $ Data.Text.drop 1 path'')
+    else if null path' then
+      LB.readFile path'
+    else if scheme == "http" || scheme == "https" then do
+      request <- parseRequest path'
+      response <- httpLBS request
+      return $ getResponseBody response
+    else
+      error ("Unrecognised path: " ++ path')
 
 -- | The functional type of link
 data LinkType = Header -- ^ The link is part of the heading menu
@@ -157,6 +179,7 @@ instance ToJSON WebConfig where
 data Config = Config {
     configParent :: Maybe Config -- ^ A parent configuration containing values that can over overridden by this configuration
   , configWeb :: WebConfig -- ^ Configuration for the web interface
+  , configCaminos :: [AssetConfig] -- ^ Locations of the various caminos
   , configCalendars :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
   , configRegions:: Maybe RegionConfig -- ^ Common region definitions
 } deriving (Show)
@@ -244,6 +267,7 @@ defaultConfig = Config {
       }
     ]
   },
+  configCaminos = [],
   configCalendars = Just (createCalendarConfig []),
   configRegions = Just (createRegionConfig [])
 }
@@ -257,14 +281,15 @@ instance HasRegionConfig Config where
 instance FromJSON Config where
   parseJSON (Object v) = do
     web' <- v .: "web"
+    caminos' <- v .:? "caminos" .!= []
     calendar' <- v .:? "calendar"
     regions' <- v .:? "regions"
-    return $ Config  (Just defaultConfig) web' calendar' regions'
+    return $ Config  (Just defaultConfig) web' caminos' calendar' regions'
   parseJSON v = unexpected v
     
 instance ToJSON Config where
-  toJSON (Config _parent' web' calendar' regions') =
-    object [ "web" .= web', "calendar" .= calendar', "regions" .= regions' ]
+  toJSON (Config _parent' web' caminos' calendar' regions') =
+    object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions' ]
 
 getAssets' :: AssetType -> Config -> M.Map Text AssetConfig
 getAssets' asset config = let

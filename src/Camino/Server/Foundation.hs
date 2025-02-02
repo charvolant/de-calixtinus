@@ -175,9 +175,9 @@ data CaminoApp = CaminoApp {
   , caminoAppCaminoConfig :: CaminoConfig
 }
 
--- | Get a list if the available caminos
+-- | Get a list if the available full caminos
 caminoAppCaminos :: CaminoApp -> [Camino]
-caminoAppCaminos app = caminoConfigCaminos $ caminoAppCaminoConfig app
+caminoAppCaminos app = filter (not . caminoFragment) $ caminoConfigCaminos $ caminoAppCaminoConfig app
 
 data PreferenceData = PreferenceData {
     prefEasyMode :: Bool -- ^ Use easy preferences

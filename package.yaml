@@ -35,6 +35,7 @@ dependencies:
   - filepath
   - file-embed
   - formatting
+  - http-conduit
   - mtl
   - network-uri
   - numeric-tools == 0.2.*

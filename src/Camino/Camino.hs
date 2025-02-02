@@ -93,14 +93,13 @@ import qualified Control.Exception as CE (evaluate)
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
-import qualified Data.ByteString.Lazy as LB (readFile)
 import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
 import Data.Event
 import Data.Foldable (toList)
-import Data.List (find)
+import qualified Data.List as L (find, partition)
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
 import Data.Maybe (catMaybes, fromJust)
 import Data.Metadata
@@ -108,11 +107,13 @@ import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, 
 import Data.Placeholder
 import Data.Propositional
 import Data.Region
-import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, null, fromList, member, union, unions, singleton)
+import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, null, fromList, member, union, unions, singleton, toList)
 import Data.Scientific (fromFloatDigits, toRealFloat)
-import Data.Text (Text, unpack, pack)
+import Data.Text (Text, unpack, pack, partition)
 import Graph.Graph
 import Graph.Programming
+import Data.Partial (topologicalSort)
+import Data.ByteString.Lazy (ByteString)
 
 -- | The measure of penance.
 -- |
@@ -1066,6 +1067,8 @@ data Camino = Camino {
   , caminoName :: Localised TaggedText
   , caminoDescription :: Description
   , caminoMetadata :: Metadata
+  , caminoFragment :: Bool -- ^ Indicates that this a fragmentary camino intended to be imported by other caminos
+  , caminoImports :: [Camino] -- ^ Imported segments of other camino information
   , caminoLocations :: M.Map Text Location -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
   , caminoTransportLinks :: [Leg] -- ^ Transport links between locations
@@ -1080,11 +1083,15 @@ buildPoiMap :: [Location] -> M.Map Text (PointOfInterest, Location)
 buildPoiMap locs = M.fromList $ foldl (\ps -> \l -> map (\p -> (poiID p, (p, l))) (locationPois l) ++ ps)  [] locs
 
 instance FromJSON Camino where
+  parseJSON (String v) = do
+    return $ placeholder v
   parseJSON (Object v) = do
     id' <- v .: "id"
     name' <- v .: "name"
     description' <- v .: "description"
     metadata' <- v .:? "metadata" .!= def
+    fragment' <- v .:? "fragment" .!= False
+    imports' <- v .:? "imports" .!= []
     locs <- v .: "locations"
     let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
     legs' <- v .: "legs"
@@ -1092,7 +1099,7 @@ instance FromJSON Camino where
     routes' <- v .: "routes"
     routeLogic' <- v .: "route-logic"
     defaultRoute' <- v .:? "default-route" .!= (routeID $ head routes')
-    let defaultRoute'' = fromJust $ find (\r -> routeID r == defaultRoute') routes'
+    let defaultRoute'' = fromJust $ L.find (\r -> routeID r == defaultRoute') routes'
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
     let routes'' = defaultRoute''' : otherRoutes
@@ -1102,6 +1109,8 @@ instance FromJSON Camino where
       , caminoName = name'
       , caminoDescription = description'
       , caminoMetadata = metadata'
+      , caminoFragment = fragment'
+      , caminoImports = imports'
       , caminoLocations = locMap
       , caminoLegs = legs'
       , caminoTransportLinks = links'
@@ -1120,12 +1129,14 @@ instance Ord Camino where
   a `compare` b = caminoId a `compare` caminoId b
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute' _pois) =
+  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _pois) =
     object [ 
         "id" .= id'
       , "name" .= name'
       , "description" .= description'
       , "metadata" .= metadata'
+      , "fragment" .= fragment'
+      , "imports" .= map placeholderID imports'
       , "locations" .= (M.elems locations')
       , "legs" .= legs'
       , "links" .= links'
@@ -1136,10 +1147,10 @@ instance ToJSON Camino where
 
 instance Graph Camino Leg Location where
   vertex camino vid = (caminoLocations camino) M.! (pack vid)
-  edge camino loc1 loc2 = find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
+  edge camino loc1 loc2 = L.find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' locations' legs' links' routes' routeLogic' defaultRoute' _pois') allowed  =
+  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _pois') allowed  =
     let
       id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
@@ -1148,7 +1159,7 @@ instance Graph Camino Leg Location where
       links'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) links'
       routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
       routeLogic'' = map (\l -> l { routeLogicInclude = routeLogicInclude l `S.intersection` allowed, routeLogicExclude = routeLogicExclude l `S.intersection` allowed}) routeLogic'
-      defaultRoute'' = fromJust $ find (\r -> routeID r == routeID defaultRoute') routes'
+      defaultRoute'' = fromJust $ L.find (\r -> routeID r == routeID defaultRoute') routes'
       pois'' = buildPoiMap $ M.elems locations'
     in
       Camino {
@@ -1156,6 +1167,8 @@ instance Graph Camino Leg Location where
         , caminoName = name''
         , caminoDescription = description'
         , caminoMetadata = metadata'
+        , caminoFragment = fragment'
+        , caminoImports = imports'
         , caminoLocations = locations''
         , caminoLegs = legs''
         , caminoTransportLinks = links''
@@ -1179,6 +1192,8 @@ instance Placeholder Text Camino where
       , caminoName = wildcardText $ "Placeholder for " <> cid
       , caminoDescription = wildcardDescription ""
       , caminoMetadata = Metadata [] []
+      , caminoFragment = False
+      , caminoImports = []
       , caminoLocations = M.empty
       , caminoLegs = []
       , caminoTransportLinks = []
@@ -1190,19 +1205,59 @@ instance Placeholder Text Camino where
     where
       dr = placeholder ("DR-" <> cid)
 
+-- Note that this completely denormalises all imports, assuming that the configuration already has
+-- the denormalised imports.
+-- This means that imports have to be loaded in dependency order
 instance Normaliser Text Camino CaminoConfig where
   normalise config camino = let
-      camino1 = camino { caminoLocations = M.map (normalise config) (caminoLocations camino) }
+      imports' = dereferenceF config (caminoImports camino) -- ^ Imports have already been normalised
+      locations' = M.map (normalise config) (caminoLocations camino)
+      locations'' = map caminoLocations imports'
+      locations''' = M.unions (locations':locations'')
+      camino1 = camino {
+          caminoImports = [] -- ^ We've done the importing by the end of this
+        , caminoLocations = locations'''
+      }
+      legs' = map (normaliseLeg camino1) (caminoLegs camino1)
+      legs'' = map caminoLegs imports'
+      links' = map (normaliseLeg camino1) (caminoTransportLinks camino1)
+      links'' = map caminoTransportLinks imports'
       camino2 = camino1 {
-          caminoLegs = map (normaliseLeg camino1) (caminoLegs camino1)
-        , caminoTransportLinks = map (normaliseLeg camino1) (caminoTransportLinks camino1)
+          caminoLegs = concat (legs':legs'')
+        , caminoTransportLinks = concat (links':links'')
         , caminoPois = buildPoiMap (caminoLocationList camino1)
       }
-      camino3 = camino2 { caminoRoutes = map (normalise camino2) (caminoRoutes camino2) }
-      camino4 = camino3 { caminoDefaultRoute = normalise camino3 (caminoDefaultRoute camino3) }
-      camino5 = camino4 { caminoRouteLogic = map (normaliseRouteLogic camino4) (caminoRouteLogic camino4)  }
+      splitroutes c rs = let
+          drid = routeID $ caminoDefaultRoute c
+          (dfs, ndfs) = L.partition (\r -> drid == routeID r) rs
+        in
+          case dfs of
+            [df] -> (df, ndfs)
+            _ -> error "Expecting single default route"
+      routes' = map (normalise camino2) (caminoRoutes camino2)
+      (d, nds) = splitroutes camino2 routes'
+      routes'' = map (\c -> splitroutes c $ caminoRoutes c) imports'
+      ids = map fst routes''
+      inds = map snd routes''
+      sunion field r rs = S.unions (field r:map field rs)
+      lunion field r rs = S.toList $ sunion (S.fromList . field) r rs
+      d' = d {
+          routeLocations = sunion routeLocations d ids
+        , routeStops = sunion routeStops d ids
+        , routeStarts = lunion routeStarts d ids
+        , routeFinishes = lunion routeFinishes d ids
+        , routeSuggestedPois = sunion routeSuggestedPois d ids
+      }
+      nds' = concat (nds:inds)
+      camino3 = camino2 {
+          caminoRoutes = d':nds'
+        , caminoDefaultRoute = d'
+      }
+      rl' =  map (normaliseRouteLogic camino3) (caminoRouteLogic camino3)
+      rl'' = map caminoRouteLogic imports'
+      camino4 = camino3 { caminoRouteLogic = concat (rl':rl'') }
     in
-      camino5
+      camino4
 
 instance Dereferencer Text Camino CaminoConfig where
   dereference config camino = dereference (caminoConfigLookup config) camino
@@ -1240,8 +1295,8 @@ caminoRoute :: Camino -- ^ The camino being interrogated
   -> Location -- ^ The location to test
   -> Route -- ^ The route that the location is on
 caminoRoute camino routes location = let
-    route = find (\r -> S.member r routes && S.member location (routeLocations r)) (reverse $ caminoRoutes camino)
-    route' = maybe (caminoDefaultRoute camino) id (find (\r -> S.member location (routeLocations r)) (reverse $ caminoRoutes camino))
+    route = L.find (\r -> S.member r routes && S.member location (routeLocations r)) (reverse $ caminoRoutes camino)
+    route' = maybe (caminoDefaultRoute camino) id (L.find (\r -> S.member location (routeLocations r)) (reverse $ caminoRoutes camino))
   in
     maybe route' id route
 
@@ -1254,7 +1309,7 @@ caminoLegRoute camino leg = let
     dflt = caminoDefaultRoute camino
     from' = legFrom leg
     to' = legTo leg
-    route = find (\r -> r /= dflt && (S.member from' (routeLocations r) || S.member to' (routeLocations r))) (caminoRoutes camino)
+    route = L.find (\r -> r /= dflt && (S.member from' (routeLocations r) || S.member to' (routeLocations r))) (caminoRoutes camino)
   in
     maybe dflt id route
 
@@ -1297,6 +1352,21 @@ caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locat
 locationTransportLinks :: Camino -> Location -> [Leg]
 locationTransportLinks camino location = filter (\l -> legFrom l == location) (caminoTransportLinks camino)
 
+-- | Partial order for a list of caminos, sorting things into import order, with
+--   a <= b if b imports (recursively)
+caminoPartialOrder :: [Camino] -> Camino -> Camino -> Bool
+caminoPartialOrder caminos camino1 camino2 = let
+    imports = caminoPartialOrder' caminos S.empty [camino2]
+  in
+    S.member (caminoId camino1) imports
+
+caminoPartialOrder' _caminos result [] = result
+caminoPartialOrder' caminos result imports = let
+    imports' = (S.fromList $ map caminoId imports) `S.difference` result
+    imports'' = map (\cid -> fromJust $ L.find (\c -> caminoId c == cid) caminos) (S.toList imports')
+  in
+    caminoPartialOrder' caminos (result `S.union` imports') imports''
+
 -- | A configuration environment for caminos
 data CaminoConfig = CaminoConfig {
     caminoConfigCaminos :: [Camino] -- ^ The list of known caminos
@@ -1331,16 +1401,24 @@ getCamino key = do
 --   dereferenced results.
 createCaminoConfig :: CalendarConfig -> RegionConfig -> [Camino] -> CaminoConfig
 createCaminoConfig calendars regions caminos = let
-    config1 = CaminoConfig [] (const Nothing) (const Nothing) calendars regions
-    caminos1 = map (normalise config1) caminos
-    caminoMap1 = M.fromList $ map (\c -> (placeholderID c, c)) caminos1
-    locationMap1 = M.unions (map caminoLocations caminos1)
+    caminos' = topologicalSort (caminoPartialOrder caminos) caminos
+    config' = CaminoConfig [] (const Nothing) (const Nothing) calendars regions
   in
-    config1 {
-        caminoConfigCaminos = caminos1
-      , caminoConfigLookup = \k -> M.lookup k caminoMap1
-      , caminoConfigLocationLookup = \k -> M.lookup k locationMap1
+    createCaminoConfig' config' caminos'
+
+createCaminoConfig' config [] = config
+createCaminoConfig' config (camino:rest) = let
+    camino' = normalise config camino
+    caminos' = (caminoConfigCaminos config) ++ [camino']
+    caminoMap' = M.fromList $ map (\c -> (placeholderID c, c)) caminos'
+    locationMap' =  M.unions (map caminoLocations caminos')
+    config' = config {
+        caminoConfigCaminos = caminos'
+      , caminoConfigLookup = \k -> M.lookup k caminoMap'
+      , caminoConfigLocationLookup = \k -> M.lookup k locationMap'
     }
+  in
+    createCaminoConfig' config' rest
 
 
 -- | The travel function to use
@@ -1394,14 +1472,13 @@ comfortEnumeration = [minBound .. maxBound]
 
 -- Read a camino description from a file, using an existing context
 -- This is an unnormalised camino with placeholders. It will  be normalised when placed in a camino configuration
-readCamino :: FilePath -> IO Camino
-readCamino file = do
-  cf <- LB.readFile file
-  let decoded = eitherDecode cf :: Either String Camino
-  _ <- CE.evaluate decoded
-  return $ case decoded of
-    Left msg -> error msg
-    Right camino' -> camino'
+readCamino :: ByteString -> Camino
+readCamino bytes = let
+    decoded = eitherDecode bytes :: Either String Camino
+  in
+    case decoded of
+      Left msg -> error msg
+      Right camino' -> camino'
 
 -- Dump a camino as a semi-readable string
 caminoDump :: Camino -> String

@@ -67,7 +67,8 @@ readPreferences file = do
 
 plan :: Plan -> IO ()
 plan opts = do
-    camino' <- readCamino (camino opts)
+    file' <- B.readFile $ camino opts
+    let camino' = readCamino file'
     preferences' <- readPreferences (preferences opts)
     config' <- readConfigFile (config opts)
     let cconf = createCaminoConfig (getCalendarConfig config') (getRegionConfig config') [camino']

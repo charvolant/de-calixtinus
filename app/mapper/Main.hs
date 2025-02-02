@@ -11,6 +11,7 @@ Portability : POSIX
 module Main (main) where
 
 import Camino.Camino
+import qualified Data.ByteString.Lazy as B
 import Data.Localised
 import Data.Region
 import Data.Text (Text, intercalate, unpack)
@@ -50,5 +51,6 @@ printLocation l = do
 main :: IO ()
 main = do
     opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Plan a camino graph")
-    camino' <- readCamino (camino opts)
+    file' <- B.readFile $ camino opts
+    let camino' = readCamino file'
     mapM_ printLocation (caminoLocations camino')

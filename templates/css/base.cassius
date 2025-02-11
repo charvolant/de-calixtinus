@@ -119,6 +119,18 @@ a
       display: inline-block
     .services
       display: inline-block
+.location-rest
+  .accordion-header
+    h5
+      font-weight: bolder
+    h5::after
+      margin-left: 1ex
+      color: #{toCssColour recreationGreen}
+      font-family: "Camino Icons"
+      font-weight: normal
+      content: "\e073"
+  .best-accommodation
+    font-weight: bold
 .location-summary
   display: inline-block
   .accommodation-types
@@ -129,6 +141,18 @@ a
     font-size: smaller
     display: inline-block
     margin-left: 0.5ex
+.location-stop
+  .accordion-header
+    h5
+      font-weight: bolder
+    h5::after
+      margin-left: 1ex
+      color: #f9b34a
+      font-family: "Camino Icons"
+      font-weight: normal
+      content: "\e020"
+  .best-accommodation
+    font-weight: bold
 .location-stop
   .accordion-header
     h5

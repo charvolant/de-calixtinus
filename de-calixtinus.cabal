@@ -53,6 +53,7 @@ library
       Data.Placeholder
       Data.Propositional
       Data.Region
+      Data.Summary
       Graph.Graph
       Graph.Programming
   other-modules:

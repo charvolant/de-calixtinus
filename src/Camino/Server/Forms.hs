@@ -25,7 +25,9 @@ module Camino.Server.Forms (
   , choosePoiForm
   , chooseRangeForm
   , chooseRoutesForm
-  , chooseServicesForm
+  , chooseRestServicesForm
+  , chooseStockServicesForm
+  , chooseStopServicesForm
   , chooseStartForm
   , chooseStopsForm
   , chooseTravelForm
@@ -49,6 +51,7 @@ import qualified Data.Map as M
 import Data.Maybe (catMaybes, isJust, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
+import Data.Summary
 import Data.Text (Text, pack)
 import Data.Time.Calendar (Day)
 import Formatting
@@ -77,20 +80,36 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewTime :: FieldView CaminoApp
   , resRest :: FormResult (PreferenceRange Int)
   , viewRest :: FieldView CaminoApp
-  , resLocation :: FormResult (M.Map LocationType Penance)
-  , viewLocation :: FieldView CaminoApp
-  , resRestLocation :: FormResult (M.Map LocationType Penance)
-  , viewRestLocation :: FieldView CaminoApp
-  , resAccommodation :: FormResult (M.Map AccommodationType Penance)
-  , viewAccommodation :: FieldView CaminoApp
+  , resStopTransportLinks :: FormResult Bool
+  , viewStopTransportLinks :: FieldView CaminoApp
+  , resStopLocation :: FormResult (M.Map LocationType Penance)
+  , viewStopLocation :: FieldView CaminoApp
+  , resStopAccommodation :: FormResult (M.Map AccommodationType Penance)
+  , viewStopAccommodation :: FieldView CaminoApp
   , resStopServices :: FormResult (M.Map Service Penance)
   , viewStopServices :: FieldView CaminoApp
+  , resStopRouteServices :: FormResult (M.Map Service Penance)
+  , viewStopRouteServices :: FieldView CaminoApp
+  , resStockTransportLinks :: FormResult Bool
+  , viewStockTransportLinks :: FieldView CaminoApp
+  , resStockLocation :: FormResult (M.Map LocationType Penance)
+  , viewStockLocation :: FieldView CaminoApp
+  , resStockAccommodation :: FormResult (M.Map AccommodationType Penance)
+  , viewStockAccommodation :: FieldView CaminoApp
+  , resStockServices :: FormResult (M.Map Service Penance)
+  , viewStockServices :: FieldView CaminoApp
+  , resStockRouteServices :: FormResult (M.Map Service Penance)
+  , viewStockRouteServices :: FieldView CaminoApp
+  , resRestTransportLinks :: FormResult Bool
+  , viewRestTransportLinks :: FieldView CaminoApp
+  , resRestLocation :: FormResult (M.Map LocationType Penance)
+  , viewRestLocation :: FieldView CaminoApp
+  , resRestAccommodation :: FormResult (M.Map AccommodationType Penance)
+  , viewRestAccommodation :: FieldView CaminoApp
   , resRestServices :: FormResult (M.Map Service Penance)
   , viewRestServices :: FieldView CaminoApp
-  , resDayServices :: FormResult (M.Map Service Penance)
-  , viewDayServices :: FieldView CaminoApp
-  , resTransportLinks :: FormResult Bool
-  , viewTransportLinks :: FieldView CaminoApp
+  , resRestRouteServices :: FormResult (M.Map Service Penance)
+  , viewRestRouteServices :: FieldView CaminoApp
   , resPoiCategories :: FormResult (S.Set PoiCategory)
   , viewPoiCategories :: FieldView CaminoApp
   , resPrevCamino :: FormResult Camino
@@ -151,40 +170,53 @@ fullRoutes _ routes = routes
 descriptionText :: [Locale] -> Description -> Maybe Text
 descriptionText locales description = plainText <$> localise locales (descriptionSummary description)
 
+fieldSettingsLabelName :: RenderMessage site msg => msg -> Text -> FieldSettings site
+fieldSettingsLabelName msg name = FieldSettings (SomeMessage msg) Nothing Nothing (Just name) []
+
+fieldSettingsName :: Text -> FieldSettings site
+fieldSettingsName name = FieldSettings "" Nothing Nothing (Just name) []
 
 -- Make a default set of preference data fields with everything hidden
 defaultPreferenceFields :: CaminoApp -> Maybe PreferenceData -> MForm Handler PreferenceDataFields
 defaultPreferenceFields master prefs = do
-    (emRes, emView) <- mreq hiddenField "" (prefEasyMode <$> prefs) -- Easy/detailed mode
-    (trpRes, trpView) <- mreq hiddenField "" (prefTravel <$> prefs) -- Original values
-    (trRes, trView) <- mreq hiddenField "" (prefTravel <$> prefs)
-    (fipRes, fipView) <- mreq hiddenField "" (prefFitness <$> prefs)
-    (fiRes, fiView) <- mreq hiddenField "" (prefFitness <$> prefs)
-    (copRes, copView) <- mreq hiddenField "" (prefComfort <$> prefs)
-    (coRes, coView) <- mreq hiddenField "" (prefComfort <$> prefs)
-    (tlRes, tlView) <- mreq hiddenField "" (prefTransportLinks <$> prefs)
-    (diRes, diView) <- mreq hiddenField "" (prefDistance <$> prefs)
-    (tiRes, tiView) <- mreq hiddenField "" (prefTime <$> prefs)
-    (reRes, reView) <- mreq hiddenField "" (prefRest <$> prefs)
-    (loRes, loView) <- mreq hiddenField "" (prefLocation <$> prefs)
-    (rlRes, rlView) <- mreq hiddenField "" (prefRestLocation <$> prefs)
-    (acRes, acView) <- mreq hiddenField "" (prefAccommodation <$> prefs)
-    (ssRes, ssView) <- mreq hiddenField "" (prefStopServices <$> prefs)
-    (rsRes, rsView) <- mreq hiddenField "" (prefRestServices <$> prefs)
-    (dsRes, dsView) <- mreq hiddenField "" (prefDayServices <$> prefs)
-    (pcRes, pcView) <- mreq hiddenField "" (prefPoiCategories <$> prefs)
-    (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) "" (prefCamino <$> prefs)
-    (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) "" (prefCamino <$> prefs)
-    (ropRes, ropView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
-    (roRes, roView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) "" (prefRoutes <$> prefs)
-    (sapRes, sapView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefStart <$> prefs)
-    (saRes, saView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefStart <$> prefs)
-    (fnpRes, fnpView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefFinish <$> prefs)
-    (fnRes, fnView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) "" (prefFinish <$> prefs)
-    (spRes, spView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefStops <$> prefs)
-    (exRes, exView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) "" (prefExcluded <$> prefs)
-    (poRes, poView) <- mreq (parsingHiddenField (S.map poiID) (findSetById cRes findPointOfInterestById)) "" (prefPois <$> prefs)
-    (sdRes, sdView) <- mreq hiddenField "" (prefStartDate <$> prefs)
+    (emRes, emView) <- mreq hiddenField (fieldSettingsName "easyMode") (prefEasyMode <$> prefs) -- Easy/detailed mode
+    (trpRes, trpView) <- mreq hiddenField (fieldSettingsName "prevTravel") (prefTravel <$> prefs) -- Original values
+    (trRes, trView) <- mreq hiddenField (fieldSettingsName "travel") (prefTravel <$> prefs)
+    (fipRes, fipView) <- mreq hiddenField (fieldSettingsName "prevFitness") (prefFitness <$> prefs)
+    (fiRes, fiView) <- mreq hiddenField (fieldSettingsName "fitness") (prefFitness <$> prefs)
+    (copRes, copView) <- mreq hiddenField (fieldSettingsName "prevComfort") (prefComfort <$> prefs)
+    (coRes, coView) <- mreq hiddenField (fieldSettingsName "comfort") (prefComfort <$> prefs)
+    (diRes, diView) <- mreq hiddenField (fieldSettingsName "distance") (prefDistance <$> prefs)
+    (tiRes, tiView) <- mreq hiddenField (fieldSettingsName "time") (prefTime <$> prefs)
+    (reRes, reView) <- mreq hiddenField (fieldSettingsName "rest") (prefRest <$> prefs)
+    (sptlRes, sptlView) <- mreq hiddenField (fieldSettingsName "stopTransportLinks") (stopTransportLinks <$> prefStop <$> prefs)
+    (sploRes, sploView) <- mreq hiddenField (fieldSettingsName "stopLocation") (stopLocation <$> prefStop <$> prefs)
+    (spacRes, spacView) <- mreq hiddenField (fieldSettingsName "stopAccommodation") (stopAccommodation <$> prefStop <$> prefs)
+    (spssRes, spssView) <- mreq hiddenField (fieldSettingsName "stopServices") (stopServices <$> prefStop <$> prefs)
+    (sprsRes, sprsView) <- mreq hiddenField (fieldSettingsName "stopRouteServices") (stopRouteServices <$> prefStop <$> prefs)
+    (sttlRes, sttlView) <- mreq hiddenField (fieldSettingsName "stockStopTransportLinks") (stopTransportLinks <$> prefStockStop <$> prefs)
+    (stloRes, stloView) <- mreq hiddenField (fieldSettingsName "stockStopLocation") (stopLocation <$> prefStockStop <$> prefs)
+    (stacRes, stacView) <- mreq hiddenField (fieldSettingsName "stockStopAccommodation") (stopAccommodation <$> prefStockStop <$> prefs)
+    (stssRes, stssView) <- mreq hiddenField (fieldSettingsName "stockStopServices") (stopServices <$> prefStockStop <$> prefs)
+    (strsRes, strsView) <- mreq hiddenField (fieldSettingsName "stockStopRouteServices") (stopRouteServices <$> prefStockStop <$> prefs)
+    (rstlRes, rstlView) <- mreq hiddenField (fieldSettingsName "restTransportLinks") (stopTransportLinks <$> prefRestStop <$> prefs)
+    (rsloRes, rsloView) <- mreq hiddenField (fieldSettingsName "restLocation") (stopLocation <$> prefRestStop <$> prefs)
+    (rsacRes, rsacView) <- mreq hiddenField (fieldSettingsName "restAccommodation") (stopAccommodation <$> prefRestStop <$> prefs)
+    (rsssRes, rsssView) <- mreq hiddenField (fieldSettingsName "restServices") (stopServices <$> prefRestStop <$> prefs)
+    (rsrsRes, rsrsView) <- mreq hiddenField (fieldSettingsName "restRouteServices") (stopRouteServices <$> prefRestStop <$> prefs)
+    (pcRes, pcView) <- mreq hiddenField (fieldSettingsName "poiCategories") (prefPoiCategories <$> prefs)
+    (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) (fieldSettingsName "prevCamino") (prefCamino <$> prefs)
+    (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) (fieldSettingsName "camino") (prefCamino <$> prefs)
+    (ropRes, ropView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) (fieldSettingsName "prevRoutes") (prefRoutes <$> prefs)
+    (roRes, roView) <- mreq (parsingHiddenField (S.map routeID) (\v -> fullRoutes cRes <$> findSetById cRes findRouteById v)) (fieldSettingsName "routes") (prefRoutes <$> prefs)
+    (sapRes, sapView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) (fieldSettingsName "prevStart") (prefStart <$> prefs)
+    (saRes, saView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) (fieldSettingsName "start") (prefStart <$> prefs)
+    (fnpRes, fnpView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) (fieldSettingsName "prevFinish") (prefFinish <$> prefs)
+    (fnRes, fnView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) (fieldSettingsName "finish") (prefFinish <$> prefs)
+    (spRes, spView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) (fieldSettingsName "stops") (prefStops <$> prefs)
+    (exRes, exView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) (fieldSettingsName "excluded") (prefExcluded <$> prefs)
+    (poRes, poView) <- mreq (parsingHiddenField (S.map poiID) (findSetById cRes findPointOfInterestById)) (fieldSettingsName "pois") (prefPois <$> prefs)
+    (sdRes, sdView) <- mreq hiddenField (fieldSettingsName "startDate") (prefStartDate <$> prefs)
     return PreferenceDataFields {
         resEasyMode = emRes
       , viewEasyMode = emView
@@ -206,18 +238,36 @@ defaultPreferenceFields master prefs = do
       , viewTime = tiView
       , resRest = reRes
       , viewRest = reView
-      , resLocation = loRes
-      , viewLocation = loView
-      , resRestLocation = rlRes
-      , viewRestLocation = rlView
-      , resAccommodation = acRes
-      , viewAccommodation = acView
-      , resStopServices = ssRes
-      , viewStopServices = ssView
-      , resRestServices = rsRes
-      , viewRestServices = rsView
-      , resDayServices = dsRes
-      , viewDayServices = dsView
+      , resStopTransportLinks = sptlRes
+      , viewStopTransportLinks = sptlView
+      , resStopLocation = sploRes
+      , viewStopLocation = sploView
+      , resStopAccommodation = spacRes
+      , viewStopAccommodation = spacView
+      , resStopServices = spssRes
+      , viewStopServices = spssView
+      , resStopRouteServices = sprsRes
+      , viewStopRouteServices = sprsView
+      , resStockTransportLinks = sttlRes
+      , viewStockTransportLinks = sttlView
+      , resStockLocation = stloRes
+      , viewStockLocation = stloView
+      , resStockAccommodation = stacRes
+      , viewStockAccommodation = stacView
+      , resStockServices = stssRes
+      , viewStockServices = stssView
+      , resStockRouteServices = strsRes
+      , viewStockRouteServices = strsView
+      , resRestTransportLinks = rstlRes
+      , viewRestTransportLinks = rstlView
+      , resRestLocation = rsloRes
+      , viewRestLocation = rsloView
+      , resRestAccommodation = rsacRes
+      , viewRestAccommodation = rsacView
+      , resRestServices = rsssRes
+      , viewRestServices = rsssView
+      , resRestRouteServices = rsrsRes
+      , viewRestRouteServices = rsrsView
       , resPoiCategories = pcRes
       , viewPoiCategories = pcView
       , resPrevCamino = cpRes
@@ -228,8 +278,6 @@ defaultPreferenceFields master prefs = do
       , viewPrevRoutes = ropView
       , resRoutes = roRes
       , viewRoutes = roView
-      , resTransportLinks = tlRes
-      , viewTransportLinks = tlView
       , resPrevStart = sapRes
       , viewPrevStart = sapView
       , resStart = saRes
@@ -252,6 +300,22 @@ changed :: (Eq a) => FormResult a -> FormResult a -> Bool
 changed (FormSuccess x) (FormSuccess y) = x /= y
 changed _ _ = False
 
+-- | For debugging
+_showResultState :: FormResult a -> String
+_showResultState (FormSuccess _) = "OK"
+_showResultState (FormFailure msg) = show msg
+_showResultState FormMissing = "Missing"
+
+-- | For debugging
+_showResultValue :: (Summary a) => FormResult a -> String
+_showResultValue (FormSuccess v) = summaryString v
+_showResultValue (FormFailure msg) = "Failure " ++ show msg
+_showResultValue FormMissing = "Missing"
+
+-- | For debugging
+-- _traceResultValue :: (Summary a) => FormResult a -> FormResult a
+-- _traceResultValue v = trace (_showResultValue v) v
+
 makePreferenceData :: CaminoApp -> PreferenceDataFields -> FormResult PreferenceData
 makePreferenceData _master fields = let
     easy' = resEasyMode fields
@@ -261,25 +325,36 @@ makePreferenceData _master fields = let
     travel' = resTravel fields
     fitness' = resFitness fields
     comfort' = resComfort fields
-    transportLinks' = resTransportLinks fields
     changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness') || (changed (resPrevComfort fields) comfort')
     dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort'
     distance' = if easy'' || changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if easy'' || changedTravel then preferenceTime <$> dtp else resTime fields
     rest' = if easy'' || changedTravel then preferenceRest <$> dtp else resRest fields
-    location' = if easy'' || changedTravel then preferenceLocation <$> dtp else resLocation fields
-    locationr' = if easy'' || changedTravel then preferenceRestLocation <$> dtp else resRestLocation fields
-    accommodation' = if easy'' || changedTravel then preferenceAccommodation <$> dtp else resAccommodation fields
-    stopServices' = if easy'' || changedTravel then preferenceStopServices <$> dtp else resStopServices fields
-    dayServices' = if easy'' || changedTravel then preferenceDayServices <$> dtp else resDayServices fields
-    restServices' = if easy'' || changedTravel then preferenceRestServices <$> dtp else resRestServices fields
+    spTransportLinks' = resStopTransportLinks fields
+    spLocation' = if easy'' || changedTravel then stopLocation <$> preferenceStop <$> dtp else resStopLocation fields
+    spAccommodation' = if easy'' || changedTravel then stopAccommodation <$> preferenceStop <$> dtp else resStopAccommodation fields
+    spServices' = if easy'' || changedTravel then stopServices <$> preferenceStop <$> dtp else resStopServices fields
+    spRouteServices' = if easy'' || changedTravel then stopRouteServices <$> preferenceStop <$> dtp else resStopRouteServices fields
+    stop' = StopPreferences <$> spTransportLinks' <*> spLocation' <*> spAccommodation' <*> spServices' <*> spRouteServices'
+    stTransportLinks' = resStockTransportLinks fields
+    stLocation' = if easy'' || changedTravel then stopLocation <$> preferenceStockStop <$> dtp else resStockLocation fields
+    stAccommodation' = if easy'' || changedTravel then stopAccommodation <$> preferenceStockStop <$> dtp else resStockAccommodation fields
+    stServices' = if easy'' || changedTravel then stopServices <$> preferenceStockStop <$> dtp else resStockServices fields
+    stRouteServices' = if easy'' || changedTravel then stopRouteServices <$> preferenceStockStop <$> dtp else resStockRouteServices fields
+    stopStock' = StopPreferences <$> stTransportLinks' <*> stLocation' <*> stAccommodation' <*> stServices' <*> stRouteServices'
+    rsTransportLinks' = resRestTransportLinks fields
+    rsLocation' = if easy'' || changedTravel then stopLocation <$> preferenceRestStop <$> dtp else resRestLocation fields
+    rsAccommodation' = if easy'' || changedTravel then stopAccommodation <$> preferenceRestStop <$> dtp else resRestAccommodation fields
+    rsServices' = if easy'' || changedTravel then stopServices <$> preferenceRestStop <$> dtp else resRestServices fields
+    rsRouteServices' = if easy'' || changedTravel then stopRouteServices <$> preferenceRestStop <$> dtp else resRestRouteServices fields
+    stopRest' = StopPreferences <$> rsTransportLinks' <*> rsLocation' <*> rsAccommodation' <*> rsServices' <*> rsRouteServices'
     poiCategories' = if easy'' || changedTravel then preferencePoiCategories <$> dtp else resPoiCategories fields
     changedCamino = changed (caminoId <$> resPrevCamino fields) (caminoId <$> resCamino fields)
     camino' = resCamino fields
     dcp = defaultCaminoPreferences <$> camino'
     routes' = if changedCamino then preferenceRoutes <$> dcp else fullRoutes (resCamino fields) <$> (resRoutes fields)
     dcp' = withRoutes <$> dcp <*> routes'
-    changedRoutes = changed (S.map routeID <$> resPrevRoutes fields) (S.map routeID <$> routes')
+    changedRoutes = changedCamino || changed (S.map routeID <$> resPrevRoutes fields) (S.map routeID <$> routes')
     start' = if changedRoutes then preferenceStart <$> dcp' else resStart fields
     finish' = if changedRoutes then preferenceFinish <$> dcp' else resFinish fields
     dcp'' = withStartFinish <$> dcp' <*> start' <*> finish'
@@ -289,21 +364,18 @@ makePreferenceData _master fields = let
     pois' = if easy'' || changedCamino || changedRoutes then recommendedPois <$> dtp <*> dcp'' else resPois fields
     startDate' = resStartDate fields
   in
+    -- trace (show $ [_showResultState easy', _showResultState travel', _showResultState fitness', _showResultState comfort', _showResultState distance', _showResultState time', _showResultState rest', _showResultState stop', _showResultState stopStock', _showResultState stopRest', _showResultState poiCategories', _showResultState camino', _showResultState routes', _showResultState start', _showResultState finish', _showResultState stops', _showResultState excluded', _showResultState pois', _showResultState startDate']) $
     PreferenceData
       <$> easy'
       <*> travel'
       <*> fitness'
       <*> comfort'
-      <*> transportLinks'
       <*> distance'
       <*> time'
       <*> rest'
-      <*> location'
-      <*> locationr'
-      <*> accommodation'
-      <*> stopServices'
-      <*> restServices'
-      <*> dayServices'
+      <*> stop'
+      <*> stopStock'
+      <*> stopRest'
       <*> poiCategories'
       <*> camino'
       <*> routes'
@@ -314,6 +386,86 @@ makePreferenceData _master fields = let
       <*> pois'
       <*> startDate'
 
+-- | Fill out hidden fields
+hiddenPreferences :: [Text] -> PreferenceDataFields -> Widget
+hiddenPreferences exclude fields = [whamlet|
+  $if notElem "EasyMode" exclude
+    ^{fvInput (viewEasyMode fields)}
+  $if notElem "PrevTravel" exclude
+    ^{fvInput (viewPrevTravel fields)}
+  $if notElem "Travel" exclude
+    ^{fvInput (viewTravel fields)}
+  $if notElem "PrevFitness" exclude
+    ^{fvInput (viewPrevFitness fields)}
+  $if notElem "Fitness" exclude
+    ^{fvInput (viewFitness fields)}
+  $if notElem "PrevComfort" exclude
+    ^{fvInput (viewPrevComfort fields)}
+  $if notElem "Comfort" exclude
+    ^{fvInput (viewComfort fields)}
+  $if notElem "Distance" exclude
+    ^{fvInput (viewDistance fields)}
+  $if notElem "Time" exclude
+    ^{fvInput (viewTime fields)}
+  $if notElem "Rest" exclude
+    ^{fvInput (viewRest fields)}
+  $if notElem "StopTransportLinks" exclude
+    ^{fvInput (viewStopTransportLinks fields)}
+  $if notElem "StopLocation" exclude
+    ^{fvInput (viewStopLocation fields)}
+  $if notElem "StopAccommodation" exclude
+    ^{fvInput (viewStopAccommodation fields)}
+  $if notElem "StopServices" exclude
+    ^{fvInput (viewStopServices fields)}
+  $if notElem "StopRouteServices" exclude
+    ^{fvInput (viewStopRouteServices fields)}
+  $if notElem "StockTransportLinks" exclude
+    ^{fvInput (viewStockTransportLinks fields)}
+  $if notElem "StockLocation" exclude
+    ^{fvInput (viewStockLocation fields)}
+  $if notElem "StockAccommodation" exclude
+    ^{fvInput (viewStockAccommodation fields)}
+  $if notElem "StockServices" exclude
+    ^{fvInput (viewStockServices fields)}
+  $if notElem "StockRouteServices" exclude
+    ^{fvInput (viewStockRouteServices fields)}
+  $if notElem "RestTransportLinks" exclude
+    ^{fvInput (viewRestTransportLinks fields)}
+  $if notElem "RestLocation" exclude
+    ^{fvInput (viewRestLocation fields)}
+  $if notElem "RestAccommodation" exclude
+    ^{fvInput (viewRestAccommodation fields)}
+  $if notElem "RestServices" exclude
+    ^{fvInput (viewRestServices fields)}
+  $if notElem "RestRouteServices" exclude
+    ^{fvInput (viewRestRouteServices fields)}
+  $if notElem "PoiCategories" exclude
+    ^{fvInput (viewPoiCategories fields)}
+  $if notElem "PrevCamino" exclude
+    ^{fvInput (viewPrevCamino fields)}
+  $if notElem "Camino" exclude
+    ^{fvInput (viewCamino fields)}
+  $if notElem "PrevRoutes" exclude
+    ^{fvInput (viewPrevRoutes fields)}
+  $if notElem "Routes" exclude
+    ^{fvInput (viewRoutes fields)}
+  $if notElem "PrevStart" exclude
+    ^{fvInput (viewPrevStart fields)}
+  $if notElem "Start" exclude
+    ^{fvInput (viewStart fields)}
+  $if notElem "PrevFinish" exclude
+    ^{fvInput (viewPrevFinish fields)}
+  $if notElem "Finish" exclude
+    ^{fvInput (viewFinish fields)}
+  $if notElem "Stops" exclude
+    ^{fvInput (viewStops fields)}
+  $if notElem "Excluded" exclude
+    ^{fvInput (viewExcluded fields)}
+  $if notElem "Pois" exclude
+    ^{fvInput (viewPois fields)}
+  $if notElem "StartDate" exclude
+    ^{fvInput (viewStartDate fields)}
+|]
 -- | Form for basic travel preferences
 chooseTravelForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseTravelForm help prefs extra = do
@@ -325,14 +477,12 @@ chooseTravelForm help prefs extra = do
     let travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
-    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
     let  poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
     (emRes, emView) <- mreq easyField "" (prefEasyMode <$> prefs)
-    (trRes, trView) <- mreq travelField (fieldSettingsLabel MsgSelectTravel) (prefTravel <$> prefs)
-    (fRes, fView) <- mreq fitnessField (fieldSettingsLabel MsgSelectFitness) (prefFitness <$> prefs)
-    (cRes, cView) <- mreq comfortField (fieldSettingsLabel MsgSelectComfort) (prefComfort <$> prefs)
-    (tlRes, tlView) <- mreq transportLinksField "" (prefTransportLinks <$> prefs)
-    (pcRes, pcView) <- mreq poiField (fieldSettingsLabel MsgSelectPoiCategories) (prefPoiCategories <$> prefs)
+    (trRes, trView) <- mreq travelField (fieldSettingsLabelName MsgSelectTravel "travel") (prefTravel <$> prefs)
+    (fRes, fView) <- mreq fitnessField (fieldSettingsLabelName MsgSelectFitness "fitness") (prefFitness <$> prefs)
+    (cRes, cView) <- mreq comfortField (fieldSettingsLabelName MsgSelectComfort "comfort") (prefComfort <$> prefs)
+    (pcRes, pcView) <- mreq poiField (fieldSettingsLabelName MsgSelectPoiCategories "poiCategories") (prefPoiCategories <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resEasyMode = emRes
@@ -343,8 +493,6 @@ chooseTravelForm help prefs extra = do
       , viewFitness = fView
       , resComfort = cRes
       , viewComfort = cView
-      , resTransportLinks = tlRes
-      , viewTransportLinks = tlView
       , resPoiCategories = pcRes
       , viewPoiCategories = pcView
     }
@@ -373,40 +521,13 @@ chooseTravelForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      $with view <- viewTransportLinks fields
-        <div .row .mb-3>
-          <div .col>
-            ^{fvInput view}
       $with view <- viewPoiCategories fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+      ^{hiddenPreferences ["EasyMode", "Travel", "Fitness", "Comfort", "PoiCategories"] fields}
     |]
     return (res, widget)
 
@@ -417,9 +538,9 @@ chooseRangeForm help prefs extra = do
     let distanceRangeField = if maybe Walking prefTravel prefs == Cycling then rangeField 0.0 250.0 1.0 else rangeField 0.0 50.0 0.5
     let timeRangeField = rangeField 0.0 16.0 0.1
     let restRangeField = rangeField 0 10 1
-    (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabel MsgDistancePreferencesLabel) (prefDistance <$> prefs)
-    (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabel MsgTimePreferencesLabel) (prefTime <$> prefs)
-    (reRes, reView) <- mreq restRangeField (fieldSettingsLabel MsgRestPreferencesLabel) (prefRest <$> prefs)
+    (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabelName MsgDistancePreferencesLabel "distance") (prefDistance <$> prefs)
+    (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabelName MsgTimePreferencesLabel "time") (prefTime <$> prefs)
+    (reRes, reView) <- mreq restRangeField (fieldSettingsLabelName MsgRestPreferencesLabel "rest") (prefRest <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resDistance = diRes
@@ -450,74 +571,50 @@ chooseRangeForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+      ^{hiddenPreferences ["Distance", "Time", "Rest"] fields}
     |]
     return (res, widget)
 
-
 -- | Form to allow service preferences to be chosen
-chooseServicesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
-chooseServicesForm help prefs extra = do
+chooseStopServicesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseStopServicesForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
+    mRender <- getMessageRender
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
+    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
-    let dayServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
-    (loRes, loView) <- mreq (penanceMapField True True locationOptions) (fieldSettingsLabel MsgLocationPreferencesLabel) (prefLocation <$> prefs)
-    (rlRes, rlView) <- mreq (penanceMapField True True locationOptions) (fieldSettingsLabel MsgRestLocationPreferencesLabel) (prefRestLocation <$> prefs)
-    (acRes, acView) <- mreq (penanceMapField True True accommodationOptions) (fieldSettingsLabel MsgAccommodationPreferencesLabel) (prefAccommodation <$> prefs)
-    (ssRes, ssView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabel MsgStopServicePreferencesLabel) (prefStopServices <$> prefs)
-    (rsRes, rsView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabel MsgRestServicePreferencesLabel) (prefRestServices <$> prefs)
-    (dsRes, dsView) <- mreq (penanceMapField False False dayServiceOptions) (fieldSettingsLabel MsgDayServicePreferencesLabel) (prefDayServices <$> prefs)
+    let routeServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
+    (tlRes, tlView) <- mreq transportLinksField (fieldSettingsName "stopTransportLinks") (stopTransportLinks <$> prefStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField True True locationOptions) (fieldSettingsLabelName MsgLocationPreferencesLabel "stopLocation") (stopLocation <$> prefStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField True True accommodationOptions) (fieldSettingsLabelName MsgAccommodationPreferencesLabel "stopAccommodation") (stopAccommodation <$> prefStop <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabelName MsgStopServicePreferencesLabel "stopServices") (stopServices <$> prefStop <$> prefs)
+    (rsRes, rsView) <- mreq (penanceMapField False False routeServiceOptions) (fieldSettingsLabelName MsgDayServicePreferencesLabel "stopRouteServices") (stopRouteServices <$> prefStop <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
-      resLocation = loRes,
-      viewLocation = loView,
-      resRestLocation = rlRes,
-      viewRestLocation = rlView,
-      resAccommodation= acRes,
-      viewAccommodation = acView,
+      resStopTransportLinks = tlRes,
+      viewStopTransportLinks = tlView,
+      resStopLocation = loRes,
+      viewStopLocation = loView,
+      resStopAccommodation= acRes,
+      viewStopAccommodation = acView,
       resStopServices = ssRes,
       viewStopServices = ssView,
-      resRestServices = rsRes,
-      viewRestServices = rsView,
-      resDayServices = dsRes,
-      viewDayServices = dsView
+      resStopRouteServices = rsRes,
+      viewStopRouteServices = rsView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
       #{extra}
-      $with view <- viewLocation fields
+      $with view <- viewStopTransportLinks fields
+        <div .row .mb-3>
+          <div .col>
+            ^{fvInput view}
+      $with view <- viewStopLocation fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
@@ -526,16 +623,7 @@ chooseServicesForm help prefs extra = do
               <div .form-text>
                 ^{tt}
             ^{fvInput view}
-      $with view <- viewRestLocation fields
-        <div .row .mb-3>
-          <div .col>
-            <label for="#{fvId view}">
-              ^{fvLabel view} ^{help}
-            $maybe tt <- fvTooltip view
-              <div .form-text>
-                ^{tt}
-            ^{fvInput view}
-      $with view <- viewAccommodation fields
+      $with view <- viewStopAccommodation fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
@@ -547,42 +635,154 @@ chooseServicesForm help prefs extra = do
              <label for="#{fvId view}">
                ^{fvLabel view} ^{help}
              ^{fvInput view}
-      $with view <- viewRestServices fields
-         <div .row .mb-3>
-           <div .col>
-             <label for="#{fvId view}">
-                ^{fvLabel view} ^{help}
-             ^{fvInput view}
-      $with view <- viewDayServices fields
+      $with view <- viewStopRouteServices fields
         <div .row .mb-3>
           <div .col>
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+     ^{hiddenPreferences ["StopTransportLinks", "StopLocation", "StopAccommodation", "StopServices", "StopRouteServices"] fields}
+    |]
+    return (res, widget)
+
+
+-- | Form to allow stock-up day service preferences to be chosen
+chooseStockServicesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseStockServicesForm help prefs extra = do
+    master <- getYesod
+    locales <- getLocales
+    mRender <- getMessageRender
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
+    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
+    let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
+    let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
+    let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
+    let routeServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
+    (tlRes, tlView) <- mreq transportLinksField (fieldSettingsName "stockTransportLinks") (stopTransportLinks <$> prefStockStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField True True locationOptions) (fieldSettingsLabelName MsgLocationPreferencesLabel "stockLocation") (stopLocation <$> prefStockStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField True True accommodationOptions) (fieldSettingsLabelName MsgAccommodationPreferencesLabel "stockAccommodation") (stopAccommodation <$> prefStockStop <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabelName MsgStopServicePreferencesLabel "stockServices") (stopServices <$> prefStockStop <$> prefs)
+    (rsRes, rsView) <- mreq (penanceMapField False False routeServiceOptions) (fieldSettingsLabelName MsgDayServicePreferencesLabel "stockRouteServices") (stopRouteServices <$> prefStockStop <$> prefs)
+    df <- defaultPreferenceFields master prefs
+    let fields = df {
+      resStockTransportLinks = tlRes,
+      viewStockTransportLinks = tlView,
+      resStockLocation = loRes,
+      viewStockLocation = loView,
+      resStockAccommodation= acRes,
+      viewStockAccommodation = acView,
+      resStockServices = ssRes,
+      viewStockServices = ssView,
+      resStockRouteServices = rsRes,
+      viewStockRouteServices = rsView
+    }
+    let res = makePreferenceData master fields
+    let widget = [whamlet|
+      #{extra}
+      $with view <- viewStockTransportLinks fields
+        <div .row .mb-3>
+          <div .col>
+            ^{fvInput view}
+      $with view <- viewStockLocation fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            $maybe tt <- fvTooltip view
+              <div .form-text>
+                ^{tt}
+            ^{fvInput view}
+      $with view <- viewStockAccommodation fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      $with view <- viewStockServices fields
+         <div .row .mb-3>
+           <div .col>
+             <label for="#{fvId view}">
+               ^{fvLabel view} ^{help}
+             ^{fvInput view}
+      $with view <- viewStockRouteServices fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+     ^{hiddenPreferences ["StockTransportLinks", "StockLocation", "StockAccommodation", "StockServices", "StockRouteServices"] fields}
+    |]
+    return (res, widget)
+
+-- | Form to allow rest day service preferences to be chosen
+chooseRestServicesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
+chooseRestServicesForm help prefs extra = do
+    master <- getYesod
+    locales <- getLocales
+    mRender <- getMessageRender
+    let config = caminoAppConfig master
+    let router = renderCaminoRoute config locales
+    let messages = renderCaminoMsg config locales
+    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
+    let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
+    let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
+    let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
+    let routeServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
+    (tlRes, tlView) <- mreq transportLinksField (fieldSettingsName "stockTransportLinks") (stopTransportLinks <$> prefRestStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField True True locationOptions) (fieldSettingsLabelName MsgLocationPreferencesLabel "stockLocation") (stopLocation <$> prefRestStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField True True accommodationOptions) (fieldSettingsLabelName MsgAccommodationPreferencesLabel "stockAccommodation") (stopAccommodation <$> prefRestStop <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField False False stopServiceOptions) (fieldSettingsLabelName MsgStopServicePreferencesLabel "stockServices") (stopServices <$> prefRestStop <$> prefs)
+    (rsRes, rsView) <- mreq (penanceMapField False False routeServiceOptions) (fieldSettingsLabelName MsgDayServicePreferencesLabel "stockRouteServices") (stopRouteServices <$> prefRestStop <$> prefs)
+    df <- defaultPreferenceFields master prefs
+    let fields = df {
+      resRestTransportLinks = tlRes,
+      viewRestTransportLinks = tlView,
+      resRestLocation = loRes,
+      viewRestLocation = loView,
+      resRestAccommodation= acRes,
+      viewRestAccommodation = acView,
+      resRestServices = ssRes,
+      viewRestServices = ssView,
+      resRestRouteServices = rsRes,
+      viewRestRouteServices = rsView
+    }
+    let res = makePreferenceData master fields
+    let widget = [whamlet|
+      #{extra}
+      $with view <- viewRestTransportLinks fields
+        <div .row .mb-3>
+          <div .col>
+            ^{fvInput view}
+      $with view <- viewRestLocation fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            $maybe tt <- fvTooltip view
+              <div .form-text>
+                ^{tt}
+            ^{fvInput view}
+      $with view <- viewRestAccommodation fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      $with view <- viewRestServices fields
+         <div .row .mb-3>
+           <div .col>
+             <label for="#{fvId view}">
+               ^{fvLabel view} ^{help}
+             ^{fvInput view}
+      $with view <- viewRestRouteServices fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+     ^{hiddenPreferences ["RestTransportLinks", "RestLocation", "RestAccommodation", "RestServices", "RestRouteServices"] fields}
     |]
     return (res, widget)
 
@@ -597,7 +797,7 @@ chooseCaminoForm help prefs extra = do
     let localised c = localiseText locales c
     let description d = Just $ (descriptionBlock False d) messages router
     let  caminoField = extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, description $ caminoDescription c)) (caminoAppCaminos master))
-    (caRes, caView) <- mreq caminoField (fieldSettingsLabel MsgSelectCamino) (prefCamino <$> prefs)
+    (caRes, caView) <- mreq caminoField (fieldSettingsLabelName MsgSelectCamino "camino") (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resCamino = caRes,
@@ -612,35 +812,7 @@ chooseCaminoForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+      ^{hiddenPreferences ["Camino"] fields}
     |]
     return (res, widget)
 
@@ -661,7 +833,7 @@ chooseRoutesForm help prefs extra = do
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
     let routeOptions = map (\r -> (routeID r, toHtml $ localised $ routeName r, r, description $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
-    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabel MsgRoutePreferencesLabel) (prefRoutes <$> prefs)
+    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabelName MsgRoutePreferencesLabel "routes") (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resRoutes = roRes,
@@ -676,35 +848,7 @@ chooseRoutesForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+      ^{hiddenPreferences ["Routes"] fields}
     |]
     return (res, widget)
 
@@ -738,9 +882,9 @@ chooseStartForm help prefs extra = do
     let rfinishes = filter (\l -> maybe True (S.member l) possibleStops) $ maybe [] suggestedFinishes cprefs
     let startOptions = makeOptions render locationID ((localiseText locales) . locationName) rstarts stops
     let finishOptions = makeOptions render locationID ((localiseText locales) . locationName) rfinishes stops
-    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabel MsgStartLocationLabel) start'
-    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabel MsgFinishLocationLabel) finish'
-    (sdRes, sdView) <- mreq (dateField) (fieldSettingsLabel MsgStartDateLabel) startDate'
+    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabelName MsgStartLocationLabel "start") start'
+    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabelName MsgFinishLocationLabel "finish") finish'
+    (sdRes, sdView) <- mreq (dateField) (fieldSettingsLabelName MsgStartDateLabel "startDate") startDate'
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStart = stRes,
@@ -771,33 +915,7 @@ chooseStartForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
+      ^{hiddenPreferences ["Start", "Finish", "StartDate"] fields}
     |]
     return (res, widget)
 
@@ -827,8 +945,8 @@ chooseStopsForm help prefs extra = do
     let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . localised) stops))
     let chosenStops = S.intersection <$> allowedStops <*> (prefStops <$> prefs)
     let chosenExcluded = S.intersection <$> allowedStops <*> (prefExcluded <$> prefs)
-    (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabel MsgStopsLabel) chosenStops
-    (exRes, exView) <- mreq (clickSelectionField exclOptions) (fieldSettingsLabel MsgExcludedLabel) chosenExcluded
+    (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabelName MsgStopsLabel "stops") chosenStops
+    (exRes, exView) <- mreq (clickSelectionField exclOptions) (fieldSettingsLabelName MsgExcludedLabel "excluded") chosenExcluded
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStops = stRes,
@@ -851,34 +969,7 @@ chooseStopsForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+      ^{hiddenPreferences ["Stops", "Excluded"] fields}
     |]
     return (res, widget)
 
@@ -920,7 +1011,7 @@ choosePoiForm help prefs extra = do
     let mkOptions ps = map (\p -> (poiID p, poiLabel locales (findLocationByPoi camino p) p, p)) ps
     let poiOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise .localised) other))
     let chosenPois = S.intersection possiblePois <$> (prefPois <$> prefs)
-    (poRes, poView) <- mreq (clickSelectionField poiOptions) (fieldSettingsLabel MsgPoisLabel) chosenPois
+    (poRes, poView) <- mreq (clickSelectionField poiOptions) (fieldSettingsLabelName MsgPoisLabel "pois") chosenPois
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resPois = poRes,
@@ -935,35 +1026,7 @@ choosePoiForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewStartDate fields)}
+      ^{hiddenPreferences ["Pois"] fields}
     |]
     return (res, widget)
 
@@ -976,35 +1039,6 @@ confirmPreferencesForm _help prefs extra = do
     let res = makePreferenceData master fields
     let widget = [whamlet|
       #{extra}
-      ^{fvInput (viewEasyMode fields)}
-      ^{fvInput (viewPrevTravel fields)}
-      ^{fvInput (viewTravel fields)}
-      ^{fvInput (viewPrevFitness fields)}
-      ^{fvInput (viewFitness fields)}
-      ^{fvInput (viewPrevComfort fields)}
-      ^{fvInput (viewComfort fields)}
-      ^{fvInput (viewTransportLinks fields)}
-      ^{fvInput (viewDistance fields)}
-      ^{fvInput (viewTime fields)}
-      ^{fvInput (viewRest fields)}
-      ^{fvInput (viewLocation fields)}
-      ^{fvInput (viewRestLocation fields)}
-      ^{fvInput (viewAccommodation fields)}
-      ^{fvInput (viewStopServices fields)}
-      ^{fvInput (viewRestServices fields)}
-      ^{fvInput (viewDayServices fields)}
-      ^{fvInput (viewPoiCategories fields)}
-      ^{fvInput (viewPrevCamino fields)}
-      ^{fvInput (viewCamino fields)}
-      ^{fvInput (viewPrevRoutes fields)}
-      ^{fvInput (viewRoutes fields)}
-      ^{fvInput (viewPrevStart fields)}
-      ^{fvInput (viewStart fields)}
-      ^{fvInput (viewPrevFinish fields)}
-      ^{fvInput (viewFinish fields)}
-      ^{fvInput (viewStops fields)}
-      ^{fvInput (viewExcluded fields)}
-      ^{fvInput (viewPois fields)}
-      ^{fvInput (viewStartDate fields)}
+     ^{hiddenPreferences [] fields}
     |]
     return (res, widget)

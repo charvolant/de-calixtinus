@@ -100,7 +100,7 @@ import Data.Description (Description(..), wildcardDescription)
 import Data.Event
 import Data.Foldable (toList)
 import qualified Data.List as L (find, partition)
-import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, wildcardText)
+import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, rootLocale, wildcardText)
 import Data.Maybe (catMaybes, fromJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup, map, unions)
@@ -109,11 +109,22 @@ import Data.Propositional
 import Data.Region
 import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, null, fromList, member, union, unions, singleton, toList)
 import Data.Scientific (fromFloatDigits, toRealFloat)
-import Data.Text (Text, unpack, pack, partition)
+import Data.Summary
+import Data.Text (Text, isPrefixOf, pack, partition, unpack)
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
+-- import Debug.Trace
+
+-- For debugging
+-- _traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v
+
+-- | Is this a placeholder name?
+--   Used to help detect placeholders
+isPlaceholderName :: Localised TaggedText -> Bool
+isPlaceholderName (Localised [TaggedText locale text]) = locale == rootLocale && isPrefixOf "Placeholder" text
+isPlaceholderName _ = False
 
 -- | The measure of penance.
 -- |
@@ -432,6 +443,7 @@ data LocationType =
    | Natural -- ^ A site of natural beauty
    | Hazard -- ^ A dangerous location (busy road crossing, etc)
    | Poi -- ^ A generic point of interest
+   | PlaceholderLocation -- ^ A placeholder location
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
  
 instance FromJSON LocationType
@@ -517,13 +529,14 @@ instance Placeholder Text PointOfInterest where
       poiID = lid
     , poiName = wildcardText $ ("Placeholder for " <> lid)
     , poiDescription = Nothing
-    , poiType = Poi
+    , poiType = PlaceholderLocation
     , poiCategories = S.empty
     , poiPosition = Nothing
     , poiHours = Nothing
     , poiTime = Nothing
     , poiEvents = []
   }
+  isPlaceholder poi = poiType poi == PlaceholderLocation
 
 instance Dereferencer Text PointOfInterest Camino where
   dereference camino poi = maybe poi fst (M.lookup (placeholderID poi) (caminoPois camino))
@@ -574,6 +587,9 @@ instance Eq PointOfInterest where
 instance Ord PointOfInterest where
   a `compare` b = poiID a `compare` poiID b
 
+instance Summary PointOfInterest where
+  summary = placeholderLabel
+
 -- | A location, usually a city/town/village that marks the start and end points of a leg
 --   and which may have accommodation and other services available.
 --   Locations form the vertexes on the travel graph
@@ -597,7 +613,7 @@ instance Placeholder Text Location where
       locationID = lid
     , locationName = wildcardText $ ("Placeholder for " <> lid)
     , locationDescription = Nothing
-    , locationType = Poi
+    , locationType = PlaceholderLocation
     , locationPosition = Nothing
     , locationRegion = Nothing
     , locationServices = S.empty
@@ -606,6 +622,7 @@ instance Placeholder Text Location where
     , locationEvents = []
     , locationCamping = False
   }
+  isPlaceholder location = locationType location == PlaceholderLocation
 
 instance Normaliser Text Location CaminoConfig where
   normalise config location = location {
@@ -672,6 +689,9 @@ instance Eq Location where
   
 instance Ord Location where
   a `compare` b = locationID a `compare` locationID b
+
+instance Summary Location where
+  summary = placeholderLabel
 
 -- | Get the accommodation types available at a location
 --   These are ordered into enumeration order
@@ -931,6 +951,7 @@ instance Placeholder Text Route where
     , routeSuggestedPois = S.empty
     , routePalette = def
   }
+  isPlaceholder route = isPlaceholderName (routeName route)
 
 instance Normaliser Text Route Camino where
   normalise camino route = route {
@@ -943,6 +964,14 @@ instance Normaliser Text Route Camino where
 
 instance Dereferencer Text Route Camino where
   dereference camino route = dereference (caminoRoutes camino) route
+
+instance Summary Route where
+  summary route = "R{"
+    <> routeID route
+    <> ", locs=" <> summary (routeLocations route)
+    <> ", starts=" <> summary (routeStarts route)
+    <> ", finishes=" <> summary (routeFinishes route)
+    <> "}"
 
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
@@ -1204,6 +1233,7 @@ instance Placeholder Text Camino where
     }
     where
       dr = placeholder ("DR-" <> cid)
+  isPlaceholder camino = isPlaceholderName (caminoName camino)
 
 -- Note that this completely denormalises all imports, assuming that the configuration already has
 -- the denormalised imports.
@@ -1261,6 +1291,12 @@ instance Normaliser Text Camino CaminoConfig where
 
 instance Dereferencer Text Camino CaminoConfig where
   dereference config camino = dereference (caminoConfigLookup config) camino
+
+instance Summary Camino where
+  summary camino = "C{"
+    <> placeholderLabel camino
+    <> ", routes=" <> summary (caminoRoutes camino)
+    <> "}"
 
 -- | Get a simple text version of the camino name
 caminoNameLabel :: Camino -> Text

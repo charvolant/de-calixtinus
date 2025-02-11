@@ -184,16 +184,12 @@ data PreferenceData = PreferenceData {
   , prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
   , prefComfort :: Comfort -- ^ The comfort level
-  , prefTransportLinks :: Bool -- ^ Allow transport links
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
   , prefRest :: PreferenceRange Int -- ^ The rest day preferences
-  , prefLocation :: M.Map LocationType Penance -- ^ The location type preferences
-  , prefRestLocation :: M.Map LocationType Penance -- ^ The rest location type preferences
-  , prefAccommodation :: M.Map AccommodationType Penance -- ^ The accommodation type preferences
-  , prefStopServices :: M.Map Service Penance -- ^ The day's end service preferences
-  , prefRestServices :: M.Map Service Penance -- ^ The rest service preferences
-  , prefDayServices :: M.Map Service Penance -- ^ The during-day service preferences
+  , prefStop :: StopPreferences -- ^ The day's stop preferences
+  , prefStockStop :: StopPreferences -- ^ The preferences for a 'stock-up' day
+  , prefRestStop :: StopPreferences -- ^ The preferences for a rest day
   , prefPoiCategories :: S.Set PoiCategory -- ^ Types of stop-off you're interested in
   , prefCamino :: Camino -- ^ The camino to travel
   , prefRoutes :: S.Set Camino.Camino.Route -- ^ The chosen routes
@@ -211,16 +207,12 @@ instance FromJSON PreferenceData where
       travel' <- v .: "travel"
       fitness' <- v .: "fitness"
       comfort' <- v .: "comfort"
-      transport' <- v .: "transport-links"
       distance' <- v .: "distance"
       time' <- v .: "time"
       rest' <- v .: "rest"
-      location' <- v .: "location"
-      locationr' <- v .: "location-rest"
-      accommodation' <- v .: "accommodation"
-      stopServices' <- v .: "stop-services"
-      restServices' <- v .: "rest-services"
-      dayServices' <- v .: "day-services"
+      stop' <- v .: "stop"
+      stockStop' <- v .: "stop-stock"
+      restStop' <- v .: "stop-rest"
       poiCategories' <- v .: "poi-categories"
       camino' <- v .: "camino"
       routes' <- v .: "routes"
@@ -242,16 +234,12 @@ instance FromJSON PreferenceData where
         , prefTravel = travel'
         , prefFitness = fitness'
         , prefComfort = comfort'
-        , prefTransportLinks = transport'
         , prefDistance = distance'
         , prefTime = time'
         , prefRest = rest'
-        , prefLocation = location'
-        , prefRestLocation = locationr'
-        , prefAccommodation = accommodation'
-        , prefStopServices = stopServices'
-        , prefRestServices = restServices'
-        , prefDayServices = dayServices'
+        , prefStop = stop'
+        , prefStockStop = stockStop'
+        , prefRestStop = restStop'
         , prefPoiCategories = poiCategories'
         , prefCamino = camino''
         , prefRoutes = routes''
@@ -271,16 +259,12 @@ instance ToJSON PreferenceData where
         , "travel" .= prefTravel prefs
         , "fitness" .= prefFitness prefs
         , "comfort" .= prefComfort prefs
-        , "transport-links" .= prefTransportLinks prefs
         , "distance" .= prefDistance prefs
         , "time" .= prefTime prefs
         , "rest" .= prefRest prefs
-        , "location" .= prefLocation prefs
-        , "location-rest" .= prefRestLocation prefs
-        , "accommodation" .= prefAccommodation prefs
-        , "stop-services" .= prefStopServices prefs
-        , "rest-services" .= prefRestServices prefs
-        , "day-services" .= prefDayServices prefs
+        , "stop" .= prefStop prefs
+        , "stop-stock" .= prefStockStop prefs
+        , "stop-rest" .= prefRestStop prefs
         , "poi-categories" .= prefPoiCategories prefs
         , "camino" .= (caminoId $ prefCamino prefs)
         , "routes" .= (S.map routeID (prefRoutes prefs))
@@ -306,16 +290,12 @@ defaultPreferenceData master current = let
       , prefTravel = travel'
       , prefFitness = fitness'
       , prefComfort = comfort'
-      , prefTransportLinks = preferenceTransportLinks dtp
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
       , prefRest = preferenceRest dtp
-      , prefLocation = preferenceLocation dtp
-      , prefRestLocation = preferenceRestLocation dtp
-      , prefAccommodation = preferenceAccommodation dtp
-      , prefStopServices = preferenceStopServices dtp
-      , prefRestServices = preferenceRestServices dtp
-      , prefDayServices = preferenceDayServices dtp
+      , prefStop = preferenceStop dtp
+      , prefStockStop = preferenceStockStop dtp
+      , prefRestStop = preferenceRestStop dtp
       , prefPoiCategories = preferencePoiCategories dtp
       , prefCamino = camino'
       , prefRoutes = preferenceRoutes dcp
@@ -332,16 +312,12 @@ travelPreferencesFrom prefs = TravelPreferences {
     preferenceTravel = prefTravel prefs
   , preferenceFitness = prefFitness prefs
   , preferenceComfort = prefComfort prefs
-  , preferenceTransportLinks = prefTransportLinks prefs
   , preferenceDistance = prefDistance prefs
   , preferenceTime = prefTime prefs
   , preferenceRest = prefRest prefs
-  , preferenceLocation = prefLocation prefs
-  , preferenceRestLocation = prefRestLocation prefs
-  , preferenceAccommodation = prefAccommodation prefs
-  , preferenceStopServices = prefStopServices prefs
-  , preferenceRestServices = prefRestServices prefs
-  , preferenceDayServices = prefDayServices prefs
+  , preferenceStop = prefStop prefs
+  , preferenceStockStop = prefStockStop prefs
+  , preferenceRestStop = prefRestStop prefs
   , preferencePoiCategories = prefPoiCategories prefs
 }
 
@@ -361,8 +337,12 @@ caminoPreferencesFrom prefs = CaminoPreferences {
 -- | Find stops that do not have rejected accommodation
 permittedStops :: PreferenceData -> S.Set Location -> S.Set Location
 permittedStops prefs locs = let
-    accommodation = prefAccommodation prefs
-    allowed ac = maybe mempty id (M.lookup ac accommodation) /= Reject
+    stopAc = stopAccommodation $ prefStop prefs
+    stockAc = stopAccommodation $ prefStockStop prefs
+    restAc = stopAccommodation $ prefRestStop prefs
+    allowed ac = (M.findWithDefault mempty ac stopAc /= Reject) ||
+      (M.findWithDefault mempty ac stockAc /= Reject) ||
+      (M.findWithDefault mempty ac restAc /= Reject)
   in
     S.filter (\l -> any (allowed . accommodationType) (locationAccommodation l)) locs
 

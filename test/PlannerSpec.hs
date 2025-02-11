@@ -40,6 +40,70 @@ timeRange1 = PreferenceRange Nothing 6.0 0.0 8.0 Nothing (Just 10.0)
 
 restRange1 = PreferenceRange Nothing 6 5 7 Nothing (Just 8)
 
+stopPrefs1 = StopPreferences {
+  stopTransportLinks = True,
+  stopLocation = M.fromList [
+       (Village, (Penance 1.5)),
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+    ],
+  stopAccommodation = M.fromList [
+        (PilgrimAlbergue, (Penance 1.5)),
+        (PrivateAlbergue, (Penance 0.9)),
+        (Hotel, (Penance 0.5))
+    ],
+  stopServices = M.fromList [
+      (Restaurant, (Penance 0.2)),
+      (Groceries, (Penance 0.3))
+    ],
+  stopRouteServices = M.fromList [
+      (Pharmacy, (Penance 0.1)),
+      (Bank, (Penance 0.1))
+    ]
+}
+
+stopPrefs2 = StopPreferences {
+    stopTransportLinks = False,
+    stopLocation = M.fromList [
+       (Village, (Penance 1.5)),
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+     ],
+    stopAccommodation = M.fromList [
+        (PilgrimAlbergue, (Penance 4.0)),
+        (PrivateAlbergue, (Penance 3.0))
+      ],
+    stopServices = M.fromList [
+      (Restaurant, (Penance 0.2)),
+      (Groceries, (Penance 0.3))
+    ],
+    stopRouteServices = M.fromList [
+      (Pharmacy, (Penance 0.1)),
+      (Bank, (Penance 0.1))
+    ]
+}
+
+
+stopPrefs3 = StopPreferences {
+    stopTransportLinks = False,
+    stopLocation = M.fromList [
+       (Town, (Penance 0.9)),
+       (City, (Penance 0.5))
+     ],
+    stopAccommodation = M.fromList [
+        (PilgrimAlbergue, (Penance 4.0)),
+        (PrivateAlbergue, (Penance 3.0))
+      ],
+    stopServices = M.fromList [
+      (Restaurant, (Penance 0.5)),
+      (Groceries, (Penance 0.5))
+    ],
+    stopRouteServices = M.fromList [
+      (Pharmacy, (Penance 0.1)),
+      (Bank, (Penance 0.1))
+    ]
+}
+
 preferences1 = TravelPreferences {
     preferenceTravel = Walking,
     preferenceFitness = Normal,
@@ -47,33 +111,9 @@ preferences1 = TravelPreferences {
     preferenceDistance = distanceRange1,
     preferenceTime = timeRange1,
     preferenceRest = restRange1,
-    preferenceTransportLinks = True,
-    preferenceLocation = M.fromList [
-       (Village, (Penance 1.5)),
-       (Town, (Penance 0.9)),
-       (City, (Penance 0.5))
-     ],
-    preferenceRestLocation = M.fromList [
-       (Town, (Penance 0.9)),
-       (City, (Penance 0.5))
-     ],
-    preferenceAccommodation = M.fromList [
-        (PilgrimAlbergue, (Penance 1.5)),
-        (PrivateAlbergue, (Penance 0.9)),
-        (Hotel, (Penance 0.5))
-      ],
-    preferenceStopServices = M.fromList [
-      (Restaurant, (Penance 0.2)),
-      (Groceries, (Penance 0.3))
-    ],
-    preferenceRestServices = M.fromList [
-      (Restaurant, (Penance 0.5)),
-      (Groceries, (Penance 0.5))
-    ],
-    preferenceDayServices = M.fromList [
-      (Pharmacy, (Penance 0.1)),
-      (Bank, (Penance 0.1))
-    ],
+    preferenceStop = stopPrefs1,
+    preferenceStockStop = stopPrefs1,
+    preferenceRestStop = stopPrefs1,
     preferencePoiCategories = S.singleton ReligiousPoi
   }
 
@@ -85,32 +125,9 @@ preferences2 = TravelPreferences {
     preferenceDistance = distanceRange1,
     preferenceTime = timeRange1,
     preferenceRest = restRange1,
-    preferenceTransportLinks = False,
-    preferenceLocation = M.fromList [
-       (Village, (Penance 1.5)),
-       (Town, (Penance 0.9)),
-       (City, (Penance 0.5))
-     ],
-    preferenceRestLocation = M.fromList [
-       (Town, (Penance 0.9)),
-       (City, (Penance 0.5))
-     ],
-    preferenceAccommodation = M.fromList [
-        (PilgrimAlbergue, (Penance 4.0)),
-        (PrivateAlbergue, (Penance 3.0))
-      ],
-    preferenceStopServices = M.fromList [
-      (Restaurant, (Penance 0.2)),
-      (Groceries, (Penance 0.3))
-    ],
-    preferenceRestServices = M.fromList [
-      (Restaurant, (Penance 0.5)),
-      (Groceries, (Penance 0.5))
-    ],
-    preferenceDayServices = M.fromList [
-      (Pharmacy, (Penance 0.1)),
-      (Bank, (Penance 0.1))
-    ],
+    preferenceStop = stopPrefs2,
+    preferenceStockStop = stopPrefs2,
+    preferenceRestStop = stopPrefs3,
     preferencePoiCategories = S.singleton ReligiousPoi
   }
 
@@ -238,9 +255,9 @@ cpreferences1 = CaminoPreferences {
   preferenceStartDate = Nothing
 }
 
-accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) preferences1 camino1) preferences1 camino1 location1 location3 (const True)
+accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) stopPrefs1 camino1) preferences1 camino1 location1 location3 (const True)
 
-locationMap1 = buildTripChoiceMap (locationChoice preferenceStopServices preferences1) preferences1 camino1 location1 location3 (const True)
+locationMap1 = buildTripChoiceMap (locationChoice stopPrefs1) preferences1 camino1 location1 location3 (const True)
 
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3, testHoursSimple4, testHoursSimple5, testHoursSimple6]
 
@@ -274,7 +291,7 @@ testAccommodationMapSimple1 = TestCase (do
 testAccommodationSimple = TestList [ testAccommodationSimple1, testAccommodationSimple2, testAccommodationSimple3, testAccommodationSimple4, testAccommodationSimple5, testAccommodationSimple6 ]
 
 testAccommodationSimple1 = let
-    accom = accommodationChoice (const True) preferences1 camino1 location2
+    accom = accommodationChoice (const True) stopPrefs1 camino1 location2
   in
     TestCase (do
       assertEqual "Accommodation Simple 1 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
@@ -282,7 +299,7 @@ testAccommodationSimple1 = let
       assertPenanceEqual "Accommodation Simple 1 3" (Penance 1.5) (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple2 = let
-    accom = accommodationChoice (const True) preferences1 camino1 location1
+    accom = accommodationChoice (const True) stopPrefs1 camino1 location1
   in
     TestCase (do
       assertEqual "Accommodation Simple 2 1" Camping (accommodationType $ tripChoice accom)
@@ -290,7 +307,7 @@ testAccommodationSimple2 = let
       assertPenanceEqual "Accommodation Simple 2 3" Reject (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple3 = let
-    accom = accommodationChoice (const True) preferences1 camino1 location3
+    accom = accommodationChoice (const True) stopPrefs1 camino1 location3
   in
     TestCase (do
       assertEqual "Accommodation Simple 3 1" Hotel (accommodationType $ tripChoice accom)
@@ -298,7 +315,7 @@ testAccommodationSimple3 = let
       assertPenanceEqual "Accommodation Simple 3 3" (Penance 0.5) (tripChoicePenance accom) 0.001
     )
 testAccommodationSimple4 = let
-    accom = accommodationChoice (const True) preferences2 camino1 location3
+    accom = accommodationChoice (const True) stopPrefs2 camino1 location3
   in
     TestCase (do
       assertEqual "Accommodation Simple 4 1" Hotel (accommodationType $ tripChoice accom)
@@ -307,7 +324,7 @@ testAccommodationSimple4 = let
     )
 testAccommodationSimple5 = let
     camino1' = camino1 { caminoTransportLinks = links1 }
-    accom = accommodationChoice (const True) preferences1 camino1' location1
+    accom = accommodationChoice (const True) stopPrefs1 camino1' location1
   in
     TestCase (do
       assertEqual "Accommodation Simple 5 1" PilgrimAlbergue (accommodationType $ tripChoice accom)
@@ -316,9 +333,9 @@ testAccommodationSimple5 = let
     )
 
 testAccommodationSimple6 = let
-    preferences1' = preferences1 { preferenceTransportLinks = False }
+    sps1 = stopPrefs1 { stopTransportLinks = False }
     camino1' = camino1 { caminoTransportLinks = links1 }
-    accom = accommodationChoice (const True) preferences1' camino1' location1
+    accom = accommodationChoice (const True) sps1 camino1' location1
   in
     TestCase (do
       assertEqual "Accommodation Simple 6 1" Camping (accommodationType $ tripChoice accom)
@@ -366,10 +383,10 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 6" "P-P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P-P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 21.0) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 31.0) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P-P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P-P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (Penance 20.0) (metricsPenance $ score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 23.0) (metricsPenance $ score day2) 0.1
     )

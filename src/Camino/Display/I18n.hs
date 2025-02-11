@@ -171,6 +171,7 @@ data CaminoMsg =
   | PilgrimPoiTitle
   | PilgrimResourceTitle
   | PilgrimTitle
+  | PlaceholderLabel
   | PlanLabel
   | PoiLabel
   | PoisLabel
@@ -196,11 +197,13 @@ data CaminoMsg =
   | RestLocationPreferencesLabel
   | RestPenanceMsg Penance
   | RestPreferencesLabel
-  | RestServicesPreferencesLabel
+  | RestStopLabel
   | RoadTitle
   | RouteLabel
+  | RouteServicesPreferencesLabel
   | RoutesLabel
   | ServicesLabel
+  | ServicesPreferencesLabel
   | SharedTitle
   | ShopTitle
   | ShowOnMapTitle
@@ -209,11 +212,11 @@ data CaminoMsg =
   | StablesTitle
   | StagesMsg Int
   | StatueTitle
+  | StockStopLabel
   | StopLabel
   | StopPenanceMsg Penance
   | StopPreferencesLabel
   | StopServicesPenanceMsg Penance
-  | StopServicesPreferencesLabel
   | SuperFitTitle
   | TheatreTitle
   | Time TimeOfDay
@@ -407,6 +410,7 @@ renderCaminoMsgDefault _ PilgrimMassEventTitle = "Pilgrim's Mass"
 renderCaminoMsgDefault _ PilgrimPoiTitle = "Pilgrim"
 renderCaminoMsgDefault _ PilgrimResourceTitle = "Pilgrim Resource"
 renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
+renderCaminoMsgDefault _ PlaceholderLabel = "Placeholder"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
 renderCaminoMsgDefault _ PoiLabel = "Point of Interest"
 renderCaminoMsgDefault _ PoisLabel = "Points of Interest"
@@ -432,11 +436,13 @@ renderCaminoMsgDefault _ RestLabel = "Rest"
 renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferences"
 renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
-renderCaminoMsgDefault _ RestServicesPreferencesLabel = "Missing Rest Services"
+renderCaminoMsgDefault _ RestStopLabel = "Rest Stop"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
+renderCaminoMsgDefault _ RouteServicesPreferencesLabel = "Missing Services on Route"
 renderCaminoMsgDefault _ RoutesLabel = "Routes"
 renderCaminoMsgDefault _ ServicesLabel = "Services"
+renderCaminoMsgDefault _ ServicesPreferencesLabel = "Missing Services"
 renderCaminoMsgDefault _ SharedTitle = "Shared"
 renderCaminoMsgDefault _ ShopTitle = "Shop"
 renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
@@ -445,11 +451,11 @@ renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
 renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
 renderCaminoMsgDefault _ StatueTitle = "Statue"
+renderCaminoMsgDefault _ StockStopLabel = "Stocking Stop"
 renderCaminoMsgDefault _ StopLabel = "Stop"
 renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
-renderCaminoMsgDefault _ StopServicesPreferencesLabel = "Missing Stop Services"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
 renderCaminoMsgDefault _ TheatreTitle = "Theatre"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]

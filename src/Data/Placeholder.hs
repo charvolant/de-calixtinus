@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE TypeSynonymInstances #-}
@@ -25,11 +26,13 @@ module Data.Placeholder (
   , Placeholder(..)
 
   , normaliseReferences
+  , placeholderLabel
 ) where
 
 import Data.List (find, partition)
 import qualified Data.Map as M
 import qualified Data.Set as S
+import qualified Data.Text as T
 
 -- | Something that can be represented by a placeholder within a particular context
 --   In this case, the placeholder has a key type of @k@
@@ -40,6 +43,8 @@ class (Eq k, Ord k, Show k) => Placeholder k a | a -> k where
   -- | Create a placeholder for an identifier
   placeholder :: k -- ^ The identifier
     -> a -- ^ A placeholder
+  -- | Is this a placeholder instance?
+  isPlaceholder :: a -> Bool
   -- | Get the internal dependencies of this placeholder
   --   By default, this returns an empty set, override this if you have internal structure that needs resolving
   internalReferences :: a -- ^ The item
@@ -99,4 +104,8 @@ normaliseReferences' remaining seen = let
     seen' = M.union seen (M.fromList $ map (\item -> (placeholderID item, item)) rebuilt)
   in
     normaliseReferences' remaining' seen'
-    
+
+-- | Get a placeholder label that identifies the placeholder and if it is actually a placeholder
+--   Useful for generating debugging summaries
+placeholderLabel :: (Placeholder T.Text a) => a -> T.Text
+placeholderLabel p = if isPlaceholder p then placeholderID p <> "*" else placeholderID p

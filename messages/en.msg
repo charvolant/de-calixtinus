@@ -50,8 +50,13 @@ SelectComfort: Select a comfort level
 SelectFitness: Select a fitness level
 SelectPoiCategories: Select points of interest that you might visit
 SelectTravel: Select a travel type
-ServicesText: Select the cost for stopping at the end of the day and the desired accommodation and services at the end of the day and throughout the day. All preferences are measured in kilometres of walking and represent the amount of extra distance you would walk to get something you want.
-ServicesTitle: Select the Day's Travel Preferences
+ServicesRestText: Select the location, accomodation and services preferences for a rest stop. Rest stops are places where you can take a day off to recover, replenish, see the sights and generally get ready for the next stage of the walk.
+ServicesRestTitle: Select Rest Stop Preferences
+ServicesStockText: Select the location, accomodation and services preferences for a "stock-up" day". Stock-up days are where you expect to not have many facilities over the next day, because many of the services you would want will be closed. For example, if the next day is a Sunday or a public holiday, you will need to ensure that you have food pre-bought.
+ServicesStockTitle: Select Stop Preferences for a Stock-up Day
+ServicesStopText: Select the location, accomodation and services preferences for the end of the day.
+ServicesStopTitle: Select the Day's Travel Preferences
+ServicesText2: All preferences are measured in kilometres of walking and represent the amount of extra distance you would walk to get something you want.
 ShowPreferencesText: If you are happy with these preferences, you can generate a plan. Otherwise, use the Back button to change your choices.
 ShowPreferencesTitle: Review Preferences
 StartDateLabel: Start Date

@@ -47,7 +47,9 @@ mkYesodDispatch "CaminoApp" resourcesCaminoApp
 data PreferenceStep =
     TravelStep
   | RangeStep
-  | ServicesStep
+  | ServicesStopStep
+  | ServicesStockStep
+  | ServicesRestStep
   | CaminoStep
   | RoutesStep
   | StartStep
@@ -241,7 +243,9 @@ nextStep stepp dir = do
 stepForm :: PreferenceStep -> Widget -> Maybe PreferenceData -> (Html -> MForm Handler (FormResult PreferenceData, Widget))
 stepForm TravelStep help prefs = chooseTravelForm help prefs
 stepForm RangeStep help prefs = chooseRangeForm help prefs
-stepForm ServicesStep help prefs = chooseServicesForm help prefs
+stepForm ServicesStopStep help prefs = chooseStopServicesForm help prefs
+stepForm ServicesStockStep help prefs = chooseStockServicesForm help prefs
+stepForm ServicesRestStep help prefs = chooseRestServicesForm help prefs
 stepForm CaminoStep help prefs = chooseCaminoForm help prefs
 stepForm RoutesStep help prefs = chooseRoutesForm help prefs
 stepForm StartStep help prefs = chooseStartForm help prefs
@@ -253,8 +257,10 @@ stepForm PlanStep help prefs = confirmPreferencesForm help prefs -- Shouldn't en
 stepForward :: Bool -> PreferenceStep -> PreferenceStep
 stepForward False TravelStep = RangeStep
 stepForward True TravelStep = CaminoStep
-stepForward _ RangeStep = ServicesStep
-stepForward _ ServicesStep = CaminoStep
+stepForward _ RangeStep = ServicesStopStep
+stepForward _ ServicesStopStep = ServicesStockStep
+stepForward _ ServicesStockStep = ServicesRestStep
+stepForward _ ServicesRestStep = CaminoStep
 stepForward _ CaminoStep = RoutesStep
 stepForward _ RoutesStep = StartStep
 stepForward False StartStep = StopsStep
@@ -267,8 +273,10 @@ stepForward _ PlanStep = ShowPreferencesStep
 stepBackward :: Bool -> PreferenceStep -> PreferenceStep
 stepBackward _ TravelStep = TravelStep
 stepBackward _ RangeStep = TravelStep
-stepBackward _ ServicesStep = RangeStep
-stepBackward False CaminoStep = ServicesStep
+stepBackward _ ServicesStopStep = RangeStep
+stepBackward _ ServicesStockStep = ServicesStopStep
+stepBackward _ ServicesRestStep = ServicesStockStep
+stepBackward False CaminoStep = ServicesRestStep
 stepBackward True CaminoStep = TravelStep
 stepBackward _ RoutesStep = CaminoStep
 stepBackward _ StartStep = RoutesStep
@@ -288,7 +296,9 @@ stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
 stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
 stepPage TravelStep nextp _ help widget enctype = stepPage' MsgTravelTitle MsgTravelText1 (Just MsgTravelText2) (Just MsgTravelBottom) TravelStep nextp Nothing help widget enctype
 stepPage RangeStep nextp _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
-stepPage ServicesStep nextp _ help widget enctype = stepPage' MsgServicesTitle MsgServicesText Nothing Nothing ServicesStep nextp Nothing help widget enctype
+stepPage ServicesStopStep nextp _ help widget enctype = stepPage' MsgServicesStopTitle MsgServicesStopText (Just MsgServicesText2) Nothing ServicesStopStep nextp Nothing help widget enctype
+stepPage ServicesStockStep nextp _ help widget enctype = stepPage' MsgServicesStockTitle MsgServicesStockText (Just MsgServicesText2) Nothing ServicesStockStep nextp Nothing help widget enctype
+stepPage ServicesRestStep nextp _ help widget enctype = stepPage' MsgServicesRestTitle MsgServicesRestText (Just MsgServicesText2) Nothing ServicesRestStep nextp Nothing help widget enctype
 stepPage CaminoStep nextp _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
 stepPage RoutesStep nextp _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
 stepPage StartStep nextp _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing Nothing StartStep nextp Nothing help widget enctype
@@ -315,7 +325,9 @@ blankHelp = [whamlet||]
 helpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
 helpPopup' TravelStep _ = Just $(ihamletFile "templates/help/travel-help-en.hamlet")
 helpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
-helpPopup' ServicesStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+helpPopup' ServicesStopStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+helpPopup' ServicesStockStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+helpPopup' ServicesRestStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
 helpPopup' PoiStep _ = Just $(ihamletFile "templates/help/poi-help-en.hamlet")
 helpPopup' RoutesStep _ = Just $(ihamletFile "templates/help/routes-help-en.hamlet")
 helpPopup' StartStep _ = Just $(ihamletFile "templates/help/start-help-en.hamlet")

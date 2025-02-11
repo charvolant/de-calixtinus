@@ -156,9 +156,7 @@
       "name": "Santiago",
       "description": "Add to the default route",
       "stops": [ ],
-      "starts": [
-        "P-P1", "P-P138", "P-P204"
-      ],
+      "starts": [ ],
       "finishes": [
         "ST-ST1"
       ],

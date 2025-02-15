@@ -28,7 +28,9 @@ sampleCalendarConfig1 = createCalendarConfig [
       ]))
   ]
   
-sampleRegionConfig1 = createRegionConfig [Region "Test" (wildcardText "Test Region") Country Nothing Nothing S.empty (Just rootLocale) [NamedCalendar "Easter"] ]
+sampleRegionConfig1 = createRegionConfig [
+  Region "Test" (wildcardText "Test Region") Country Nothing Nothing S.empty (Just rootLocale) [NamedCalendar "Easter"] [Weekly (S.singleton Sunday)]
+  ]
 
 data TestConfig = TestConfig CalendarConfig RegionConfig
 
@@ -75,8 +77,9 @@ testEventCalendarOnOrBefore = let
       testEventCalendarOnOrBefore5, testEventCalendarOnOrBefore6, testEventCalendarOnOrBefore7, testEventCalendarOnOrBefore8,
       testEventCalendarOnOrBefore9, testEventCalendarOnOrBefore10, testEventCalendarOnOrBefore11, testEventCalendarOnOrBefore12,
       testEventCalendarOnOrBefore13, testEventCalendarOnOrBefore14, testEventCalendarOnOrBefore15, testEventCalendarOnOrBefore16,
-      testEventCalendarOnOrBefore17, testEventCalendarOnOrBefore18, testEventCalendarOnOrBefore19, testEventCalendarOnOrBefore20
-     ]
+      testEventCalendarOnOrBefore17, testEventCalendarOnOrBefore18, testEventCalendarOnOrBefore19, testEventCalendarOnOrBefore20,
+      testEventCalendarOnOrBefore21
+      ]
   in
     TestList $ map (\t -> runReader t sampleConfig1) tests
 
@@ -300,6 +303,17 @@ testEventCalendarOnOrBefore20 = do
       assertEqual "EventCalendar OnOrBefore 20 3" (fromGregorian 2025 April 20) before3
       )
 
+testEventCalendarOnOrBefore21 = do
+    let calendar = ClosedDay "Test"
+    before1 <- calendarDateOnOrBefore calendar (fromGregorian 2023 March 26)
+    before2 <- calendarDateOnOrBefore calendar (fromGregorian 2024 June 7)
+    before3 <- calendarDateOnOrBefore calendar (fromGregorian 2025 October 12)
+    return $ TestCase (do
+      assertEqual "EventCalendar OnOrBefore 21 1" (fromGregorian 2023 March 26) before1
+      assertEqual "EventCalendar OnOrBefore 21 2" (fromGregorian 2024 June 2) before2
+      assertEqual "EventCalendar OnOrBefore 21 3" (fromGregorian 2025 October 12) before3
+      )
+
 
 testEventCalendarOnOrAfter = let
     tests = [
@@ -307,7 +321,8 @@ testEventCalendarOnOrAfter = let
       testEventCalendarOnOrAfter5, testEventCalendarOnOrAfter6, testEventCalendarOnOrAfter7, testEventCalendarOnOrAfter8,
       testEventCalendarOnOrAfter9, testEventCalendarOnOrAfter10, testEventCalendarOnOrAfter11, testEventCalendarOnOrAfter12,
       testEventCalendarOnOrAfter13, testEventCalendarOnOrAfter14, testEventCalendarOnOrAfter15, testEventCalendarOnOrAfter16,
-      testEventCalendarOnOrAfter17, testEventCalendarOnOrAfter18, testEventCalendarOnOrAfter19, testEventCalendarOnOrAfter20
+      testEventCalendarOnOrAfter17, testEventCalendarOnOrAfter18, testEventCalendarOnOrAfter19, testEventCalendarOnOrAfter20,
+      testEventCalendarOnOrAfter21
      ]
   in
     TestList $ map (\t -> runReader t sampleConfig1) tests
@@ -531,7 +546,18 @@ testEventCalendarOnOrAfter20 = do
       assertEqual "EventCalendar OnOrAfter 20 2" (fromGregorian 2025 April 20) after2
       assertEqual "EventCalendar OnOrAfter 20 3" (fromGregorian 2026 April 5) after3
       )
-     
+
+testEventCalendarOnOrAfter21 = do
+    let calendar = ClosedDay "Test"
+    after1 <- calendarDateOnOrAfter calendar (fromGregorian 2023 March 26)
+    after2 <- calendarDateOnOrAfter calendar (fromGregorian 2024 June 7)
+    after3 <- calendarDateOnOrAfter calendar (fromGregorian 2025 October 12)
+    return $ TestCase (do
+      assertEqual "EventCalendar OnOrAfter 20 1" (fromGregorian 2023 March 26) after1
+      assertEqual "EventCalendar OnOrAfter 20 2" (fromGregorian 2024 June 9) after2
+      assertEqual "EventCalendar OnOrAfter 20 3" (fromGregorian 2025 October 12) after3
+      )
+
 testInCalendar = let
     tests = [
       testInCalendar1, testInCalendar2, testInCalendar3, testInCalendar4,
@@ -539,7 +565,7 @@ testInCalendar = let
       testInCalendar9, testInCalendar10, testInCalendar11, testInCalendar12,
       testInCalendar13, testInCalendar14, testInCalendar15, testInCalendar16,
       testInCalendar17, testInCalendar18, testInCalendar19, testInCalendar20,
-      testInCalendar21
+      testInCalendar21, testInCalendar22
      ]
   in
     TestList $ map (\t -> runReader t sampleConfig1) tests
@@ -786,4 +812,17 @@ testInCalendar21 = do
       assertEqual "InCalendar 21 2" False incal2
       assertEqual "InCalendar 21 3" False incal3
       assertEqual "InCalendar 21 4" True incal4
+      )
+
+testInCalendar22 = do
+    let calendar = ClosedDay "Test"
+    incal1 <- inCalendar calendar (fromGregorian 2023 March 26)
+    incal2 <- inCalendar calendar (fromGregorian 2024 June 7)
+    incal3 <- inCalendar calendar (fromGregorian 2025 October 12)
+    incal4 <- inCalendar calendar (fromGregorian 2024 March 31)
+    return $ TestCase (do
+      assertEqual "InCalendar 22 1" True incal1
+      assertEqual "InCalendar 22 2" False incal2
+      assertEqual "InCalendar 22 3" True incal3
+      assertEqual "InCalendar 22 4" True incal4
       )

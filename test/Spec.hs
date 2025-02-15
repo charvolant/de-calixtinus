@@ -40,10 +40,10 @@ main = do
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)
     let shortPreferences = fromRight (defaultTravelPreferences Walking Normal Pilgrim) ep
-    results <- runTestTT (testList shortPreferences (head $ caminoConfigCaminos cconf))
+    results <- runTestTT (testList cconf shortPreferences (head $ caminoConfigCaminos cconf))
     putStrLn $ show results
 
-testList prefs camino = TestList [
+testList config prefs camino = TestList [
    TestLabel "Partial" testPartial,
    TestLabel "Localised" testLocalised,
    TestLabel "Metadata" testMetadata,
@@ -53,9 +53,9 @@ testList prefs camino = TestList [
    TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
    TestLabel "Config" testConfig,
-   TestLabel "Camino" testCamino, 
-   TestLabel "Walking" testWalking, 
-   TestLabel "Graph" testGraph, 
-   TestLabel "Programming" testProgramming, 
-   TestLabel "Planner" (testPlanner prefs camino) 
+   TestLabel "Camino" testCamino,
+   TestLabel "Walking" testWalking,
+   TestLabel "Graph" testGraph,
+   TestLabel "Programming" testProgramming,
+   TestLabel "Planner" (testPlanner config prefs camino)
   ]

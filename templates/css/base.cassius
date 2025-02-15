@@ -34,9 +34,7 @@ a
 .attribution
   font-size: x-small
 .best-accommodation
-  color: #6ac830
-.best-accommodation::before
-  content: "\2713"
+  font-weight: bold
 .best-accommodation-penance
   font-size: smaller
   vertical-align: top
@@ -65,7 +63,10 @@ a
       margin-left: 1em
       font-size: initial
       display: inline-block
-    .ca-rest
+    .ca-restpoint
+      margin-left: 1em
+      color: #{toCssColour recreationGreen}
+    .ca-stockpoint
       margin-left: 1em
       color: #{toCssColour recreationGreen}
 .description-icon
@@ -129,8 +130,16 @@ a
       font-family: "Camino Icons"
       font-weight: normal
       content: "\e073"
-  .best-accommodation
-    font-weight: bold
+.location-stockpoint
+  .accordion-header
+    h5
+      font-weight: bolder
+    h5::after
+      margin-left: 1ex
+      color: #{toCssColour recreationGreen}
+      font-family: "Camino Icons"
+      font-weight: normal
+      content: "\e041"
 .location-summary
   display: inline-block
   .accommodation-types
@@ -147,24 +156,10 @@ a
       font-weight: bolder
     h5::after
       margin-left: 1ex
-      color: #f9b34a
+      color: #{toCssColour caminoYellow}
       font-family: "Camino Icons"
       font-weight: normal
       content: "\e020"
-  .best-accommodation
-    font-weight: bold
-.location-stop
-  .accordion-header
-    h5
-      font-weight: bolder
-    h5::after
-      margin-left: 1ex
-      color: #f9b34a
-      font-family: "Camino Icons"
-      font-weight: normal
-      content: "\e020"
-  .best-accommodation
-    font-weight: bold
 .location-type-sample
   color: #{toCssColour caminoYellow}
 .location-waypoint

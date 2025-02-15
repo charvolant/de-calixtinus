@@ -13,6 +13,8 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Default.Class
 import Data.Either
+import Data.Placeholder
+import Data.Time.Calendar
 import Graph.Graph (identifier)
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
@@ -24,14 +26,15 @@ assertPenanceEqual msg Reject actual _precision =
 assertPenanceEqual msg (Penance expected) (Penance actual) precision =
   assertBool (msg ++ " expected penance value " ++ show expected ++ " but got " ++ show actual) (abs (expected - actual) < precision)
 
-testPlanner :: TravelPreferences -> Camino -> Test
-testPlanner preferences camino = TestList [
+testPlanner :: CaminoConfig -> TravelPreferences -> Camino -> Test
+testPlanner config preferences camino = TestList [
   TestLabel "Hours Simple" testHoursSimple,
   TestLabel "Travel Simple" testTravelSimple,
   TestLabel "Accommodation Map Simple" testAccommodationMapSimple,
   TestLabel "Accommodation Simple" testAccommodationSimple,
   TestLabel "Penance Simple" testPenanceSimple,
-  TestLabel "Plan Camino" (testPlanCamino preferences camino)
+  TestLabel "Stock Up Day" (testIsStockUpDay config),
+  TestLabel "Plan Camino" (testPlanCamino config preferences camino)
   ]
 
 distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
@@ -138,8 +141,9 @@ location1 = Location {
     locationType = Poi,
     locationDescription = Nothing,
     locationCamping = True,
+    locationAlwaysOpen = False,
     locationPosition = Nothing,
-    locationRegion = Nothing,
+    locationRegion = Just $ placeholder "PT",
     locationServices = S.empty,
     locationAccommodation = [],
     locationPois = [],
@@ -152,8 +156,9 @@ location2 = Location {
     locationType = Poi,
     locationDescription = Nothing,
     locationCamping = True,
+    locationAlwaysOpen = False,
     locationPosition = Nothing,
-    locationRegion = Nothing,
+    locationRegion = Just $ placeholder "ES-GA",
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue,
@@ -169,8 +174,9 @@ location3 = Location {
     locationType = Poi,
     locationDescription = Nothing,
     locationCamping = True,
+    locationAlwaysOpen = False,
     locationPosition = Nothing,
-    locationRegion = Nothing,
+    locationRegion = Just $ placeholder "ES-GA",
     locationServices = S.empty,
     locationAccommodation = [
       Accommodation (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ]) Nothing
@@ -186,8 +192,9 @@ location4 = Location {
     locationType = Poi,
     locationDescription = Nothing,
     locationPosition = Nothing,
-    locationRegion = Nothing,
+    locationRegion = Just $ placeholder "ES",
     locationCamping = True,
+    locationAlwaysOpen = False,
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue
@@ -210,6 +217,10 @@ legs2 = [
   Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legDescription = Nothing },
   Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing },
   Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legDescription = Nothing }
+  ]
+
+legs4 = [
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing }
   ]
 
 links1 = [
@@ -346,17 +357,47 @@ testAccommodationSimple6 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
 
-testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
 
-testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
 
-testPlanCamino preferences camino = TestList [ testPlanCamino1 preferences camino]
+testIsStockUpDay config = TestList [
+  testIsStockUpDay1 config, testIsStockUpDay2 config, testIsStockUpDay3 config, testIsStockUpDay4 config,
+  testIsStockUpDay5 config
+  ]
 
-testPlanCamino1 preferences camino =
+testIsStockUpDay1 config = TestCase (assertEqual "IsStockUpDay 1" False (isStockUpDay config (fromGregorian 2025 May 10) []))
+
+testIsStockUpDay2 config = let
+    day1 = Chain location1 location2 legs0 mempty
+  in
+    TestCase (assertEqual "IsStockUpDay 2" False (isStockUpDay config (fromGregorian 2025 May 10) [day1]))
+
+testIsStockUpDay3 config = let
+    day1 = Chain location1 location2 legs0 mempty
+    day2 = Chain location2 location3 legs4 mempty
+  in
+    TestCase (assertEqual "IsStockUpDay 3" True (isStockUpDay config (fromGregorian 2025 May 10) [day1, day2]))
+
+testIsStockUpDay4 config = let
+    day1 = Chain location1 location2 legs0 mempty
+    day2 = Chain location2 location3 legs4 mempty
+  in
+    TestCase (assertEqual "IsStockUpDay 4" False (isStockUpDay config (fromGregorian 2025 May 11) [day1, day2]))
+
+testIsStockUpDay5 config = let
+    day1 = Chain location1 location2 legs0 mempty
+    day2 = Chain location2 location3 legs4 mempty
+  in
+    TestCase (assertEqual "IsStockUpDay 5" True (isStockUpDay config (fromGregorian 2025 December 24) [day1, day2]))
+
+testPlanCamino config preferences camino = TestList [ testPlanCamino1 config preferences camino]
+
+testPlanCamino1 config preferences camino =
   let
     cpreferences = CaminoPreferences {
       preferenceCamino = camino,
@@ -366,9 +407,9 @@ testPlanCamino1 preferences camino =
       preferenceStops = S.empty,
       preferenceExcluded = S.empty,
       preferencePois = S.empty,
-      preferenceStartDate = Nothing
+      preferenceStartDate = Just $ fromGregorian 2025 January 16
     }
-    solution = planCamino preferences cpreferences
+    solution = planCamino config preferences cpreferences
     epilgrimage = solutionPilgrimage solution
   in
     TestCase (do
@@ -383,10 +424,10 @@ testPlanCamino1 preferences camino =
       assertEqual "Plan Camino 1 6" "P-P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P-P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 31.0) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 21.0) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P-P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P-P12" (identifier $ finish day2)
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
-      assertPenanceEqual "Plan Camino 1 13" (Penance 23.0) (metricsPenance $ score day2) 0.1
+      assertPenanceEqual "Plan Camino 1 13" (Penance 20.0) (metricsPenance $ score day2) 0.1
     )

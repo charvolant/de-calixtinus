@@ -108,8 +108,8 @@ validRange :: (Ord a) =>
   -> Bool -- ^ True if the range is in order, false otherwise
 validRange pr =
   (maybe True (<= rangeLower pr) (rangeMinimum pr)) &&
-  (rangeLower pr <= rangeTarget pr) &&
-  (rangeTarget pr <= rangeUpper pr) &&
+  (rangeLower pr < rangeTarget pr) &&
+  (rangeTarget pr < rangeUpper pr) &&
   (maybe True (>= rangeUpper pr) (rangeMaximum pr))
 
 
@@ -832,7 +832,7 @@ suggestedStockServices :: Travel -- ^ The style of travel
   -> Comfort -- ^ The comfort level
   -> M.Map Service Penance -- ^ The suggested services map
 suggestedStockServices travel fitness comfort = M.union
-  (M.fromList [(Groceries, (Penance 5.0)), (Pharmacy, (Penance 2.0))])
+  (M.fromList [(Groceries, (Penance 1.0)), (Pharmacy, (Penance 1.0))])
   (suggestedStopServices travel fitness comfort)
 
 
@@ -864,7 +864,27 @@ suggestedRouteServices' Luxurious = M.fromList [
     , (Bank, Penance 0.5)
     , (Bus, Penance 1.0)
   ]
-  
+
+-- | Create a suggested penance map for route services, based on travel type and fitness level
+suggestedRouteServices :: Travel -- ^ The style of travel
+  -> Fitness -- ^ The fitness level
+  -> Comfort -- ^ The comfort level
+  -> M.Map Service Penance -- ^ The suggested services map
+suggestedRouteServices Walking _ comfort = suggestedRouteServices' comfort
+suggestedRouteServices Cycling fitness comfort = M.union
+  (M.singleton BicycleRepair (Penance 3.0))
+  (suggestedRouteServices Walking fitness comfort)
+
+
+-- | Create a suggested penance map for stock-up route services, based on travel type and fitness level
+suggestedStockRouteServices :: Travel -- ^ The style of travel
+  -> Fitness -- ^ The fitness level
+  -> Comfort -- ^ The comfort level
+  -> M.Map Service Penance -- ^ The suggested services map
+suggestedStockRouteServices travel fitness comfort = M.union
+  (M.singleton Groceries (Penance 5.0))
+  (suggestedRouteServices travel fitness comfort)
+
 -- Default rest services, based on comfort
 suggestedRestServices'  :: Comfort -> M.Map Service Penance -- ^ The suggested services map
 suggestedRestServices' Austere = M.fromList [
@@ -925,16 +945,6 @@ suggestedRestServices Cycling fitness comfort = M.union
   (M.singleton BicycleStorage (Penance 2.0)) 
   (suggestedRestServices Walking fitness comfort)
 
--- | Create a suggested penance map for route services, based on travel type and fitness level
-suggestedRouteServices :: Travel -- ^ The style of travel
-  -> Fitness -- ^ The fitness level
-  -> Comfort -- ^ The comfort level
-  -> M.Map Service Penance -- ^ The suggested services map
-suggestedRouteServices Walking _ comfort = suggestedRouteServices' comfort
-suggestedRouteServices Cycling fitness comfort = M.union 
-  (M.singleton BicycleRepair (Penance 3.0)) 
-  (suggestedRouteServices Walking fitness comfort)
-
 -- | Create a suggested set of point of interest prefereneces based on travel type, fitness and comfort level
 suggestedPoiCategories :: Travel -> Fitness -> Comfort -> S.Set PoiCategory
 suggestedPoiCategories _ _ Austere = S.fromList [ReligiousPoi, PilgrimPoi]
@@ -988,7 +998,7 @@ suggestedStockPreferences travel fitness comfort = let
       , stopLocation = suggestedStockLocation travel fitness comfort
       , stopAccommodation = suggestedAccommodation travel fitness comfort
       , stopServices = services
-      , stopRouteServices = suggestedRouteServices travel fitness comfort
+      , stopRouteServices = suggestedStockRouteServices travel fitness comfort
     }
 
 -- | The default stop preferences for a rest stop

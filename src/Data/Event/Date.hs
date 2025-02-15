@@ -15,6 +15,7 @@ module Data.Event.Date (
     calendarDateOnOrAfter
   , calendarDateOnOrBefore
   , inCalendar
+  , noServicesDay
   , nthWeekOnOf
 ) where
 
@@ -109,6 +110,10 @@ calendarDateOnOrBefore c@(PublicHoliday region) day = do
   region' <- getRegion region
   days <- mapM (\cc -> calendarDateOnOrBefore cc day) (getRegionalHolidays region')
   calendarDateOnOrBefore'' c $ maximum days
+calendarDateOnOrBefore c@(ClosedDay region) day = do
+  region' <- getRegion region
+  days <- mapM (\cc -> calendarDateOnOrBefore cc day) (getClosedDays region')
+  calendarDateOnOrBefore'' c $ maximum days
 calendarDateOnOrBefore (Conditional calendar _note) day = calendarDateOnOrBefore calendar day
 
 -- Simple version for when we just have to search backwards
@@ -190,6 +195,10 @@ calendarDateOnOrAfter c@(PublicHoliday region) day = do
   region' <- getRegion region
   days <- mapM (\cc -> calendarDateOnOrAfter cc day) (getRegionalHolidays region')
   calendarDateOnOrAfter'' c $ minimum days
+calendarDateOnOrAfter c@(ClosedDay region) day = do
+  region' <- getRegion region
+  days <- mapM (\cc -> calendarDateOnOrAfter cc day) (getClosedDays region')
+  calendarDateOnOrAfter'' c $ minimum days
 calendarDateOnOrAfter (Conditional calendar _note) day = calendarDateOnOrAfter calendar day
 
 
@@ -248,6 +257,16 @@ inCalendar (PublicHoliday region) day = do
   region' <- getRegion region
   matches <- mapM (\c -> inCalendar c day) (getRegionalHolidays region')
   return $ any id matches
+inCalendar (ClosedDay region) day = do
+  region' <- getRegion region
+  matches <- mapM (\c -> inCalendar c day) (getClosedDays region')
+  return $ any id matches
 inCalendar (Conditional calendar _note) day = inCalendar calendar day
 
+-- | Is this day a day where shops etc. are closed?
+noServicesDay :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => Region -> Day -> m Bool
+noServicesDay region day = do
+  holidays <- mapM (\c -> inCalendar c day) (getRegionalHolidays region)
+  closed <- mapM (\c -> inCalendar c day) (getClosedDays region)
+  return $ any id holidays || any id closed
 

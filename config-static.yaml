@@ -442,6 +442,10 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
   - id: "ES-AS"
     name:
       - Asturies@ast
@@ -570,6 +574,10 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
   - id: FR
     name:
       - France@fr
@@ -615,6 +623,10 @@ regions:
       about: http://nouvelle-aquitaine.fr/
     type: Province
     parent: FR
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
   - id: OC
     name:
       - "Oceania@en"

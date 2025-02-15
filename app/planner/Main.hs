@@ -91,7 +91,7 @@ plan opts = do
     let locales = map localeFromIDOrError langs
     let router = renderCaminoRoute config' locales
     let messages = renderCaminoMsg config' locales
-    let solution = planCamino preferences' caminoPrefs'''
+    let solution = planCamino cconf preferences' caminoPrefs'''
     let pilgrimage = either (\f -> error ("Unable to find solution, cause " ++ show f)) Just (solutionPilgrimage solution)
     createDirectoryIfMissing True output'
     let kml = createCaminoDoc config' preferences' caminoPrefs''' pilgrimage

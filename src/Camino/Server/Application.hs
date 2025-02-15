@@ -384,8 +384,8 @@ planPage prefs = do
     locales <- getLocales
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
-    let solution = planCamino tprefs cprefs
     let config = caminoAppConfig master
+    let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
@@ -409,7 +409,7 @@ planKml prefs = do
     master <- getYesod
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
-    let solution = planCamino tprefs cprefs
+    let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
     let pilgrimage = either (const Nothing) (Just) (solutionPilgrimage solution)
     let config = caminoAppConfig master
     let kml = createCaminoDoc config tprefs cprefs pilgrimage

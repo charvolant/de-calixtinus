@@ -31,32 +31,32 @@ testRegionJSON = TestList [
 
 testRegionToJSON1 =
   let
-    region = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) []
+    region = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) [] []
     ec = encode region
   in
     TestCase (do
-      assertEqual "Region ToJSON 1 1" "{\"description\":null,\"holidays\":[],\"id\":\"World\",\"locale\":\"*\",\"member\":[],\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}" ec
+      assertEqual "Region ToJSON 1 1" "{\"closed-days\":[],\"description\":null,\"holidays\":[],\"id\":\"World\",\"locale\":\"*\",\"member\":[],\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}" ec
       )
 
 testRegionToJSON2 =
   let
     description1 = Description Nothing (Just $ wildcardText "The French Republic") [] Nothing Nothing
-    region1 = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) []
-    region2 = Region "FR" (wildcardText "France") Country (Just description1) (Just region1) S.empty (localeFromID "fr") []
+    region1 = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) [] []
+    region2 = Region "FR" (wildcardText "France") Country (Just description1) (Just region1) S.empty (localeFromID "fr") [] []
     ec = encode region2
   in
     TestCase (do
-      assertEqual "Region ToJSON 2 1" "{\"description\":\"The French Republic\",\"holidays\":[],\"id\":\"FR\",\"locale\":\"fr\",\"member\":[],\"name\":\"France\",\"parent\":\"World\",\"type\":\"Country\"}" ec
+      assertEqual "Region ToJSON 2 1" "{\"closed-days\":[],\"description\":\"The French Republic\",\"holidays\":[],\"id\":\"FR\",\"locale\":\"fr\",\"member\":[],\"name\":\"France\",\"parent\":\"World\",\"type\":\"Country\"}" ec
       )
 
 testRegionToJSON3 =
   let
-    region1 = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) []
-    region2 = Region "FR" (wildcardText "France") Country Nothing (Just region1) S.empty Nothing [NamedCalendar "Easter"]
+    region1 = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) [] []
+    region2 = Region "FR" (wildcardText "France") Country Nothing (Just region1) S.empty Nothing [NamedCalendar "Easter"] []
     ec = encode region2
   in
     TestCase (do
-      assertEqual "Region ToJSON 2 1" "{\"description\":null,\"holidays\":[{\"key\":\"Easter\",\"type\":\"named\"}],\"id\":\"FR\",\"locale\":null,\"member\":[],\"name\":\"France\",\"parent\":\"World\",\"type\":\"Country\"}" ec
+      assertEqual "Region ToJSON 2 1" "{\"closed-days\":[],\"description\":null,\"holidays\":[{\"key\":\"Easter\",\"type\":\"named\"}],\"id\":\"FR\",\"locale\":null,\"member\":[],\"name\":\"France\",\"parent\":\"World\",\"type\":\"Country\"}" ec
       )
 
 testRegionFromJSON1 =
@@ -106,13 +106,13 @@ regionConfigJSON1 = [r|
 
 testRegionConfigToJSON1 =
   let
-    region1 = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) []
-    region2 = Region "Europe" (wildcardText "Europe") Continent Nothing (Just region1) S.empty Nothing []
+    region1 = Region "World" (wildcardText "World") Planet Nothing Nothing S.empty (Just rootLocale) [] []
+    region2 = Region "Europe" (wildcardText "Europe") Continent Nothing (Just region1) S.empty Nothing [] []
     config = createRegionConfig [region1, region2]
     ec = encode config
   in
     TestCase (do
-      assertEqual "RegionConfig ToJSON 1 1" "[{\"description\":null,\"holidays\":[],\"id\":\"Europe\",\"locale\":null,\"member\":[],\"name\":\"Europe\",\"parent\":\"World\",\"type\":\"Continent\"},{\"description\":null,\"holidays\":[],\"id\":\"World\",\"locale\":\"*\",\"member\":[],\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}]" ec
+      assertEqual "RegionConfig ToJSON 1 1" "[{\"closed-days\":[],\"description\":null,\"holidays\":[],\"id\":\"Europe\",\"locale\":null,\"member\":[],\"name\":\"Europe\",\"parent\":\"World\",\"type\":\"Continent\"},{\"closed-days\":[],\"description\":null,\"holidays\":[],\"id\":\"World\",\"locale\":\"*\",\"member\":[],\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}]" ec
       )
 
 testRegionConfigFromJSON1 =

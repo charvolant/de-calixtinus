@@ -63,6 +63,8 @@ data CaminoMsg =
   | CathedralTitle
   | ChurchTitle
   | CityTitle
+  | ClosedDayLabel Text
+  | ClosedDayText
   | ClosedText
   | ComfortableTitle
   | CrossTitle
@@ -193,11 +195,10 @@ data CaminoMsg =
   | ReligiousPoiTitle
   | RequiredStopsLabel
   | RestaurantTitle
-  | RestLabel
   | RestLocationPreferencesLabel
   | RestPenanceMsg Penance
+  | RestpointLabel
   | RestPreferencesLabel
-  | RestStopLabel
   | RoadTitle
   | RouteLabel
   | RouteServicesPreferencesLabel
@@ -212,7 +213,7 @@ data CaminoMsg =
   | StablesTitle
   | StagesMsg Int
   | StatueTitle
-  | StockStopLabel
+  | StockpointLabel
   | StopLabel
   | StopPenanceMsg Penance
   | StopPreferencesLabel
@@ -314,6 +315,7 @@ renderCaminoMsgDefault _ CasualTitle = "Casual"
 renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
 renderCaminoMsgDefault _ ChurchTitle = "Church"
 renderCaminoMsgDefault _ CityTitle = "City"
+renderCaminoMsgDefault _ ClosedDayText = "Closed Day"
 renderCaminoMsgDefault _ ClosedText = "closed"
 renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
 renderCaminoMsgDefault _ ComfortLabel = "Comfort"
@@ -432,11 +434,10 @@ renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
 renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
-renderCaminoMsgDefault _ RestLabel = "Rest"
 renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferences"
 renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ RestpointLabel = "Rest Point"
 renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
-renderCaminoMsgDefault _ RestStopLabel = "Rest Stop"
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ RouteServicesPreferencesLabel = "Missing Services on Route"
@@ -451,7 +452,7 @@ renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
 renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
 renderCaminoMsgDefault _ StatueTitle = "Statue"
-renderCaminoMsgDefault _ StockStopLabel = "Stocking Stop"
+renderCaminoMsgDefault _ StockpointLabel = "Stocking Point"
 renderCaminoMsgDefault _ StopLabel = "Stop"
 renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
@@ -544,11 +545,18 @@ renderLocalisedPublicHoliday config locs rid = [shamlet|^{renderCaminoMsg config
     region = (regionConfigLookup $ getRegionConfig config) rid
     name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False (regionName r)) region
 
+renderLocalisedClosedDay :: Config -> [Locale] -> Text -> Html
+renderLocalisedClosedDay config locs rid = [shamlet|^{renderCaminoMsg config locs ClosedDayText} (^{name})|]
+  where
+    region = (regionConfigLookup $ getRegionConfig config) rid
+    name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False (regionName r)) region
+
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
+renderCaminoMsg config locales (ClosedDayLabel region) = renderLocalisedClosedDay config locales region
 renderCaminoMsg _config locales (DateMsg day) = [shamlet|<span .date>^{renderLocalisedDate True locales day}|]
 renderCaminoMsg _config locales (DateRangeMsg day1 day2) = [shamlet|
   <span .date-range>^{renderLocalisedDate True locales day1}#

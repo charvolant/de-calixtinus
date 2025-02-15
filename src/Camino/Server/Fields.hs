@@ -214,7 +214,7 @@ rangeField minv maxv stepv = Field
       showFloat f v = either id (pack . show . f) v
       showMaybeFloat f v = either id (\x -> maybe "--" (pack . show) (f x)) v
       validate e@(Left _msg) = e
-      validate v@(Right r) = if validRange r then v else Left (MsgInvalidEntry "")
+      validate v@(Right r) = if validRange r then v else Left (MsgInvalidEntry "Range not valid")
       dash = '\x2014'
 
 

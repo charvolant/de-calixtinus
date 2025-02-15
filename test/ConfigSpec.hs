@@ -47,6 +47,7 @@ testConfig2 = Config {
     ],
     webMaps = []
   },
+  configCaminos = [],
   configCalendars = Nothing,
   configRegions = Nothing
 }

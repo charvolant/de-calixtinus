@@ -17,7 +17,7 @@ module Camino.Display.Html where
 import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
-import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStops, pilgrimageWaypoints)
+import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
 import Camino.Util
 import Camino.Display.Css (caminoCss, toCssColour)
@@ -134,7 +134,7 @@ tripSummary _preferences _camino pilgrimage = [ihamlet|
       $forall stage <- path pilgrimage
         $forall day <- path stage
           <li>_{Txt (locationName $ start day)} - _{Txt (locationName $ finish day)}
-        <li>_{RestLabel}
+        <li>_{RestpointLabel}
   |]
 
 locationSummary :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -432,14 +432,12 @@ caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping _mul
 
 caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation Service) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|
-  <div .row .accommodation>
+  <div .row .accommodation :isBest:.best-accommodation>
     <div .offset-1 .col-5>
       ^{caminoAccommodationTypeIcon type'}
       ^{caminoAccommodationNameHtml accommodation}
       $maybe ac <- choice'
-        <span .best-accommodation>
-          $if tripChoicePenance ac /= mempty
-            <span .best-accommodation-penance>+_{PenanceFormatted (tripChoicePenance ac)}
+        <!-- +_{PenanceFormatted (tripChoicePenance ac)} -->
     <div .col-4>
       $forall service <- accommodationServices accommodation
         ^{caminoServiceIcon service}
@@ -454,11 +452,13 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
      cn' = maybe "" (accommodationNameLabel . tripChoice) choice
      ct' = maybe Camping (accommodationType . tripChoice) choice
      choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
+     isBest = isJust choice'
 
 -- | Get elements of a possible solution
-solutionElements :: Camino -> Maybe Solution -> (Either (Failure Location) Pilgrimage, S.Set Location, S.Set Location, S.Set Location, S.Set Leg)
+solutionElements :: Camino -> Maybe Solution -> (Either (Failure Location) Pilgrimage, S.Set Location, S.Set Location, S.Set Location, S.Set Location, S.Set Leg)
 solutionElements camino Nothing = (
     Left $ simpleFailure "Solution not present" Nothing,
+    S.empty,
     S.empty,
     S.empty,
     S.fromList $ caminoLocationList camino,
@@ -467,6 +467,7 @@ solutionElements camino Nothing = (
 solutionElements _camino (Just solution) = (
     pilgrimage',
     either (const S.empty) (S.fromList . pilgrimageRests) pilgrimage',
+    either (const S.empty) (S.fromList . pilgrimageStockpoints) pilgrimage',
     either (const S.empty) (S.fromList . pilgrimageStops) pilgrimage',
     either (const S.empty) (S.fromList . pilgrimageWaypoints) pilgrimage',
     either (const S.empty) (S.fromList . pilgrimageLegs) pilgrimage'
@@ -530,6 +531,9 @@ calendarBlock (NamedCalendar key) = [ihamlet|
   |]
 calendarBlock (PublicHoliday region) = [ihamlet|
   _{PublicHolidayLabel region}
+  |]
+calendarBlock (ClosedDay region) = [ihamlet|
+  _{ClosedDayLabel region}
   |]
 calendarBlock (Conditional cal cond) = [ihamlet|
   ^{calendarBlock cal}
@@ -805,9 +809,9 @@ caminoTransportLinkHtml preferences camino tlink = [ihamlet|
     target = legTo tlink
     tid = locationID target
 
-caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationHtml preferences camino solution containerId rests stops waypoints used location = [ihamlet|
-  <div id="#{lid}" .accordion-item .location-#{routeID route} :isRest:.location-rest :isStop:.location-stop :isWaypoint:.location-waypoint .location>
+caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationHtml preferences camino solution containerId rests stocks stops waypoints used location = [ihamlet|
+  <div id="#{lid}" .accordion-item .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
       <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
         <div .container-fluid>
@@ -879,8 +883,9 @@ caminoLocationHtml preferences camino solution containerId rests stops waypoints
     lid = locationID location
     route = caminoRoute camino' (preferenceRoutes camino) location
     isRest = S.member location rests
-    isStop = (not isRest) && S.member location stops
-    isWaypoint = (not isStop) && (not isRest) && (S.member location waypoints)
+    isStockpoint = not isRest && S.member location stocks
+    isStop = not isRest && not isStockpoint && S.member location stops
+    isWaypoint = not isStop && not isStockpoint && not isRest && (S.member location waypoints)
     accChoice = maybe Nothing (\s -> M.lookup location (solutionAccommodation s)) solution
     transportLinks = locationTransportLinks camino' location
 
@@ -902,14 +907,14 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
         <div #locations .accordion .container-fluid>
           $forall loc <- locationsSorted
             <div .row>
-              ^{caminoLocationHtml preferences camino solution "locations" rests stops waypoints usedLegs loc}
+              ^{caminoLocationHtml preferences camino solution "locations" rests stocks stops waypoints usedLegs loc}
   |]
   where
     camino' = preferenceCamino camino
     locationOrder a b = compare (canonicalise $ locationNameLabel a) (canonicalise $ locationNameLabel b)
     locationsSorted = L.sortBy locationOrder (caminoLocationList camino')
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationNameLabel l) locationsSorted
-    (_trip, rests, stops, waypoints, usedLegs) = solutionElements camino' solution
+    (_trip, rests, stocks, stops, waypoints, usedLegs) = solutionElements camino' solution
 
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml range = [ihamlet|
@@ -973,8 +978,8 @@ preferencesHtml showLink preferences camino = [ihamlet|
             <tr>
                <th>
                <th>_{StopLabel}
-               <th>_{StockStopLabel}
-               <th>_{RestStopLabel}
+               <th>_{StockpointLabel}
+               <th>_{RestpointLabel}
           <tbody>
             <tr>
               <td>_{TransportLinksLabel}
@@ -1132,8 +1137,10 @@ caminoTripHtml preferences camino pilgrimage = [ihamlet|
              <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
               \   -
               <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
-              $if finish day == finish stage
-                  <span title="_{RestLabel}" .ca-rest>
+              $if metricsRestpoint (score day)
+                  <span title="_{RestpointLabel}" .ca-restpoint>
+              $if metricsStockpoint (score day)
+                  <span title="_{StockpointLabel}" .ca-stockpoint>
               $maybe dates <- metricsDate (score day)
                 _{DateRangeMsg (fst dates) (snd dates)}
               _{DistanceFormatted (metricsDistance $ score day)}
@@ -1340,7 +1347,7 @@ caminoMapScript preferences camino solution = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
-    (_trip, _rests, stops, waypoints, usedLegs) = solutionElements camino' solution
+    (_trip, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino' solution
     (tl, br) = if S.null waypoints then caminoBbox camino' else locationBbox waypoints
     chooseWidth leg | S.member leg usedLegs = 7 :: Int
       | otherwise = 5 :: Int

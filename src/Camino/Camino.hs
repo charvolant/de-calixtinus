@@ -468,6 +468,10 @@ locationCampingDefault Town = False
 locationCampingDefault City = False
 locationCampingDefault _ = True
 
+-- | The default state for whether a location is always open on weekends/holidays
+locationAlwaysOpenDefault :: LocationType -> Bool
+locationAlwaysOpenDefault _ = False
+
 -- | Broad categories of points of interest, used to decide whether a pilgrim is likely to visit them.
 --   A single point of interest is quite likely to fit multiple classes.
 data PoiCategory =
@@ -605,6 +609,7 @@ data Location = Location {
   , locationPois :: [PointOfInterest]
   , locationEvents :: [Event]
   , locationCamping :: Bool
+  , locationAlwaysOpen :: Bool
 } deriving (Show)
 
 instance Placeholder Text Location where
@@ -621,6 +626,7 @@ instance Placeholder Text Location where
     , locationPois = []
     , locationEvents = []
     , locationCamping = False
+    , locationAlwaysOpen = False
   }
   isPlaceholder location = locationType location == PlaceholderLocation
 
@@ -650,7 +656,8 @@ instance FromJSON Location where
     pois' <- v .:? "pois" .!= []
     events' <- v .:? "events" .!= []
     camping' <- v .:? "camping" .!= locationCampingDefault type'
-    return Location { 
+    alwaysOpen' <- v .:? "always-open" .!= locationAlwaysOpenDefault type'
+    return Location {
         locationID = id'
       , locationName = name'
       , locationDescription = description'
@@ -662,11 +669,12 @@ instance FromJSON Location where
       , locationPois = pois'
       , locationEvents = events'
       , locationCamping = camping'
+      , locationAlwaysOpen = alwaysOpen'
     }
   parseJSON v = error ("Unable to parse location object " ++ show v)
 
 instance ToJSON Location where
-    toJSON (Location id' name' description' type' position' region' services' accommodation' pois' events' camping') =
+    toJSON (Location id' name' description' type' position' region' services' accommodation' pois' events' camping' alwaysOpen') =
       object [ 
           "id" .= id'
         , "name" .= name'
@@ -679,7 +687,8 @@ instance ToJSON Location where
         , "pois" .= pois'
         , "events" .= events'
         , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
-      ]
+        , "always-open" .= if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen'
+     ]
 
 instance Vertex Location where
   identifier v = unpack $ locationID v

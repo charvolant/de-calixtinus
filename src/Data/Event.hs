@@ -135,6 +135,7 @@ data EventCalendar =
   | ListCalendar (S.Set Day) -- ^ A specific list of Julian Days
   | NamedCalendar Text  -- ^ A calendar with a specific key (eg Easter) that has a definition supplied by a calendar configuration
   | PublicHoliday Text -- ^ A regional public holiday
+  | ClosedDay Text -- ^ A regional closed day (eg Sundays)
   | Conditional EventCalendar (Localised TaggedText) -- ^ Occurs at complex times specified by a note
   deriving (Show)
   
@@ -154,6 +155,7 @@ instance Eq EventCalendar where
   ListCalendar dates1 == ListCalendar dates2 = dates1 == dates2
   NamedCalendar key1 == NamedCalendar key2 = key1 == key2
   PublicHoliday region1 == PublicHoliday region2 = region1 == region2
+  ClosedDay region1 == ClosedDay region2 = region1 == region2
   Conditional cal1 cond1 == Conditional cal2 cond2 = cal1 == cal2 && localiseDefault cond1 == localiseDefault cond2
   _ == _ = False 
 
@@ -220,6 +222,10 @@ instance ToJSON EventCalendar where
     ]
   toJSON (PublicHoliday region') = object [
       "type" .= ("public-holiday" :: Text)
+    , "region" .= region'
+    ]
+  toJSON (ClosedDay region') = object [
+      "type" .= ("closed-day" :: Text)
     , "region" .= region'
     ]
   toJSON (Conditional calendar' condition') = object [
@@ -289,6 +295,9 @@ instance FromJSON EventCalendar where
       "public-holiday" -> do
         region' <- v .: "region"
         return $ PublicHoliday region'
+      "closed-day" -> do
+        region' <- v .: "region"
+        return $ ClosedDay region'
       "conditional" -> do
         calendar' <- v .: "calendar"
         condition' <- v .: "condition"

@@ -21,6 +21,7 @@ module Data.Region (
   , RegionType(..)
 
   , createRegionConfig
+  , getClosedDays
   , getRegionalHolidays
   , getRegion
   , regionClosure
@@ -50,6 +51,7 @@ data RegionType =
   | Province -- ^ A sub-national division (eg. Galacia)
   | Island -- ^ An island or group of islands (eg. Macquarie Island)
   | OtherRegion -- ^ None of the above
+  | PlaceholderRegion -- ^ A placeholder region
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
 
 instance FromJSON RegionType
@@ -64,6 +66,7 @@ data Region = Region {
   , regionMember :: S.Set Region -- ^ Other regions that this region is a member of.
   , regionLocale :: Maybe Locale -- ^ The locale information for the region
   , regionHolidays :: [EventCalendar] -- ^ Local holidays
+  , regionClosedDays :: [EventCalendar] -- ^ Days closed (not including holidays)
 } deriving (Show)
 
 instance Eq Region where
@@ -77,13 +80,15 @@ instance Placeholder Text Region where
   placeholder id' = Region {
       regionID = id'
     , regionName = wildcardText ("Placedholder for " <> id')
-    , regionType = OtherRegion
+    , regionType = PlaceholderRegion
     , regionDescription = Nothing
     , regionParent = Nothing
     , regionMember = S.empty
     , regionLocale = Nothing
     , regionHolidays = []
+    , regionClosedDays = []
     }
+  isPlaceholder region = regionType region == PlaceholderRegion
   internalReferences region = maybe S.empty S.singleton (regionParent region) `S.union` regionMember region
 
 instance Normaliser Text Region (M.Map Text Region) where
@@ -93,7 +98,7 @@ instance Normaliser Text Region (M.Map Text Region) where
     }
 
 instance ToJSON Region where
-  toJSON (Region id' name' type' description' parent' member' locale' holidays') = object [
+  toJSON (Region id' name' type' description' parent' member' locale' holidays' closedDays') = object [
       "id" .= id'
     , "name" .= name'
     , "type" .= type'
@@ -102,6 +107,7 @@ instance ToJSON Region where
     , "member" .= member'
     , "locale" .= (localeID <$> locale')
     , "holidays" .= holidays'
+    , "closed-days" .= closedDays'
     ]
 
 instance FromJSON Region where
@@ -117,7 +123,8 @@ instance FromJSON Region where
     locale' <- v .:? "locale"
     let locale'' = localeFromIDOrError <$> locale'
     holidays' <- v .:? "holidays" .!= []
-    return $ Region id' name' type' description' parent'' member'' locale'' holidays'
+    closedDays' <- v .:? "closed-days" .!= []
+    return $ Region id' name' type' description' parent'' member'' locale'' holidays' closedDays'
   parseJSON v = typeMismatch "object" v
 
 -- | Get all the regions of a particular type, including parent regions
@@ -130,9 +137,12 @@ regionClosure' seen more = if S.null more then seen else regionClosure' (seen `S
 getRegionalHolidays :: Region -> [EventCalendar]
 getRegionalHolidays region = regionHolidays region ++ (maybe [] getRegionalHolidays $ regionParent region)
 
+getClosedDays :: Region -> [EventCalendar]
+getClosedDays region = regionClosedDays region ++ (maybe [] getClosedDays $ regionParent region)
+
 -- | A region configuration, allowing regions to be looked up easily
 data RegionConfig = RegionConfig {
-    regionConfigRegions :: [Region] -- ^ The this of regions
+    regionConfigRegions :: [Region] -- ^ The list of regions
   , regionConfigLookup :: Text -> Maybe Region -- ^ Lookup a region based on identifier
 }
 

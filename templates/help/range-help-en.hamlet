@@ -2,7 +2,7 @@
 
 <p>
   Distance and time preferences are expressed as ranges.
-  These ranges are used to help calculate the "penance" score for a proposed day's stage and put hard limits on
+  These ranges are used to help calculate the "penance" score for a proposed day's stage and put hard and soft limits on
   how far and how long each day is to be.
   (See the general help for more information on penance.)
   The five values in the range are:
@@ -36,11 +36,21 @@
             \ A day's stage calculated by the planning system will, generally, be at most this distance or time.
 
 <p>
-  Generally, once the distance/time strays outside the upper or lower bounds, the planner will start adding
+  Once the distance/time strays outside the upper or lower bounds, the planner will start adding
   penalties to the day's penance score.
   These penalties will tend to steer the planner away from over-long (or short) days.
 
 <h3 #distance-help>Distance
+
+<p>
+  The distance preferences describe how far you want to walk each day.
+  This section allows you to specify the "walk about 20km each day" advice that is often given and
+  place limits on how far you are willing to stray from that advice.
+
+<p>
+  These distances take no account of climbs or descents -- these get factored into the planning in other ways.
+  If you are walking a particularly hilly Camino, have a look at the <em>feels like</em> entry for each day and,
+  if they look particularly oppressive, consider lowering the range.
 
 <p>
   The distance range is pre-populated with values derived from the travel type and level of fitness that you have supplied.
@@ -49,10 +59,24 @@
 <h3 #time-help>Time
 
 <p>
-  The time range is pre-populated with values derived from the travel type and level of fitness that you have supplied.
-  The target is five to six hours, depending on fitness levels.
-  This target allows for rests, lunch, diversions and other activities.
+  The time range is for how many hours you want to walk each day.
+  Generally, this will be have a target lower than a full day's walking, allowing for rests, lunch, diversions
+  and the business of finding accommodation and getting fed at the end of the day.
   The actual time taken each day will be somewhat longer.
 
 <p>
+  The time range is pre-populated with values derived from the travel type and level of fitness that you have supplied.
+  The target is five to six hours, depending on fitness levels.
+
+<p>
   It is generally a good idea to leave the minimum and lower bounds at zero and let the distance range control minimums.
+
+<h3 #rest-help>Rest Days
+
+<p>
+  The rest range describes how many days you want to walk before taking a break to recover, wash your clothes,
+  take care of any medical issues, see the sights and generally indulge in rest and recreation.
+  Rests are usually targeted to take place in cities or large towns with plenty of services.
+
+<p>
+  The rest range is pre-populated with values derived from the travel type and level of fitness that you have supplied.

@@ -8,6 +8,8 @@ The basic configuration consists of three sections
 ```yaml
 web:
   # Web server configuration, including the location of static assets
+caminos:
+  # Links to camino definition files
 calendar:
   # Named calendar definitions
 regions:
@@ -44,7 +46,9 @@ for web pages, so that assets can be re-located to static servers,
 such as S3 buckets, and the locations of additional links and map
 tiles.
 
-Assets can have the following elements
+### Assets
+
+Assets are references to (usually static) loadable information and can have the following elements
 
 | Field | Description | Example |
 | --- | --- | --- |
@@ -56,14 +60,15 @@ Assets can have the following elements
 
 The asset type can be one of
 
-| Type | Description                                                                                              |
-| --- |----------------------------------------------------------------------------------------------------------|
-| `JavaScript` | A javascript asset, loaded after the page has loaded.                                                    |
-| `JavaScriptEarly` | A javascript asset, loaded while loading the header so that the script can be used in-page.              |
-| `Css` | A CSS style-sheet                                                                                        |
-| `Font` | The location of a font used by a CSS style-sheet. The asset id corresponds to the `font-family` CSS name. |
-| `Icon` | A specific icon, such as a page header. Rarely used.                                                     |
-| `Directory` | A directory holding a group of assests, such as PNG icons. |
+| Type               | Description                                                                                              |
+|--------------------|----------------------------------------------------------------------------------------------------------|
+| `JavaScript`       | A javascript asset, loaded after the page has loaded.                                                    |
+| `JavaScriptEarly`  | A javascript asset, loaded while loading the header so that the script can be used in-page.              |
+| `Css`              | A CSS style-sheet                                                                                        |
+| `Font`             | The location of a font used by a CSS style-sheet. The asset id corresponds to the `font-family` CSS name. |
+| `Icon`             | A specific icon, such as a page header. Rarely used.  |
+| `CaminoDefinition` | A [camino definition file](CAMINO.md) |
+| `Directory`        | A directory holding a group of assests, such as PNG icons. |
 
 Links are links that can be inserted into the header or footer of the page layout,
 to allow a certain level of customisation.
@@ -85,6 +90,33 @@ The map elements are:
 |-------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
 | id    | The map identifier, to allow location and over-riding of links                                               | `google`                                              |
 | tiles | The URL of the tile server for the map, with `{x}`, `{y}` and `{z}` giving the longitude, latitude and zoom. | `http://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}` |
+
+## Caminos
+
+Caminos are specified by [asset links](#assets) to [camino definition files](CAMINO.ms).
+
+For example:
+
+```yaml
+caminos:
+  - id: I-ST
+    type: CaminoDefinition
+    path: "https://test.com/import-santiago.json"
+  - id: I-MS
+    type: CaminoDefinition
+    path: "https://test.com/import-melide-santiago.json"
+  - id: F
+    type: CaminoDefinition
+    path: "file:camino-frances.json"
+  - id: P
+    type: CaminoDefinition
+    path: "file:/data/caminos/camino-portuguese.json"
+```
+
+Only the `file`, `http` and `https` schemes are supported.
+Caminos appear in the camino menu in load order.
+It is also generally a good idea to specify any imported
+camino fragments before the main camino definition files.
 
 ## Calendars
 
@@ -160,6 +192,10 @@ An example pair of regions is
       - type: named
         key: Epiphany
       # ...
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
   - id: "ES-GA"
     name:
       - Galicia@ga
@@ -179,15 +215,16 @@ An example pair of regions is
 
 The fields are
 
-| Field | Description                                                          | Example |
-| --- |----------------------------------------------------------------------| --- |
-| id | The region identifier, used so that the region can be referenced.    | `Europe` |
-| name | A localisable name for the region                                    | `Europa@es` |
-| type | The type of region, see below                                        | `Sea` |
-| parent | An optional parent region, given by id                               | `World` |
-| member | A list of other, secondary, regional memberships                     | `EU` |
-| locale | The locale, see [localisation](CONFIG.md#supported-languages)        | `pt` |
-| holidays | A list of observed holidays. These are usually [configured calendars](#calendars) | `Easter` |
+| Field       | Description                                                                                                                       | Example     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|-------------|
+| id          | The region identifier, used so that the region can be referenced.                                                                 | `Europe`    |
+| name        | A localisable name for the region                                                                                                 | `Europa@es` |
+| type        | The type of region, see below                                                                                                     | `Sea`       |
+| parent      | An optional parent region, given by id                                                                                            | `World`     |
+| member      | A list of other, secondary, regional memberships                                                                                  | `EU`        |
+| locale      | The locale, see [localisation](CONFIG.md#supported-languages)                                                                     | `pt`        |
+| holidays    | A list of observed holidays. These are usually [configured calendars](#calendars)                                                 | `Easter`    |
+| closed-days | A list of days where shops and services are usually closed. These are usually weekly calendar definitions. | `sunday`    |
 
 For identifiers, using the [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) two letter codes for countries and
 [ISO-3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) codes for regions is a good idea.

@@ -9,6 +9,41 @@
   "I would walk an extra <em>y</em> kilometres to ensure that I have this available when I stop walking for the day" or
   "I would walk an extra <em>z</em> kilometres to ensure that I have access to this sometime during the day".
 
+<h3 #stop-help>Stops, Stock-up Stops and Rests
+
+<p>
+  There are three types of preference groups, depending on the nature of the day.
+  You get a screen for each type of day.
+
+<p>
+  <strong>Day Travel Preferences
+  are the normal preferences for location, accommodation and services at the end of a day's walking.
+
+<p>
+  <strong>Stock-up Day Travel Preferences
+  are for days where you will need to gather resources for the next day.
+  Generally, except in the largest cities, shops and restaurants will close on Sundays and public holidays.
+  It may be some distance into the next Monday before things have opened again.
+  So, Saturdays or the days before public holidays will require you to stock-up on provisions that will last you
+  for the closed day and breakfast on the following day.
+  Preferences for stock-up days will generally indicate a preference for staying somewhere where facilities are more
+  common, or where there is an opportunity to acquire supplies during the day.
+
+<p>
+  <strong>Rest Stop Preferences
+  are for when you intend to spend more than one day at a location, so that you can recover and replenish.
+  The preferences are generally skewed towards cities or large towns, with a full array of services.
+  Pilgrim albergues usually only permit one night's stay, so other accommodation will be needed.
+
+<h3 #transport-link-help>Use Transport Links for Accommodation and Services
+
+<p>
+  Checking this box allows travellers at a few locations to use bus, train or ferry links to access
+  nearby accommodation and services, widening the options in terms of possible stops and locations.
+<p>
+  <strong .warning>Checking this option violates the spirit of the Camino.
+  It should not be used if you intend to get a Compostella Certificate at the end of your pilgrimage.
+  The option is included for recreational travellers and routes that are not pilgrimages.
 
 <h3 #location-help>Location Preferences
 
@@ -16,6 +51,7 @@
   The location preferences indicate how willing you are to stay in a particular type of location at the end of the day.
   The higher the value, the more willing you are to stay there.
   You can use this section to indicate whether you would prefer more urban or rural stops.
+  The "reject" or _{PenanceFormatted Reject} symbol indicates that you do not wish to stop in this type of location at all.
 
 <p>
   Since you can only sleep in one place each night, location preferences work by seeing if there is something

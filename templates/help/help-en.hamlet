@@ -42,16 +42,16 @@
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
     See the Bondi-Manly walk for an example.
-    However, we only have the data for four actual Caminos at the moment, along with all the various
+    However, we only have the data for five actual Caminos at the moment, along with all the various
     alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
   What you do is enter your <em>preferences</em> - how fit you are, how long would would like to walk each day,
   what sort of facilities you want at day's-end, specific places where you want to stop and so on.
-  De Calixtinus then attempts to build a <em>globally</em> optimised set of stages that best match your preferences.
-  To do this, it may stretch out a stage to the next town, so that you can get to a place with food at the end of the day,
-  or shrink a stage, so that the next day can break before you have walked too far.
-  This process operates over the entire route, so the planner may stretch or shink a stage a bit to make things better
+  De Calixtinus then attempts to build a <em>globally</em> optimised set of days that best match your preferences.
+  To do this, it may stretch out a day's walk to the next town, so that you can get to a place with food at the end of the day,
+  or shrink a day, so that the next day can break before you have walked too far.
+  This process operates over the entire route, so the planner may stretch or shink a day a bit to make things better
   many days further on.
 
 <p>
@@ -62,19 +62,29 @@
   The planner can develop a plan from any start point to any end point, as long as you are travelling onwards, towards
   Santiago de Compostella in most cases but whatever the end-point is for other walks.
   This means that, if your plans change mid-pilgrimage - perhaps you want to walk a little faster or find that
-  you're not quite up to very long stages - you can re-generate a plan, based on where you currently are.
+  you're not quite up to very long days - you can re-generate a plan, based on where you currently are.
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
     See the <a href="/about">about page</a> for an explanation of how the term "penance" came to be.
 
-  The planner works by minimising penance, a catch-all term for the effort spent travelling.
+  The planner works by minimising <em>penance</em>, a catch-all term for the effort spent travelling.
   The basic idea is that everything is converted into equivalent kilometres of walking.
   Actual travel is converted into a perceived distance that takes account of climbs and descents, fatigue and so on.
   To this distance, adjustments are added for particularly long or short distances, whether the place where you sleep
   meets your needs, whether there is a restaurant in the town where you are staying so that you can eat, and a variety
   of other adjustments.
   De Calixtinus tries to minimise the total penance accumulated over the entire trip.
+
+<p>
+  The panner also attempts to include <em>rest days</em> in the plan.
+  Typically, for every 5-6 days of walking, the planner will find a suitable rest point and schedule a day off.
+  You can use the rest day to recover, refit, re-supply and spend a day seeing the sights before travelling on.
+  Rest days are also used to help manage the Sunday (and public holiday) famine, where all shops and cafes are closed
+  and you need to pick up supplies during the preceeding day.
+  <em>Rest days are still a work in progress.
+  The current planner first works out an optimal set of days and then tries to add in rest days.
+  Doing this while planning the day's walking would be better but it needs a re-design.
 
 <h2 #preferences-help>Preferences
 
@@ -93,12 +103,13 @@
   your preferences.
   If you have previously specified some preferences, the screens will be set to your previous preferences.
   If you haven't specified something already or have changed things a bit too much for your previous preferences
-  to make sense, each screen chooses defaults based on your previous answers.
+  to make sense, each screen chooses defaults based on your previous answers, which you can then alter to your taste.
 
 <p>
   The table below is a brief description of the various preferences.
   Most fields contain detailed help, marked by a
-  <span .ca-help>
+  <a href="#">
+    <span .ca-help>
   Click on the question mark for more information.
 
 <table .table .table-striped>
@@ -136,8 +147,34 @@
         \ the "you can expect to walk about 20km a day" advice that you will often see.
     <tr>
       <td>Time Preferences
-      <td>
-        \ The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking.
+      <td>The preference range (<a href="#preference-range-help">see below</a>) for the time spent walking or cycling.
+    <tr>
+      <td>Rest Preferences
+      <td>The preference range (<a href="#preference-range-help">see below</a>) for the number of days spent travelling
+        \ before you take a rest.
+    <tr>
+      <td>Stop Preferences
+      <td>Preferences for your stop at the end of the day.
+        There are different types of stop:
+        <dl>
+          <dt>Stop
+          <dd>A normal end-of-day stop along the Camino.
+          <dt>Stock-up Point
+          <dd>A stop (and day) where you will need to stock-up on food, in preparation for everything being
+            \ closed on the following day, due to a Sunday or public holiday.
+          <dt>Rest Point
+          <dd>A stop where you can take an extra rest day to recover.
+        Each stop type has its own transport, location, accommodation and services preferences.
+        For example, a rest point will be in a town or city, where you can access services, or a stock-up
+        point will emphasise access to groceries.
+    <tr>
+      <td>Transport Option
+      <td>For those who want a more casual walk, rather than a pilgrimage.
+        \ If the stop has public transport links to other locations, potentially use those for accommodation
+        \ and services.
+        <em>
+          Do not use this option if you want a Compostella Certificate, since it violates both the terms of the certifcate
+          \ and the spirit of the Camino.
     <tr>
       <td>Location Preferences
       <td>
@@ -155,7 +192,7 @@
         The penance can be read as "I would be prepared to walk this distance extra to stay in something like this."
         The effect of this is relative and declines with distance so, in most cases, the whatever is available is
         usually good enough.
-        The calculation of accommodation penance can be quite complicated; see <a href="#accommodation-penance">below</a> for a more
+        The calculation of accommodation penance is also quite complicated; see <a href="#accommodation-penance">below</a> for a more
         detailed description.
     <tr>
       <td>Preferred Services at Day's End
@@ -169,7 +206,7 @@
       <td>
         A list of the services that you would like to be present somewhere along the day's route, including
         \ the start and end locations.
-        \ Each service is associated with the penance added if that service is <em>not</em> available.
+        \ Each service is associated with the penance added if that service is <em>not</em> available throughout the day.
     <tr>
       <td>Camino
       <td>
@@ -192,6 +229,11 @@
       <td>
         The end point for the plan.
         \ This is usually Santiago de Compostela, but it doesn't have to be.
+    <tr>
+      <td>Start Date
+      <td>
+        When you plan to start walking.
+        The start date is used to plan around public holidays and opening times.
     <tr>
       <td>Required Stops
       <td>
@@ -316,11 +358,11 @@
     A small amount of additional penance is added for being away from the target distance.
     Once the distance or time is outside the normal lower and upper bounds of the range, more penance is
     calculated to indicate either a heartbreakingly long day or an embarrassingly short walk.
-    There are also hard maximum and minimum limits, which will cause the day to be rejected as a possible stage.
+    There are also hard maximum and minimum limits, which will cause the day to be rejected as a possible solution.
   <li>
     A stop penance is added.
     This represents the business of settling down for the night, paying for accommodation, food costs and the like.
-    The stop penance encourages the planner not to divide the walk into many short stages.
+    The stop penance encourages the planner not to divide the walk into many short days.
     This penance is set by the chosen comfort level, with higher levels of comfort having a bias towards shorter legs.
   <li>
     The user can express preferences for services available in the stop location, in terms of added penance
@@ -390,7 +432,7 @@
 
 <ul>
   <li><a href="#map-help">Map</a> - A map of the route.
-  <li><a href="stage-help">Plan</a> - A plan for the Camino, showing each day's activity
+  <li><a href="stage-help">Plan</a> - A plan for the Camino, showing each stage's and day's activity
   <li><a href="location-help">Locations</a> - Detailed information about each location
   <li>Preferences - A summary of the <a href="#preferences-help">preferences</a> that you specified
   <li>About - Information about the camino data
@@ -479,16 +521,17 @@
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
-    The planner attempts to break things into stages of acceptable
+    The planner attempts to break things into stages and days of acceptable
     <a href="#penance-help">
       <em>penance.
-    Penance is a measure of how hard the stage feels like, based on the
+    Penance is a measure of how hard a day feels like, based on the
     <a href="preferences-help">preferences
     given in the preferences tab.
     The planner then attempts to minimise the total amount of penance for the entire trip.
 
   The plan tab shows the suggested route.
   The plan is broken into days, each day showing a start and stop point and the waypoints for the day.
+  Multiple days are grouped into stages, with a rest day at the end of each stage.
   An example day is
 
 <div .card .day .m-2 .p-1 .border-info>
@@ -496,6 +539,8 @@
     <a href="#">Vila Franca de Xira
      -
     <a href="#">Azambuja
+    <span .ca-stockpoint" title="Stocking Point">
+    <span .date-range>Wed 2025-04-30
     <span .distance">19.4km
   <div .card-body>
     <p>
@@ -563,6 +608,9 @@
   The top line shows the start and end points for the day and the total distance travelled.
   Clicking on either of the locations will take you to a more detailed description of the location in
   the <a hre="#location-help">locations</a> tab.
+  The <span .ca-stockpoint title="Stocking Point"></span> symbol shows that this is a stock-up day.
+  See <a href="#location-help">below</a> for more information on this and other symbols.
+  <span .date-range>Wed 2025-04-30</span> is the expected date for this day.
 
 <p>
   Below the top line is a line giving the distance and time travelled for the day.
@@ -584,6 +632,37 @@
   It then takes 4.7 kilometres, again with 5 metres ascent and descent to reach Vila Nova de Rainha from
   Estación de Carregado
 
+<p>
+  A stage groups days and has a head that looks like
+
+<div .card .stage .border-primary .mt-2>
+  <div .card-body>
+    <h3 .card-title #stage-P-P1>
+      <a href="#">
+        <span lang="en">Lisbon
+      -
+      <a href="#">
+        <span lang="en">Santarém
+      <span .date-range>Mon 2025-04-28 - Sat 2025-05-03
+    <p .card-text>
+      Distance <span .distance">89.8km</span>
+      (feels like <span .distance>102.4km</span>)
+      over <span .time>27.6hrs</span>
+      (<span .time>2.0hrs</span> stops)
+      <span .days>5 days
+      Ascent <span .height>385m</span>
+      Descent <span .height>305m</span>
+      <br>
+      Penance <span .penance>127.3 km</span>
+      =
+      Distance <span .distance>102.4 km</span>
+      + Distance Adjustment <span .penance>6.9km</span>
+      + Time Adjustment <span .penance>6.0km</span>
+      + Stop <span .penance>10.0km</span>
+      + Rest <span .penance>2.0km</span>
+
+<p>
+  The stage shows a summary of the days that comprise it, showing total distance, time and effort.
 
 <h3 #location-help>Locations
 
@@ -736,11 +815,25 @@
   The location type is a very rough indicator of the type of location.
   The exact line between what is a village, a town or a city is not well-defined, monasteries are often attached
   to villages and a point of interest could be almost anything.
-  If this location is a stop point at the end of a day's walk, a bed icon is shown after the location name.
+  There are a number of icons that might be shown after the location name:
+
+<dl>
+  <dt>
+    <span title="_{StopLabel}" .ca-stop>
+  <dd>
+    A stop point at the end of a day's walking.
+  <dt>
+    <span title="_{StockpointLabel}" .ca-stockpoint>
+  <dd>
+    As well as a stop point, use this location and any facilities during the day to stock up on supplies.
+  <dt>
+    <span title="_{RestpointLabel}" .ca-restpoint>
+  <dd>
+    This is a location where a rest day is scheduled.
 
 <p>
   The next element shows the services that the location offers.
-  These are services that are publicly available, generally shop, cafés and the like and within
+  These are services that are publicly available, generally shops, cafés and the like and within
   relatively easy reach of a pilgrim.
 
 <p>
@@ -1139,7 +1232,7 @@
     <a href="accommodation-help">More
   <dt>Day
   <dd>
-    A day's walking, sometimes also called a stage.
+    A day's walking or cycling.
     A day will start from the last day's end, pass through a number locations and stop at a final location.
   <dt>Event
   <dd>
@@ -1155,7 +1248,7 @@
   <dd>
     How long a chunk of walking <em>feels</em> like.
     Climbing up or down steep hills is harder than walking on flat ground.
-    As you continue walking, you will fatigue, and the later stages feel longer and harder.
+    As you continue walking, you will fatigue, and the later legs between locations feel longer and harder.
     Perceived distance is how long something would feel like if you were walking on flat ground and never tired.
   <dt>Penance
   <dd>
@@ -1175,6 +1268,11 @@
     what sort of services you will need along the way, what sort of accommodation you would prefer to stay in
     at the end of the day, and so on.
     <a href="#preferences-help">More
+  <dt>Rest Day
+  <dd>
+    A day not spent walking or cycling.
+    You can use rest days to recover, deal with injuries, resupply, be a tourist and get ready for the next stage
+    of travel.
   <dt>Route
   <dd>
     A variant route on a larger Camino.
@@ -1183,7 +1281,16 @@
   <dd>
     Something that you might need to use, such as an ATM for getting cash, a restaurant for eating or a washing machine.
     Locations and accommodation provide services.
+  <dt>Stage
+  <dd>
+    A group of travelling days, ending at a major break point with a rest day at the end of the stage.
+  <dt>Stock-up Day
+  <dd>
+    A day where the next day is a Sunday, public holiday or some other day where you can expect there to be
+    not much in the way of food or other services.
+    These days are marked, and preferences altered, to give you a chance to stock-up with supplies.
   <dt>Stop
   <dd>
     The final point of a day's walking, where you would expect to find accommodation, washing facilities, etc.
+    Stops for stock-up days and rest days have special preferences.
 

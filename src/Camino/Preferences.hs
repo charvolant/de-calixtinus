@@ -655,9 +655,9 @@ suggestedRestLocation' Frugal = M.fromList [
     (Poi, Reject)
   ]
 suggestedRestLocation' Pilgrim = M.fromList [
-    (Town, Penance 0.0),
-    (City, Penance 5.0),
-    (Village, Reject),
+    (Town, Penance 5.0),
+    (City, Penance 8.0),
+    (Village, Penance 0.0),
     (Monastery, Reject),
     (Bridge, Reject),
     (Intersection, Reject),
@@ -665,9 +665,9 @@ suggestedRestLocation' Pilgrim = M.fromList [
     (Poi, Reject)
   ]
 suggestedRestLocation' Comfortable = M.fromList [
-    (Town, Penance 0.0),
-    (City, Penance 8.0),
-    (Village, Reject),
+    (Town, Penance 5.0),
+    (City, Penance 10.0),
+    (Village, Penance 0.0),
     (Monastery, Reject),
     (Bridge, Reject),
     (Intersection, Reject),
@@ -675,9 +675,9 @@ suggestedRestLocation' Comfortable = M.fromList [
     (Poi, Reject)
   ]
 suggestedRestLocation' Luxurious = M.fromList [
-    (Town, Penance 0.0),
-    (City, Penance 20.0),
-    (Village, Reject),
+    (Town, Penance 5.0),
+    (City, Penance 10.0),
+    (Village, Penance 0.0),
     (Monastery, Reject),
     (Bridge, Reject),
     (Intersection, Reject),

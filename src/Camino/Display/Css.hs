@@ -169,6 +169,7 @@ iconList = [
     ("ca-stables", '\xe068'),
     ("ca-statue", '\xe01b'),
     ("ca-stockpoint", '\xe041'),
+    ("ca-stop", '\xe020'),
     ("ca-tent", '\xe018'),
     ("ca-theatre", '\xe035'),
     ("ca-towels", '\xe06d'),

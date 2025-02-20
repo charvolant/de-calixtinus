@@ -39,7 +39,7 @@ allows you to run de calixtinus locally, if you wish to play.
 To run the web server, use
 
 ```shell
-camino-server-exe [-c CONFIG] [-s STATIC] [-d] [-r ROOT] [-p PORT] CAMINO ...
+camino-server-exe [-c CONFIG] [-s STATIC] [-d] [-r ROOT] [-p PORT]
 ```
 
 | Argument  | Description                                                                             | Example/default        |
@@ -96,17 +96,20 @@ Most of these we used when walking the Camino ourselves.
   [app website](https://www.editorialbuencamino.com/) (Information used with permission.)
 * A secondary source is *The Camino Portugués* by Kat Davis (Cicerone, 2019), which we
   used as a planning book.
+* *The Camino del Norte and Camino Primitivo* by Dave Whitson and Laura Perazzoli (Cicerone, 2019) for
+  the Camino Primitivo. (I have yet to get to the Camino del Norte.)
 * Good-old [Google Maps](https://www.google.com/maps) was used to estimate total ascent and descent between
   waypoints and fix suitable waypoint locations.
   Google Maps was also used to estimate train and bus stations.
 * The [Stingy Nomads](https://stingynomads.com/camino-fatima-walk-lisbon-porto/) aided us on 
   our route to Fátima.
+* The [Bondi to Manly](https://www.bonditomanly.com/) website
 * And, of course, we did our own stuff.
 
 ### Beware
 
 This is intended to be a helpful tool for people planning their trip.
-Just because "Computer Says So!" doesn't mean it's a good idea.
+Just because *Computer Says So!* doesn't mean it's a good idea.
 So use your own judgement.
 In particular, the planner doesn't really distinguish between an interesting place
 to stop, full of sights and entertainment, and a boring, dusty truckstop beside a
@@ -125,18 +128,20 @@ casual resilience in the face of adversity.
 ## A Work in Progress
 
 The eventual aim is to have this with a nice front-end that allows users to
-enter preferences and get a nicely formatted plan.
-There's a bit of a way to go for that.
+enter preferences and get a nicely formatted plan with all the considerations a
+prospective pilgrim would normally consider.
+There's *still* a bit of a way to go for that.
 
 ### The TODO List
 
 * ~~A full website implementation~~
-* Start scoring stages (see the [design notes](#some-design-notes)) for
+* ~~tart scoring stages (see the [design notes](#some-design-notes)) for~~
   * ~~Services available at the end-point and at accommodation (eg clothes washing facilities)~~
   * ~~Services available along the way (eg. an ATM somewhere during the day)~~
-  * Handling the Sunday famine
+  * ~~Handling the Sunday famine~~
 * ~~Include points of interest~~
-  * And make allowance for breaks so that people can visit
+  * ~~And make allowance for breaks so that people can visit~~
+* Integrate rest days, stock-up days and general day planning
 
 ### Some design notes
 
@@ -165,6 +170,11 @@ There's a bit of a way to go for that.
   * [Tranter's corrections](https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections) allow for fatigue and fitness
   * These are used to build a *perceived* distance travelled, taking into account
    ascent, descent and building fatigue.
+* Once a set of day-stages has been built, the result is then split into
+  multi-day stages, with a rest day at the end of each stage and assign calendar dates to each day.
+  * This also allows for "stock-up" days where you need to get supplies for the next day.
+  * This is not optimal, since choice of rest point and stock points influences day planning.
+  * Ideally, rest days should be included during the first round of optimisation.
  
 ## Build Notes
 

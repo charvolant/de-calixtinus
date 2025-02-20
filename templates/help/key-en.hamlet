@@ -17,6 +17,8 @@
           <a .nav-link .active href="#travel-help">Travel
         <li .nav-item>
           <a .nav-link .active href="#event-help">Events
+        <li .nav-item>
+          <a .nav-link .active href="#other-help">Other
 
 ^{caminoMapKeyHtml preferences camino}
 
@@ -528,3 +530,34 @@
           <td>^{caminoEventTypeIcon Mass}
           <td>Mass
           <td>A general mass or eucharist
+
+<div #other-help .card>
+  <div .card-body>
+    <h2 .card-title>Other
+    <table .table .table-striped>
+      <caption>Other Information
+      <thead>
+        <tr>
+           <th scope="col">Icon
+           <th scope="col">Description
+      <tbody>
+        <tr>
+          <td>
+            <span title="_{StopLabel}" .ca-stop>
+          <td>
+            Stop Point.
+            A stop point at the end of a day's walking, where you can find accommodation and services.
+        <tr>
+          <td>
+            <span title="_{StockpointLabel}" .ca-stockpoint>
+          <td>
+            Stock-up Point.
+            The next day is likely to have minimal services, because it is a holiday or rest day (eg. Sunday)
+            You will therefore need to stock up on supplies.
+        <tr>
+          <td>
+            <span title="_{RestpointLabel}" .ca-restpoint>
+          <td>
+            Rest Point.
+            This is a point where a rest day is scheduled, so that you can recover, replenish supplies, repair or replace
+            equipment, wash clothes and whatever else you need to do.

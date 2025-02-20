@@ -41,13 +41,20 @@ The basic camino file has the following format:
   "metadata" : {
     ...
   },
+  "fragment": ...,
+  "imports": [
+    ...
+  ],
   "locations": [
     ...
   ],
   "legs": [
     ...
   ],
-  "routes": [
+  "transport-links": [
+    ...
+  ],
+ "routes": [
     ...
   ],
   "route-logic": [
@@ -59,8 +66,19 @@ The basic camino file has the following format:
 The `id`, `name`, `description` and `metadata` entries for the [header](#header) and
 gives descriptive information about the camino.
 
+The `imports` list gives a list of the ids of other partial caminos to import into this  one.
+Imports allow you to record the data for shared route segments in a shared
+definition file and then import it into other caminos.
+This can be used, for example, to not have to enter the same information
+about Santiago de Compostella into every single camino definition.
+The `fragment` entry is true for a fragment of camino that is only intended as an import.
+
 The `locations` and `legs` entries describe the various possible 
 [waypoints](#locations) on the camino and the [connections](#legs) between them.
+`transport-links` are leg-like links to nearby locations that can be used by people
+not adhering strictly to the conditions of the Compostela Certificate.
+People can use transport links to end their day in one location and use a nearby location
+for accommodation, food and services.
 
 The `routes`, `route-logic` and `default-route` chunk the locations and legs into
 optional [variants](#routes) of the main, default route.
@@ -312,7 +330,7 @@ Otherwise, a note is a JSON object with a `type` and `text` field. For example
 ```json
 {
   "notes": [
-    "The crossing is the only ",
+    "The crossing is the only way across the river.",
     {
       "type": "Directions",
       "text": "The crossing can be seen from the overpass. Go down the stairs to the left.@en"
@@ -446,7 +464,11 @@ The types of calendar are:
   },
   {
     "type": "public-holiday",
-    "region": "Galicia"
+    "region": "ES-GA"
+  },
+  {
+    "type": "closed-day",
+    "region": "PT"
   },
   {
     "type": "conditional",
@@ -493,6 +515,10 @@ The types of calendar are:
   The example refers to Easter Sunday, which moves about the calendar and is usually configured as a list.
 * A public holiday calendar refers to all the public holidays in a region, given by a region identifier.
   The example refers to all public holidays take in Galicia, including Spanish national holidays.
+* A closed day calendar refers to the standard days where the shops are likely to be closed in a region, usually some
+  part of the weekend.
+  The region is given by a region identifier.
+  The example refers to all closed days in Portugal, where shops usually close on Sunday.
 * A conditional calendar takes another calendar and adds a text condition.
 
 **Times** give the hour of the day that something happens, is open, etc.
@@ -559,6 +585,28 @@ So, for example, if a route wants to list the location above, it simply needs to
 "F-M001", not repeat the location information.
 The camino parser will sort out all the references when it reads the file.
 
+## Imports
+
+Imports allow you to import other camino definitions.
+This can be useful when you have a common piece of route or a location
+shared by several caminos, since it allows you to just update one piece of
+data when doing maintenance.
+
+For example:
+
+```json
+"imports": [ "I-MS"]
+```
+
+will include the segment from Melide to Santiago de Compostella.
+
+Imports are transative, so the Melide to Santiago import also has an import,
+importing the common definition of Santiago de Compostella.
+
+Since you will not want to have the imports included in the list of complete caminos,
+Adding `fragment: true` to the camino definition indicates a fragmentary definition intended
+for import.
+
 ## Locations
 
 Locations describe potential stops and waypoints on the camino route.
@@ -572,6 +620,7 @@ An example location is:
   "name": "Azambuja",
   "type": "Town",
   "position": { "latitude": 39.0695, "longitude": -8.8667 },
+  "region": "PT",
   "services": ["BicycleRepair", "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
   "accommodation": [
     {
@@ -603,10 +652,16 @@ The elements are:
 * `description` Optional descriptive information
 * `type` The type of location. See [below](#types-services-etc)
 * `position` The position of the location in decimal latitude and longitude.
+* `region` The region code for the location.
 * `services` A list of the publicly available services at the location. See [below](#types-services-etc).
 * `accommodation` A list of the accommodation options. See [below](#accommodation)
 * `pois` A list of points of interest. See [below](#points-of-interest)
 * `events` A list of local events. See [below](#events)
+* `camping` Set to true/false if you do not want to use the default camping permissions.
+  By default, towns and cities do not allow camping, whereas other locations do.
+* `always-open` If set to true, then this location has services (eg. a supermarket) that are
+  always available, even on normal days of rest like Sundays.
+  This is usually only true for the largest cities.
 
 When you are constructing a location, the position can be difficult.
 Generally a latitude/longitude accurate to 5 decimal places identifies the position to
@@ -641,6 +696,9 @@ A typical accommodation entry looks like:
 * The `services` lists the services available to guests. See [above](#types-services-etc).
   These can overlap with public services.
 * `sleeping` lists the types of sleeping arrangements available. See [above](#types-services-etc)
+* `multi-day` If true, allows multi-day stays.
+  By default, accomodation allows multi-day stays, except for pilgrim albergues,
+  where you are expected to move on the next day.
 
 #### Generic Accommodation
 
@@ -669,6 +727,7 @@ And example PoI is
 
 ```json
 {
+  "id": "P-P1-1",
   "name": [
     "Museu Nacional do Azulejo@pt",
     "National Tile Museum@en"
@@ -688,11 +747,20 @@ And example PoI is
 ```
 The fields are
 
+* `id` A unique identifier for the PoI.
+  This is usually an extension of the location the PoI is associated with.
 * `name` The name of the PoI, possibly [localised](#localisation)
 * `description` Any optional [descriptive](#description) information
 * `type` The PoI (location) type
+* `categories` The broad PoI categories.
+  If not specfied, then a default set will be used.
+  For example, a cathedral defaults to both religious and historical.
 * `position` The latitude and longitude of the PoI
 * `hours` An optional set of [opening hours](#calendar-and-times) showing when the PoI is open
+* `time` An optional estimate of how long (in hours) a visitor will spend at the PoI.
+  This is used by the planner to factor in visiting time during a days walk.
+  If not specified, then the PoI is assumed to be one of passing interest that does not 
+  need time to be included in planning.
 * `events` An optional list of [events](#events) associated with the PoI
 
 ### Events
@@ -814,6 +882,8 @@ An example route is:
 * `stops` Suggested stop points.
   These are usually places that have some sort of significance and where it would be
   a shame for the planner to just propel the pilgrim past.
+* `suggested-pois` A list of PoIs (by `id`) that are probably good places to visit.
+  Only suggested PoIs with a significan `time` need to be listed.
 * `palette` The colour denoting the route.
   The `text-colour` field can be added to provide a more contrasting text colour, if needed.
 
@@ -856,7 +926,7 @@ An example route logic entry is:
 ```
 
 * `condition` The conditions under which this particular set of alterations applies. See [below](#conditions)
-* `description` An optional description of what this is intended to capture.
+* `description` An optional (plain text) description of what this is intended to capture.
 * `requires` A list of other routes that are required to be present for this combination to make sense.
   The default route is always included.
 * `allows` A list of additional routes that become possible under these conditions.

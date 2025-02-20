@@ -38,6 +38,12 @@ a
 .best-accommodation-penance
   font-size: smaller
   vertical-align: top
+.ca-restpoint
+  color: #{toCssColour recreationGreen}
+.ca-stockpoint
+  color: #{toCssColour recreationGreen}
+.ca-stop
+  color: #{toCssColour caminoYellow}
 .chosen-location
   color: #{toCssColour caminoBlue}
 .chosen-location-penance
@@ -65,10 +71,10 @@ a
       display: inline-block
     .ca-restpoint
       margin-left: 1em
-      color: #{toCssColour recreationGreen}
     .ca-stockpoint
       margin-left: 1em
-      color: #{toCssColour recreationGreen}
+    .ca-stop
+      margin-left: 1em
 .description-icon
   color: #{toCssColour informationBlue}
   padding-left: 0.5em;

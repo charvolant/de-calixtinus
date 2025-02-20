@@ -84,8 +84,8 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is only source data for four caminos:
-  the Camino Portuguese, the one we walked; the Camino Frances; the Camino Ingles and the Camino Fisterra.
+  Currently, there is only source data for five caminos:
+  the Camino Portuguese, the one we walked; the Camino Frances; the Camino Ingles; the Camino Primitivo and the Camino Fisterra.
   I've also added in the Bondi-Manly walk, about as far away from the Camino Santiago as you can get, both
   figuratively and physically, for funsies.
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
@@ -102,7 +102,7 @@
 <h2>Sources of Data
 
 <p>
-  The major source is the excellent <strong>Buen Camino</strong> app.
+  The major source is the excellent <cite>Buen Camino</cite> app.
   This app gives most of the information above in a useful form while walking the Camino.
   It also updates dynamically and can be used to load multiple Camino routes.
   You can get more information about this at the Apple Store, Google Play or at the
@@ -111,7 +111,10 @@
 
 <p>
  A secondary source is <cite>The Camino Portugués</cite> by Kat Davis (Cicerone, 2019), which we
-  \ used as a planning book.
+ \ used as a planning book.
+ \ Another secondary source is <cite>The Camino del Norte and Camino Primitivo</cite>
+ by Dave Whitson and Laura Perazzoli (Cicerone, 2019) for the Camino Primitivo.
+ (I have yet to get to the Camino del Norte.)
 
 <p>
   Good-old Google Maps was used to estimate total ascent and descent between

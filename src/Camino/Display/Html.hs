@@ -1196,7 +1196,7 @@ caminoMapKeyHtml _preferences camino = [ihamlet|
             <td>
             <td>
             <td>_{Txt (routeName r)}
-        $forall lt <- locationTypeEnumeration
+        $forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
           <tr>
             <td>
               <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">

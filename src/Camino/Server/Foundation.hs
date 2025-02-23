@@ -7,6 +7,7 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-orphans       #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-|
 Module      : Foundation
 Description : Yesod foundation for the Calixtinus application

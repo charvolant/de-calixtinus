@@ -62,7 +62,7 @@ import Data.Time.Calendar (Day)
 import qualified Data.Map as M (Map, difference, fromList, singleton, union)
 import qualified Data.Set as S (Set, delete, disjoint, empty, filter, fold, fromList, insert, intersection, map, member, singleton, union, unions)
 import Data.Summary
-import qualified Data.Text as T (Text, intercalate, pack)
+import Data.Text (pack)
 import Graph.Graph (successors, predecessors)
 
 -- | Acceptable range boundaries for various parameters.
@@ -358,7 +358,7 @@ instance Summary CaminoPreferences where
     <> ", " <> (summary $ preferenceStops cprefs)
     <> ", " <> (summary $ preferenceExcluded cprefs)
     <> ", " <> (summary $ preferencePois cprefs)
-    <> ", " <> (T.pack $ show $ preferenceStartDate cprefs)
+    <> ", " <> (pack $ show $ preferenceStartDate cprefs)
     <> "}"
 
 -- | Normalise preferences to the correct locations and routes, based on placeholders

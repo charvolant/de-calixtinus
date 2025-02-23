@@ -413,10 +413,9 @@ routeMetrics :: StopPreferences -- ^ The stop preferences to use
   -> [TripChoice Accommodation Service] -- ^ The chosen accommodations
   -> [Leg] -- ^ The route
   -> (S.Set Service, Penance) -- ^ The metrics associated with the route (missing services, missing service penance)
-routeMetrics sprefs tprefs cprefs accoms day =
+routeMetrics sprefs _tprefs cprefs accoms day =
   let
     camino = preferenceCamino cprefs
-    stop = legTo $ last day
     dayMissing = missingRouteServices sprefs camino accoms day
     dayMissingCost = missingServicePenance (stopServices sprefs) dayMissing
   in

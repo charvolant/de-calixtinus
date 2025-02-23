@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
+
 {-|
 Module      : Html
 Description : Produce HTML descriptions map of caminos and trips
@@ -433,11 +435,9 @@ caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping _mul
 caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation Service) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|
   <div .row .accommodation :isBest:.best-accommodation>
-    <div .offset-1 .col-5>
+    <div .offset-1 .col-5 penance="_{PenanceFormatted (maybe mempty tripChoicePenance choice')}">
       ^{caminoAccommodationTypeIcon type'}
       ^{caminoAccommodationNameHtml accommodation}
-      $maybe ac <- choice'
-        <!-- +_{PenanceFormatted (tripChoicePenance ac)} -->
     <div .col-4>
       $forall service <- accommodationServices accommodation
         ^{caminoServiceIcon service}

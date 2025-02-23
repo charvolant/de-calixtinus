@@ -14,10 +14,9 @@ import Camino.Camino
 import Camino.Config
 import Camino.Server.Application
 import Camino.Server.Foundation
-import Network.HTTP.Simple
+import Network.HTTP.Simple()
 import Options.Applicative
 import Yesod.Static
-import Formatting (bytes)
 
 data Server = Server {
     config :: FilePath

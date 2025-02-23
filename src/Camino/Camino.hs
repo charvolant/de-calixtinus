@@ -89,7 +89,6 @@ module Camino.Camino (
 ) where
 
 import GHC.Generics (Generic)
-import qualified Control.Exception as CE (evaluate)
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
@@ -110,7 +109,7 @@ import Data.Region
 import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, null, fromList, member, union, unions, singleton, toList)
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Summary
-import Data.Text (Text, isPrefixOf, pack, partition, unpack)
+import Data.Text (Text, isPrefixOf, pack, unpack)
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)

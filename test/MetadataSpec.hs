@@ -5,9 +5,7 @@ module MetadataSpec(testMetadata) where
 import Test.HUnit
 import Data.Aeson
 import Data.Localised
-import Data.Maybe (fromJust)
 import Data.Metadata
-import Network.URI
 import Text.RawString.QQ
 import Data.ByteString.Lazy
 
@@ -144,8 +142,6 @@ testRead2 =
     getTerm _ = error "Invalid term"
     getValue (Statement _term value) = plainText value
     getValue _ = error "Invalid value"
-    getLang (Statement _term value) = localeLanguageTag $ locale value
-    getLang _ = error "Invalid language"
   in
     TestCase (do
       assertEqual "Read 2 1" 2 (Prelude.length $ metadataNamespaces metadata)

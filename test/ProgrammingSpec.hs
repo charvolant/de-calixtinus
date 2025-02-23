@@ -1,4 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# OPTIONS_GHC -Wno-orphans       #-}
+
 module ProgrammingSpec(testProgramming) where
 
 import Test.HUnit(Test(..), assertEqual, assertBool)
@@ -80,12 +82,14 @@ evaluate1 eseq = (eseq, sum $ map testValue eseq)
 pevaluate1 :: EvaluationFunction (Chain TestVertex TestEdge Int) Int
 pevaluate1 eseq = (eseq, sum $ map score eseq)
 
+
 -- | Modify sequence
 pevaluate2 :: EvaluationFunction (Chain TestVertex TestEdge Int) Int
 pevaluate2 (h:t) = let
     eseq' = (h { score = 10 }):t
   in
     (eseq', sum $ map score eseq')
+pevaluate2 _ = error "Unexpected chain"
 
 choice1 :: (Edge e v) => ChoiceFunction v e Int
 choice1 s1 s2 = if score s1 < score s2 then s1 else s2

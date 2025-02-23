@@ -40,7 +40,6 @@ import Graph.Graph
 import Data.Aeson
 import Data.Maybe
 import Data.List (nub, find)
-import Options.Applicative (failureCode)
 import Data.Text (Text)
 
 -- | A measure that can be used to evaluate a programming solution.

@@ -44,9 +44,8 @@ import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
-import Data.Description (Description(..), descriptionSummary)
 import Data.List (find, partition, singleton, sortOn)
-import Data.Localised (Locale(..), Tagged(..), localise, localiseText)
+import Data.Localised (Locale, localiseText)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, isJust, isNothing)
 import Data.Placeholder
@@ -166,9 +165,6 @@ findLocationByPoi (Just camino) poi = snd <$> M.lookup (poiID poi) (caminoPois c
 fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Camino.Route
 fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
 fullRoutes _ routes = routes
-
-descriptionText :: [Locale] -> Description -> Maybe Text
-descriptionText locales description = plainText <$> localise locales (descriptionSummary description)
 
 fieldSettingsLabelName :: RenderMessage site msg => msg -> Text -> FieldSettings site
 fieldSettingsLabelName msg name = FieldSettings (SomeMessage msg) Nothing Nothing (Just name) []

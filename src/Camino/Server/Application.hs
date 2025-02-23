@@ -6,6 +6,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE ViewPatterns          #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-|
 Module      : Application
 Description : De Calixtinus yesod application
@@ -35,7 +36,6 @@ import Data.Default.Class
 import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
-import Graph.Programming (Failure(..))
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML

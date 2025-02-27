@@ -36,6 +36,7 @@ import Data.Default.Class
 import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
+import Graph.Graph
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
@@ -358,17 +359,15 @@ helpPopup stepp = do
 imagePopup :: Widget
 imagePopup = $(widgetFile "image-popup")
 
-addError' :: Failure Location -> [Locale] -> Html
-addError' (Failure msg loc root) locales = [shamlet|
+addError' :: (Edge e Location, Score s1, Score s2) => (Failure Location e s1 s2) -> [Locale] -> Html
+addError' (Failure msg loc _ _) locales = [shamlet|
   #{msg}
   $maybe l <- loc
     #{locationID l} #{localiseText locales $ locationName l}
-  $maybe r <- root
-    : ^{addError' r locales}
 |]
 
-addError :: Either (Failure Location) Pilgrimage -> Handler ()
-addError (Left failure) = do
+addError :: (Edge e Location, Score s1, Score s2) => Maybe (Failure Location e s1 s2) -> Handler ()
+addError (Just failure) = do
   locales <- getLocales
   setMessage [shamlet|
     <div ..alert .alert-warning role="alert">
@@ -389,7 +388,8 @@ planPage prefs = do
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
-    addError (solutionPilgrimage solution)
+    addError (solutionJourneyFailure solution)
+    addError (solutionPilgrimageFailure solution)
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ locationName (preferenceStart cprefs)} - #{localiseText locales $ locationName (preferenceFinish cprefs)}|]
       (toWidget html)
@@ -410,7 +410,7 @@ planKml prefs = do
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
     let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
-    let pilgrimage = either (const Nothing) (Just) (solutionPilgrimage solution)
+    let pilgrimage = solutionPilgrimage solution
     let config = caminoAppConfig master
     let kml = createCaminoDoc config tprefs cprefs pilgrimage
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml

@@ -182,6 +182,7 @@ data Config = Config {
   , configCaminos :: [AssetConfig] -- ^ Locations of the various caminos
   , configCalendars :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
   , configRegions:: Maybe RegionConfig -- ^ Common region definitions
+  , configDebug :: Bool -- ^ Show debugging information
 } deriving (Show)
 
 -- | The default configuration
@@ -269,7 +270,8 @@ defaultConfig = Config {
   },
   configCaminos = [],
   configCalendars = Just (createCalendarConfig []),
-  configRegions = Just (createRegionConfig [])
+  configRegions = Just (createRegionConfig []),
+  configDebug = False
 }
 
 instance HasCalendarConfig Config where
@@ -284,12 +286,13 @@ instance FromJSON Config where
     caminos' <- v .:? "caminos" .!= []
     calendar' <- v .:? "calendar"
     regions' <- v .:? "regions"
-    return $ Config  (Just defaultConfig) web' caminos' calendar' regions'
+    debug' <- v .:? "debug" .!= False
+    return $ Config  (Just defaultConfig) web' caminos' calendar' regions' debug'
   parseJSON v = unexpected v
     
 instance ToJSON Config where
-  toJSON (Config _parent' web' caminos' calendar' regions') =
-    object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions' ]
+  toJSON (Config _parent' web' caminos' calendar' regions' debug') =
+    object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions', "debug" .= debug' ]
 
 getAssets' :: AssetType -> Config -> M.Map Text AssetConfig
 getAssets' asset config = let

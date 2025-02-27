@@ -94,8 +94,8 @@ available graph reach visited =
     trigger v = ((sources graph v) `S.intersection` reach) `S.isSubsetOf` visited
     triggered = (S.filter trigger next) `S.intersection` reach
   in
-     -- trace ("Available from " ++ (show $ S.map identifier visited) ++ " triggered=" ++ (show $ S.map identifier triggered)) triggered
-     triggered 
+    -- trace ("Available from " ++ (show $ S.map identifier visited) ++ " active=" ++ (show $ S.map identifier active) ++ " triggered=" ++ (show $ S.map identifier triggered)) triggered
+    triggered
 
 -- | Generate a summary of the graph as a string
 graphSummary :: (Graph g e v) => g -- ^ The graph to summarise

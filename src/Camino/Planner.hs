@@ -186,7 +186,9 @@ data Solution = Solution {
     solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
   , solutionAccommodation :: TripChoiceMap Accommodation Service -- ^ The penance costs for accommodation in various locations
   , solutionLocation :: TripChoiceMap Location Service -- ^ The penance costs for various locations
-  , solutionPilgrimage :: Either (Failure Location) Pilgrimage -- ^ Either a journey solution or a place where something has gone wrong
+  , solutionJourneyFailure :: Maybe (Failure Location Leg Metrics Metrics)
+  , solutionPilgrimageFailure :: Maybe (Failure Location Day Metrics Metrics)
+  , solutionPilgrimage :: Maybe Pilgrimage -- ^ If successful, a pilgrimage solution
 }
 
 -- Is this the last day's travel?
@@ -738,7 +740,9 @@ planCamino cc tprefs cprefs  = Solution {
         solutionLocations = allowed
       , solutionAccommodation = stopAm
       , solutionLocation = stopLm
-      , solutionPilgrimage = pilgrimage
+      , solutionJourneyFailure = either Just (const Nothing) journey
+      , solutionPilgrimageFailure = either Just (const Nothing) pilgrimage
+      , solutionPilgrimage = either (const Nothing) Just pilgrimage
   }
   where
     sprefs = preferenceStop tprefs
@@ -775,7 +779,7 @@ planCamino cc tprefs cprefs  = Solution {
       (preferenceStart cprefs)
       (preferenceFinish cprefs)
     pilgrimage = either
-      (\f -> Left (compoundFailure "Unable to build journey" Nothing f))
+      (\_f -> Left $ emptyFailure "Unable to build journey" Nothing)
       (\j -> program
         (fromChains (const mempty) (path j))
         (pilgrimageChoice tprefs cprefs)

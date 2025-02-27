@@ -2977,13 +2977,6 @@
       "to": "PR-P56",
       "distance": 8.16,
       "ascent": 55,
-      "descent": 760
-    },
-    {
-      "from": "PR-P55",
-      "to": "PR-P56",
-      "distance": 8.16,
-      "ascent": 55,
       "descent": 760,
       "description": "Steep descent@en"
     },
@@ -3648,7 +3641,7 @@
       "description": "Changes for the Hospital variant",
       "condition": "PR-H",
       "exclude": [
-        "PR-P39", "PR-P74", "PR-P41", "PR-P42", "PR-P43", "PR-P44", "PR-P45"
+        "PR-P39", "PR-P40", "PR-P41", "PR-P42", "PR-P43", "PR-P44", "PR-P45"
       ]
     },
     {

@@ -98,12 +98,14 @@ data CaminoMsg =
   | EventsLabel
   | ExceptText
   | ExcludedStopsLabel
+  | FailureLabel
   | FatiguePenanceMsg Penance
   | FerryTitle
   | FestivalEventTitle
   | FitnessLabel
   | FitTitle
   | FoodEventTitle
+  | FromLabel
   | FrugalTitle
   | FountainTitle
   | GiteTitle
@@ -159,8 +161,10 @@ data CaminoMsg =
   | OrdinalBeforeAfter Int CaminoMsg
   | OtherLabel
   | ParkTitle
+  | PathLabel
   | PeakTitle
   | PenanceFormatted Penance
+  | PenanceFormattedPlain Penance
   | PenanceMsg Penance
   | PenanceReject
   | PenanceSummaryLabel
@@ -183,6 +187,7 @@ data CaminoMsg =
   | PrayerTitle
   | PreferencesLabel
   | PrivateAlbergueTitle
+  | ProgramLabel
   | PromontoryTitle
   | PublicHolidayLabel Text
   | PublicHolidayText
@@ -219,6 +224,7 @@ data CaminoMsg =
   | StopPreferencesLabel
   | StopServicesPenanceMsg Penance
   | SuperFitTitle
+  | TableLabel
   | TheatreTitle
   | Time TimeOfDay
   | TimeAdjustMsg Penance
@@ -226,6 +232,7 @@ data CaminoMsg =
   | TimeMsgPlain Float
   | TimePenaltyLabel
   | TimePreferencesLabel
+  | ToLabel
   | TowelsTitle
   | TownTitle
   | TrailTitle
@@ -261,6 +268,10 @@ thinSpace = "\x2009"
 formatPenance :: Penance -> Html
 formatPenance Reject = [shamlet|<span .penance .rejected title="Rejected">#{rejectSymbol}</span>|]
 formatPenance (Penance p) = [shamlet|<span .penance>#{format (fixed 1) p}#{thinSpace}km</span>|]
+
+formatPenancePlain :: Penance -> Html
+formatPenancePlain Reject = "Rejected"
+formatPenancePlain (Penance p) = [shamlet|#{format (fixed 1) p}km|]
 
 formatDistance :: (Real a) => a -> Html
 formatDistance d = [shamlet|<span .distance>#{format (fixed 1) d}#{thinSpace}km</span>#|]
@@ -344,6 +355,7 @@ renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
+renderCaminoMsgDefault _ FailureLabel = "Failure"
 renderCaminoMsgDefault _ (FatiguePenanceMsg penance') = [shamlet|Fatigue ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
@@ -351,6 +363,7 @@ renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
 renderCaminoMsgDefault _ FoodEventTitle = "Food"
 renderCaminoMsgDefault _ FountainTitle = "Fountain"
+renderCaminoMsgDefault _ FromLabel = "From"
 renderCaminoMsgDefault _ FrugalTitle = "Frugal"
 renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
@@ -398,8 +411,10 @@ renderCaminoMsgDefault _ OtherLabel = "Other"
 renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
 renderCaminoMsgDefault _ OpenText = "open"
 renderCaminoMsgDefault _ ParkTitle = "Park or garden"
+renderCaminoMsgDefault _ PathLabel = "Path"
 renderCaminoMsgDefault _ PeakTitle = "Peak, pass or lookout"
 renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
+renderCaminoMsgDefault _ (PenanceFormattedPlain penance') = formatPenancePlain penance'
 renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ PenanceReject = "Rejected"
 renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
@@ -423,6 +438,7 @@ renderCaminoMsgDefault _ PoolTitle = "Pool"
 renderCaminoMsgDefault _ PrayerTitle = "Prayer"
 renderCaminoMsgDefault _ PreferencesLabel = "Preferences"
 renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
+renderCaminoMsgDefault _ ProgramLabel = "Program"
 renderCaminoMsgDefault _ PromontoryTitle = "Promontory or Headland"
 renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
@@ -458,12 +474,14 @@ renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenan
 renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
+renderCaminoMsgDefault _ TableLabel = "Table"
 renderCaminoMsgDefault _ TheatreTitle = "Theatre"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
 renderCaminoMsgDefault _ (TimeMsgPlain time) = formatHours time
 renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
 renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
+renderCaminoMsgDefault _ ToLabel = "To"
 renderCaminoMsgDefault _ TowelsTitle = "Towels"
 renderCaminoMsgDefault _ TownTitle = "Town"
 renderCaminoMsgDefault _ TrailTitle = "Trail (walkers only)"

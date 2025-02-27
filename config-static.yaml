@@ -672,3 +672,4 @@ regions:
         key: KingsBirthdayAU
       - type: named
         key: LabourDayAU
+debug: true

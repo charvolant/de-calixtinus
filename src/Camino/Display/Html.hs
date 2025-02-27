@@ -2,6 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 {-|
 Module      : Html
@@ -35,7 +36,8 @@ import Data.Localised
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import Data.Region
-import Graph.Graph (incoming, outgoing)
+import Data.Summary
+import Graph.Graph (Edge(..), incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
 import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, take, toLower, toUpper)
@@ -435,7 +437,7 @@ caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping _mul
 caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation Service) -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation choice = [ihamlet|
   <div .row .accommodation :isBest:.best-accommodation>
-    <div .offset-1 .col-5 penance="_{PenanceFormatted (maybe mempty tripChoicePenance choice')}">
+    <div .offset-1 .col-5 penance="_{PenanceFormattedPlain (maybe mempty tripChoicePenance choice')}">
       ^{caminoAccommodationTypeIcon type'}
       ^{caminoAccommodationNameHtml accommodation}
     <div .col-4>
@@ -455,9 +457,11 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
      isBest = isJust choice'
 
 -- | Get elements of a possible solution
-solutionElements :: Camino -> Maybe Solution -> (Either (Failure Location) Pilgrimage, S.Set Location, S.Set Location, S.Set Location, S.Set Location, S.Set Leg)
+solutionElements :: Camino -> Maybe Solution -> (Maybe Pilgrimage, Maybe (Failure Location Leg Metrics Metrics), Maybe (Failure Location Day Metrics Metrics), S.Set Location, S.Set Location, S.Set Location, S.Set Location, S.Set Leg)
 solutionElements camino Nothing = (
-    Left $ simpleFailure "Solution not present" Nothing,
+    Nothing,
+    Nothing,
+    Nothing,
     S.empty,
     S.empty,
     S.empty,
@@ -466,11 +470,13 @@ solutionElements camino Nothing = (
   )
 solutionElements _camino (Just solution) = (
     pilgrimage',
-    either (const S.empty) (S.fromList . pilgrimageRests) pilgrimage',
-    either (const S.empty) (S.fromList . pilgrimageStockpoints) pilgrimage',
-    either (const S.empty) (S.fromList . pilgrimageStops) pilgrimage',
-    either (const S.empty) (S.fromList . pilgrimageWaypoints) pilgrimage',
-    either (const S.empty) (S.fromList . pilgrimageLegs) pilgrimage'
+    solutionJourneyFailure solution,
+    solutionPilgrimageFailure solution,
+    maybe S.empty (S.fromList . pilgrimageRests) pilgrimage',
+    maybe S.empty (S.fromList . pilgrimageStockpoints) pilgrimage',
+    maybe S.empty (S.fromList . pilgrimageStops) pilgrimage',
+    maybe S.empty (S.fromList . pilgrimageWaypoints) pilgrimage',
+    maybe S.empty (S.fromList . pilgrimageLegs) pilgrimage'
   ) where
     pilgrimage' = solutionPilgrimage solution
 
@@ -914,7 +920,7 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
     locationOrder a b = compare (canonicalise $ locationNameLabel a) (canonicalise $ locationNameLabel b)
     locationsSorted = L.sortBy locationOrder (caminoLocationList camino')
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationNameLabel l) locationsSorted
-    (_trip, rests, stocks, stops, waypoints, usedLegs) = solutionElements camino' solution
+    (_trip, _jerrors, _perrors, rests, stocks, stops, waypoints, usedLegs) = solutionElements camino' solution
 
 preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml range = [ihamlet|
@@ -949,6 +955,60 @@ preferenceRangeIntHtml range = [ihamlet|
   |]
   where
     endash = '\x2013'
+
+failureTable :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> ChainGraph Location e Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+failureTable tprefs cprefs caption graph = [ihamlet|
+  <table .table .table-striped>
+    <caption>_{caption}
+    <thead>
+      <tr>
+        <th>_{FromLabel}
+        <th>_{ToLabel}
+        <th>_{DistanceLabel}
+        <th>_{PenanceSummaryLabel}
+        <th>_{PathLabel}
+    <tbody>
+      $forall l <- M.keysSet (forwards graph)
+        <tr>
+          <td colspan="6">#{summary l} _{Txt (locationName l)}
+        $forall t <- outgoing graph l
+          <tr>
+            <td>
+            <td>#{summary (finish t)} _{Txt (locationName (finish t))}
+            <td>_{DistanceFormatted (metricsDistance (score t))} _{TimeMsg (metricsTime (score t))}
+            <td>^{penanceSummary tprefs cprefs False False (score t)}
+            <td>
+              #{summary l}
+              $forall p <- path t
+                \ #{arrow} #{summary (target p)}
+
+|]
+  where
+    arrow = '\x2192'
+
+failureReport :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
+failureReport _tprefs _cprefs Nothing = [ihamlet|
+|]
+failureReport tprefs cprefs (Just (Failure msg loc paths progs)) = [ihamlet|
+  <div .row>
+    <div .col>
+      #{msg}
+      $maybe l <- loc
+        #{summary l} _{Txt (locationName l)}
+    <div .row>
+      <div .col>
+        ^{failureTable tprefs cprefs TableLabel paths}
+   <div .row>
+      <div .col>
+        ^{failureTable tprefs cprefs ProgramLabel progs}
+|]
+
+failureHtml :: TravelPreferences -> CaminoPreferences -> Maybe (Failure Location Leg Metrics Metrics) -> Maybe (Failure Location Day Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
+failureHtml tprefs cprefs journey pilgrimage = [ihamlet|
+  <div .container-fluid>
+    ^{failureReport tprefs cprefs journey}
+    ^{failureReport tprefs cprefs pilgrimage}
+ |]
 
 preferencesHtml :: Bool -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferencesHtml showLink preferences camino = [ihamlet|
@@ -1347,7 +1407,7 @@ caminoMapScript preferences camino solution = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
-    (_trip, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino' solution
+    (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino' solution
     (tl, br) = if S.null waypoints then caminoBbox camino' else locationBbox waypoints
     chooseWidth leg | S.member leg usedLegs = 7 :: Int
       | otherwise = 5 :: Int
@@ -1531,6 +1591,9 @@ caminoHtmlBase config preferences camino solution =
             <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
           <li .nav-item role="presentation">
             <a #preferences-toggle .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
+          $if showFailure
+            <li .nav-item role="presentation">
+              <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#failure-tab">_{FailureLabel}
           <li .nav-item role="presentation">
             <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
           <li .nav-item role="presentation">
@@ -1545,6 +1608,9 @@ caminoHtmlBase config preferences camino solution =
             ^{caminoLocationsHtml preferences camino solution}
           <div .tab-pane role="tabpanel" id="preferences-tab">
             ^{preferencesHtml True preferences camino}
+          $if showFailure
+            <div .tab-pane role="tabpanel" id="failure-tab">
+              ^{failureHtml preferences camino journeyFailure pilgrimageFailure}
           <div .tab-pane role="tabpanel" id="about-tab">
             ^{aboutHtml config preferences camino}
           <div .tab-pane role="tabpanel" id="key-tab">
@@ -1552,7 +1618,10 @@ caminoHtmlBase config preferences camino solution =
     ^{caminoMapScript preferences camino solution}
   |]
   where
-    pilgrimage = maybe Nothing (\s -> either (const Nothing) Just (solutionPilgrimage s)) solution
+    pilgrimage = maybe Nothing solutionPilgrimage solution
+    journeyFailure = maybe Nothing solutionJourneyFailure solution
+    pilgrimageFailure = maybe Nothing solutionPilgrimageFailure solution
+    showFailure = configDebug config && (isJust journeyFailure || isJust pilgrimageFailure)
 
 -- | Display a camino wihout a chosen route
 caminoHtmlSimple :: Config -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute

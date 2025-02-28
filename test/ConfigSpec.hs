@@ -31,7 +31,8 @@ testConfig1 = Config {
     }
   ],
   configCalendars = Nothing,
-  configRegions = Nothing
+  configRegions = Nothing,
+  configDebug = False
 }
 
 testConfig2 = Config {
@@ -49,7 +50,8 @@ testConfig2 = Config {
   },
   configCaminos = [],
   configCalendars = Nothing,
-  configRegions = Nothing
+  configRegions = Nothing,
+  configDebug = False
 }
 
 testConfig :: Test

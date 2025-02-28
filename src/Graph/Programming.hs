@@ -133,7 +133,7 @@ fromChains evaluate chains  =
   }
 
 -- | Construct a chain graph from a list of chains
-emptyChainGraph :: (Edge e v, Score s) => ChainGraph v e s
+emptyChainGraph :: (Edge e v) => ChainGraph v e s
 emptyChainGraph  = ChainGraph M.empty M.empty
 
 data (Edge e v, Score s1, Score s2) => Failure v e s1 s2 = Failure Text (Maybe v) (ChainGraph v e s1) (ChainGraph v (Chain v e s1) s2)

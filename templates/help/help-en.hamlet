@@ -613,6 +613,15 @@
   <span .date-range>Wed 2025-04-30</span> is the expected date for this day.
 
 <p>
+  If there is an entry like
+  <span .holiday title="Holiday">Easter Friday
+  then the day is a named public holiday at the end location.
+  This usually means that facilities will be closed and there will need to be a stock-up day on the previous day.
+  Usually, it is obvious what date the holiday falls upon;
+  if there is doubt about the date, then it will be given beside the holiday
+
+
+<p>
   Below the top line is a line giving the distance and time travelled for the day.
   A line below shows the
   <a href="#penance-help">penance

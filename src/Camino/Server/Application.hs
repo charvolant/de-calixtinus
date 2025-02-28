@@ -367,11 +367,11 @@ addError' (Failure msg loc _ _) locales = [shamlet|
 |]
 
 addError :: (Edge e Location, Score s1, Score s2) => Maybe (Failure Location e s1 s2) -> Handler ()
-addError (Just failure) = do
+addError (Just f) = do
   locales <- getLocales
   setMessage [shamlet|
     <div ..alert .alert-warning role="alert">
-      ^{addError' failure locales}
+      ^{addError' f locales}
     |]
   return ()
 addError _ = do

@@ -65,6 +65,9 @@ a
     .date-range
       margin-left: 1em
       font-size: initial
+    .holiday
+      margin-left: 1em
+      font-size: initial
     .penance-summary
       margin-left: 1em
       font-size: initial
@@ -93,6 +96,15 @@ a
   color: #{toCssColour informationBlue}
 .event-type.event-pilgrimmass
   color: #{toCssColour caminoYellow}
+.holiday
+  color: #{toCssColour informationBlue}
+.holiday::before
+  font-family: "Camino Icons"
+  font-weight: normal
+  line-height: 1
+  text-rendering: auto
+  content: "\e034"
+  padding-right: 0.5ex
 .location-tooltip
   .leg-to
     font-size: x-small

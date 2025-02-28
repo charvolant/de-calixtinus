@@ -16,6 +16,7 @@ Eventually, the modelling will improve
 -}
 module Data.Event (
     CalendarConfig(..)
+  , CalendarConfigEntry(..)
   , EventCalendar(..)
   , EventHours(..)
   , EventTime(..)
@@ -24,6 +25,7 @@ module Data.Event (
   
   , calendarKey
   , createCalendarConfig
+  , getHoliday
   , getNamedCalendar
   , getNamedCalendarName
   , hasCalendar
@@ -107,7 +109,17 @@ getNamedCalendar key = do
   let mcal = (calendarConfigLookup $ getCalendarConfig env) key
   let cal = maybe (error ("Can't find named calendar with key " ++ show key)) ceCalendar mcal
   return cal
-     
+
+-- | Get a public holiday named calendar from an envonment
+--   Throws an error if the named calendar is not found or if this is not a public holiday
+getHoliday :: (MonadReader env m, HasCalendarConfig env) => EventCalendar -> m CalendarConfigEntry
+getHoliday (NamedCalendar key) = do
+  env <- ask
+  let mcal = (calendarConfigLookup $ getCalendarConfig env) key
+  let cal = maybe (error ("Can't find named calendar with key " ++ show key)) id mcal
+  return cal
+getHoliday cal = error ("Can't find calendar " ++ show cal)
+
 -- | Get a named calendar from an environment.
 --   Throws an error if the named calendar is not found
 getNamedCalendarName :: (MonadReader env m, HasCalendarConfig env) => Text -> m (Localised TaggedText)
@@ -116,7 +128,7 @@ getNamedCalendarName key = do
   let mcal = (calendarConfigLookup $ getCalendarConfig env) key
   let name = maybe (error ("Can't find named calendar with key " ++ show key)) ceName mcal
   return name
-  
+
 -- | A calendar for an event.
 --   The calendar is intended to allow the building of 
 data EventCalendar =

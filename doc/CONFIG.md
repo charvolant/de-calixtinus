@@ -3,7 +3,7 @@
 Configuration is via YAML files.
 Most elements have defaults and the configuration only needs to
 override things different to the defaults.
-The basic configuration consists of three sections
+The basic configuration consists of five sections
 
 ```yaml
 web:
@@ -14,6 +14,8 @@ calendar:
   # Named calendar definitions
 regions:
   # Region definitions and hierarchy
+debug:
+  # Set to true for additional information on planning failures and the like
 ```
 
 ## Web Configuration

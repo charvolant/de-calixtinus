@@ -10,9 +10,9 @@ import TestUtils
 import Data.Description
 import Data.Localised
 import qualified Data.Map as M
+import Data.Maybe
 import qualified Data.Set as S
 import Data.Default.Class
-import Data.Either
 import Data.Placeholder
 import Data.Time.Calendar
 import Graph.Graph (identifier)
@@ -410,11 +410,11 @@ testPlanCamino1 config preferences camino =
       preferenceStartDate = Just $ fromGregorian 2025 January 16
     }
     solution = planCamino config preferences cpreferences
-    epilgrimage = solutionPilgrimage solution
+    mpilgrimage = solutionPilgrimage solution
   in
     TestCase (do
-      assertBool "Plan Camino 1 1" (isRight epilgrimage)
-      let pilgrimage = fromRight (error "Bad route") epilgrimage
+      assertBool "Plan Camino 1 1" (isJust mpilgrimage)
+      let pilgrimage = fromJust mpilgrimage
       assertEqual "Plan Camino 1 2" (preferenceStart cpreferences) (start pilgrimage)
       assertEqual "Plan Camino 1 3" (preferenceFinish cpreferences) (finish pilgrimage)
       assertEqual "Plan Camino 1 4" 1 (length $ path pilgrimage)

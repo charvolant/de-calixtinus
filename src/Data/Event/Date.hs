@@ -16,9 +16,11 @@ module Data.Event.Date (
   , calendarDateOnOrBefore
   , inCalendar
   , noServicesDay
+  , namedDates
   , nthWeekOnOf
 ) where
 
+import Control.Monad (filterM)
 import Control.Monad.Reader
 import Data.Event
 import Data.Localised
@@ -270,3 +272,25 @@ noServicesDay region day = do
   closed <- mapM (\c -> inCalendar c day) (getClosedDays region)
   return $ any id holidays || any id closed
 
+-- | For a region, get a list of named calendars that occur between a partiuclar set of dates and return a list of the dates and
+--   the associated calendars
+namedDates :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => Region -> Day -> Day -> m [(Day, CalendarConfigEntry)]
+namedDates region day1 day2 = do
+  let names = getRegionalHolidays region
+  holidays <- mapM getHoliday names
+  dates <- namedDates' holidays day1 day2
+  return dates
+
+namedDates' :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => [CalendarConfigEntry] -> Day -> Day -> m [(Day, CalendarConfigEntry)]
+namedDates' holidays day1 day2 = if day1 > day2 then do
+    return []
+  else do
+    matches <- namedDates'' holidays day1
+    rest <- namedDates' holidays (addDays 1 day1) day2
+    return $ matches ++ rest
+
+namedDates'' :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => [CalendarConfigEntry] -> Day -> m [(Day, CalendarConfigEntry)]
+namedDates'' holidays day = do
+  matches <- filterM (\c -> inCalendar (ceCalendar c) day) holidays
+  let pairs = map (\c -> (day, c)) matches
+  return pairs

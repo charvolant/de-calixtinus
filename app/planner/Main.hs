@@ -92,9 +92,9 @@ plan opts = do
     let router = renderCaminoRoute config' locales
     let messages = renderCaminoMsg config' locales
     let solution = planCamino cconf preferences' caminoPrefs'''
-    let pilgrimage = either (\f -> error ("Unable to find solution, cause " ++ show f)) Just (solutionPilgrimage solution)
+    let mpilgrimage = solutionPilgrimage solution
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences' caminoPrefs''' pilgrimage
+    let kml = createCaminoDoc config' preferences' caminoPrefs''' mpilgrimage
     let kmlFile = output' </> "camino.kml"
     B.writeFile kmlFile (renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml)
     let html = caminoHtml config' preferences' caminoPrefs''' solution

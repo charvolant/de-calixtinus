@@ -16,6 +16,7 @@ testEventDate :: Test
 testEventDate = TestList [
        TestLabel "NthWeekOf" testNthWeekOf
      , TestLabel "Calendar" testEventCalendar
+     , TestLabel "NamedDates" testNamedDates
  ]
 
 sampleCalendarConfig1 = createCalendarConfig [
@@ -825,4 +826,29 @@ testInCalendar22 = do
       assertEqual "InCalendar 22 2" False incal2
       assertEqual "InCalendar 22 3" True incal3
       assertEqual "InCalendar 22 4" True incal4
+      )
+
+testNamedDates = let
+    tests = [
+      testNamedDates1, testNamedDates2
+     ]
+  in
+    TestList $ map (\t -> runReader t sampleConfig1) tests
+
+testNamedDates1 = do
+    region <- getRegion "Test"
+    dates <- namedDates region (fromGregorian 2024 July 27) (fromGregorian 2024 September 30)
+    return $ TestCase (do
+      assertEqual "NamedDates 1 1" 0 (length dates)
+      )
+
+
+testNamedDates2 = do
+    region <- getRegion "Test"
+    dates <- namedDates region (fromGregorian 2024 March 1) (fromGregorian 2024 April 1)
+    return $ TestCase (do
+      assertEqual "NamedDates 2 1" 1 (length dates)
+      let (day, ce) = head dates
+      assertEqual "NamedDates 2 3" (fromGregorian 2024 March 31) day
+      assertEqual "NamedDates 2 3" "Easter" (ceKey ce)
       )

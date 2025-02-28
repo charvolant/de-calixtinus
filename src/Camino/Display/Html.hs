@@ -796,24 +796,24 @@ caminoTransportLinkHtml :: TravelPreferences -> CaminoPreferences -> Leg -> Html
 caminoTransportLinkHtml preferences camino tlink = [ihamlet|
   <div .row .transport-link>
     <div .offset-1 .col-2>
-      <a href="##{tid}" onclick="showLocationDescription('#{tid}');">_{Txt (locationName target)}
+      <a href="##{tid}" onclick="showLocationDescription('#{tid}');">_{Txt (locationName tloc)}
     <div .col-3 .services>
-      $forall service <- locationServices target
+      $forall service <- locationServices tloc
         ^{caminoServiceIcon service}
     <div .col-2 .accommodation-types>
-      $forall accommodation <- locationAccommodationTypes target
+      $forall accommodation <- locationAccommodationTypes tloc
         ^{caminoAccommodationTypeIcon accommodation}
     <div .col-2 .poi-types>
-      $forall poi <- locationPoiTypes target
+      $forall poi <- locationPoiTypes tloc
         ^{caminoLocationTypeIcon poi}
-      $forall event <- locationEventTypes target
+      $forall event <- locationEventTypes tloc
         ^{caminoEventTypeIcon event}
     <div .col-2>
       ^{legLine preferences camino tlink}
   |]
   where
-    target = legTo tlink
-    tid = locationID target
+    tloc = legTo tlink
+    tid = locationID tloc
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml preferences camino solution containerId rests stocks stops waypoints used location = [ihamlet|
@@ -989,7 +989,7 @@ failureTable tprefs cprefs caption graph = [ihamlet|
 failureReport :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
 failureReport _tprefs _cprefs Nothing = [ihamlet|
 |]
-failureReport tprefs cprefs (Just (Failure msg loc paths progs)) = [ihamlet|
+failureReport tprefs cprefs (Just (Failure msg loc pathGraph programGraph)) = [ihamlet|
   <div .row>
     <div .col>
       #{msg}
@@ -997,10 +997,10 @@ failureReport tprefs cprefs (Just (Failure msg loc paths progs)) = [ihamlet|
         #{summary l} _{Txt (locationName l)}
     <div .row>
       <div .col>
-        ^{failureTable tprefs cprefs TableLabel paths}
+        ^{failureTable tprefs cprefs TableLabel pathGraph}
    <div .row>
       <div .col>
-        ^{failureTable tprefs cprefs ProgramLabel progs}
+        ^{failureTable tprefs cprefs ProgramLabel programGraph}
 |]
 
 failureHtml :: TravelPreferences -> CaminoPreferences -> Maybe (Failure Location Leg Metrics Metrics) -> Maybe (Failure Location Day Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1164,8 +1164,8 @@ preferencesHtml showLink preferences camino = [ihamlet|
     findRSv prefs sk = M.findWithDefault mempty sk (stopRouteServices prefs)
     pois = caminoPois $ preferenceCamino camino
 
-caminoTripHtml :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoTripHtml preferences camino pilgrimage = [ihamlet|
+caminoTripHtml :: Config -> TravelPreferences -> CaminoPreferences -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoTripHtml config preferences camino pilgrimage = [ihamlet|
   <div .container-fluid>
     <div .row .trip-summary>
       <div .col>
@@ -1201,9 +1201,15 @@ caminoTripHtml preferences camino pilgrimage = [ihamlet|
                   <span title="_{RestpointLabel}" .ca-restpoint>
               $if metricsStockpoint (score day)
                   <span title="_{StockpointLabel}" .ca-stockpoint>
-              $maybe dates <- metricsDate (score day)
-                _{DateRangeMsg (fst dates) (snd dates)}
-              _{DistanceFormatted (metricsDistance $ score day)}
+              $maybe (day1, day2) <- metricsDate (score day)
+                _{DateRangeMsg day1 day2}
+                $maybe region <- locationRegion $ finish day
+                  $forall (d, cal) <- runReader (namedDates region day1 day2) config
+                    <span .holiday title="_{HolidayEventTitle}">
+                      _{Txt (ceName cal)}
+                      $if day1 /= day2
+                        (_{DateMsg d})
+               _{DistanceFormatted (metricsDistance $ score day)}
            <div .card-body>
            <p .card-text>
               ^{metricsSummary preferences camino (score day) Nothing Nothing}
@@ -1603,7 +1609,7 @@ caminoHtmlBase config preferences camino solution =
             ^{caminoMapHtml preferences camino solution}
           $maybe p <- pilgrimage
             <div .tab-pane role="tabpanel" id="plan-tab">
-              ^{caminoTripHtml preferences camino p}
+              ^{caminoTripHtml config preferences camino p}
           <div .tab-pane role="tabpanel" id="locations-tab">
             ^{caminoLocationsHtml preferences camino solution}
           <div .tab-pane role="tabpanel" id="preferences-tab">

@@ -13,6 +13,31 @@ web:
     - id: "Camino Icons"
       type: Font
       path: ../fonts/Camino-Icons.woff
+caminos:
+  - id: I-ST
+    type: CaminoDefinition
+    path: "file:import-santiago.json"
+  - id: I-MS
+    type: CaminoDefinition
+    path: "file:import-melide-santiago.json"
+  - id: F
+    type: CaminoDefinition
+    path: "file:camino-frances.json"
+  - id: P
+    type: CaminoDefinition
+    path: "file:camino-portuguese.json"
+  - id: PR
+    type: CaminoDefinition
+    path: "file:camino-primitivo.json"
+  - id: I
+    type: CaminoDefinition
+    path: "file:camino-ingles.json"
+  - id: FI
+    type: CaminoDefinition
+    path: "file:camino-fisterra.json"
+  - id: BM
+    type: CaminoDefinition
+    path: "file:bondi-manly.json"
 calendar:
   - key: EasterSunday
     name:
@@ -245,6 +270,14 @@ calendar:
       type: day-of-year
       days:
         - 08-15
+  - key: DayOfAsturias
+    name:
+      - Day of Asturias@en
+      - Día de Asturias@ast
+    calendar:
+      type: day-of-year
+      days:
+        - 09-08
   - key: LabourDayAU
     name:
       - Labour Day (Australia)@en
@@ -410,6 +443,27 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
+  - id: "ES-AS"
+    name:
+      - Asturies@ast
+      - Asturias@es
+    description:
+      text:
+        - The Principality of Asturias@en
+        - Principáu d'Asturies@ast
+        - Principado de Asturias@es
+        - Principao d'Asturias@ga
+      about: https://www.xunta.gal/
+    type: Province
+    parent: ES
+    locale: ast
+    holidays:
+      - type: named
+        key: DayOfAsturias
   - id: "ES-GA"
     name:
       - Galicia@ga
@@ -521,6 +575,10 @@ regions:
         key: ImmaculateConception
       - type: named
         key: Christmas
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
   - id: FR
     name:
       - France@fr
@@ -566,6 +624,10 @@ regions:
       about: http://nouvelle-aquitaine.fr/
     type: Province
     parent: FR
+    closed-days:
+      - type: weekly
+        days:
+          - sunday
   - id: OC
     name:
       - "Oceania@en"
@@ -611,4 +673,4 @@ regions:
         key: KingsBirthdayAU
       - type: named
         key: LabourDayAU
-
+debug: false

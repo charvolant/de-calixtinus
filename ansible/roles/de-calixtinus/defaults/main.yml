@@ -1,4 +1,5 @@
-
+# Provide debugging info
+dcx_debug: false
 # Installation directory for software and library data
 dcx_dir: /opt/de-calixtinus
 # S3 bucket to install distribution from
@@ -8,7 +9,7 @@ dcx_maximum_heap_size: 768m
 dcx_log_dir: /var/log/de-calixtinus
 dcx_run_dir: de-calixtinus
 # The s3 configuration to use
-dcx_s3_config: config-s3.yaml
+dcx_s3_config: config.yaml
 dcx_user: dcx
 # If true, use the static s3 bucket for static CSS icons etc.
 dcx_use_s3: true

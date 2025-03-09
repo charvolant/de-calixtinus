@@ -56,23 +56,10 @@
     - camino-map-exe
     - generate-static-exe
 
-- name: Use the local static configuration
-  file:
-    src: "{{ dcx_dir }}/lib/config-static.yaml"
+- name: Create the configuration
+  ansible.builtin.template:
+    src: templates/config.yaml.j2
     dest: "{{ dcx_dir }}/lib/config.yaml"
-    owner: "{{ dcx_user }}"
-    group: "{{ dcx_group }}"
-    state: link
-  when: not dcx_use_s3
-
-- name: Use the S3 static configuration
-  file:
-    src: "{{ dcx_dir }}/lib/{{ dcx_s3_config }}"
-    dest: "{{ dcx_dir }}/lib/config.yaml"
-    owner: "{{ dcx_user }}"
-    group: "{{ dcx_group }}"
-    state: link
-  when: dcx_use_s3
 
 - name: Create the log directory
   ansible.builtin.file:

@@ -1475,13 +1475,16 @@ aboutHtml config _preferences camino = [ihamlet|
           <th>_{RegionLabel}
           <th>
           <th>
-          <th>
           <th>_{ClosedDayText}
       <tbody>
         $forall region <- regions
           <tr ##{regionID region}>
             <td>
               _{Txt (regionName region)}
+              $maybe description1 <- regionDescription region
+                $maybe about <- descAbout description1
+                  \ <a .about href="@{LinkRoute about}" title="_{LinkTitle about (regionName region)}">
+                    <span .ca-link>
             <td>
               $maybe parent <- regionParent region
                 $if S.member parent regions
@@ -1489,14 +1492,8 @@ aboutHtml config _preferences camino = [ihamlet|
                 $else
                   _{Txt (regionName parent)}
             <td>
-              $maybe description <- regionDescription region
-                ^{descriptionBlock False description}
-            <td>
-              $maybe description <- regionDescription region
-                $maybe about <- descAbout description
-                  <a .about href="@{LinkRoute about}">
-                    <span .ca-link>
-                      \ _{LinkTitle about (regionName region)}
+              $maybe description2 <- regionDescription region
+                ^{descriptionBlock False description2}
             <td>
               <ul .comma-list>
                 $forall cal <- regionClosedDays region

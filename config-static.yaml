@@ -456,7 +456,7 @@ regions:
         - Principáu d'Asturies@ast
         - Principado de Asturias@es
         - Principao d'Asturias@ga
-      about: https://www.xunta.gal/
+      about: https://www.asturias.es/
     type: Province
     parent: ES
     locale: ast

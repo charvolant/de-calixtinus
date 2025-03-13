@@ -598,9 +598,9 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
    start' = renderLocalisedText locales False False (locationName $ start day)
    finish' = renderLocalisedText locales False False (locationName $ finish day)
 renderCaminoMsg _config locales (LinkTitle locd defd) = if hasLocalisedText locales locd then
-    renderLocalisedText locales False False locd
+    renderLocalisedText locales True False locd
   else
-    renderLocalisedText locales False False defd
+    renderLocalisedText locales True False defd
 renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
 renderCaminoMsg config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderLocalisedDayOfWeek locales dow} ^{renderLocalisedBeforeAfter config locales nth}|]
 renderCaminoMsg config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderCaminoMsg config locales unit} ^{renderLocalisedBeforeAfter config locales nth}|]

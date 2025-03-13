@@ -1687,7 +1687,7 @@ caminoHtmlSimple config camino =
   |]
   where
     camino' = preferenceCamino camino
-    preferences = defaultTravelPreferences Walking Normal Pilgrim
+    preferences = defaultTravelPreferences Walking Normal Pilgrim Nothing
 
 
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

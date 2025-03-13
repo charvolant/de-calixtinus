@@ -1036,8 +1036,9 @@ suggestedFinishes = suggested routeFinishes
 defaultTravelPreferences :: Travel -- ^ The travel style of the pilgrim
  -> Fitness -- ^ The fitness level of the pilgrim, see the notes on @suggestedDistanceRange@
  -> Comfort -- ^ The desired comfort level
+ -> Maybe (S.Set PoiCategory)
  -> TravelPreferences -- ^ The resulting preferences skeleton
-defaultTravelPreferences travel fitness comfort = TravelPreferences {
+defaultTravelPreferences travel fitness comfort poics = TravelPreferences {
       preferenceTravel = travel
     , preferenceFitness = fitness
     , preferenceComfort = comfort
@@ -1047,7 +1048,7 @@ defaultTravelPreferences travel fitness comfort = TravelPreferences {
     , preferenceStop = suggestedStopPreferences travel fitness comfort
     , preferenceStockStop = suggestedStockPreferences travel fitness comfort
     , preferenceRestStop = suggestedRestPreferences travel fitness comfort
-    , preferencePoiCategories = suggestedPoiCategories travel fitness comfort
+    , preferencePoiCategories = maybe (suggestedPoiCategories travel fitness comfort) id poics
   }
 
 

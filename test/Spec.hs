@@ -39,7 +39,7 @@ main = do
     pf <- B.readFile "test-preferences.json"
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)
-    let shortPreferences = fromRight (defaultTravelPreferences Walking Normal Pilgrim) ep
+    let shortPreferences = fromRight (defaultTravelPreferences Walking Normal Pilgrim Nothing) ep
     results <- runTestTT (testList cconf shortPreferences (head $ caminoConfigCaminos cconf))
     putStrLn $ show results
 

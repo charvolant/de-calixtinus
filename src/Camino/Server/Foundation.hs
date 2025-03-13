@@ -282,7 +282,7 @@ defaultPreferenceData master current = let
     travel' = Walking
     fitness' = Unfit
     comfort' = Pilgrim
-    dtp = defaultTravelPreferences travel' fitness' comfort'
+    dtp = defaultTravelPreferences travel' fitness' comfort' Nothing
     camino' = head $ caminoAppCaminos master
     dcp = defaultCaminoPreferences camino'
   in

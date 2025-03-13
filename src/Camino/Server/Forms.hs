@@ -109,6 +109,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewRestServices :: FieldView CaminoApp
   , resRestRouteServices :: FormResult (M.Map Service Penance)
   , viewRestRouteServices :: FieldView CaminoApp
+  , resPrevPoiCategories :: FormResult (S.Set PoiCategory)
+  , viewPrevPoiCategories :: FieldView CaminoApp
   , resPoiCategories :: FormResult (S.Set PoiCategory)
   , viewPoiCategories :: FieldView CaminoApp
   , resPrevCamino :: FormResult Camino
@@ -200,6 +202,7 @@ defaultPreferenceFields master prefs = do
     (rsacRes, rsacView) <- mreq hiddenField (fieldSettingsName "restAccommodation") (stopAccommodation <$> prefRestStop <$> prefs)
     (rsssRes, rsssView) <- mreq hiddenField (fieldSettingsName "restServices") (stopServices <$> prefRestStop <$> prefs)
     (rsrsRes, rsrsView) <- mreq hiddenField (fieldSettingsName "restRouteServices") (stopRouteServices <$> prefRestStop <$> prefs)
+    (pcpRes, pcpView) <- mreq hiddenField (fieldSettingsName "prevPoiCategories") (prefPoiCategories <$> prefs)
     (pcRes, pcView) <- mreq hiddenField (fieldSettingsName "poiCategories") (prefPoiCategories <$> prefs)
     (cpRes, cpView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) (fieldSettingsName "prevCamino") (prefCamino <$> prefs)
     (cRes, cView) <- mreq (parsingHiddenField caminoId (findCaminoById (caminoAppCaminoConfig master))) (fieldSettingsName "camino") (prefCamino <$> prefs)
@@ -264,6 +267,8 @@ defaultPreferenceFields master prefs = do
       , viewRestServices = rsssView
       , resRestRouteServices = rsrsRes
       , viewRestRouteServices = rsrsView
+      , resPrevPoiCategories = pcpRes
+      , viewPrevPoiCategories = pcpView
       , resPoiCategories = pcRes
       , viewPoiCategories = pcView
       , resPrevCamino = cpRes
@@ -321,8 +326,10 @@ makePreferenceData _master fields = let
     travel' = resTravel fields
     fitness' = resFitness fields
     comfort' = resComfort fields
+    poiCategories' = resPoiCategories fields
     changedTravel = (changed (resPrevTravel fields) travel') || (changed (resPrevFitness fields) fitness') || (changed (resPrevComfort fields) comfort')
-    dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort'
+    changedPoiCategories = changed (resPrevPoiCategories fields) poiCategories'
+    dtp = defaultTravelPreferences <$> travel' <*> fitness' <*> comfort' <*> (Just <$> poiCategories')
     distance' = if easy'' || changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if easy'' || changedTravel then preferenceTime <$> dtp else resTime fields
     rest' = if easy'' || changedTravel then preferenceRest <$> dtp else resRest fields
@@ -344,7 +351,6 @@ makePreferenceData _master fields = let
     rsServices' = if easy'' || changedTravel then stopServices <$> preferenceRestStop <$> dtp else resRestServices fields
     rsRouteServices' = if easy'' || changedTravel then stopRouteServices <$> preferenceRestStop <$> dtp else resRestRouteServices fields
     stopRest' = StopPreferences <$> rsTransportLinks' <*> rsLocation' <*> rsAccommodation' <*> rsServices' <*> rsRouteServices'
-    poiCategories' = if easy'' || changedTravel then preferencePoiCategories <$> dtp else resPoiCategories fields
     changedCamino = changed (caminoId <$> resPrevCamino fields) (caminoId <$> resCamino fields)
     camino' = resCamino fields
     dcp = defaultCaminoPreferences <$> camino'
@@ -357,7 +363,7 @@ makePreferenceData _master fields = let
     changedStart = changedRoutes || changed (locationID <$> resPrevStart fields) (locationID <$> start') || changed (locationID <$> resPrevFinish fields) (locationID <$> finish')
     stops' = if easy'' || changedStart then recommendedStops <$> dcp'' else resStops fields
     excluded' = if easy'' || changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
-    pois' = if easy'' || changedCamino || changedRoutes then recommendedPois <$> dtp <*> dcp'' else resPois fields
+    pois' = if easy'' || changedCamino || changedRoutes || changedPoiCategories then recommendedPois <$> dtp <*> dcp'' else resPois fields
     startDate' = resStartDate fields
   in
     -- trace (show $ [_showResultState easy', _showResultState travel', _showResultState fitness', _showResultState comfort', _showResultState distance', _showResultState time', _showResultState rest', _showResultState stop', _showResultState stopStock', _showResultState stopRest', _showResultState poiCategories', _showResultState camino', _showResultState routes', _showResultState start', _showResultState finish', _showResultState stops', _showResultState excluded', _showResultState pois', _showResultState startDate']) $
@@ -435,6 +441,8 @@ hiddenPreferences exclude fields = [whamlet|
     ^{fvInput (viewRestServices fields)}
   $if notElem "RestRouteServices" exclude
     ^{fvInput (viewRestRouteServices fields)}
+  $if notElem "PrevPoiCategories" exclude
+    ^{fvInput (viewPrevPoiCategories fields)}
   $if notElem "PoiCategories" exclude
     ^{fvInput (viewPoiCategories fields)}
   $if notElem "PrevCamino" exclude
@@ -473,7 +481,7 @@ chooseTravelForm help prefs extra = do
     let travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
-    let  poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
+    let poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
     (emRes, emView) <- mreq easyField "" (prefEasyMode <$> prefs)
     (trRes, trView) <- mreq travelField (fieldSettingsLabelName MsgSelectTravel "travel") (prefTravel <$> prefs)
     (fRes, fView) <- mreq fitnessField (fieldSettingsLabelName MsgSelectFitness "fitness") (prefFitness <$> prefs)

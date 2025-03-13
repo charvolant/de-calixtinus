@@ -84,6 +84,9 @@
       }
     ]
   },
+  "imports": [
+    "I-ST"
+  ],
   "locations": [
     {
       "id": "I-I1",
@@ -858,94 +861,6 @@
       "services": [  ],
       "accommodation": [
       ]
-    },
-    {
-      "id": "I-I39",
-      "name": "Santiago de Compostela",
-      "type": "City",
-      "position": { "latitude": 42.88051, "longitude": -8.54556 },
-      "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
-      "pois": [
-        {
-          "id": "I-I39-1",
-          "name": [
-            "Catedral Basílica de Santiago de Compostela@ga",
-            "Catedral Basílica de Santiago de Compostela@es",
-            "Santiago de Compostela Cathedral@en"
-          ],
-          "description": {
-            "text": "Journey's End@en",
-            "about": "https://catedraldesantiago.es/",
-            "image": {
-              "source": "S-1-Cathedral.jpg",
-              "thumbnail": "S-1-Cathedral-thumbnail.jpg",
-              "title": "View from the Praza do Obradoiro",
-              "metadata": {
-                "statements": [
-                  {
-                    "term": "dcterms:creator",
-                    "value": "Fernando"
-                  },
-                  {
-                    "term": "dcterms:created",
-                    "value": "2021"
-                  },
-                  {
-                    "term": "dcterms:rightsHolder",
-                    "value": "Wikimedia Commons"
-                  },
-                  {
-                    "term": "dcterms:license",
-                    "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
-                  },
-                  {
-                    "term": "dcterms:source",
-                    "value": "https://commons.wikimedia.org/wiki/File:Santiago_cathedral_2021.jpg"
-                  }
-                ]
-              }
-            }
-          },
-          "type": "Cathedral",
-          "position": { "latitude": 42.88060, "longitude": -8.54466 },
-          "hours": "1000-2000",
-          "time": 2.0,
-          "events": [
-            {
-              "name": "Pilgrim's Mass",
-              "type": "PilgrimMass",
-              "hours": "0730-0830,0930-1030,1200-1300,1930-2030"
-            }
-          ]
-        },
-        {
-          "id": "I-I39-2",
-          "name": "Praza do Obradoiro@ga",
-          "description": {
-            "text": "The main arrival point for pilgrims@en"
-          },
-          "type": "Municipal",
-          "position": { "latitude": 42.88046, "longitude":  -8.54572 }
-        },
-        {
-          "id": "I-I39-3",
-          "name": "Pilgrim Office@en",
-          "description": {
-            "text": "This is where you can pick up your Compostela (pilgrim's certificate).@en",
-            "about": "https://catedral.df-server.info/agencias/Banderas.aspx?ind=1",
-            "notes": [
-              {
-                "type": "Warning",
-                "text": "This office can get very busy during the high season. Book a ticket ahead by using the link above.@en"
-              }
-            ]
-          },
-          "type": "PilgrimResource",
-          "position": { "latitude": 42.88207, "longitude":  -8.546826 }
-        }
-      ]
     }
   ],
 
@@ -1158,7 +1073,7 @@
     },
     {
       "from": "I-I28",
-      "to": "I-I39",
+      "to": "ST-ST1",
       "distance": 3.59,
       "ascent": 5,
       "descent": 90
@@ -1245,9 +1160,9 @@
         "I-I1"
       ],
       "finishes": [
-        "I-I39"
+        "ST-ST1"
       ],
-      "suggested-pois": [ "I-I39-1" ],
+      "suggested-pois": [ "ST-ST1-1" ],
       "palette": {
         "colour": "fec953"
       },

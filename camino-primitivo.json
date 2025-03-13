@@ -3554,7 +3554,9 @@
         "PR-P1", "PR-P95"
       ],
       "finishes": [
+        "ST-ST1"
       ],
+      "suggested-pois": [ "PR-P1-1", "PR-P57-1", "PR-P95-1", "ST-ST1-1" ],
       "palette": {
         "colour": "fec953"
       },

@@ -81,16 +81,10 @@
       }
     ]
   },
+  "imports": [
+    "I-ST"
+  ],
   "locations": [
-    {
-      "id": "FI-F1",
-      "name": "Santiago de Compostela",
-      "type": "City",
-      "position": { "latitude": 42.88051, "longitude": -8.54556 },
-      "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ]
-    },
     {
       "id": "FI-F2",
       "name": "Sarela de Baixo",
@@ -1268,7 +1262,7 @@
 
   "legs": [
     {
-      "from": "FI-F1",
+      "from": "ST-ST1",
       "to": "FI-F2",
       "distance": 2.06,
       "ascent": 55,
@@ -1658,7 +1652,7 @@
       "stops": [
       ],
       "starts": [
-        "FI-F1"
+        "ST-ST1"
       ],
       "finishes": [
         "FI-F33"

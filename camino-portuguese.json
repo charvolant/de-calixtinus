@@ -10863,7 +10863,7 @@
       "stops": [
         "P-F10"
       ],
-      "pois": [
+      "suggested-pois": [
         "P-F10-1"
       ],
        "palette": {
@@ -10885,8 +10885,8 @@
       "stops": [
         "P-F10"
       ],
-      "finishes": [
-        "P-F10"
+      "suggested-pois": [
+        "P-F10-1"
       ],
       "palette": {
         "colour": "2a78ff"

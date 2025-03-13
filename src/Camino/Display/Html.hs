@@ -46,6 +46,10 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.List as L
 
+-- A useful separator
+endash :: Char
+endash = '\x2013'
+
 -- Make a javascript string out of possible text
 javascriptString :: Maybe T.Text -> T.Text
 javascriptString mtxt = maybe "null" (\t -> "'" <> (T.replace "\'" "\\'" $ T.replace "\"" "\'" t) <> "'") mtxt
@@ -622,7 +626,7 @@ descriptionBlock showAbout description = [ihamlet|
     $if showAbout
       $maybe about <- descAbout description
         <div .float-start .description-icon>
-          <a .about href="@{LinkRoute about}" title="_{LinkTitle about}">
+          <a .about href="@{LinkRoute about}" title="_{LinkTitle about ""}">
             <span .ca-link>
     $maybe txt <- descText description
       _{Txt txt}
@@ -742,7 +746,7 @@ caminoEventHtml event = [ihamlet|
         _{Txt (eventName event)}
         $maybe d <- eventDescription event
           $maybe about <- descAbout d
-            <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
+            <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about (eventName event)}">
               <span .ca-link>
         $maybe t <- eventHours event
           ^{hoursBlock t}
@@ -777,7 +781,7 @@ caminoPointOfInterestHtml poi = [ihamlet|
             <span .ca-globe title="_{ShowOnMapTitle}">
         $maybe d <- poiDescription poi
           $maybe about <- descAbout d
-            <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about}">
+            <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about (poiName poi)}">
               <span .ca-link>
       $if hasBody
         <div .card-body>
@@ -859,7 +863,7 @@ caminoLocationHtml preferences camino solution containerId rests stocks stops wa
                     _{Txt (regionName r)}
                 $maybe d <- locationDescription location
                   $maybe about <- descAbout d
-                    <a .description-icon .about href="@{LinkRoute about}" title="_{LinkTitle about}">
+                    <a .description-icon .about href="@{LinkRoute about}" title="_{LinkTitle about (locationName location)}">
                       <span .ca-link>
                 $maybe pos <- locationPosition location
                   <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
@@ -936,8 +940,6 @@ preferenceRangeHtml range = [ihamlet|
     $maybe d <- rangeDerived range
       <p .text-body-tertiary .smaller>#{d}
   |]
-  where
-    endash = '\x2013'
 
 preferenceRangeIntHtml :: (Integral a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeIntHtml range = [ihamlet|
@@ -953,8 +955,6 @@ preferenceRangeIntHtml range = [ihamlet|
     $maybe d <- rangeDerived range
       <p .text-body-tertiary .smaller>#{d}
   |]
-  where
-    endash = '\x2013'
 
 failureTable :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> ChainGraph Location e Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
 failureTable tprefs cprefs caption graph = [ihamlet|
@@ -1208,7 +1208,7 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                     <span .holiday title="_{HolidayEventTitle}">
                       _{Txt (ceName cal)}
                       $if day1 /= day2
-                        (_{DateMsg d})
+                        \ #{endash} _{DateMsg d}
                _{DistanceFormatted (metricsDistance $ score day)}
            <div .card-body>
            <p .card-text>
@@ -1469,19 +1469,42 @@ aboutHtml config _preferences camino = [ihamlet|
         <div .offset-1 .col>
           ^{descriptionBlock True (routeDescription route)}
     <h3>_{RegionsLabel}
-    $forall region <- regions
-      <div ##{regionID region} .row>
-        <div .col>
-          <span>
-            _{Txt (regionName region)}
-          $maybe parent <- regionParent region
-            <span>
-             (<a href="##{regionID parent}">_{Txt (regionName parent)}</a>)
-      $maybe description <- regionDescription region
-        <div .row>
-          <div .offset-1 .col>
-            ^{descriptionBlock True description}
-    <h3>_{HolidaysLabel}
+    <table .table .table-striped>
+      <thead>
+        <tr>
+          <th>_{RegionLabel}
+          <th>
+          <th>
+          <th>
+          <th>_{ClosedDayText}
+      <tbody>
+        $forall region <- regions
+          <tr ##{regionID region}>
+            <td>
+              _{Txt (regionName region)}
+            <td>
+              $maybe parent <- regionParent region
+                $if S.member parent regions
+                  <a href="##{regionID parent}">_{Txt (regionName parent)}
+                $else
+                  _{Txt (regionName parent)}
+            <td>
+              $maybe description <- regionDescription region
+                ^{descriptionBlock False description}
+            <td>
+              $maybe description <- regionDescription region
+                $maybe about <- descAbout description
+                  <a .about href="@{LinkRoute about}">
+                    <span .ca-link>
+                      \ _{LinkTitle about (regionName region)}
+            <td>
+              <ul .comma-list>
+                $forall cal <- regionClosedDays region
+                  ^{calendarBlock cal}
+                $forall cal <- getInheritedClosedDays region
+                  <span .text-black-50>
+                    ^{calendarBlock cal}
+    <h4>_{HolidaysLabel}
     <table .table .table-striped .>
       <thead>
         <tr>
@@ -1500,7 +1523,8 @@ aboutHtml config _preferences camino = [ihamlet|
                 _{DateMsg d}
             $forall region <- holidayRegions
               <td .text-center>
-                #{checkMark (elem (fst holiday) (regionHolidays region))}
+                <span :isIndirectHoliday (fst holiday) region:.text-black-50>
+                  #{checkMark (isHoliday (fst holiday) region)}
     <h3>_{InformationLabel}
     <p>_{InformationDescription}
     $with metadata <- caminoMetadata camino'
@@ -1515,12 +1539,14 @@ aboutHtml config _preferences camino = [ihamlet|
   |]
   where
     camino' = preferenceCamino camino
-    regions = regionClosure $ caminoRegions camino'
-    holidayRegions = S.filter (\r -> not $ null $ regionHolidays r) regions
+    regions = S.filter isHolidayRegion $ regionClosure $ caminoRegions camino'
+    holidayRegions = S.filter (\r -> not $ null $ getRegionalHolidays r) regions
     holidayKeys = S.fold S.union S.empty $ S.map (\r -> S.fromList $ catMaybes $ map calendarKey $ regionHolidays r) holidayRegions
     startDate = preferenceStartDate camino
     mapDate k = (c, (\d -> runReader (calendarDateOnOrAfter c d) config) <$> startDate) where c = NamedCalendar k
     holidays = sortOn snd $ map mapDate $ S.toList holidayKeys
+    isHoliday holiday region = elem holiday (getRegionalHolidays region)
+    isIndirectHoliday holiday region = elem holiday (getInheritedRegionalHolidays region)
 
 
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.

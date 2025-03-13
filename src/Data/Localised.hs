@@ -53,6 +53,7 @@ import Data.Aeson.Types (Parser, typeMismatch)
 import Data.Char (isAlpha)
 import Data.List (find, singleton, uncons)
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
+import Data.String (IsString(..))
 import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack)
 import Data.Time.Format
 import Data.Time.LocalTime
@@ -492,6 +493,9 @@ instance ToJSON TaggedText where
     else
       toJSON $ if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
 
+instance IsString TaggedText where
+  fromString txt = fromText $ pack txt
+
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)
   deriving (Show, Eq)
@@ -549,6 +553,9 @@ instance (Tagged a, ToJSON a) => ToJSON (Localised a) where
   toJSON (Localised []) = toJSON (""::Text)
   toJSON (Localised [elt]) = toJSON elt
   toJSON (Localised elts) = toJSON (map toJSON elts)
+
+instance (Tagged a, IsString a) => IsString (Localised a) where
+  fromString txt = Localised [fromString txt]
 
 -- | Get the elements of a localised list
 elements :: (Tagged a) => Localised a -> [a]

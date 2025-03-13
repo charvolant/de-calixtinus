@@ -22,8 +22,11 @@ module Data.Region (
 
   , createRegionConfig
   , getClosedDays
+  , getInheritedClosedDays
+  , getInheritedRegionalHolidays
   , getRegionalHolidays
   , getRegion
+  , isHolidayRegion
   , regionClosure
 ) where
 
@@ -134,11 +137,24 @@ regionClosure regions = regionClosure' regions regions
 regionClosure' :: S.Set Region -> S.Set Region -> S.Set Region
 regionClosure' seen more = if S.null more then seen else regionClosure' (seen `S.union` more) (S.fold (\r -> \ms -> maybe ms (\p -> S.insert p ms) (regionParent r)) S.empty more)
 
+-- | Test to see if this region has holidays/closures attached to it or a parent region
+isHolidayRegion :: Region -> Bool
+isHolidayRegion region = if null (regionHolidays region) && null (regionClosedDays region) then
+    maybe False isHolidayRegion (regionParent region) || any isHolidayRegion (regionMember region)
+  else
+    True
+
 getRegionalHolidays :: Region -> [EventCalendar]
 getRegionalHolidays region = regionHolidays region ++ (maybe [] getRegionalHolidays $ regionParent region)
 
+getInheritedRegionalHolidays :: Region -> [EventCalendar]
+getInheritedRegionalHolidays region = maybe [] getRegionalHolidays $ regionParent region
+
 getClosedDays :: Region -> [EventCalendar]
 getClosedDays region = regionClosedDays region ++ (maybe [] getClosedDays $ regionParent region)
+
+getInheritedClosedDays :: Region -> [EventCalendar]
+getInheritedClosedDays region = maybe [] getClosedDays $ regionParent region
 
 -- | A region configuration, allowing regions to be looked up easily
 data RegionConfig = RegionConfig {

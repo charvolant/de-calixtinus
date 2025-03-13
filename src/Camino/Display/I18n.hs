@@ -132,7 +132,7 @@ data CaminoMsg =
   | KeyLabel
   | KitchenTitle
   | LegPenanceMsg Penance
-  | LinkTitle (Localised TaggedURL)
+  | LinkTitle (Localised TaggedURL) (Localised TaggedText)
   | LinkOut
   | LocationPenanceMsg Penance
   | LocationPreferencesLabel
@@ -194,6 +194,7 @@ data CaminoMsg =
   | QuadrupleTitle
   | QuadrupleWcTitle
   | RefugeTitle
+  | RegionLabel
   | RegionsLabel
   | RecreationPoiTitle
   | ReligiousEventTitle
@@ -444,6 +445,7 @@ renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
 renderCaminoMsgDefault _ RefugeTitle = "Refuge"
+renderCaminoMsgDefault _ RegionLabel = "Region"
 renderCaminoMsgDefault _ RegionsLabel = "Regions"
 renderCaminoMsgDefault _ RecreationPoiTitle = "Recreation"
 renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
@@ -505,6 +507,9 @@ renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
 renderCaminoMsgDefault _ WineryTitle = "Winery"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
+
+hasLocalisedText :: (Tagged a) => [Locale] -> Localised a -> Bool
+hasLocalisedText locales locd = maybe False (\t -> plainText t /= "") $ localise locales locd
 
 renderLocalisedText :: (Tagged a) => [Locale] -> Bool -> Bool -> Localised a -> Html
 renderLocalisedText locales attr js locd = let
@@ -592,7 +597,10 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
    metrics = score day
    start' = renderLocalisedText locales False False (locationName $ start day)
    finish' = renderLocalisedText locales False False (locationName $ finish day)
-renderCaminoMsg _config locales (LinkTitle locd) = renderLocalisedText locales False False locd
+renderCaminoMsg _config locales (LinkTitle locd defd) = if hasLocalisedText locales locd then
+    renderLocalisedText locales False False locd
+  else
+    renderLocalisedText locales False False defd
 renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
 renderCaminoMsg config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderLocalisedDayOfWeek locales dow} ^{renderLocalisedBeforeAfter config locales nth}|]
 renderCaminoMsg config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderCaminoMsg config locales unit} ^{renderLocalisedBeforeAfter config locales nth}|]

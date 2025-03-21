@@ -34,7 +34,7 @@
     "notes": [
       {
         "type": "Information",
-        "text": "There are various points on the trip where accommodation can be hard to come by. Walkers often use the ferry or bus links to access either a central point, usually Circular Quay, or nearby accommodation options. To use this facility, check the 'Use Transport Links' option."
+        "text": "There are various points on the trip where accommodation can be hard to come by. Walkers often use the ferry or bus links to access either a central point, usually Circular Quay, or nearby accommodation options. Cremorne and Mossman have been added to allow walkers on the North side of the harbour to access additional accommodation and services. To use this facility, check the 'Use Transport Links' option."
 
       },
       {
@@ -1527,6 +1527,28 @@
       "accommodation": [ "GuestHouse", "Hotel" ],
       "pois": [
       ]
+    },
+    {
+      "id": "BM-A1",
+      "name": "Cremorne",
+      "type": "Town",
+      "position": { "latitude": -33.82813, "longitude": 151.23020 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [ "House", "Hotel" ],
+      "pois": [
+      ]
+    },
+    {
+      "id": "BM-A2",
+      "name": "Mosman",
+      "type": "Town",
+      "position": { "latitude": -33.82411, "longitude": 151.24153 },
+      "region": "AU-NSW",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "accommodation": [ "House", "Hotel" ],
+      "pois": [
+      ]
     }
   ],
 
@@ -2135,6 +2157,15 @@
       "time": 0.5
     },
     {
+      "type": "BusLink",
+      "from": "BM-23",
+      "to": "BM-1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
       "type": "FerryLink",
       "from": "BM-24",
       "to": "BM-36",
@@ -2199,6 +2230,33 @@
     },
     {
       "type": "FerryLink",
+      "from": "BM-45",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.35
+    },
+    {
+      "type": "BusLink",
+      "from": "BM-47",
+      "to": "BM-A1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "FerryLink",
+      "from": "BM-47",
+      "to": "BM-36",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "FerryLink",
       "from": "BM-48",
       "to": "BM-36",
       "distance": 0,
@@ -2223,6 +2281,51 @@
       "ascent": 0,
       "descent": 0,
       "time": 0.40
+    },
+    {
+      "type": "BusLink",
+      "from": "BM-51",
+      "to": "BM-A2",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.40
+    },
+    {
+      "type": "BusLink",
+      "from": "BM-59",
+      "to": "BM-A2",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "BusLink",
+      "from": "BM-62",
+      "to": "BM-A1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "BusLink",
+      "from": "BM-62",
+      "to": "BM-A2",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "BusLink",
+      "from": "BM-68",
+      "to": "BM-70",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
     },
     {
       "type": "FerryLink",

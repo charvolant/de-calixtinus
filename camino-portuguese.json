@@ -1499,7 +1499,7 @@
     },
     {
       "id": "P-P88",
-      "name": "Mealhanda",
+      "name": "Mealhada",
       "type": "Town",
       "position": { "latitude": 40.38071, "longitude": -8.44947 },
       "region": "PT",
@@ -4941,7 +4941,7 @@
       "type": "Town",
       "position": { "latitude": 39.51473, "longitude": -8.68721 },
       "region": "PT",
-      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
           "name": "Casal Dos 5",
@@ -10830,6 +10830,342 @@
       "descent": 20
     }
   ],
+  "links": [
+    {
+      "type": "BusLink",
+      "from": "P-P2",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P3",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P4",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P5",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P7",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P8",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P9",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P11",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P12",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P13",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P14",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P15",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P21",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P22",
+      "to": "P-P1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P26",
+      "to": "P-P32",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P72",
+      "to": "P-P78",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P73",
+      "to": "P-P78",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P74",
+      "to": "P-P78",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P79",
+      "to": "P-P78",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P88",
+      "to": "P-P78",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P104",
+      "to": "P-P101",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P119",
+      "to": "P-P123",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P120",
+      "to": "P-P123",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P125",
+      "to": "P-P123",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P139",
+      "to": "P-P138",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P140",
+      "to": "P-P138",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-P164",
+      "to": "P-P160",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.25
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P244",
+      "to": "P-P236",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P254",
+      "to": "P-P247",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P256",
+      "to": "P-P260",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.75
+    },
+    {
+      "type": "BusLink",
+      "from": "P-P274",
+      "to": "ST-ST1",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-C7",
+      "to": "P-P138",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-C9",
+      "to": "P-C13",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-C56",
+      "to": "P-C57",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 0.5
+    },
+    {
+      "type": "BusLink",
+      "from": "P-E18",
+      "to": "P-E21",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-F25",
+      "to": "P-P32",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    },
+    {
+      "type": "TrainLink",
+      "from": "P-F25",
+      "to": "P-P78",
+      "distance": 0,
+      "ascent": 0,
+      "descent": 0,
+      "time": 1.0
+    }
+  ],
+
   "routes": [
     {
       "id": "P-RP",

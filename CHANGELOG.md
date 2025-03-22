@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.6 - 2025-03-23
+
+### Added
+
+* Rest days and pre-holiday "stock-up" days
+  * This is still a work in progress. The system works by building days and then dividing the days into stages.
+    A better solution would be to choose days based on the need for rest days.
+    However, this turns out to be quite hard.
+  * Also includes proposed travel dates so that Sundays and holidays can be tracked.
+* Camino Primitivo
+* Imports of camino segments
+
+### Changed
+
+* Added transport links to Camino Portuguese and more links to Bondi-Manly caminos
+* Moved camino definitions to configuration file
+* Region and holiday display
+* Small graphic and layout improvements
+
+### Fixed
+
+* Fix to PoI category bug
+
 ## 0.5 - 2024-11-22
 
 ### Added
@@ -47,7 +70,7 @@ and this project adheres to the
 * Include Gîtes d'Étape accomodation type
 * Show summary pages of the various caminos
 
-### Chnaged
+### Changed
 
 * MunicipalAlbergue is now PilgrimAlbergue
 * Update ansible scripts for a development/testing server
@@ -58,7 +81,7 @@ and this project adheres to the
 
 * Camino Fisterra
 * Show chosen accommodation and penance for all locations
-* Add a comfort level to condition accommodation and servoce choice #[4](https://github.com/charvolant/de-calixtinus/issues/4)
+* Add a comfort level to condition accommodation and service choice #[4](https://github.com/charvolant/de-calixtinus/issues/4)
 
 ### Changed
 

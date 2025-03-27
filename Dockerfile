@@ -12,7 +12,7 @@ RUN stack install --local-bin-path /app/bin :camino-server-exe
 FROM debian:bullseye-slim
 LABEL title="De Calixtinus"
 LABEL description="A web server that allows users to enter travel preferences and creates a staged plan for the Camino Santiago"
-LABEL version=0.6
+LABEL version=0.7-SNAPSHOT
 COPY --from=build /app /app
 EXPOSE 3000
 ENTRYPOINT [ "/app/bin/camino-server-exe", "-s", "/app/lib/static", "-c", "/app/lib/config-docker.yaml" ]

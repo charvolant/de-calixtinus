@@ -34,6 +34,7 @@ library
       Camino.Display.KML
       Camino.Display.Routes
       Camino.Display.Static
+      Camino.Display.XLSX
       Camino.Planner
       Camino.Preferences
       Camino.Server.Application
@@ -41,7 +42,6 @@ library
       Camino.Server.Forms
       Camino.Server.Foundation
       Camino.Server.Settings
-      Camino.Util
       Camino.Walking
       Data.Description
       Data.DublinCore
@@ -54,6 +54,8 @@ library
       Data.Propositional
       Data.Region
       Data.Summary
+      Data.Util
+      Data.Xlsx
       Graph.Graph
       Graph.Programming
   other-modules:
@@ -77,6 +79,7 @@ library
     , filepath
     , formatting
     , http-conduit
+    , lens
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -89,6 +92,7 @@ library
     , time
     , vector
     , warp
+    , xlsx
     , xml-conduit
     , xml-hamlet
     , xml-types
@@ -123,6 +127,7 @@ executable camino-map-exe
     , filepath
     , formatting
     , http-conduit
+    , lens
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -135,6 +140,7 @@ executable camino-map-exe
     , time
     , vector
     , warp
+    , xlsx
     , xml-conduit
     , xml-hamlet
     , xml-types
@@ -169,6 +175,7 @@ executable camino-planner-exe
     , filepath
     , formatting
     , http-conduit
+    , lens
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -181,6 +188,7 @@ executable camino-planner-exe
     , time
     , vector
     , warp
+    , xlsx
     , xml-conduit
     , xml-hamlet
     , xml-types
@@ -215,6 +223,7 @@ executable camino-server-exe
     , filepath
     , formatting
     , http-conduit
+    , lens
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -227,6 +236,7 @@ executable camino-server-exe
     , time
     , vector
     , warp
+    , xlsx
     , xml-conduit
     , xml-hamlet
     , xml-types
@@ -261,6 +271,7 @@ executable generate-static-exe
     , filepath
     , formatting
     , http-conduit
+    , lens
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -273,6 +284,7 @@ executable generate-static-exe
     , time
     , vector
     , warp
+    , xlsx
     , xml-conduit
     , xml-hamlet
     , xml-types
@@ -324,6 +336,7 @@ test-suite de-calixtinus-test
     , filepath
     , formatting
     , http-conduit
+    , lens
     , mtl
     , network-uri
     , numeric-tools ==0.2.*
@@ -337,6 +350,7 @@ test-suite de-calixtinus-test
     , time
     , vector
     , warp
+    , xlsx
     , xml-conduit
     , xml-hamlet
     , xml-types

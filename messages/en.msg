@@ -33,6 +33,8 @@ PlanKmlLabel: Plan (KML)
 PlanKmlTitle: Generate a plan as a KML file suitable for Google Earth
 PlanLabel: Plan
 PlanTitle: Generate a plan and display it
+PlanXlsxLabel: Plan (Xlsx)
+PlanXlsxTitle: Generate a plan as a Xslx file suitable for spreadsheet applications
 PoisLabel: Points of Interest
 PoiTitle: Point of Interest Preferences
 PoiText: Select the significant point of interests that you intend to stop at while travelling. These stops will be built into the planning time.

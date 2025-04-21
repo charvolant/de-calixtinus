@@ -56,7 +56,7 @@ import Data.Aeson
 import Data.Placeholder
 import Data.Text (Text)
 import Camino.Camino
-import Camino.Util
+import Data.Util
 import Camino.Walking
 import Data.Time.Calendar (Day)
 import qualified Data.Map as M (Map, difference, fromList, singleton, union)

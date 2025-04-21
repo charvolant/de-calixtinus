@@ -44,7 +44,7 @@ module Camino.Planner (
 import Camino.Walking
 import Camino.Camino
 import Camino.Preferences
-import Camino.Util (maybeSum)
+import Data.Util (maybeSum)
 import Graph.Graph (available, incoming, mirror, reachable, subgraph)
 import Graph.Programming()
 import Control.Applicative ((<|>))
@@ -120,6 +120,7 @@ data Metrics = Metrics {
     , metricsFatigue :: Penance -- ^ Cost of accumulated fatigue
     , metricsRest :: Penance -- ^ Cost of taking a rest
     , metricsMisc :: Penance -- ^ Additional miscellaneous penance costs and causes
+    , metricsRestDays :: Int -- ^ Number of rest days taken
     , metricsDate :: Maybe (C.Day, C.Day) -- ^ An associated date range for this location
     , metricsStockpoint :: Bool -- ^ Stock-up at the end of the day 
     , metricsRestpoint :: Bool -- ^ The next day is a resting day
@@ -153,6 +154,7 @@ instance Semigroup Metrics where
     , metricsFatigue = metricsFatigue m1 <> metricsFatigue m2
     , metricsRest = metricsRest m1 <> metricsRest m2
     , metricsMisc = metricsMisc m1 <> metricsMisc m2
+    , metricsRestDays = metricsRestDays m1 + metricsRestDays m2
     , metricsDate = combineDates (metricsDate m1) (metricsDate m2)
     , metricsStockpoint = (metricsStockpoint m1) || (metricsStockpoint m2)
     , metricsRestpoint = (metricsRestpoint m1) || (metricsRestpoint m2)
@@ -167,10 +169,10 @@ combineDates r1 Nothing = r1
 combineDates (Just (min1, max1)) (Just (min2, max2)) = Just (min min1 min2, max max1 max2)
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty Nothing False False mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty Reject Nothing False False Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty Reject 0 Nothing False False Reject
 
 -- | A day's stage
 type Day = Chain Location Leg Metrics
@@ -473,6 +475,7 @@ penance sprefs tprefs cprefs accommodationMap locationMap day =
       mempty
       mempty
       misc
+      0
       Nothing
       False
       False
@@ -644,7 +647,8 @@ pilgrimageEvaluate'' _cc tprefs cprefs choices current [day] = let
     metrics' = penance (preferenceRestStop tprefs) tprefs cprefs (tcRestAccommodation choices) (tcRestLocation choices) (path day)
     day' = day {
       score = metrics' {
-          metricsDate = Just (current, C.addDays 1 current)
+          metricsRestDays = 1
+        , metricsDate = Just (current, C.addDays 1 current)
         , metricsRestpoint = True
       }
     }

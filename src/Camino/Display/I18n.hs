@@ -10,14 +10,16 @@ Stability   : experimental
 Portability : POSIX
 -}
 module Camino.Display.I18n (
-  CaminoMsg(..),
+    CaminoMsg(..)
 
-  formatDistance,
-  formatMaybeDistance,
-  formatMaybeHours,
-  formatPenance,
-  formatHours,
-  renderCaminoMsg
+  , formatDistance
+  , formatMaybeDistance
+  , formatMaybeHours
+  , formatPenance
+  , formatHours
+  , rejectSymbol
+  , renderCaminoMsg
+  , renderCaminoMsgText
 ) where
 
 import Camino.Camino
@@ -26,12 +28,19 @@ import Camino.Planner
 import Data.Localised
 import Data.Region
 import Data.Text
+import Data.Text.Encoding (decodeUtf8Lenient)
+import Data.Text.Lazy (toStrict)
 import Data.Time.Calendar
 import Data.Time.Format
 import Data.Time.LocalTime
-import Formatting
-import Text.Blaze.Html (toHtml)
+import Data.Util (commaJoin)
+import Formatting (fixed, int, sformat)
+import Text.Blaze.Html (Html, contents, text, text, toHtml, toValue)
+import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5.Attributes as HA
+import qualified Text.Blaze.Internal as TB
 import Text.Hamlet
+import Debug.Trace
 
 -- | Message placeholders for the camino
 data CaminoMsg =
@@ -42,7 +51,9 @@ data CaminoMsg =
   | AccommodationPreferencesLabel
   | AddressTitle
   | AfterText
+  | AlwaysOpenLabel
   | ArtworkTitle
+  | AscentLabel
   | AscentMsg Float
   | AustereTitle
   | BankTitle
@@ -56,6 +67,7 @@ data CaminoMsg =
   | BridgeTitle
   | BusTitle
   | CalendarTitle
+  | CaminoLabel
   | CampGroundTitle
   | CampingTitle
   | CampSiteTitle
@@ -73,7 +85,7 @@ data CaminoMsg =
   | CyclingTitle
   | CyclePathTitle
   | DailyLabel
-  | DayText
+  | DateLabel
   | DateMsg Data.Time.Calendar.Day
   | DateRangeMsg Data.Time.Calendar.Day Data.Time.Calendar.Day
   | DayOfMonthName DayOfMonth
@@ -82,6 +94,8 @@ data CaminoMsg =
   | DayServicesPreferencesLabel
   | DaysMsg Int
   | DaySummaryMsg Camino.Planner.Day
+  | DayText
+  | DescentLabel
   | DescentMsg Float
   | DinnerTitle
   | DirectionsTitle
@@ -102,6 +116,8 @@ data CaminoMsg =
   | FatiguePenanceMsg Penance
   | FerryTitle
   | FestivalEventTitle
+  | FinishDateLabel
+  | FinishLocationLabel
   | FitnessLabel
   | FitTitle
   | FoodEventTitle
@@ -124,6 +140,7 @@ data CaminoMsg =
   | HotelTitle
   | HoursTitle
   | HouseTitle
+  | IdentifierLabel
   | InformationLabel
   | InformationTitle
   | InformationDescription
@@ -131,13 +148,17 @@ data CaminoMsg =
   | JunctionTitle
   | KeyLabel
   | KitchenTitle
+  | LatitudeLabel
   | LegPenanceMsg Penance
   | LinkTitle (Localised TaggedURL) (Localised TaggedText)
   | LinkOut
+  | ListMsg [CaminoMsg]
   | LocationPenanceMsg Penance
   | LocationPreferencesLabel
+  | LocationLabel
   | LocationsLabel
   | LockersTitle
+  | LongitudeLabel
   | LookoutTitle
   | LuxuriousTitle
   | MapLabel
@@ -154,6 +175,7 @@ data CaminoMsg =
   | NaturalPoiTitle
   | NaturalTitle
   | NormalTitle
+  | NotesLabel
   | NthWeekdayText WeekOfMonth DayOfWeek
   | OpenHoursTitle
   | OpenText
@@ -201,6 +223,7 @@ data CaminoMsg =
   | ReligiousPoiTitle
   | RequiredStopsLabel
   | RestaurantTitle
+  | RestDaysLabel
   | RestLocationPreferencesLabel
   | RestPenanceMsg Penance
   | RestpointLabel
@@ -218,6 +241,8 @@ data CaminoMsg =
   | SleepingBagTitle
   | StablesTitle
   | StagesMsg Int
+  | StartDateLabel
+  | StartLocationLabel
   | StatueTitle
   | StockpointLabel
   | StopLabel
@@ -229,6 +254,7 @@ data CaminoMsg =
   | TheatreTitle
   | Time TimeOfDay
   | TimeAdjustMsg Penance
+  | TimeLabel
   | TimeMsg (Maybe Float)
   | TimeMsgPlain Float
   | TimePenaltyLabel
@@ -266,36 +292,39 @@ rejectSymbol = "\x25c6"
 thinSpace :: Text
 thinSpace = "\x2009"
 
+-- Note the use of direct blaze scans in the following code, rather than shamlet.
+-- Hamlet seems to generate tags as chunks of content, rather than proper blaze HTML,
+-- so the direct formatting allows renderCaminoMsgText to strip tags properly.
 formatPenance :: Penance -> Html
-formatPenance Reject = [shamlet|<span .penance .rejected title="Rejected">#{rejectSymbol}</span>|]
-formatPenance (Penance p) = [shamlet|<span .penance>#{format (fixed 1) p}#{thinSpace}km</span>|]
+formatPenance Reject = H.span H.! HA.class_ "penance rejected" H.! HA.title "Rejected" $ text rejectSymbol
+formatPenance (Penance p) = H.span H.! HA.class_ "penance" $ text $  sformat  (fixed 1) p <> thinSpace <> "km"
 
 formatPenancePlain :: Penance -> Html
 formatPenancePlain Reject = "Rejected"
-formatPenancePlain (Penance p) = [shamlet|#{format (fixed 1) p}km|]
+formatPenancePlain (Penance p) = text $  sformat  (fixed 1) p <> "km"
 
 formatDistance :: (Real a) => a -> Html
-formatDistance d = [shamlet|<span .distance>#{format (fixed 1) d}#{thinSpace}km</span>#|]
+formatDistance d = H.span H.! HA.class_ "distance" $ text $ sformat (fixed 1) d <> thinSpace <> "km"
 
 formatMaybeDistance :: (Real a) => Maybe a -> Html
-formatMaybeDistance Nothing = [shamlet|<span .distance .rejected title="Rejected">#{rejectSymbol}</span>#|]
+formatMaybeDistance Nothing = formatPenance Reject
 formatMaybeDistance (Just d) = formatDistance d
 
 formatHours :: (Real a) => a -> Html
-formatHours t = [shamlet|<span .time>#{format (fixed 1) t}#{thinSpace}hrs</span>|]
+formatHours t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t <> thinSpace <> "hrs"
 
 formatDays :: Int -> Html
-formatDays d = [shamlet|<span .days>#{format int d}#{thinSpace}days</span>#|]
+formatDays d = H.span H.! HA.class_ "days" $ text $  sformat  int d <> thinSpace <> "days"
 
 formatStages :: Int -> Html
-formatStages s = [shamlet|<span .stages>#{format int s}#{thinSpace}stages</span>#|]
+formatStages s = H.span H.! HA.class_ "stages" $ text $  sformat  int s <> thinSpace <> "stages"
 
 formatMaybeHours :: (Real a) => Maybe a -> Html
-formatMaybeHours Nothing = [shamlet|<span .time .rejected title="Rejected">#{rejectSymbol}</span>|]
+formatMaybeHours Nothing = formatPenance Reject
 formatMaybeHours (Just t) = formatHours t
 
 formatHeight :: (Real a) => a -> Html
-formatHeight h = [shamlet|<span .height>#{format (fixed 0) h}#{thinSpace}m</span>|]
+formatHeight h = H.span H.! HA.class_ "height" $ text $  sformat  (fixed 0) h <> thinSpace <> "m"
 
 -- | Default English translation
 renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
@@ -305,8 +334,10 @@ renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ AddressTitle = "Address"
+renderCaminoMsgDefault _ AlwaysOpenLabel = "Always Open"
 renderCaminoMsgDefault _ AfterText = "after"
 renderCaminoMsgDefault _ ArtworkTitle = "Art"
+renderCaminoMsgDefault _ AscentLabel = "Ascent"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
@@ -321,6 +352,7 @@ renderCaminoMsgDefault _ BridgeTitle = "Bridge"
 renderCaminoMsgDefault _ BusTitle = "Bus"
 renderCaminoMsgDefault _ CalendarTitle = "Calendar"
 renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
+renderCaminoMsgDefault _ CaminoLabel = "Camino"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CasualTitle = "Casual"
@@ -336,10 +368,12 @@ renderCaminoMsgDefault _ CulturalPoiTitle = "Cultural"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ DailyLabel = "Daily"
-renderCaminoMsgDefault _ DayText = "day"
+renderCaminoMsgDefault _ DateLabel = "Date"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
+renderCaminoMsgDefault _ DayText = "day"
+renderCaminoMsgDefault _ DescentLabel = "Descent"
 renderCaminoMsgDefault _ (DescentMsg ascent) = [shamlet|Descent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ DirectionsTitle = "Directions"
 renderCaminoMsgDefault _ DinnerTitle = "Dinner"
@@ -360,6 +394,8 @@ renderCaminoMsgDefault _ FailureLabel = "Failure"
 renderCaminoMsgDefault _ (FatiguePenanceMsg penance') = [shamlet|Fatigue ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
+renderCaminoMsgDefault _ FinishDateLabel = "Finish Date"
+renderCaminoMsgDefault _ FinishLocationLabel = "Finish Location"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
 renderCaminoMsgDefault _ FoodEventTitle = "Food"
@@ -380,7 +416,9 @@ renderCaminoMsgDefault _ HolidaysLabel = "Holidays"
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
 renderCaminoMsgDefault _ HostelTitle = "Hostel"
 renderCaminoMsgDefault _ HotelTitle = "Hotel"
+renderCaminoMsgDefault _ HoursTitle = "Hours"
 renderCaminoMsgDefault _ HouseTitle = "House"
+renderCaminoMsgDefault _ IdentifierLabel = "ID"
 renderCaminoMsgDefault _ InformationLabel = "Information"
 renderCaminoMsgDefault _ InformationTitle = "Information"
 renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
@@ -388,12 +426,15 @@ renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
 renderCaminoMsgDefault _ JunctionTitle = "Junction"
 renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
+renderCaminoMsgDefault _ LatitudeLabel = "Latitude"
 renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
 renderCaminoMsgDefault _ LinkOut = [shamlet|More information|]
 renderCaminoMsgDefault _ (LocationPenanceMsg penance') = [shamlet|Location ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ LocationPreferencesLabel = "Location Preferences"
+renderCaminoMsgDefault _ LocationLabel = "Location"
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
+renderCaminoMsgDefault _ LongitudeLabel = "Longitude"
 renderCaminoMsgDefault _ LookoutTitle = "Lookout"
 renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"
 renderCaminoMsgDefault _ MapLabel = "Map"
@@ -408,7 +449,7 @@ renderCaminoMsgDefault _ MusicEventTitle = "Music"
 renderCaminoMsgDefault _ NaturalPoiTitle = "Natural"
 renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, etc."
 renderCaminoMsgDefault _ NormalTitle = "Normal"
-renderCaminoMsgDefault _ OtherLabel = "Other"
+renderCaminoMsgDefault _ NotesLabel = "Notes"
 renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
 renderCaminoMsgDefault _ OpenText = "open"
 renderCaminoMsgDefault _ ParkTitle = "Park or garden"
@@ -452,6 +493,7 @@ renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
 renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
 renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
+renderCaminoMsgDefault _ RestDaysLabel = "Rest Days"
 renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferences"
 renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ RestpointLabel = "Rest Point"
@@ -469,6 +511,8 @@ renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
 renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
+renderCaminoMsgDefault _ StartDateLabel = "Start Date"
+renderCaminoMsgDefault _ StartLocationLabel = "Start Location"
 renderCaminoMsgDefault _ StatueTitle = "Statue"
 renderCaminoMsgDefault _ StockpointLabel = "Stocking Point"
 renderCaminoMsgDefault _ StopLabel = "Stop"
@@ -480,6 +524,7 @@ renderCaminoMsgDefault _ TableLabel = "Table"
 renderCaminoMsgDefault _ TheatreTitle = "Theatre"
 renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
+renderCaminoMsgDefault _ TimeLabel = "Time"
 renderCaminoMsgDefault _ (TimeMsgPlain time) = formatHours time
 renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
 renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
@@ -518,12 +563,12 @@ renderLocalisedText locales attr js locd = let
     txt' = if attr then replace "\"" "'" txt else txt
     txt'' = if js then replace "'" "\\'" txt' else txt'
     loc = maybe rootLocale locale elt
-    lang = localeLanguageTag loc
+    lng = localeLanguageTag loc
   in
-    if attr || Data.Text.null lang then
+    if attr || Data.Text.null lng then
       toHtml txt''
     else
-      [shamlet|<span lang="#{lang}">#{txt''}#|]
+      H.span H.! HA.lang (toValue lng) $ Text.Blaze.Html.text txt''
 
 renderLocalisedDate :: (FormatTime t) => Bool -> [Locale] -> t -> Html
 renderLocalisedDate weekDay [] day = renderLocalisedDate weekDay [rootLocale] day
@@ -580,14 +625,16 @@ renderCaminoMsg :: Config -- ^ The configuration
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
 renderCaminoMsg config locales (ClosedDayLabel region) = renderLocalisedClosedDay config locales region
-renderCaminoMsg _config locales (DateMsg day) = [shamlet|<span .date>^{renderLocalisedDate True locales day}|]
-renderCaminoMsg _config locales (DateRangeMsg day1 day2) = [shamlet|
-  <span .date-range>^{renderLocalisedDate True locales day1}#
-    $if day1 /= day2
-      \ - ^{renderLocalisedDate True locales day2}#
-  |]
+renderCaminoMsg _config locales (DateMsg day) = H.span H.! HA.class_ "date" $ renderLocalisedDate True locales day
+renderCaminoMsg _config locales (DateRangeMsg day1 day2) = H.span H.! HA.class_ "date-range" $
+  if day1 == day2 then
+    renderLocalisedDate True locales day1
+  else do
+    renderLocalisedDate True locales day1
+    " - "
+    renderLocalisedDate True locales day2
 renderCaminoMsg _config locales (DayOfWeekName dow) = renderLocalisedTime locales "%a" dow
-renderCaminoMsg _config _locales (DayOfMonthName dom) = [shamlet|#{dom}|]
+renderCaminoMsg _config _locales (DayOfMonthName dom) = toHtml dom
 renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   #{start'} to #{finish'}
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
@@ -601,6 +648,11 @@ renderCaminoMsg _config locales (LinkTitle locd defd) = if hasLocalisedText loca
     renderLocalisedText locales True False locd
   else
     renderLocalisedText locales True False defd
+renderCaminoMsg config locales (ListMsg msgs) = [shamlet|
+  <ul .comma-separated-list>
+    $forall m <- msgs
+      <li>^{renderCaminoMsg config locales m}
+  |]
 renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
 renderCaminoMsg config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderLocalisedDayOfWeek locales dow} ^{renderLocalisedBeforeAfter config locales nth}|]
 renderCaminoMsg config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderCaminoMsg config locales unit} ^{renderLocalisedBeforeAfter config locales nth}|]
@@ -611,3 +663,27 @@ renderCaminoMsg _config locales (Time time) = renderLocalisedTime locales "%H%M"
 renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
 renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg
+
+-- | Render a camino message as un-markup text
+renderCaminoMsgText :: Config -> [Locale] -> CaminoMsg -> Text
+renderCaminoMsgText config locales (ListMsg msgs) = commaJoin $ Prelude.map (renderCaminoMsgText config locales) msgs
+renderCaminoMsgText config locales msg = renderMarkupToText $ renderCaminoMsg config locales msg
+
+renderMarkupToText :: TB.MarkupM a -> Text
+renderMarkupToText (TB.Parent _ _ _ c)           = renderMarkupToText c
+renderMarkupToText (TB.CustomParent _ c)         = renderMarkupToText c
+renderMarkupToText (TB.Content s _)              = renderChoiceStringToText s
+renderMarkupToText (TB.Append c1 c2)             = renderMarkupToText c1 <> renderMarkupToText c2
+renderMarkupToText (TB.AddAttribute _ _ _ c)     = renderMarkupToText c
+renderMarkupToText (TB.AddCustomAttribute _ _ c) = renderMarkupToText c
+renderMarkupToText _                          = ""
+
+renderChoiceStringToText :: TB.ChoiceString -> Text
+renderChoiceStringToText (TB.Static ss) = TB.getText ss
+renderChoiceStringToText (TB.String s) = pack s
+renderChoiceStringToText (TB.Text t) = t
+renderChoiceStringToText (TB.ByteString bs) = decodeUtf8Lenient bs
+renderChoiceStringToText (TB.PreEscaped c) = renderChoiceStringToText c
+renderChoiceStringToText (TB.External c) = renderChoiceStringToText c
+renderChoiceStringToText (TB.AppendChoiceString c1 c2) = renderChoiceStringToText c1 <> renderChoiceStringToText c2
+renderChoiceStringToText (TB.EmptyChoiceString) =""

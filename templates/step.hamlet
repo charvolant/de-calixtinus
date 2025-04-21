@@ -21,6 +21,9 @@
           <div .btn-group>
             $if nextp == PlanStep
               <div .btn-group>
+                <button type="submit" name="_generate" formaction="@{PlanXlsxR}" onclick="showWorking('plan-xlsx-spinner');" .btn .btn-outline-secondary title="_{MsgPlanXlsxTitle}">
+                  <span #plan-xlsx-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
+                  _{MsgPlanXlsxLabel}
                 <button type="submit" name="_generate" formaction="@{PlanKmlR}" onclick="showWorking('plan-kml-spinner');" .btn .btn-outline-secondary title="_{MsgPlanKmlTitle}">
                   <span #plan-kml-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
                   _{MsgPlanKmlLabel}

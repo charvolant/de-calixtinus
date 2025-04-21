@@ -24,19 +24,23 @@ module Camino.Server.Application where
 import Camino.Camino
 import Camino.Planner (Solution(..), Pilgrimage)
 import Camino.Preferences
-import Camino.Util
+import Data.Util
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.KML
 import Camino.Display.Routes
+import Camino.Display.XLSX
 import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
+import Codec.Xlsx
 import Data.Default.Class
 import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
+import Data.Time.Clock.POSIX (getPOSIXTime)
 import Graph.Graph
+import Text.Blaze (contents)
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
@@ -192,6 +196,21 @@ postPlanKmlR = do
           FormSuccess prefs -> do
              encodePreferences prefs
              planKml prefs
+          _ ->
+            invalidArgs ["Bad preferences data"]
+    _ -> do
+      invalidArgs ["Bad preferences step"]
+
+postPlanXlsxR :: Handler TypedContent
+postPlanXlsxR = do
+  stepp <- lookupPostParam "_step"
+  case maybe Nothing (readMaybe . unpack) stepp of
+    Just step' -> do
+      ((result, _widget), _enctype) <- runFormPost $ (stepForm step' blankHelp) Nothing
+      case result of
+          FormSuccess prefs -> do
+             encodePreferences prefs
+             planXlsx prefs
           _ ->
             invalidArgs ["Bad preferences data"]
     _ -> do
@@ -416,6 +435,32 @@ planKml prefs = do
     let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
     addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs pilgrimage <> "\"")
     return $ TypedContent kmlType (toContent result)
+
+
+-- | The MIME type for KML
+xlsxType :: ContentType
+xlsxType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+-- | Generate a file name for this
+xlsxFileName :: CaminoPreferences -> Maybe Pilgrimage -> Text
+xlsxFileName camino _ = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".xlsx"
+
+planXlsx :: PreferenceData -> Handler TypedContent
+planXlsx prefs = do
+    master <- getYesod
+    locales <- getLocales
+    ct <- liftIO getPOSIXTime
+    let config = caminoAppConfig master
+    let messages = renderCaminoMsgText config locales
+    let tprefs = travelPreferencesFrom prefs
+    let cprefs = caminoPreferencesFrom prefs
+    let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
+    let pilgrimage = solutionPilgrimage solution
+    let config = caminoAppConfig master
+    let xlsx = createCaminoXlsx config messages tprefs cprefs solution
+    let result = fromXlsx ct xlsx
+    addHeader "content-disposition" ("attachment; filename=\"" <> xlsxFileName cprefs pilgrimage <> "\"")
+    return $ TypedContent xlsxType (toContent result)
 
 runCaminoApp :: CaminoApp -> IO ()
 runCaminoApp app = warp (caminoAppPort app) app

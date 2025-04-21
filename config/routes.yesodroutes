@@ -6,5 +6,6 @@
 /notice NoticeR GET
 /plan PlanR POST
 /planKml PlanKmlR POST
+/planXlsx PlanXlsxR POST
 /preferences PreferencesR GET POST
 /static StaticR Static caminoAppStatic

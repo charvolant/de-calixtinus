@@ -11,9 +11,17 @@ Stability   : experimental
 Portability : POSIX
 -}
 module Camino.Display.Css (
-    caminoCss
+    caminoBlue
+  , caminoCss
+  , caminoYellow
+  , informationBlue
+  , mutedBlue
+  , recreationGreen
   , staticCss
+  , successGreen
   , toCssColour
+  , toExcelColour
+  , warningRed
 ) where
 
 import Camino.Camino
@@ -24,7 +32,7 @@ import Data.Colour
 import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Localised (rootLocale)
-import Data.Text (Text)
+import Data.Text (Text, pack)
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
@@ -49,10 +57,23 @@ recreationGreen = sRGB24read "00b820"
 mutedBlue :: Colour Double
 mutedBlue = sRGB24read "a0b3ca"
 
+-- A bootstrap warning color
+warningRed :: Colour Double
+warningRed = sRGB24read "dc3545"
+
+-- A bootstrap success color
+successGreen :: Colour Double
+successGreen = sRGB24read "198754"
+
 -- | Create a CSS-able colour
 toCssColour :: Colour Double -- ^ The colour to display
  -> String -- ^ A #rrggbb colour triple
 toCssColour = sRGB24show
+
+-- | Create an Excel-able colour
+toExcelColour :: Colour Double -- ^ The colour to display
+  -> Text -- ^ A aarrggbb colour quad
+toExcelColour v = "ff" <> (pack $ tail $ sRGB24show v)
 
 paletteCss :: Text -> Palette -> Render CaminoRoute -> Css
 paletteCss ident pal = [cassius|

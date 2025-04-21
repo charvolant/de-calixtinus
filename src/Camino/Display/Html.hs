@@ -22,7 +22,7 @@ import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
 import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
-import Camino.Util
+import Data.Util
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
@@ -259,6 +259,15 @@ caminoLegTypeIcon BoatLink = [ihamlet| <span .leg-type .ca-rowing title="_{BoatT
 caminoLegTypeIcon BusLink = [ihamlet| <span .leg-type .ca-bus-link title="_{BusTitle}"> |]
 caminoLegTypeIcon TrainLink = [ihamlet| <span .leg-type .ca-train-link title="_{TrainTitle}"> |]
 caminoLegTypeIcon _ = [ihamlet| <span .leg-type title="_{RoadTitle}"> |]
+
+caminoLegTypeLabel :: LegType -> CaminoMsg
+caminoLegTypeLabel Trail = TrailTitle
+caminoLegTypeLabel CyclePath = CyclePathTitle
+caminoLegTypeLabel FerryLink = FerryTitle
+caminoLegTypeLabel BoatLink = BoatTitle
+caminoLegTypeLabel BusLink = BusTitle
+caminoLegTypeLabel TrainLink = TrainTitle
+caminoLegTypeLabel _ = RoadTitle
 
 caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoSleepingIcon Shared = [ihamlet| <span .sleeping .ca-shared title="_{SharedTitle}"> |]

@@ -38,7 +38,7 @@ module Camino.Server.Forms (
 
 import Camino.Camino
 import Camino.Preferences
-import Camino.Util
+import Data.Util
 import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg, descriptionBlock)
 import Camino.Display.I18n (renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
@@ -862,7 +862,7 @@ makeOptions render keyer labeler recommended options = let
     other = filter (\v -> not $ S.member v rset) options
     mkOptions opts = map (\l -> (keyer l, labeler l, l)) opts
   in
-    (render MsgSuggestedLabel, mkOptions recommended) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . labeler) other))
+    (render MsgSuggestedLabel, mkOptions recommended) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . labeler) other))
 
 -- | Form to allow start and finish to be chosen
 chooseStartForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
@@ -945,8 +945,8 @@ chooseStopsForm help prefs extra = do
     let recommended = maybe S.empty recommendedStops cprefs'
     let (suggested, other) = Data.List.partition (\l -> S.member l recommended) stops
     let mkOptions locs = map (\l -> (locationID l, localised l, l)) locs
-    let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise .localised) other))
-    let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise . localised) stops))
+    let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
+    let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . localised) stops))
     let chosenStops = S.intersection <$> allowedStops <*> (prefStops <$> prefs)
     let chosenExcluded = S.intersection <$> allowedStops <*> (prefExcluded <$> prefs)
     (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabelName MsgStopsLabel "stops") chosenStops
@@ -1013,7 +1013,7 @@ choosePoiForm help prefs extra = do
     let recommended = maybe S.empty id $ recommendedPois <$> tprefs <*> cprefs'
     let (suggested, other) = Data.List.partition (\p -> S.member p recommended) pois
     let mkOptions ps = map (\p -> (poiID p, poiLabel locales (findLocationByPoi camino p) p, p)) ps
-    let poiOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Camino.Util.partition (categorise .localised) other))
+    let poiOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
     let chosenPois = S.intersection possiblePois <$> (prefPois <$> prefs)
     (poRes, poView) <- mreq (clickSelectionField poiOptions) (fieldSettingsLabelName MsgPoisLabel "pois") chosenPois
     df <- defaultPreferenceFields master prefs

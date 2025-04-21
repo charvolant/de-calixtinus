@@ -10,17 +10,19 @@ Portability : POSIX
 
 Some useful common functions
 -}
-module Camino.Util (
+module Data.Util (
     canonicalise
   , categorise
+  , commaJoin
   , listUnions
   , maybeSum
   , partition
   , selectFromList
   , toFileName
+  , unique
 ) where
 
-import Data.Char (isLetter)
+import Data.Char (isLetter, isPunctuation)
 import qualified Data.Set as S
 import qualified Data.Text as T
  
@@ -161,9 +163,32 @@ categorise v = categorise' $ T.head $ canonicalise $ T.toUpper $ T.take 1 v
 toFileName :: T.Text -> T.Text
 toFileName v = T.filter isLetter $ canonicalise v
 
--- Add two maybe numbers together
+-- | Add two maybe numbers together
 maybeSum :: (Num a) => Maybe a -> Maybe a -> Maybe a
 maybeSum Nothing Nothing = Nothing
 maybeSum Nothing a = a
 maybeSum a Nothing = a
 maybeSum (Just a) (Just b) = Just (a + b)
+
+-- | Create a unique list in list order with the first unique element first
+unique :: (Ord a) => [a] -> [a]
+unique l = unique' S.empty l
+
+unique' _seen [] = []
+unique' seen (v:t) = if S.member v seen then unique' seen t else v:(unique' (S.insert v seen) t)
+
+-- | Join a list of pieces of text.
+--   Use commas if there is no obvious punctuation at the end, otherwise use spaces
+commaJoin :: [T.Text] -> T.Text
+commaJoin [] = ""
+commaJoin (t:r) = let
+  t' = T.strip t
+  sp = isPunctuation $ T.last t'
+  r' = commaJoin r
+  in
+    if T.null r' then
+      t'
+    else if sp then
+      t' <> " " <> r'
+    else
+      t' <> ", " <> r'

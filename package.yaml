@@ -36,6 +36,7 @@ dependencies:
   - file-embed
   - formatting
   - http-conduit
+  - lens
   - mtl
   - network-uri
   - numeric-tools == 0.2.*
@@ -53,6 +54,7 @@ dependencies:
   - yesod-core
   - yesod-form
   - yesod-static
+  - xlsx
   - xml-conduit
   - xml-hamlet
   - xml-types

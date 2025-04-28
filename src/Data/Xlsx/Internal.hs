@@ -32,7 +32,6 @@ import Data.Maybe (catMaybes, fromJust, isNothing, mapMaybe)
 import Data.Text (Text, intercalate, null, pack)
 import qualified Data.Text as T (length)
 import Data.Util (unique, maybeMin)
-import Control.Exception (bracket)
 
 -- | Render a cell message type into text
 type Renderer t = t -> Text

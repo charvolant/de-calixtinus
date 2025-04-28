@@ -29,18 +29,16 @@ import Data.Localised
 import Data.Region
 import Data.Text
 import Data.Text.Encoding (decodeUtf8Lenient)
-import Data.Text.Lazy (toStrict)
 import Data.Time.Calendar
 import Data.Time.Format
 import Data.Time.LocalTime
 import Data.Util (commaJoin)
 import Formatting (fixed, int, sformat)
-import Text.Blaze.Html (Html, contents, text, text, toHtml, toValue)
+import Text.Blaze.Html (text, text, toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as HA
 import qualified Text.Blaze.Internal as TB
 import Text.Hamlet
-import Debug.Trace
 
 -- | Message placeholders for the camino
 data CaminoMsg =

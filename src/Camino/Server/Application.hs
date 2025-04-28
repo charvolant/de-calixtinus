@@ -34,13 +34,11 @@ import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
 import Codec.Xlsx
-import Data.Default.Class
 import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import Graph.Graph
-import Text.Blaze (contents)
 import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
@@ -456,7 +454,6 @@ planXlsx prefs = do
     let cprefs = caminoPreferencesFrom prefs
     let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
     let pilgrimage = solutionPilgrimage solution
-    let config = caminoAppConfig master
     let xlsx = createCaminoXlsx config messages tprefs cprefs solution
     let result = fromXlsx ct xlsx
     addHeader "content-disposition" ("attachment; filename=\"" <> xlsxFileName cprefs pilgrimage <> "\"")

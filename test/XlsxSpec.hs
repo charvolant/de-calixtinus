@@ -270,7 +270,7 @@ testStyleMap = TestList [
   ]
 
 testStyleMap1 = TestCase (do
-  let worksheet = Worksheet "Test" (rowSlab [def & cellStyle ?~ style1 & cellText ?~ "Text 1", def & cellStyle ?~ style2 & cellText ?~ "Text 2" ])
+  let worksheet = Worksheet "Test" (rowSlab [def & cellStyle ?~ style1 & cellText ?~ ("Text 1" :: T.Text), def & cellStyle ?~ style2 & cellText ?~ ("Text 2" :: T.Text) ])
   let styles = createStyleMap [worksheet]
   assertEqual "StyleMap 1 1" 3 (length $ styleMapCells styles)
   assertEqual "StyleMap 1 2" 3 (length $ styleMapBorders styles)
@@ -360,19 +360,19 @@ testCreateCellMap = TestList [
 
 testCreateCellMap1 = TestCase (let
     slab = rowSlab [ def, def & cellValue ?~ CellText "Hello" & cellID ?~ cellID1 ]
-    map = createCellMap id [Worksheet "sheet1" slab]
+    cmap = createCellMap id [Worksheet "sheet1" slab]
   in do
-    assertEqual "CreateCellMap 1 1" "B1" (unCellRef $ map "sheet1" cellID1)
-    assertEqual "CreateCellMap 1 2" "'sheet1'!B1" (unCellRef $ map "sheet2" cellID1)
+    assertEqual "CreateCellMap 1 1" "B1" (unCellRef $ cmap "sheet1" cellID1)
+    assertEqual "CreateCellMap 1 2" "'sheet1'!B1" (unCellRef $ cmap "sheet2" cellID1)
   )
 
 testCreateCellMap2 = TestCase (let
     slab = columnSlab [ def, def & cellText ?~ "Hello" & cellID ?~ cellID1, def & cellText ?~ "World" & cellID ?~ cellID2 ]
-    map = createCellMap id [Worksheet "sheet1" slab]
+    cmap = createCellMap id [Worksheet "sheet1" slab]
   in do
-    assertEqual "CreateCellMap 1 1" "A2" (unCellRef $ map "sheet1" cellID1)
-    assertEqual "CreateCellMap 1 2" "'sheet1'!A2" (unCellRef $ map "sheet2" cellID1)
-    assertEqual "CreateCellMap 1 3" "A3" (unCellRef $ map "sheet1" cellID2)
+    assertEqual "CreateCellMap 1 1" "A2" (unCellRef $ cmap "sheet1" cellID1)
+    assertEqual "CreateCellMap 1 2" "'sheet1'!A2" (unCellRef $ cmap "sheet2" cellID1)
+    assertEqual "CreateCellMap 1 3" "A3" (unCellRef $ cmap "sheet1" cellID2)
   )
 
 testFormula = TestList [

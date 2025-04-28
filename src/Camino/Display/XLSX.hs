@@ -744,7 +744,7 @@ _createHolidayListSlab config cprefs startDate = do
     let holidayRegions = S.filter (\r -> not $ null $ getRegionalHolidays r) regions
     let holidayDates = runReader (_dateList (S.toList holidayRegions) startDate) config
     let header = rowSlab [ headingLabel DateLabel, headingLabel HolidaysLabel ]
-    (dates, tids) <- foldlM (\(s, rids) -> \(d, r, hs) -> do
+    (dates, _tids) <- foldlM (\(s, rids) -> \(d, r, hs) -> do
         rid <- nextCellID "region/holiday"
         let
           hline = rowSlab [
@@ -760,7 +760,6 @@ _createHolidayListSlab config cprefs startDate = do
 
 createHolidaySheet :: Config -> CaminoPreferences -> CellIDStream (Worksheet CaminoMsg, CellID, M.Map Region Int)
 createHolidaySheet config cprefs = do
-    let startDate = maybe (C.fromGregorian 1900 C.January 1) id (preferenceStartDate cprefs)
     (holidays, htable, rtable) <- createHolidayMatrixSlab config cprefs
     return $ (Worksheet HolidaysLabel holidays, htable, rtable)
 

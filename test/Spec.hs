@@ -14,6 +14,8 @@ import ProgrammingSpec
 import MetadataSpec
 import PropositionalSpec
 import LocalisedSpec
+import UtilSpec
+import XlsxSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import Data.Default.Class
@@ -44,6 +46,7 @@ main = do
     putStrLn $ show results
 
 testList config prefs camino = TestList [
+   TestLabel "Util" testUtils,
    TestLabel "Partial" testPartial,
    TestLabel "Localised" testLocalised,
    TestLabel "Metadata" testMetadata,
@@ -52,6 +55,7 @@ testList config prefs camino = TestList [
    TestLabel "Region" testRegion,
    TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
+   TestLabel "Xlsx" testXlsx,
    TestLabel "Config" testConfig,
    TestLabel "Camino" testCamino,
    TestLabel "Walking" testWalking,

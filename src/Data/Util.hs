@@ -15,6 +15,8 @@ module Data.Util (
   , categorise
   , commaJoin
   , listUnions
+  , maybeMax
+  , maybeMin
   , maybeSum
   , partition
   , selectFromList
@@ -70,7 +72,7 @@ canonicalise' '\x00db' = 'U' -- U curcumflex
 canonicalise' '\x00dc' = 'U' -- U diaresis
 canonicalise' '\x00dd' = 'Y' -- Y acute
 canonicalise' '\x00de' = 'T' -- thorn
-canonicalise' '\x00df' = 'S' -- sharp S
+canonicalise' '\x00df' = 's' -- sharp s
 canonicalise' '\x00e0' = 'a' -- a grave
 canonicalise' '\x00e1' = 'a' -- a acute
 canonicalise' '\x00e2' = 'a' -- a curcumflex
@@ -102,6 +104,104 @@ canonicalise' '\x00fc' = 'u' -- u diaresis
 canonicalise' '\x00fd' = 'y' -- Y acute
 canonicalise' '\x00fe' = 't' -- thorn
 canonicalise' '\x00ff' = 'y' -- y diaresis
+canonicalise' '\x0100' = 'A' -- A macron
+canonicalise' '\x0101' = 'a' -- a macron
+canonicalise' '\x0106' = 'C' -- C acute
+canonicalise' '\x0107' = 'c' -- c acute
+canonicalise' '\x0108' = 'C' -- C circumflex
+canonicalise' '\x0109' = 'c' -- c circumfles
+canonicalise' '\x010a' = 'C' -- C dot
+canonicalise' '\x010b' = 'c' -- c dot
+canonicalise' '\x010c' = 'C' -- C caron
+canonicalise' '\x010d' = 'c' -- c caron
+canonicalise' '\x010e' = 'D' -- D caron
+canonicalise' '\x010f' = 'd' -- d caron
+canonicalise' '\x0110' = 'D' -- D stroke
+canonicalise' '\x0111' = 'd' -- d stroke
+canonicalise' '\x0112' = 'E' -- E macron
+canonicalise' '\x0113' = 'e' -- e macron
+canonicalise' '\x0116' = 'E' -- E dot
+canonicalise' '\x0117' = 'e' -- e dot
+canonicalise' '\x0118' = 'E' -- E ogonek
+canonicalise' '\x0119' = 'e' -- e ogonek
+canonicalise' '\x011a' = 'E' -- E caron
+canonicalise' '\x011b' = 'e' -- e caron
+canonicalise' '\x0128' = 'I' -- I tilde
+canonicalise' '\x0129' = 'i' -- i tilde
+canonicalise' '\x012a' = 'I' -- I macron
+canonicalise' '\x012b' = 'i' -- i macron
+canonicalise' '\x012e' = 'I' -- I ogonek
+canonicalise' '\x012f' = 'i' -- i ogonek
+canonicalise' '\x0130' = 'I' -- I dot
+canonicalise' '\x0131' = 'i' -- i dotless
+canonicalise' '\x013b' = 'L' -- L cedilla
+canonicalise' '\x013c' = 'l' -- l cedilla
+canonicalise' '\x0141' = 'L' -- L stroke
+canonicalise' '\x0142' = 'l' -- l stroke
+canonicalise' '\x0143' = 'N' -- N acute
+canonicalise' '\x0144' = 'n' -- n acute
+canonicalise' '\x0145' = 'N' -- N cedilla
+canonicalise' '\x0146' = 'n' -- n cedilla
+canonicalise' '\x014a' = 'N' -- Eng
+canonicalise' '\x014b' = 'n' -- eng
+canonicalise' '\x014c' = 'O' -- O macron
+canonicalise' '\x014d' = 'o' -- o macron
+canonicalise' '\x0152' = 'O' -- OE
+canonicalise' '\x0153' = 'o' -- oe
+canonicalise' '\x0158' = 'R' -- R caron
+canonicalise' '\x0159' = 'r' -- r caron
+canonicalise' '\x015a' = 'S' -- S acute
+canonicalise' '\x015b' = 's' -- s acute
+canonicalise' '\x015e' = 'S' -- S cedilla
+canonicalise' '\x015f' = 's' -- s cedilla
+canonicalise' '\x0160' = 'S' -- S caron
+canonicalise' '\x0161' = 's' -- s caron
+canonicalise' '\x0164' = 'T' -- T caron
+canonicalise' '\x0165' = 't' -- t caron
+canonicalise' '\x0168' = 'U' -- U tilde
+canonicalise' '\x0169' = 'u' -- u tilde
+canonicalise' '\x016a' = 'U' -- U macron
+canonicalise' '\x016b' = 'u' -- u macron
+canonicalise' '\x016e' = 'U' -- U ring
+canonicalise' '\x016f' = 'u' -- u ring
+canonicalise' '\x0170' = 'U' -- U double acute
+canonicalise' '\x0171' = 'u' -- u double acute
+canonicalise' '\x0174' = 'W' -- W circumflex
+canonicalise' '\x0175' = 'w' -- w circumflex
+canonicalise' '\x0176' = 'Y' -- Y circumflex
+canonicalise' '\x0177' = 'y' -- y circumflex
+canonicalise' '\x0178' = 'Y' -- Y umlaut
+canonicalise' '\x0179' = 'Z' -- Z acute
+canonicalise' '\x017a' = 'z' -- z acute
+canonicalise' '\x017b' = 'Z' -- Z dot
+canonicalise' '\x017c' = 'z' -- z dot
+canonicalise' '\x017d' = 'Z' -- Z caron
+canonicalise' '\x017e' = 'z' -- z caron
+canonicalise' '\x01cd' = 'A' -- A caron
+canonicalise' '\x01ce' = 'a' -- a caron
+canonicalise' '\x01cf' = 'I' -- I caron
+canonicalise' '\x01d0' = 'i' -- i caron
+canonicalise' '\x01d1' = 'O' -- O caron
+canonicalise' '\x01d2' = 'o' -- o caron
+canonicalise' '\x01d3' = 'U' -- U caron
+canonicalise' '\x01d4' = 'u' -- u caron
+canonicalise' '\x0218' = 'S' -- S comma below
+canonicalise' '\x0219' = 's' -- s comma below
+canonicalise' '\x021a' = 'T' -- T comma below
+canonicalise' '\x021b' = 't' -- t comma below
+canonicalise' '\x1e0e' = 'D' -- D line below
+canonicalise' '\x1e0f' = 'd' -- d line below
+canonicalise' '\x1e3a' = 'L' -- L line below
+canonicalise' '\x1e3b' = 'l' -- l line below
+canonicalise' '\x1e48' = 'N' -- N line below
+canonicalise' '\x1e49' = 'n' -- n line below
+canonicalise' '\x1e5e' = 'R' -- R line below
+canonicalise' '\x1e5f' = 'r' -- r line below
+canonicalise' '\x1e6e' = 'T' -- T line below
+canonicalise' '\x1e6f' = 't' -- t line below
+canonicalise' '\x1e9e' = 'S' -- Capital sharp s
+canonicalise' '\x1ebc' = 'E' -- E circumflex acute
+canonicalise' '\x1ebd' = 'e' -- e circumflex acute
 canonicalise' c = c
 
 
@@ -155,7 +255,8 @@ categorise' 'Z' = "U-Z"
 categorise' _ = "..."
 
 -- | Divide text entries into alhpabetic groups
-categorise :: T.Text -> T.Text 
+categorise :: T.Text -> T.Text
+categorise "" = "..."
 categorise v = categorise' $ T.head $ canonicalise $ T.toUpper $ T.take 1 v
 
 
@@ -169,6 +270,20 @@ maybeSum Nothing Nothing = Nothing
 maybeSum Nothing a = a
 maybeSum a Nothing = a
 maybeSum (Just a) (Just b) = Just (a + b)
+
+-- | Minimum of two maybe numbers
+maybeMin :: (Ord a) => Maybe a -> Maybe a -> Maybe a
+maybeMin Nothing Nothing = Nothing
+maybeMin Nothing a = a
+maybeMin a Nothing = a
+maybeMin (Just a) (Just b) =Just $ min a b
+
+-- | Maximum of two maybe numbers
+maybeMax :: (Ord a) => Maybe a -> Maybe a -> Maybe a
+maybeMax Nothing Nothing = Nothing
+maybeMax Nothing a = a
+maybeMax a Nothing = a
+maybeMax (Just a) (Just b) =Just $ max a b
 
 -- | Create a unique list in list order with the first unique element first
 unique :: (Ord a) => [a] -> [a]

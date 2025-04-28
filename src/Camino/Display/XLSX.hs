@@ -520,7 +520,7 @@ startDateFormula prevID mrestID add = let
   in
     date''
 
-createDaySlab :: S.Set Location -> Formula -> M.Map Region Int -> CellID -> Maybe CellID -> Int -> Day -> CellIDStream (Cslab, CellID, CellID)
+createDaySlab :: S.Set Location -> CellID -> M.Map Region Int -> CellID -> Maybe CellID -> Int -> Day -> CellIDStream (Cslab, CellID, CellID)
 createDaySlab  stocks htable rtable sid mrdid add day = do
   (legs, disids, asids, deids) <- foldrM (\l -> \(s, dsids', asids', deids') -> do
       (ls, disid, asid, deid) <- createLegSlab l
@@ -541,16 +541,16 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
       , localisedCell (locationName $ finish day)
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ distanceFormat)
-          & cellFormula ?~ FApply "SUM" [FRange (head disids) (last disids)]
+          & cellFormula ?~ FApply "SUM" [FRef $ CellRangeID (head disids) (last disids)]
       , maybeTimeCell (metricsTime metrics)
       , maybeDistanceCell (metricsPerceivedDistance metrics)
       , penanceCell True $ Just $ metricsPenance metrics
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ heightFormat)
-          & cellFormula ?~ FApply "SUM" [FRange (head asids) (last asids)]
+          & cellFormula ?~ FApply "SUM" [FRef $ CellRangeID (head asids) (last asids)]
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ heightFormat)
-          & cellFormula ?~ FApply "SUM" [FRange (head deids) (last deids)]
+          & cellFormula ?~ FApply "SUM" [FRef $ CellRangeID (head deids) (last deids)]
       , maybeTimeCell (metricsPoiTime metrics)
       , integerCell (metricsRestDays metrics) & cellID ?~ rdid'
       , booleanCell (S.member (finish day) stocks)
@@ -564,7 +564,7 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
           ((\rc -> let
               match = FApply "MATCH" [
                   FRef dayid
-                , FColumn 1 htable
+                , FRef $ CellSubrangeID Nothing Nothing Nothing (Just 1) htable
                 , FInt 0
                 ]
             in
@@ -574,7 +574,7 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
                     , FBool False
                     , FApply "=" [
                           FApply "INDEX" [
-                              htable
+                              FRef htable
                             , match
                             , FInt (M.findWithDefault 1 rc rtable)
                             ]
@@ -582,7 +582,7 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
                         ]
                     ]
                 , FApply "INDEX" [
-                      htable
+                      FRef htable
                     , match
                     , FInt 1
                     ]
@@ -592,7 +592,7 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
       ]
   return (legs >>! final, dayid, rdid')
 
-createStageSlab :: S.Set Location -> Formula -> M.Map Region Int -> CellID -> Int -> Journey -> CellIDStream (Cslab, CellID)
+createStageSlab :: S.Set Location -> CellID -> M.Map Region Int -> CellID -> Int -> Journey -> CellIDStream (Cslab, CellID)
 createStageSlab stocks htable rtable ssid nd stage = do
   fsid <- nextCellID "stage final"
   (ss, fdid', _, mrdid', dids) <- foldlM (\(s, did, add, mrdid, dids') -> \d -> do
@@ -610,18 +610,18 @@ createStageSlab stocks htable rtable ssid nd stage = do
           & cellFormula ?~ startDateFormula fdid' mrdid' 0
       , localisedCell (locationName $ start stage)
       , localisedCell (locationName $ finish stage)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 4 c) dids)
-      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 5 c) dids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 6 c) dids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 7 c) dids)
-      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 8 c) dids)
-      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 9 c) dids)
-      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 10 c) dids)
-      , def & cellStyle ?~ integerStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 11 c) dids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 4 c) dids)
+      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 5 c) dids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 6 c) dids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 7 c) dids)
+      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 8 c) dids)
+      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 9 c) dids)
+      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 10 c) dids)
+      , def & cellStyle ?~ integerStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 11 c) dids)
       ]
-  return $ (ss >>! final, OffsetCellID 0 1 fsid)
+  return $ (ss >>! final, CellOffsetID 0 1 fsid)
 
-createPilgrimageSlab :: S.Set Location -> Formula -> M.Map Region Int -> Maybe Pilgrimage -> CellIDStream Cslab
+createPilgrimageSlab :: S.Set Location -> CellID -> M.Map Region Int -> Maybe Pilgrimage -> CellIDStream Cslab
 createPilgrimageSlab _ _ _ Nothing = return $ SEmpty
 createPilgrimageSlab stocks htable rtable (Just pilgrimage) = do
   sdid <- nextCellID "stage"
@@ -642,18 +642,18 @@ createPilgrimageSlab stocks htable rtable (Just pilgrimage) = do
       , def & cellStyle ?~ longDateStyle & cellFormula ?~ FRef fsid
       , localisedCell (locationName $ start pilgrimage)
       , localisedCell (locationName $ finish pilgrimage)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 4 c) sids)
-      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 5 c) sids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 6 c) sids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 7 c) sids)
-      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 8 c) sids)
-      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 9 c) sids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 10 c) sids)
-      , def & cellStyle ?~ integerStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ OffsetCellID 0 11 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 4 c) sids)
+      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 5 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 6 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 7 c) sids)
+      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 8 c) sids)
+      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 9 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 10 c) sids)
+      , def & cellStyle ?~ integerStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 11 c) sids)
       ]
   return (ps >>! footer)
 
-createPlanSheet :: Formula -> M.Map Region Int -> TravelPreferences -> CaminoPreferences -> Solution -> CellIDStream (Worksheet CaminoMsg)
+createPlanSheet :: CellID -> M.Map Region Int -> TravelPreferences -> CaminoPreferences -> Solution -> CellIDStream (Worksheet CaminoMsg)
 createPlanSheet htable rtable _tprefs cprefs solution = let
     camino = preferenceCamino cprefs
     (trip, _jerrors, _perrors, _rests, stocks, _stops, _waypoints, _usedLegs) = solutionElements camino (Just solution)
@@ -694,7 +694,7 @@ createPlanSheet htable rtable _tprefs cprefs solution = let
     pilgrimage <- createPilgrimageSlab stocks htable rtable trip
     return $ Worksheet PlanLabel (headings >>! pilgrimage)
 
-createHolidayMatrixSlab :: Config -> CaminoPreferences -> CellIDStream (Cslab, Formula, M.Map Region Int)
+createHolidayMatrixSlab :: Config -> CaminoPreferences -> CellIDStream (Cslab, CellID, M.Map Region Int)
 createHolidayMatrixSlab config cprefs = do
     let camino = preferenceCamino cprefs
     let regions = S.filter isHolidayRegion $ regionClosure $ caminoRegions camino
@@ -722,7 +722,7 @@ createHolidayMatrixSlab config cprefs = do
             ] ++ map (\r -> booleanCell (isHoliday h r)) regionList
         return $ (s >>! hline, hids' ++ [hid])
       ) (SEmpty, []) holidays
-    let htable = FRange (AbsoluteCellID $ head hids) (AbsoluteCellID $ OffsetCellID 0 (length regions + 1) (last hids))
+    let htable = CellRangeID (toAbsolute $ head hids) (toAbsolute $ CellOffsetID 0 (length regions + 1) (last hids))
     return $ (header >>! matrix, htable, rtable)
 
 -- Not used
@@ -758,7 +758,7 @@ _createHolidayListSlab config cprefs startDate = do
       ) (SEmpty, []) holidayDates
     return $ header >>! dates
 
-createHolidaySheet :: Config -> CaminoPreferences -> CellIDStream (Worksheet CaminoMsg, Formula, M.Map Region Int)
+createHolidaySheet :: Config -> CaminoPreferences -> CellIDStream (Worksheet CaminoMsg, CellID, M.Map Region Int)
 createHolidaySheet config cprefs = do
     let startDate = maybe (C.fromGregorian 1900 C.January 1) id (preferenceStartDate cprefs)
     (holidays, htable, rtable) <- createHolidayMatrixSlab config cprefs

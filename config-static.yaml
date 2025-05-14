@@ -25,6 +25,9 @@ caminos:
   - id: P
     type: CaminoDefinition
     path: "file:camino-portuguese.json"
+  - id: "N"
+    type: CaminoDefinition
+    path: "file:camino-norte.json"
   - id: PR
     type: CaminoDefinition
     path: "file:camino-primitivo.json"
@@ -259,6 +262,14 @@ calendar:
       type: day-of-year
       days:
         - 07-25
+  - key: CantabriaInstitutionsDay
+    name:
+      - Cantabria Institutions Day@en
+      - Día de las Instituciones de Cantabria Galega@ga
+    calendar:
+      type: day-of-year
+      days:
+        - 07-28
   - key: Assumption
     name:
       - Assumption@en
@@ -277,6 +288,14 @@ calendar:
       type: day-of-year
       days:
         - 09-08
+  - key: BienAparecida
+    name:
+      - Our Lady of the "Bien Aparecida"@en
+      - La Bien Aparecida@ast
+    calendar:
+      type: day-of-year
+      days:
+        - 09-15
   - key: LabourDayAU
     name:
       - Labour Day (Australia)@en
@@ -463,6 +482,24 @@ regions:
     holidays:
       - type: named
         key: DayOfAsturias
+  - id: "ES-CB"
+    name:
+      - Cantabria@es
+    description:
+      text:
+        - Autonomous Community of Cantabria@en
+        - Comunidad Autonoma de Cantrabria@es
+      about: https://www.cantabria.es/
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: MaundayThursday
+      - type: named
+        key: CantabriaInstitutionsDay
+      - type: named
+        key: BienAparecida
   - id: "ES-GA"
     name:
       - Galicia@ga

@@ -69,6 +69,7 @@ data CaminoMsg =
   | CampGroundTitle
   | CampingTitle
   | CampSiteTitle
+  | CasaRuralTitle
   | CasualTitle
   | CathedralTitle
   | ChurchTitle
@@ -353,6 +354,7 @@ renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
 renderCaminoMsgDefault _ CaminoLabel = "Camino"
 renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
+renderCaminoMsgDefault _ CasaRuralTitle = "Casa Rural/Quinta"
 renderCaminoMsgDefault _ CasualTitle = "Casual"
 renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
 renderCaminoMsgDefault _ ChurchTitle = "Church"

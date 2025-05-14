@@ -498,7 +498,7 @@
         },
         {
           "name": "A Casiña de Brume",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Kitchen", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC"]
         }
@@ -525,7 +525,7 @@
       "accommodation": [
         {
           "name": "Casa Dona María",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
@@ -547,7 +547,7 @@
         },
         {
           "name": "Casa Antón Veiras",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Restaurant", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Double"]
         }

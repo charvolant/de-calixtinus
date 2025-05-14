@@ -285,6 +285,7 @@ caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrlI18n CaminoMsg Camino
 caminoAccommodationTypeIcon PilgrimAlbergue = [ihamlet| <span .accommodation .municipal-albergue .ca-albergue title="_{PilgrimAlbergueTitle}"> |]
 caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accommodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
 caminoAccommodationTypeIcon Hostel = [ihamlet| <span .accommodation .hostel .ca-hostel title="_{HostelTitle}"> |]
+caminoAccommodationTypeIcon CasaRural = [ihamlet| <span .accommodation .casa-rural .ca-casa-rural title="_{CasaRuralTitle}"> |]
 caminoAccommodationTypeIcon GuestHouse = [ihamlet| <span .accommodation .guest-house .ca-guesthouse title="_{GuestHouseTitle}"> |]
 caminoAccommodationTypeIcon HomeStay = [ihamlet| <span .accommodation .home-stay .ca-homestay title="_{HomeStayTitle}"> |]
 caminoAccommodationTypeIcon House = [ihamlet| <span .accommodation .house .ca-house title="_{HouseTitle}"> |]
@@ -298,6 +299,7 @@ caminoAccommodationTypeMsg :: AccommodationType -> CaminoMsg
 caminoAccommodationTypeMsg PilgrimAlbergue = PilgrimAlbergueTitle
 caminoAccommodationTypeMsg PrivateAlbergue = PrivateAlbergueTitle
 caminoAccommodationTypeMsg Hostel = HostelTitle
+caminoAccommodationTypeMsg CasaRural = CasaRuralTitle
 caminoAccommodationTypeMsg GuestHouse = GuestHouseTitle
 caminoAccommodationTypeMsg HomeStay = HomeStayTitle
 caminoAccommodationTypeMsg House = HouseTitle
@@ -311,6 +313,7 @@ caminoAccommodationLabel :: Accommodation -> CaminoMsg
 caminoAccommodationLabel (GenericAccommodation PilgrimAlbergue) = PilgrimAlbergueTitle
 caminoAccommodationLabel (GenericAccommodation PrivateAlbergue) = PrivateAlbergueTitle
 caminoAccommodationLabel (GenericAccommodation Hostel) = HostelTitle
+caminoAccommodationLabel (GenericAccommodation CasaRural) = CasaRuralTitle
 caminoAccommodationLabel (GenericAccommodation GuestHouse) = GuestHouseTitle
 caminoAccommodationLabel (GenericAccommodation HomeStay) = HomeStayTitle
 caminoAccommodationLabel (GenericAccommodation House) = HouseTitle

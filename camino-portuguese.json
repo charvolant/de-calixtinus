@@ -6671,7 +6671,7 @@
         },
         {
           "name": "Casa Puertas",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },

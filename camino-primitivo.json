@@ -1042,13 +1042,13 @@
         },
         {
           "name": "Casa Uria",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double" ]
         },
         {
           "name": "Casa de Aldea Araceli",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels", "CampSite" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
         },
@@ -1218,13 +1218,13 @@
         },
         {
           "name": "San Julián Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Casa Ferreiro",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
@@ -1956,13 +1956,13 @@
         },
         {
           "name": "Casa Castrelo",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Casa de Baixo Rural Tourism",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -2022,13 +2022,13 @@
         },
         {
           "name": "Casa do Cuco",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Casa de Ponte Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Stables" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
@@ -2105,7 +2105,7 @@
       "accommodation": [
         {
           "name": "Casa Camiño Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         }

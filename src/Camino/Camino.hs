@@ -204,8 +204,9 @@ instance ToJSON LatLong where
 data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local volunteers
   | PrivateAlbergue -- ^ A hostel run as a local business, oriented towards pilgrims
   | Hostel -- ^ A generic hostel
+  | CasaRural -- ^ Rural accommodation, Quinta
   | GuestHouse -- ^ A generic guesthouse
-  | HomeStay -- ^ Rural accommodation, Quinta, Air B&B room etc.
+  | HomeStay -- ^ Air B&B room etc.
   | House -- ^ An entire house or apartment for rent
   | Hotel -- ^ A dedicated hotel
   | Gite -- ^ A gîtes d'etape, a stage lodging for walkers or cyclists
@@ -316,6 +317,7 @@ accommodationServices (Accommodation _name _type services' _sleeping _multi) = s
 accommodationServices (GenericAccommodation PilgrimAlbergue) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation PrivateAlbergue) = S.fromList [ Handwash, WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hostel) = S.fromList [ WiFi, Kitchen, Bedlinen, Towels ]
+accommodationServices (GenericAccommodation CasaRural) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation GuestHouse) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation HomeStay) = S.fromList [ WiFi, Heating, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation House) = S.fromList [ WiFi, Bedlinen, Towels ]
@@ -331,6 +333,7 @@ accommodationSleeping (Accommodation _name _type _services sleeping' _multi) = s
 accommodationSleeping (GenericAccommodation PilgrimAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation PrivateAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation Hostel) = S.fromList [ Shared ]
+accommodationSleeping (GenericAccommodation CasaRural) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation GuestHouse) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation HomeStay) = S.fromList [ Single, Double ]
 accommodationSleeping (GenericAccommodation House) = S.fromList [ Single, Double ]

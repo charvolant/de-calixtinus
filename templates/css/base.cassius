@@ -14,6 +14,8 @@ a
   padding: 1ex
 .accommodation.municipal-albergue
   color: #{toCssColour caminoYellow}
+.accommodation.casa-rural
+  color: #19c0bf
 .accommodation.hostel
   color: #2ab472
 .accommodation.home-stay

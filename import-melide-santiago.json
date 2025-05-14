@@ -131,7 +131,7 @@
         },
         {
           "name": "VUT Boente",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Pets", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -167,13 +167,13 @@
         },
         {
           "name": "Casa Milia",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Restaurant", "Breakfast", "Accessible", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
         {
           "name": "Casa Garea",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Restaurant", "Groceries", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
@@ -260,7 +260,7 @@
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
-        "HomeStay",
+        "CasaRural",
         "House",
         "GuestHouse",
         "Hotel",
@@ -316,7 +316,7 @@
         },
         {
           "name": "A Chousa",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Quadruple" ]
         }
@@ -347,7 +347,7 @@
         },
         {
           "name": "Casa do Hórreo",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -572,7 +572,7 @@
         },
         {
           "name": "Pazo Xan Xordo",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
         },
@@ -612,7 +612,7 @@
       "accommodation": [
         {
           "name": "Casa de Amancio",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer",  "Kitchen", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }

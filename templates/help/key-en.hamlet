@@ -311,32 +311,39 @@
                 An albergue (pilgrim hostel) for pilgrims only.
                 Pilgrim albergues are often run by volunteer societies or as municipal albergues by the local municipality.
                 Pilgrim albergues are generally inexpensive, have limited services and usually only allow one night's stay.
-                Municipal albergues are often not bookable but simply accept pilgrims until full.
+                Often, municipal albergues are not bookable but simply accept pilgrims until full.
         <tr>
             <td>^{caminoAccommodationTypeIcon PrivateAlbergue}
             <td>Private Albergue
             <td>
                 An albergue run as a private business.
-                Private albergues usually offer more services than pilgrim albergues, allow more than one nights stay and are bookable.
+                Private albergues usually offer more services than pilgrim albergues, allow more than one night's stay and are bookable.
         <tr>
             <td>^{caminoAccommodationTypeIcon Hostel}
             <td>Hostel
             <td>
                 A hostel not oriented towards pilgrims, for example a youth hostel.
         <tr>
+            <td>^{caminoAccommodationTypeIcon CasaRural}
+            <td>Casa Rural, Quninta or Country Lodge
+            <td>
+                Rural tourist accommodation or farm stay.
+                Casa rurals or country lodges are usually self-catering but in some cases have more facilities.
+                Quintas are farm estates that provide accommodation.
+        <tr>
             <td>^{caminoAccommodationTypeIcon GuestHouse}
             <td>Guesthouse
             <td>
-                A guesthouse, quinta, casa, bed-and-breakfast, pensione or similar
+                A guesthouse, bed-and-breakfast, pensione or similar
         <tr>
             <td>^{caminoAccommodationTypeIcon HomeStay}
             <td>Home Stay
             <td>
-                An AirB&B, farm stay or similar
+                An AirB&B or similar
         <tr>
         <tr>
             <td>^{caminoAccommodationTypeIcon House}
-            <td>House Rental
+            <td>House/Apartment
             <td>
                 An entire house or unit, available for rental
         <tr>

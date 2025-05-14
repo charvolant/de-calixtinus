@@ -602,7 +602,10 @@ stageEvaluate tprefs cprefs choices stage = let
     stopCost = stopPenance tprefs camino' stop
     locationCost = locationPenance tprefs camino' (tcStopLocation choices) stop
     stop' = stopMissingCost <> stopCost <> locationCost
-    metrics = mempty { metricsFatigue = fatigue, metricsRest = stop', metricsPenance = fatigue <> stop' }
+    metrics = if stop == preferenceFinish cprefs then
+        mempty { metricsFatigue = fatigue, metricsPenance = fatigue }
+      else
+        mempty { metricsFatigue = fatigue, metricsRest = stop', metricsPenance = fatigue <> stop' }
   in
     (stage, total <> metrics)
 
@@ -643,12 +646,16 @@ pilgrimageEvaluate' cc tprefs cprefs choices current (stage:rest) =  let
 -- Fill out dates of arrival and adjust rest day and stock-up day preferences
 pilgrimageEvaluate'' :: CaminoConfig -> TravelPreferences -> CaminoPreferences -> TripChoices -> C.Day -> [Day] -> [Day]
 pilgrimageEvaluate'' _cc _tprefs _cprefs _choices _current [] = []
-pilgrimageEvaluate'' _cc tprefs cprefs choices current [day] = let
-    metrics' = penance (preferenceRestStop tprefs) tprefs cprefs (tcRestAccommodation choices) (tcRestLocation choices) (path day)
+pilgrimageEvaluate'' _cc tprefs cprefs choices current [day] =
+  let
+    atEnd = finish day == preferenceFinish cprefs
+    metrics' = if atEnd then score day else penance (preferenceRestStop tprefs) tprefs cprefs (tcRestAccommodation choices) (tcRestLocation choices) (path day)
+    rests' = if atEnd then 0 else 1
+    restDay = C.addDays rests' current
     day' = day {
       score = metrics' {
-          metricsRestDays = 1
-        , metricsDate = Just (current, C.addDays 1 current)
+          metricsRestDays = fromInteger rests'
+        , metricsDate = Just (current, restDay)
         , metricsRestpoint = True
       }
     }

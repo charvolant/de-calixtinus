@@ -268,25 +268,25 @@
         },
         {
           "name": "Bergara Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
         {
           "name": "Don Jáuregui de Burguete Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Lockers" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Pedroarena Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Casa Iturrialdea Boarding House",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WashingMachine", "Breakfast" ],
           "sleeping": [ "Double" ]
         },
@@ -320,13 +320,13 @@
         },
         {
           "name": "Casa Errebesena",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "WashingMachine", "Dryer" ],
           "sleeping": [ "Single", "Double" ]
         },
         {
           "name": "Casa Carmen",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Breakfast" ],
           "sleeping": [ "Double" ]
         },
@@ -381,25 +381,25 @@
       "accommodation": [
         {
           "name": "Batit Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ ],
           "sleeping": [ "Single" ]
         },
         {
           "name": "Maitetxu Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Amatxi Elsa Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "La Posada Nueva Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "WashingMachine", "Dinner", "Breakfast", "Pets" ],
           "sleeping": [ "Single", "Double", "DoubleWC" ]
         }
@@ -476,7 +476,7 @@
         },
         {
           "name": "Tzantxorena Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
@@ -915,7 +915,7 @@
       "accommodation": [
         {
           "name": "Casa Villazón I",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "WashingMachine", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double" ]
         }
@@ -937,7 +937,7 @@
         },
         {
           "name": "Casa Villazón II",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
         },
@@ -1054,7 +1054,7 @@
         },
         {
           "name": "Txema's House",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Breakfast", "BicycleStorage", "Lockers", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple", "Quadruple" ]
         },
@@ -1088,7 +1088,7 @@
         },
         {
           "name": "643km Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC" ]
         }
@@ -1196,7 +1196,7 @@
       "accommodation": [
         {
           "name": "La Perla Negra Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double" ]
         }
@@ -1232,7 +1232,7 @@
         },
         {
           "name": "Montedeio Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Prayer" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
         }
@@ -1340,7 +1340,7 @@
         },
         {
           "name": "El Olivo Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Lockers", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
@@ -1368,13 +1368,13 @@
         },
         {
           "name": "Martintxo Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
         },
         {
           "name": "Hostal San Andrés",
-          "type": "HomeStay",
+          "type": "PrivateAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Pool" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         }
@@ -1514,13 +1514,13 @@
       "accommodation": [
         {
           "name": "El Colorao Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "San Martin Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Accessible", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "DoubleWC" ]
         }
@@ -1653,7 +1653,7 @@
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "Triple", "Quadruple" ]
         },
-        "HomeStay",
+        "CasaRural",
         "House",
         "GuestHouse",
         "Hotel"
@@ -1706,13 +1706,13 @@
         },
         {
           "name": "Casa Jacobea",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Kitchen", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Casa Rural Cerro de Mirabel",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "WashingMachine", "Breakfast" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -1952,7 +1952,7 @@
         },
         {
           "name": "La Alpargateria",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC" ]
         },
@@ -2071,7 +2071,7 @@
         },
         {
           "name": "Casa Rural el Cocodrilo",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Kitchen", "Accessible", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
@@ -2450,13 +2450,13 @@
         },
          {
           "name": "De Sol a Sol",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "La Casa del Abuelo",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "DoubleWC", "Triple" ]
         }
@@ -2563,7 +2563,7 @@
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         "PrivateAlbergue",
-        "HomeStay",
+        "CasaRural",
         "GuestHouse",
         "Hotel"
        ],
@@ -2702,13 +2702,13 @@
         },
         {
           "name": "Seriarias and Antonia and Marcelino Country Lodge",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Kitchen", "Lockers" ],
           "sleeping": [ "Single", "Double" ]
         },
         {
           "name": "La Via Láctea Apartment",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -2804,7 +2804,7 @@
         },
         {
           "name": "La Casona de Doña Petra",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner" ],
           "sleeping": [ "Double", "Triple", "Quadruple" ]
         }
@@ -3121,7 +3121,7 @@
         },
         {
           "name": "Los Balcones de Camino",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
@@ -3280,7 +3280,7 @@
         },
         {
           "name": "Piedras Blancas Rural Tourism Centre",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
@@ -3381,7 +3381,7 @@
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
-        "HomeStay",
+        "CasaRural",
         "House",
         "GuestHouse",
         "Hotel"
@@ -3755,7 +3755,7 @@
         },
         {
           "name": "Molino Galochas",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
@@ -3899,7 +3899,7 @@
       "accommodation": [
         {
           "name": "Casa Pita",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [
             "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "BicycleStorage", "Pets",
             "Bedlinen", "Towels"
@@ -3981,13 +3981,13 @@
         },
         {
           "name": "La Casa de Murias",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "La Veleta Rural Tourism Centre",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Accessible" ],
           "sleeping": [ "DoubleWC" ]
         }
@@ -4123,7 +4123,7 @@
         },
         {
           "name": "Las Carballedas Rural Apartments",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "WashingMachine", "Kitchen", "Breakfast", "BicycleStorage", "Stables", "Pets" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -4290,13 +4290,13 @@
         },
         {
           "name": "La Trucha del Arco Iris",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Pets" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "La Rosa del Agua Iris",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "CampSite" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
         },
@@ -4345,7 +4345,7 @@
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         "PrivateAlbergue",
-        "HomeStay",
+        "CasaRural",
         "GuestHouse",
         "Hotel"
       ]
@@ -4630,13 +4630,13 @@
       "accommodation": [
         {
           "name": "Las Coronas",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "Triple" ]
         },
         {
           "name": "Pereje Garden",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "Kitchen", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Quadruple" ]
         }
@@ -4698,7 +4698,7 @@
         },
         {
           "name": "Os Arroxos",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Kitchen", "Pets", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "DoubleWC", "TripleWC" ]
         },
@@ -4874,7 +4874,7 @@
         },
         {
           "name": "Casa Polín",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner" ],
           "sleeping": [ "Single", "DoubleWC"]
         },
@@ -4974,19 +4974,19 @@
         },
         {
           "name": "Valiña",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "Heating" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Navarro",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Venta Celta",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "DoubleWC" ]
         },
@@ -5109,7 +5109,7 @@
         },
         {
           "name": "Casa Núñez",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
@@ -5137,13 +5137,13 @@
       "accommodation": [
         {
           "name": "Casa Xato",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "Triple" ]
         },
         {
           "name": "Casa Quiroga",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels" ],
           "sleeping": [ "Double", "Triple" ]
         }
@@ -5226,7 +5226,7 @@
         },
         {
           "name": "Casa Pacios",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
@@ -5368,13 +5368,13 @@
         },
         {
           "name": "Casa Licerio",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Casas de Outeiro",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC" ]
         },
@@ -5435,7 +5435,7 @@
       "accommodation": [
         {
           "name": "Casas Xaymaca",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         }
@@ -5660,7 +5660,7 @@
       "accommodation": [
         {
           "name": "Casanova de Rente",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ ],
           "sleeping": [ ]
         }
@@ -5828,7 +5828,7 @@
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
-        "HomeStay",
+        "CasaRural",
         "House",
         "GuestHouse",
         "Hotel"
@@ -5903,7 +5903,7 @@
         },
         {
           "name": "Casa Perdigueira",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double", "Triple" ]
         }
@@ -5972,7 +5972,7 @@
         },
         {
           "name": "A Casona de Ventas",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
@@ -6000,7 +6000,7 @@
         },
         {
           "name": "Casa Róan",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Breakfast", "Accessible", "BicycleStorage" ],
           "sleeping": [ "DoubleWC" ]
         }
@@ -6081,7 +6081,7 @@
       "accommodation": [
         {
           "name": "Rectoral de Lestedo",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [
             "WiFi", "Heating", "WashingMachine", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen",
             "Towels"
@@ -6190,7 +6190,7 @@
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
-        "HomeStay",
+        "CasaRural",
         "House",
         "GuestHouse",
         "Hotel"
@@ -6281,7 +6281,7 @@
         },
         {
           "name": "Bolboreta",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "CampSite", "Prayer", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
@@ -6297,13 +6297,13 @@
       "accommodation": [
         {
           "name": "Casa de los Somoza",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "Hostal Los dos alemanes",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
@@ -6328,7 +6328,7 @@
       "accommodation": [
         {
           "name": "Casa Saleta",
-          "type": "HomeStay",
+          "type": "CasaRural",
           "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Restaurant", "Bedlinen", "Towels" ],
           "sleeping": [ "Quadruple" ]
         },

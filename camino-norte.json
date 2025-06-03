@@ -9161,8 +9161,6 @@
       "id": "N-N",
       "name": "Camino del Norte",
       "description": "The main Camino route starting in Irun.",
-      "stops": [
-      ],
       "starts": [
         "N-N1",
         "N-N224"

@@ -16,6 +16,12 @@ caminos:
   - id: I-ST
     type: CaminoDefinition
     path: "file:import-santiago.json"
+  - id: I-VV
+    type: CaminoDefinition
+    path: "file:import-villaviciosa.json"
+  - id: I-AS
+    type: CaminoDefinition
+    path: "file:import-arzua-santiago.json"
   - id: I-MS
     type: CaminoDefinition
     path: "file:import-melide-santiago.json"

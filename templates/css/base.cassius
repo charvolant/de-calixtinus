@@ -126,7 +126,7 @@ a
     font-size: smaller
   .leg-descent::before
     content: "\2193"
-  .leg-notes
+  .leg-description
     font-size: smaller
 .leg-used
   color: black
@@ -186,6 +186,8 @@ a
   .accordion-header
     h5
       font-weight: bolder
+.note
+   font-size: smaller
 .note-type
    color: #{toCssColour informationBlue}
 .or-list

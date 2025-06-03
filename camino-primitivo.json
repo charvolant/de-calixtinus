@@ -88,7 +88,7 @@
     ]
   },
   "imports": [
-    "I-MS"
+    "I-MS", "I-VV"
   ],
   "locations": [
     {
@@ -2140,109 +2140,6 @@
     },
 
     {
-      "id": "PR-N1",
-      "name": "Villaviciosa",
-      "type": "Town",
-      "position": { "latitude": 43.48155, "longitude": -5.43255  },
-      "region": "ES-AS",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical","Bank", "BicycleRepair", "Bus" ],
-      "accommodation": [
-        {
-          "name": "Villaviciosa Hostel",
-          "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "QuadrupleWC" ]
-        },
-        {
-          "name": "El Congreso Hostel",
-          "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage" ],
-          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
-        },
-        {
-          "name": "Hevia Apartments",
-          "type": "House",
-          "services": [ "WiFi", "WashingMachine", "Heating", "Kitchen", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
-        },
-        {
-          "name": "Naredo Apartments",
-          "type": "House",
-          "services": [ "WiFi", "Heating", "Kitchen", "Bedlinen" ],
-          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
-        },
-        {
-          "name": "El Sol Hostel",
-          "type": "GuestHouse",
-          "services": [ "Heating", "Lockers" ],
-          "sleeping": [ "Double" ]
-        },
-        {
-          "name": "Carlos I Hotel",
-          "type": "Hotel",
-          "services": [ "WiFi", "Heating", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
-        },
-        {
-          "name": "Casa España Hotel",
-          "type": "Hotel",
-          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
-        },
-        {
-          "name": "Ab Murias Blancas Hotel",
-          "type": "Hotel",
-          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
-        },
-        {
-          "name": "Hotel Arcea Villaviciosa",
-          "type": "Hotel",
-          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
-        }
-      ]
-    },
-    {
-      "id": "PR-N2",
-      "name": "Amandi",
-      "type": "Village",
-      "position": { "latitude": 43.47229, "longitude": -5.44170  },
-      "region": "ES-AS",
-      "services": [ "Restaurant" ],
-      "accommodation": [
-        {
-          "name": "Hotel La Casona de Amandi",
-          "type": "Hotel",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
-        }
-      ]
-    },
-    {
-      "id": "PR-N3",
-      "name": "Casquita",
-      "type": "Village",
-      "position": { "latitude": 43.46624, "longitude": -5.46142  },
-      "region": "ES-AS",
-      "services": [ "Restaurant" ],
-      "accommodation": [ ],
-      "pois": [
-        {
-          "id": "PR-N3-1",
-          "name": "Camino del Norte and Camino Primitivo Split@en",
-          "type": "Junction",
-          "position": { "latitude": 43.46625, "longitude": -5.46159  }
-        },
-        {
-          "id": "PR-N3-2",
-          "name": "High-level Variant@en",
-          "type": "Junction",
-          "position": { "latitude": 43.46625, "longitude": -5.46159  }
-        }
-      ]
-    },
-    {
       "id": "PR-N4",
       "name": "San Salvador de Valdediós",
       "type": "Monastery",
@@ -3360,21 +3257,7 @@
     },
 
     {
-      "from": "PR-N1",
-      "to": "PR-N2",
-      "distance": 1.81,
-      "ascent": 5,
-      "descent": 5
-    },
-    {
-      "from": "PR-N2",
-      "to": "PR-N3",
-      "distance": 1.70,
-      "ascent": 25,
-      "descent": 5
-    },
-    {
-      "from": "PR-N3",
+      "from": "N-N140",
       "to": "PR-N4",
       "distance": 4.06,
       "ascent": 180,
@@ -3402,7 +3285,7 @@
       "descent": 0
     },
     {
-      "from": "PR-N3",
+      "from": "N-N140",
       "to": "PR-N7",
       "distance": 3.8,
       "ascent": 170,
@@ -3608,7 +3491,7 @@
         "text": "The original start point of the Primitivo. Start from Villaviciosa on the Camino del Norte and walk up to Oviedo.@en"
       },
       "locations": [
-        "PR-N1",  "PR-N2",  "PR-N3",  "PR-N4",  "PR-N5",  "PR-N6",  "PR-N7",  "PR-N8",  "PR-N9",  "PR-N10",
+        "N-N138", "N-N139",  "PR-N3",  "PR-N4",  "PR-N5",  "PR-N6",  "PR-N7",  "PR-N8",  "PR-N9",  "PR-N10",
         "PR-N11", "PR-N12", "PR-N13", "PR-N14", "PR-N15", "PR-N16", "PR-N17", "PR-N18", "PR-N19", "PR-N20",
         "PR-N21", "PR-N22", "PR-N23", "PR-N24", "PR-N25"
       ],
@@ -3616,7 +3499,7 @@
         "PR-P1"
       ],
       "starts": [
-        "PR-N1"
+        "N-N138"
       ],
       "palette": {
         "colour": "37b5fe"

@@ -186,6 +186,36 @@ a
   .accordion-header
     h5
       font-weight: bolder
+.map-key
+  font-size: small
+.map-key-icon
+  max-width: 16px
+  max-height: 16px
+.map-key-small
+  font-size: x-small
+.map-label
+  background-color: #faf8f0 !important
+  border: 1px solid #faf8f0 !important
+.map-label.leaflet-tooltip-top::before
+  border-top-color: #faf8f0 !important
+.map-label.leaflet-tooltip-bottom::before
+  border-bottom-color: #faf8f0 !important
+.map-label.leaflet-tooltip-left::before
+  border-left-color: #faf8f0 !important
+.map-label.leaflet-tooltip-right::before
+  border-right-color: #faf8f0 !important
+.map-label-minor
+  background-color: #e8e6df !important
+  border: 1px solid #e8e6df !important
+  font-size: smaller
+.map-label-minor.leaflet-tooltip-top::before
+  border-top-color: #e8e6df !important
+.map-label-minor.leaflet-tooltip-bottom::before
+  border-bottom-color: #e8e6df !important
+.map-label-minor.leaflet-tooltip-left::before
+  border-left-color: #e8e6df !important
+.map-label-minor.leaflet-tooltip-right::before
+  border-right-color: #e8e6df !important
 .note
    font-size: smaller
 .note-type
@@ -248,10 +278,6 @@ a
   font-size: small
 .link-map::before
   content: "\e090"
-.map-key
-  font-size: small
-.map-key-icon
-  width: 16px
 .bar-separated-list
   list-style-type: none
   padding: 0

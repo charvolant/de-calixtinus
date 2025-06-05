@@ -22,6 +22,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
+import Camino.Config (AssetConfig(..), getAsset)
 import Camino.Planner (Solution(..), Pilgrimage)
 import Camino.Preferences
 import Data.Util
@@ -34,7 +35,8 @@ import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
 import Codec.Xlsx
-import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale)
+import Data.Description (Image(..))
+import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale, textToUri, wildcardText)
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Clock.POSIX (getPOSIXTime)
@@ -63,7 +65,9 @@ data PreferenceStep =
   deriving (Eq, Ord, Enum, Bounded, Show, Read)
 
 homeP :: Handler Html
-homeP =
+homeP = do
+  master <- getYesod
+  let mapUrl = maybe "" assetPath (getAsset "images" (caminoAppConfig master)) <> "/Map.png"
   defaultLayout $ do
     setTitleI MsgAppName
     $(widgetFile "homepage")
@@ -120,6 +124,21 @@ caminoPage camino = do
       setTitle [shamlet|#{localiseText locales $ caminoName (preferenceCamino cprefs)}|]
       (toWidget html)
       imagePopup
+
+getMapR :: Handler Html
+getMapR = do
+  master <- getYesod
+  locales <- getLocales
+  let config = caminoAppConfig master
+  let router = renderCaminoRoute config locales
+  let messages = renderCaminoMsg config locales
+  defaultLayout $ do
+    setTitleI MsgMapTitle
+    toWidget ((mapWidget (caminoAppCaminos master)) messages router)
+
+-- | Map of all caminos
+mapWidget :: [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
+mapWidget caminos = $(ihamletFile "templates/map.hamlet")
 
 getMetricR :: Handler Html
 getMetricR = do

@@ -3431,6 +3431,7 @@
       "id": "PR-P",
       "name": "Camino Primitivo",
       "description": "The main Camino route starting in Oviedo and ending at Stantiago de Compostella and following the Southern route",
+      "major": true,
       "stops": [
       ],
       "starts": [
@@ -3490,6 +3491,7 @@
       "description": {
         "text": "The original start point of the Primitivo. Start from Villaviciosa on the Camino del Norte and walk up to Oviedo.@en"
       },
+      "major": true,
       "locations": [
         "N-N138", "N-N139",  "PR-N3",  "PR-N4",  "PR-N5",  "PR-N6",  "PR-N7",  "PR-N8",  "PR-N9",  "PR-N10",
         "PR-N11", "PR-N12", "PR-N13", "PR-N14", "PR-N15", "PR-N16", "PR-N17", "PR-N18", "PR-N19", "PR-N20",

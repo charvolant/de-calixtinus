@@ -1,31 +1,5 @@
-<nav .navbar .navbar-expand-md .bg-body>
-  <div .container-fluid>
-    <button data-bs-toggle="collapse" .navbar-toggler data-bs-target="#help-menu">
-      <span .visually-hidden>Toggle navigation
-      <span .navbar-toggler-icon>
-    <div .collapse .navbar-collapse #help-menu">
-      <ul .navbar-nav>
-        <li .nav-item>
-          <a .nav-link .active href="#map-key">Map
-        <li .nav-item>
-          <a .nav-link .active href="#location-help">Locations
-        <li .nav-item>
-          <a .nav-link .active href="#services-help">Services
-        <li .nav-item>
-          <a .nav-link .active href="#accommodation-help">Accommodation
-        <li .nav-item>
-          <a .nav-link .active href="#travel-help">Travel
-        <li .nav-item>
-          <a .nav-link .active href="#event-help">Events
-        <li .nav-item>
-          <a .nav-link .active href="#other-help">Other
-
-<div #map-key .card>
-  <div .card-body>
-    <h2 .card-title>Map
-    <table .table .table-striped>
-      ^{caminoCaminoKeyHtml (preferenceCamino camino)}
-      ^{caminoMapKeyHtml True}
+$forall camino <- caminos
+  ^{caminoMapKeyHtml preferences camino}
 
 <div #location-help .card>
   <div .card-body>

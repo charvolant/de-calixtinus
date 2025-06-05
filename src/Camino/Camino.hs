@@ -58,6 +58,7 @@ module Camino.Camino (
   , caminoRegions
   , caminoRoute
   , caminoRouteLocations
+  , centroid
   , comfortEnumeration
   , completeRoutes
   , createAllowsClauses
@@ -82,6 +83,7 @@ module Camino.Camino (
   , locationTypeEnumeration
   , poiCategoryEnumeration
   , readCamino
+  , routeCentralLocation
   , serviceEnumeration
   , subtractFloor
   , townServiceEnumeration
@@ -97,10 +99,10 @@ import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
 import Data.Event
-import Data.Foldable (toList)
+import Data.Foldable (foldl', minimumBy, toList)
 import qualified Data.List as L (find, partition)
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, rootLocale, wildcardText)
-import Data.Maybe (catMaybes, fromJust)
+import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup, map, unions)
 import Data.Placeholder
@@ -199,6 +201,19 @@ instance FromJSON LatLong where
 
 instance ToJSON LatLong where
   toJSON (LatLong latitude' longitude' srs') = object [ "latitude" .= latitude', "longitude" .= longitude', "srs" .= (if srs' == def then Nothing else Just (srsID srs')) ]
+
+-- Compute the centroid of a list of lat/longs
+centroid :: (Foldable t) => t LatLong -> LatLong
+centroid lls = let
+    (slats, slongs, srs'') = foldl' (\(lats, longs, _srs) -> \(LatLong lat lon srs') -> (lats + lat, longs + lon, srs')) (0.0, 0.0, def) lls
+    len = fromIntegral $ max 1 (length lls)
+  in
+    LatLong (slats / len) (slongs / len) srs''
+
+-- Squared Euclidian distance between two lat longs
+-- This is not accurate, but good enough for quick estimation
+euclidianDistance2 :: LatLong -> LatLong -> Double
+euclidianDistance2 (LatLong lat1 long1 _srs1) (LatLong lat2 long2 _srs2) = (lat2 - lat1) * (lat2 - lat1) + (long2 - long1) * (long2 - long1)
 
 -- | Broad accommodation types
 data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local volunteers
@@ -894,6 +909,7 @@ data Route = Route {
     routeID :: Text -- ^ An identifier for the route
   , routeName :: Localised TaggedText -- ^ The route name
   , routeDescription :: Description -- ^ The route description
+  , routeMajor :: Bool -- ^ Is this a major route (a multi-day variant to the main route)
   , routeLocations :: S.Set Location -- ^ The locations along the route
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
@@ -909,6 +925,7 @@ instance FromJSON Route where
       id' <- v .: "id"
       name' <- v .: "name"
       description' <- v .: "description"
+      major' <- v .:? "major" .!= False
       locations' <- v .:? "locations" .!= S.empty
       stops' <- v .:? "stops" .!= S.empty
       starts' <- v .:? "starts" .!= []
@@ -919,6 +936,7 @@ instance FromJSON Route where
           routeID = id'
         , routeName = name'
         , routeDescription = description'
+        , routeMajor = major'
         , routeLocations = locations'
         , routeStops = stops'
         , routeStarts = starts'
@@ -929,11 +947,12 @@ instance FromJSON Route where
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' locations' stops' starts' finishes' pois' palette') =
+    toJSON (Route id' name' description' major' locations' stops' starts' finishes' pois' palette') =
       object [ 
           "id" .= id'
         , "name" .= name'
         , "description" .= description'
+        , "major" .= major'
         , "locations" .= S.map locationID locations'
         , "stops" .= S.map locationID stops'
         , "starts" .= map locationID starts'
@@ -955,6 +974,7 @@ instance Placeholder Text Route where
       routeID = rid
     , routeName = wildcardText $ ("Placeholder for " <> rid)
     , routeDescription = wildcardDescription ""
+    , routeMajor = False
     , routeLocations = S.empty
     , routeStops = S.empty
     , routeStarts = []
@@ -983,6 +1003,19 @@ instance Summary Route where
     <> ", starts=" <> summary (routeStarts route)
     <> ", finishes=" <> summary (routeFinishes route)
     <> "}"
+
+-- Find the location closest to the centre of the route
+routeCentralLocation :: Route -> Location
+routeCentralLocation route = let
+    locations = filter (isJust . locationPosition) $ S.toList $ routeLocations route
+  in
+    if null locations then
+      head $ S.toList $ routeLocations route
+    else let
+        centre = centroid $ map (fromJust . locationPosition) locations
+        closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (fromJust $ locationPosition l1)) (euclidianDistance2 centre (fromJust $ locationPosition l2))) locations
+      in
+        closest
 
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and

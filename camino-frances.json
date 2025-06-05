@@ -8113,6 +8113,7 @@
       "id": "F-F",
       "name": "Camino Frances",
       "description": "The main Camino route starting in Saint-Jean-Pied-de-Port to Santiago de Compostella",
+      "major": true,
       "stops": [
         "F-F26", "F-F51", "F-F81", "F-F118"
       ],

@@ -400,13 +400,18 @@ instance Yesod CaminoApp where
           <header .p-2>
             <nav .navbar .navbar-expand-md>
               <div .container-fluid>
-                <a .navbar-brand href="#">
                 $maybe icons <- C.getAsset "icons" config
-                  <a .m-2 href="@{HomeR}">
-                    <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgAppName}">
+                 <a .navbar-brand .m-2 href="@{HomeR}">
+                   <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgAppName}">
                 <h1>#{pageTitle pc}
-                <div .collapse .navbar-collapse .d-flex .justify-content-end #navcol-links">
+                <button .navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navcol-links" aria-controls="navcol-links" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+                <div .collapse .navbar-collapse .justify-content-end #navcol-links">
                   <ul .navbar-nav>
+                    <li .nav-item>
+                      <a .nav-link href=@{HomeR}>#{render MsgHomeLabel}
+                    <li .nav-item>
+                      <a .nav-link href=@{MapR} title="#{render MsgMapTitle}">#{render MsgMapLabel}
                     $forall link <- headLinks
                       <li .nav-item>
                         <a target="_blank" .nav-link href="#{linkText link}">#{plainText link}

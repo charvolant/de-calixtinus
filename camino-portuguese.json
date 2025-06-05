@@ -11171,6 +11171,7 @@
       "id": "P-RP",
       "name": "Caminho Português",
       "description": "The main Camino route starting in Lisbon and following the inland route",
+      "major": true,
       "stops": [
         "P-P20", "P-P32", "P-P78", "P-P138"
       ],
@@ -11192,6 +11193,7 @@
       "id": "P-RFT",
       "name": "Fátima - Tomar",
       "description": "A variant pilgrimage including the Fátima shrine and returning to the main route at Tomar",
+      "major": true,
       "locations": [
         "P-F1", "P-F2", "P-F3", "P-F4", "P-F5", "P-F6", "P-F7", "P-F8", "P-F9", "P-F10",
         "P-F11", "P-F12", "P-F13", "P-F14", "P-F15"
@@ -11210,6 +11212,7 @@
       "id": "P-RFA",
       "name": "Fátima - Ansião",
       "description": "A variant pilgrimage including the Fátima shrine and returning to the main route near Ansião",
+      "major": true,
       "locations": [
         "P-F1", "P-F2", "P-F3", "P-F4", "P-F5", "P-F6", "P-F7", "P-F8", "P-F9", "P-F10",
         "P-F11", "P-F16", "P-F17", "P-F18", "P-F19", "P-F20",
@@ -11232,6 +11235,7 @@
       "id": "P-RS",
       "name": "Variante Espiritual",
       "description": "The Spiritual Variant of the main route that follows the last part of the journey of the remains of the Apostle St.James. The variant ends with a boat trip up the Río Ulla",
+      "major": true,
       "locations": [
         "P-E1", "P-E2", "P-E3", "P-E4", "P-E5", "P-E6", "P-E7", "P-E8", "P-E9", "P-E10",
         "P-E11", "P-E12", "P-E13", "P-E14", "P-E15", "P-E16", "P-E17", "P-E18", "P-E19", "P-E20",
@@ -11248,6 +11252,7 @@
       "id": "P-RC",
       "name": "Coastal Route",
       "description": "An alternative to the central route from Porto, the coastal route follows the Atlantic coast from Porto into Spain",
+      "major": true,
       "locations": [
                  "P-C2",  "P-C3",  "P-C4",  "P-C5",  "P-C6",  "P-C7",  "P-C8",  "P-C9",  "P-C10",
         "P-C11", "P-C12", "P-C13", "P-C14", "P-C15", "P-C16", "P-C17", "P-C18", "P-C19", "P-C20",

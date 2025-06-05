@@ -650,8 +650,8 @@ descriptionBlock showAbout description = [ihamlet|
     attribution = maybe Nothing imageAttribution mimg
     origin= maybe Nothing imageOrigin mimg
 
-locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-locationLine _preferences _camino location = [ihamlet|
+locationLineSimple :: Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLineSimple location = [ihamlet|
     _{Txt (locationName location)}
     $maybe r <- locationRegion location
       <span .region>
@@ -669,13 +669,20 @@ locationLine _preferences _camino location = [ihamlet|
         ^{caminoEventTypeIcon event}
   |]
 
-poiLine :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
-poiLine _preferences _camino poi = [ihamlet|
+locationLine :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLine _preferences _camino location = locationLineSimple location
+
+
+poiLineSimple :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
+poiLineSimple poi = [ihamlet|
     _{Txt (poiName poi)}
   |]
 
-legLine :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
-legLine _preferences _camino leg = [ihamlet|
+poiLine :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
+poiLine _preferences _camino poi = poiLineSimple poi
+
+legLineSimple :: Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+legLineSimple leg = [ihamlet|
     <div .d-inline-block>
       ^{caminoLegTypeIcon (legType leg)}
       $if legDistance leg > 0
@@ -692,6 +699,9 @@ legLine _preferences _camino leg = [ihamlet|
         <span .leg-description>^{descriptionLine (fromJust $ legDescription leg)}
   |]
 
+legLine :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+legLine _preferences _camino leg = legLineSimple leg
+
 locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegLine preferences showLink showTo camino leg = [ihamlet|
    $if showLink
@@ -705,7 +715,7 @@ locationLegLine preferences showLink showTo camino leg = [ihamlet|
    direction = if showTo then legTo else legFrom
    locid = locationID $ direction leg
 
-locationLegSummary :: TravelPreferences ->CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLegSummary :: TravelPreferences -> CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegSummary preferences camino used location = [ihamlet|
   $forall leg <- usedLegs
     <div .row>
@@ -916,14 +926,17 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
   <div .container-fluid>
     <div .row>
       <nav .navbar .navbar-expand-md>
-        <ul .navbar-nav>
-          $forall (initial, locs) <- locationPartition
-            <li .dropdown .m-1>
-              <a href="#" .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
-                #{initial}
-              <ul .dropdown-menu>
-                $forall loc <- locs
-                  <a .dropdown-item href="##{locationID loc}">_{Txt (locationName loc)}
+        <button .navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#location-nav" aria-controls="location-nav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon">
+        <div .collapse .navbar-collapse #location-nav">
+          <ul .navbar-nav>
+            $forall (initial, locs) <- locationPartition
+              <li .dropdown .m-1>
+                <a href="#" .dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
+                  #{initial}
+                <ul .dropdown-menu>
+                  $forall loc <- locs
+                    <a .dropdown-item href="##{locationID loc}">_{Txt (locationName loc)}
     <div .row>
       <div .col>
         <div #locations .accordion .container-fluid>
@@ -1260,35 +1273,45 @@ caminoMapHtml _preferences _camino _solution = [ihamlet|
         <div #map>
   |]
 
-caminoMapKeyHtml :: TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapKeyHtml _preferences camino = [ihamlet|
-<div #map-key .card>
-  <div .card-body>
-    <h2 .card-title>_{MapLabel}
-    <table .table-striped>
-      <tbody>
-        $forall r <- caminoRoutes camino'
-          <tr>
-            <td>
-            <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
-            <td>
-            <td>
-            <td>_{Txt (routeName r)}
-        $forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
-          <tr>
-            <td>
-              <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
-            <td>
-              <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
-            <td>
-              <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
-            <td>
-              <img .map-key-icon src="@{caminoPoiTypeMapIcon lt}" title="_{PoiLabel}">
-            <td>
-              _{caminoLocationTypeLabel lt}
-  |]
-  where
-    camino' = preferenceCamino camino
+caminoCaminoKeyHtml :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoCaminoKeyHtml camino = [ihamlet|
+$forall r <- caminoRoutes camino
+  <tr>
+    <td>
+    <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
+    <td>
+    <td>
+    <td>
+      $if r == caminoDefaultRoute camino
+        <span .fw-normal>
+          _{Txt (caminoName camino)}
+      $else
+        <span .fw-lighter>
+          _{Txt (routeName r)}
+|]
+
+caminoMapKeyHtml :: Bool -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapKeyHtml full = [ihamlet|
+$forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
+  <tr>
+    <td>
+      $if full
+        <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
+    <td>
+      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
+    <td>
+      $if full
+        <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
+    <td>
+      <img .map-key-icon src="@{caminoPoiTypeMapIcon lt}" title="_{PoiLabel}">
+    <td>
+      _{caminoLocationTypeLabel lt}
+|]
+
+
+caminoLocationIconSimple :: Location -> String
+caminoLocationIconSimple location =
+  "icon" ++ (show $ locationType location) ++ "Used"
 
 caminoLocationIcon :: TravelPreferences -> CaminoPreferences -> S.Set Location -> S.Set Location -> Location -> String
 caminoLocationIcon _preferences _camino stops waypoints location =
@@ -1299,9 +1322,12 @@ caminoLocationIcon _preferences _camino stops waypoints location =
      | S.member loc waypoints = "Used"
      | otherwise = "Unused"
 
-caminoPoiIcon :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> String
-caminoPoiIcon _preferences _camino poi =
+caminoPoiIconSimple :: PointOfInterest -> String
+caminoPoiIconSimple poi =
   "icon" ++ (show $ poiType poi) ++ "Poi"
+
+caminoPoiIcon :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> String
+caminoPoiIcon _preferences _camino poi = caminoPoiIconSimple poi
 
 caminoLocationTooltip :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationTooltip preferences camino _solution usedLegs location = [ihamlet|
@@ -1312,6 +1338,15 @@ caminoLocationTooltip preferences camino _solution usedLegs location = [ihamlet|
     ^{locationLegSummary preferences camino usedLegs location}
   |]
 
+caminoLocationTooltipSimple :: Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationTooltipSimple location = [ihamlet|
+  <div .location-tooltip .container-fluid>
+    <div .row>
+      <div .col>
+        ^{locationLineSimple location}
+   |]
+
+
 caminoPoiTooltip :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPoiTooltip preferences camino poi = [ihamlet|
   <div .location-tooltip .container-fluid>
@@ -1320,119 +1355,86 @@ caminoPoiTooltip preferences camino poi = [ihamlet|
         ^{poiLine preferences camino poi}
   |]
 
-caminoMapScript :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapScript preferences camino solution = [ihamlet|
-  <script>
-    var map = L.map('map');
-
-    function showRouteDescription(id) {
-      \$('#about-toggle').tab('show');
-      \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
-    }
-    
-    function openLocationDescription(id) {
-      \$('#location-body-' + id).addClass('show');
-    }
-
-    function showLocationDescription(id) {
-      \$('#locations-toggle').tab('show');
-      \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
-      openLocationDescription(id);
-    }
-
-    function showLocationOnMap(lat, lng) {
-      \$('#map-toggle').tab('show');
-      map.fitBounds([ [lat + 0.01, lng - 0.01], [lat - 0.01, lng + 0.01] ]);
-    }
-
-    function selectZoom(map, locations, legs, pois) {
-      var zoom = map.getZoom();
-      var showLocations = zoom > 8;
-      var showLegs = true;
-      var showPois = zoom > 12;
-      if (showPois && !map.hasLayer(pois))
-          map.addLayer(pois);
-      if (!showPois && map.hasLayer(pois))
-          map.removeLayer(pois);
-      if (showLegs && !map.hasLayer(legs))
-          map.addLayer(legs);
-      if (!showLegs && map.hasLayer(legs))
-          map.removeLayer(legs);
-      if (showLocations && !map.hasLayer(locations))
-          map.addLayer(locations);
-      if (!showLocations && map.hasLayer(locations))
-          map.removeLayer(locations);
-    }
-
-    $forall icon <- icons
-      $with name <- T.pack $ show $ fst icon
-        var icon#{name}Used = L.icon({
-          iconUrl: '@{caminoLocationTypeMapIcon (fst icon) False True}',
-          iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
-        });
-        var icon#{name}Unused = L.icon({
-          iconUrl: '@{caminoLocationTypeMapIcon (fst icon) False False}',
-          iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
-        });
-        var icon#{name}Stop = L.icon({
-          iconUrl: '@{caminoLocationTypeMapIcon (fst icon) True True}',
-          iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
-        });
-        var icon#{name}Poi = L.icon({
-          iconUrl: '@{caminoPoiTypeMapIcon (fst icon)}',
-          iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
-        });
-    map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
-    L.tileLayer('@{MapTileRoute}', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-    var locations = L.layerGroup();
-    var legs = L.layerGroup();
-    var pois = L.layerGroup();
-    var marker;
-    var line;
-    $forall location <- M.elems $ caminoLocations camino'
-      $maybe position <- locationPosition location
-        marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{caminoLocationIcon preferences camino stops waypoints location} } );
-        marker.bindTooltip(`^{caminoLocationTooltip preferences camino solution usedLegs location}`);
-        marker.addTo(locations);
-        marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
-      $forall poi <- locationPois location
-        $maybe position <- poiPosition poi
-          marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{caminoPoiIcon preferences camino poi} } );
-          marker.bindTooltip(`^{caminoPoiTooltip preferences camino poi}`);
-          marker.addTo(pois);
-          marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
-    $forall leg <- caminoLegs camino'
-      $if isJust (locationPosition $ legFrom leg) && isJust (locationPosition $ legTo leg)
-        line = L.polyline([
-          [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
-          [#{maybe 0.0 latitude (locationPosition $ legTo leg)}, #{maybe 0.0 longitude (locationPosition $ legTo leg)}]
-        ], {
-           color: '#{chooseColour leg}',
-           weight: #{chooseWidth leg},
-           opacity: #{chooseOpacity leg}
-        });
-        line.addTo(legs);
-    map.on("zoomend", function() {
-      selectZoom(map, locations, legs, pois);
-    });
-    locations.setZIndex(30);
-    legs.setZIndex(20);
-    pois.setZIndex(10);
-    selectZoom(map, locations, legs, pois);
+caminoPoiTooltipSimple :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoPoiTooltipSimple poi = [ihamlet|
+  <div .location-tooltip .container-fluid>
+    <div .row>
+      <div .col>
+        ^{poiLineSimple poi}
   |]
+
+caminoMapScriptBase :: HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScriptBase = [ihamlet|
+var map = L.map('map');
+var locations = L.layerGroup();
+var legs = L.layerGroup();
+var pois = L.layerGroup();
+var labels = L.layerGroup();
+var marker;
+var line;
+
+L.tileLayer('@{MapTileRoute}', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+labels.setZIndex(40);
+locations.setZIndex(30);
+legs.setZIndex(20);
+pois.setZIndex(10);
+
+function showLocationOnMap(lat, lng) {
+  \$('#map-toggle').tab('show');
+  map.fitBounds([ [lat + 0.01, lng - 0.01], [lat - 0.01, lng + 0.01] ]);
+}
+
+function selectZoom(map, locations, legs, pois, labels) {
+  var zoom = map.getZoom();
+  var showLocations = zoom > 8;
+  var showLegs = true;
+  var showPois = zoom > 12;
+  var showLabels = true;
+  if (showLabels && !map.hasLayer(labels))
+      map.addLayer(labels);
+  if (!showLabels && map.hasLayer(labels))
+      map.removeLayer(labels);
+  if (showPois && !map.hasLayer(pois))
+      map.addLayer(pois);
+  if (!showPois && map.hasLayer(pois))
+      map.removeLayer(pois);
+  if (showLegs && !map.hasLayer(legs))
+      map.addLayer(legs);
+  if (!showLegs && map.hasLayer(legs))
+      map.removeLayer(legs);
+  if (showLocations && !map.hasLayer(locations))
+      map.addLayer(locations);
+  if (!showLocations && map.hasLayer(locations))
+      map.removeLayer(locations);
+}
+
+map.on("zoomend", function() {
+  selectZoom(map, locations, legs, pois, labels);
+});
+
+$forall icon <- icons
+  $with name <- T.pack $ show $ fst icon
+    var icon#{name}Used = L.icon({
+      iconUrl: '@{caminoLocationTypeMapIcon (fst icon) False True}',
+      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+    });
+    var icon#{name}Unused = L.icon({
+      iconUrl: '@{caminoLocationTypeMapIcon (fst icon) False False}',
+      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+    });
+    var icon#{name}Stop = L.icon({
+      iconUrl: '@{caminoLocationTypeMapIcon (fst icon) True True}',
+      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+    });
+    var icon#{name}Poi = L.icon({
+      iconUrl: '@{caminoPoiTypeMapIcon (fst icon)}',
+      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+    });
+|]
   where
-    camino' = preferenceCamino camino
-    (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino' solution
-    (tl, br) = if S.null waypoints then caminoBbox camino' else locationBbox waypoints
-    chooseWidth leg | S.member leg usedLegs = 7 :: Int
-      | otherwise = 5 :: Int
-    chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
-      | otherwise = 0.5 :: Float
-    chooseColour leg | S.member leg usedLegs = toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino' leg
-      | otherwise = toCssColour $ blend 0.5 lightgrey $ paletteColour $ routePalette $ caminoLegRoute camino' leg
     icons = [
         (Village, (16, 16))
       , (Town, (32, 20))
@@ -1463,6 +1465,121 @@ caminoMapScript preferences camino solution = [ihamlet|
       , (Hazard, (20, 18))
       , (Poi, (15, 24))
       ] :: [(LocationType, (Int, Int))]
+
+
+caminoMapScriptTabs :: HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScriptTabs = [ihamlet|
+function showRouteDescription(id) {
+  \$('#about-toggle').tab('show');
+  \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
+}
+
+function openLocationDescription(id) {
+  \$('#location-body-' + id).addClass('show');
+}
+
+function showLocationDescription(id) {
+  \$('#locations-toggle').tab('show');
+  \$('#' + id).get(0).scrollIntoView({behavior: 'smooth'});
+  openLocationDescription(id);
+}
+
+|]
+
+caminoMapScriptCamino :: Bool -> (Location -> String) -> (PointOfInterest -> String) -> (Location -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute) ->  (Leg -> Int) -> (Leg -> Float) -> (Leg -> String) -> S.Set Location -> S.Set Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScriptCamino tlink chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip chooseWidth chooseOpacity chooseColour locations legs = [ihamlet|
+$forall location <- locations
+  $maybe position <- locationPosition location
+    marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{chooseLocationIcon location} } );
+    marker.bindTooltip(`^{chooseLocationTooltip location}`);
+    marker.addTo(locations);
+    $if tlink
+      marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
+  $forall poi <- locationPois location
+    $maybe position <- poiPosition poi
+      marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{choosePoiIcon poi} } );
+      marker.bindTooltip(`^{choosePoiTooltip poi}`);
+      marker.addTo(pois);
+      $if tlink
+        marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
+$forall leg <- legs
+  $if isJust (locationPosition $ legFrom leg) && isJust (locationPosition $ legTo leg)
+    line = L.polyline([
+      [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
+      [#{maybe 0.0 latitude (locationPosition $ legTo leg)}, #{maybe 0.0 longitude (locationPosition $ legTo leg)}]
+    ], {
+       color: '#{chooseColour leg}',
+       weight: #{chooseWidth leg},
+       opacity: #{chooseOpacity leg}
+    });
+    line.addTo(legs);
+|]
+
+caminoMapScriptLabels :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScriptLabels camino = [ihamlet|
+$forall route <- caminoRoutes camino
+  $if routeMajor route && not (route == defr)
+    $maybe position <- locationPosition (routeCentralLocation route)
+      label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
+      label.addTo(labels);
+$maybe position <- locationPosition caminoStart
+  label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (caminoName camino)}`, direction: "top", permanent: true, className: "map-label" });
+  label.addTo(labels);
+|]
+  where
+    defr = caminoDefaultRoute camino
+    caminoStart = head $ routeStarts defr
+
+
+caminoMapScript :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScript tprefs cprefs solution = [ihamlet|
+<script>
+  ^{caminoMapScriptBase}
+  ^{caminoMapScriptTabs}
+  map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
+  ^{caminoMapScriptCamino True chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip chooseWidth chooseOpacity chooseColour locations legs}
+  selectZoom(map, locations, legs, pois, labels);
+|]
+  where
+    camino = preferenceCamino cprefs
+    locations = S.fromList $ M.elems $ caminoLocations camino
+    legs = S.fromList $ caminoLegs camino
+    (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino solution
+    (tl, br) = if S.null waypoints then caminoBbox camino else locationBbox waypoints
+    chooseLocationIcon loc = caminoLocationIcon tprefs cprefs stops waypoints loc
+    choosePoiIcon poi = caminoPoiIcon tprefs cprefs poi
+    chooseLocationTooltip loc = caminoLocationTooltip tprefs cprefs solution usedLegs loc
+    choosePoiTooltip poi = caminoPoiTooltip tprefs cprefs poi
+    chooseWidth leg | S.member leg usedLegs = 7 :: Int
+      | otherwise = 5 :: Int
+    chooseOpacity leg | S.member leg usedLegs = 1.0 :: Float
+      | otherwise = 0.5 :: Float
+    chooseColour leg | S.member leg usedLegs = toCssColour $ paletteColour $ routePalette $ caminoLegRoute camino leg
+      | otherwise = toCssColour $ blend 0.5 lightgrey $ paletteColour $ routePalette $ caminoLegRoute camino leg
+
+
+caminoAllMapScript :: LatLong -> LatLong -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAllMapScript tl br caminos = [ihamlet|
+<script>
+  ^{caminoMapScriptBase}
+  ^{caminoMapScriptCamino False chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip chooseWidth chooseOpacity chooseColour locations legs}
+  $forall camino <- caminos
+    ^{caminoMapScriptLabels camino}
+  map.setZoom(7);
+  selectZoom(map, locations, legs, pois, labels);
+  map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
+ |]
+  where
+    rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoLegs c)) caminos
+    locations = S.unions $ map (S.fromList . M.elems . caminoLocations) caminos
+    legs = S.unions $ map (S.fromList . caminoLegs) caminos
+    chooseLocationIcon loc = caminoLocationIconSimple loc
+    choosePoiIcon poi = caminoPoiIconSimple poi
+    chooseLocationTooltip loc = caminoLocationTooltipSimple loc
+    choosePoiTooltip poi = caminoPoiTooltipSimple poi
+    chooseWidth _leg = 7 :: Int
+    chooseOpacity _leg = 1.0 :: Float
+    chooseColour leg = maybe "#000000" (toCssColour . paletteColour . routePalette) (M.lookup leg rmap)
 
 
 aboutHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1610,7 +1727,7 @@ layoutHtml config title header body footer = [ihamlet|
 
 
 keyHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-keyHtml _config preferences camino = $(ihamletFile "templates/help/key-en.hamlet")
+keyHtml _config _preferences camino = $(ihamletFile "templates/help/key-en.hamlet")
 
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")

@@ -2342,6 +2342,7 @@
       "id": "BM-BM",
       "name": "Full Walk",
       "description": "The full Bondi to Manly walk.",
+      "major": true,
       "stops": [
         "BM-36"
       ],

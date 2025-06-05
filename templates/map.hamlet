@@ -1,0 +1,14 @@
+<div .container-fluid>
+  <div .row>
+    <div .col-md .d-flex .justify-content-center>
+      <div #map>
+    <div .col-md-2 .m-1 .map-key-small>
+      <table>
+        <tbody>
+          $forall camino <- caminos
+            ^{caminoCaminoKeyHtml camino}
+    <div .col-md-1 .m-1 .map-key-small>
+      <table>
+        <tbody>
+          ^{caminoMapKeyHtml False}
+^{caminoAllMapScript (LatLong 44.0 -10.0 def) (LatLong 39.0 -1.0 def) caminos}

@@ -7,3 +7,7 @@
   <div .row .justify-content-center>
     <div .col-1>
       <a .btn .btn-primary href="@{PreferencesR}">_{MsgStartLabel}
+  <div .row .m-4 .justify-content-center>
+    <div .col .p-1>
+      <a href="@{MapR}" title="_{MsgMapTitle}">
+        <img .rounded .mx-auto .d-block .img-fluid src="#{mapUrl}" alt="_{MsgMapTitle}" >

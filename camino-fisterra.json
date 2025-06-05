@@ -1649,6 +1649,7 @@
       "id": "FI-F",
       "name": "Camino Fisterra",
       "description": "The main Camino route starting in Stantiago de Compostella and following the Southern route",
+      "major": true,
       "stops": [
       ],
       "starts": [
@@ -1666,6 +1667,7 @@
       "id": "FI-M",
       "name": "Muxia Variant",
       "description": "A longer variant that travels North to Muxia and then Southwards to Fisterra",
+      "major": true,
       "locations": [
         "FI-M1",  "FI-M2",  "FI-M3",  "FI-M4",  "FI-M5",  "FI-M6",  "FI-M7",  "FI-M8",  "FI-M9",  "FI-M10",
         "FI-M11", "FI-M12", "FI-M13", "FI-M14", "FI-M15", "FI-M16", "FI-M17", "FI-M18", "FI-M19", "FI-M20"

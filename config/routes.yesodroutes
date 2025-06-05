@@ -2,6 +2,7 @@
 /about AboutR GET
 /camino/#Text CaminoR GET
 /help HelpR GET
+/map MapR GET
 /metric MetricR GET
 /notice NoticeR GET
 /plan PlanR POST

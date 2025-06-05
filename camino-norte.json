@@ -9161,6 +9161,7 @@
       "id": "N-N",
       "name": "Camino del Norte",
       "description": "The main Camino route starting in Irun.",
+      "major": true,
       "starts": [
         "N-N1",
         "N-N224"
@@ -9245,10 +9246,11 @@
     },
     {
       "id": "N-ER",
-      "name": "Eastern route from the coast to Mondoñedo@en",
+      "name": "Original route to Mondoñedo@en",
       "description": {
         "text": "The most common modern route goes to Ribadeo and then follows the Western side of the Ría de Foz estuary to Mondoñedo. This is original pilgrimage route, following the Eastern side of the estuary@en"
       },
+      "major": true,
       "locations": [
         "N-ER1", "N-ER2", "N-ER3", "N-ER4", "N-ER5", "N-ER6", "N-ER7", "N-ER8"
       ],

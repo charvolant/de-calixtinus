@@ -31,7 +31,7 @@ import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
-import Data.Text (Text, concat, intercalate, pack, splitOn, unpack)
+import Data.Text (Text, concat, intercalate, isPrefixOf, pack, splitOn, unpack)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Text.Lazy (toStrict)
 import Data.Time.Calendar (Day, fromGregorian)
@@ -460,6 +460,12 @@ noticePopup = do
   let notice = (noticePopupText locales) messages router
   return $(widgetFile "notice-popup")
 
+-- Ensure secure cookies
+defaultCookieSecure :: Handler Bool
+defaultCookieSecure = do
+  master <- getYesod
+  return $ isPrefixOf "https:" (caminoAppRoot master)
+
 -- | Update this as terms change
 noticeVersion :: Text
 noticeVersion = "Accept 0.7"
@@ -486,12 +492,13 @@ checkNotice = do
 setNotice :: Bool -> Handler ()
 setNotice accept =
   if accept then do
+    secure <- defaultCookieSecure
     let cookie  = defaultSetCookie { 
         setCookieName = encodeUtf8 noticeCookie
       , setCookieValue = encodeUtf8 noticeVersion
       , setCookiePath = Just "/"
       , setCookieMaxAge = Just noticeAge 
-      , setCookieSecure = True
+      , setCookieSecure = secure
       , setCookieSameSite = Just sameSiteStrict
     }
     setCookie cookie
@@ -505,13 +512,14 @@ decodePreferences = do
 
 encodePreferences :: PreferenceData -> Handler ()
 encodePreferences preferences = do
+  secure <- defaultCookieSecure
   let enc = LB.toStrict $ encode preferences
   let cookie = defaultSetCookie { 
       setCookieName = encodeUtf8 preferencesCookie
     , setCookieValue = enc
     , setCookiePath = Just "/"
     , setCookieMaxAge = Just preferencesAge
-    , setCookieSecure = True
+    , setCookieSecure = secure
     , setCookieSameSite = Just sameSiteStrict
   }
   setCookie cookie

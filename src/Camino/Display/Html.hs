@@ -1545,7 +1545,7 @@ $forall route <- caminoRoutes camino
           label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
           label.addTo(majorRouteLabels);
       $else
-          label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
+          label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-subminor" });
           label.addTo(minorRouteLabels);
 $maybe position <- locationPosition caminoStart
   label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (caminoName camino)}`, direction: "top", permanent: true, className: "map-label" });

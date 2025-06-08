@@ -139,7 +139,7 @@ iconList = [
     ("ca-dinner", '\xe065'),
     ("ca-document", '\xe099'),
     ("ca-document-kml", '\xe09b'),
-    ("ca-document-spreadhseet", '\xe09a'),
+    ("ca-document-spreadsheet", '\xe09a'),
     ("ca-dryer", '\xe062'),
     ("ca-ferry", '\xe082'),
     ("ca-festival", '\xe032'),

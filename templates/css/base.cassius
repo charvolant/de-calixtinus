@@ -194,7 +194,10 @@ a
 .map-key-small
   font-size: x-small
 .map-label
+  font-size: inherit
 .map-label-minor
+  font-size: smaller
+.map-label-subminor
   font-size: smaller
   font-weight: lighter
 .note

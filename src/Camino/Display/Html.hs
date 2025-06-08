@@ -198,6 +198,7 @@ caminoLocationTypeIcon Fountain = [ihamlet| <span .location-type .ca-fountain ti
 caminoLocationTypeIcon Statue = [ihamlet| <span .location-type .ca-statue title="_{StatueTitle}"> |]
 caminoLocationTypeIcon Artwork = [ihamlet| <span .location-type .ca-artwork title="_{ArtworkTitle}"> |]
 caminoLocationTypeIcon Municipal = [ihamlet| <span .location-type .ca-municipal title="_{MunicipalTitle}"> |]
+caminoLocationTypeIcon InformationPoint = [ihamlet| <span .location-type .ca-information-point title="_{InformationPointTitle}"> |]
 caminoLocationTypeIcon PilgrimResource = [ihamlet| <span .location-type .ca-pilgrim title="_{PilgrimResourceTitle}"> |]
 caminoLocationTypeIcon Junction = [ihamlet| <span .location-type .ca-junction title="_{JunctionTitle}"> |]
 caminoLocationTypeIcon Shop = [ihamlet| <span .location-type .ca-shop title="_{ShopTitle}"> |]
@@ -229,6 +230,7 @@ caminoLocationTypeLabel Fountain = FountainTitle
 caminoLocationTypeLabel Statue = StatueTitle
 caminoLocationTypeLabel Artwork = ArtworkTitle
 caminoLocationTypeLabel Municipal = MunicipalTitle
+caminoLocationTypeLabel InformationPoint = InformationPointTitle
 caminoLocationTypeLabel PilgrimResource = PilgrimResourceTitle
 caminoLocationTypeLabel Junction = JunctionTitle
 caminoLocationTypeLabel Shop = ShopTitle
@@ -1473,6 +1475,7 @@ $forall icon <- icons
       , (Statue, (12, 24))
       , (Artwork, (24, 24))
       , (Municipal, (24, 21))
+      , (InformationPoint, (24, 24))
       , (PilgrimResource, (16, 24))
       , (Junction, (23, 24))
       , (Shop, (24, 16))

@@ -3988,7 +3988,7 @@
           "name": [
             "Avilés Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.55589, "longitude": -5.92044 }
         }
       ]
@@ -4894,7 +4894,7 @@
           "name": [
             "Navia Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.54177, "longitude": -6.72271 }
         }
       ]
@@ -5001,7 +5001,7 @@
           "name": [
             "La Caridad Tourist Information Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.55233, "longitude": -6.83139 }
         }
       ]
@@ -5190,7 +5190,7 @@
             "Oficina de Turismo de Ribadeo@es",
             "Ribadeo Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.53564, "longitude": -7.03930 }
         }
       ]
@@ -5370,7 +5370,7 @@
           "name": [
             "Lourenzá Municipal Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.47085, "longitude": -7.29863 }
         },
         {
@@ -5502,7 +5502,7 @@
           "name": [
             "Mondoñedo Municipal Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.42854, "longitude": -7.36364 }
         },
         {
@@ -5874,7 +5874,7 @@
         {
           "id":  "N-N221-1",
           "name": "Vilalba Tourist Office@en",
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": {"latitude": 43.29802, "longitude": -7.68153 }
         },
         {
@@ -6240,7 +6240,7 @@
           "name": [
             "Sobrado dos Monxes Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": {"latitude": 43.04029, "longitude": -8.02221 }
         },
         {
@@ -6345,7 +6345,7 @@
           "name": [
             "Boimorto Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": {"latitude": 43.00776, "longitude": -8.12654 }
         },
         {
@@ -6545,7 +6545,7 @@
           "name": [
             "Vegadeo Tourist Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": { "latitude": 43.46436, "longitude": -7.05000 }
         }
       ]

@@ -448,6 +448,7 @@ data LocationType =
    | Statue -- ^ A statue, artwork, etc
    | Artwork -- ^ An artwork
    | Municipal -- ^ An office, square, market etc
+   | InformationPoint -- ^ Tourist information
    | PilgrimResource -- ^ An office, rest-spot etc. for pilgrims
    | Junction -- ^ A junction in pilgrim routes
    | Shop -- ^ A shop of some interest
@@ -518,6 +519,7 @@ defaultPoiCategories Fountain = S.fromList [RecreationPoi]
 defaultPoiCategories Statue = S.fromList [HistoricalPoi]
 defaultPoiCategories Artwork = S.fromList [CulturalPoi]
 defaultPoiCategories Municipal = S.fromList [HistoricalPoi, RecreationPoi]
+defaultPoiCategories InformationPoint = S.fromList [RecreationPoi]
 defaultPoiCategories PilgrimResource = S.fromList [PilgrimPoi]
 defaultPoiCategories Shop = S.fromList [RecreationPoi]
 defaultPoiCategories Winery = S.fromList [RecreationPoi]

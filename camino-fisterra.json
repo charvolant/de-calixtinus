@@ -844,7 +844,7 @@
             "Punto Información@ga",
             "Tourism Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": {"latitude": 42.90564, "longitude": -9.26259 },
           "hours": "1000-1400,1530-1830"
         },
@@ -1102,7 +1102,7 @@
             "Oficina Municipal de Turismo de Muxía@ga",
             "Tourism Office@en"
           ],
-          "type": "PilgrimResource",
+          "type": "InformationPoint",
           "position": {"latitude": 43.10722, "longitude": -9.21723 },
           "calendar": {
             "type": "weekly",

@@ -136,9 +136,15 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon InformationPoint}
+          <td>Information Point
+          <td>A local tourist office, guide, etc. not specifically geared towards pilgrims
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon PilgrimResource}
           <td>Pilgrim Resource
-          <td>A pilgrim's office, rest point, etc. specifically geared to pilgrims
+          <td>A pilgrim's office, rest point, etc. specifically geared towards pilgrims
         <tr>
           <td>
             <span .location-type-sample>

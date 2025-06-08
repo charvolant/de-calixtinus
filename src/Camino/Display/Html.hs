@@ -1369,15 +1369,22 @@ var map = L.map('map');
 var locations = L.layerGroup();
 var legs = L.layerGroup();
 var pois = L.layerGroup();
-var labels = L.layerGroup();
+var caminoLabels = L.layerGroup();
+var majorRouteLabels = L.layerGroup();
+var minorRouteLabels = L.layerGroup();
 var marker;
 var line;
+var label;
+
+var labelState = 0;
 
 L.tileLayer('@{MapTileRoute}', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
-labels.setZIndex(40);
+caminoLabels.setZIndex(60);
+majorRouteLabels.setZIndex(50);
+minorRouteLabels.setZIndex(40);
 locations.setZIndex(30);
 legs.setZIndex(20);
 pois.setZIndex(10);
@@ -1387,16 +1394,26 @@ function showLocationOnMap(lat, lng) {
   map.fitBounds([ [lat + 0.01, lng - 0.01], [lat - 0.01, lng + 0.01] ]);
 }
 
-function selectZoom(map, locations, legs, pois, labels) {
+function selectZoom() {
   var zoom = map.getZoom();
   var showLocations = zoom > 8;
   var showLegs = true;
   var showPois = zoom > 12;
-  var showLabels = true;
-  if (showLabels && !map.hasLayer(labels))
-      map.addLayer(labels);
-  if (!showLabels && map.hasLayer(labels))
-      map.removeLayer(labels);
+  var showCaminoLabels = labelState > 0;
+  var showMajorRouteLabels = labelState > 1;
+  var showMinorRouteLabels = labelState > 2;
+  if (showCaminoLabels && !map.hasLayer(caminoLabels))
+      map.addLayer(caminoLabels);
+  if (!showCaminoLabels && map.hasLayer(caminoLabels))
+      map.removeLayer(caminoLabels);
+  if (showMajorRouteLabels && !map.hasLayer(majorRouteLabels))
+      map.addLayer(majorRouteLabels);
+  if (!showMajorRouteLabels && map.hasLayer(majorRouteLabels))
+      map.removeLayer(majorRouteLabels);
+  if (showMinorRouteLabels && !map.hasLayer(minorRouteLabels))
+      map.addLayer(minorRouteLabels);
+  if (!showMinorRouteLabels && map.hasLayer(minorRouteLabels))
+      map.removeLayer(minorRouteLabels);
   if (showPois && !map.hasLayer(pois))
       map.addLayer(pois);
   if (!showPois && map.hasLayer(pois))
@@ -1412,8 +1429,12 @@ function selectZoom(map, locations, legs, pois, labels) {
 }
 
 map.on("zoomend", function() {
-  selectZoom(map, locations, legs, pois, labels);
+  selectZoom();
 });
+L.easyButton('<span class="ca-label fs-5" title="_{ShowLabelsTitle}"></span>', function(btn, map) {
+    labelState = (labelState + 1) % 4;
+    selectZoom();
+}).addTo(map);
 
 $forall icon <- icons
   $with name <- T.pack $ show $ fst icon
@@ -1518,13 +1539,17 @@ $forall leg <- legs
 caminoMapScriptLabels :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptLabels camino = [ihamlet|
 $forall route <- caminoRoutes camino
-  $if routeMajor route && not (route == defr)
-    $maybe position <- locationPosition (routeCentralLocation route)
-      label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
-      label.addTo(labels);
+  $maybe position <- locationPosition (routeCentralLocation route)
+    $if not (route == defr)
+      $if routeMajor route
+          label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
+          label.addTo(majorRouteLabels);
+      $else
+          label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
+          label.addTo(minorRouteLabels);
 $maybe position <- locationPosition caminoStart
   label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (caminoName camino)}`, direction: "top", permanent: true, className: "map-label" });
-  label.addTo(labels);
+  label.addTo(caminoLabels);
 |]
   where
     defr = caminoDefaultRoute camino
@@ -1538,7 +1563,8 @@ caminoMapScript tprefs cprefs solution = [ihamlet|
   ^{caminoMapScriptTabs}
   map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
   ^{caminoMapScriptCamino True chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip chooseWidth chooseOpacity chooseColour locations legs}
-  selectZoom(map, locations, legs, pois, labels);
+  ^{caminoMapScriptLabels camino}
+  selectZoom();
 |]
   where
     camino = preferenceCamino cprefs
@@ -1565,9 +1591,8 @@ caminoAllMapScript tl br caminos = [ihamlet|
   ^{caminoMapScriptCamino False chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip chooseWidth chooseOpacity chooseColour locations legs}
   $forall camino <- caminos
     ^{caminoMapScriptLabels camino}
-  map.setZoom(7);
-  selectZoom(map, locations, legs, pois, labels);
   map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
+  selectZoom();
  |]
   where
     rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoLegs c)) caminos

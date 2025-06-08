@@ -213,6 +213,13 @@ defaultConfig = Config {
         assetCrossOrigin = Anonymous
       },
       Asset {
+        assetId = "leaflet-js-easybutton",
+        assetType = JavaScriptEarly,
+        assetPath = "https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Anonymous
+      },
+      Asset {
         assetId = "bootstrap-css",
         assetType = Css,
         assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
@@ -223,6 +230,13 @@ defaultConfig = Config {
         assetId = "leaflet-css",
         assetType = Css,
         assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "leaflet-css-easybutton",
+        assetType = Css,
+        assetPath = "https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },

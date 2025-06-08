@@ -235,6 +235,7 @@ data CaminoMsg =
   | ServicesPreferencesLabel
   | SharedTitle
   | ShopTitle
+  | ShowLabelsTitle
   | ShowOnMapTitle
   | SingleTitle
   | SleepingBagTitle
@@ -506,6 +507,7 @@ renderCaminoMsgDefault _ ServicesLabel = "Services"
 renderCaminoMsgDefault _ ServicesPreferencesLabel = "Missing Services"
 renderCaminoMsgDefault _ SharedTitle = "Shared"
 renderCaminoMsgDefault _ ShopTitle = "Shop"
+renderCaminoMsgDefault _ ShowLabelsTitle = "Show camino and route labels on map"
 renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
 renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"

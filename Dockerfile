@@ -1,4 +1,4 @@
-FROM haskell:9.6-bullseye AS build
+FROM haskell:9.8-bullseye AS build
 # First build all the dependencies as a separate layer so we don't have to do it all over with each minor change
 COPY stack.yaml package.yaml de-calixtinus.cabal /build/
 WORKDIR /build

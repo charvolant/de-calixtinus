@@ -14,20 +14,26 @@ module Data.Util (
     canonicalise
   , categorise
   , commaJoin
+  , foldDirectory
   , listUnions
+  , loopM
   , maybeMax
   , maybeMin
   , maybeSum
   , partition
+  , scanDirectory
   , selectFromList
   , toFileName
   , unique
 ) where
 
+import Control.Monad
 import Data.Char (isLetter, isPunctuation)
 import qualified Data.Set as S
 import qualified Data.Text as T
- 
+import System.Directory
+import System.FilePath
+
 -- | Select elements from a list that are in a set, keeping the order of the list
 selectFromList :: (Ord a) => S.Set a -- ^ The elements to select
   -> [a] -- ^ The source list
@@ -307,3 +313,42 @@ commaJoin (t:r) = let
       t' <> " " <> r'
     else
       t' <> ", " <> r'
+
+
+-- | Recursively scan a directory, performing an action on each file
+scanDirectory :: (FilePath -> IO ()) -> (FilePath -> IO ()) -> FilePath -> IO ()
+scanDirectory faction daction dir = do
+  list <- listDirectory dir
+  forM_ list (\f -> do
+      let ff = dir </> f
+      isFile <- doesFileExist ff
+      when isFile (faction ff)
+      when (not isFile) (do
+        scanDirectory faction daction ff
+        )
+    )
+  daction dir
+
+
+-- | Recursively scan a directory, folding a
+foldDirectory :: FilePath -> (a -> FilePath -> a) -> a -> IO a
+foldDirectory dir folder val = do
+  list <- listDirectory dir
+  value <- foldM (\v -> \f -> do
+      let ff = dir </> f
+      isFile <- doesFileExist ff
+      if isFile then
+          return $ folder v ff
+       else
+          foldDirectory ff folder v
+    ) val list
+  return value
+
+-- | A monadic loop, where the predicate returns 'Left' as a seed for the next loop
+--   or 'Right' to abort the loop.
+loopM :: Monad m => (a -> m (Either a b)) -> a -> m b
+loopM act x = do
+    res <- act x
+    case res of
+        Left x' -> loopM act x'
+        Right v -> pure v

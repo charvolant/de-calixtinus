@@ -231,6 +231,7 @@ route1 = Route {
   routeID = "R1", 
   routeName = wildcardText "R1", 
   routeDescription = wildcardDescription "Route 1",
+  routeMajor = True,
   routeLocations = S.fromList [location1, location2, location3], 
   routeStarts = [],
   routeFinishes = [],

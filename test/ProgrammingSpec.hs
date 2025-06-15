@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# OPTIONS_GHC -Wno-orphans       #-}
-
+{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 module ProgrammingSpec(testProgramming) where
 
 import Test.HUnit(Test(..), assertEqual, assertBool)

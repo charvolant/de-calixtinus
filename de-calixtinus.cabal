@@ -43,6 +43,7 @@ library
       Camino.Server.Foundation
       Camino.Server.Settings
       Camino.Walking
+      Data.Cache
       Data.Description
       Data.DublinCore
       Data.Event
@@ -75,6 +76,7 @@ library
     , containers
     , cookie
     , data-default-class
+    , deepseq
     , directory
     , file-embed
     , filepath
@@ -123,6 +125,7 @@ executable camino-map-exe
     , cookie
     , data-default-class
     , de-calixtinus
+    , deepseq
     , directory
     , file-embed
     , filepath
@@ -171,6 +174,7 @@ executable camino-planner-exe
     , cookie
     , data-default-class
     , de-calixtinus
+    , deepseq
     , directory
     , file-embed
     , filepath
@@ -219,6 +223,7 @@ executable camino-server-exe
     , cookie
     , data-default-class
     , de-calixtinus
+    , deepseq
     , directory
     , file-embed
     , filepath
@@ -267,6 +272,7 @@ executable generate-static-exe
     , cookie
     , data-default-class
     , de-calixtinus
+    , deepseq
     , directory
     , file-embed
     , filepath
@@ -300,6 +306,7 @@ test-suite de-calixtinus-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      CacheSpec
       CaminoSpec
       ConfigSpec
       DescriptionSpec
@@ -334,6 +341,7 @@ test-suite de-calixtinus-test
     , cookie
     , data-default-class
     , de-calixtinus
+    , deepseq
     , directory
     , file-embed
     , filepath

@@ -1,5 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 import Test.HUnit
+import CacheSpec
 import CaminoSpec
 import ConfigSpec
 import DescriptionSpec
@@ -55,6 +57,7 @@ testList config prefs camino = TestList [
    TestLabel "Region" testRegion,
    TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
+   TestLabel "Cache" testCache,
    TestLabel "Xlsx" testXlsx,
    TestLabel "Config" testConfig,
    TestLabel "Camino" testCamino,

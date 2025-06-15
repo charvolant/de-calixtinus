@@ -67,9 +67,9 @@ testGetAssets = TestList [
 
 testGetAssets1 = TestCase (assertEqual "getAssets 1" 0 (length $ getAssets JavaScript testConfig1))
 
-testGetAssets2 = TestCase (assertEqual "getAssets 2" 4 (length $ getAssets Css testConfig1))
+testGetAssets2 = TestCase (assertEqual "getAssets 2" 5 (length $ getAssets Css testConfig1))
 
-testGetAssets3 = TestCase (assertEqual "getAssets 3" 3 (length $ getAssets Css defaultConfig))
+testGetAssets3 = TestCase (assertEqual "getAssets 3" 4 (length $ getAssets Css defaultConfig))
 
   
 testGetAsset = TestList [

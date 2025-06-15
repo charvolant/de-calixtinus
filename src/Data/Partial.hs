@@ -1,5 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
+
 {-|
 Module      : Partial Ordeing
 Description : Handling of partial orders and topological sorts
@@ -19,6 +21,7 @@ module Data.Partial (
 
 import Data.Foldable (foldl')
 import Data.List (partition)
+
 
 -- | A partial order over a.
 --   If the partial order evaluates to true, then the first argument is less than or equal to the second argument.

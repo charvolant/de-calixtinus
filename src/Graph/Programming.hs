@@ -35,6 +35,7 @@ module Graph.Programming (
   , step
 ) where
 
+import Control.DeepSeq
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Graph.Graph
@@ -76,6 +77,13 @@ instance (FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Ch
 instance (ToJSON v, ToJSON e, ToJSON s, Edge e v, Score s) => ToJSON (Chain v e s) where
     toJSON (Chain start' finish' path' score') =
       object [ "start" .= start', "finish" .= finish', "path" .= path', "score" .= score' ]
+
+instance (Edge e v, Score s, NFData v, NFData e, NFData s) => NFData (Chain v e s) where
+  rnf c = start c
+    `deepseq` finish c
+    `deepseq` path c
+    `deepseq` score c
+    `deepseq` ()
 
 instance (Edge e v, Score s) => Edge (Chain v e s) v where
   source = start

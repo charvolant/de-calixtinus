@@ -26,6 +26,8 @@ module Data.Metadata (
   statementValue
 ) where
 
+import GHC.Generics (Generic)
+import Control.DeepSeq
 import Data.Aeson
 import Data.Default.Class
 import Data.List (find)
@@ -38,7 +40,7 @@ import Network.URI
 data Namespace = Namespace {
   namespacePrefix :: T.Text, -- ^ The prefix to use
   namespaceUri :: T.Text -- ^ The corresponding namespace URI
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON Namespace where
   parseJSON (Object v) = do
@@ -49,6 +51,8 @@ instance FromJSON Namespace where
 
 instance ToJSON Namespace where
   toJSON (Namespace prefix' namespace') = object [ "prefix" .= (fromJust $ T.stripSuffix ":" prefix'), "namespace" .= namespace' ]
+
+instance NFData Namespace
 
 -- | Merge namespaces with the second entry overriding the first
 mergeNamespaces :: [Namespace] -> [Namespace] -> [Namespace]
@@ -77,7 +81,7 @@ encodeTerm namespaces term =
 data Statement =
   Statement URI TaggedText -- ^ A proper statement
   | RawStatement T.Text TaggedText -- ^ A statement that needs to be decoded
-  deriving (Show)
+  deriving (Show, Generic)
 
 instance FromJSON Statement where
   parseJSON (Object v) = do
@@ -89,6 +93,8 @@ instance FromJSON Statement where
 instance ToJSON Statement where
   toJSON (RawStatement term' value') = object [ "term" .= term', "value" .= value' ]
   toJSON (Statement term' value') = object [ "term" .= (uriToString id term') "", "value" .= value' ]
+
+instance NFData Statement
 
 fromRawStatement _namespaces s@(Statement _ _) = s
 fromRawStatement namespaces (RawStatement term value) = Statement (fromJust $ decodeTerm namespaces term) value
@@ -127,7 +133,7 @@ statementLabel statement =
 data Metadata = Metadata {
   metadataNamespaces :: [Namespace], -- ^ The list of namespaces
   metadataStatements :: [Statement] -- ^ The list of metadata statements
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON Metadata where
   parseJSON (Object v) = do
@@ -144,6 +150,8 @@ instance ToJSON Metadata where
       statements'' = map (toRawStatement namespaces') statements'
     in
       object [ "namespaces" .= namespaces', "statements" .= statements'' ]
+
+instance NFData Metadata
 
 -- | A default, empty metadata container with the dc: and dcterms: namespaces
 instance Default Metadata where

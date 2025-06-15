@@ -34,6 +34,8 @@ module Data.Event (
   , isDaily
 ) where
 
+import GHC.Generics (Generic)
+import Control.DeepSeq
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch, Parser)
@@ -51,7 +53,7 @@ data CalendarConfigEntry = CalendarConfigEntry {
     ceKey :: Text
   , ceName :: Localised TaggedText
   , ceCalendar :: EventCalendar
-} deriving (Show, Eq)
+} deriving (Show, Eq, Generic)
 
 instance ToJSON CalendarConfigEntry where
   toJSON (CalendarConfigEntry key' name' calendar') = object [ "key" .= key', "name" .= name', "calendar" .= calendar' ]
@@ -63,13 +65,15 @@ instance FromJSON CalendarConfigEntry where
     calendar' <- v .: "calendar"
     return $ CalendarConfigEntry key' name' calendar'
   parseJSON v = typeMismatch "calendar entry object" v
-  
+
+instance NFData CalendarConfigEntry
+
 -- | Top-level calendar configureation for named calendars.
 --   This is intended to be embedded in a ReaderT so that readers and writers can access common calendar defintions
 data CalendarConfig = CalendarConfig {
     calendarConfigCalendars :: [CalendarConfigEntry]
   , calendarConfigLookup :: Text -> Maybe CalendarConfigEntry
-}
+} deriving (Generic)
 
 instance Show CalendarConfig where
   show config = showString "CalendarConfig: " $ showList (calendarConfigCalendars config) ""
@@ -86,6 +90,8 @@ instance FromJSON CalendarConfig where
     let calendarMap = M.fromList $ map (\e -> (ceKey e, e)) calendars'
     return $ CalendarConfig calendars' (\k -> M.lookup k calendarMap)
   parseJSON v = typeMismatch "array of calendar entries" v
+
+instance NFData CalendarConfig
 
 class HasCalendarConfig a where
   getCalendarConfig :: a -> CalendarConfig
@@ -149,7 +155,7 @@ data EventCalendar =
   | PublicHoliday Text -- ^ A regional public holiday
   | ClosedDay Text -- ^ A regional closed day (eg Sundays)
   | Conditional EventCalendar (Localised TaggedText) -- ^ Occurs at complex times specified by a note
-  deriving (Show)
+  deriving (Show, Generic)
   
 instance Eq EventCalendar where
   Daily == Daily = True
@@ -317,6 +323,8 @@ instance FromJSON EventCalendar where
       invalid' -> typeMismatch "expecting event type" invalid'
   parseJSON v = typeMismatch "expecting object" v
 
+instance NFData EventCalendar
+
 -- | Is this calendar daily (ie. no specific dates)
 isDaily :: EventCalendar -> Bool
 isDaily Daily = True
@@ -333,7 +341,7 @@ data EventTime =
     EventClosed -- ^ Indicates a null event time
   | EventOpen -- ^ Indicates soemthing open 24/7
   | EventTime [(TimeOfDay, TimeOfDay)]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
 
 instance ToJSON EventTime where
   toJSON EventClosed = "closed"
@@ -361,7 +369,9 @@ instance FromJSON EventTime where
         times' = splitOn "," v
         times'' = map parseTimeRange times'
   parseJSON v = typeMismatch "expecting string" v
-  
+
+instance NFData EventTime
+
 -- | Is this open 24/7
 isAlwaysOpen :: EventTime -> Bool
 isAlwaysOpen EventOpen = True
@@ -370,7 +380,7 @@ isAlwaysOpen _ = False
 
 -- | A combination of calendar and hours (eg. open on Fridays, 10-12)
 data EventHours = EventHours EventCalendar EventTime
-    deriving (Show, Eq)
+    deriving (Show, Eq, Generic)
 
 instance ToJSON EventHours where
   toJSON (EventHours calendar' hours') = object [
@@ -388,10 +398,12 @@ instance FromJSON EventHours where
     return $ EventHours calendar' hours'
   parseJSON v = typeMismatch "expecting string or object" v
 
+instance NFData EventHours
+
 -- | The opening hours of an establishment
 --   Opening hours match in order, so it is possible to have something like "closed on holidays, otherwise open from 10-5"
 data OpenHours = OpenHours [EventHours]
-    deriving (Show, Eq)
+    deriving (Show, Eq, Generic)
 
 instance ToJSON OpenHours where
   toJSON (OpenHours [hours']) = toJSON hours'
@@ -409,6 +421,8 @@ instance FromJSON OpenHours where
     hours' <- parseJSON v
     return $ OpenHours [hours']
   parseJSON v = typeMismatch "expecting string, object or array" v
+
+instance NFData OpenHours
 
 -- | Has at least one entry that gives a calendar of some sort
 hasCalendar :: OpenHours -> Bool

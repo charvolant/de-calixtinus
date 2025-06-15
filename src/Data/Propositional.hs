@@ -26,6 +26,7 @@ module Data.Propositional (
   , substitutionFromMap
 ) where
 
+import Control.DeepSeq
 import qualified Data.Map as M
 import qualified Data.Set as S
 
@@ -50,6 +51,17 @@ instance (Eq a, Show a) => Show (Formula a) where
   show (And (f:fs)) = "(" <> foldl (\s -> \f' -> s <> " \x2227 " <> show f') (show f) fs <> ")"
   show (Not f) = "\x00ac " <> show f
   show (Implies p c) = show p <> " \x2192 " <> show c
+
+instance (Eq a, NFData a) => NFData (Formula a) where
+  rnf T = ()
+  rnf F = ()
+  rnf (Variable v) = rnf v
+  rnf (Or fs) = rnf fs
+  rnf (And fs) = rnf fs
+  rnf (Not f) = rnf f
+  rnf (Implies p q) = p
+   `deepseq` q
+   `deepseq` ()
 
 -- | A substitution is a partial mapping of variables onto other formulae
 --   Generally, mappings on to @T@ or @F@ are expected; but other formulas could be used 

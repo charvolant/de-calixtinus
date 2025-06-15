@@ -25,6 +25,7 @@ module Data.Description (
 ) where
 
 import GHC.Generics (Generic)
+import Control.DeepSeq
 import Data.Aeson (FromJSON(..), ToJSON(..), Value(..), (.!=), (.:), (.:?), (.=), object)
 import Data.Aeson.Types (typeMismatch)
 import Data.DublinCore
@@ -44,12 +45,13 @@ data NoteType =
 
 instance FromJSON NoteType
 instance ToJSON NoteType
+instance NFData NoteType
 
 -- | A note with a type and detailed information
 data Note = Note {
     noteType :: NoteType -- ^ The type of note
   , noteText :: Localised TaggedText -- ^ The note substance
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON Note where
   parseJSON (String v) = do
@@ -64,14 +66,16 @@ instance FromJSON Note where
 instance ToJSON Note where
   toJSON (Note Information (Localised [TaggedText locale' txt'])) = toJSON $ txt' <> "@" <> localeID locale'
   toJSON (Note type' txt') = object [ "type" .= type', "text" .= txt' ]
- 
+
+instance NFData Note
+
 -- | An image descriptor
 data Image = Image {
       imageSource :: URI
     , imageThumbnail :: Maybe URI
     , imageTitle :: Localised TaggedText
     , imageMetadata :: Maybe Metadata
-  } deriving (Show)
+  } deriving (Show, Generic)
 
 instance FromJSON Image where
   parseJSON (Object v) = do
@@ -89,6 +93,8 @@ instance ToJSON Image where
       , "title" .= title'
       , "metadata" .= metadata'
      ]
+
+instance NFData Image
 
 joinText :: Text -> Maybe TaggedText -> Maybe Text -> Maybe Text
 joinText sep mtt mtxt = maybe mtxt (\tt -> Just $ maybe (plainText tt) (\txt -> txt <> sep <> plainText tt) mtxt) mtt
@@ -142,7 +148,7 @@ data Description = Description {
     , descAbout :: Maybe (Localised TaggedURL) -- ^ A referencing URI, if resolvable then this can be make into a link
     , descImage :: Maybe Image -- ^ A link to an image
   }   
-  deriving (Show)
+  deriving (Show, Generic)
 
 instance FromJSON Description where
   parseJSON (String v) = do
@@ -168,6 +174,8 @@ instance ToJSON Description where
       , "about" .= about'
       , "image" .= image'
     ]
+
+instance NFData Description
 
 -- | Create a localised instance from a piece of text
 wildcardDescription :: Text -> Description

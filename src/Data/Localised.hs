@@ -49,6 +49,7 @@ module Data.Localised (
 ) where
 
 import GHC.Generics
+import Control.DeepSeq
 import Data.Aeson
 import Data.Aeson.Types (Parser, typeMismatch)
 import Data.Char (isAlpha)
@@ -60,6 +61,18 @@ import Data.Time.Format
 import Data.Time.LocalTime
 import Formatting
 import Network.URI
+
+-- Make timelocale NFData
+instance NFData TimeLocale where
+  rnf tl = wDays tl
+    `deepseq` months tl
+    `deepseq` amPm tl
+    `deepseq` dateTimeFmt tl
+    `deepseq` dateFmt tl
+    `deepseq` timeFmt tl
+    `deepseq` time12Fmt tl
+    `deepseq` knownTimeZones tl
+    `deepseq` ()
 
 -- | Parse a URI, looking for the correct type
 textToUri :: Text -> URI
@@ -90,6 +103,7 @@ data WeekOfMonth =
 
 instance FromJSON WeekOfMonth
 instance ToJSON WeekOfMonth
+instance NFData WeekOfMonth
 
 -- | A locale specification
 data Locale = Locale {
@@ -101,7 +115,7 @@ data Locale = Locale {
   , localeTime :: Maybe TimeLocale -- ^ The time locale to use
   , localeOrdinals :: Maybe (Int -> Text)
   , localeWeekOfMonth :: Maybe (WeekOfMonth -> Text)
-}
+} deriving (Generic)
 
 instance Show Locale where
   show (Locale _parent' id' _matches' _language' _country' _time' _ordinals' _wom') = "Locale:" ++ (unpack id')
@@ -111,6 +125,8 @@ instance Eq Locale where
   
 instance Ord Locale where
   a `compare` b = (localeID a) `compare` (localeID b)
+
+instance NFData Locale
 
 localeLanguageTag :: Locale -> Text
 localeLanguageTag loc = if Prelude.null langs then
@@ -469,7 +485,7 @@ class TaggedLink a where
 -- | A piece of localised text tgged by a locale specification
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedText = TaggedText Locale Text 
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
 
 instance Tagged TaggedText where
   locale (TaggedText loc _) = loc
@@ -494,17 +510,21 @@ instance ToJSON TaggedText where
     else
       toJSON $ if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
 
+instance NFData TaggedText
+
 instance IsString TaggedText where
   fromString txt = fromText $ pack txt
 
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance NFData Hyperlink
 
 -- | A URL with potential localisation and title
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedURL = TaggedURL Locale Hyperlink
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
 
 instance Tagged TaggedURL where
   locale (TaggedURL loc _) = loc
@@ -541,9 +561,11 @@ instance ToJSON TaggedURL where
       , "title" .= title'
     ]
 
+instance NFData TaggedURL
+
 -- | A localised object containing (potentially) multiple localised instances of something
 data (Tagged a) => Localised a = Localised [a]
-    deriving (Show, Eq)
+  deriving (Show, Eq)
 
 instance (Tagged a, FromJSON a) => FromJSON (Localised a) where
   parseJSON v@(String _) = Localised <$> (singleton <$> parseJSON v)
@@ -557,6 +579,9 @@ instance (Tagged a, ToJSON a) => ToJSON (Localised a) where
 
 instance (Tagged a, IsString a) => IsString (Localised a) where
   fromString txt = Localised [fromString txt]
+
+instance (Tagged a, NFData a) => NFData (Localised a) where
+  rnf (Localised v) = rnf v
 
 -- | Get the elements of a localised list
 elements :: (Tagged a) => Localised a -> [a]

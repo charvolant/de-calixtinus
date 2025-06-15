@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
@@ -53,6 +54,8 @@ module Camino.Preferences (
   , withStartFinish
 ) where
 
+import GHC.Generics
+import Control.DeepSeq
 import Data.Aeson
 import Data.Placeholder
 import Data.Text (Text)
@@ -79,7 +82,7 @@ data PreferenceRange a = PreferenceRange {
   rangeUpper :: a, -- ^ The preferred upper bound for a range
   rangeMinimum :: Maybe a, -- ^ The /hard/ lower bound for a range
   rangeMaximum :: Maybe a -- ^ The /hard/ upper bound for a range
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance (FromJSON a) => FromJSON (PreferenceRange a) where
   parseJSON (Object v) = do
@@ -102,6 +105,8 @@ instance (FromJSON a) => FromJSON (PreferenceRange a) where
 instance (ToJSON a) => ToJSON (PreferenceRange a) where
   toJSON (PreferenceRange derived targ low up mini maxi) =
     object [ "derived" .= derived, "target" .= targ, "lower" .= low, "upper" .= up, "min" .= mini, "max" .= maxi]
+
+instance (NFData a) => NFData (PreferenceRange a)
 
 -- | Check to see if a range is valid, meaning that the minimum - lower - target - upper - maximum values are in order
 validRange :: (Ord a) => 
@@ -206,7 +211,7 @@ data StopPreferences = StopPreferences {
   , stopAccommodation :: M.Map AccommodationType Penance -- ^ Accommodation preferences (absence implies unacceptable accommodation)
   , stopServices :: M.Map Service Penance -- ^ Desired services at a stop (absence implies zero desire)
   , stopRouteServices :: M.Map Service Penance -- ^ Desired services on the road before reaching a stop
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON StopPreferences where
   parseJSON (Object v) = do
@@ -234,6 +239,8 @@ instance ToJSON StopPreferences where
       , "services-route" .= route'
     ]
 
+instance NFData StopPreferences
+
 -- | Preferences for hwo far, how long and what sort of comforts one might expect.
 --   These can be reasonably expected to remain constant across different caminos   
 data TravelPreferences = TravelPreferences {
@@ -247,7 +254,7 @@ data TravelPreferences = TravelPreferences {
   , preferenceStockStop :: StopPreferences -- ^ Preferences for the day before a day where everything will be closed (ie Sunday)
   , preferenceRestStop :: StopPreferences -- ^ Preferences for a rest stop (a stop where you spend a day resting up)
   , preferencePoiCategories :: S.Set PoiCategory -- ^ The types of Poi to visit
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON TravelPreferences where
   parseJSON (Object v) = do
@@ -290,6 +297,8 @@ instance ToJSON TravelPreferences where
       , "poi-categories" .= pois'
     ]
 
+instance NFData TravelPreferences
+
 -- | Preferences for where to go and where to stop on a camino  
 data CaminoPreferences = CaminoPreferences {
     preferenceCamino :: Camino -- ^ The camino route to walk
@@ -300,7 +309,7 @@ data CaminoPreferences = CaminoPreferences {
   , preferenceExcluded :: S.Set Location -- ^ Locations that we will not visit (end a day at, although passing through is OK)
   , preferencePois :: S.Set PointOfInterest -- ^ The significant points of interest that deserve a stop
   , preferenceStartDate :: Maybe Day -- ^ The proposed start date
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON CaminoPreferences where
   parseJSON (Object v) = do
@@ -349,6 +358,8 @@ instance ToJSON CaminoPreferences where
         , "pois" .= pois''
         , "start-date" .= startDate'
       ]
+
+instance NFData CaminoPreferences
 
 instance Summary CaminoPreferences where
   summary cprefs = "{"

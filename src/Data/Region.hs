@@ -31,6 +31,7 @@ module Data.Region (
 ) where
 
 import GHC.Generics
+import Control.DeepSeq
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (Parser, typeMismatch)
@@ -59,6 +60,7 @@ data RegionType =
 
 instance FromJSON RegionType
 instance ToJSON RegionType
+instance NFData RegionType
 
 data Region = Region {
     regionID :: Text -- ^ The region identifier
@@ -70,7 +72,7 @@ data Region = Region {
   , regionLocale :: Maybe Locale -- ^ The locale information for the region
   , regionHolidays :: [EventCalendar] -- ^ Local holidays
   , regionClosedDays :: [EventCalendar] -- ^ Days closed (not including holidays)
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance Eq Region where
   r1 == r2 = regionID r1 == regionID r2
@@ -130,6 +132,8 @@ instance FromJSON Region where
     return $ Region id' name' type' description' parent'' member'' locale'' holidays' closedDays'
   parseJSON v = typeMismatch "object" v
 
+instance NFData Region
+
 -- | Get all the regions of a particular type, including parent regions
 regionClosure :: S.Set Region -> S.Set Region
 regionClosure regions = regionClosure' regions regions
@@ -160,7 +164,7 @@ getInheritedClosedDays region = maybe [] getClosedDays $ regionParent region
 data RegionConfig = RegionConfig {
     regionConfigRegions :: [Region] -- ^ The list of regions
   , regionConfigLookup :: Text -> Maybe Region -- ^ Lookup a region based on identifier
-}
+} deriving (Generic)
 
 instance Show RegionConfig where
   show config = showString "RegionConfig: " $ showList (regionConfigRegions config) ""
@@ -173,6 +177,8 @@ instance FromJSON RegionConfig where
     regions' <- parseJSONList v :: Parser [Region]
     return $ createRegionConfig regions'
   parseJSON v = typeMismatch "array" v
+
+instance NFData RegionConfig
 
 class HasRegionConfig a where
   getRegionConfig :: a -> RegionConfig

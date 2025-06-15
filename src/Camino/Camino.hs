@@ -92,6 +92,7 @@ module Camino.Camino (
 ) where
 
 import GHC.Generics (Generic)
+import Control.DeepSeq
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
@@ -133,7 +134,7 @@ isPlaceholderName _ = False
 -- | Currently, based a simple float that can be thought of as equivalent to kilometres spent walking.
 data Penance = Reject -- ^ Unsustainable penance
  | Penance Float -- ^ Simple penance
- deriving (Show)
+ deriving (Show, Generic)
 
 instance Semigroup Penance where
   Reject <> _ = Reject
@@ -169,6 +170,8 @@ instance ToJSON Penance where
     toJSON Reject = String "reject"
     toJSON (Penance score') = Number $ fromFloatDigits score'
 
+instance NFData Penance
+
 -- | Reduce a penance by another penance, with 0 penance the minimum
 --   @Reject - b = Reject@, @a - Reject = zero@, @a - b = max(zero, a - b)@
 subtractFloor :: Penance -> Penance -> Penance
@@ -178,7 +181,7 @@ subtractFloor (Penance p1) (Penance p2) = if p2 > p1 then mempty else Penance (p
 
 -- | Spatial reference system
 data SRS = SRS Text
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
 
 srsID :: SRS -> Text
 srsID (SRS sid) = sid
@@ -186,11 +189,13 @@ srsID (SRS sid) = sid
 instance Default SRS where
   def = SRS "WGS84"
 
+instance NFData SRS
+
 data LatLong = LatLong {
   latitude :: Double,
   longitude :: Double,
   srs :: SRS
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON LatLong where
   parseJSON (Object v) = do
@@ -202,6 +207,8 @@ instance FromJSON LatLong where
 
 instance ToJSON LatLong where
   toJSON (LatLong latitude' longitude' srs') = object [ "latitude" .= latitude', "longitude" .= longitude', "srs" .= (if srs' == def then Nothing else Just (srsID srs')) ]
+
+instance NFData LatLong
 
 -- Compute the centroid of a list of lat/longs
 centroid :: (Foldable t) => t LatLong -> LatLong
@@ -237,6 +244,7 @@ instance FromJSONKey AccommodationType where
   fromJSONKey = genericFromJSONKey defaultJSONKeyOptions
 instance ToJSONKey AccommodationType where
   toJSONKey = genericToJSONKey defaultJSONKeyOptions
+instance NFData AccommodationType
 
 -- | Provide an enumeration of all accommodation types
 accommodationTypeEnumeration :: [AccommodationType]
@@ -284,7 +292,7 @@ instance FromJSONKey Service where
   fromJSONKey = genericFromJSONKey defaultJSONKeyOptions
 instance ToJSONKey Service where
   toJSONKey = genericToJSONKey defaultJSONKeyOptions
-
+instance NFData Service
 
 -- | Provide an enumeration of all services
 serviceEnumeration :: [Service]
@@ -309,12 +317,13 @@ data Sleeping = Shared -- ^ Shared accommodation in a dormitory
 
 instance FromJSON Sleeping
 instance ToJSON Sleeping
+instance NFData Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
   Accommodation (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) (Maybe Bool) -- ^ Fully described accommodation
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
-  deriving (Show)
+  deriving (Show, Generic)
   
 accommodationName :: Accommodation -> (Localised TaggedText)
 accommodationName (Accommodation name' _type _services _sleeping _multi) = name'
@@ -384,6 +393,8 @@ instance ToJSON Accommodation where
     toJSON (GenericAccommodation type' ) =
       toJSON type'
 
+instance NFData Accommodation
+
 -- | An event that takes place somewhere
 data EventType =
     Religious -- ^ A religious festival, ceremony, saints day etc.
@@ -398,6 +409,7 @@ data EventType =
 
 instance FromJSON EventType
 instance ToJSON EventType
+instance NFData EventType
 
 -- | An event that occurs at a location or point of interest
 --   The location of the event is associated with the unclosing point
@@ -406,7 +418,7 @@ data Event = Event {
   , eventDescription :: Maybe Description -- ^ Detailed description
   , eventType :: EventType -- ^ The event type
   , eventHours :: Maybe OpenHours -- ^ Dates/times when the event occurs
-  } deriving (Show)
+  } deriving (Show, Generic)
 
 instance FromJSON Event where
   parseJSON (Object v) = do
@@ -430,6 +442,8 @@ instance ToJSON Event where
         , "type" .= type'
         , "hours" .= hours'
       ]
+
+instance NFData Event
 
 -- | The type of location or point of interest
 data LocationType =
@@ -471,6 +485,7 @@ instance FromJSONKey LocationType where
   fromJSONKey = genericFromJSONKey defaultJSONKeyOptions
 instance ToJSONKey LocationType where
   toJSONKey = genericToJSONKey defaultJSONKeyOptions
+instance NFData LocationType
 
 -- | Provide an enumeration of all location types
 locationTypeEnumeration :: [LocationType]
@@ -504,6 +519,7 @@ data PoiCategory =
 
 instance ToJSON PoiCategory
 instance FromJSON PoiCategory
+instance NFData PoiCategory
 
 -- | Provide an enumeration of all poi categories
 poiCategoryEnumeration :: [PoiCategory]
@@ -545,7 +561,7 @@ data PointOfInterest = PointOfInterest {
   , poiHours :: Maybe OpenHours -- ^ Dates and times when the point of interest is open
   , poiTime :: Maybe Float -- ^ The amount of time, in hours that someone might spend investigating the Poi
   , poiEvents :: [Event] -- ^ Associated events
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance Placeholder Text PointOfInterest where
   placeholderID = poiID
@@ -605,6 +621,8 @@ instance ToJSON PointOfInterest where
         , "events" .= if null events' then Nothing else Just events'
       ]
 
+instance NFData PointOfInterest
+
 instance Eq PointOfInterest where
   a == b = poiID a == poiID b
 
@@ -630,7 +648,7 @@ data Location = Location {
   , locationEvents :: [Event]
   , locationCamping :: Bool
   , locationAlwaysOpen :: Bool
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance Placeholder Text Location where
   placeholderID = locationID
@@ -709,6 +727,8 @@ instance ToJSON Location where
         , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
         , "always-open" .= if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen'
      ]
+
+instance NFData Location
 
 instance Vertex Location where
   identifier v = unpack $ locationID v
@@ -815,6 +835,7 @@ data LegType = Road -- ^ Walk or cycle on a road or suitable path
  
 instance FromJSON LegType
 instance ToJSON LegType
+instance NFData LegType
 
 instance Default LegType where
   def = Road
@@ -835,7 +856,7 @@ data Leg = Leg {
   , legAscent :: Float -- ^ The total ascent on the leg in metres
   , legDescent :: Float -- ^ The total descent on the leg in metres
   , legPenance :: Maybe Penance -- ^ Any additional penance associated with the leg
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON Leg where
     parseJSON (Object v) = do
@@ -855,6 +876,8 @@ instance FromJSON Leg where
 instance ToJSON Leg where
     toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance') =
       object [ "type" .= (if type' == def then Nothing else Just type'), "from" .= locationID from', "to" .= locationID to', "description" .= description', "distance" .= distance', "time" .= time', "ascent" .= ascent', "descent" .= descent', "penance" .= penance' ]
+
+instance NFData Leg
 
 instance Edge Leg Location where
   source = legFrom
@@ -878,11 +901,16 @@ normaliseLeg camino leg =
     , legTo = dereference camino (legTo leg)
   }
 
+-- Make Colour NFData
+-- Colour is already strict, so leave it be
+instance NFData (Colour a) where
+  rnf _ = ()
+
 -- | A palette, graphical styles to use for displaying information
 data Palette = Palette {
     paletteColour :: Colour Double -- ^ The basic colour of the element
   , paletteTextColour :: Colour Double -- ^ The text colour of the element
-} deriving (Show)
+} deriving (Show, Generic)
       
 instance FromJSON Palette where
   parseJSON (Object v) = do
@@ -900,6 +928,8 @@ instance ToJSON Palette where
         "colour" .= sRGB24show colour'
       , "text-colour" .= sRGB24show textColour'
     ]
+
+instance NFData Palette
 
 instance Default Palette where
   def = Palette {
@@ -919,7 +949,7 @@ data Route = Route {
   , routeFinishes :: [Location] -- ^ A list of suggested finish points for the route
   , routeSuggestedPois :: S.Set PointOfInterest -- ^ A list of suggested points of interest for the route
   , routePalette :: Palette
-} deriving (Show)
+} deriving (Show, Generic)
 
 instance FromJSON Route where
     parseJSON (String v) = do
@@ -964,6 +994,7 @@ instance ToJSON Route where
         , "palette" .= palette'
       ]
 
+instance NFData Route
 
 instance Eq Route where
   a == b = routeID a == routeID b
@@ -1032,7 +1063,7 @@ data RouteLogic = RouteLogic {
   , routeLogicProhibits :: S.Set Route -- ^ Routes that this implies should be excluded
   , routeLogicInclude :: S.Set Location -- ^ Stuff to add to the allowed locations
   , routeLogicExclude :: S.Set Location -- ^ Stuff to remove from the allowed locations
-} deriving (Show)
+} deriving (Show, Generic)
 
 -- | Read formulas a JSON
 instance FromJSON (Formula Route) where
@@ -1097,6 +1128,8 @@ instance ToJSON RouteLogic where
     where
       nonEmpty v = if S.null v then Nothing else Just v
 
+instance NFData RouteLogic
+
 dereferenceFormula :: Camino -> Formula Route -> Formula Route
 dereferenceFormula camino (Variable route) = Variable $ dereference camino route
 dereferenceFormula camino (And fs) = And (map (dereferenceFormula camino) fs)
@@ -1152,11 +1185,17 @@ data Camino = Camino {
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
   , caminoPois :: M.Map Text (PointOfInterest, Location) -- ^ The camino points of interest
-} deriving (Show)
+} deriving (Show, Generic)
 
 -- Internal, construct the PoI map from a list of locations
 buildPoiMap :: [Location] -> M.Map Text (PointOfInterest, Location)
 buildPoiMap locs = M.fromList $ foldl (\ps -> \l -> map (\p -> (poiID p, (p, l))) (locationPois l) ++ ps)  [] locs
+
+instance Eq Camino where
+  a == b = caminoId a == caminoId b
+
+instance Ord Camino where
+  a `compare` b = caminoId a `compare` caminoId b
 
 instance FromJSON Camino where
   parseJSON (String v) = do
@@ -1197,13 +1236,6 @@ instance FromJSON Camino where
     }
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
-
-instance Eq Camino where
-  a == b = caminoId a == caminoId b
-
-instance Ord Camino where
-  a `compare` b = caminoId a `compare` caminoId b
-
 instance ToJSON Camino where
   toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _pois) =
     object [ 
@@ -1220,6 +1252,8 @@ instance ToJSON Camino where
       , "route-logic" .= routeLogic'
       , "default-route" .= routeID defaultRoute' 
     ]
+
+instance NFData Camino
 
 instance Graph Camino Leg Location where
   vertex camino vid = (caminoLocations camino) M.! (pack vid)
@@ -1457,7 +1491,9 @@ data CaminoConfig = CaminoConfig {
   , caminoConfigLocationLookup :: Text -> Maybe Location -- ^ Look up a location by identifier
   , caminoConfigCalendars :: CalendarConfig -- ^ Known calendar dates
   , caminoConfigRegions :: RegionConfig -- ^ Known regions
-}
+} deriving (Generic)
+
+instance NFData CaminoConfig
 
 -- | Has-class for ReaderT usage
 class HasCaminoConfig a where
@@ -1511,6 +1547,7 @@ data Travel = Walking -- ^ Walking
 
 instance FromJSON Travel
 instance ToJSON Travel
+instance NFData Travel
 
 -- | Provide an enumeration of all travel types
 travelEnumeration :: [Travel]
@@ -1533,6 +1570,7 @@ data Fitness = SuperFit -- ^ 15 minutes for 1000ft over 1/2 a mile
 
 instance FromJSON Fitness
 instance ToJSON Fitness
+instance NFData Fitness
 
 -- | Provide an enumeration of all fitness levesls
 fitnessEnumeration :: [Fitness]
@@ -1548,6 +1586,7 @@ data Comfort = Austere -- ^ Minimal services and accommodation
 
 instance FromJSON Comfort
 instance ToJSON Comfort
+instance NFData Comfort
 
 -- | Provide an enumeration of all comfort levesls
 comfortEnumeration :: [Comfort]

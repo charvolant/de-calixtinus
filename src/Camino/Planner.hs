@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
@@ -42,9 +43,11 @@ module Camino.Planner (
   , tripLabel
 ) where
 
+import GHC.Generics
 import Camino.Walking
 import Camino.Camino
 import Camino.Preferences
+import Control.DeepSeq
 import Data.Util (maybeSum)
 import Graph.Graph (available, incoming, mirror, reachable, subgraph)
 import Graph.Programming()
@@ -67,6 +70,12 @@ data (Ord f) => TripChoice v f = TripChoice {
     , tripChoiceFeatures :: S.Set f -- ^ The additional features (services, points of interest etc) supplied by this choice
     , tripChoicePenance :: Penance -- ^ The penance associated with this choice
 } deriving (Show)
+
+instance (Ord f, NFData v, NFData f) => NFData (TripChoice v f) where
+  rnf tc = tripChoice tc
+    `deepseq` tripChoiceFeatures tc
+    `deepseq` tripChoicePenance tc
+    `deepseq` ()
 
 -- | Select trip choice based on penance / services covered / services available
 selectTripChoice :: (Ord f) => (v -> S.Set f) -> TripChoice v f -> TripChoice v f -> TripChoice v f
@@ -98,7 +107,9 @@ data TripChoices = TripChoices {
   , tcStockLocation :: TripChoiceMap Location Service
   , tcRestAccommodation :: TripChoiceMap Accommodation Service
   , tcRestLocation :: TripChoiceMap Location Service
-}
+} deriving (Generic)
+
+instance NFData TripChoices
 
 -- | The metrics for a day, journey or complete pilgrimage
 data Metrics = Metrics {
@@ -126,7 +137,7 @@ data Metrics = Metrics {
     , metricsStockpoint :: Bool -- ^ Stock-up at the end of the day 
     , metricsRestpoint :: Bool -- ^ The next day is a resting day
     , metricsPenance :: Penance -- ^ Total penance for this leg of the metrics
-  } deriving (Show)
+  } deriving (Show, Generic)
 
 instance Eq Metrics where
   m1 == m2 = metricsPenance m1 == metricsPenance m2
@@ -161,6 +172,8 @@ instance Semigroup Metrics where
     , metricsRestpoint = (metricsRestpoint m1) || (metricsRestpoint m2)
     , metricsPenance = metricsPenance m1 <> metricsPenance m2
   }
+
+instance NFData Metrics
 
 -- Combine date ranges
 combineDates :: Maybe (C.Day, C.Day) -> Maybe (C.Day, C.Day) -> Maybe (C.Day, C.Day)

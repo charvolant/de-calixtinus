@@ -8,7 +8,8 @@ import Data.Cache
 import Control.Concurrent (threadDelay)
 import System.Directory
 import System.FilePath
-import Data.Util (loopM, scanDirectory)
+import Data.Util
+import TestUtils
 
 testCache :: Test
 testCache = TestList [
@@ -156,21 +157,6 @@ testFileCache = TestList [
 testFileCacheCreate = TestList [
     testFileCacheCreate1
   ]
-
-openTestDir :: IO FilePath
-openTestDir = do
-  tmpdir <- getTemporaryDirectory
-  testdir <- loopM (\n -> do
-    let f = tmpdir </> ("test" ++ show n)
-    exist <- doesDirectoryExist f
-    return $ if exist then Left (n + 1) else Right f
-    ) 0
-  createDirectoryIfMissing True testdir
-  return testdir
-
-closeTestDir :: FilePath -> IO ()
-closeTestDir dir = do
-  scanDirectory (\f -> removeFile f) (\d -> removeDirectory d) dir
 
 testFileCacheCreate1 = TestCase (do
  testdir <- openTestDir

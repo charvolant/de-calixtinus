@@ -1,0 +1,282 @@
+{
+  "camino-preferences": {
+    "camino": "Test",
+    "excluded": [],
+    "finish": "C",
+    "pois": [],
+    "routes": [
+      "R1"
+    ],
+    "start": "A",
+    "start-date": "2025-01-16",
+    "stops": []
+  },
+  "id": "S-1",
+  "locations": [
+    "A",
+    "B",
+    "C"
+  ],
+  "metadata": null,
+  "pilgrimage": {
+    "finish": "C",
+    "path": [
+      {
+        "finish": "C",
+        "path": [
+          {
+            "finish": "C",
+            "path": [
+              {
+                "ascent": 100,
+                "descent": 50,
+                "description": null,
+                "distance": 2,
+                "from": "A",
+                "penance": null,
+                "time": null,
+                "to": "B",
+                "type": null
+              },
+              {
+                "ascent": 0,
+                "descent": 350,
+                "description": null,
+                "distance": 3.5,
+                "from": "B",
+                "penance": null,
+                "time": null,
+                "to": "C",
+                "type": null
+              }
+            ],
+            "score": {
+              "accommodation": 0,
+              "accommodation-choice": [
+                {
+                  "choice": "C#1",
+                  "features": [
+                    "Restaurant"
+                  ],
+                  "penance": null
+                }
+              ],
+              "ascent": 100,
+              "date": [
+                "2025-01-16",
+                "2025-01-16"
+              ],
+              "day-services": 0,
+              "descent": 400,
+              "distance": 5.5,
+              "distance-adjust": 0,
+              "fatigue": 0,
+              "location": 0,
+              "misc": 0,
+              "missing-day-services": [
+                "Pharmacy",
+                "Bank"
+              ],
+              "missing-stop-services": [
+                "Groceries"
+              ],
+              "penance": 6.9413977,
+              "perceived-distance": 4.641398,
+              "poi-time": null,
+              "rest": 0,
+              "rest-days": 0,
+              "rest-point": true,
+              "stock-point": false,
+              "stop": 2,
+              "stop-services": 0.3,
+              "time": 1.1603495,
+              "time-adjust": 0
+            },
+            "start": "A"
+          }
+        ],
+        "score": {
+          "accommodation": 0,
+          "accommodation-choice": [
+            {
+              "choice": "C#1",
+              "features": [
+                "Restaurant"
+              ],
+              "penance": null
+            }
+          ],
+          "ascent": 100,
+          "date": [
+            "2025-01-16",
+            "2025-01-16"
+          ],
+          "day-services": 0,
+          "descent": 400,
+          "distance": 5.5,
+          "distance-adjust": 0,
+          "fatigue": 16,
+          "location": 0,
+          "misc": 0,
+          "missing-day-services": [
+            "Pharmacy",
+            "Bank"
+          ],
+          "missing-stop-services": [
+            "Groceries"
+          ],
+          "penance": 22.941399,
+          "perceived-distance": 4.641398,
+          "poi-time": null,
+          "rest": 0,
+          "rest-days": 0,
+          "rest-point": true,
+          "stock-point": false,
+          "stop": 2,
+          "stop-services": 0.3,
+          "time": 1.1603495,
+          "time-adjust": 0
+        },
+        "start": "A"
+      }
+    ],
+    "score": {
+      "accommodation": 0,
+      "accommodation-choice": [
+        {
+          "choice": "C#1",
+          "features": [
+            "Restaurant"
+          ],
+          "penance": null
+        }
+      ],
+      "ascent": 100,
+      "date": [
+        "2025-01-16",
+        "2025-01-16"
+      ],
+      "day-services": 0,
+      "descent": 400,
+      "distance": 5.5,
+      "distance-adjust": 0,
+      "fatigue": 16,
+      "location": 0,
+      "misc": 0,
+      "missing-day-services": [
+        "Pharmacy",
+        "Bank"
+      ],
+      "missing-stop-services": [
+        "Groceries"
+      ],
+      "penance": 22.941399,
+      "perceived-distance": 4.641398,
+      "poi-time": null,
+      "rest": 0,
+      "rest-days": 0,
+      "rest-point": true,
+      "stock-point": false,
+      "stop": 2,
+      "stop-services": 0.3,
+      "time": 1.1603495,
+      "time-adjust": 0
+    },
+    "start": "A"
+  },
+  "travel-preferences": {
+    "comfort": "Pilgrim",
+    "distance-range": {
+      "derived": null,
+      "lower": 2,
+      "max": 10,
+      "min": null,
+      "target": 4,
+      "upper": 8
+    },
+    "fitness": "Normal",
+    "poi-categories": [
+      "ReligiousPoi"
+    ],
+    "rest-range": {
+      "derived": null,
+      "lower": 5,
+      "max": 8,
+      "min": null,
+      "target": 6,
+      "upper": 7
+    },
+    "rest-stop": {
+      "accommodation": {
+        "Hotel": 0.5,
+        "PilgrimAlbergue": 1.5,
+        "PrivateAlbergue": 0.9
+      },
+      "location": {
+        "City": 0.5,
+        "Town": 0.9,
+        "Village": 1.5
+      },
+      "services": {
+        "Groceries": 0.3,
+        "Restaurant": 0.2
+      },
+      "services-route": {
+        "Bank": 0.1,
+        "Pharmacy": 0.1
+      },
+      "transport-links": true
+    },
+    "stock-stop": {
+      "accommodation": {
+        "Hotel": 0.5,
+        "PilgrimAlbergue": 1.5,
+        "PrivateAlbergue": 0.9
+      },
+      "location": {
+        "City": 0.5,
+        "Town": 0.9,
+        "Village": 1.5
+      },
+      "services": {
+        "Groceries": 0.3,
+        "Restaurant": 0.2
+      },
+      "services-route": {
+        "Bank": 0.1,
+        "Pharmacy": 0.1
+      },
+      "transport-links": true
+    },
+    "stop": {
+      "accommodation": {
+        "Hotel": 0.5,
+        "PilgrimAlbergue": 1.5,
+        "PrivateAlbergue": 0.9
+      },
+      "location": {
+        "City": 0.5,
+        "Town": 0.9,
+        "Village": 1.5
+      },
+      "services": {
+        "Groceries": 0.3,
+        "Restaurant": 0.2
+      },
+      "services-route": {
+        "Bank": 0.1,
+        "Pharmacy": 0.1
+      },
+      "transport-links": true
+    },
+    "time-range": {
+      "derived": null,
+      "lower": 0,
+      "max": 10,
+      "min": null,
+      "target": 6,
+      "upper": 8
+    },
+    "travel": "Walking"
+  }
+}

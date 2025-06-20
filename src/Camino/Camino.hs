@@ -82,6 +82,8 @@ module Camino.Camino (
   , locationStopTypeEnumeration
   , locationTransportLinks
   , locationTypeEnumeration
+  , normaliseLeg
+  , normaliseLeg'
   , poiCategoryEnumeration
   , readCamino
   , routeCentralLocation
@@ -95,7 +97,7 @@ import GHC.Generics (Generic)
 import Control.DeepSeq
 import Control.Monad.Reader
 import Data.Aeson
-import Data.Aeson.Types (typeMismatch)
+import Data.Aeson.Types (toJSONKeyText, typeMismatch)
 import Data.Colour (Colour)
 import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
@@ -118,6 +120,7 @@ import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
+import Text.Read (readMaybe)
 -- import Debug.Trace
 
 -- For debugging
@@ -236,6 +239,7 @@ data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local vol
   | CampGround -- ^ A dedicated camping ground with services
   | Refuge -- ^ A remote-area refuge without facilities
   | Camping -- ^ Roadside camping (with a tent or without, depending on what carried)
+  | PlaceholderAccommodation -- ^ Placeholder for accommodation
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
 
 instance FromJSON AccommodationType
@@ -246,9 +250,9 @@ instance ToJSONKey AccommodationType where
   toJSONKey = genericToJSONKey defaultJSONKeyOptions
 instance NFData AccommodationType
 
--- | Provide an enumeration of all accommodation types
+-- | Provide an enumeration of all accommodation types, not including the placeholder
 accommodationTypeEnumeration :: [AccommodationType]
-accommodationTypeEnumeration = [minBound .. maxBound]
+accommodationTypeEnumeration = [PilgrimAlbergue .. Camping]
 
 -- | Default multi-day stay for the type of accomodation
 --   False for pilgrim albergues, true for anything else
@@ -321,12 +325,16 @@ instance NFData Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
-  Accommodation (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) (Maybe Bool) -- ^ Fully described accommodation
+    Accommodation Text (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) (Maybe Bool) -- ^ Fully described accommodation
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
-  deriving (Show, Generic)
-  
+  deriving (Eq, Ord, Show, Generic)
+
+accommodationID :: Accommodation -> Text
+accommodationID (Accommodation id' _name _type _services _sleeping _multi) = id'
+accommodationID (GenericAccommodation type') = pack $ show type'
+
 accommodationName :: Accommodation -> (Localised TaggedText)
-accommodationName (Accommodation name' _type _services _sleeping _multi) = name'
+accommodationName (Accommodation _id' name' _type _services _sleeping _multi) = name'
 accommodationName (GenericAccommodation type') = wildcardText $ pack ("Generic " ++ show type')
 
 -- | Get a simple text version of the accommodation name
@@ -334,11 +342,11 @@ accommodationNameLabel :: Accommodation -> Text
 accommodationNameLabel accommodation = localiseDefault $ accommodationName accommodation
 
 accommodationType :: Accommodation -> AccommodationType
-accommodationType (Accommodation _name type' _services _sleeping _multi) = type'
+accommodationType (Accommodation _id _name type' _services _sleeping _multi) = type'
 accommodationType (GenericAccommodation type') = type'
 
 accommodationServices :: Accommodation -> S.Set Service
-accommodationServices (Accommodation _name _type services' _sleeping _multi) = services'
+accommodationServices (Accommodation _id _name _type services' _sleeping _multi) = services'
 accommodationServices (GenericAccommodation PilgrimAlbergue) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation PrivateAlbergue) = S.fromList [ Handwash, WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hostel) = S.fromList [ WiFi, Kitchen, Bedlinen, Towels ]
@@ -354,7 +362,7 @@ accommodationServices (GenericAccommodation Camping) = S.empty
 
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
-accommodationSleeping (Accommodation _name _type _services sleeping' _multi) = sleeping'
+accommodationSleeping (Accommodation _id _name _type _services sleeping' _multi) = sleeping'
 accommodationSleeping (GenericAccommodation PilgrimAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation PrivateAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation Hostel) = S.fromList [ Shared ]
@@ -371,25 +379,52 @@ accommodationSleeping (GenericAccommodation Camping) = S.fromList [ SleepingBag 
 -- | Allow a multi-day stay?
 --   If the accommodation does not allow a specific override, then `accommodationDefaultMulti` is used.
 accommodationMulti :: Accommodation -> Bool
-accommodationMulti (Accommodation _name _type _services _sleeping (Just multi')) = multi'
-accommodationMulti (Accommodation _name type' _services _sleeping Nothing) = accommodationDefaultMulti type'
+accommodationMulti (Accommodation _id _name _type _services _sleeping (Just multi')) = multi'
+accommodationMulti (Accommodation _id _name type' _services _sleeping Nothing) = accommodationDefaultMulti type'
 accommodationMulti (GenericAccommodation type') = accommodationDefaultMulti type'
+
+-- | Is this a generic accommodation type?
+isGenericAccommodation :: Accommodation -> Bool
+isGenericAccommodation (GenericAccommodation _type) = True
+isGenericAccommodation _ = False
+
+instance Placeholder Text Accommodation where
+  placeholderID = accommodationID
+  placeholder aid = let
+      mt = readMaybe (unpack aid)
+    in
+      maybe
+        (Accommodation aid (wildcardText $ "Placeholder for " <> aid) PlaceholderAccommodation S.empty S.empty Nothing)
+        GenericAccommodation
+        mt
+  isPlaceholder accommodation = accommodationType accommodation == PlaceholderAccommodation
+
+instance Dereferencer Text Accommodation Camino where
+  dereference camino ac@(Accommodation id' _name PlaceholderAccommodation _services _sleeping _multi) =
+    maybe ac fst (M.lookup id' (caminoAccommodation camino))
+  dereference _camino ac = ac
+
+instance Dereferencer Text Accommodation CaminoConfig where
+  dereference config ac@(Accommodation id' _name PlaceholderAccommodation _services _sleeping _multi) =
+    maybe ac fst $ (caminoConfigAccommodationLookup config) id'
+  dereference _config ac = ac
 
 instance FromJSON Accommodation where
    parseJSON t@(String _v) = do
-     type' <- parseJSON t
-     return $ GenericAccommodation type'
+     id' <- parseJSON t
+     return $ placeholder id'
    parseJSON (Object v) = do
+     id' <- v .:? "id" .!= ""
      name' <- v .: "name"
      type' <- v .: "type"
      services' <- v .: "services"
      sleeping' <- v .: "sleeping"
      multi' <- v .:? "multi-day"
-     return $ Accommodation name' type' services' sleeping' multi'
+     return $ Accommodation id' name' type' services' sleeping' multi'
    parseJSON v = error ("Unable to parse accommodation object " ++ show v)
 instance ToJSON Accommodation where
-    toJSON (Accommodation name' type' services' sleeping' multi') =
-      object [ "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping', "multi-day" .= multi' ]
+    toJSON (Accommodation id' name' type' services' sleeping' multi') =
+      object [ "id" .= id', "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping', "multi-day" .= multi' ]
     toJSON (GenericAccommodation type' ) =
       toJSON type'
 
@@ -668,9 +703,17 @@ instance Placeholder Text Location where
   }
   isPlaceholder location = locationType location == PlaceholderLocation
 
+setAccommodationID :: Accommodation -> Text -> Int -> Accommodation
+setAccommodationID (Accommodation "" name' type' services' sleeping' multi') lid pos =
+  Accommodation id' name' type' services' sleeping' multi'
+  where
+    id' = lid <> "#" <> pack (show pos)
+setAccommodationID accommodation _lid _pos = accommodation
+
 instance Normaliser Text Location CaminoConfig where
   normalise config location = location {
-    locationRegion = dereference (caminoConfigRegions config) <$> (locationRegion location)
+      locationRegion = dereference (caminoConfigRegions config) <$> (locationRegion location)
+    , locationAccommodation = map (\(ac, pos) -> setAccommodationID ac (locationID location) pos) (zip (locationAccommodation location) [1..])
   }
 
 instance Dereferencer Text Location CaminoConfig where
@@ -727,6 +770,11 @@ instance ToJSON Location where
         , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
         , "always-open" .= if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen'
      ]
+
+instance FromJSONKey Location where
+  fromJSONKey = FromJSONKeyTextParser $ \lid -> pure $ placeholder lid
+instance ToJSONKey Location where
+  toJSONKey = toJSONKeyText placeholderID
 
 instance NFData Location
 
@@ -899,6 +947,14 @@ normaliseLeg camino leg =
   leg {
       legFrom = dereference camino (legFrom leg)
     , legTo = dereference camino (legTo leg)
+  }
+
+-- | Ensure a leg has locations mapped correctly within a camino, using the full camino config
+normaliseLeg' :: CaminoConfig -> Leg -> Leg
+normaliseLeg' config leg =
+  leg {
+      legFrom = dereference config (legFrom leg)
+    , legTo = dereference config (legTo leg)
   }
 
 -- Make Colour NFData
@@ -1184,12 +1240,17 @@ data Camino = Camino {
   , caminoRoutes :: [Route] -- ^ Named sub-routes
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
+  , caminoAccommodation :: M.Map Text (Accommodation, Location) -- ^ The camino accommodation
   , caminoPois :: M.Map Text (PointOfInterest, Location) -- ^ The camino points of interest
 } deriving (Show, Generic)
 
 -- Internal, construct the PoI map from a list of locations
 buildPoiMap :: [Location] -> M.Map Text (PointOfInterest, Location)
 buildPoiMap locs = M.fromList $ foldl (\ps -> \l -> map (\p -> (poiID p, (p, l))) (locationPois l) ++ ps)  [] locs
+
+-- Internal, construct the accommodation map from a list of locations
+buildAccommodationMap :: [Location] -> M.Map Text (Accommodation, Location)
+buildAccommodationMap locs = M.fromList $ foldl (\as -> \l -> map (\a -> (accommodationID a, (a, l))) (filter (not . isGenericAccommodation) (locationAccommodation l)) ++ as)  [] locs
 
 instance Eq Camino where
   a == b = caminoId a == caminoId b
@@ -1218,6 +1279,7 @@ instance FromJSON Camino where
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
     let routes'' = defaultRoute''' : otherRoutes
+    let accommodation' = buildAccommodationMap locs
     let pois' = buildPoiMap locs
     return $ Camino {
         caminoId = id'
@@ -1232,12 +1294,13 @@ instance FromJSON Camino where
       , caminoRoutes = routes''
       , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
+      , caminoAccommodation = accommodation'
       , caminoPois = pois'
     }
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _pois) =
+  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _accommodation _pois) =
     object [ 
         "id" .= id'
       , "name" .= name'
@@ -1260,7 +1323,7 @@ instance Graph Camino Leg Location where
   edge camino loc1 loc2 = L.find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _pois') allowed  =
+  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _accommodation' _pois') allowed  =
     let
       id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
@@ -1270,6 +1333,7 @@ instance Graph Camino Leg Location where
       routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
       routeLogic'' = map (\l -> l { routeLogicInclude = routeLogicInclude l `S.intersection` allowed, routeLogicExclude = routeLogicExclude l `S.intersection` allowed}) routeLogic'
       defaultRoute'' = fromJust $ L.find (\r -> routeID r == routeID defaultRoute') routes'
+      accommodation'' = buildAccommodationMap $ M.elems locations'
       pois'' = buildPoiMap $ M.elems locations'
     in
       Camino {
@@ -1285,6 +1349,7 @@ instance Graph Camino Leg Location where
         , caminoRoutes = routes''
         , caminoRouteLogic = routeLogic''
         , caminoDefaultRoute = defaultRoute''
+        , caminoAccommodation = accommodation''
         , caminoPois = pois''
       }
   mirror camino =
@@ -1310,6 +1375,7 @@ instance Placeholder Text Camino where
       , caminoRoutes = [dr]
       , caminoRouteLogic = []
       , caminoDefaultRoute = dr
+      , caminoAccommodation = M.empty
       , caminoPois = M.empty
     }
     where
@@ -1333,10 +1399,12 @@ instance Normaliser Text Camino CaminoConfig where
       legs'' = map caminoLegs imports'
       links' = map (normaliseLeg camino1) (caminoTransportLinks camino1)
       links'' = map caminoTransportLinks imports'
+      locs' = caminoLocationList camino1
       camino2 = camino1 {
           caminoLegs = concat (legs':legs'')
         , caminoTransportLinks = concat (links':links'')
-        , caminoPois = buildPoiMap (caminoLocationList camino1)
+        , caminoAccommodation = buildAccommodationMap locs'
+        , caminoPois = buildPoiMap locs'
       }
       splitroutes c rs = let
           drid = routeID $ caminoDefaultRoute c
@@ -1489,6 +1557,7 @@ data CaminoConfig = CaminoConfig {
     caminoConfigCaminos :: [Camino] -- ^ The list of known caminos
   , caminoConfigLookup :: Text -> Maybe Camino -- ^ Look up a camino by identifier
   , caminoConfigLocationLookup :: Text -> Maybe Location -- ^ Look up a location by identifier
+  , caminoConfigAccommodationLookup :: Text -> Maybe (Accommodation, Location) -- ^ Look up a accommodation by identifier
   , caminoConfigCalendars :: CalendarConfig -- ^ Known calendar dates
   , caminoConfigRegions :: RegionConfig -- ^ Known regions
 } deriving (Generic)
@@ -1521,7 +1590,7 @@ getCamino key = do
 createCaminoConfig :: CalendarConfig -> RegionConfig -> [Camino] -> CaminoConfig
 createCaminoConfig calendars regions caminos = let
     caminos' = topologicalSort (caminoPartialOrder caminos) caminos
-    config' = CaminoConfig [] (const Nothing) (const Nothing) calendars regions
+    config' = CaminoConfig [] (const Nothing) (const Nothing) (const Nothing) calendars regions
   in
     createCaminoConfig' config' caminos'
 
@@ -1531,10 +1600,12 @@ createCaminoConfig' config (camino:rest) = let
     caminos' = (caminoConfigCaminos config) ++ [camino']
     caminoMap' = M.fromList $ map (\c -> (placeholderID c, c)) caminos'
     locationMap' =  M.unions (map caminoLocations caminos')
+    accommodationMap' =  M.unions (map caminoAccommodation caminos')
     config' = config {
         caminoConfigCaminos = caminos'
       , caminoConfigLookup = \k -> M.lookup k caminoMap'
       , caminoConfigLocationLookup = \k -> M.lookup k locationMap'
+      , caminoConfigAccommodationLookup = \k -> M.lookup k accommodationMap'
     }
   in
     createCaminoConfig' config' rest

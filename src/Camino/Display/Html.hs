@@ -418,7 +418,7 @@ caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoR
 caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
     ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
   |]
-caminoAccommodationSummaryHtml a@(Accommodation _name type' services' sleeping' _multi) = [ihamlet|
+caminoAccommodationSummaryHtml a@(Accommodation _id _name type' services' sleeping' _multi) = [ihamlet|
     <span .accommodation>
       <span .pr-4>
         ^{caminoAccommodationTypeIcon type'} _{Txt (accommodationName a)}
@@ -450,12 +450,12 @@ caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
 
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
-caminoAccommodationNameHtml (Accommodation name' _type  _services _sleeping _multi) = [ihamlet|_{Txt name'}|]
+caminoAccommodationNameHtml (Accommodation _id name' _type  _services _sleeping _multi) = [ihamlet|_{Txt name'}|]
 
-caminoAccommodationHtml :: Accommodation -> Maybe (TripChoice Accommodation Service) -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoAccommodationHtml accommodation choice = [ihamlet|
-  <div .row .accommodation :isBest:.best-accommodation>
-    <div .offset-1 .col-5 penance="_{PenanceFormattedPlain (maybe mempty tripChoicePenance choice')}">
+caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAccommodationHtml accommodation = [ihamlet|
+  <div .row .accommodation>
+    <div .offset-1 .col-5>
       ^{caminoAccommodationTypeIcon type'}
       ^{caminoAccommodationNameHtml accommodation}
     <div .col-4>
@@ -466,13 +466,7 @@ caminoAccommodationHtml accommodation choice = [ihamlet|
         ^{caminoSleepingIcon sleeping}
  |]
    where
-     name' = accommodationNameLabel accommodation
      type' = accommodationType accommodation
-     cp' = maybe Reject tripChoicePenance choice
-     cn' = maybe "" (accommodationNameLabel . tripChoice) choice
-     ct' = maybe Camping (accommodationType . tripChoice) choice
-     choice' = if cp' /= Reject && type' == ct'  && name' == cn' then choice else Nothing
-     isBest = isJust choice'
 
 -- | Get elements of a possible solution
 solutionElements :: Camino -> Maybe Solution -> (Maybe Pilgrimage, Maybe (Failure Location Leg Metrics Metrics), Maybe (Failure Location Day Metrics Metrics), S.Set Location, S.Set Location, S.Set Location, S.Set Location, S.Set Leg)
@@ -901,7 +895,7 @@ caminoLocationHtml preferences camino solution containerId rests stocks stops wa
               ^{descriptionBlock False d}
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
-          ^{caminoAccommodationHtml accommodation accChoice}
+          ^{caminoAccommodationHtml accommodation}
         ^{conditionalLabel PoisLabel (locationPois location)}
         $forall poi <- locationPois location
           ^{caminoPointOfInterestHtml poi}
@@ -920,7 +914,6 @@ caminoLocationHtml preferences camino solution containerId rests stocks stops wa
     isStockpoint = not isRest && S.member location stocks
     isStop = not isRest && not isStockpoint && S.member location stops
     isWaypoint = not isStop && not isStockpoint && not isRest && (S.member location waypoints)
-    accChoice = maybe Nothing (\s -> M.lookup location (solutionAccommodation s)) solution
     transportLinks = locationTransportLinks camino' location
 
 caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

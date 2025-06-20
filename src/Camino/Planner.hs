@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Planner
@@ -30,6 +31,7 @@ module Camino.Planner (
   , hasNonTravel
   , isStockUpDay
   , nonTravelHours
+  , normaliseSolution
   , penance
   , openSleeping
   , pilgrimageLegs
@@ -47,22 +49,49 @@ import GHC.Generics
 import Camino.Walking
 import Camino.Camino
 import Camino.Preferences
-import Control.DeepSeq
-import Data.Util (maybeSum)
-import Graph.Graph (available, incoming, mirror, reachable, subgraph)
-import Graph.Programming()
 import Control.Applicative ((<|>))
+import Control.DeepSeq
 import Control.Monad.Reader (runReader)
+import Data.Aeson
 import Data.Event
 import Data.Event.Date
 import qualified Data.List as L
 import qualified Data.Map as M
 import Data.Maybe (isJust, isNothing, fromJust, fromMaybe, mapMaybe)
+import Data.Metadata (Metadata(..))
+import Data.Placeholder
 import Data.Region
 import qualified Data.Set as S
 import qualified Data.Text as T
 import qualified Data.Time.Calendar as C
+import Data.Util (maybeSum)
+import Graph.Graph (Edge(..), available, incoming, mirror, reachable, subgraph)
+import Graph.Programming
+import Data.Placeholder (Placeholder)
 
+
+instance (Placeholder T.Text v, FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
+    parseJSON (Object v) = do
+      start' <- v .: "start"
+      finish' <- v .: "finish"
+      path' <- v .: "path"
+      score' <- v .: "score"
+      return Chain {
+          start = placeholder start'
+        , finish = placeholder finish'
+        , path = path'
+        , score = score'
+        }
+    parseJSON v = error ("Unable to parse chain object " ++ show v)
+
+instance (Placeholder T.Text v, ToJSON v, ToJSON e, ToJSON s, Edge e v, Score s) => ToJSON (Chain v e s) where
+    toJSON (Chain start' finish' path' score') =
+      object [
+          "start" .= placeholderID start'
+        , "finish" .= placeholderID finish'
+        , "path" .= path'
+        , "score" .= score'
+        ]
 
 -- | A pre-selected choice for a location, accommodation etc.
 data (Ord f) => TripChoice v f = TripChoice {
@@ -70,6 +99,26 @@ data (Ord f) => TripChoice v f = TripChoice {
     , tripChoiceFeatures :: S.Set f -- ^ The additional features (services, points of interest etc) supplied by this choice
     , tripChoicePenance :: Penance -- ^ The penance associated with this choice
 } deriving (Show)
+
+instance (Ord f, FromJSON v, FromJSON f) => FromJSON (TripChoice v f) where
+  parseJSON (Object v) = do
+    choice' <- v .: "choice"
+    features' <- v .:? "features" .!= S.empty
+    penance' <- v .:? "penance" .!= mempty
+    return $ TripChoice {
+        tripChoice = choice'
+      , tripChoiceFeatures = features'
+      , tripChoicePenance = penance'
+      }
+  parseJSON v = error ("Unable to parse trip choice object " ++ show v)
+  
+instance (Ord f, ToJSON v, ToJSON f) => ToJSON (TripChoice v f) where
+  toJSON (TripChoice choice' features' penance') =
+    object [
+        "choice" .= choice'
+      , "features" .= if S.null features' then Nothing else Just features'
+      , "penance" .= if penance' == mempty then Nothing else Just penance'
+      ]
 
 instance (Ord f, NFData v, NFData f) => NFData (TripChoice v f) where
   rnf tc = tripChoice tc
@@ -108,6 +157,35 @@ data TripChoices = TripChoices {
   , tcRestAccommodation :: TripChoiceMap Accommodation Service
   , tcRestLocation :: TripChoiceMap Location Service
 } deriving (Generic)
+
+instance FromJSON TripChoices where
+  parseJSON (Object v) = do
+    stopaccommodation' <- v .: "stop-accommodation"
+    stoplocation' <- v .: "stop-location"
+    stockaccommodation' <- v .: "stock-accommodation"
+    stocklocation' <- v .: "stock-location"
+    restaccommodation' <- v .: "rest-accommodation"
+    restlocation' <- v .: "rest-location"
+    return $ TripChoices {
+        tcStopAccommodation = stopaccommodation'
+      , tcStopLocation = stoplocation'
+      , tcStockAccommodation = stockaccommodation'
+      , tcStockLocation = stocklocation'
+      , tcRestAccommodation = restaccommodation'
+      , tcRestLocation = restlocation'
+      }
+  parseJSON v = error ("Unable to parse trip choices object " ++ show v)
+
+instance ToJSON TripChoices where
+  toJSON (TripChoices stopaccommodation' stoplocation' stockaccommodation' stocklocation' restaccommodation' restlocation') =
+    object [
+        "stop-accommodation" .= stopaccommodation'
+      , "stop-location" .= stoplocation'
+      , "stock-accommodation" .= stockaccommodation'
+      , "stock-location" .= stocklocation'
+      , "rest-accommodation" .= restaccommodation'
+      , "rest-location" .= restlocation'
+      ]
 
 instance NFData TripChoices
 
@@ -173,7 +251,101 @@ instance Semigroup Metrics where
     , metricsPenance = metricsPenance m1 <> metricsPenance m2
   }
 
+instance FromJSON Metrics where
+  parseJSON (Object v) = do
+    distance' <- v .: "distance"
+    time' <- v .:? "time"
+    poitime' <- v .:? "poi-time"
+    perceiveddistance' <- v .:? "perceived-distance"
+    ascent' <- v .: "ascent"
+    descent' <- v .: "descent"
+    stop' <- v .: "stop"
+    location' <- v .: "location"
+    accommodationchoice' <- v .: "accommodation-choice"
+    let accommodationchoice'' = map (\(TripChoice id' ss' pe') -> TripChoice (placeholder id') ss' pe') accommodationchoice'
+    accommodation' <- v .: "accommodation"
+    missingstopservices' <- v .: "missing-stop-services"
+    stopservices' <- v .: "stop-services"
+    missingdayservices' <- v .: "missing-day-services"
+    dayservices' <- v .: "day-services"
+    distanceadjust' <- v .: "distance-adjust"
+    timeadjust' <- v .: "time-adjust"
+    fatigue' <- v .: "fatigue"
+    rest' <- v .: "rest"
+    misc' <- v .: "misc"
+    restdays' <- v .: "rest-days"
+    date' <- v .:? "date"
+    stockpoint' <- v .: "stock-point"
+    restpoint' <- v .: "rest-point"
+    penance' <- v .: "penance"
+    return $ Metrics {
+        metricsDistance = distance'
+      , metricsTime = time'
+      , metricsPoiTime = poitime'
+      , metricsPerceivedDistance = perceiveddistance'
+      , metricsAscent = ascent'
+      , metricsDescent = descent'
+      , metricsStop = stop'
+      , metricsLocation = location'
+      , metricsAccommodationChoice = accommodationchoice''
+      , metricsAccommodation = accommodation'
+      , metricsMissingStopServices = missingstopservices'
+      , metricsStopServices = stopservices'
+      , metricsMissingDayServices = missingdayservices'
+      , metricsDayServices = dayservices'
+      , metricsDistanceAdjust = distanceadjust'
+      , metricsTimeAdjust = timeadjust'
+      , metricsFatigue = fatigue'
+      , metricsRest = rest'
+      , metricsMisc = misc'
+      , metricsRestDays = restdays'
+      , metricsDate = date'
+      , metricsStockpoint = stockpoint'
+      , metricsRestpoint = restpoint'
+      , metricsPenance = penance'
+    }
+  parseJSON v = error ("Unable to parse metrics object " ++ show v)
+
+instance ToJSON Metrics where
+  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
+    object [
+        "distance" .= distance'
+      , "time" .= time'
+      , "poi-time" .= poitime'
+      , "perceived-distance" .= perceiveddistance'
+      , "ascent" .= ascent'
+      , "descent" .= descent'
+      , "stop" .= stop'
+      , "location" .= location'
+      , "accommodation-choice" .= map (\(TripChoice ac' ss' pe') -> TripChoice (placeholderID ac') ss' pe') accommodationchoice'
+      , "accommodation" .= accommodation'
+      , "missing-stop-services" .= missingstopservices'
+      , "stop-services" .= stopservices'
+      , "missing-day-services" .= missingdayservices'
+      , "day-services" .= dayservices'
+      , "distance-adjust" .= distanceadjust'
+      , "time-adjust" .= timeadjust'
+      , "fatigue" .= fatigue'
+      , "rest" .= rest'
+      , "misc" .= misc'
+      , "rest-days" .= restdays'
+      , "date" .= date'
+      , "stock-point" .= stockpoint'
+      , "rest-point" .= restpoint'
+      , "penance" .= penance'
+      ]
+
 instance NFData Metrics
+
+normaliseAccommodationChoice :: CaminoConfig -> TripChoice Accommodation Service -> TripChoice Accommodation Service
+normaliseAccommodationChoice config (TripChoice accommodation' services' penance') =
+  TripChoice (dereference config accommodation') services' penance'
+
+-- Normalise metric information
+normaliseMetrics :: CaminoConfig -> Metrics -> Metrics
+normaliseMetrics config metrics = metrics {
+    metricsAccommodationChoice = map (normaliseAccommodationChoice config) (metricsAccommodationChoice metrics)
+  }
 
 -- Combine date ranges
 combineDates :: Maybe (C.Day, C.Day) -> Maybe (C.Day, C.Day) -> Maybe (C.Day, C.Day)
@@ -191,21 +363,103 @@ instance Score Metrics where
 -- | A day's stage
 type Day = Chain Location Leg Metrics
 
+-- | Normalise a day
+normaliseDay :: CaminoConfig -> Day -> Day
+normaliseDay config day = 
+    day {
+        start = dereference config (start day)
+      , finish = dereference config (finish day)
+      , path = map (normaliseLeg' config) (path day)
+      , score = normaliseMetrics config (score day)
+    }
+
 -- | The complete camino stages
 type Journey = Chain Location Day Metrics
+
+-- | Normalise a journey
+normaliseJourney :: CaminoConfig -> Journey -> Journey
+normaliseJourney config journey = 
+    journey {
+        start = dereference config (start journey)
+      , finish = dereference config (finish journey)
+      , path = map (normaliseDay config) (path journey)
+      , score = normaliseMetrics config (score journey)
+    }
 
 -- | A full pilgrimage, broken into stages
 type Pilgrimage = Chain Location Journey Metrics
 
+-- | Normalise a pilgrimage
+normalisePilgrimage :: CaminoConfig -> Pilgrimage -> Pilgrimage
+normalisePilgrimage config pilgrimage = 
+    pilgrimage {
+        start = dereference config (start pilgrimage)
+      , finish = dereference config (finish pilgrimage)
+      , path = map (normaliseJourney config) (path pilgrimage)
+      , score = normaliseMetrics config (score pilgrimage)
+    }
+
 -- | A complete solution, including accommodation and location metrics
 data Solution = Solution {
-    solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
-  , solutionAccommodation :: TripChoiceMap Accommodation Service -- ^ The penance costs for accommodation in various locations
-  , solutionLocation :: TripChoiceMap Location Service -- ^ The penance costs for various locations
+    solutionID :: Maybe T.Text -- ^ The unique solution identifier
+  , solutionMetadata :: Maybe Metadata -- ^ Any metadata associates with the solution
+  , solutionTravelPreferences :: TravelPreferences -- ^ The travel preferences used
+  , solutionCaminoPreferences :: CaminoPreferences -- ^ The camino preferences used
+  , solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
   , solutionJourneyFailure :: Maybe (Failure Location Leg Metrics Metrics)
   , solutionPilgrimageFailure :: Maybe (Failure Location Day Metrics Metrics)
   , solutionPilgrimage :: Maybe Pilgrimage -- ^ If successful, a pilgrimage solution
-}
+} deriving (Generic)
+
+-- | We onblt read/write successful solutions
+instance FromJSON Solution where
+  parseJSON (Object v) = do
+    id' <- v .:? "id"
+    metadata' <- v .:? "metadata"
+    locations' <- v .: "locations"
+    tprefs' <- v .: "travel-preferences"
+    cprefs' <- v .: "camino-preferences"
+    pilgrimage' <- v .: "pilgrimage"
+    return $ Solution {
+        solutionID = id'
+      , solutionMetadata = metadata'
+      , solutionTravelPreferences = tprefs'
+      , solutionCaminoPreferences = cprefs'
+      , solutionLocations = locations'
+      , solutionJourneyFailure = Nothing
+      , solutionPilgrimageFailure = Nothing
+      , solutionPilgrimage = Just pilgrimage'
+      }
+  parseJSON v = error ("Unable to parse solution object " ++ show v)
+
+instance ToJSON Solution where
+  toJSON (Solution id' metadata' tprefs' cprefs' locations' _jf _pf (Just pilgrimage')) =
+    object [
+        "id" .= id'
+      , "metadata" .= metadata'
+      , "travel-preferences" .= tprefs'
+      , "camino-preferences" .= cprefs'
+      , "locations" .= S.map placeholderID locations'
+      , "pilgrimage" .= pilgrimage'
+      ]
+    where
+
+  toJSON _ = error "Unable to jsonify unsuccessful solution"
+
+instance NFData Solution
+
+-- | Normalise a solution
+normaliseSolution :: CaminoConfig -> Solution -> Solution
+normaliseSolution config solution = let
+    cprefs' = normalisePreferences config (solutionCaminoPreferences solution)
+    locations' = dereferenceS config (solutionLocations solution)
+    pilgrimage' = normalisePilgrimage config <$> solutionPilgrimage solution
+  in
+    solution {
+       solutionCaminoPreferences = cprefs'
+      , solutionLocations = locations'
+      , solutionPilgrimage = pilgrimage'
+    }
 
 -- Is this the last day's travel?
 isLastDay :: Location -> [Leg] -> Bool
@@ -762,9 +1016,11 @@ buildTripChoiceMap chooser preferences camino begin end select = let
 -- | Plan a camino based on the stated preferences
 planCamino :: CaminoConfig -> TravelPreferences -> CaminoPreferences -> Solution
 planCamino cc tprefs cprefs  = Solution {
-        solutionLocations = allowed
-      , solutionAccommodation = stopAm
-      , solutionLocation = stopLm
+        solutionID = Nothing
+      , solutionMetadata = Nothing
+      , solutionTravelPreferences = tprefs
+      , solutionCaminoPreferences = cprefs
+      , solutionLocations = allowed
       , solutionJourneyFailure = either Just (const Nothing) journey
       , solutionPilgrimageFailure = either Just (const Nothing) pilgrimage
       , solutionPilgrimage = either (const Nothing) Just pilgrimage

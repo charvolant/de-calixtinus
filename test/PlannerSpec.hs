@@ -7,6 +7,7 @@ import Camino.Planner
 import Camino.Camino
 import Camino.Preferences
 import TestUtils
+import Data.Aeson
 import Data.Description
 import Data.Localised
 import qualified Data.Map as M
@@ -16,6 +17,8 @@ import Data.Default.Class
 import Data.Placeholder
 import Data.Time.Calendar
 import Graph.Graph (identifier)
+import System.Directory
+import System.FilePath
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
 assertPenanceEqual msg Reject Reject _precision = assertBool msg True
@@ -28,13 +31,14 @@ assertPenanceEqual msg (Penance expected) (Penance actual) precision =
 
 testPlanner :: CaminoConfig -> TravelPreferences -> Camino -> Test
 testPlanner config preferences camino = TestList [
-  TestLabel "Hours Simple" testHoursSimple,
-  TestLabel "Travel Simple" testTravelSimple,
-  TestLabel "Accommodation Map Simple" testAccommodationMapSimple,
-  TestLabel "Accommodation Simple" testAccommodationSimple,
-  TestLabel "Penance Simple" testPenanceSimple,
-  TestLabel "Stock Up Day" (testIsStockUpDay config),
-  TestLabel "Plan Camino" (testPlanCamino config preferences camino)
+    TestLabel "Hours Simple" testHoursSimple
+  , TestLabel "Travel Simple" testTravelSimple
+  , TestLabel "Accommodation Map Simple" testAccommodationMapSimple
+  , TestLabel "Accommodation Simple" testAccommodationSimple
+  , TestLabel "Penance Simple" testPenanceSimple
+  , TestLabel "Stock Up Day" (testIsStockUpDay config)
+  , TestLabel "Plan Camino" (testPlanCamino config preferences camino)
+  , TestLabel "Persist Solution" (testSolution config preferences camino)
   ]
 
 distanceRange1 = PreferenceRange Nothing 4.0 2.0 8.0 Nothing (Just 10.0)
@@ -162,7 +166,7 @@ location2 = Location {
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue,
-      Accommodation (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ]) Nothing
+      Accommodation "B#2" (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ]) Nothing
     ],
     locationPois = [],
     locationEvents = []
@@ -179,7 +183,7 @@ location3 = Location {
     locationRegion = Just $ placeholder "ES-GA",
     locationServices = S.empty,
     locationAccommodation = [
-      Accommodation (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ]) Nothing
+      Accommodation "C#1" (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ]) Nothing
     ],
     locationPois = [],
     locationEvents = []
@@ -264,7 +268,7 @@ cpreferences1 = CaminoPreferences {
   preferenceStops = S.empty,
   preferenceExcluded = S.empty,
   preferencePois = S.empty,
-  preferenceStartDate = Nothing
+  preferenceStartDate = Just $ fromGregorian 2025 January 16
 }
 
 accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) stopPrefs1 camino1) preferences1 camino1 location1 location3 (const True)
@@ -432,3 +436,69 @@ testPlanCamino1 config preferences camino =
       assertEqual "Plan Camino 1 12" 5 (length $ path day2)
       assertPenanceEqual "Plan Camino 1 13" (Penance 20.0) (metricsPenance $ score day2) 0.1
     )
+
+testSolution config preferences camino = TestList [
+    testSolution1 config
+  , testSolution2 config preferences camino
+  , testSolution3 config
+  ]
+
+testSolution1 config = TestCase (do
+    testdir <- openTestDir
+    let solution = planCamino config preferences1 cpreferences1
+    let solution' = solution { solutionID = Just "S-1" }
+    let file = testdir </> "solution-1" <.> "json"
+    encodeFile file solution'
+    exists <- doesFileExist file
+    assertBool "Solution 1 1" exists
+    actual <- readFile file
+    expected <- readFile ("test" </> "solution-1" <.> "json")
+    assertEqualStripped "Solution 1 2" expected actual
+    closeTestDir testdir
+  )
+
+testSolution2 config preferences camino = TestCase (do
+    testdir <- openTestDir
+    let cprefs = CaminoPreferences {
+          preferenceCamino = camino,
+          preferenceRoutes = S.singleton $ caminoDefaultRoute camino,
+          preferenceStart = (caminoLocations camino) M.! "P-P1",
+          preferenceFinish = (caminoLocations camino) M.! "P-P12",
+          preferenceStops = S.empty,
+          preferenceExcluded = S.empty,
+          preferencePois = S.empty,
+          preferenceStartDate = Just $ fromGregorian 2025 January 16
+        }
+    let solution = planCamino config preferences cprefs
+    let solution' = solution { solutionID = Just "S-2" }
+    let file = testdir </> "solution-2" <.> "json"
+    encodeFile file solution'
+    exists <- doesFileExist file
+    assertBool "Solution 2 1" exists
+    actual <- readFile file
+    expected <- readFile ("test" </> "solution-2" <.> "json")
+    assertEqualStripped "Solution 2 2" expected actual
+    closeTestDir testdir
+  )
+
+testSolution3 config = TestCase (do
+    let file = "test" </> "solution-2" <.> "json"
+    msolution <- decodeFileStrict file :: IO (Maybe Solution)
+    assertBool "Solution 3 1" (isJust msolution)
+    let solution = normaliseSolution config $ fromJust msolution
+    assertEqual "Solution 3 2" (Just "S-2") (solutionID solution)
+    assertBool "Solution 3 3" (isJust $ solutionPilgrimage solution)
+    let pilgrimage = fromJust $ solutionPilgrimage solution
+    assertEqual "Solution 3 4" "P-P1" (locationID $ start pilgrimage)
+    assertEqual "Solution 3 5" "P-P12" (locationID $ finish pilgrimage)
+    let finish' = finish pilgrimage
+    assertEqual "Solution 3 5" "Vila Franca de Xira" (locationName finish')
+    assertEqual "Solution 3 6" 4 (length $ locationAccommodation finish')
+    let sc = score pilgrimage
+    let ac = metricsAccommodationChoice sc
+    assertEqual "Solution 3 7" 2 (length ac)
+    let (TripChoice ac1 s1 p1) = ac !! 1
+    assertEqual "Solution 3 8" "Hostel DP" (accommodationName ac1)
+    assertEqual "Solution 3 9" S.empty s1
+    assertEqual "Solution 3 10" mempty p1
+  )

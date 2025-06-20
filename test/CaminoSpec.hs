@@ -101,6 +101,7 @@ camino1 = Camino
   [logic1]
   route1
   M.empty
+  M.empty
 
 testLegEqual = TestList [
   testLegEqual1, testLegEqual2, testLegEqual3, testLegEqual4, testLegEqual5, testLegEqual6

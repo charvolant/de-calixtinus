@@ -485,7 +485,7 @@ class TaggedLink a where
 -- | A piece of localised text tgged by a locale specification
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedText = TaggedText Locale Text 
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Ord, Generic)
 
 instance Tagged TaggedText where
   locale (TaggedText loc _) = loc
@@ -517,14 +517,14 @@ instance IsString TaggedText where
 
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Ord, Generic)
 
 instance NFData Hyperlink
 
 -- | A URL with potential localisation and title
 --   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedURL = TaggedURL Locale Hyperlink
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Ord, Generic)
 
 instance Tagged TaggedURL where
   locale (TaggedURL loc _) = loc
@@ -565,7 +565,7 @@ instance NFData TaggedURL
 
 -- | A localised object containing (potentially) multiple localised instances of something
 data (Tagged a) => Localised a = Localised [a]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 instance (Tagged a, FromJSON a) => FromJSON (Localised a) where
   parseJSON v@(String _) = Localised <$> (singleton <$> parseJSON v)

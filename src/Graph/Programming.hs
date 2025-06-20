@@ -39,7 +39,6 @@ import Control.DeepSeq
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Graph.Graph
-import Data.Aeson
 import Data.Maybe
 import Data.List (nub, find)
 import Data.Text (Text)
@@ -64,19 +63,6 @@ data (Edge e v, Score s) => Chain v e s = Chain {
 -- | Get all the vertices in a chain (including the start and finish)
 passed :: (Edge e v, Score s) => Chain v e s -> S.Set v
 passed chain = S.insert (start chain) (S.fromList $ map target (path chain))
-
-instance (FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
-    parseJSON (Object v) = do
-      start' <- v .: "start"
-      finish' <- v .: "finish"
-      path' <- v .: "path"
-      score' <- v .: "score"
-      return Chain { start = start', finish = finish', path = path', score = score' }
-    parseJSON v = error ("Unable to parse chain object " ++ show v)
-
-instance (ToJSON v, ToJSON e, ToJSON s, Edge e v, Score s) => ToJSON (Chain v e s) where
-    toJSON (Chain start' finish' path' score') =
-      object [ "start" .= start', "finish" .= finish', "path" .= path', "score" .= score' ]
 
 instance (Edge e v, Score s, NFData v, NFData e, NFData s) => NFData (Chain v e s) where
   rnf c = start c
@@ -113,6 +99,11 @@ instance (Edge e v, Score s) => Graph (ChainGraph v e s) (Chain v e s) v where
   sources graph vx = let out = M.lookup vx (reverses graph) in if isNothing out then S.empty else M.keysSet (fromJust out)
   targets graph vx = let out = M.lookup vx (forwards graph) in if isNothing out then S.empty else M.keysSet (fromJust out)
 
+instance (Edge e v, Score s, NFData v, NFData e, NFData s) => NFData (ChainGraph v e s) where
+  rnf cg = forwards cg
+    `deepseq` reverses cg
+    `deepseq` ()
+
 -- | Accept a sequence of elements as a possible part
 type AcceptFunction e = [e] -> Bool
 
@@ -147,6 +138,13 @@ emptyChainGraph  = ChainGraph M.empty M.empty
 
 data (Edge e v, Score s1, Score s2) => Failure v e s1 s2 = Failure Text (Maybe v) (ChainGraph v e s1) (ChainGraph v (Chain v e s1) s2)
  deriving (Show)
+
+instance (Edge e v, Score s1, Score s2, NFData s1, NFData s2, NFData v, NFData e) => NFData (Failure v e s1 s2) where
+  rnf (Failure message' location' chain1' chain2') = message'
+    `deepseq` location'
+    `deepseq` chain1'
+    `deepseq` chain2'
+    `deepseq` ()
 
 -- | Create a failure with the constructed link and program table for debugging
 failure :: (Edge e v, Score s1, Score s2) => Text -- ^ The error message

@@ -93,6 +93,7 @@ library
     , template-haskell
     , text
     , time
+    , uuid
     , vector
     , warp
     , xlsx
@@ -142,6 +143,7 @@ executable camino-map-exe
     , template-haskell
     , text
     , time
+    , uuid
     , vector
     , warp
     , xlsx
@@ -191,6 +193,7 @@ executable camino-planner-exe
     , template-haskell
     , text
     , time
+    , uuid
     , vector
     , warp
     , xlsx
@@ -240,6 +243,7 @@ executable camino-server-exe
     , template-haskell
     , text
     , time
+    , uuid
     , vector
     , warp
     , xlsx
@@ -289,6 +293,7 @@ executable generate-static-exe
     , template-haskell
     , text
     , time
+    , uuid
     , vector
     , warp
     , xlsx
@@ -359,6 +364,7 @@ test-suite de-calixtinus-test
     , template-haskell
     , text
     , time
+    , uuid
     , vector
     , warp
     , xlsx

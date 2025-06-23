@@ -27,6 +27,7 @@ module Camino.Planner (
   , buildTripChoiceMap
   , daysLabel
   , findDay
+  , findStage
   , locationChoice
   , hasNonTravel
   , isStockUpDay
@@ -1101,6 +1102,13 @@ findDay pilgrimage location = findDay' (path pilgrimage) location
 
 findDay' [] _location = Nothing
 findDay' (stage:rest) location = L.find (\d -> start d == location) (path stage) <|> findDay' rest location
+
+-- | Find the stage that starts at a location
+findStage :: Pilgrimage -> Location -> Maybe Journey
+findStage pilgrimage location = findStage' (path pilgrimage) location
+
+findStage' [] _location = Nothing
+findStage' (stage:rest) location = if (start stage == location) then Just stage else findStage' rest location
 
 -- | Useful label for a day sequence
 daysLabel :: [Day] -> T.Text

@@ -78,6 +78,7 @@ data CaminoMsg =
   | ClosedDayText
   | ClosedText
   | ComfortableTitle
+  | CopyLinkTitle
   | CrossTitle
   | ComfortLabel
   | CulturalPoiTitle
@@ -87,6 +88,7 @@ data CaminoMsg =
   | DateLabel
   | DateMsg Data.Time.Calendar.Day
   | DateRangeMsg Data.Time.Calendar.Day Data.Time.Calendar.Day
+  | DayLabel
   | DayOfMonthName DayOfMonth
   | DayOfWeekName DayOfWeek
   | DayServicesPenanceMsg Penance
@@ -107,6 +109,8 @@ data CaminoMsg =
   | DistancePreferencesPerceivedLabel
   | DoubleTitle
   | DoubleWcTitle
+  | DownloadKmlTitle
+  | DownloadSpreadsheetTitle
   | DryerTitle
   | EventsLabel
   | ExceptText
@@ -145,6 +149,7 @@ data CaminoMsg =
   | InformationDescription
   | InformationPointTitle
   | IntersectionTitle
+  | JourneySummaryMsg Journey
   | JunctionTitle
   | KeyLabel
   | KitchenTitle
@@ -192,8 +197,10 @@ data CaminoMsg =
   | PenanceSummaryLabel
   | PerceivedDistanceLabel
   | PerformanceEventTitle
+  | PersistentLinkTitle
   | PetsTitle
   | PharmacyTitle
+  | PilgrimageLabel
   | PilgrimAlbergueTitle
   | PilgrimMassEventTitle
   | PilgrimPoiTitle
@@ -241,6 +248,7 @@ data CaminoMsg =
   | SingleTitle
   | SleepingBagTitle
   | StablesTitle
+  | StageLabel
   | StagesMsg Int
   | StartDateLabel
   | StartLocationLabel
@@ -365,12 +373,14 @@ renderCaminoMsgDefault _ ClosedDayText = "Closed Day"
 renderCaminoMsgDefault _ ClosedText = "closed"
 renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
 renderCaminoMsgDefault _ ComfortLabel = "Comfort"
+renderCaminoMsgDefault _ CopyLinkTitle = "Copy Link"
 renderCaminoMsgDefault _ CrossTitle = "Cross"
 renderCaminoMsgDefault _ CulturalPoiTitle = "Cultural"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
 renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ DailyLabel = "Daily"
 renderCaminoMsgDefault _ DateLabel = "Date"
+renderCaminoMsgDefault _ DayLabel = "Day"
 renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
@@ -388,6 +398,8 @@ renderCaminoMsgDefault _ DistancePreferencesLabel = "Distance Preferences (km)"
 renderCaminoMsgDefault _ DistancePreferencesPerceivedLabel = "Perceived Distance Preferences (km)"
 renderCaminoMsgDefault _ DoubleTitle = "Double"
 renderCaminoMsgDefault _ DoubleWcTitle = "Double with WC"
+renderCaminoMsgDefault _ DownloadKmlTitle = "Download KML"
+renderCaminoMsgDefault _ DownloadSpreadsheetTitle = "Download Spreadhseet"
 renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
@@ -465,8 +477,10 @@ renderCaminoMsgDefault _ PenanceReject = "Rejected"
 renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
 renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
 renderCaminoMsgDefault _ PerformanceEventTitle = "Performance"
+renderCaminoMsgDefault _ PersistentLinkTitle = "Persistent Link"
 renderCaminoMsgDefault _ PetsTitle = "Pets"
 renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
+renderCaminoMsgDefault _ PilgrimageLabel = "Pilgrimage"
 renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ PilgrimMassEventTitle = "Pilgrim's Mass"
 renderCaminoMsgDefault _ PilgrimPoiTitle = "Pilgrim"
@@ -514,6 +528,7 @@ renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
 renderCaminoMsgDefault _ SingleTitle = "Single"
 renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
 renderCaminoMsgDefault _ StablesTitle = "Stables"
+renderCaminoMsgDefault _ StageLabel = "Stage"
 renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
 renderCaminoMsgDefault _ StartDateLabel = "Start Date"
 renderCaminoMsgDefault _ StartLocationLabel = "Start Location"
@@ -643,11 +658,24 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   #{start'} to #{finish'}
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
   over ^{formatMaybeHours $ metricsTime metrics}
+  Ascent ^{formatHeight $ metricsAscent metrics} Descent ^{formatHeight $ metricsDescent metrics}
+  Penance ^{formatPenance $ metricsPenance metrics}
   |]
   where
    metrics = score day
    start' = renderLocalisedText locales False False (locationName $ start day)
    finish' = renderLocalisedText locales False False (locationName $ finish day)
+renderCaminoMsg _config locales (JourneySummaryMsg journey) = [shamlet|
+  #{start'} to #{finish'}
+  Total distance ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
+  over ^{formatDays $ Prelude.length $ path journey}
+  Total ascent ^{formatHeight $ metricsAscent metrics} Total descent ^{formatHeight $ metricsDescent metrics}
+  Penance ^{formatPenance $ metricsPenance metrics}
+  |]
+  where
+   metrics = score journey
+   start' = renderLocalisedText locales False False (locationName $ start journey)
+   finish' = renderLocalisedText locales False False (locationName $ finish journey)
 renderCaminoMsg _config locales (LinkTitle locd defd) = if hasLocalisedText locales locd then
     renderLocalisedText locales True False locd
   else

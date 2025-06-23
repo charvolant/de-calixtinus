@@ -135,6 +135,7 @@ iconList = [
     ("ca-city", '\xe003'),
     ("ca-clock", '\xe094'),
     ("ca-cooling", '\xe071'),
+    ("ca-copy", '\xe09d'),
     ("ca-cross", '\xe009'),
     ("ca-cycling", '\xe081'),
     ("ca-dinner", '\xe065'),

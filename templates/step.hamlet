@@ -20,18 +20,9 @@
             <button type="submit" name="_next" value="back" .btn .btn-secondary>_{MsgBackLabel}
           <div .btn-group>
             $if nextp == PlanStep
-              <div .btn-group>
-                <button type="submit" name="_generate" formaction="@{PlanXlsxR}" onclick="showWorking('plan-xlsx-spinner');" .btn .btn-outline-secondary title="_{MsgPlanXlsxTitle}">
-                  <span #plan-xlsx-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
-                  <span .ca-document-spreadsheet>
-                  _{MsgPlanXlsxLabel}
-                <button type="submit" name="_generate" formaction="@{PlanKmlR}" onclick="showWorking('plan-kml-spinner');" .btn .btn-outline-secondary title="_{MsgPlanKmlTitle}">
-                  <span #plan-kml-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
-                  <span .ca-document-kml>
-                  _{MsgPlanKmlLabel}
-                <button type="submit" name="_generate" formaction="@{PlanR}" onclick="showWorking('plan-spinner');" .btn .btn-primary title="_{MsgPlanTitle}">
-                  <span #plan-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
-                  _{MsgPlanLabel}
+              <button type="submit" name="_generate" formaction="@{MakePlanR}" onclick="showWorking('plan-spinner');" .btn .btn-primary title="_{MsgPlanTitle}">
+                <span #plan-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
+                _{MsgPlanLabel}
             $else
               <button type="submit" name="_next" value="next" .btn .btn-primary>_{MsgNextLabel}
   $maybe bot <- bottom

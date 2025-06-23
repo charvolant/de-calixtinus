@@ -799,7 +799,7 @@ chooseCaminoForm help prefs extra = do
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
     let localised c = localiseText locales c
-    let description d = Just $ (descriptionBlock False d) messages router
+    let description d = Just $ (descriptionBlock False True d) messages router
     let  caminoField = extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, description $ caminoDescription c)) (caminoAppCaminos master))
     (caRes, caView) <- mreq caminoField (fieldSettingsLabelName MsgSelectCamino "camino") (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
@@ -830,7 +830,7 @@ chooseRoutesForm help prefs extra = do
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
     let localised r = localiseText locales r
-    let description d = Just $ (descriptionBlock False d) messages router
+    let description d = Just $ (descriptionBlock False True d) messages router
     let camino = prefCamino <$> prefs
     let routes = maybe (Prelude.concat (map caminoRoutes (caminoAppCaminos master))) caminoRoutes camino
     let requirementClauses = maybe [] (\c -> Prelude.concat $ map createRequiresClauses (caminoRouteLogic c)) camino

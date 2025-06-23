@@ -35,6 +35,18 @@ a
   content: " and "
 .attribution
   font-size: x-small
+.bar-separated-list
+  list-style-type: none
+  padding: 0
+  margin: 0
+.bar-separated-list li
+  display: inline
+  padding-left: 1ex
+  padding-right: 1ex
+.bar-separated-list li:first-child
+  padding-left: 0
+.bar-separated-list li:not(:first-child)
+  border-left: thin solid gray
 .best-accommodation
   font-weight: bold
 .best-accommodation-penance
@@ -262,15 +274,3 @@ a
   font-size: small
 .link-map::before
   content: "\e090"
-.bar-separated-list
-  list-style-type: none
-  padding: 0
-  margin: 0
-.bar-separated-list li
-  display: inline
-  padding-left: 1ex
-  padding-right: 1ex
-.bar-separated-list li:first-child
-  padding-left: 0
-.bar-separated-list li:not(:first-child)
-  border-left: thin solid gray

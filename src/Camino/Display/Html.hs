@@ -19,8 +19,8 @@ module Camino.Display.Html where
 
 import Control.Monad.Reader
 import Camino.Camino
-import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets)
-import Camino.Planner (TripChoice(..), Solution(..), Day, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
+import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
+import Camino.Planner (TripChoice(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
 import Data.Util
 import Camino.Display.Css (caminoCss, toCssColour)
@@ -129,8 +129,16 @@ metricsSummary _preferences _camino metrics days stages = [ihamlet|
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
 daySummary _preferences _camino _pilgrimage day = [ihamlet|
     <p>_{DaySummaryMsg day}
-    <ol>
+    <ol .bar-separated-list>
       $forall loc <- (map legFrom $ path day) ++ [finish day]
+        <li>_{Txt (locationName loc)}
+  |]
+
+stageSummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Journey -> HtmlUrlI18n CaminoMsg CaminoRoute
+stageSummary _preferences _camino _pilgrimage stage = [ihamlet|
+    <p>_{JourneySummaryMsg stage}
+    <ol .bar-separated-list>
+      $forall loc <- (map start $ path stage) ++ [finish stage]
         <li>_{Txt (locationName loc)}
   |]
 
@@ -296,6 +304,7 @@ caminoAccommodationTypeIcon Gite = [ihamlet| <span .accommodation .gite .ca-gite
 caminoAccommodationTypeIcon CampGround = [ihamlet| <span .accommodation .camp-ground .ca-campground title="_{CampGroundTitle}"> |]
 caminoAccommodationTypeIcon Refuge = [ihamlet| <span .accommodation .refuge .ca-refuge title="_{RefugeTitle}"> |]
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accommodation .camping .ca-tent title="_{CampingTitle}"> |]
+caminoAccommodationTypeIcon PlaceholderAccommodation = [ihamlet| <span .accommodation title="_{PlaceholderLabel}">? |]
 
 caminoAccommodationTypeMsg :: AccommodationType -> CaminoMsg
 caminoAccommodationTypeMsg PilgrimAlbergue = PilgrimAlbergueTitle
@@ -310,6 +319,7 @@ caminoAccommodationTypeMsg Gite = GiteTitle
 caminoAccommodationTypeMsg CampGround = CampGroundTitle
 caminoAccommodationTypeMsg Refuge = RefugeTitle
 caminoAccommodationTypeMsg Camping = CampingTitle
+caminoAccommodationTypeMsg PlaceholderAccommodation = PlaceholderLabel
 
 caminoAccommodationLabel :: Accommodation -> CaminoMsg
 caminoAccommodationLabel (GenericAccommodation PilgrimAlbergue) = PilgrimAlbergueTitle
@@ -324,6 +334,7 @@ caminoAccommodationLabel (GenericAccommodation Gite) = GiteTitle
 caminoAccommodationLabel (GenericAccommodation CampGround) = CampGroundTitle
 caminoAccommodationLabel (GenericAccommodation Refuge) = RefugeTitle
 caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
+caminoAccommodationLabel (GenericAccommodation PlaceholderAccommodation) = PlaceholderLabel
 caminoAccommodationLabel _ = AccommodationLabel
 
 caminoServiceIcon :: Service -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -603,6 +614,13 @@ hoursBlock (OpenHours hours) = [ihamlet|
         ^{timeBlock time}
   |]
 
+
+descriptionNoteTypeMsg :: NoteType -> CaminoMsg
+descriptionNoteTypeMsg Information = InformationTitle
+descriptionNoteTypeMsg Warning = WarningTitle
+descriptionNoteTypeMsg Address = AddressTitle
+descriptionNoteTypeMsg Directions = DirectionsTitle
+
 descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
 descriptionNoteTypeIcon Warning = [ihamlet| <span .note-type .ca-warning title="_{WarningTitle}">|]
@@ -625,12 +643,13 @@ descriptionLine description = [ihamlet|
   |]
 
 -- Only partial. This should be enclosed in a .row since it allows extra stuff to be added
-descriptionBlock :: Bool -> Description -> HtmlUrlI18n CaminoMsg CaminoRoute
-descriptionBlock showAbout description = [ihamlet|
-    $maybe img <- mimg
-      <div .description-thumbnail .card .float-end>
-        <div .card-body>
-          <img .rounded .img-fluid src="@{ImgRoute img True}" alt="_{TxtPlain True False (imageTitle img)}" title="_{TxtPlain True False (imageTitle img)}" :isJust attribution:dc:rights="#{javascriptString attribution}" onclick="showImagePopup('@{ImgRoute img False}', '_{TxtPlain True True (imageTitle img)}', #{javascriptString attribution}, #{javascriptString origin})"">
+descriptionBlock :: Bool -> Bool -> Description -> HtmlUrlI18n CaminoMsg CaminoRoute
+descriptionBlock showAbout showImages description = [ihamlet|
+    $if showImages
+      $maybe img <- mimg
+        <div .description-thumbnail .card .float-end>
+          <div .card-body>
+            <img .rounded .img-fluid src="@{ImgRoute img True}" alt="_{TxtPlain True False (imageTitle img)}" title="_{TxtPlain True False (imageTitle img)}" :isJust attribution:dc:rights="#{javascriptString attribution}" onclick="showImagePopup('@{ImgRoute img False}', '_{TxtPlain True True (imageTitle img)}', #{javascriptString attribution}, #{javascriptString origin})"">
     $if showAbout
       $maybe about <- descAbout description
         <div .float-start .description-icon>
@@ -771,7 +790,7 @@ caminoEventHtml event = [ihamlet|
   $maybe d <- eventDescription event
     <div .row>
       <div .col>
-        ^{descriptionBlock False d}
+        ^{descriptionBlock False True d}
   |]
   where
     eventCss = "event-" <> (T.toLower $ T.pack $ show $ eventType event)
@@ -806,7 +825,7 @@ caminoPointOfInterestHtml poi = [ihamlet|
             $maybe c <- poiHours poi
               ^{hoursBlock c}
             $maybe d <- poiDescription poi
-              ^{descriptionBlock False d}
+              ^{descriptionBlock False True d}
             $forall event <- poiEvents poi
               ^{caminoEventHtml event}
   |]
@@ -892,7 +911,7 @@ caminoLocationHtml preferences camino solution containerId rests stocks stops wa
         $maybe d <- locationDescription location
           <div .row>
             <div .col>
-              ^{descriptionBlock False d}
+              ^{descriptionBlock False True d}
         ^{conditionalLabel AccommodationLabel (locationAccommodation location)}
         $forall accommodation <- locationAccommodation location
           ^{caminoAccommodationHtml accommodation}
@@ -1603,21 +1622,21 @@ caminoAllMapScript tl br caminos = [ihamlet|
     chooseColour leg = maybe "#000000" (toCssColour . paletteColour . routePalette) (M.lookup leg rmap)
 
 
-aboutHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
-aboutHtml config _preferences camino = [ihamlet|
+aboutHtml :: Config -> Bool -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
   <div .container-fluid>
-    <h2>_{Txt (caminoName camino')}
+    <h2>_{Txt (caminoName camino)}
     <div .row>
       <div .col>
-        ^{descriptionBlock True (caminoDescription camino')}
+        ^{descriptionBlock True showImages (caminoDescription camino)}
     <h3>_{RoutesLabel}
-    $forall route <- caminoRoutes camino'
+    $forall route <- caminoRoutes camino
       <div ##{routeID route} .row>
         <div .col>
           <span style="color: #{toCssColour $ paletteTextColour $ routePalette route}">_{Txt (routeName route)}
       <div .row>
         <div .offset-1 .col>
-          ^{descriptionBlock True (routeDescription route)}
+          ^{descriptionBlock True True (routeDescription route)}
     <h3>_{RegionsLabel}
     <table .table .table-striped>
       <thead>
@@ -1643,7 +1662,7 @@ aboutHtml config _preferences camino = [ihamlet|
                   _{Txt (regionName parent)}
             <td>
               $maybe description2 <- regionDescription region
-                ^{descriptionBlock False description2}
+                ^{descriptionBlock False True description2}
             <td>
               <ul .comma-list>
                 $forall cal <- regionClosedDays region
@@ -1674,7 +1693,8 @@ aboutHtml config _preferences camino = [ihamlet|
                   #{checkMark (isHoliday (fst holiday) region)}
     <h3>_{InformationLabel}
     <p>_{InformationDescription}
-    $with metadata <- caminoMetadata camino'
+    <h4>_{CaminoLabel}
+    $with metadata <- caminoMetadata camino
       $forall statement <- metadataStatements metadata
         <div .row>
           <div .col-1>
@@ -1683,13 +1703,24 @@ aboutHtml config _preferences camino = [ihamlet|
               <span>#{l}
           <div .col>
             #{statementValue statement}
+    $maybe solution <- msolution
+      $maybe metadata <- solutionMetadata solution
+        <h4>_{PlanLabel}
+        $forall statement <- metadataStatements metadata
+          <div .row>
+            <div .col-1>
+              <a href="#{show $ statementTerm statement}">#{statementLabel statement}
+              $maybe l <- statementLang statement
+                <span>#{l}
+            <div .col>
+              #{statementValue statement}
   |]
   where
-    camino' = preferenceCamino camino
-    regions = S.filter isHolidayRegion $ regionClosure $ caminoRegions camino'
+    camino = preferenceCamino cprefs
+    regions = S.filter isHolidayRegion $ regionClosure $ caminoRegions camino
     holidayRegions = S.filter (\r -> not $ null $ getRegionalHolidays r) regions
     holidayKeys = S.fold S.union S.empty $ S.map (\r -> S.fromList $ catMaybes $ map calendarKey $ regionHolidays r) holidayRegions
-    startDate = preferenceStartDate camino
+    startDate = preferenceStartDate cprefs
     mapDate k = (c, (\d -> runReader (calendarDateOnOrAfter c d) config) <$> startDate) where c = NamedCalendar k
     holidays = sortOn snd $ map mapDate $ S.toList holidayKeys
     isHoliday holiday region = elem holiday (getRegionalHolidays region)
@@ -1754,7 +1785,7 @@ helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 
 caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoHtmlBase config preferences camino solution =
+caminoHtmlBase config preferences camino msolution =
   [ihamlet|
       <style>
         $forall css <- caminoCss config (preferenceCamino camino)
@@ -1777,30 +1808,41 @@ caminoHtmlBase config preferences camino solution =
             <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
           <li .nav-item role="presentation">
             <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
+        $maybe solution <- msolution
+          $maybe sid <- solutionID solution
+            <div .btn-group-vertical .float-end .me-1 .mt-2 .ms-3 .mb-2>
+              <a .btn .btn-secondary .btn-sm href="@{PlanRoute sid}" title="_{PersistentLinkTitle}">
+                <span .ca-link>
+              <a .btn .btn-secondary .btn-sm href="#" onclick="navigator.clipboard.writeText('@{PlanRoute sid}')" title="_{CopyLinkTitle}">
+                <span .ca-copy>
+              <a .btn .btn-secondary .btn-sm href="@{PlanSpreadsheetRoute sid}" title="_{DownloadSpreadsheetTitle}">
+                <span .ca-document-spreadsheet>
+              <a .btn .btn-secondary .btn-sm href="@{PlanKmlRoute sid}" title="_{DownloadKmlTitle}">
+                <span .ca-document-kml>
         <div .tab-content>
           <div .tab-pane .active role="tabpanel" id="map-tab">
-            ^{caminoMapHtml preferences camino solution}
+            ^{caminoMapHtml preferences camino msolution}
           $maybe p <- pilgrimage
             <div .tab-pane role="tabpanel" id="plan-tab">
               ^{caminoTripHtml config preferences camino p}
           <div .tab-pane role="tabpanel" id="locations-tab">
-            ^{caminoLocationsHtml preferences camino solution}
+            ^{caminoLocationsHtml preferences camino msolution}
           <div .tab-pane role="tabpanel" id="preferences-tab">
             ^{preferencesHtml True preferences camino}
           $if showFailure
             <div .tab-pane role="tabpanel" id="failure-tab">
               ^{failureHtml preferences camino journeyFailure pilgrimageFailure}
           <div .tab-pane role="tabpanel" id="about-tab">
-            ^{aboutHtml config preferences camino}
+            ^{aboutHtml config True preferences camino msolution}
           <div .tab-pane role="tabpanel" id="key-tab">
             ^{keyHtml config preferences camino}
-    ^{caminoMapScript preferences camino solution}
+    ^{caminoMapScript preferences camino msolution}
   |]
   where
-    pilgrimage = maybe Nothing solutionPilgrimage solution
-    journeyFailure = maybe Nothing solutionJourneyFailure solution
-    pilgrimageFailure = maybe Nothing solutionPilgrimageFailure solution
-    showFailure = configDebug config && (isJust journeyFailure || isJust pilgrimageFailure)
+    pilgrimage = maybe Nothing solutionPilgrimage msolution
+    journeyFailure = maybe Nothing solutionJourneyFailure msolution
+    pilgrimageFailure = maybe Nothing solutionPilgrimageFailure msolution
+    showFailure = getDebug config && (isJust journeyFailure || isJust pilgrimageFailure)
 
 -- | Display a camino wihout a chosen route
 caminoHtmlSimple :: Config -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1830,7 +1872,7 @@ caminoHtmlSimple config camino =
               <div .tab-pane role="tabpanel" id="locations-tab">
                 ^{caminoLocationsHtml preferences camino Nothing}
               <div .tab-pane role="tabpanel" id="about-tab">
-                ^{aboutHtml config preferences camino}
+                ^{aboutHtml config True preferences camino Nothing}
               <div .tab-pane role="tabpanel" id="key-tab">
                 ^{keyHtml config preferences camino}
         ^{caminoMapScript preferences camino Nothing}

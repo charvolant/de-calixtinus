@@ -22,8 +22,8 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Config (AssetConfig(..), getAsset)
-import Camino.Planner (Solution(..), Pilgrimage)
+import Camino.Config (AssetConfig(..), getAsset, getWebRoot)
+import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution)
 import Camino.Preferences
 import Data.Util
 import Camino.Display.Html
@@ -35,11 +35,19 @@ import Camino.Server.Forms
 import Camino.Server.Foundation
 import Camino.Server.Settings
 import Codec.Xlsx
+import Data.Cache
 import Data.Description (Image(..))
-import Data.Localised (Locale, localeLanguageTag, localiseText, rootLocale, textToUri, wildcardText)
+import Data.DublinCore
+import Data.Localised (Locale, TaggedText(..), localeLanguageTag, localiseText, rootLocale, textToUri, wildcardText)
+import Data.Maybe (fromJust, isJust)
+import Data.Metadata
+import Data.IORef
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Clock.POSIX (getPOSIXTime)
+import Data.Time.Format.ISO8601 (iso8601Show)
+import Data.UUID (toText)
+import Data.UUID.V4
 import Graph.Graph
 import Text.Hamlet
 import Text.Read (readMaybe)
@@ -182,8 +190,8 @@ getHomeR :: Handler Html
 getHomeR = do
   homeP
 
-postPlanR :: Handler Html
-postPlanR = do
+postMakePlanR :: Handler Html
+postMakePlanR = do
   stepp <- lookupPostParam "_step"
   case maybe Nothing (readMaybe . unpack) stepp of
     Just step' -> do
@@ -203,35 +211,63 @@ postPlanR = do
     _ ->
       invalidArgs ["Bad preferences step"]
 
-postPlanKmlR :: Handler TypedContent
-postPlanKmlR = do
-  stepp <- lookupPostParam "_step"
-  case maybe Nothing (readMaybe . unpack) stepp of
-    Just step' -> do
-      ((result, _widget), _enctype) <- runFormPost $ (stepForm step' blankHelp) Nothing
-      case result of
-          FormSuccess prefs -> do
-             encodePreferences prefs
-             planKml prefs
-          _ ->
-            invalidArgs ["Bad preferences data"]
-    _ -> do
-      invalidArgs ["Bad preferences step"]
 
-postPlanXlsxR :: Handler TypedContent
-postPlanXlsxR = do
-  stepp <- lookupPostParam "_step"
-  case maybe Nothing (readMaybe . unpack) stepp of
-    Just step' -> do
-      ((result, _widget), _enctype) <- runFormPost $ (stepForm step' blankHelp) Nothing
-      case result of
-          FormSuccess prefs -> do
-             encodePreferences prefs
-             planXlsx prefs
-          _ ->
-            invalidArgs ["Bad preferences data"]
-    _ -> do
-      invalidArgs ["Bad preferences step"]
+getPlanR :: Text -> Handler Html
+getPlanR sid = do
+  master <- getYesod
+  msolution <- liftIO $ do
+    let store = caminoAppStore master
+    cache <- readIORef store
+    (msolution', cache') <- cacheLookup sid cache
+    writeIORef store cache'
+    return $ normaliseSolution (caminoAppCaminoConfig master) <$> msolution'
+  case msolution of
+    Nothing -> do
+      setMessage [shamlet|
+        <div ..alert .alert-warning role="alert">
+          Can't find #{sid}
+        |]
+      notFound
+    Just solution ->
+      showPage solution
+
+getPlanKmlR :: Text -> Handler TypedContent
+getPlanKmlR sid = do
+  master <- getYesod
+  msolution <- liftIO $ do
+    let store = caminoAppStore master
+    cache <- readIORef store
+    (msolution', cache') <- cacheLookup sid cache
+    writeIORef store cache'
+    return $ normaliseSolution (caminoAppCaminoConfig master) <$> msolution'
+  case msolution of
+    Nothing -> do
+      setMessage [shamlet|
+        <div ..alert .alert-warning role="alert">
+          Can't find #{sid}
+        |]
+      notFound
+    Just solution ->
+      showKml solution
+
+getPlanXlsxR :: Text -> Handler TypedContent
+getPlanXlsxR sid = do
+  master <- getYesod
+  msolution <- liftIO $ do
+    let store = caminoAppStore master
+    cache <- readIORef store
+    (msolution', cache') <- cacheLookup sid cache
+    writeIORef store cache'
+    return $ normaliseSolution (caminoAppCaminoConfig master) <$> msolution'
+  case msolution of
+    Nothing -> do
+      setMessage [shamlet|
+        <div ..alert .alert-warning role="alert">
+          Can't find #{sid}
+        |]
+      notFound
+    Just solution ->
+      showXlsx solution
 
 
 getPreferencesR :: Handler Html
@@ -413,6 +449,16 @@ addError (Just f) = do
 addError _ = do
   return ()
 
+createMetadata :: Solution -> Text -> IO Metadata
+createMetadata solution origin = do
+  timestamp <- getCurrentTime
+  let created = Statement dctermsCreated (TaggedText rootLocale (pack $ iso8601Show timestamp))
+  let creator = Statement dctermsCreator (TaggedText rootLocale "de-calixtinus")
+  let identifier = Statement dctermsIdentifier (TaggedText rootLocale (maybe "unknown" id (solutionID solution)))
+  let license = Statement dctermsLicense (TaggedText rootLocale "https://creativecommons.org/licenses/by/4.0/")
+  let source = Statement dctermsSource (TaggedText rootLocale origin)
+  return $ def { metadataStatements = [ created, creator, identifier, license, source ] }
+
 planPage :: PreferenceData -> Handler Html
 planPage prefs = do
     master <- getYesod
@@ -421,8 +467,30 @@ planPage prefs = do
     let cprefs = caminoPreferencesFrom prefs
     let config = caminoAppConfig master
     let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
+    solution' <- if isJust (solutionPilgrimage solution) then liftIO $ do
+        uuid <- nextRandom
+        let sid = toText uuid
+        let so = solution { solutionID = Just sid }
+        metadata <- liftIO $ createMetadata so (getWebRoot $ caminoAppConfig master)
+        let so' = so { solutionMetadata = Just metadata }
+        let store = caminoAppStore master
+        cache <- readIORef store
+        cache' <- cachePut sid so' cache
+        writeIORef store cache'
+        return so'
+      else
+        return solution
+    showPage solution'
+
+showPage :: Solution -> Handler Html
+showPage solution = do
+    master <- getYesod
+    locales <- getLocales
+    let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let messages = renderCaminoMsg config locales
+    let tprefs = solutionTravelPreferences solution
+    let cprefs = solutionCaminoPreferences solution
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionJourneyFailure solution)
     addError (solutionPilgrimageFailure solution)
@@ -440,16 +508,16 @@ kmlFileName :: CaminoPreferences -> Maybe Pilgrimage -> Text
 kmlFileName camino Nothing = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".kml"
 kmlFileName camino (Just trip) = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> "-" <> (toFileName $ locationNameLabel $ start trip) <> "-" <> (toFileName $ locationNameLabel $ finish trip) <> ".kml"
 
-planKml :: PreferenceData -> Handler TypedContent
-planKml prefs = do
+showKml :: Solution -> Handler TypedContent
+showKml solution = do
     master <- getYesod
-    let tprefs = travelPreferencesFrom prefs
-    let cprefs = caminoPreferencesFrom prefs
-    let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
+    locales <- getLocales
+    let tprefs = solutionTravelPreferences solution
+    let cprefs = solutionCaminoPreferences solution
     let pilgrimage = solutionPilgrimage solution
     let config = caminoAppConfig master
-    let kml = createCaminoDoc config tprefs cprefs pilgrimage
-    let result = renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml
+    let kml = createCaminoDoc config locales tprefs cprefs (Just solution)
+    let result = renderLBS (def { rsUseCDATA = useCDATA }) kml
     addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs pilgrimage <> "\"")
     return $ TypedContent kmlType (toContent result)
 
@@ -462,21 +530,21 @@ xlsxType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 xlsxFileName :: CaminoPreferences -> Maybe Pilgrimage -> Text
 xlsxFileName camino _ = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".xlsx"
 
-planXlsx :: PreferenceData -> Handler TypedContent
-planXlsx prefs = do
+showXlsx :: Solution -> Handler TypedContent
+showXlsx solution = do
     master <- getYesod
     locales <- getLocales
     ct <- liftIO getPOSIXTime
     let config = caminoAppConfig master
     let messages = renderCaminoMsgText config locales
-    let tprefs = travelPreferencesFrom prefs
-    let cprefs = caminoPreferencesFrom prefs
-    let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
+    let tprefs = solutionTravelPreferences solution
+    let cprefs = solutionCaminoPreferences solution
     let pilgrimage = solutionPilgrimage solution
     let xlsx = createCaminoXlsx config messages tprefs cprefs solution
     let result = fromXlsx ct xlsx
     addHeader "content-disposition" ("attachment; filename=\"" <> xlsxFileName cprefs pilgrimage <> "\"")
     return $ TypedContent xlsxType (toContent result)
+
 
 runCaminoApp :: CaminoApp -> IO ()
 runCaminoApp app = warp (caminoAppPort app) app

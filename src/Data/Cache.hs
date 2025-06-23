@@ -22,6 +22,7 @@ module Data.Cache (
 
   , compositeCache
   , defaultFileCache
+  , defaultFileCacheWithNamer
   , defaultMemCache
   , defaultMemCacheWithExpiry
 ) where
@@ -301,6 +302,12 @@ defaultFileCache root expiry = FileCache {
     , fcNamer = filter isAlphaNum . show
     , fcLastScan = Nothing
   }
+
+-- | Create a default file cache with a specific lcation and expiry time
+--   The file key is just the string version of the key
+--   The rescan interval is every 10th of the longevity
+defaultFileCacheWithNamer :: (Ord k, Show k, FromJSON v, ToJSON v, Real t) => FilePath -> t -> (k -> String) -> FileCache k v
+defaultFileCacheWithNamer root expiry namer = (defaultFileCache root expiry) { fcNamer = namer }
 
 -- | A composite cache with a primary and secondary cache
 --   The primary cache is usually small and allows fast retrieval.

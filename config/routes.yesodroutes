@@ -5,8 +5,9 @@
 /map MapR GET
 /metric MetricR GET
 /notice NoticeR GET
-/plan PlanR POST
-/planKml PlanKmlR POST
-/planXlsx PlanXlsxR POST
+/plan MakePlanR POST
+/plan/#Text PlanR GET
+/planKml/#Text PlanKmlR GET
+/planXlsx/#Text PlanXlsxR GET
 /preferences PreferencesR GET POST
 /static StaticR Static caminoAppStatic

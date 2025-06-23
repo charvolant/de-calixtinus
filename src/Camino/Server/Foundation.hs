@@ -22,14 +22,17 @@ Portability : POSIX
 module Camino.Server.Foundation where
 
 import Camino.Camino
+import Camino.Planner (Solution)
 import Camino.Preferences
 import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
+import Data.Cache (CompositeCache(..), FileCache(..), MemCache(..))
 import Data.Localised (Locale, Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
+import Data.IORef
 import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, isPrefixOf, pack, splitOn, unpack)
@@ -169,10 +172,10 @@ instance (Show a, Read a) => PathPiece (PreferenceRange a) where
     ]
 
 data CaminoApp = CaminoApp {
-    caminoAppRoot :: Text
-  , caminoAppPort :: Int
+    caminoAppPort :: Int
   , caminoAppDevel :: Bool
   , caminoAppStatic :: Static
+  , caminoAppStore :: IORef (CompositeCache (MemCache Text Solution) (FileCache Text Solution) Text Solution)
   , caminoAppConfig :: C.Config
   , caminoAppCaminoConfig :: CaminoConfig
 }
@@ -360,7 +363,7 @@ instance RenderMessage CaminoApp CaminoMsg where
     renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) (catMaybes $ map localeFromID langs) msg
 
 instance Yesod CaminoApp where
-  approot = ApprootMaster caminoAppRoot
+  approot = ApprootMaster (C.getWebRoot . caminoAppConfig)
 
   defaultLayout :: Widget -> Handler Html
   defaultLayout widget = do
@@ -465,7 +468,7 @@ noticePopup = do
 defaultCookieSecure :: Handler Bool
 defaultCookieSecure = do
   master <- getYesod
-  return $ isPrefixOf "https:" (caminoAppRoot master)
+  return $ isPrefixOf "https:" (C.getWebRoot $ caminoAppConfig master)
 
 -- | Update this as terms change
 noticeVersion :: Text

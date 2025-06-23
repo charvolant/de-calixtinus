@@ -94,9 +94,9 @@ plan opts = do
     let solution = planCamino cconf preferences' caminoPrefs'''
     let mpilgrimage = solutionPilgrimage solution
     createDirectoryIfMissing True output'
-    let kml = createCaminoDoc config' preferences' caminoPrefs''' mpilgrimage
+    let kml = createCaminoDoc config' locales preferences' caminoPrefs''' (Just solution)
     let kmlFile = output' </> "camino.kml"
-    B.writeFile kmlFile (renderLBS (def { rsPretty = True, rsUseCDATA = useCDATA }) kml)
+    B.writeFile kmlFile (renderLBS (def { rsUseCDATA = useCDATA }) kml)
     let html = caminoHtml config' preferences' caminoPrefs''' solution
     let indexFile = output' </> "index.html"
     B.writeFile indexFile (renderHtml (html messages router))

@@ -438,6 +438,51 @@
   <li>About - Information about the camino data
   <li>Key - A key for the various symbols and markers
 
+
+<p .clearfix>
+  <div .aside .m-1 .p-1 .float-end>
+    <div .btn-group-vertical>
+      <button .btn .btn-secondary .btn-sm title="Persistent Link">
+        <span .ca-link>
+      <button .btn .btn-secondary .btn-sm title="Copy Link">
+        <span .ca-copy>
+      <button .btn .btn-secondary .btn-sm title="Download Spreadhseet">
+        <span .ca-document-spreadsheet>
+      <button .btn .btn-secondary .btn-sm title="Download KML">
+        <span .ca-document-kml>
+  On each tab of the plan is a small menu on the right.
+  This menu allows you to link to and download the plan in various ways:
+
+<ul .lift-group .clearfix>
+  <li .list-group-item>
+    <button .btn .btn-secondary .btn-sm>
+      <span .ca-link>
+    A link to a persistent version of the plan.
+    Plans are kept for 30 days after creation and this link allows you to revisit your plan later.
+    <span .text-warning>
+      <span .ca-warning>
+      Anyone with the link can look at the generated plan.
+      The plan identifier is randomly generated and there is nothing in the plan that personally identifies you.
+      However, share the plan with caution.
+  <li .list-group-item>
+    <button .btn .btn-secondary .btn-sm>
+      <span .ca-copy>
+    Copy the persistent link to the clipboard, so that you can share it via email, etc.
+  <li .list-group-item>
+    <button .btn .btn-secondary .btn-sm>
+      <span .ca-document-spreadsheet>
+    Download the plan in the form of a spreadsheet, openable by Microsoft Office or LibreOffice.
+    The downloaded spreadsheet uses formulas when calculating dates, distances etc.
+    This should allow you to adjust your plan.
+    <span .text-warning>
+      <span .ca-warning>
+      Recalculating values like penance and fatigue is beyond the abilities of the spreadsheet,
+      so estimates of time, distance and effort will gradually diverge from reality as you modify things.
+  <li .list-group-item>
+    <button .btn .btn-secondary .btn-sm>
+      <span .ca-document-kml>
+    Download the plan in the form of a KML file, openable by Google Earth or Maps.
+
 <h3 #map-help>Map
 
 <p>

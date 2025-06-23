@@ -25,12 +25,16 @@ module Camino.Config (
   , defaultConfig
   , getAsset
   , getAssets
+  , getCaminos
   , getCalendarName
+  , getDebug
   , getLink
   , getLinks
   , getMap
+  , getWebRoot
   , readAsset
   , readConfigFile
+  , withRoot
 ) where
 
 import GHC.Generics (Generic)
@@ -158,22 +162,24 @@ instance ToJSON LinkConfig where
 
 -- | Configuration for what's needed to set up web pages and other resources
 data WebConfig = Web {
-  webAssets :: [AssetConfig], -- ^ The assets needed to display the page properly
-  webLinks :: [LinkConfig], -- ^ Links to other pages
-  webMaps :: [MapConfig] -- ^ The sources of map tiles, with the default first
+    webRoot :: Maybe Text -- ^ The root location for non-absolute paths
+  , webAssets :: [AssetConfig] -- ^ The assets needed to display the page properly
+  , webLinks :: [LinkConfig] -- ^ Links to other pages
+  , webMaps :: [MapConfig] -- ^ The sources of map tiles, with the default first
 } deriving (Show)
 
 instance FromJSON WebConfig where
   parseJSON (Object v) = do
+    root' <- v .:? "root"
     assets' <- v .:? "assets" .!= []
     links' <- v .:? "links" .!= []
     maps' <- v .:? "maps" .!= []
-    return $ Web assets' links' maps'
+    return $ Web root' assets' links' maps'
   parseJSON v = unexpected v
     
 instance ToJSON WebConfig where
-  toJSON (Web assets' links' maps') =
-    object [ "assets" .= assets', "links" .= links', "maps" .= maps' ]
+  toJSON (Web root' assets' links' maps') =
+    object [ "root" .= root', "assets" .= assets', "links" .= links', "maps" .= maps' ]
    
 -- | Configuration for what's needed to set up web pages and other resources
 data Config = Config {
@@ -182,7 +188,7 @@ data Config = Config {
   , configCaminos :: [AssetConfig] -- ^ Locations of the various caminos
   , configCalendars :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
   , configRegions:: Maybe RegionConfig -- ^ Common region definitions
-  , configDebug :: Bool -- ^ Show debugging information
+  , configDebug :: Maybe Bool -- ^ Show debugging information
 } deriving (Show)
 
 -- | The default configuration
@@ -190,6 +196,7 @@ defaultConfig :: Config
 defaultConfig = Config {
   configParent = Nothing,
   configWeb = Web {
+    webRoot = Just ".",
     webAssets = [
       Asset {
         assetId = "jquery-js",
@@ -285,7 +292,7 @@ defaultConfig = Config {
   configCaminos = [],
   configCalendars = Just (createCalendarConfig []),
   configRegions = Just (createRegionConfig []),
-  configDebug = False
+  configDebug = Just False
 }
 
 instance HasCalendarConfig Config where
@@ -300,13 +307,29 @@ instance FromJSON Config where
     caminos' <- v .:? "caminos" .!= []
     calendar' <- v .:? "calendar"
     regions' <- v .:? "regions"
-    debug' <- v .:? "debug" .!= False
+    debug' <- v .:? "debug"
     return $ Config  (Just defaultConfig) web' caminos' calendar' regions' debug'
   parseJSON v = unexpected v
     
 instance ToJSON Config where
   toJSON (Config _parent' web' caminos' calendar' regions' debug') =
     object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions', "debug" .= debug' ]
+
+-- | Create a configuration with a specific root
+withRoot :: Config -> Text -> Config
+withRoot parent root = Config {
+    configParent = Just parent
+  , configWeb = Web {
+      webRoot = Just root
+      , webAssets = []
+      , webLinks = []
+      , webMaps = []
+      }
+  , configCaminos = []
+  , configCalendars = Nothing
+  , configRegions = Nothing
+  , configDebug = Nothing
+  }
 
 getAssets' :: AssetType -> Config -> M.Map Text AssetConfig
 getAssets' asset config = let
@@ -337,6 +360,18 @@ getRecursive ident lister identifier config = let
         Nothing -> Nothing
         Just p -> getRecursive ident lister identifier p
       r -> r
+
+-- | Get something recursively from the configurations
+getRecursive' :: (Config -> Maybe b) -> Config -> b
+getRecursive' access config = let
+    parent = configParent config
+    result = access config
+  in
+    case result of
+      Nothing -> case parent of
+        Nothing -> error "No value found"
+        Just p -> getRecursive' access p
+      Just r -> r
 
 -- | Get an asset based on identifier
 --   If the configuration has a parent and the requisite asset is not present, then the parent is tried
@@ -374,6 +409,23 @@ getMap :: Maybe Text -- ^ The map identifier, if Nothing then the first map is c
   -> Config -- ^ The configuration
   -> Maybe MapConfig -- ^ The resulting map configuration
 getMap ident config = getRecursive ident (webMaps . configWeb) mapId config
+
+-- Get the root URL
+-- This assumes that the value is set somewhere in the heirarchy, otherwise an error is shown
+getWebRoot :: Config -- ^ The configuration
+  -> Text -- ^ The root URL
+getWebRoot config = getRecursive' (webRoot . configWeb) config
+
+-- Get the root URL
+-- This assumes that the value is set somewhere in the heirarchy, otherwise an error is shown
+getDebug :: Config -- ^ The configuration
+  -> Bool -- ^ The debug flag
+getDebug config = getRecursive' configDebug config
+
+-- Get all caminos
+getCaminos :: Config -- ^ The configuration
+  -> [AssetConfig] -- ^ The list of caminos
+getCaminos config = maybe [] getCaminos (configParent config) ++ configCaminos config
 
 -- | Get the name of a calendar from the configuration
 getCalendarName :: Config -> Text -> Localised TaggedText

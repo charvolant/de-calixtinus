@@ -1,10 +1,18 @@
-<h2>Cookies
+<h3>Cookies
 
 <p>
   De Calixtinus uses cookies for session tracking and to keep a persistent copy of your current travel and route preferences.
-  De Calixtinus does not keep any other personal information, or share information with other entities.
 
-<h2>Usage
+<h3>Persistent Data
+<p>
+  De Calixtinus does not keep any other personal information, or share information with other entities, other than as saved plans.
+
+<p .text-bg-warning>
+  De Calixtinus saves generated plans for revisiting and sharing with others.
+  These plans are publicly viewable by anyone with the unique link.
+  The generated plans contain no personal information or identification
+
+<h3>Usage
 
 <p>
   This is intended to be a helpful tool for people planning their trip.
@@ -21,17 +29,17 @@
   Or a bar that is sometimes open for a couple of hours each day or a full-dress restaurant.
   Or a small corner shop and a full-blown supermarket.
 
-<h3>Units
+<h4>Units
 
 <p>
   De Calixtinus uses the metric system, both internally and for input and display.
   A possible future enhancement is to allow the user to specify their preferred unit system but,
-  right now, netric it is.
+  right now, metric it is.
 
-<h2>Disclaimer
+<h3>Disclaimer
 
-<p>
-  <strong>De Calixtinus is still under development
+<p .text-bg-danger>
+  De Calixtinus is still under development
 
 <p>
   Just because "Computer Says So!" doesn't mean it's a good idea.

@@ -29,7 +29,7 @@ testMemCacheCreate = TestList [
   ]
 
 testMemCacheCreate1 = TestCase (do
- let cache = defaultMemCache 1 :: MemCache String String
+ cache <- newMemCache "test" Nothing 1 :: IO (Cache String String)
  entries <- cacheEntries cache
  assertEqual "MemCache create 1" 0 entries
  )
@@ -39,83 +39,83 @@ testMemCachePut = TestList [
   ]
 
 testMemCachePut1 = TestCase (do
-  let cache = defaultMemCache 2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newMemCache "test" Nothing 2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "MemCache put 1 1" 1 entries1
-  (value1, cache2) <- cacheLookup "Key1" cache1
+  value1 <- cacheLookup cache "Key1"
   assertEqual "MemCache put 1 2" (Just "Value1") value1
-  (value2, _cache3) <- cacheLookup "Key2" cache2
+  value2 <- cacheLookup cache "Key2"
   assertEqual "MemCache put 1 3" Nothing value2
   )
 
 testMemCachePut2 = TestCase (do
-  let cache = defaultMemCache 2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newMemCache "test" Nothing 2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "MemCache put 2 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
-  entries2 <- cacheEntries cache2
+  cachePut cache "Key2" "Value2"
+  entries2 <- cacheEntries cache
   assertEqual "MemCache put 2 2" 2 entries2
-  (value1, cache3) <- cacheLookup "Key1" cache2
+  value1 <- cacheLookup cache "Key1"
   assertEqual "MemCache put 1 2" (Just "Value1") value1
-  (value2, _cache4) <- cacheLookup "Key2" cache3
+  value2 <- cacheLookup cache "Key2"
   assertEqual "MemCache put 1 3" (Just "Value2") value2
   )
 
 testMemCachePut3 = TestCase (do
-  let cache = defaultMemCache 2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newMemCache "test" Nothing 2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1" 
+  entries1 <- cacheEntries cache
   assertEqual "MemCache put 3 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
-  entries2 <- cacheEntries cache2
+  cachePut cache "Key2" "Value2"
+  entries2 <- cacheEntries cache
   assertEqual "MemCache put 3 2" 2 entries2
-  cache3 <- cachePut "Key3" "Value3" cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key3" "Value3"
+  entries3 <- cacheEntries cache
   assertEqual "MemCache put 3 3" 2 entries3
   )
 
 testMemCachePut4 = TestCase (do
-  let cache = defaultMemCache 2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
+  cache <- newMemCache "test" Nothing 2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
   threadDelay 10
-  entries1 <- cacheEntries cache1
+  entries1 <- cacheEntries cache
   assertEqual "MemCache put 4 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
+  cachePut cache "Key2" "Value2"
   threadDelay 10
-  entries2 <- cacheEntries cache2
+  entries2 <- cacheEntries cache
   assertEqual "MemCache put 4 2" 2 entries2
-  cache3 <- cachePut "Key3" "Value3" cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key3" "Value3"
+  entries3 <- cacheEntries cache
   assertEqual "MemCache put 4 3" 2 entries3
-  (value1, cache4) <- cacheLookup "Key1" cache3
+  value1 <- cacheLookup cache "Key1"
   assertEqual "MemCache put 4 4" Nothing value1
-  (value2, cache5) <- cacheLookup "Key2" cache4
+  value2 <- cacheLookup cache "Key2"
   assertEqual "MemCache put 4 5" (Just "Value2") value2
-  (value3, _cache6) <- cacheLookup "Key3" cache5
+  value3 <- cacheLookup cache "Key3"
   assertEqual "MemCache put 4 6" (Just "Value3") value3
   )
 
 testMemCachePut5 = TestCase (do
-  let cache = defaultMemCache 2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
+  cache <- newMemCache "test" Nothing 2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
   threadDelay 10
-  entries1 <- cacheEntries cache1
+  entries1 <- cacheEntries cache
   assertEqual "MemCache put 4 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
+  cachePut cache "Key2" "Value2"
   threadDelay 10
-  (_, cache3) <- cacheLookup "Key1" cache2
-  entries3 <- cacheEntries cache3
+  _value <- cacheLookup cache "Key1"
+  entries3 <- cacheEntries cache
   assertEqual "MemCache put 4 2" 2 entries3
-  cache4 <- cachePut "Key3" "Value3" cache3
-  entries4 <- cacheEntries cache4
+  cachePut cache "Key3" "Value3"
+  entries4 <- cacheEntries cache
   assertEqual "MemCache put 4 3" 2 entries4
-  (value1, cache5) <- cacheLookup "Key1" cache4
+  value1 <- cacheLookup cache "Key1"
   assertEqual "MemCache put 4 4" (Just "Value1") value1
-  (value2, cache6) <- cacheLookup "Key2" cache5
+  value2 <- cacheLookup cache "Key2"
   assertEqual "MemCache put 4 5" Nothing value2
-  (value3, _cache7) <- cacheLookup "Key3" cache6
+  value3 <- cacheLookup cache "Key3"
   assertEqual "MemCache put 4 6" (Just "Value3") value3
   )
 
@@ -124,27 +124,27 @@ testMemCacheExpire = TestList [
   ]
 
 testMemCacheExpire1 = TestCase (do
-  let cache = defaultMemCacheWithExpiry 2 0.2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newMemCacheWithExpiry "test" Nothing 2 0.2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "MemCache expire 1 1" 1 entries1
   threadDelay 300000
-  cache2 <- cacheExpire cache1
-  entries2 <- cacheEntries cache2
+  cacheExpire cache
+  entries2 <- cacheEntries cache
   assertEqual "MemCache expire 1 2" 0 entries2
   )
 
 testMemCacheExpire2 = TestCase (do
-  let cache = defaultMemCacheWithExpiry 2 0.2 :: MemCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
+  cache <- newMemCacheWithExpiry "test" Nothing 2 0.2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
   threadDelay 150000
-  cache2 <- cachePut "Key2" "Value2" cache1
-  cache3 <- cacheExpire cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key2" "Value2"
+  cacheExpire cache
+  entries3 <- cacheEntries cache
   assertEqual "MemCache expire 1 1" 2 entries3
   threadDelay 150000
-  cache4 <- cacheExpire cache3
-  entries4 <- cacheEntries cache4
+  cacheExpire cache
+  entries4 <- cacheEntries cache
   assertEqual "MemCache expire 1 2" 1 entries4
   )
 
@@ -160,7 +160,7 @@ testFileCacheCreate = TestList [
 
 testFileCacheCreate1 = TestCase (do
  testdir <- openTestDir
- let cache = defaultFileCache testdir 1 :: FileCache String String
+ cache <- newFileCache "test1" Nothing testdir 1 :: IO (Cache String String)
  entries <- cacheEntries cache
  assertEqual "FileCache create 1" 0 entries
  closeTestDir testdir
@@ -172,91 +172,91 @@ testFileCachePut = TestList [
 
 testFileCachePut1 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 1 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newFileCache "test1" Nothing testdir 1 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "FileCache put 1 1" 1 entries1
-  (value1, cache2) <- cacheLookup "Key1" cache1
+  value1 <- cacheLookup cache "Key1"
   assertEqual "FileCache put 1 2" (Just "Value1") value1
-  (value2, _cache3) <- cacheLookup "Key2" cache2
+  value2 <- cacheLookup cache "Key2"
   assertEqual "FileCache put 1 3" Nothing value2
   closeTestDir testdir
   )
 
 testFileCachePut2 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 1 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newFileCache "test1" Nothing testdir 1 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "FileCache put 2 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
-  entries2 <- cacheEntries cache2
+  cachePut cache "Key2" "Value2"
+  entries2 <- cacheEntries cache
   assertEqual "FileCache put 2 2" 2 entries2
-  (value1, cache3) <- cacheLookup "Key1" cache2
+  value1 <- cacheLookup cache "Key1"
   assertEqual "FileCache put 1 2" (Just "Value1") value1
-  (value2, _cache4) <- cacheLookup "Key2" cache3
+  value2 <- cacheLookup cache "Key2"
   assertEqual "FileCache put 1 3" (Just "Value2") value2
   closeTestDir testdir
   )
 
 testFileCachePut3 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 1 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newFileCache "test1" Nothing testdir 1 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "FileCache put 3 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
-  entries2 <- cacheEntries cache2
+  cachePut cache "Key2" "Value2"
+  entries2 <- cacheEntries cache
   assertEqual "FileCache put 3 2" 2 entries2
-  cache3 <- cachePut "Key3" "Value3" cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key3" "Value3"
+  entries3 <- cacheEntries cache
   assertEqual "FileCache put 3 3" 3 entries3
   closeTestDir testdir
   )
 
 testFileCachePut4 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 1 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
+  cache <- newFileCache "test1" Nothing testdir 1 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
   threadDelay 10
-  entries1 <- cacheEntries cache1
+  entries1 <- cacheEntries cache
   assertEqual "FileCache put 4 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
+  cachePut cache "Key2" "Value2"
   threadDelay 10
-  entries2 <- cacheEntries cache2
+  entries2 <- cacheEntries cache
   assertEqual "FileCache put 4 2" 2 entries2
-  cache3 <- cachePut "Key3" "Value3" cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key3" "Value3"
+  entries3 <- cacheEntries cache
   assertEqual "FileCache put 4 3" 3 entries3
-  (value1, cache4) <- cacheLookup "Key1" cache3
+  value1 <- cacheLookup cache "Key1"
   assertEqual "FileCache put 4 4" (Just "Value1") value1
-  (value2, cache5) <- cacheLookup "Key2" cache4
+  value2 <- cacheLookup cache "Key2"
   assertEqual "FileCache put 4 5" (Just "Value2") value2
-  (value3, _cache6) <- cacheLookup "Key3" cache5
+  value3 <- cacheLookup cache "Key3"
   assertEqual "FileCache put 4 6" (Just "Value3") value3
   closeTestDir testdir
   )
 
 testFileCachePut5 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 1 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
+  cache <- newFileCache "test1" Nothing testdir 1 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
   threadDelay 10
-  entries1 <- cacheEntries cache1
+  entries1 <- cacheEntries cache
   assertEqual "FileCache put 4 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
+  cachePut cache "Key2" "Value2"
   threadDelay 10
-  (_, cache3) <- cacheLookup "Key1" cache2
-  entries3 <- cacheEntries cache3
+  _value <- cacheLookup cache "Key1"
+  entries3 <- cacheEntries cache
   assertEqual "FileCache put 4 2" 2 entries3
-  cache4 <- cachePut "Key3" "Value3" cache3
-  entries4 <- cacheEntries cache4
+  cachePut cache "Key3" "Value3"
+  entries4 <- cacheEntries cache
   assertEqual "FileCache put 4 3" 3 entries4
-  (value1, cache5) <- cacheLookup "Key1" cache4
+  value1 <- cacheLookup cache "Key1"
   assertEqual "FileCache put 4 4" (Just "Value1") value1
-  (value2, cache6) <- cacheLookup "Key2" cache5
+  value2 <- cacheLookup cache "Key2"
   assertEqual "FileCache put 4 5" (Just "Value2") value2
-  (value3, _cache7) <- cacheLookup "Key3" cache6
+  value3 <- cacheLookup cache "Key3"
   assertEqual "FileCache put 4 6" (Just "Value3") value3
   closeTestDir testdir
   )
@@ -267,29 +267,29 @@ testFileCacheExpire = TestList [
 
 testFileCacheExpire1 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 0.2 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  cache <- newFileCache "test1" Nothing testdir 0.2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "FileCache expire 1 1" 1 entries1
   threadDelay 300000
-  cache2 <- cacheExpire cache1
-  entries2 <- cacheEntries cache2
+  cacheExpire cache
+  entries2 <- cacheEntries cache
   assertEqual "FileCache expire 1 2" 0 entries2
   closeTestDir testdir
   )
 
 testFileCacheExpire2 = TestCase (do
   testdir <- openTestDir
-  let cache = defaultFileCache testdir 0.2 :: FileCache String String
-  cache1 <- cachePut "Key1" "Value1" cache
+  cache <- newFileCache "test1" Nothing testdir 0.2 :: IO (Cache String String)
+  cachePut cache "Key1" "Value1"
   threadDelay 150000
-  cache2 <- cachePut "Key2" "Value2" cache1
-  cache3 <- cacheExpire cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key2" "Value2"
+  cacheExpire cache
+  entries3 <- cacheEntries cache
   assertEqual "FileCache expire 1 1" 2 entries3
   threadDelay 150000
-  cache4 <- cacheExpire cache3
-  entries4 <- cacheEntries cache4
+  cacheExpire cache
+  entries4 <- cacheEntries cache
   assertEqual "FileCache expire 1 2" 1 entries4
   closeTestDir testdir
   )
@@ -306,9 +306,9 @@ testCompositeCacheCreate = TestList [
 
 testCompositeCacheCreate1 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCache 2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
+  primary <- newMemCache "test-1" Nothing 2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
   entries <- cacheEntries cache
   assertEqual "CompositeCache create 1" 0 entries
   closeTestDir testdir
@@ -320,101 +320,101 @@ testCompositeCachePut = TestList [
 
 testCompositeCachePut1 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCache 2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  primary <- newMemCache "test-1" Nothing 2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "CompositeCache put 1 1" 1 entries1
-  (value1, cache2) <- cacheLookup "Key1" cache1
+  value1 <- cacheLookup cache "Key1"
   assertEqual "CompositeCache put 1 2" (Just "Value1") value1
-  (value2, _cache3) <- cacheLookup "Key2" cache2
+  value2 <- cacheLookup cache "Key2"
   assertEqual "CompositeCache put 1 3" Nothing value2
   closeTestDir testdir
   )
 
 testCompositeCachePut2 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCache 2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  primary <- newMemCache "test-1" Nothing 2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "CompositeCache put 2 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
-  entries2 <- cacheEntries cache2
+  cachePut cache "Key2" "Value2"
+  entries2 <- cacheEntries cache
   assertEqual "CompositeCache put 2 2" 2 entries2
-  (value1, cache3) <- cacheLookup "Key1" cache2
+  value1 <- cacheLookup cache "Key1"
   assertEqual "CompositeCache put 1 2" (Just "Value1") value1
-  (value2, _cache4) <- cacheLookup "Key2" cache3
+  value2 <- cacheLookup cache "Key2"
   assertEqual "CompositeCache put 1 3" (Just "Value2") value2
   closeTestDir testdir
   )
 
 testCompositeCachePut3 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCache 2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  primary <- newMemCache "test-1" Nothing 2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "CompositeCache put 3 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
-  entries2 <- cacheEntries cache2
+  cachePut cache "Key2" "Value2"
+  entries2 <- cacheEntries cache
   assertEqual "CompositeCache put 3 2" 2 entries2
-  cache3 <- cachePut "Key3" "Value3" cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key3" "Value3"
+  entries3 <- cacheEntries cache
   assertEqual "CompositeCache put 3 3" 2 entries3
   closeTestDir testdir
   )
 
 testCompositeCachePut4 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCache 2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
+  primary <- newMemCache "test-1" Nothing 2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
   threadDelay 10
-  entries1 <- cacheEntries cache1
+  entries1 <- cacheEntries cache
   assertEqual "CompositeCache put 4 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
+  cachePut cache "Key2" "Value2"
   threadDelay 10
-  entries2 <- cacheEntries cache2
+  entries2 <- cacheEntries cache
   assertEqual "CompositeCache put 4 2" 2 entries2
-  cache3 <- cachePut "Key3" "Value3" cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key3" "Value3"
+  entries3 <- cacheEntries cache
   assertEqual "CompositeCache put 4 3" 2 entries3
-  (value1, cache4) <- cacheLookup "Key1" cache3
+  value1 <- cacheLookup cache "Key1"
   assertEqual "CompositeCache put 4 4" (Just "Value1") value1
-  (value2, cache5) <- cacheLookup "Key2" cache4
+  value2 <- cacheLookup cache "Key2"
   assertEqual "CompositeCache put 4 5" (Just "Value2") value2
-  (value3, _cache6) <- cacheLookup "Key3" cache5
+  value3 <- cacheLookup cache "Key3"
   assertEqual "CompositeCache put 4 6" (Just "Value3") value3
   closeTestDir testdir
   )
 
 testCompositeCachePut5 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCache 2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
+  primary <- newMemCache "test-1" Nothing 2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
   threadDelay 10
-  entries1 <- cacheEntries cache1
+  entries1 <- cacheEntries cache
   assertEqual "CompositeCache put 4 1" 1 entries1
-  cache2 <- cachePut "Key2" "Value2" cache1
+  cachePut cache "Key2" "Value2"
   threadDelay 10
-  (_, cache3) <- cacheLookup "Key1" cache2
-  entries3 <- cacheEntries cache3
+  _value <- cacheLookup cache "Key1"
+  entries3 <- cacheEntries cache
   assertEqual "CompositeCache put 4 2" 2 entries3
-  cache4 <- cachePut "Key3" "Value3" cache3
-  entries4 <- cacheEntries cache4
+  cachePut cache "Key3" "Value3"
+  entries4 <- cacheEntries cache
   assertEqual "CompositeCache put 4 3" 2 entries4
-  (value1, cache5) <- cacheLookup "Key1" cache4
+  value1 <- cacheLookup cache "Key1"
   assertEqual "CompositeCache put 4 4" (Just "Value1") value1
-  (value2, cache6) <- cacheLookup "Key2" cache5
+  value2 <- cacheLookup cache "Key2"
   assertEqual "CompositeCache put 4 5" (Just "Value2") value2
-  (value3, _cache7) <- cacheLookup "Key3" cache6
+  value3 <- cacheLookup cache "Key3"
   assertEqual "CompositeCache put 4 6" (Just "Value3") value3
   closeTestDir testdir
   )
@@ -425,33 +425,33 @@ testCompositeCacheExpire = TestList [
 
 testCompositeCacheExpire1 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCacheWithExpiry 2 0.2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
-  entries1 <- cacheEntries cache1
+  primary <- newMemCacheWithExpiry "test-1" Nothing 2 0.2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
+  entries1 <- cacheEntries cache
   assertEqual "CompositeCache expire 1 1" 1 entries1
   threadDelay 300000
-  cache2 <- cacheExpire cache1
-  entries2 <- cacheEntries cache2
+  cacheExpire cache
+  entries2 <- cacheEntries cache
   assertEqual "CompositeCache expire 1 2" 0 entries2
   closeTestDir testdir
   )
 
 testCompositeCacheExpire2 = TestCase (do
   testdir <- openTestDir
-  let primary =  defaultMemCacheWithExpiry 2 0.2 :: MemCache String String
-  let secondary = defaultFileCache testdir 0.2 :: FileCache String String
-  let cache = compositeCache primary secondary
-  cache1 <- cachePut "Key1" "Value1" cache
+  primary <- newMemCacheWithExpiry "test-1" Nothing 2 0.2 :: IO (Cache String String)
+  secondary <- newFileCache "test-2" Nothing testdir 0.2 :: IO (Cache String String)
+  let cache = newCompositeCache "test" primary secondary
+  cachePut cache "Key1" "Value1"
   threadDelay 150000
-  cache2 <- cachePut "Key2" "Value2" cache1
-  cache3 <- cacheExpire cache2
-  entries3 <- cacheEntries cache3
+  cachePut cache "Key2" "Value2"
+  cacheExpire cache
+  entries3 <- cacheEntries cache
   assertEqual "CompositeCache expire 1 1" 2 entries3
   threadDelay 150000
-  cache4 <- cacheExpire cache3
-  entries4 <- cacheEntries cache4
+  cacheExpire cache
+  entries4 <- cacheEntries cache
   assertEqual "CompositeCache expire 1 2" 1 entries4
   closeTestDir testdir
   )

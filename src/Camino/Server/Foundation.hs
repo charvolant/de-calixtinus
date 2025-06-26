@@ -28,11 +28,10 @@ import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
-import Data.Cache (CompositeCache(..), FileCache(..), MemCache(..))
+import Data.Cache (Cache(..))
 import Data.Localised (Locale, Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
-import Data.IORef
 import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, isPrefixOf, pack, splitOn, unpack)
@@ -175,7 +174,7 @@ data CaminoApp = CaminoApp {
     caminoAppPort :: Int
   , caminoAppDevel :: Bool
   , caminoAppStatic :: Static
-  , caminoAppStore :: IORef (CompositeCache (MemCache Text Solution) (FileCache Text Solution) Text Solution)
+  , caminoAppPlans :: Cache Text Solution
   , caminoAppConfig :: C.Config
   , caminoAppCaminoConfig :: CaminoConfig
 }

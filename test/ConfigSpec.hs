@@ -9,6 +9,7 @@ import Data.Maybe (fromJust, isJust)
 testConfig1 = Config {
   configParent = Just defaultConfig,
   configWeb = Web {
+    webRoot = Just "https:/nowhere1.com",
     webAssets = [
       Asset {
         assetId = "foo",
@@ -32,12 +33,14 @@ testConfig1 = Config {
   ],
   configCalendars = Nothing,
   configRegions = Nothing,
-  configDebug = False
+  configCaches = [],
+  configDebug = Just False
 }
 
 testConfig2 = Config {
   configParent = Just defaultConfig,
   configWeb = Web {
+    webRoot = Just "https:/nowhere2.com",
     webAssets = [],
     webLinks = [
       Link {
@@ -51,7 +54,8 @@ testConfig2 = Config {
   configCaminos = [],
   configCalendars = Nothing,
   configRegions = Nothing,
-  configDebug = False
+  configCaches = [],
+  configDebug = Just False
 }
 
 testConfig :: Test

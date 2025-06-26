@@ -5,6 +5,9 @@ module UtilSpec(testUtils) where
 
 import Test.HUnit
 import Data.Util
+import System.Directory
+import System.Environment
+import System.FilePath
 
 testUtils :: Test
 testUtils = TestList [
@@ -17,6 +20,7 @@ testUtils = TestList [
   , TestLabel "MaybeMin" testMaybeMax
   , TestLabel "Unique" testUnique
   , TestLabel "CommaJoin" testCommaJoin
+  , TestLabel "ExpandPath" testExpandPath
   ]
   
 testCanonicalise = TestList [
@@ -210,3 +214,48 @@ testCommaJoin4 = TestCase (assertEqual "CommaJoin 4" "One, Two, Three" (commaJoi
 testCommaJoin5 = TestCase (assertEqual "CommaJoin 5" "Sentence. Clause; Other" (commaJoin ["Sentence.", "Clause;", "Other"]))
 
 testCommaJoin6 = TestCase (assertEqual "CommaJoin 6" "Sentence! Clause, Other." (commaJoin ["Sentence!", "Clause", "Other. "]))
+
+testExpandPath = TestList [
+  testExpandPath1, testExpandPath2, testExpandPath3, testExpandPath4,
+  testExpandPath5, testExpandPath6, testExpandPath7
+  ]
+
+
+testExpandPath1 = TestCase (do
+  path <- expandPath "simple.txt"
+  assertEqual "ExpandPath 1" "simple.txt" path
+  )
+
+testExpandPath2 = TestCase (do
+  path <- expandPath "/path1/path2/simple.txt"
+  assertEqual "ExpandPath 2" "/path1/path2/simple.txt" path
+  )
+
+testExpandPath3 = TestCase (do
+  tmp <- getTemporaryDirectory
+  path <- expandPath "$TMP"
+  assertEqual "ExpandPath 3" tmp path
+  )
+
+testExpandPath4 = TestCase (do
+  tmp <- getTemporaryDirectory
+  path <- expandPath "$TMP/dir"
+  assertEqual "ExpandPath 4" (tmp </> "dir") path
+  )
+
+testExpandPath5 = TestCase (do
+  tmp <- getTemporaryDirectory
+  path <- expandPath "/var/$TMP/dir"
+  assertEqual "ExpandPath 5" ("/" </> "var" </> tmp </> "dir") path
+  )
+
+testExpandPath6 = TestCase (do
+  home <- getEnv "HOME"
+  path <- expandPath "/var/$HOME"
+  assertEqual "ExpandPath 6" ("/" </> "var" </> home) path
+  )
+
+testExpandPath7 = TestCase (do
+  path <- expandPath "/var/$FLOOPLE"
+  assertEqual "ExpandPath 6" ("/" </> "var" </> "$FLOOPLE") path
+  )

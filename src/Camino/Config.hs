@@ -22,9 +22,11 @@ module Camino.Config (
   , MapConfig(..)
   , WebConfig(..)
 
+  , createCache
   , defaultConfig
   , getAsset
   , getAssets
+  , getCacheConfig
   , getCaminos
   , getCalendarName
   , getDebug
@@ -40,17 +42,81 @@ module Camino.Config (
 import GHC.Generics (Generic)
 import Control.Monad.Reader (runReader)
 import Data.Aeson
+import Data.Aeson.Types (unexpected)
+import qualified Data.ByteString as B (readFile)
+import qualified Data.ByteString.Lazy as LB (ByteString, readFile)
+import Data.Cache
+import Data.Default.Class
 import Data.Event (CalendarConfig(..), HasCalendarConfig(..), createCalendarConfig, getNamedCalendarName)
-import qualified Data.Map as M
-import Data.Text (Text, breakOn, drop, unpack)
 import Data.List (find)
 import Data.Localised
+import qualified Data.Map as M
 import Data.Region (HasRegionConfig(..), RegionConfig(..), createRegionConfig)
+import Data.Text (Text, breakOn, drop, unpack)
 import Data.Yaml (ParseException, decodeEither')
-import qualified Data.ByteString as B (readFile)
-import Data.Aeson.Types (unexpected)
-import qualified Data.ByteString.Lazy as LB (ByteString, readFile)
 import Network.HTTP.Simple
+
+-- | Configuration for a plan cache
+data CacheConfig = CacheConfig {
+    cacheConfigID :: Text -- The cache name
+  , cacheConfigMemSize :: Maybe Int -- ^ The number of entries to cache in memory, if absent then no in-memory cache
+  , cacheConfigFileSize :: Maybe Int -- ^ The number of entries for cache on the file system, if absent then no limit
+  , cacheConfigFileExpiry :: Maybe Float -- ^ The number of days to retain files in the file cache, if absent then no limit
+  , cacheConfigFileStore :: Maybe FilePath -- ^ The store location for the file cache. If there is a $TMP at the start of the string, this will become the temporary directory
+} deriving (Show)
+
+-- Default cache configuration is a ten-entry memory cache
+instance Default CacheConfig where
+  def = CacheConfig {
+      cacheConfigID = "default"
+    , cacheConfigMemSize = Just 10
+    , cacheConfigFileSize = Nothing
+    , cacheConfigFileExpiry = Nothing
+    , cacheConfigFileStore = Nothing
+    }
+
+instance FromJSON CacheConfig where
+  parseJSON (Object v) = do
+    id' <- v .: "id"
+    mem' <- v .:? "mem-size"
+    files' <- v .:? "file-size"
+    expiry' <- v .:? "file-expiry"
+    store' <- v .:? "file-store"
+    return CacheConfig {
+        cacheConfigID = id'
+      , cacheConfigMemSize = mem'
+      , cacheConfigFileSize = files'
+      , cacheConfigFileExpiry = expiry'
+      , cacheConfigFileStore = store'
+      }
+  parseJSON v = unexpected v
+
+instance ToJSON CacheConfig where
+  toJSON (CacheConfig id' mem' files' expiry' store') =
+    object [
+        "id" .= id'
+      , "mem-size" .= mem'
+      , "file-size" .= files'
+      , "file-expiry" .= expiry'
+      , "file-store" .= store'
+      ]
+
+buildCache :: (IsNamer k, Ord k, FromJSON v, ToJSON v) => CacheConfig -> IO (Cache k v)
+buildCache config = case (cacheConfigMemSize config, cacheConfigFileStore config) of
+  (Nothing, Nothing) -> newMemCache cid mlogger 10
+  (Just size, Nothing) -> newMemCache cid mlogger size
+  (Nothing, Just store) -> newFileCache cid mlogger store (maybe 3600.0 (\v -> v * 3600.0 * 24.0) (cacheConfigFileExpiry config))
+  (Just size, Just store) -> do
+    primary <- newMemCache (cid ++ "-1") mlogger size
+    secondary <- newFileCache (cid ++ "-2") mlogger store (maybe 3600.0 (\v -> v * 3600.0 * 24.0) (cacheConfigFileExpiry config))
+    return $ newCompositeCache cid primary secondary
+  where
+    mlogger = Just putStrLn
+    cid = unpack $ cacheConfigID config
+
+-- | Create a cache with a given identifier
+createCache :: (IsNamer k, Ord k, FromJSON v, ToJSON v) => Config -> Text -> IO (Cache k v)
+createCache config ident = buildCache $ maybe (def { cacheConfigID = ident }) id (getCacheConfig ident config)
 
 -- | Configuration for a map provider
 data MapConfig = Map {
@@ -188,6 +254,7 @@ data Config = Config {
   , configCaminos :: [AssetConfig] -- ^ Locations of the various caminos
   , configCalendars :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
   , configRegions:: Maybe RegionConfig -- ^ Common region definitions
+  , configCaches :: [CacheConfig]
   , configDebug :: Maybe Bool -- ^ Show debugging information
 } deriving (Show)
 
@@ -292,6 +359,15 @@ defaultConfig = Config {
   configCaminos = [],
   configCalendars = Just (createCalendarConfig []),
   configRegions = Just (createRegionConfig []),
+  configCaches = [
+    CacheConfig {
+      cacheConfigID = "plans"
+      , cacheConfigMemSize = Just 10
+      , cacheConfigFileSize = Just 1000
+      , cacheConfigFileExpiry = Just 30.0
+      , cacheConfigFileStore = Just "$TMP/de-calixtinus/store"
+    }
+  ],
   configDebug = Just False
 }
 
@@ -307,13 +383,22 @@ instance FromJSON Config where
     caminos' <- v .:? "caminos" .!= []
     calendar' <- v .:? "calendar"
     regions' <- v .:? "regions"
+    caches' <- v .:? "caches" .!= []
     debug' <- v .:? "debug"
-    return $ Config  (Just defaultConfig) web' caminos' calendar' regions' debug'
+    return $ Config {
+        configParent = (Just defaultConfig)
+      , configWeb = web'
+      , configCaminos = caminos'
+      , configCalendars = calendar'
+      , configRegions = regions'
+      , configCaches = caches'
+      , configDebug = debug'
+      }
   parseJSON v = unexpected v
     
 instance ToJSON Config where
-  toJSON (Config _parent' web' caminos' calendar' regions' debug') =
-    object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions', "debug" .= debug' ]
+  toJSON (Config _parent' web' caminos' calendar' regions' caches' debug') =
+    object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions', "caches" .= caches', "debug" .= debug' ]
 
 -- | Create a configuration with a specific root
 withRoot :: Config -> Text -> Config
@@ -328,6 +413,7 @@ withRoot parent root = Config {
   , configCaminos = []
   , configCalendars = Nothing
   , configRegions = Nothing
+  , configCaches = []
   , configDebug = Nothing
   }
 
@@ -430,6 +516,14 @@ getCaminos config = maybe [] getCaminos (configParent config) ++ configCaminos c
 -- | Get the name of a calendar from the configuration
 getCalendarName :: Config -> Text -> Localised TaggedText
 getCalendarName config key = runReader (getNamedCalendarName key) config
+
+
+-- | Get an asset based on identifier
+--   If the configuration has a parent and the requisite configuration is not present, then the parent is tried
+getCacheConfig :: Text -- ^ The cache identifier
+  -> Config -- ^ The configuration to query
+  -> Maybe CacheConfig -- ^ The cache config, if found
+getCacheConfig ident config = getRecursive (Just ident) configCaches cacheConfigID config
 
 -- | Read a configuration from a YAML file
 --   The resulting configuration will have @defaultConfig@ as a parent.

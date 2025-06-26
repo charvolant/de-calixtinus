@@ -44,6 +44,7 @@ module Camino.Camino (
 
   , module Graph.Programming
 
+  , accommodationID
   , accommodationMulti
   , accommodationName
   , accommodationNameLabel
@@ -68,6 +69,7 @@ module Camino.Camino (
   , createProhibitsClauses
   , fitnessEnumeration
   , getCamino
+  , isGenericAccommodation
   , locationAccommodationTypes
   , locationAdditionalAccommodationTypes
   , locationAdditionalPoiTypes
@@ -359,6 +361,7 @@ accommodationServices (GenericAccommodation Gite) = S.fromList [ Kitchen, Bicycl
 accommodationServices (GenericAccommodation CampGround) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation Refuge) = S.empty
 accommodationServices (GenericAccommodation Camping) = S.empty
+accommodationServices (GenericAccommodation PlaceholderAccommodation) = S.empty
 
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
@@ -375,6 +378,7 @@ accommodationSleeping (GenericAccommodation Gite) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation CampGround) = S.fromList [ SleepingBag ]
 accommodationSleeping (GenericAccommodation Refuge) = S.fromList [ SleepingBag ]
 accommodationSleeping (GenericAccommodation Camping) = S.fromList [ SleepingBag ]
+accommodationSleeping (GenericAccommodation PlaceholderAccommodation) = S.empty
 
 -- | Allow a multi-day stay?
 --   If the accommodation does not allow a specific override, then `accommodationDefaultMulti` is used.

@@ -23,9 +23,8 @@ module Camino.Server.Application where
 
 import Camino.Camino
 import Camino.Config (AssetConfig(..), getAsset, getWebRoot)
-import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution)
+import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution, planCamino)
 import Camino.Preferences
-import Data.Util
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.KML
@@ -36,16 +35,15 @@ import Camino.Server.Foundation
 import Camino.Server.Settings
 import Codec.Xlsx
 import Data.Cache
-import Data.Description (Image(..))
 import Data.DublinCore
-import Data.Localised (Locale, TaggedText(..), localeLanguageTag, localiseText, rootLocale, textToUri, wildcardText)
-import Data.Maybe (fromJust, isJust)
+import Data.Localised
+import Data.Maybe (isJust)
 import Data.Metadata
-import Data.IORef
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import Data.Time.Format.ISO8601 (iso8601Show)
+import Data.Util
 import Data.UUID (toText)
 import Data.UUID.V4
 import Graph.Graph
@@ -53,7 +51,6 @@ import Text.Hamlet
 import Text.Read (readMaybe)
 import Text.XML
 import Yesod
-import Camino.Planner (planCamino)
 
 mkYesodDispatch "CaminoApp" resourcesCaminoApp
 
@@ -101,9 +98,9 @@ getHelpR = do
 -- | Help for the languages that we have
 helpWidget :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpWidget [] = helpWidget [rootLocale]
-helpWidget (locale:rest)
- | localeLanguageTag locale == "" = $(ihamletFile "templates/help/help-en.hamlet")
- | localeLanguageTag locale == "en" = $(ihamletFile "templates/help/help-en.hamlet")
+helpWidget (loc:rest)
+ | localeLanguageTag loc == "" = $(ihamletFile "templates/help/help-en.hamlet")
+ | localeLanguageTag loc == "en" = $(ihamletFile "templates/help/help-en.hamlet")
  | otherwise = helpWidget rest
 
 getCaminoR :: Text -> Handler Html
@@ -162,9 +159,9 @@ getMetricR = do
 -- | Help for the languages that we have
 metricWidget :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
 metricWidget [] = metricWidget [rootLocale]
-metricWidget (locale:rest)
- | localeLanguageTag locale == "" = $(ihamletFile "templates/help/metric-en.hamlet")
- | localeLanguageTag locale == "en" = $(ihamletFile "templates/help/metric-en.hamlet")
+metricWidget (loc:rest)
+ | localeLanguageTag loc == "" = $(ihamletFile "templates/help/metric-en.hamlet")
+ | localeLanguageTag loc == "en" = $(ihamletFile "templates/help/metric-en.hamlet")
  | otherwise = metricWidget rest
 
 getAboutR :: Handler Html
@@ -181,9 +178,9 @@ getAboutR = do
 -- | About text for the languages that we have
 aboutWidget :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
 aboutWidget [] = aboutWidget [rootLocale]
-aboutWidget (locale:rest)
- | localeLanguageTag locale == "" = $(ihamletFile "templates/about/about-en.hamlet")
- | localeLanguageTag locale == "en" = $(ihamletFile "templates/about/about-en.hamlet")
+aboutWidget (loc:rest)
+ | localeLanguageTag loc == "" = $(ihamletFile "templates/about/about-en.hamlet")
+ | localeLanguageTag loc == "en" = $(ihamletFile "templates/about/about-en.hamlet")
  | otherwise = aboutWidget rest
 
 getHomeR :: Handler Html
@@ -216,10 +213,8 @@ getPlanR :: Text -> Handler Html
 getPlanR sid = do
   master <- getYesod
   msolution <- liftIO $ do
-    let store = caminoAppStore master
-    cache <- readIORef store
-    (msolution', cache') <- cacheLookup sid cache
-    writeIORef store cache'
+    let cache = caminoAppPlans master
+    msolution' <- cacheLookup cache sid
     return $ normaliseSolution (caminoAppCaminoConfig master) <$> msolution'
   case msolution of
     Nothing -> do
@@ -235,10 +230,8 @@ getPlanKmlR :: Text -> Handler TypedContent
 getPlanKmlR sid = do
   master <- getYesod
   msolution <- liftIO $ do
-    let store = caminoAppStore master
-    cache <- readIORef store
-    (msolution', cache') <- cacheLookup sid cache
-    writeIORef store cache'
+    let cache = caminoAppPlans master
+    msolution' <- cacheLookup cache sid
     return $ normaliseSolution (caminoAppCaminoConfig master) <$> msolution'
   case msolution of
     Nothing -> do
@@ -254,10 +247,8 @@ getPlanXlsxR :: Text -> Handler TypedContent
 getPlanXlsxR sid = do
   master <- getYesod
   msolution <- liftIO $ do
-    let store = caminoAppStore master
-    cache <- readIORef store
-    (msolution', cache') <- cacheLookup sid cache
-    writeIORef store cache'
+    let cache = caminoAppPlans master
+    msolution' <- cacheLookup cache sid
     return $ normaliseSolution (caminoAppCaminoConfig master) <$> msolution'
   case msolution of
     Nothing -> do
@@ -454,18 +445,16 @@ createMetadata solution origin = do
   timestamp <- getCurrentTime
   let created = Statement dctermsCreated (TaggedText rootLocale (pack $ iso8601Show timestamp))
   let creator = Statement dctermsCreator (TaggedText rootLocale "de-calixtinus")
-  let identifier = Statement dctermsIdentifier (TaggedText rootLocale (maybe "unknown" id (solutionID solution)))
+  let ident = Statement dctermsIdentifier (TaggedText rootLocale (maybe "unknown" id (solutionID solution)))
   let license = Statement dctermsLicense (TaggedText rootLocale "https://creativecommons.org/licenses/by/4.0/")
-  let source = Statement dctermsSource (TaggedText rootLocale origin)
-  return $ def { metadataStatements = [ created, creator, identifier, license, source ] }
+  let src = Statement dctermsSource (TaggedText rootLocale origin)
+  return $ def { metadataStatements = [ created, creator, ident, license, src ] }
 
 planPage :: PreferenceData -> Handler Html
 planPage prefs = do
     master <- getYesod
-    locales <- getLocales
     let tprefs = travelPreferencesFrom prefs
     let cprefs = caminoPreferencesFrom prefs
-    let config = caminoAppConfig master
     let solution = planCamino (caminoAppCaminoConfig master) tprefs cprefs
     solution' <- if isJust (solutionPilgrimage solution) then liftIO $ do
         uuid <- nextRandom
@@ -473,10 +462,8 @@ planPage prefs = do
         let so = solution { solutionID = Just sid }
         metadata <- liftIO $ createMetadata so (getWebRoot $ caminoAppConfig master)
         let so' = so { solutionMetadata = Just metadata }
-        let store = caminoAppStore master
-        cache <- readIORef store
-        cache' <- cachePut sid so' cache
-        writeIORef store cache'
+        let cache = caminoAppPlans master
+        cachePut cache sid so'
         return so'
       else
         return solution

@@ -11,20 +11,27 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+A store of items, where items can be removed from the cache before the cache gets too large or when the items
+get too old.
 
+Caches are, essentially opaqueish handles to IO-like stores.
+All interactions take place within the `IO` monad and `IORef`s are used to hold mutable state.
 
 -}
 module Data.Cache (
     Cache(..)
-  , CompositeCache(..)
-  , FileCache(..)
-  , MemCache(..)
+  , CacheLogger
+  , IsNamer(..)
 
-  , compositeCache
-  , defaultFileCache
-  , defaultFileCacheWithNamer
-  , defaultMemCache
-  , defaultMemCacheWithExpiry
+  , cacheDelete
+  , cacheEntries
+  , cacheExpire
+  , cacheLookup
+  , cachePut
+  , newCompositeCache
+  , newFileCache
+  , newMemCache
+  , newMemCacheWithExpiry
 ) where
 
 import Control.Monad
@@ -33,46 +40,78 @@ import Data.Aeson.Types (typeMismatch)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Lazy as LB
 import Data.Char (isAlphaNum)
-import Data.List ((!?), singleton, sortBy)
+import Data.IORef
+import Data.List ((!?), singleton)
 import qualified Data.Map as M
+import Data.Text (Text, unpack)
 import Data.Time.Clock
 import Data.Util
 import System.Directory
 import System.FilePath
 import System.IO
 
--- | A cache.
---   Caches store information up to some limit and will then expire unused cache items
-class Cache c k v | c -> k, c -> v where
-  -- The number of entries in the cache
-  cacheEntries :: c -- ^ The cache
-    -> IO Int -- ^ The current number of entries
-  -- See if an item is in the cache
-  cacheLookup :: k -- ^ The key to lookup
-    -> c -- ^ The cache
-    -> IO (Maybe v, c) -- ^ The found key and the updated cache
-  -- Put an item into the cache
-  cachePut :: k -- ^ The key
-    -> v -- ^ The cache value
-    -> c -- ^ The cache to update
-    -> IO c -- ^ The resulting cache
-  -- Delete an item from the cache
-  cacheDelete :: k -- ^ The key of the object to delete
-    -> c -- ^ The cache to delete from
-    -> IO c -- ^ The updated cache
-  -- Free up space for new entries in the cache, if the cache has a size policy
-  cacheFree :: Int -- ^ The number of spaces to ensure are free
-    -> c -- ^ The cache to expire
-    -> IO c -- ^ The updated cache
-  -- Expire any entries in a cache, if the cache has an expiry policy
-  cacheExpire ::  c -- ^ The cache to expire
-    -> IO c -- ^ The updated cache
-  -- Load the cache from whatever backing store is used, if any
-  cacheLoad :: c -- The unloaded cache
-    -> IO c -- ^ The loaded cache
+-- A cache logging function
+type CacheLogger = String -> IO ()
+
+-- | The null logging action
+nullLog :: CacheLogger
+nullLog _msg = return ()
+
+-- | Items of this sort can be used to name keys, files etc
+class IsNamer a where
+  toName :: a -> String
+
+instance IsNamer String where
+  toName = filter (\c -> isAlphaNum c || c == '_' || c == '-')
+
+instance IsNamer Text where
+  toName = toName . unpack
+
+-- | The
+data CachePolicy k v = CachePolicy {
+    cpSize :: Maybe Int -- ^ The maximum size of the cache
+  , cpRetain :: Maybe NominalDiffTime -- ^ The maximum age of data in the cache, if absent than data is returned indefinately
+  , cpScan :: Maybe NominalDiffTime -- ^ The minimum time before a rescan for expiry, if not set then rescans occur any time requested
+}
+
+-- | A cache
+data (Ord k) => Cache k v = Cache {
+    caID :: String -- ^ The name, for logging
+  , caPolicy :: CachePolicy k v -- ^ The retentionm and expiry policy for this cache
+  , caEntries :: Cache k v -> IO Int  -- ^ Return the current number of entries in the cache
+  , caLookup :: Cache k v -> k -> IO (Maybe v) -- ^ Lookup a value in the cache
+  , caPut :: Cache k v -> k -> v -> IO () -- ^ Put a value into the cache
+  , caDelete :: Cache k v -> k -> IO () -- ^ Delete a key from the cache
+  , caExpire :: Cache k v -> IO () -- ^ Expire stale entries in the cache
+  , caLog :: CacheLogger -- ^ Log information about the cache
+}
+
+-- | Get the number of entries in the cache
+cacheEntries :: (Ord k) => Cache k v -> IO Int
+cacheEntries cache = (caEntries cache) cache
+
+-- | Lookup a value in a cache
+cacheLookup :: (Ord k) => Cache k v -> k -> IO (Maybe v)
+cacheLookup cache key = (caLookup cache) cache key
+
+-- | Put a value into the cache
+cachePut :: (Ord k) => Cache k v -> k -> v -> IO ()
+cachePut cache key value = (caPut cache) cache key value
+
+-- | Delete a key from the cache. If the key is not there, then nothing is done
+cacheDelete :: (Ord k) => Cache k v -> k -> IO ()
+cacheDelete cache key = (caDelete cache) cache key
+
+-- Check the cache for expired entries
+cacheExpire :: (Ord k) => Cache k v -> IO ()
+cacheExpire cache = (caExpire cache) cache
+
+-- | Log an message about the cache
+cacheLog :: (Ord k) => Cache k v -> String -> IO ()
+cacheLog cache msg = (caLog cache) (caID cache ++ ": " ++ msg)
 
 -- | A cache entry.
---   A common entry type for a cache to allow ease of expiry
+--   A common entry type for a cache to allow ease of expiry calculations
 data (Ord k) => CacheEntry k v = CacheEntry {
     ceKey :: k
   , ceValue :: v
@@ -100,19 +139,6 @@ instance (Ord k, FromJSON k, FromJSON v) => FromJSON (CacheEntry k v) where
 instance (Ord k, Show k, Show v) => Show (CacheEntry k v) where
   show ce = "{" ++ show (ceKey ce) ++ ", " ++ show (ceValue ce) ++ ", " ++ show (ceCreated ce) ++ ", " ++ show (ceAccessed ce) ++ "}"
 
-data CachePolicy k v = CachePolicy {
-    cpSize :: Maybe Int -- ^ The maximum size of the cache
-  , cpRetain :: Maybe NominalDiffTime -- ^ The maximum age of data in the cache, if absent than data is returned indefinately
-  , cpScan :: Maybe NominalDiffTime -- ^ The minimum time before a rescan for expiry, if not set then rescans occur any time requested
-  , cpRemove :: Int -> [CacheEntry k v] -> [k] -- ^ How to choose which cache entries to remove
-}
-
-rescanCheck :: CachePolicy k v -> Maybe UTCTime -> UTCTime -> Maybe UTCTime
-rescanCheck (CachePolicy _ Nothing _ _) _ _ = Nothing
-rescanCheck (CachePolicy _ (Just retain) Nothing _) _ current = Just $ addUTCTime (negate retain) current
-rescanCheck (CachePolicy _ (Just retain) _ _) Nothing current = Just $ addUTCTime (negate retain) current
-rescanCheck (CachePolicy _ (Just retain) (Just sc) _) (Just ls) current = if addUTCTime sc ls <= current then (Just $ addUTCTime (negate retain) current) else Nothing
-
 toRetainTime :: (Real t) => t -> NominalDiffTime
 toRetainTime v = secondsToNominalDiffTime $ realToFrac v
 
@@ -121,106 +147,142 @@ toScanTime t = secondsToNominalDiffTime sc
   where sc = max 0.1 (realToFrac t / 10.0)
 
 -- | Least recently used cache removal policy
-cacheRemovalLRU :: (Ord k) => Int -> [CacheEntry k v] -> [k]
-cacheRemovalLRU remove entries = let
-    ordered = sortBy (\ce1 -> \ce2 -> compare (ceAccessed ce1) (ceAccessed ce2)) entries
-  in
-    map ceKey (take remove ordered)
+cacheRemovalLRU :: (Ord k) => CacheEntry k v -> CacheEntry k v -> Ordering
+cacheRemovalLRU ce1 ce2 = compare (ceAccessed ce1) (ceAccessed ce2)
 
 -- | An in-memory cache.
---   The cache policy provides
+--   The cache policy provides rules for removing entries
 data (Ord k) => MemCache k v = MemCache {
-    mcPolicy :: CachePolicy k v
-  , mcEntries :: M.Map k (CacheEntry k v) -- ^ The list of current entries
-  , mcLastScan :: Maybe UTCTime -- The time of the last expiry scan
+    mcEntries :: IORef (M.Map k (CacheEntry k v)) -- ^ The list of current entries
+  , mcLastScan :: IORef UTCTime -- The time of the last expiry scan
 }
 
-instance (Ord k) => Cache (MemCache k v) k v where
-  cacheEntries cache = return $ M.size $ mcEntries cache
-  cacheLookup key cache = do
-    let mce = M.lookup key (mcEntries cache)
-    current <- getCurrentTime
-    return $ maybe (Nothing, cache) (\ce -> let
-        cache' = cache {
-          mcEntries = M.adjust (\ce' -> ce' { ceAccessed = current }) key (mcEntries cache)
-        }
-      in
-        (Just (ceValue ce), cache')
-      ) mce
-  cachePut key value cache = do
-    current <- getCurrentTime
-    cache' <- cacheFree 1 cache
-    let ce = CacheEntry key value current current
-    let cache'' = cache' {
-      mcEntries = M.insert key ce (mcEntries cache')
-    }
-    return cache''
-  cacheDelete key cache = do
-    let cache' = cache {
-      mcEntries = M.delete key (mcEntries cache)
-    }
-    return cache'
-  cacheFree space cache = maybe (return cache) (\sz -> let
-        entries = mcEntries cache
-        removals = max 0 ((space + M.size entries) - sz)
-        remove = (cpRemove $ mcPolicy cache) removals (M.elems entries)
-        entries' = foldr (\k -> \es -> M.delete k es) entries remove
-      in
-        return $ cache { mcEntries = entries' }
-      ) (cpSize $ mcPolicy cache)
-  cacheExpire cache = do
-    current <- getCurrentTime
-    return $ maybe cache (\expire -> let
-        entries = mcEntries cache
-        expired = M.filter (\ce -> ceAccessed ce < expire) entries
-        entries' = M.difference entries expired
-      in
-        cache { mcEntries = entries', mcLastScan = Just current }
-      ) (rescanCheck (mcPolicy cache) (mcLastScan cache) current)
-  cacheLoad cache = return cache
+memCacheEntries :: (Ord k) => MemCache k v -> Cache k v  -> IO Int
+memCacheEntries cache _base = do
+  entries <- readIORef (mcEntries cache)
+  return $ M.size entries
+
+memCacheLookup :: (Ord k) => MemCache k v -> Cache k v  -> k -> IO (Maybe v)
+memCacheLookup cache base key = do
+  memCacheExpire cache base
+  current <- getCurrentTime
+  result <- atomicModifyIORef' (mcEntries cache) (memCacheLookup' current key)
+  return result
+
+memCacheLookup' :: (Ord k) => UTCTime -> k -> M.Map k (CacheEntry k v) -> (M.Map k (CacheEntry k v), Maybe v)
+memCacheLookup' current key entries = let
+    mce = M.lookup key entries
+    entries' = maybe entries (\ce -> M.insert key (ce { ceAccessed = current }) entries) mce
+  in
+    (entries', ceValue <$> mce)
+
+memCachePut :: (Ord k) => MemCache k v -> Cache k v  -> k -> v -> IO ()
+memCachePut cache base key value = do
+  current <- getCurrentTime
+  memCacheFree cache base 1
+  memCacheExpire cache base
+  atomicModifyIORef' (mcEntries cache) (memCachePut' current key value)
+
+memCachePut' :: (Ord k) => UTCTime -> k -> v -> M.Map k (CacheEntry k v) -> (M.Map k (CacheEntry k v), ())
+memCachePut' current key value entries = let
+    mce = M.lookup key entries
+    ce' = maybe (CacheEntry { ceKey = key, ceValue = value, ceCreated = current, ceAccessed = current }) (\ce -> ce { ceValue = value, ceAccessed = current }) mce
+    entries' = M.insert key ce' entries
+  in
+    (entries', ())
+
+memCacheDelete :: (Ord k) => MemCache k v -> Cache k v -> k -> IO ()
+memCacheDelete cache _base key =
+  atomicModifyIORef' (mcEntries cache) (memCacheDelete' key)
+
+memCacheDelete' :: (Ord k) => k -> M.Map k (CacheEntry k v) -> (M.Map k (CacheEntry k v), ())
+memCacheDelete' key entries = (M.delete key entries, ())
+
+memCacheFree :: (Ord k) => MemCache k v -> Cache k v -> Int -> IO ()
+memCacheFree cache base free = case cpSize $ caPolicy base of
+  Nothing -> return ()
+  (Just capacity) -> do
+    entries <- memCacheEntries cache base
+    let removals = entries + free - capacity
+    when (removals > 0) $ cacheLog base ("Freeing " ++ show removals ++ " entries")
+    atomicModifyIORef' (mcEntries cache) (memCacheFree' cacheRemovalLRU removals)
+
+memCacheFree' :: (Ord k) => (CacheEntry k v -> CacheEntry k v -> Ordering) -> Int ->  M.Map k (CacheEntry k v) -> (M.Map k (CacheEntry k v), ())
+memCacheFree' chooser n entries
+  | n <= 0 = (entries, ())
+  | otherwise = let
+      mremove = M.foldr (\ce -> \cm -> maybe (Just ce) (\cm' -> if chooser ce cm' == LT then (Just ce) else cm) cm) Nothing entries
+    in case mremove of
+      Nothing -> (entries, ())
+      (Just remove) -> memCacheFree' chooser (n - 1) (M.delete (ceKey remove) entries)
+
+memCacheExpire :: (Ord k) => MemCache k v -> Cache k v -> IO ()
+memCacheExpire cache base = case cpRetain $ caPolicy base of
+  Nothing -> return ()
+  (Just expiry) -> case cpScan $ caPolicy base of
+    Nothing -> memCacheExpiry' cache expiry
+    (Just scan) -> do
+      current <- getCurrentTime
+      lastScan <- readIORef (mcLastScan cache)
+      if addUTCTime scan lastScan < current then do
+        cacheLog base "Scanning for expiry"
+        memCacheExpiry' cache expiry
+      else
+        return ()
+
+memCacheExpiry' :: (Ord k) => MemCache k v -> NominalDiffTime -> IO ()
+memCacheExpiry' cache expiry = do
+  current <- getCurrentTime
+  atomicModifyIORef' (mcEntries cache) (memCacheExpiry'' (addUTCTime (negate expiry) current))
+  writeIORef (mcLastScan cache) current
+
+memCacheExpiry'' :: (Ord k) => UTCTime -> M.Map k (CacheEntry k v) -> (M.Map k (CacheEntry k v), ())
+memCacheExpiry'' cutoff entries = (M.filter (\ce -> ceAccessed ce >= cutoff) entries, ())
 
 -- | Create a default memory cache with a specific size
 --   The default cache has a least recently used removal policy
-defaultMemCache :: (Ord k) => Int -> MemCache k v
-defaultMemCache size = MemCache {
-      mcPolicy = CachePolicy {
-        cpSize = Just size
-        , cpRetain = Nothing
-        , cpScan = Nothing
-        , cpRemove = cacheRemovalLRU
+newMemCache' :: (Ord k, Real t) => String -> Maybe CacheLogger -> Maybe Int -> Maybe t -> IO (Cache k v)
+newMemCache' ident mlogger msize mexpiry = do
+  current <- getCurrentTime
+  entries <- newIORef M.empty
+  scan <- newIORef current
+  let memCache = MemCache {
+        mcEntries = entries
+      , mcLastScan = scan
+    }
+  return $ Cache {
+      caID = ident
+    , caPolicy = CachePolicy {
+        cpSize = msize
+        , cpRetain = toRetainTime <$> mexpiry
+        , cpScan = toScanTime <$> mexpiry
       }
-    , mcEntries = M.empty
-    , mcLastScan = Nothing
-  }
+    , caEntries = memCacheEntries memCache
+    , caLookup = memCacheLookup memCache
+    , caPut = memCachePut memCache
+    , caDelete = memCacheDelete memCache
+    , caExpire = memCacheExpire memCache
+    , caLog = maybe nullLog id mlogger
+    }
 
--- | Create a default memory cache with a specific size and expiry time
---   The default cache has a least recently used removal policy
-defaultMemCacheWithExpiry :: (Ord k, Real t) => Int -> t -> MemCache k v
-defaultMemCacheWithExpiry size expiry = MemCache {
-      mcPolicy = CachePolicy {
-          cpSize = Just size
-        , cpRetain = Just $ toRetainTime expiry
-        , cpScan = Just $ toScanTime expiry
-        , cpRemove = cacheRemovalLRU
-      }
-    , mcEntries = M.empty
-    , mcLastScan = Nothing
-  }
+-- | A memory cache with a size and no expiry time
+newMemCache :: (Ord k) => String -> Maybe CacheLogger -> Int -> IO (Cache k v)
+newMemCache ident mlogger size = newMemCache' ident mlogger (Just size) (Nothing :: Maybe Float)
 
+-- | A memory cache with a size and an expiry time
+newMemCacheWithExpiry :: (Ord k, Real t) => String -> Maybe CacheLogger -> Int -> t -> IO (Cache k v)
+newMemCacheWithExpiry ident mlogger size expiry = newMemCache' ident mlogger (Just size) (Just expiry)
 
 -- | A file-based cache.
---   Cache entries are stored as JSON files, with the file system providing
-data (Ord k, ToJSON v, FromJSON v) => FileCache k v = FileCache {
-    fcPolicy :: CachePolicy k v
-  , fcRoot :: FilePath -- ^ The root location of a file
-  , fcNamer :: k -> String -- ^ Convert a key into a string that gives the base of a file name without extensions, path etc
-  , fcLastScan :: Maybe UTCTime -- ^ The time of the last scan
+--   Cache entries are stored as JSON files, with the file system providing information about creation and access time
+data (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v = FileCache {
+    fcRoot :: FilePath -- ^ The root location of a file
+  , fcLastScan :: IORef UTCTime -- ^ The time of the last scan
 }
 
-fileForKey :: (Ord k, ToJSON v, FromJSON v) => FileCache k v -> k -> FilePath
-fileForKey cache key = let
-    filename = (fcNamer cache) key
-    root = fcRoot cache
+fileForKey :: (IsNamer k) => FilePath -> k -> FilePath
+fileForKey root key = let
+    filename = toName key
     level0 = root </> maybe "_0" singleton (filename !? 0)
     level1 = level0 </> maybe "_0" singleton (filename !? 1)
   in
@@ -242,118 +304,170 @@ writeCacheFile path value =
     hFlush h
     )
 
-instance (Ord k, Show k, ToJSON v, FromJSON v) => Cache (FileCache k v) k v where
-  cacheEntries cache = foldDirectory (fcRoot cache) (\c -> \_f -> c + 1) 0
-  cacheLookup key cache = do
-    let path = fileForKey cache key
-    cache1 <- cacheExpire cache
-    exists <- doesFileExist path
-    if not exists then
-      return $! (Nothing, cache1)
-    else do
-      value <- readCacheFile path
-      return $! (value, cache1)
-  cachePut key value cache = do
-    let path = fileForKey cache key
-    let dir = takeDirectory path
-    cache1 <- cacheExpire cache
-    cache2 <- cacheFree 1 cache1
-    createDirectoryIfMissing True dir
-    writeCacheFile path value
-    return cache2
-  cacheDelete       key cache = do
-    let path = fileForKey cache key
-    cache1 <- cacheExpire cache
-    exists <- doesFileExist path
-    when exists (removeFile path)
-    return cache1
-  cacheFree _entries cache = return cache -- Ignores size for now
-  cacheExpire cache = do
-    current <- getCurrentTime
-    maybe
-      (return $! cache)
-      (\expire -> do
-        scanDirectory
-          (\f -> do
-            access <- getAccessTime f
-            when (access < expire) (removeFile f)
-          )
-          (\_d -> return ())
-          (fcRoot cache)
-        return $! cache { fcLastScan = Just current }
-      )
-      (rescanCheck (fcPolicy cache) (fcLastScan cache) current)
-  cacheLoad cache = do
-    cache1 <- cacheExpire cache
-    return cache1
+fileCacheEntries :: FileCache k v -> Cache k v -> IO Int
+fileCacheEntries cache _base = foldDirectory (fcRoot cache) (\c -> \_f -> c + 1) 0
 
--- | Create a default file cache with a specific lcation and expiry time
---   The file key is just the string version of the key
---   The rescan interval is every 10th of the longevity
-defaultFileCache :: (Ord k, Show k, FromJSON v, ToJSON v, Real t) => FilePath -> t -> FileCache k v
-defaultFileCache root expiry = FileCache {
-      fcPolicy = CachePolicy {
-        cpSize = Nothing
-        , cpRetain = Just $ toRetainTime expiry
-        , cpScan = Just $ toScanTime expiry
-        , cpRemove = cacheRemovalLRU
+fileCacheLookup :: (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v -> Cache k v  -> k -> IO (Maybe v)
+fileCacheLookup cache base key = do
+  let path = fileForKey (fcRoot cache) key
+  fileCacheExpire False cache base
+  exists <- doesFileExist path
+  if not exists then
+    return Nothing
+  else do
+    value <- readCacheFile path
+    return $ Just value
+
+fileCachePut :: (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v -> Cache k v  -> k -> v -> IO ()
+fileCachePut cache base key value = do
+  let path = fileForKey (fcRoot cache) key
+  let dir = takeDirectory path
+  fileCacheExpire False cache base
+  fileCacheFree cache base 1
+  createDirectoryIfMissing True dir
+  writeCacheFile path value
+
+fileCacheDelete :: (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v -> Cache k v  -> k -> IO ()
+fileCacheDelete cache base key = do
+  let path = fileForKey (fcRoot cache) key
+  fileCacheExpire False cache base
+  exists <- doesFileExist path
+  when exists (removeFile path)
+
+fileCacheFree :: (Ord k) => FileCache k v -> Cache k v -> Int -> IO ()
+fileCacheFree cache base free = case cpSize $ caPolicy base of
+  Nothing -> return ()
+  (Just capacity) -> do
+    entries <- fileCacheEntries cache base
+    let removals = entries + free - capacity
+    when (removals > 0) $ cacheLog base ("Freeing " ++ show removals ++ " entries")
+    fileCacheFree' (fcRoot cache) removals
+
+fileCacheFree' :: FilePath -> Int ->  IO ()
+fileCacheFree' root n
+  | n <= 0 = return ()
+  | otherwise = do
+      mremove <- foldDirectoryIO root fileCacheFree'' Nothing
+      case mremove of
+        Nothing -> return ()
+        (Just (remove, _ac)) -> removeFile remove
+
+fileCacheFree'' :: Maybe (FilePath, UTCTime) -> FilePath -> IO (Maybe (FilePath, UTCTime))
+fileCacheFree'' mc f = do
+  ac <- getAccessTime f
+  return $ case mc of
+    Nothing -> Just (f, ac)
+    Just (_f, ac') -> if ac < ac' then Just (f, ac) else mc
+
+fileCacheExpire :: (Ord k) => Bool -> FileCache k v -> Cache k v -> IO ()
+fileCacheExpire force cache base = case cpRetain $ caPolicy base of
+  Nothing -> return ()
+  (Just expiry) -> case cpScan $ caPolicy base of
+    Nothing -> fileCacheExpiry' cache expiry
+    (Just scan) -> do
+      current <- getCurrentTime
+      lastScan <- readIORef (fcLastScan cache)
+      if force || addUTCTime scan lastScan < current then do
+        cacheLog base "Scanning for expiry"
+        fileCacheExpiry' cache expiry
+      else
+        return ()
+
+fileCacheExpiry' :: FileCache k v -> NominalDiffTime -> IO ()
+fileCacheExpiry' cache expiry = do
+  current <- getCurrentTime
+  let expire = addUTCTime (negate expiry) current
+  scanDirectory
+    (\f -> do
+      access <- getAccessTime f
+      when (access < expire) (removeFile f)
+    )
+    (\_d -> return ())
+    (fcRoot cache)
+  writeIORef (fcLastScan cache) current
+
+-- | Create a default memory cache with a specific size
+--   The default cache has a least recently used removal policy
+newFileCache' :: (IsNamer k, Ord k, ToJSON v, FromJSON v, Real t) => String -> Maybe CacheLogger -> FilePath -> Maybe Int -> Maybe t -> IO (Cache k v)
+newFileCache' ident mlogger root msize mexpiry = do
+  current <- getCurrentTime
+  lastScan <- newIORef current
+  let fileCache = FileCache {
+        fcRoot = root
+      , fcLastScan = lastScan
+    }
+  let cache = Cache {
+      caID = ident
+    , caPolicy = CachePolicy {
+      cpSize = msize
+      , cpRetain = toRetainTime <$> mexpiry
+      , cpScan = toScanTime <$> mexpiry
       }
-    , fcRoot = root
-    , fcNamer = filter isAlphaNum . show
-    , fcLastScan = Nothing
-  }
+    , caEntries = fileCacheEntries fileCache
+    , caLookup = fileCacheLookup fileCache
+    , caPut = fileCachePut fileCache
+    , caDelete = fileCacheDelete fileCache
+    , caExpire = fileCacheExpire False fileCache
+    , caLog = maybe nullLog id mlogger
+    }
+  createDirectoryIfMissing True root
+  cacheLog cache ("File directory " ++ root)
+  fileCacheExpire True fileCache cache
+  return cache
 
--- | Create a default file cache with a specific lcation and expiry time
---   The file key is just the string version of the key
---   The rescan interval is every 10th of the longevity
-defaultFileCacheWithNamer :: (Ord k, Show k, FromJSON v, ToJSON v, Real t) => FilePath -> t -> (k -> String) -> FileCache k v
-defaultFileCacheWithNamer root expiry namer = (defaultFileCache root expiry) { fcNamer = namer }
+-- | A new file cache with a root on the filesystem and an expiry time
+-- | File roots may have environment/tmp variables in them, such as $HOME, expended by `expandPath`
+newFileCache :: (IsNamer k, Ord k, ToJSON v, FromJSON v, Real t) => String -> Maybe CacheLogger -> FilePath -> t -> IO (Cache k v)
+newFileCache ident mlogger root expiry = do
+  root' <- expandPath root
+  newFileCache' ident mlogger root' Nothing (Just expiry)
 
--- | A composite cache with a primary and secondary cache
---   The primary cache is usually small and allows fast retrieval.
---   The secondary cache is slower but provides larger, persistent storage.
-data (Ord k, Cache c1 k v, Cache c2 k v) => CompositeCache c1 c2 k v = CompositeCache {
-    ccPrimary :: c1 -- The primary cache
-  , ccSecondary :: c2 -- The secondary cache
-}
+-- Composite caches are composed out of a primary (faster, smaller size) and seconary (slower, larger size) pair
 
-instance (Ord k, Cache c1 k v, Cache c2 k v) => Cache (CompositeCache c1 c2 k v) k v where
-  cacheEntries cache = cacheEntries (ccPrimary cache)
-  cacheLookup key cache = do
-    (v1, c1) <- cacheLookup key (ccPrimary cache)
-    case v1 of
-      Nothing -> do
-        (v2, c2) <- cacheLookup key (ccSecondary cache)
-        case v2 of
-          Nothing -> return (v2, cache { ccPrimary = c1, ccSecondary = c2 })
-          (Just v2') -> do
-            c1' <- cachePut key v2' c1
-            return (v2, cache { ccPrimary = c1', ccSecondary = c2 })
-      (Just _) -> return (v1, cache { ccPrimary = c1 })
-  cachePut key value cache = do
-    primary' <- cachePut key value (ccPrimary cache)
-    secondary' <- cachePut key value (ccSecondary cache)
-    return cache { ccPrimary = primary', ccSecondary = secondary' }
-  cacheDelete key cache = do
-    primary' <- cacheDelete key (ccPrimary cache)
-    secondary' <- cacheDelete key (ccSecondary cache)
-    return cache { ccPrimary = primary', ccSecondary = secondary' }
-  cacheFree entries cache = do
-    primary' <- cacheFree entries (ccPrimary cache)
-    secondary' <- cacheFree entries (ccSecondary cache)
-    return cache { ccPrimary = primary', ccSecondary = secondary' }
-  cacheExpire cache = do
-    primary' <- cacheExpire (ccPrimary cache)
-    secondary' <- cacheExpire (ccSecondary cache)
-    return cache { ccPrimary = primary', ccSecondary = secondary' }
-  cacheLoad cache = do
-    primary' <- cacheLoad (ccPrimary cache)
-    secondary' <- cacheLoad (ccSecondary cache)
-    return cache { ccPrimary = primary', ccSecondary = secondary' }
+compositeCacheEntries :: (Ord k) => Cache k v -> Cache k v -> Cache k v -> IO Int
+compositeCacheEntries primary _secodnary _base = cacheEntries primary
 
--- | Create a composite cache out of two other caches
-compositeCache :: (Ord k, Cache c1 k v, Cache c2 k v) => c1 -> c2 -> CompositeCache c1 c2 k v
-compositeCache primary secondary = CompositeCache {
-    ccPrimary = primary
-  , ccSecondary = secondary
+compositeCacheLookup :: (Ord k) => Cache k v -> Cache k v -> Cache k v -> k -> IO (Maybe v)
+compositeCacheLookup primary secondary _base key = do
+  mresult <- cacheLookup primary key
+  case mresult of
+    Nothing -> do
+      mresult' <- cacheLookup secondary key
+      case mresult' of
+        Nothing -> return Nothing
+        (Just result') -> do
+          cachePut primary key result'
+          return mresult'
+    (Just _) -> return mresult
+
+compositeCachePut :: (Ord k) => Cache k v -> Cache k v -> Cache k v  -> k -> v -> IO ()
+compositeCachePut primary secondary _base key value = do
+  cachePut primary key value
+  cachePut secondary key value
+
+compositeCacheDelete :: (Ord k) => Cache k v -> Cache k v -> Cache k v -> k -> IO ()
+compositeCacheDelete primary secondary _base key = do
+  cacheDelete primary key
+  cacheDelete secondary key
+
+compositeCacheExpire :: (Ord k) => Cache k v -> Cache k v -> Cache k v -> IO ()
+compositeCacheExpire primary secondary _base = do
+  cacheExpire primary
+  cacheExpire secondary
+
+-- | Create a composite cache from two caches
+newCompositeCache :: (Ord k) => String -> Cache k v -> Cache k v -> Cache k v
+newCompositeCache ident primary secondary = Cache {
+      caID = ident
+    , caPolicy = CachePolicy {
+          cpSize = Nothing
+        , cpRetain = Nothing
+        , cpScan = Nothing
+        }
+    , caEntries = compositeCacheEntries primary secondary
+    , caLookup = compositeCacheLookup primary secondary
+    , caPut = compositeCachePut primary secondary
+    , caDelete = compositeCacheDelete primary secondary
+    , caExpire = compositeCacheExpire primary secondary
+    , caLog = caLog primary
   }

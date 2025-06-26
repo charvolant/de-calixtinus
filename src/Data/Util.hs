@@ -14,7 +14,9 @@ module Data.Util (
     canonicalise
   , categorise
   , commaJoin
+  , expandPath
   , foldDirectory
+  , foldDirectoryIO
   , listUnions
   , loopM
   , maybeMax
@@ -32,6 +34,7 @@ import Data.Char (isLetter, isPunctuation)
 import qualified Data.Set as S
 import qualified Data.Text as T
 import System.Directory
+import System.Environment
 import System.FilePath
 
 -- | Select elements from a list that are in a set, keeping the order of the list
@@ -329,8 +332,7 @@ scanDirectory faction daction dir = do
     )
   daction dir
 
-
--- | Recursively scan a directory, folding a
+-- | Recursively scan a directory, folding a value as we go
 foldDirectory :: FilePath -> (a -> FilePath -> a) -> a -> IO a
 foldDirectory dir folder val = do
   list <- listDirectory dir
@@ -344,6 +346,20 @@ foldDirectory dir folder val = do
     ) val list
   return value
 
+-- | Recursively scan a directory, folding a value as we go
+foldDirectoryIO :: FilePath -> (a -> FilePath -> IO a) -> a -> IO a
+foldDirectoryIO dir folder val = do
+  list <- listDirectory dir
+  value <- foldM (\v -> \f -> do
+      let ff = dir </> f
+      isFile <- doesFileExist ff
+      if isFile then
+          folder v ff
+       else
+          foldDirectoryIO ff folder v
+    ) val list
+  return value
+
 -- | A monadic loop, where the predicate returns 'Left' as a seed for the next loop
 --   or 'Right' to abort the loop.
 loopM :: Monad m => (a -> m (Either a b)) -> a -> m b
@@ -352,3 +368,22 @@ loopM act x = do
     case res of
         Left x' -> loopM act x'
         Right v -> pure v
+
+-- | Expand a path with environment variables.
+--   Any environment variable of the form `$VAR` is expanded into the equivalent environment variable
+--   The $TMP variable refers to the temporary file directory
+--   Only simple substitions will work, "$TMP/dir" works, as will "/var/$HOME" but "$TMP-1/dir" or "${TMP} will not
+expandPath :: FilePath -> IO FilePath
+expandPath path = do
+  let pieces = splitDirectories path
+  pieces' <- mapM expandPath' pieces
+  return $ joinPath pieces'
+
+expandPath' :: FilePath -> IO FilePath
+expandPath' piece@('$':name) = case name of
+  "TMP" -> getTemporaryDirectory
+  _ -> do
+    mval <- lookupEnv name
+    return $ maybe piece id mval
+expandPath' piece = return piece
+

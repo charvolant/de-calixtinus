@@ -251,14 +251,18 @@ camino1 = Camino {
   caminoMetadata = def,
   caminoFragment = False,
   caminoImports = [],
-  caminoLocations = M.fromList [("A", location1), ("B", location2), ("C", location3)],
+  caminoLocations = M.fromList $ map (\l -> (locationID l, l)) locations,
   caminoLegs = legs1,
   caminoTransportLinks = [],
   caminoRoutes = [route1],
   caminoRouteLogic = [],
   caminoDefaultRoute = route1,
+  caminoAccommodation = accommodation,
   caminoPois = M.empty
 }
+  where
+    locations = [location1, location2, location3]
+    accommodation = M.fromList $ foldl (\as -> \l -> map (\a -> (accommodationID a, (a, l))) (filter (not . isGenericAccommodation) (locationAccommodation l)) ++ as) [] locations
 
 cpreferences1 = CaminoPreferences {
   preferenceCamino = camino1,

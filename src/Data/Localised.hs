@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Localised
 Description : Locale-specific text and formatting
@@ -129,10 +128,9 @@ instance Ord Locale where
 instance NFData Locale
 
 localeLanguageTag :: Locale -> Text
-localeLanguageTag loc = if Prelude.null langs then
-    maybe "" localeLanguageTag (localeParent loc)
-  else
-    head langs
+localeLanguageTag loc = case langs of
+    [] -> maybe "" localeLanguageTag (localeParent loc)
+    (hl:_) -> hl
   where
     langs = maybe [] id (localeLanguage loc)
 

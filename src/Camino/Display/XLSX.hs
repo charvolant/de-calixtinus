@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : XLSX
 Description : Produce an excel spreadsheet showing the stages of the camino route.
@@ -52,7 +51,7 @@ import qualified Data.Time.Calendar as C
 import Data.Time.Format.ISO8601
 import Data.Util
 import Data.Xlsx
-import Data.Description (Description(..))
+
 
 -- What most of the sheets work in
 type Cslab = Slab (Cell CaminoMsg)
@@ -521,6 +520,14 @@ startDateFormula prevID mrestID add = let
   in
     date''
 
+sumOver :: [CellID] -> Formula
+sumOver [] = FText ""
+sumOver cellids = let
+    fromid = maybe (error "Empty cell list") fst (uncons cellids)
+    toid = maybe (error "Empty cell list") snd (unsnoc cellids)
+  in
+    FApply "SUM" [FRef $ CellRangeID fromid toid]
+
 createDaySlab :: S.Set Location -> CellID -> M.Map Region Int -> CellID -> Maybe CellID -> Int -> Day -> CellIDStream (Cslab, CellID, CellID)
 createDaySlab  stocks htable rtable sid mrdid add day = do
   (legs, disids, asids, deids) <- foldrM (\l -> \(s, dsids', asids', deids') -> do
@@ -542,16 +549,16 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
       , localisedCell (locationName $ finish day)
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ distanceFormat)
-          & cellFormula ?~ FApply "SUM" [FRef $ CellRangeID (head disids) (last disids)]
+          & cellFormula ?~ sumOver disids
       , maybeTimeCell (metricsTime metrics)
       , maybeDistanceCell (metricsPerceivedDistance metrics)
       , penanceCell True $ Just $ metricsPenance metrics
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ heightFormat)
-          & cellFormula ?~ FApply "SUM" [FRef $ CellRangeID (head asids) (last asids)]
+          & cellFormula ?~ sumOver asids
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ heightFormat)
-          & cellFormula ?~ FApply "SUM" [FRef $ CellRangeID (head deids) (last deids)]
+          & cellFormula ?~ sumOver deids
       , maybeTimeCell (metricsPoiTime metrics)
       , integerCell (metricsRestDays metrics) & cellID ?~ rdid'
       , booleanCell (S.member (finish day) stocks)
@@ -723,7 +730,9 @@ createHolidayMatrixSlab config cprefs = do
             ] ++ map (\r -> booleanCell (isHoliday h r)) regionList
         return $ (s >>! hline, hids' ++ [hid])
       ) (SEmpty, []) holidays
-    let htable = CellRangeID (toAbsolute $ head hids) (toAbsolute $ CellOffsetID 0 (length regions + 1) (last hids))
+    let hhid = headWithDefault (error "Empty holidays") hids
+    let lhid = lastWithDefault (error "Empty holidays") hids
+    let htable = CellRangeID (toAbsolute $ hhid) (toAbsolute $ CellOffsetID 0 (length regions + 1) lhid)
     return $ (header >>! matrix, htable, rtable)
 
 -- Not used

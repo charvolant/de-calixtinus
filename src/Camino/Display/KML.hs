@@ -46,7 +46,6 @@ import Graph.Graph (outgoing)
 import Numeric (showHex)
 import Text.Hamlet
 import Text.Hamlet.XML
-import Text.Shakespeare.Text
 import Text.XML
 import Text.Blaze.Html.Renderer.Text
 import Debug.Trace

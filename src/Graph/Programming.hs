@@ -1,7 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Programming
 Description : Forward-chaining dynamic programming 
@@ -238,10 +237,9 @@ findBreak' chain begin end visited horizon =
   in
     if S.member end visited' then
       Nothing
-    else if not $ null missing' then
-      Just (head missing')
-    else
-      findBreak' chain begin end visited' next'
+    else case missing' of
+      [] -> findBreak' chain begin end visited' next'
+      (hm:_) -> Just hm
 
 -- | Find the break in a chain where things can't continue      
 findBreak :: (Graph g e v) => g -> v -> v -> Maybe v

@@ -17,6 +17,11 @@ module Data.Util (
   , expandPath
   , foldDirectory
   , foldDirectoryIO
+  , headWithDefault
+  , headWithError
+  , initOrEmpty
+  , lastWithDefault
+  , lastWithError
   , listUnions
   , loopM
   , maybeMax
@@ -25,12 +30,14 @@ module Data.Util (
   , partition
   , scanDirectory
   , selectFromList
+  , tailOrEmpty
   , toFileName
   , unique
 ) where
 
 import Control.Monad
 import Data.Char (isLetter, isPunctuation)
+import qualified Data.List.NonEmpty as NE
 import qualified Data.Set as S
 import qualified Data.Text as T
 import System.Directory
@@ -387,3 +394,30 @@ expandPath' piece@('$':name) = case name of
     return $ maybe piece id mval
 expandPath' piece = return piece
 
+-- | Get the head of a list or a default value
+headWithDefault :: a -> [a] -> a
+headWithDefault d [] = d
+headWithDefault _d (h:_) = h
+
+-- | Get the head of a known non-empty list or throw an error
+headWithError :: [a] -> a
+headWithError l = headWithDefault (error "Unexpected empty list") l
+
+-- | Get the last element of a list or a default value
+lastWithDefault :: a -> [a] -> a
+lastWithDefault d [] = d
+lastWithDefault _d (h:t) = NE.last (h NE.:| t)
+
+-- | Get the head of a known non-empty list or a default value
+lastWithError :: [a] -> a
+lastWithError l = headWithDefault (error "Unexpected empty list") l
+
+-- | Get the tail of a list, or the empty list if the list is already empty
+tailOrEmpty :: [a] -> [a]
+tailOrEmpty [] = []
+tailOrEmpty (_:t) = t
+
+-- | Get the init of a list, or the empty list if the list is already empty
+initOrEmpty :: [a] -> [a]
+initOrEmpty [] = []
+initOrEmpty (h:t) = NE.init (h NE.:| t)

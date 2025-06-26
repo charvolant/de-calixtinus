@@ -8,7 +8,6 @@
 {-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-orphans       #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Foundation
 Description : Yesod foundation for the Calixtinus application
@@ -47,6 +46,7 @@ import Camino.Server.Settings (widgetFile)
 import Text.Hamlet (HtmlUrlI18n, ihamletFile)
 import Text.Read (readMaybe)
 import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
+import Data.Util (headWithDefault)
 
 -- | Generic placeholder date
 placeholderDate :: Day
@@ -286,7 +286,7 @@ defaultPreferenceData master current = let
     fitness' = Unfit
     comfort' = Pilgrim
     dtp = defaultTravelPreferences travel' fitness' comfort' Nothing
-    camino' = head $ caminoAppCaminos master
+    camino' = headWithDefault (error "At least one Camino required") $ caminoAppCaminos master
     dcp = defaultCaminoPreferences camino'
   in
     PreferenceData {

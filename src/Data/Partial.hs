@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 
 {-|
 Module      : Partial Ordeing
@@ -34,8 +33,8 @@ topologicalSort :: (Eq a) => PartialOrder a -- ^ The partial order to use
   -> [a] -- ^ The sorted elements
 topologicalSort _po [] = []
 topologicalSort _po x@[ _ ] = x
-topologicalSort po x = let
-    x' = foldl' (\v1 -> \v2 -> if po v2 v1 then v2 else v1) (head x) x
+topologicalSort po x@(h:_) = let
+    x' = foldl' (\v1 -> \v2 -> if po v2 v1 then v2 else v1) h x
     (front, back) = partition (\v -> v == x') x
   in
     front ++ topologicalSort po back

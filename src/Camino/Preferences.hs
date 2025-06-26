@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Camino
 Description : Preference models for deciding where the limits lie
@@ -398,8 +397,8 @@ withRoutes preferences routes = let
     routes' = S.map (normalise camino') routes
     prefs' = preferences { preferenceRoutes = routes' }
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
-    start' = if S.member (preferenceStart prefs') allowed then preferenceStart prefs' else head $ suggestedStarts prefs'
-    finish' = if S.member (preferenceFinish prefs') allowed then preferenceFinish prefs' else head $ suggestedFinishes prefs'
+    start' = if S.member (preferenceStart prefs') allowed then preferenceStart prefs' else headWithError $ suggestedStarts prefs'
+    finish' = if S.member (preferenceFinish prefs') allowed then preferenceFinish prefs' else headWithError $ suggestedFinishes prefs'
     stops' = preferenceStops prefs' `S.intersection` allowed
     excluded' = preferenceExcluded prefs' `S.intersection` allowed
     pois' = preferencePois prefs'
@@ -1078,8 +1077,8 @@ defaultCaminoPreferences camino = let
     in
       CaminoPreferences {
           preferenceCamino = camino
-        , preferenceStart = head $ routeStarts dr
-        , preferenceFinish = head $ routeFinishes dr
+        , preferenceStart = headWithError $ routeStarts dr
+        , preferenceFinish = headWithError $ routeFinishes dr
         , preferenceRoutes = S.singleton dr
         , preferenceStops = routeStops dr
         , preferenceExcluded = S.empty

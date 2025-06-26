@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Planner
 Description : The camino planner
@@ -65,11 +64,10 @@ import Data.Region
 import qualified Data.Set as S
 import qualified Data.Text as T
 import qualified Data.Time.Calendar as C
-import Data.Util (maybeSum)
+import Data.Util (maybeSum, initOrEmpty, lastWithError, tailOrEmpty)
 import Graph.Graph (Edge(..), available, incoming, mirror, reachable, subgraph)
 import Graph.Programming
 import Data.Placeholder (Placeholder)
-
 
 instance (Placeholder T.Text v, FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
     parseJSON (Object v) = do
@@ -468,7 +466,8 @@ isLastDay end day = legTo (last day) == end
 
 -- | Get the locations associated with a day
 dayLocations :: [Leg] -> [Location]
-dayLocations day = legFrom (head day) : map legTo day
+dayLocations [] = []
+dayLocations day@(fl:_) = legFrom fl : map legTo day
 
 travelFunction :: Travel -> Fitness -> (Fitness -> Float -> Float -> Float -> Float)
 travelFunction Walking SuperFit = naismith
@@ -532,7 +531,7 @@ pointOfInterestTime :: CaminoPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Maybe Float
 pointOfInterestTime camino day = let
-  dpois = foldl (\pois location -> selectedPois camino location ++ pois) [] $ map legFrom (tail day)
+  dpois = foldl (\pois location -> selectedPois camino location ++ pois) [] $ map legFrom (tailOrEmpty day)
  in
   foldl maybeSum Nothing $ map poiTime dpois
 
@@ -571,7 +570,7 @@ missingRouteServices :: StopPreferences -- ^ The calculation preferences
   -> S.Set Service -- ^ The list of desired but missing services from the stop location
 missingRouteServices preferences _camino accoms day = let
       desired = M.keysSet $ stopRouteServices preferences
-      desired' = desired `S.difference` (if null accoms then S.empty else tripChoiceFeatures (head accoms))
+      desired' = desired `S.difference` (maybe S.empty (tripChoiceFeatures . fst) (L.uncons accoms))
     in
       foldl S.difference desired' $ map locationServices (dayLocations day)
 
@@ -620,7 +619,7 @@ accommodationChoice select preferences camino location = let
 
 -- Does this leg have no acceptable accommodation (except possibly at the start and end)
 isAccommodationFree :: TravelPreferences -> TripChoiceMap Accommodation Service -> [Leg] -> Bool
-isAccommodationFree _preferences accommodationMap day = all (\l -> (tripChoicePenance $ M.findWithDefault invalidAccommodation (legFrom l) accommodationMap) == Reject) (tail day)
+isAccommodationFree _preferences accommodationMap day = all (\l -> (tripChoicePenance $ M.findWithDefault invalidAccommodation (legFrom l) accommodationMap) == Reject) (tailOrEmpty day)
 
 -- Make a choice based on the location
 locationChoice :: StopPreferences -> Location -> TripChoice Location Service
@@ -794,7 +793,7 @@ dayChoice _preferences _camino day1 day2 = if score day1 < score day2 then day1 
 caminoAccept :: TravelPreferences -> CaminoPreferences -> [Day] -> Bool
 caminoAccept _preferences _camino days =
   let
-    middle = if length days < 3 then [] else tail (init days)
+    middle = if length days < 3 then [] else tailOrEmpty (initOrEmpty days)
   in
     null middle || all (\d -> (metricsPenance $ score d) /= Reject) middle
 
@@ -1112,7 +1111,8 @@ findStage' (stage:rest) location = if (start stage == location) then Just stage 
 
 -- | Useful label for a day sequence
 daysLabel :: [Day] -> T.Text
-daysLabel days = T.concat [locationNameLabel $ start $ head days, " -> ", locationNameLabel $ finish $ last days, " [", T.intercalate "," (map (locationNameLabel . start) (tail $ days)), "]" ]
+daysLabel [] = ""
+daysLabel days@(h:t) = T.concat [locationNameLabel $ start $ h, " -> ", locationNameLabel $ finish $ lastWithError days, " [", T.intercalate "," (map (locationNameLabel . start) t), "]" ]
 
 -- | Useful label for trips
 tripLabel :: Journey -> T.Text

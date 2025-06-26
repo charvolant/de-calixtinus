@@ -31,7 +31,7 @@ import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isNothing, mapMaybe)
 import Data.Text (Text, intercalate, null, pack)
 import qualified Data.Text as T (length)
-import Data.Util (unique, maybeMin)
+import Data.Util (unique, maybeMin, headWithDefault)
 
 -- | Render a cell message type into text
 type Renderer t = t -> Text
@@ -816,5 +816,5 @@ createXlsx renderer worksheets = let
 
 -- | A useful utility to get at the minimal base font before adjusting it
 baseFont :: Font
-baseFont = head $ minimalStyleSheet ^. styleSheetFonts
+baseFont = headWithDefault def $ minimalStyleSheet ^. styleSheetFonts
 

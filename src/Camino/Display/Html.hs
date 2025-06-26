@@ -3,7 +3,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Html
 Description : Produce HTML descriptions map of caminos and trips
@@ -22,7 +21,6 @@ import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
 import Camino.Planner (TripChoice(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
-import Data.Util
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
@@ -31,20 +29,20 @@ import Data.Colour.Names (lightgrey)
 import Data.Description
 import Data.Event
 import Data.Event.Date
-import Data.List (sortOn)
+import qualified Data.List as L
 import Data.Localised
+import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
 import Data.Region
+import qualified Data.Set as S
 import Data.Summary
+import Data.Util
 import Graph.Graph (Edge(..), incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
 import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, take, toLower, toUpper)
 import Formatting
-import qualified Data.Map as M
-import qualified Data.Set as S
-import qualified Data.List as L
 
 -- A useful separator
 endash :: Char
@@ -596,7 +594,7 @@ hoursBlock (OpenHours [EventHours calendar EventOpen]) = [ihamlet|
     <div .col>
   |]
 hoursBlock (OpenHours hours) = [ihamlet|
-  $with (EventHours calendar time) <- head hours
+  $with (EventHours calendar time) <- headWithDefault (EventHours Daily EventOpen)  hours
     <div .row .event-hours>
       <div .col>
         <span .description-icon .ca-calendar title="_{CalendarTitle}">
@@ -604,7 +602,7 @@ hoursBlock (OpenHours hours) = [ihamlet|
       <div .col>
         <span .description-icon .ca-clock title="_{OpenHoursTitle}">
         ^{timeBlock time}
-  $forall (EventHours calendar time) <- tail hours
+  $forall (EventHours calendar time) <- tailOrEmpty hours
     <div .row .event-hours>
       <div .col>
         <span .invisible .description-icon .ca-calendar title="_{CalendarTitle}">
@@ -857,7 +855,7 @@ caminoTransportLinkHtml preferences camino tlink = [ihamlet|
     tid = locationID tloc
 
 caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationHtml preferences camino solution containerId rests stocks stops waypoints used location = [ihamlet|
+caminoLocationHtml preferences camino _solution containerId rests stocks stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
       <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
@@ -1568,7 +1566,7 @@ $maybe position <- locationPosition caminoStart
 |]
   where
     defr = caminoDefaultRoute camino
-    caminoStart = head $ routeStarts defr
+    caminoStart = maybe (error "No camino start") fst $ L.uncons $ routeStarts defr
 
 
 caminoMapScript :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1722,7 +1720,7 @@ aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
     holidayKeys = S.fold S.union S.empty $ S.map (\r -> S.fromList $ catMaybes $ map calendarKey $ regionHolidays r) holidayRegions
     startDate = preferenceStartDate cprefs
     mapDate k = (c, (\d -> runReader (calendarDateOnOrAfter c d) config) <$> startDate) where c = NamedCalendar k
-    holidays = sortOn snd $ map mapDate $ S.toList holidayKeys
+    holidays = L.sortOn snd $ map mapDate $ S.toList holidayKeys
     isHoliday holiday region = elem holiday (getRegionalHolidays region)
     isIndirectHoliday holiday region = elem holiday (getInheritedRegionalHolidays region)
 

@@ -10,7 +10,7 @@ Portability : POSIX
 -}
 import Data.Event
 import Data.Region
-import Data.Text (Text, pack, unpack)
+import Data.Text (pack)
 import Camino.Camino
 import Camino.Config
 import Camino.Server.Application

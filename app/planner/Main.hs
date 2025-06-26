@@ -92,7 +92,6 @@ plan opts = do
     let router = renderCaminoRoute config' locales
     let messages = renderCaminoMsg config' locales
     let solution = planCamino cconf preferences' caminoPrefs'''
-    let mpilgrimage = solutionPilgrimage solution
     createDirectoryIfMissing True output'
     let kml = createCaminoDoc config' locales preferences' caminoPrefs''' (Just solution)
     let kmlFile = output' </> "camino.kml"

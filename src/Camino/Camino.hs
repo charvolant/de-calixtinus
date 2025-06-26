@@ -2,7 +2,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Camino
 Description : Data models for travelling the Camino
@@ -118,6 +117,7 @@ import qualified Data.Set as S (Set, difference, empty, insert, intersection, ma
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Summary
 import Data.Text (Text, isPrefixOf, pack, unpack)
+import Data.Util (headWithError)
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
@@ -1104,7 +1104,7 @@ routeCentralLocation route = let
     locations = filter (isJust . locationPosition) $ S.toList $ routeLocations route
   in
     if null locations then
-      head $ S.toList $ routeLocations route
+      headWithError $ S.toList $ routeLocations route
     else let
         centre = centroid $ map (fromJust . locationPosition) locations
         closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (fromJust $ locationPosition l1)) (euclidianDistance2 centre (fromJust $ locationPosition l2))) locations
@@ -1278,7 +1278,7 @@ instance FromJSON Camino where
     links' <- v .:? "links" .!= []
     routes' <- v .: "routes"
     routeLogic' <- v .: "route-logic"
-    defaultRoute' <- v .:? "default-route" .!= (routeID $ head routes')
+    defaultRoute' <- v .:? "default-route" .!= (routeID $ headWithError routes')
     let defaultRoute'' = fromJust $ L.find (\r -> routeID r == defaultRoute') routes'
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default

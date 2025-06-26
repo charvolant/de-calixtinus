@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Css
 Description : Produce Css styles for HTML and KML display
@@ -34,6 +33,7 @@ import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Localised (rootLocale)
 import Data.Text (Text, pack)
+import Data.Util (tailOrEmpty)
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
@@ -74,7 +74,7 @@ toCssColour = sRGB24show
 -- | Create an Excel-able colour
 toExcelColour :: Colour Double -- ^ The colour to display
   -> Text -- ^ A aarrggbb colour quad
-toExcelColour v = "ff" <> (pack $ tail $ sRGB24show v)
+toExcelColour v = "ff" <> (pack $ tailOrEmpty $ sRGB24show v)
 
 paletteCss :: Text -> Palette -> Render CaminoRoute -> Css
 paletteCss ident pal = [cassius|

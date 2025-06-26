@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 {-|
 Module      : Propositional
 Description : Simple propositional logic and formulas
@@ -29,6 +28,7 @@ module Data.Propositional (
 import Control.DeepSeq
 import qualified Data.Map as M
 import qualified Data.Set as S
+import Data.Util
 
 -- Propositional formulas over a set of variables @a@
 data (Eq a) => Formula a =
@@ -82,10 +82,10 @@ formulaMap mapper (Implies p c) = Implies (formulaMap mapper p) (formulaMap mapp
 -- | Reduce a formula
 reduce :: (Eq a) => Formula a -- ^ The source formula
    -> Formula a -- ^ The reduced formula
-reduce (Or fs) = if null fs' then F else if any (== T) fs' then T else if length fs' == 1 then head fs' else Or fs'
+reduce (Or fs) = if null fs' then F else if any (== T) fs' then T else if length fs' == 1 then headWithError fs' else Or fs'
   where
     fs' = filter (/= F) $ map reduce fs
-reduce (And fs) = if null fs' then T else if any (== F) fs' then F else if length fs' == 1 then head fs' else And fs'
+reduce (And fs) = if null fs' then T else if any (== F) fs' then F else if length fs' == 1 then headWithError fs' else And fs'
   where
     fs' = filter (/= T) $ map reduce fs
 reduce (Not f) = if f' == T then F else if f' == F then T else Not f'

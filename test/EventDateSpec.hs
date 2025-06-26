@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# OPTIONS_GHC -Wno-type-defaults #-}
-{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 module EventDateSpec(testEventDate) where
 
 import Test.HUnit
@@ -9,9 +8,11 @@ import Control.Monad.Reader
 import Data.Event
 import Data.Event.Date
 import Data.Localised
+import Data.Maybe
 import Data.Region
 import qualified Data.Set as S
 import Data.Time.Calendar
+import Data.Util (headWithDefault)
 
 testEventDate :: Test
 testEventDate = TestList [
@@ -849,7 +850,7 @@ testNamedDates2 = do
     dates <- namedDates region (fromGregorian 2024 March 1) (fromGregorian 2024 April 1)
     return $ TestCase (do
       assertEqual "NamedDates 2 1" 1 (length dates)
-      let (day, ce) = head dates
+      let (day, ce) = headWithDefault (error "Named Dates 2") dates
       assertEqual "NamedDates 2 3" (fromGregorian 2024 March 31) day
       assertEqual "NamedDates 2 3" "Easter" (ceKey ce)
       )

@@ -1252,14 +1252,16 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
               ^{metricsSummary preferences camino (score day) Nothing Nothing}
               <br>
               ^{penanceSummary preferences camino False True $ score day}
-           <ul .card-text>
-              <li>
-                <div .location-summary>
+           <ul .card-text .list-unstyled>
+              <li .ms-3>
+                <div .location-summary .plan-leg>
+                  ^{caminoLocationTypeIcon (locationType (start day))}
                   ^{locationLine preferences camino (start day)}
               $forall leg <- path day
                 $with loc <- legTo leg
-                  <li>
-                    <div .location-summary>
+                  <li .ms-3>
+                    <div .location-summary .plan-leg>
+                      ^{caminoLocationTypeIcon (locationType loc)}
                       ^{locationLine preferences camino loc}
                     <div .leg-summary .leg-line>
                       ^{legLine preferences camino leg}

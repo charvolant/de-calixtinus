@@ -227,13 +227,21 @@ a
   content: ", "
 .or-list li:not(:first-child):last-child:before
   content: " or "
+.plan-leg
+  .poi-types
+    .location-type
+      color: #{toCssColour informationBlue}
+  .location-type
+    display: inline-block
+    color: #{toCssColour caminoYellow}
+    width: 1em
 .poi-summary
   font-size: smaller
   color: #{toCssColour informationBlue}
   margin-left: 1ex
   margin-right: 1ex
 .poi-types
-   color: #{toCssColour informationBlue}
+  color: #{toCssColour informationBlue}
 .region
   font-size: smaller
   color: #{toCssColour caminoBlue}

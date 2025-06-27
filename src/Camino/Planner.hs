@@ -862,14 +862,16 @@ stageEvaluate tprefs cprefs choices stage = let
     stop = finish last'
     stageLength = length stage
     restPrefs = withoutMinimum $ preferenceRest tprefs
-    fatigue = if isOutOfRange restPrefs stageLength then Reject else Penance ((rangeTarget $ preferenceDistance tprefs) * (rangeDistanceInt restPrefs stageLength))
+    dayTarget = rangeTarget $ preferenceDistance tprefs
+    fatigue = if isOutOfRange restPrefs stageLength then Reject else Penance (dayTarget * (rangeDistanceInt restPrefs stageLength))
     stopMissing = missingStopServices sprefs camino' stop
     accom = M.findWithDefault invalidAccommodation stop (tcStopAccommodation choices)
     stopMissing' = stopMissing `S.difference` tripChoiceFeatures accom
     stopMissingCost = missingServicePenance (stopServices sprefs) stopMissing'
     stopCost = stopPenance tprefs camino' stop
     locationCost = locationPenance tprefs camino' (tcStopLocation choices) stop
-    stop' = stopMissingCost <> stopCost <> locationCost
+    preferredStopCost = if S.member stop (preferenceStops cprefs) then mempty else Penance dayTarget
+    stop' = stopMissingCost <> stopCost <> locationCost <> preferredStopCost
     metrics = if stop == preferenceFinish cprefs then
         mempty { metricsFatigue = fatigue, metricsPenance = fatigue }
       else

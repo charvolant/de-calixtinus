@@ -201,8 +201,8 @@ a
 .map-key
   font-size: small
 .map-key-icon
-  max-width: 16px
-  max-height: 16px
+  max-width: 24px
+  max-height: 24px
 .map-key-small
   font-size: x-small
 .map-label

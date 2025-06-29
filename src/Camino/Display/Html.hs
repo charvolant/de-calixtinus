@@ -1450,57 +1450,57 @@ L.easyButton('<span class="ca-label fs-5" title="_{ShowLabelsTitle}"></span>', f
     selectZoom();
 }).addTo(map);
 
-$forall icon <- icons
-  $with name <- T.pack $ show $ fst icon
+$forall (lt, location, poi) <- icons
+  $with name <- T.pack $ show $ lt
     var icon#{name}Used = L.icon({
-      iconUrl: '@{caminoLocationTypeMapIcon (fst icon) False True}',
-      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+      iconUrl: '@{caminoLocationTypeMapIcon lt False True}',
+      iconSize: [#{fst location}, #{snd location}]
     });
     var icon#{name}Unused = L.icon({
-      iconUrl: '@{caminoLocationTypeMapIcon (fst icon) False False}',
-      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+      iconUrl: '@{caminoLocationTypeMapIcon lt False False}',
+      iconSize: [#{fst location}, #{snd location}]
     });
     var icon#{name}Stop = L.icon({
-      iconUrl: '@{caminoLocationTypeMapIcon (fst icon) True True}',
-      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+      iconUrl: '@{caminoLocationTypeMapIcon lt True True}',
+      iconSize: [#{fst location}, #{snd location}]
     });
     var icon#{name}Poi = L.icon({
-      iconUrl: '@{caminoPoiTypeMapIcon (fst icon)}',
-      iconSize: [#{fst (snd icon)}, #{snd (snd icon)}]
+      iconUrl: '@{caminoPoiTypeMapIcon lt}',
+      iconSize: [#{fst poi}, #{snd poi}]
     });
 |]
   where
     icons = [
-        (Village, (16, 16))
-      , (Town, (32, 20))
-      , (City, (32, 25))
-      , (Monastery, (24, 22))
-      , (Bridge, (24, 9))
-      , (Intersection, (24, 22))
-      , (Peak, (20, 18))
-      , (Lookout, (24, 13))
-      , (Promontory, (24, 17))
-      , (Church, (24, 21))
-      , (Cathedral, (19, 24))
-      , (Cross, (15, 24))
-      , (Fountain, (19, 24))
-      , (Statue, (12, 24))
-      , (Artwork, (24, 24))
-      , (Municipal, (24, 21))
-      , (InformationPoint, (24, 24))
-      , (PilgrimResource, (16, 24))
-      , (Junction, (23, 24))
-      , (Shop, (24, 16))
-      , (Winery, (22, 24))
-      , (Museum, (24, 22))
-      , (Theatre, (24, 17))
-      , (Historical, (24, 17))
-      , (Park, (24, 25))
-      , (Beach, (24, 18))
-      , (Natural, (24, 25))
-      , (Hazard, (20, 18))
-      , (Poi, (15, 24))
-      ] :: [(LocationType, (Int, Int))]
+        (Village, (24, 24), (16, 16))
+      , (Town, (32, 32), (32, 20))
+      , (City, (40, 40), (32, 25))
+      , (Monastery, (24, 24), (24, 22))
+      , (Bridge, (24, 24), (24, 9))
+      , (Intersection, (24, 24), (24, 22))
+      , (Peak, (24, 24), (20, 18))
+      , (Lookout, (24, 24), (24, 13))
+      , (Promontory, (24, 24), (24, 17))
+      , (Church, (24, 24), (24, 21))
+      , (Cathedral, (24, 24), (19, 24))
+      , (Cross, (24, 24), (15, 24))
+      , (Fountain, (24, 24), (19, 24))
+      , (Statue, (24, 24), (12, 24))
+      , (Artwork, (24, 24), (24, 24))
+      , (Municipal, (24, 24), (24, 21))
+      , (InformationPoint, (24, 24), (24, 24))
+      , (PilgrimResource, (24, 24), (16, 24))
+      , (Junction, (24, 24), (23, 24))
+      , (Shop, (24, 24), (24, 16))
+      , (Winery, (24, 24), (22, 24))
+      , (Museum, (24, 24), (24, 22))
+      , (Theatre, (24, 24), (24, 17))
+      , (Historical, (24, 24), (24, 17))
+      , (Park, (24, 24), (24, 25))
+      , (Beach, (24, 24), (24, 18))
+      , (Natural, (24, 24), (24, 25))
+      , (Hazard, (24, 24), (20, 18))
+      , (Poi, (16, 24), (16, 24))
+      ] :: [(LocationType, (Int, Int), (Int, Int))]
 
 
 caminoMapScriptTabs :: HtmlUrlI18n CaminoMsg CaminoRoute

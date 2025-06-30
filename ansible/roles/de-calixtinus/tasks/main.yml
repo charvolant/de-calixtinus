@@ -75,6 +75,13 @@
     group: "{{ dcx_group }}"
     state: directory
 
+- name: Create the var directory
+  ansible.builtin.file:
+    path: "{{ dcx_var_dir }}"
+    owner: "{{ dcx_user }}"
+    group: "{{ dcx_group }}"
+    state: directory
+
 - name: Create systemd services
   ansible.builtin.template:
     src: templates/de-calixtinus.service.j2

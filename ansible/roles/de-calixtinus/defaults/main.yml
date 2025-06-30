@@ -7,12 +7,19 @@ dcx_dist_bucket: de-calixtinus
 dcx_group: dcx
 dcx_maximum_heap_size: 768m
 dcx_log_dir: /var/log/de-calixtinus
+# The plan cache (in memory size, file store size (-1) for no limit, file expiry in days, store location)
+dcx_plan_cache_mem_size: 10
+dcx_plan_cache_file_expiry: 30
+dcx_plan_cache_file_size: -1
+dcx_plan_cache_file_store: {{ dcx_var_dir }}/plans
 dcx_run_dir: de-calixtinus
 # The s3 configuration to use
 dcx_s3_config: config.yaml
 dcx_user: dcx
 # If true, use the static s3 bucket for static CSS icons etc.
 dcx_use_s3: true
+# File for caches and the like
+dcx_var_dir: /var/lib/de-calixtinus
 # Version to install
 dcx_version: 0.7
 # Install the international components for unicode (ICU) library

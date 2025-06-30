@@ -1,4 +1,4 @@
-# Contact for cetificate creation. Override this in your inventory.yml
+# Contact for certificate creation. Override this in your inventory.yml
 acme_account_email: INVALID
 # The name of the cerbot package to install
 certbot_package_name: "certbot"

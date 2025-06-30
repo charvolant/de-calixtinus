@@ -11,7 +11,7 @@ dcx_log_dir: /var/log/de-calixtinus
 dcx_plan_cache_mem_size: 10
 dcx_plan_cache_file_expiry: 30
 dcx_plan_cache_file_size: -1
-dcx_plan_cache_file_store: {{ dcx_var_dir }}/plans
+dcx_plan_cache_file_store: "{{ dcx_var_dir }}/plans"
 dcx_run_dir: de-calixtinus
 # The s3 configuration to use
 dcx_s3_config: config.yaml

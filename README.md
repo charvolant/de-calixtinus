@@ -142,12 +142,13 @@ There's *still* a bit of a way to go for that.
 * ~~Include points of interest~~
   * ~~And make allowance for breaks so that people can visit~~
 * Integrate rest days, stock-up days and general day planning
+  * Partially done, but needs a revisit
 
 ### Some design notes
 
 * Uses dynamic programming to plan camino stages
 * Inspired by TeX layout algorithm
-* Calculate a *penance* for each stage.
+* Calculates a *penance* for each stage.
   * "Penance" is my own in-joke, following a comment by a hotel owner that we'd paid for all our sins at once
     after a particularly miserable day.
   * Penance is used to optimise stages and essentially converts everything
@@ -165,13 +166,13 @@ There's *still* a bit of a way to go for that.
   * The program works to minimise total penance but, if you're that sort of
     pilgrim, it could be made to maximise penance, instead.
 * Time is estimated from kilometres travelled
-  * [Naismith's Rule](https://en.wikipedia.org/wiki/Naismith%27s_rule) to handles the extra time taken for ascent and descent 
+  * [Naismith's Rule](https://en.wikipedia.org/wiki/Naismith%27s_rule) to handle the extra time taken for ascent and descent 
     or, preferentially [Tobler's Hiking Function](https://en.wikipedia.org/wiki/Tobler%27s_hiking_function)
   * [Tranter's corrections](https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections) allow for fatigue and fitness
   * These are used to build a *perceived* distance travelled, taking into account
    ascent, descent and building fatigue.
 * Once a set of day-stages has been built, the result is then split into
-  multi-day stages, with a rest day at the end of each stage and assign calendar dates to each day.
+  multi-day stages, with a rest day at the end of each stage and calendar dates assigned to each day.
   * This also allows for "stock-up" days where you need to get supplies for the next day.
   * This is not optimal, since choice of rest point and stock points influences day planning.
   * Ideally, rest days should be included during the first round of optimisation.

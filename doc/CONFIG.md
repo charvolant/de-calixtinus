@@ -14,6 +14,8 @@ calendar:
   # Named calendar definitions
 regions:
   # Region definitions and hierarchy
+caches:
+  # Stores for generated plans and the like
 debug:
   # Set to true for additional information on planning failures and the like
 ```
@@ -231,11 +233,11 @@ The fields are
 For identifiers, using the [ISO-3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) two letter codes for countries and
 [ISO-3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) codes for regions is a good idea.
 If you want something more complex, try the
-[Getty Thesaurus od Geographic Names](https://www.getty.edu/research/tools/vocabularies/tgn/).
+[Getty Thesaurus of Geographic Names](https://www.getty.edu/research/tools/vocabularies/tgn/).
 
 The hierarchy inherits or accumulates values.
 For example, the locales for Galicia would be `ga`, `es` and `*` in that order.
-Similarly, Galicia observes both Galician Literture Day and Epiphany as
+Similarly, Galicia observes both Galician Literature Day and Epiphany as
 public holidays.
 
 The possible region types are:
@@ -258,3 +260,35 @@ since there are too many possible exceptions.
 For example, the Galicia-North Portugal Euroregion is a transnational cooperation zone
 straddling parts of two countrues.
 
+## Caches
+
+Caches are stores for generated information.
+When a plan is successfully computed for a trip, the plan is stored
+in the cache so that a user can retrieve and share the plan.
+Caches have two parts: an in-memory cache that can be used to rapidly retrieve
+recently used elements and a file-based cache for longer storage.
+Items stored in the file-based cache are stored as JSON.
+An example cache configuration is
+
+```yaml
+caches:
+  - id: plans
+    mem-size: 15
+    file-size: 100
+    file-expiry: 20
+    file-store: /var/lib/de-calixtinus/plans
+```
+
+The fields are:
+
+| Field | Description                                                                                                      | Example |
+| --- |------------------------------------------------------------------------------------------------------------------| --- |
+| id | The cache identifier. Presently, the only identifier in use is `plans`                                           | `plans` |
+| mem-size | The maximum number of items contained in the in-memory cache. If not specified, then no in-memory cache is used. | `10` |
+| file-size | The maximum number of items held by the file-based cache. If not present, any number of items can be stored.     |  `200` |
+| file-expiry | The number of days (decimals allowed) before an item is aged out of the cache. If absent, items live forever. | `30` |
+| file-store | The path to the directory that holds cache items. If absent, then a file based cache is not used. | `$TMP/plans` |
+
+The `file-store` element can use some variable substitution.
+Environment variables, such as `$HOME`, can be included in the path.
+`$TMP` refers to whatever path is the temporary directory.

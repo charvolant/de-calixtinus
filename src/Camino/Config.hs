@@ -361,7 +361,7 @@ defaultConfig = Config {
   configRegions = Just (createRegionConfig []),
   configCaches = [
     CacheConfig {
-      cacheConfigID = "plans"
+        cacheConfigID = "plans"
       , cacheConfigMemSize = Just 10
       , cacheConfigFileSize = Just 1000
       , cacheConfigFileExpiry = Just 30.0

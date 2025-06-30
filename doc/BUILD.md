@@ -26,6 +26,7 @@ static files up to date and then use
 docker build . -t yourname/de-calixtinus:0.7-SNAPSHOT
 ```
 
+substituing your docker username for `yourname`.
 This builds the current source in a docker container and then
 creates a slimmed-down version for deployment.
 

@@ -16,12 +16,21 @@ caminos:
   - id: I-ST
     type: CaminoDefinition
     path: "file:/app/lib/import-santiago.json"
+  - id: I-VV
+    type: CaminoDefinition
+    path: "file:/app/lib/import-villaviciosa.json"
+  - id: I-AS
+    type: CaminoDefinition
+    path: "file:/app/lib/import-arzua-santiago.json"
   - id: I-MS
     type: CaminoDefinition
     path: "file:/app/lib/import-melide-santiago.json"
   - id: F
     type: CaminoDefinition
     path: "file:/app/lib/camino-frances.json"
+  - id: "N"
+    type: CaminoDefinition
+    path: "file:/app/lib/camino-norte.json"
   - id: P
     type: CaminoDefinition
     path: "file:/app/lib/camino-portuguese.json"
@@ -259,6 +268,14 @@ calendar:
       type: day-of-year
       days:
         - 07-25
+  - key: CantabriaInstitutionsDay
+    name:
+      - Cantabria Institutions Day@en
+      - Día de las Instituciones de Cantabria Galega@ga
+    calendar:
+      type: day-of-year
+      days:
+        - 07-28
   - key: Assumption
     name:
       - Assumption@en
@@ -277,6 +294,14 @@ calendar:
       type: day-of-year
       days:
         - 09-08
+  - key: BienAparecida
+    name:
+      - Our Lady of the "Bien Aparecida"@en
+      - La Bien Aparecida@ast
+    calendar:
+      type: day-of-year
+      days:
+        - 09-15
   - key: LabourDayAU
     name:
       - Labour Day (Australia)@en
@@ -463,6 +488,24 @@ regions:
     holidays:
       - type: named
         key: DayOfAsturias
+  - id: "ES-CB"
+    name:
+      - Cantabria@es
+    description:
+      text:
+        - Autonomous Community of Cantabria@en
+        - Comunidad Autonoma de Cantrabria@es
+      about: https://www.cantabria.es/
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: MaundayThursday
+      - type: named
+        key: CantabriaInstitutionsDay
+      - type: named
+        key: BienAparecida
   - id: "ES-GA"
     name:
       - Galicia@ga

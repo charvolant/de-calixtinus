@@ -1292,32 +1292,31 @@ caminoCaminoKeyHtml camino = [ihamlet|
 $forall r <- caminoRoutes camino
   <tr>
     <td>
-    <td .border .border-light style="background-color: #{toCssColour $ paletteColour $ routePalette r}">
+    <td .border .border-light style="min-width: 1ex; background-color: #{toCssColour $ paletteColour $ routePalette r}">
     <td>
     <td>
-    <td>
-      $if r == caminoDefaultRoute camino
-        <span .fw-normal>
-          _{Txt (caminoName camino)}
-      $else
-        <span .fw-lighter>
-          _{Txt (routeName r)}
+    $if r == caminoDefaultRoute camino
+      <td .fw-normal>
+        _{Txt (caminoName camino)}
+    $else
+      <td .fw-lighter .ps-2>
+        _{Txt (routeName r)}
 |]
 
 caminoMapKeyHtml :: Bool -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapKeyHtml full = [ihamlet|
 $forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
   <tr>
-    <td>
-      $if full
-        <img .map-key-icon src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
-    <td>
-      <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
-    <td>
-      $if full
-        <img .map-key-icon src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
-    <td>
-      <img .map-key-icon src="@{caminoPoiTypeMapIcon lt}" title="_{PoiLabel}">
+    $if full
+      <td .map-key-icon>
+        <img src="@{caminoLocationTypeMapIcon lt True False}" title="_{StopLabel}">
+    <td .map-key-icon >
+      <img src="@{caminoLocationTypeMapIcon lt False True}" title="_{WaypointLabel}">
+    $if full
+      <td .map-key-icon>
+        <img src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
+    <td .map-key-icon>
+      <img src="@{caminoPoiTypeMapIcon lt}" title="_{PoiLabel}">
     <td>
       _{caminoLocationTypeLabel lt}
 |]

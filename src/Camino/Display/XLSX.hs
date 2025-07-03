@@ -441,6 +441,7 @@ locationHeaders :: Cslab
 locationHeaders = rowSlab [
     head3Label LocationLabel
   , headingLabel LocationLabel & cellPos .~ (1, 0)
+  , headingLabel TypeLabel
   , headingLabel RegionLabel
   , headingLabel WaypointLabel
   , headingLabel StopLabel

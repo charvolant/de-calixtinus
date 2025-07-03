@@ -281,6 +281,7 @@ data CaminoMsg =
   | TripleWcTitle
   | Txt (Localised TaggedText)
   | TxtPlain Bool Bool (Localised TaggedText)
+  | TypeLabel
   | UnfitTitle
   | UnusedLabel
   | VeryFitTitle
@@ -558,6 +559,7 @@ renderCaminoMsgDefault _ TripFinishLabel = "Trip Finish"
 renderCaminoMsgDefault _ TripStartLabel = "Trip Start"
 renderCaminoMsgDefault _ TripleTitle = "Triple"
 renderCaminoMsgDefault _ TripleWcTitle = "Triple with WC"
+renderCaminoMsgDefault _ TypeLabel = "Type"
 renderCaminoMsgDefault _ UnfitTitle = "Unfit"
 renderCaminoMsgDefault _ UnusedLabel = "Unused"
 renderCaminoMsgDefault _ VeryFitTitle = "Very fit"

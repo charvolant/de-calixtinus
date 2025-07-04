@@ -22,7 +22,7 @@
 <p>
   <strong>Stock-up Day Travel Preferences
   are for days where you will need to gather resources for the next day.
-  Generally, except in the largest cities, shops and restaurants will close on Sundays and public holidays.
+  Except in the largest cities, shops and restaurants will normally be closed on Sundays and public holidays.
   It may be some distance into the next Monday before things have opened again.
   So, Saturdays or the days before public holidays will require you to stock-up on provisions that will last you
   for the closed day and breakfast on the following day.
@@ -40,8 +40,8 @@
 <p>
   Checking this box allows travellers at a few locations to use bus, train or ferry links to access
   nearby accommodation and services, widening the options in terms of possible stops and locations.
-<p>
-  <strong .warning>Checking this option violates the spirit of the Camino.
+<p .text-bg-danger>
+  Checking this option violates the spirit of the Camino.
   It should not be used if you intend to get a Compostella Certificate at the end of your pilgrimage.
   The option is included for recreational travellers and routes that are not pilgrimages.
 

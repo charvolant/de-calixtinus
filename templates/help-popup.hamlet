@@ -2,7 +2,7 @@
   <div .modal-dialog>
     <div .modal-content>
       <div class="modal-header">
-        <h5 class="modal-title">_{MsgHelpTitle}</h5>
+        <h5 class="modal-title">_{MsgHelpPopupTitle}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="_{MsgCloseLabel}"></button>
       <div #help-dialog-contents .modal-body>
         ^{help}

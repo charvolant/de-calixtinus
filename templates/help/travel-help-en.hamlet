@@ -42,9 +42,9 @@
   \ See <a href="#estimating-fitness">below</a>
   \ for information on how to estimate fitness.
 
-<p>
-  <em>Beware of over-estimating your fitness.</em>
-  \ "Normal" fitness is someone in their 20s or 30s who has trained for long walks.
+<p .text-bg-warning>
+  Beware of over-estimating your fitness.
+  "Normal" fitness is someone in their 20s or 30s who has trained for long walks.
 
 <table .table .table-striped>
   <caption>Fitness Levels

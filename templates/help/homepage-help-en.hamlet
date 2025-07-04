@@ -1,0 +1,23 @@
+<p>
+  De Calixtinus is a tool for people planning to walk the Camino Santiago.
+  What you do is enter your <em>preferences</em> - how fit you are, how long would would like to walk each day,
+  what sort of facilities you want at day's-end, specific places where you want to stop and so on.
+  De Calixtinus then attempts to build a <em>globally</em> optimised set of days that best match your preferences.
+  To do this, it may stretch out a day's walk to the next town, so that you can get to a place with food at the end of the day,
+  or shrink a day, so that the next day can break before you have walked too far.
+  This process operates over the entire route, so the planner may stretch or shrink a day a bit to make things better
+  many days further on.
+
+<p>
+  The planner works by minimising <em>penance</em>, a catch-all term for the effort spent travelling.
+  The basic idea is that everything is converted into equivalent kilometres of walking.
+  Actual travel is converted into a perceived distance that takes account of climbs and descents, fatigue and so on.
+  To this distance, adjustments are added for particularly long or short distances, whether the place where you sleep
+  meets your needs, whether there is a restaurant in the town where you are staying so that you can eat, and a variety
+  of other adjustments.
+  De Calixtinus tries to minimise the total penance accumulated over the entire trip.
+
+<p>
+  The panner also attempts to include <em>rest days</em> in the plan.
+  Typically, for every 5-6 days of walking, the planner will find a suitable rest point and schedule a day off.
+  You can use the rest day to recover, refit, re-supply and spend a day seeing the sights before travelling on.

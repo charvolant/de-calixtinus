@@ -20,8 +20,9 @@ ForbiddenStopsLabel: Forbidden Stops
 HelpLabel: Help
 HelpTitle: General Help
 HomeLabel: Home
+HelpPopupTitle: Help
 HomeText1: Welcome to De Calixtinus.
-HomeText2: If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accommodation, food etc. The panner is designed to give you a globally optimal set of stages, stretching some a bit and reducing others, to give you the best overall trip. It does this by minimising "penance" a name that captures the total effort for a day, including distance, climbs and descents, accommodation, sources of food and other things.
+HomeText2: If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accommodation, food etc. The panner is designed to give you a globally optimal set of stages, stretching some a bit and reducing others, to give you the best overall trip.
 HomeText3: To begin, press the Start button below.
 InvalidCamino: Invalid camino
 InvalidStep: Invalid preferences step

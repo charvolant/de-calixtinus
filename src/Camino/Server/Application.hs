@@ -72,9 +72,11 @@ data PreferenceStep =
 homeP :: Handler Html
 homeP = do
   master <- getYesod
+  (help, helpPop) <- helpPopup $ Just $(ihamletFile "templates/help/homepage-help-en.hamlet")
   let mapUrl = maybe "" assetPath (getAsset "images" (caminoAppConfig master)) <> "/Map.png"
   defaultLayout $ do
     setTitleI MsgAppName
+    toWidget helpPop
     $(widgetFile "homepage")
 
 getNoticeR :: Handler Text
@@ -268,7 +270,7 @@ getPreferencesR = do
     time <- liftIO getCurrentTime
     let current = utctDay time
     let prefs' = maybe (defaultPreferenceData master current) id prefs
-    (embedded, help) <- helpPopup TravelStep
+    (embedded, help) <- preferenceHelpPopup TravelStep
     ((_result, widget), enctype) <- runFormPost $ chooseTravelForm embedded (Just prefs')
     stepPage TravelStep RangeStep Nothing help widget enctype
 
@@ -285,14 +287,14 @@ postPreferencesR = do
 
 nextStep :: PreferenceStep -> Maybe Text -> Handler Html
 nextStep stepp dir = do
-  (embedded, help) <- helpPopup stepp
+  (embedded, help) <- preferenceHelpPopup stepp
   ((result, widget), enctype) <- runFormPost $ (stepForm stepp embedded) Nothing
   case result of
       FormSuccess prefs -> do
         let easy = prefEasyMode prefs
         let nextp = if maybe False (== "next") dir then stepForward easy stepp else stepBackward easy stepp
         let nextp' = stepForward easy nextp
-        (embedded', help') <- helpPopup nextp
+        (embedded', help') <- preferenceHelpPopup nextp
         (widget', enctype') <- generateFormPost $ (stepForm nextp embedded') (Just prefs)
         stepPage nextp nextp' (Just prefs) help' widget' enctype'
       FormFailure errs -> do
@@ -386,27 +388,15 @@ stepPage PlanStep nextp prefs help widget enctype = stepPage ShowPreferencesStep
 blankHelp :: Widget
 blankHelp = [whamlet||]
 
-helpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
-helpPopup' TravelStep _ = Just $(ihamletFile "templates/help/travel-help-en.hamlet")
-helpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
-helpPopup' ServicesStopStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
-helpPopup' ServicesStockStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
-helpPopup' ServicesRestStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
-helpPopup' PoiStep _ = Just $(ihamletFile "templates/help/poi-help-en.hamlet")
-helpPopup' RoutesStep _ = Just $(ihamletFile "templates/help/routes-help-en.hamlet")
-helpPopup' StartStep _ = Just $(ihamletFile "templates/help/start-help-en.hamlet")
-helpPopup' StopsStep _ = Just $(ihamletFile "templates/help/stops-help-en.hamlet")
-helpPopup' _ _ = Nothing
-
-helpPopup :: PreferenceStep -> Handler (Widget, Widget)
-helpPopup stepp = do
+helpPopup :: Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -> Handler (Widget, Widget)
+helpPopup help' = do
   master <- getYesod
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
   let messages = renderCaminoMsg config locales
-  let help' = (\h -> h messages router) <$> helpPopup' stepp locales
-  return $ case help' of
+  let help'' = (\h -> h messages router) <$> help'
+  return $ case help'' of
     Nothing -> (
          blankHelp
        , blankHelp
@@ -418,6 +408,25 @@ helpPopup stepp = do
            |]
         , $(widgetFile "help-popup")
       )
+
+
+preferenceHelpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
+preferenceHelpPopup' TravelStep _ = Just $(ihamletFile "templates/help/travel-help-en.hamlet")
+preferenceHelpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
+preferenceHelpPopup' ServicesStopStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+preferenceHelpPopup' ServicesStockStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+preferenceHelpPopup' ServicesRestStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+preferenceHelpPopup' PoiStep _ = Just $(ihamletFile "templates/help/poi-help-en.hamlet")
+preferenceHelpPopup' RoutesStep _ = Just $(ihamletFile "templates/help/routes-help-en.hamlet")
+preferenceHelpPopup' StartStep _ = Just $(ihamletFile "templates/help/start-help-en.hamlet")
+preferenceHelpPopup' StopsStep _ = Just $(ihamletFile "templates/help/stops-help-en.hamlet")
+preferenceHelpPopup' _ _ = Nothing
+
+preferenceHelpPopup :: PreferenceStep -> Handler (Widget, Widget)
+preferenceHelpPopup stepp = do
+  locales <- getLocales
+  let help = preferenceHelpPopup' stepp locales
+  helpPopup help
 
 imagePopup :: Widget
 imagePopup = $(widgetFile "image-popup")

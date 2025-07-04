@@ -2,7 +2,7 @@
   <div .row>
     <div .col>
       <p .lead>_{MsgHomeText1}
-      <p>_{MsgHomeText2}
+      <p>_{MsgHomeText2}^{help}
       <p>_{MsgHomeText3}
   <div .row .justify-content-center>
     <div .col-1>

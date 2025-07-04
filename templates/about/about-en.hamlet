@@ -84,13 +84,15 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is only source data for five caminos:
-  the Camino Portuguese, the one we walked; the Camino Frances; the Camino Ingles; the Camino Primitivo and the Camino Fisterra.
+  Currently, there is source data for six caminos:
+  the Camino Portuguese, the one we walked; the Camino Frances; the Camino del Norte; the Camino Ingles;
+  the Camino Primitivo and the Camino Fisterra.
   I've also added in the Bondi-Manly walk, about as far away from the Camino Santiago as you can get, both
   figuratively and physically, for funsies.
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
   over 9,000 lines of JSON.
-  More routes are planned.
+  Each release tends to include a new camino, alternating between shortish camino, such as the Camino Ingles and
+  a full-cream one, such as the Camino del Norte.
 
 <h2>Source Code
 

@@ -42,7 +42,7 @@
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
     See the Bondi-Manly walk for an example.
-    However, we only have the data for five actual Caminos at the moment, along with all the various
+    We have the data for six actual Caminos at the moment, along with all the various
     alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
@@ -51,12 +51,12 @@
   De Calixtinus then attempts to build a <em>globally</em> optimised set of days that best match your preferences.
   To do this, it may stretch out a day's walk to the next town, so that you can get to a place with food at the end of the day,
   or shrink a day, so that the next day can break before you have walked too far.
-  This process operates over the entire route, so the planner may stretch or shink a day a bit to make things better
+  This process operates over the entire route, so the planner may stretch or shrink a day a bit to make things better
   many days further on.
 
 <p>
   The entire process is fairly quick.
-  In most cases, a walking plan will be generated in a few seconds.
+  In most cases, a walking plan will be generated in a five to ten seconds.
   If you're prepared to camp by the roadside, then the process will take a few seconds more, as there are many more
   possible options to sift through.
   The planner can develop a plan from any start point to any end point, as long as you are travelling onwards, towards
@@ -82,9 +82,10 @@
   You can use the rest day to recover, refit, re-supply and spend a day seeing the sights before travelling on.
   Rest days are also used to help manage the Sunday (and public holiday) famine, where all shops and cafes are closed
   and you need to pick up supplies during the preceeding day.
-  <em>Rest days are still a work in progress.
-  The current planner first works out an optimal set of days and then tries to add in rest days.
-  Doing this while planning the day's walking would be better but it needs a re-design.
+  <span .text-bg-warning>
+    Rest days are still a work in progress.
+    The current planner first works out an optimal set of days and then tries to add in rest days.
+    Doing this while planning the day's walking would be better but it needs a re-design.
 
 <h2 #preferences-help>Preferences
 
@@ -172,7 +173,8 @@
       <td>For those who want a more casual walk, rather than a pilgrimage.
         \ If the stop has public transport links to other locations, potentially use those for accommodation
         \ and services.
-        <em>
+        <span .text-bg-danger>
+          <span .ca-warning>
           Do not use this option if you want a Compostella Certificate, since it violates both the terms of the certifcate
           \ and the spirit of the Camino.
     <tr>
@@ -246,8 +248,8 @@
     <tr>
       <td>Points of Interest
       <td>
-        A list of the significant points of interest (those that would take a chunk out of your walking time
-        \ that you wish to include in the plan.
+        A list of the significant points of interest.
+        (Those that would take a chunk out of your walking time that you wish to include in the plan.)
 
 <h3 #preference-range-help>Preference Ranges
 
@@ -453,10 +455,11 @@
   On each tab of the plan is a small menu on the right.
   This menu allows you to link to and download the plan in various ways:
 
-<ul .lift-group .clearfix>
-  <li .list-group-item>
+<dl .row .clearfix>
+  <dt .col-1>
     <button .btn .btn-secondary .btn-sm>
       <span .ca-link>
+  <dd .col-11>
     A link to a persistent version of the plan.
     Plans are kept for 30 days after creation and this link allows you to revisit your plan later.
     <span .text-warning>
@@ -464,13 +467,15 @@
       Anyone with the link can look at the generated plan.
       The plan identifier is randomly generated and there is nothing in the plan that personally identifies you.
       However, share the plan with caution.
-  <li .list-group-item>
+  <dt .col-1>
     <button .btn .btn-secondary .btn-sm>
       <span .ca-copy>
+  <dd .col-11>
     Copy the persistent link to the clipboard, so that you can share it via email, etc.
-  <li .list-group-item>
+  <dt .col-1>
     <button .btn .btn-secondary .btn-sm>
       <span .ca-document-spreadsheet>
+  <dd .col-11>
     Download the plan in the form of a spreadsheet, openable by Microsoft Office or LibreOffice.
     The downloaded spreadsheet uses formulas when calculating dates, distances etc.
     This should allow you to adjust your plan.
@@ -478,9 +483,10 @@
       <span .ca-warning>
       Recalculating values like penance and fatigue is beyond the abilities of the spreadsheet,
       so estimates of time, distance and effort will gradually diverge from reality as you modify things.
-  <li .list-group-item>
+  <dt .col-1>
     <button .btn .btn-secondary .btn-sm>
       <span .ca-document-kml>
+  <dd .col-11>
     Download the plan in the form of a KML file, openable by Google Earth or Maps.
 
 <h3 #map-help>Map
@@ -725,7 +731,7 @@
     The locations are initially shown collapsed, so that you can easily scroll through them.
     Click on the line to fully open the location detail.
 
-  The locations tab shows a list of the location found on the
+  The locations tab shows a list of the locations found on the
   <a href="#map-help">map
   and listed in the
   <a href="#stage-help">plan
@@ -1119,19 +1125,9 @@
   The complete list of sleeping arrangements is available on the Key tab.
 
 <p>
-  If there is a
-  <span .best-accommodation>
-  mark beside the accommodation, then this is the accommodation option for this location that the planner has
-  chosen as the best match for your preferences, although it may not have used it for a stop.
   The planner does not choose on accommodation type alone.
   If the accommodation option has services that look appealing, it may choose it over another option of a
   more preferred type.
-  If there is a figure beside the symbol, e.g.
-  <span .best-accommodation>
-    <span .best-accommodation-penance>+<span .penance">0.4 km</span>
-  Then that indicates that there is a better option nearby, with the number giving a sense of the combination
-  of how much better and how far away that other option is.
-  (See <a href="#accommodation-penance">above</a> for more information.)
 
 <h4 #poi-help>Points of Interest
 

@@ -69,11 +69,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2025-01-27"
+        "value": "2025-07-02"
       },
       {
         "term": "dcterms:version",
-        "value": "0.6"
+        "value": "0.7"
       },
       {
         "term": "dcterms:license",

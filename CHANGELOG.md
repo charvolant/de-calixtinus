@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.7 - 2025-07-04
+
+#### Added
+
+* Camino del Norte
+* Download spreadsheet version of camino
+* Make caminos persistent with unique identifiers, so that they can be revisited and shared
+* Map of all caminos
+
+### Changed
+
+* Map icons embedded in background to make them more obvious
+  * Improved town and village icons
+* Information point location type
+* Casa rural accommodation type
+* Labels for caminos/
+* Direct rest day preferences towards required stops
+* Move to lts-23.24 / GHC 9.8.4 stack
+
 ## 0.6 - 2025-03-23
 
 ### Added

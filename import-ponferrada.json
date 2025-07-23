@@ -1,0 +1,143 @@
+{
+  "id": "I-PF",
+  "name": "Ponferrada Location",
+  "description": {
+    "text": "Ponferrada location for importing"
+  },
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Ponferrada Import@en"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2025-07-11"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-07-11"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "fragment": true,
+  "locations": [
+    {
+      "id": "F-F148",
+      "name": "Ponferrada",
+      "type": "City",
+      "position": { "latitude": 42.54301, "longitude": -6.59390 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Alea Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner",  "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "San Nicolás de Flüe Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Stables", "Prayer", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        "PrivateAlbergue",
+        "House",
+        "GuestHouse",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "F-F148-1",
+          "name": [
+            "Castillo de los Templarios@es",
+            "Castle of the Knights Templar@en"
+          ],
+          "description": {
+            "about": "http://www.castillodelostemplarios.com/"
+          },
+          "type": "Historical",
+          "position": { "latitude": 42.543539, "longitude": -6.59379 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1400,1630-2030"
+            }
+          ],
+          "time": 2.0
+        },
+        {
+          "id": "F-F148-2",
+          "name": [
+            "Oficina de Turismo de Ponferrada@es",
+            "Tourist Office of Ponferrada@en"
+          ],
+          "type": "InformationPoint",
+          "position": { "latitude": 42.54414, "longitude": -6.59270 },
+          "hours": "1015-1645"
+        },
+        {
+          "id": "F-F148-3",
+          "name": [
+            "Starting Point of the Winter Route@en"
+          ],
+          "type": "Junction",
+          "position": { "latitude": 42.54288, "longitude": -6.58923 }
+        }
+      ]
+    }
+  ],
+
+  "legs": [
+  ],
+  "routes": [
+    {
+      "id": "PF-PF",
+      "name": "Santiago",
+      "description": "Add to the default route",
+      "stops": [ ],
+      "starts": [ ],
+      "finishes": [
+      ],
+      "suggested-pois": [
+      ],
+      "palette": {
+        "colour": "fec953"
+      },
+      "default": true
+    }
+  ],
+  "route-logic": [
+  ],
+  "default-route": "PF-PF"
+}

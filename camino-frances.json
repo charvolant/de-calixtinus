@@ -77,11 +77,11 @@
       },
       {
         "term": "dcterms:modified",
-        "value": "2025-01-27"
+        "value": "2025-07-11"
       },
       {
         "term": "dcterms:version",
-        "value": "0.6"
+        "value": "0.7"
       },
       {
         "term": "dcterms:license",
@@ -94,7 +94,7 @@
     ]
   },
   "imports": [
-    "I-MS"
+    "I-MS", "I-PF"
   ],
   "locations": [
     {
@@ -4358,56 +4358,6 @@
       "region": "ES-CL",
       "services": [ "Bus" ],
       "accommodation": [ ]
-    },
-    {
-      "id": "F-F148",
-      "name": "Ponferrada",
-      "type": "City",
-      "position": { "latitude": 42.54301, "longitude": -6.59390 },
-      "region": "ES-CL",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [
-        {
-          "name": "Alea Pilgrims Hostel",
-          "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Breakfast", "Dinner",  "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
-        },
-        {
-          "name": "San Nicolás de Flüe Pilgrims Hostel",
-          "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Stables", "Prayer", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
-        },
-        "PrivateAlbergue",
-        "House",
-        "GuestHouse",
-        "Hotel"
-      ],
-      "pois": [
-        {
-          "id": "F-F148-1",
-          "name": [
-            "Castillo de los Templarios@es",
-            "Castle of the Knights Templar@en"
-          ],
-          "description": {
-            "about": "http://www.castillodelostemplarios.com/"
-          },
-          "type": "Historical",
-          "position": { "latitude": 42.543539, "longitude": -6.59379 },
-          "hours": [
-            {
-              "calendar": {
-                "type": "weekly",
-                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
-              },
-              "hours": "1000-1400,1630-2030"
-            }
-          ],
-          "time": 2.0
-        }
-      ]
     },
     {
       "id": "F-F149",

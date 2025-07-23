@@ -19,6 +19,9 @@ caminos:
   - id: I-VV
     type: CaminoDefinition
     path: "file:import-villaviciosa.json"
+  - id: I-PF
+    type: CaminoDefinition
+    path: "file:import-ponferrada.json"
   - id: I-AS
     type: CaminoDefinition
     path: "file:import-arzua-santiago.json"
@@ -43,6 +46,9 @@ caminos:
   - id: FI
     type: CaminoDefinition
     path: "file:camino-fisterra.json"
+  - id: W
+    type: CaminoDefinition
+    path: "file:camino-invierno.json"
   - id: BM
     type: CaminoDefinition
     path: "file:bondi-manly.json"

@@ -427,11 +427,11 @@ caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoR
 caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
     ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
   |]
-caminoAccommodationSummaryHtml a@(Accommodation _id _name type' services' sleeping' _multi) = [ihamlet|
+caminoAccommodationSummaryHtml a@(Accommodation _id _name _description type' services' sleeping' _multi) = [ihamlet|
     <span .accommodation>
       <span .pr-4>
         ^{caminoAccommodationTypeIcon type'} _{Txt (accommodationName a)}
-      <span .p2-4>
+      <span .pr-4>
         $forall service <- services'
            ^{caminoServiceIcon service}
       <span>
@@ -459,13 +459,14 @@ caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
 
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
-caminoAccommodationNameHtml (Accommodation _id name' _type  _services _sleeping _multi) = [ihamlet|_{Txt name'}|]
+caminoAccommodationNameHtml (Accommodation _id name' _description _type  _services _sleeping _multi) = [ihamlet|_{Txt name'}|]
 
 caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation = [ihamlet|
   <div .row .accommodation>
-    <div .offset-1 .col-5>
+    <div .col-1 .text-end>
       ^{caminoAccommodationTypeIcon type'}
+    <div .col-5>
       ^{caminoAccommodationNameHtml accommodation}
     <div .col-4>
       $forall service <- accommodationServices accommodation
@@ -473,6 +474,12 @@ caminoAccommodationHtml accommodation = [ihamlet|
     <div .col-2>
       $forall sleeping <- accommodationSleeping accommodation
         ^{caminoSleepingIcon sleeping}
+  $maybe desc <- accommodationDescription accommodation
+    <div .row .accommodation>
+      <div .offset-1 .col .text-secondary>
+        ^{descriptionBlock True True desc}
+      <div .col-1>
+
  |]
    where
      type' = accommodationType accommodation

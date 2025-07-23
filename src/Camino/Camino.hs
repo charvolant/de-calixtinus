@@ -43,6 +43,7 @@ module Camino.Camino (
 
   , module Graph.Programming
 
+  , accommodationDescription
   , accommodationID
   , accommodationMulti
   , accommodationName
@@ -327,28 +328,32 @@ instance NFData Sleeping
 
 -- | Somewhere to stay at the end of a leg
 data Accommodation =
-    Accommodation Text (Localised TaggedText) AccommodationType (S.Set Service) (S.Set Sleeping) (Maybe Bool) -- ^ Fully described accommodation
+    Accommodation Text (Localised TaggedText) (Maybe Description) AccommodationType (S.Set Service) (S.Set Sleeping) (Maybe Bool) -- ^ Fully described accommodation
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
-  deriving (Eq, Ord, Show, Generic)
+  deriving (Show, Generic)
 
 accommodationID :: Accommodation -> Text
-accommodationID (Accommodation id' _name _type _services _sleeping _multi) = id'
+accommodationID (Accommodation id' _name _description _type _services _sleeping _multi) = id'
 accommodationID (GenericAccommodation type') = pack $ show type'
 
 accommodationName :: Accommodation -> (Localised TaggedText)
-accommodationName (Accommodation _id' name' _type _services _sleeping _multi) = name'
+accommodationName (Accommodation _id' name' _description _type _services _sleeping _multi) = name'
 accommodationName (GenericAccommodation type') = wildcardText $ pack ("Generic " ++ show type')
 
 -- | Get a simple text version of the accommodation name
 accommodationNameLabel :: Accommodation -> Text
 accommodationNameLabel accommodation = localiseDefault $ accommodationName accommodation
 
+accommodationDescription :: Accommodation -> Maybe Description
+accommodationDescription (Accommodation _id' _name' description' _type _services _sleeping _multi) = description'
+accommodationDescription (GenericAccommodation type') = Nothing
+
 accommodationType :: Accommodation -> AccommodationType
-accommodationType (Accommodation _id _name type' _services _sleeping _multi) = type'
+accommodationType (Accommodation _id _name _description type' _services _sleeping _multi) = type'
 accommodationType (GenericAccommodation type') = type'
 
 accommodationServices :: Accommodation -> S.Set Service
-accommodationServices (Accommodation _id _name _type services' _sleeping _multi) = services'
+accommodationServices (Accommodation _id _name _description _type services' _sleeping _multi) = services'
 accommodationServices (GenericAccommodation PilgrimAlbergue) = S.fromList [ Handwash ]
 accommodationServices (GenericAccommodation PrivateAlbergue) = S.fromList [ Handwash, WiFi, Bedlinen, Towels ]
 accommodationServices (GenericAccommodation Hostel) = S.fromList [ WiFi, Kitchen, Bedlinen, Towels ]
@@ -365,7 +370,7 @@ accommodationServices (GenericAccommodation PlaceholderAccommodation) = S.empty
 
 
 accommodationSleeping :: Accommodation -> S.Set Sleeping
-accommodationSleeping (Accommodation _id _name _type _services sleeping' _multi) = sleeping'
+accommodationSleeping (Accommodation _id _name _description _type _services sleeping' _multi) = sleeping'
 accommodationSleeping (GenericAccommodation PilgrimAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation PrivateAlbergue) = S.fromList [ Shared ]
 accommodationSleeping (GenericAccommodation Hostel) = S.fromList [ Shared ]
@@ -383,8 +388,8 @@ accommodationSleeping (GenericAccommodation PlaceholderAccommodation) = S.empty
 -- | Allow a multi-day stay?
 --   If the accommodation does not allow a specific override, then `accommodationDefaultMulti` is used.
 accommodationMulti :: Accommodation -> Bool
-accommodationMulti (Accommodation _id _name _type _services _sleeping (Just multi')) = multi'
-accommodationMulti (Accommodation _id _name type' _services _sleeping Nothing) = accommodationDefaultMulti type'
+accommodationMulti (Accommodation _id _name _description _type _services _sleeping (Just multi')) = multi'
+accommodationMulti (Accommodation _id _name _description type' _services _sleeping Nothing) = accommodationDefaultMulti type'
 accommodationMulti (GenericAccommodation type') = accommodationDefaultMulti type'
 
 -- | Is this a generic accommodation type?
@@ -392,24 +397,36 @@ isGenericAccommodation :: Accommodation -> Bool
 isGenericAccommodation (GenericAccommodation _type) = True
 isGenericAccommodation _ = False
 
+instance Eq Accommodation where
+  (Accommodation id1 _name1 _description1 _type1 _services1 _sleeping1 _multi1) == (Accommodation id2 _name2 _description2 _type2 _services2 _sleeping2 _multi2) = id1 == id2
+  (GenericAccommodation type1) == (GenericAccommodation type2) = type1 == type2
+  _ == _ = False
+
+
+instance Ord Accommodation where
+  compare (Accommodation id1 _name1 _description1 _type1 _services1 _sleeping1 _multi1) (Accommodation id2 _name2 _description2 _type2 _services2 _sleeping2 _multi2) = compare id1 id2
+  compare (GenericAccommodation type1) (GenericAccommodation type2) = compare type1 type2
+  compare (Accommodation _id1 _name1 _description1 _type1 _services1 _sleeping1 _multi1) (GenericAccommodation _type2) = LT
+  compare (GenericAccommodation _type1) (Accommodation _id2 _name2 _description2 _type2 _services2 _sleeping2 _multi2) = GT
+
 instance Placeholder Text Accommodation where
   placeholderID = accommodationID
   placeholder aid = let
       mt = readMaybe (unpack aid)
     in
       maybe
-        (Accommodation aid (wildcardText $ "Placeholder for " <> aid) PlaceholderAccommodation S.empty S.empty Nothing)
+        (Accommodation aid (wildcardText $ "Placeholder for " <> aid) Nothing PlaceholderAccommodation S.empty S.empty Nothing)
         GenericAccommodation
         mt
   isPlaceholder accommodation = accommodationType accommodation == PlaceholderAccommodation
 
 instance Dereferencer Text Accommodation Camino where
-  dereference camino ac@(Accommodation id' _name PlaceholderAccommodation _services _sleeping _multi) =
+  dereference camino ac@(Accommodation id' _name _description PlaceholderAccommodation _services _sleeping _multi) =
     maybe ac fst (M.lookup id' (caminoAccommodation camino))
   dereference _camino ac = ac
 
 instance Dereferencer Text Accommodation CaminoConfig where
-  dereference config ac@(Accommodation id' _name PlaceholderAccommodation _services _sleeping _multi) =
+  dereference config ac@(Accommodation id' _name _description PlaceholderAccommodation _services _sleeping _multi) =
     maybe ac fst $ (caminoConfigAccommodationLookup config) id'
   dereference _config ac = ac
 
@@ -420,15 +437,16 @@ instance FromJSON Accommodation where
    parseJSON (Object v) = do
      id' <- v .:? "id" .!= ""
      name' <- v .: "name"
+     description' <- v .:? "description"
      type' <- v .: "type"
      services' <- v .: "services"
      sleeping' <- v .: "sleeping"
      multi' <- v .:? "multi-day"
-     return $ Accommodation id' name' type' services' sleeping' multi'
+     return $ Accommodation id' name' description' type' services' sleeping' multi'
    parseJSON v = error ("Unable to parse accommodation object " ++ show v)
 instance ToJSON Accommodation where
-    toJSON (Accommodation id' name' type' services' sleeping' multi') =
-      object [ "id" .= id', "name" .= name', "type" .= type', "services" .= services', "sleeping" .= sleeping', "multi-day" .= multi' ]
+    toJSON (Accommodation id' name' description' type' services' sleeping' multi') =
+      object [ "id" .= id', "name" .= name', "description" .= description', "type" .= type', "services" .= services', "sleeping" .= sleeping', "multi-day" .= multi' ]
     toJSON (GenericAccommodation type' ) =
       toJSON type'
 
@@ -708,8 +726,8 @@ instance Placeholder Text Location where
   isPlaceholder location = locationType location == PlaceholderLocation
 
 setAccommodationID :: Accommodation -> Text -> Int -> Accommodation
-setAccommodationID (Accommodation "" name' type' services' sleeping' multi') lid pos =
-  Accommodation id' name' type' services' sleeping' multi'
+setAccommodationID (Accommodation "" name' description' type' services' sleeping' multi') lid pos =
+  Accommodation id' name' description' type' services' sleeping' multi'
   where
     id' = lid <> "#" <> pack (show pos)
 setAccommodationID accommodation _lid _pos = accommodation

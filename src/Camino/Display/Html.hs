@@ -1001,7 +1001,7 @@ preferenceRangeIntHtml range = [ihamlet|
   |]
 
 failureTable :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> ChainGraph Location e Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-failureTable tprefs cprefs caption graph = [ihamlet|
+failureTable _tprefs _cprefs caption graph = [ihamlet|
   <table .table .table-striped>
     <caption>_{caption}
     <thead>
@@ -1020,7 +1020,7 @@ failureTable tprefs cprefs caption graph = [ihamlet|
             <td>
             <td>#{summary (finish t)} _{Txt (locationName (finish t))}
             <td>_{DistanceFormatted (metricsDistance (score t))} _{TimeMsg (metricsTime (score t))}
-            <td>^{penanceSummary tprefs cprefs False False (score t)}
+            <td>#{summary (score t)}
             <td>
               #{summary l}
               $forall p <- path t
@@ -1030,19 +1030,19 @@ failureTable tprefs cprefs caption graph = [ihamlet|
   where
     arrow = '\x2192'
 
-failureReport :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
-failureReport _tprefs _cprefs Nothing = [ihamlet|
+failureReport :: (Edge e Location) => T.Text -> T.Text -> TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
+failureReport _tlabel _plabel _tprefs _cprefs Nothing = [ihamlet|
 |]
-failureReport tprefs cprefs (Just (Failure msg loc pathGraph programGraph)) = [ihamlet|
+failureReport tlabel plabel tprefs cprefs (Just (Failure msg loc pathGraph programGraph)) = [ihamlet|
   <div .row>
     <div .col>
       #{msg}
       $maybe l <- loc
         #{summary l} _{Txt (locationName l)}
-    <div .row>
-      <div .col>
-        ^{failureTable tprefs cprefs TableLabel pathGraph}
-   <div .row>
+  <div ##{tlabel} .row>
+    <div .col>
+       ^{failureTable tprefs cprefs TableLabel pathGraph}
+  <div ##{plabel} .row>
       <div .col>
         ^{failureTable tprefs cprefs ProgramLabel programGraph}
 |]
@@ -1050,8 +1050,20 @@ failureReport tprefs cprefs (Just (Failure msg loc pathGraph programGraph)) = [i
 failureHtml :: TravelPreferences -> CaminoPreferences -> Maybe (Failure Location Leg Metrics Metrics) -> Maybe (Failure Location Day Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
 failureHtml tprefs cprefs journey pilgrimage = [ihamlet|
   <div .container-fluid>
-    ^{failureReport tprefs cprefs journey}
-    ^{failureReport tprefs cprefs pilgrimage}
+    <nav .navbar .navbar-expand-md .bg-body>
+      <ul .navbar-nav>
+        $if isJust journey
+          <li .nav-item>
+            <a .nav-link href=#failure-journey-table">_{JourneyLabel}-_{TableLabel}
+          <li .nav-item>
+            <a .nav-link href="#failure-journey-program">_{JourneyLabel}-_{ProgramLabel}
+        $if isJust pilgrimage
+          <li .nav-item>
+            <a .nav-link href=#failure-pilgrimage-table">_{PilgrimageLabel}-_{TableLabel}
+          <li .nav-item>
+            <a .nav-link href="#failure-pilgrimage-program">_{PilgrimageLabel}-_{ProgramLabel}
+    ^{failureReport "failure-journey-table" "failure-journey-program" tprefs cprefs journey}
+    ^{failureReport "failure-pilgrimage-table" "failure-pilgrimage-program" tprefs cprefs pilgrimage}
  |]
 
 preferencesHtml :: Bool -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute

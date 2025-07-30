@@ -149,6 +149,7 @@ data CaminoMsg =
   | InformationDescription
   | InformationPointTitle
   | IntersectionTitle
+  | JourneyLabel
   | JourneySummaryMsg Journey
   | JunctionTitle
   | KeyLabel
@@ -439,6 +440,7 @@ renderCaminoMsgDefault _ InformationTitle = "Information"
 renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
 renderCaminoMsgDefault _ InformationPointTitle = "Information Point"
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
+renderCaminoMsgDefault _ JourneyLabel = "Journey"
 renderCaminoMsgDefault _ JunctionTitle = "Junction"
 renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"

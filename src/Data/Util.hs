@@ -410,7 +410,7 @@ lastWithDefault _d (h:t) = NE.last (h NE.:| t)
 
 -- | Get the head of a known non-empty list or a default value
 lastWithError :: [a] -> a
-lastWithError l = headWithDefault (error "Unexpected empty list") l
+lastWithError l = lastWithDefault (error "Unexpected empty list") l
 
 -- | Get the tail of a list, or the empty list if the list is already empty
 tailOrEmpty :: [a] -> [a]

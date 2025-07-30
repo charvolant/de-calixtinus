@@ -178,6 +178,11 @@ instance ToJSON Penance where
 
 instance NFData Penance
 
+instance Summary Penance where
+  summary Reject = "x"
+  summary (Penance v) = summary v
+  summaryIfNotNull v = if v == mempty then Nothing else Just $ summary v
+
 -- | Reduce a penance by another penance, with 0 penance the minimum
 --   @Reject - b = Reject@, @a - Reject = zero@, @a - b = max(zero, a - b)@
 subtractFloor :: Penance -> Penance -> Penance
@@ -299,7 +304,11 @@ instance FromJSONKey Service where
   fromJSONKey = genericFromJSONKey defaultJSONKeyOptions
 instance ToJSONKey Service where
   toJSONKey = genericToJSONKey defaultJSONKeyOptions
+
 instance NFData Service
+
+instance Summary Service where
+  summary v = pack $ show v
 
 -- | Provide an enumeration of all services
 serviceEnumeration :: [Service]
@@ -962,6 +971,9 @@ instance Ord Leg where
     | legFrom a /= legFrom b = legFrom a `compare` legFrom b
     | legTo a /= legTo b = legTo a `compare` legTo b
     | otherwise = legDistance a `compare` legDistance b
+
+instance Summary Leg where
+  summary leg = "{" <> (pack $ show $ legType leg) <> ", " <> locationID (legFrom leg) <> " -> " <> locationID (legTo leg) <> "}"
 
 -- | Ensure a leg has locations mapped correctly within a camino
 normaliseLeg :: Camino -> Leg -> Leg

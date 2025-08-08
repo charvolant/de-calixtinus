@@ -19,7 +19,7 @@ module Camino.Display.Html where
 import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
-import Camino.Planner (TripChoice(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
+import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
@@ -99,6 +99,8 @@ penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = 
        $forall service <- metricsMissingDayServices metrics
           ^{caminoServiceIcon service}
        )
+   $if metricsRestPressure metrics /= mempty
+     \ + _{RestPressurePenanceMsg (metricsRestPressure metrics)}
    $if metricsFatigue metrics /= mempty
      \ + _{FatiguePenanceMsg (metricsFatigue metrics)}
    $if metricsRest metrics /= mempty
@@ -861,8 +863,41 @@ caminoTransportLinkHtml preferences camino tlink = [ihamlet|
     tloc = legTo tlink
     tid = locationID tloc
 
-caminoLocationHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationHtml preferences camino _solution containerId rests stocks stops waypoints used location = [ihamlet|
+tripChoiceSummary' :: Config -> Maybe (r -> T.Text) -> TripChoiceMap r Service -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+tripChoiceSummary' _config showName choiceMap location = [ihamlet|
+  $maybe tc <- M.lookup location choiceMap
+    $maybe sn <- showName
+      #{sn (tripChoice tc)} #
+    <span .services>
+      $forall service <- tripChoiceFeatures tc
+        ^{caminoServiceIcon service}
+    _{PenanceFormatted (tripChoicePenance tc)}
+  $nothing
+    #{endash}
+|]
+
+tripChoiceSummary :: Config -> Maybe Solution -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+tripChoiceSummary config msolution location = [ihamlet|
+  $maybe choices <- solutionChoices <$> msolution
+    <div .row .choice-summary>
+      <div .col>
+        _{StopLabel}
+        ^{tripChoiceSummary' config Nothing (tcStopLocation choices) location} /
+        ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStopAccommodation choices)  location}
+      <div .col>
+        _{StockpointLabel}
+        ^{tripChoiceSummary' config Nothing (tcStockLocation choices) location} /
+        ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStockAccommodation choices)  location}
+      <div .col>
+        _{RestpointLabel}
+        ^{tripChoiceSummary' config Nothing (tcRestLocation choices) location} /
+        ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcRestAccommodation choices)  location}
+      <div .col>
+        ^{tripChoiceSummary' config Nothing (tcRestPressure choices) location}
+|]
+
+caminoLocationHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationHtml config preferences camino msolution containerId rests stocks stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
       <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
@@ -913,6 +948,8 @@ caminoLocationHtml preferences camino _solution containerId rests stocks stops w
     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
         ^{locationLegs preferences camino used location}
+        $if getDebug config
+          ^{tripChoiceSummary config msolution location}
         $maybe d <- locationDescription location
           <div .row>
             <div .col>
@@ -940,8 +977,8 @@ caminoLocationHtml preferences camino _solution containerId rests stocks stops w
     isWaypoint = not isStop && not isStockpoint && not isRest && (S.member location waypoints)
     transportLinks = locationTransportLinks camino' location
 
-caminoLocationsHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoLocationsHtml preferences camino solution = [ihamlet|
+caminoLocationsHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoLocationsHtml config preferences camino solution = [ihamlet|
   <div .container-fluid>
     <div .row>
       <nav .navbar .navbar-expand-md>
@@ -961,7 +998,7 @@ caminoLocationsHtml preferences camino solution = [ihamlet|
         <div #locations .accordion .container-fluid>
           $forall loc <- locationsSorted
             <div .row>
-              ^{caminoLocationHtml preferences camino solution "locations" rests stocks stops waypoints usedLegs loc}
+              ^{caminoLocationHtml config preferences camino solution "locations" rests stocks stops waypoints usedLegs loc}
   |]
   where
     camino' = preferenceCamino camino
@@ -1844,7 +1881,7 @@ caminoHtmlBase config preferences camino msolution =
             <div .tab-pane role="tabpanel" id="plan-tab">
               ^{caminoTripHtml config preferences camino p}
           <div .tab-pane role="tabpanel" id="locations-tab">
-            ^{caminoLocationsHtml preferences camino msolution}
+            ^{caminoLocationsHtml config preferences camino msolution}
           <div .tab-pane role="tabpanel" id="preferences-tab">
             ^{preferencesHtml True preferences camino}
           $if showFailure
@@ -1888,7 +1925,7 @@ caminoHtmlSimple config camino =
               <div .tab-pane .active role="tabpanel" id="map-tab">
                 ^{caminoMapHtml preferences camino Nothing}
               <div .tab-pane role="tabpanel" id="locations-tab">
-                ^{caminoLocationsHtml preferences camino Nothing}
+                ^{caminoLocationsHtml config preferences camino Nothing}
               <div .tab-pane role="tabpanel" id="about-tab">
                 ^{aboutHtml config True preferences camino Nothing}
               <div .tab-pane role="tabpanel" id="key-tab">

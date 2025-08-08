@@ -646,9 +646,9 @@ suggestedStockLocation t VeryUnfit comfort = suggestedStockLocation t Unfit comf
 -- | Base location preferences from comfort level
 suggestedRestLocation' :: Comfort -> M.Map LocationType Penance
 suggestedRestLocation' Austere = M.fromList [
-    (Village, Penance 10.0),
-    (Town, Penance 20.0),
-    (City, Penance 25.0),
+    (Village, Penance 4.0),
+    (Town, Penance 8.0),
+    (City, Penance 10.0),
     (Monastery, Penance 0.0),
     (Bridge, Reject),
     (Intersection, Reject),
@@ -656,9 +656,9 @@ suggestedRestLocation' Austere = M.fromList [
     (Poi, Reject)
   ]
 suggestedRestLocation' Frugal = M.fromList [
-    (Village, Penance 10.0),
-    (Town, Penance 20.0),
-    (City, Penance 25.0),
+    (Village, Penance 2.0),
+    (Town, Penance 5.0),
+    (City, Penance 10.0),
     (Monastery, Penance 0.0),
     (Bridge, Reject),
     (Intersection, Reject),
@@ -667,7 +667,7 @@ suggestedRestLocation' Frugal = M.fromList [
   ]
 suggestedRestLocation' Pilgrim = M.fromList [
     (Town, Penance 0.0),
-    (City, Penance 20.0),
+    (City, Penance 10.0),
     (Village, Reject),
     (Monastery, Reject),
     (Bridge, Reject),
@@ -677,7 +677,7 @@ suggestedRestLocation' Pilgrim = M.fromList [
   ]
 suggestedRestLocation' Comfortable = M.fromList [
     (Town, Penance 0.0),
-    (City, Penance 20.0),
+    (City, Penance 10.0),
     (Village, Reject),
     (Monastery, Reject),
     (Bridge, Reject),
@@ -687,7 +687,7 @@ suggestedRestLocation' Comfortable = M.fromList [
   ]
 suggestedRestLocation' Luxurious = M.fromList [
     (Town, Penance 0.0),
-    (City, Penance 20.0),
+    (City, Penance 15.0),
     (Village, Reject),
     (Monastery, Reject),
     (Bridge, Reject),

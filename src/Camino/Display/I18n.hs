@@ -236,6 +236,7 @@ data CaminoMsg =
   | RestPenanceMsg Penance
   | RestpointLabel
   | RestPreferencesLabel
+  | RestPressurePenanceMsg Penance
   | RoadTitle
   | RouteLabel
   | RouteServicesPreferencesLabel
@@ -518,6 +519,7 @@ renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferenc
 renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ RestpointLabel = "Rest Point"
 renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
+renderCaminoMsgDefault _ (RestPressurePenanceMsg penance') = [shamlet|Rest Pressure ^{formatPenance penance'}|]
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ RouteServicesPreferencesLabel = "Missing Services on Route"

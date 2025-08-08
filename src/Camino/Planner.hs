@@ -20,6 +20,7 @@ module Camino.Planner (
   , Journey
   , Pilgrimage
   , TripChoice(..)
+  , TripChoices(..)
   , TripChoiceMap
 
   , accommodationChoice
@@ -101,22 +102,22 @@ data (Ord f) => TripChoice v f = TripChoice {
     , tripChoicePenance :: Penance -- ^ The penance associated with this choice
 } deriving (Show)
 
-instance (Ord f, FromJSON v, FromJSON f) => FromJSON (TripChoice v f) where
+instance (Ord f, Placeholder T.Text v, FromJSON v, FromJSON f) => FromJSON (TripChoice v f) where
   parseJSON (Object v) = do
     choice' <- v .: "choice"
     features' <- v .:? "features" .!= S.empty
     penance' <- v .:? "penance" .!= mempty
     return $ TripChoice {
-        tripChoice = choice'
+        tripChoice = placeholder choice'
       , tripChoiceFeatures = features'
       , tripChoicePenance = penance'
       }
   parseJSON v = error ("Unable to parse trip choice object " ++ show v)
   
-instance (Ord f, ToJSON v, ToJSON f) => ToJSON (TripChoice v f) where
+instance (Ord f, Placeholder T.Text v, ToJSON v, ToJSON f) => ToJSON (TripChoice v f) where
   toJSON (TripChoice choice' features' penance') =
     object [
-        "choice" .= choice'
+        "choice" .= placeholderID choice'
       , "features" .= if S.null features' then Nothing else Just features'
       , "penance" .= if penance' == mempty then Nothing else Just penance'
       ]
@@ -157,6 +158,7 @@ data TripChoices = TripChoices {
   , tcStockLocation :: TripChoiceMap Location Service
   , tcRestAccommodation :: TripChoiceMap Accommodation Service
   , tcRestLocation :: TripChoiceMap Location Service
+  , tcRestPressure :: TripChoiceMap Location Service
 } deriving (Generic)
 
 instance FromJSON TripChoices where
@@ -167,6 +169,7 @@ instance FromJSON TripChoices where
     stocklocation' <- v .: "stock-location"
     restaccommodation' <- v .: "rest-accommodation"
     restlocation' <- v .: "rest-location"
+    restpressure' <- v .: "rest-pressure"
     return $ TripChoices {
         tcStopAccommodation = stopaccommodation'
       , tcStopLocation = stoplocation'
@@ -174,11 +177,12 @@ instance FromJSON TripChoices where
       , tcStockLocation = stocklocation'
       , tcRestAccommodation = restaccommodation'
       , tcRestLocation = restlocation'
+      , tcRestPressure = restpressure'
       }
   parseJSON v = error ("Unable to parse trip choices object " ++ show v)
 
 instance ToJSON TripChoices where
-  toJSON (TripChoices stopaccommodation' stoplocation' stockaccommodation' stocklocation' restaccommodation' restlocation') =
+  toJSON (TripChoices stopaccommodation' stoplocation' stockaccommodation' stocklocation' restaccommodation' restlocation' restpressure') =
     object [
         "stop-accommodation" .= stopaccommodation'
       , "stop-location" .= stoplocation'
@@ -186,9 +190,24 @@ instance ToJSON TripChoices where
       , "stock-location" .= stocklocation'
       , "rest-accommodation" .= restaccommodation'
       , "rest-location" .= restlocation'
+      , "rest-pressure" .= restpressure'
       ]
 
 instance NFData TripChoices
+
+normaliseTripChoices :: CaminoConfig -> TripChoices -> TripChoices
+normaliseTripChoices config (TripChoices stopaccommodation' stoplocation' stockaccommodation' stocklocation' restaccommodation' restlocation' restpressure') =
+  TripChoices
+    (deref stopaccommodation')
+    (deref stoplocation')
+    (deref stockaccommodation')
+    (deref stocklocation')
+    (deref restaccommodation')
+    (deref restlocation')
+    (deref restpressure')
+  where
+    deref' (key, val) = (dereference config key, val { tripChoice = dereference config (tripChoice val) })
+    deref tcs = M.fromList $ map deref' $ M.assocs tcs
 
 -- | The metrics for a day, journey or complete pilgrimage
 data Metrics = Metrics {
@@ -208,6 +227,7 @@ data Metrics = Metrics {
     , metricsDayServices :: Penance -- ^ Adjustment to penance in km-equivalnet caused by missing services throughout the day
     , metricsDistanceAdjust :: Penance -- ^ Adjustments to distance cost in km-equivalent caused by going over/under target
     , metricsTimeAdjust :: Penance -- ^ Adjustments to time cost in km-equivalent caused by going over/under target
+    , metricsRestPressure :: Penance -- ^ Pressure to go on to a rest stop
     , metricsFatigue :: Penance -- ^ Cost of accumulated fatigue
     , metricsRest :: Penance -- ^ Cost of taking a rest
     , metricsMisc :: Penance -- ^ Additional miscellaneous penance costs and causes
@@ -242,6 +262,7 @@ instance Semigroup Metrics where
     , metricsDayServices = metricsDayServices m1 <> metricsDayServices m2
     , metricsDistanceAdjust = metricsDistanceAdjust m1 <> metricsDistanceAdjust m2
     , metricsTimeAdjust = metricsTimeAdjust m1 <> metricsTimeAdjust m2
+    , metricsRestPressure = metricsRestPressure m1 <> metricsRestPressure m2
     , metricsFatigue = metricsFatigue m1 <> metricsFatigue m2
     , metricsRest = metricsRest m1 <> metricsRest m2
     , metricsMisc = metricsMisc m1 <> metricsMisc m2
@@ -263,7 +284,6 @@ instance FromJSON Metrics where
     stop' <- v .: "stop"
     location' <- v .: "location"
     accommodationchoice' <- v .: "accommodation-choice"
-    let accommodationchoice'' = map (\(TripChoice id' ss' pe') -> TripChoice (placeholder id') ss' pe') accommodationchoice'
     accommodation' <- v .: "accommodation"
     missingstopservices' <- v .: "missing-stop-services"
     stopservices' <- v .: "stop-services"
@@ -271,6 +291,7 @@ instance FromJSON Metrics where
     dayservices' <- v .: "day-services"
     distanceadjust' <- v .: "distance-adjust"
     timeadjust' <- v .: "time-adjust"
+    restpressure' <- v .: "rest-pressure"
     fatigue' <- v .: "fatigue"
     rest' <- v .: "rest"
     misc' <- v .: "misc"
@@ -288,7 +309,7 @@ instance FromJSON Metrics where
       , metricsDescent = descent'
       , metricsStop = stop'
       , metricsLocation = location'
-      , metricsAccommodationChoice = accommodationchoice''
+      , metricsAccommodationChoice = accommodationchoice'
       , metricsAccommodation = accommodation'
       , metricsMissingStopServices = missingstopservices'
       , metricsStopServices = stopservices'
@@ -296,6 +317,7 @@ instance FromJSON Metrics where
       , metricsDayServices = dayservices'
       , metricsDistanceAdjust = distanceadjust'
       , metricsTimeAdjust = timeadjust'
+      , metricsRestPressure = restpressure'
       , metricsFatigue = fatigue'
       , metricsRest = rest'
       , metricsMisc = misc'
@@ -308,7 +330,7 @@ instance FromJSON Metrics where
   parseJSON v = error ("Unable to parse metrics object " ++ show v)
 
 instance ToJSON Metrics where
-  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
+  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
     object [
         "distance" .= distance'
       , "time" .= time'
@@ -318,7 +340,7 @@ instance ToJSON Metrics where
       , "descent" .= descent'
       , "stop" .= stop'
       , "location" .= location'
-      , "accommodation-choice" .= map (\(TripChoice ac' ss' pe') -> TripChoice (placeholderID ac') ss' pe') accommodationchoice'
+      , "accommodation-choice" .= accommodationchoice'
       , "accommodation" .= accommodation'
       , "missing-stop-services" .= missingstopservices'
       , "stop-services" .= stopservices'
@@ -326,6 +348,7 @@ instance ToJSON Metrics where
       , "day-services" .= dayservices'
       , "distance-adjust" .= distanceadjust'
       , "time-adjust" .= timeadjust'
+      , "rest-pressure" .= restpressure'
       , "fatigue" .= fatigue'
       , "rest" .= rest'
       , "misc" .= misc'
@@ -356,13 +379,14 @@ combineDates r1 Nothing = r1
 combineDates (Just (min1, max1)) (Just (min2, max2)) = Just (min min1 min2, max max1 max2)
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty Reject 0 Nothing False False Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty Reject 0 Nothing False False Reject
+  isInvalid metrics = metricsPenance metrics == Reject
 
 instance Summary Metrics where
-  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
+  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
     joinSummaries [
       labelledSummaryIfNotNull "distance" distance'
     , labelledSummaryIfNotNull "time" time'
@@ -380,6 +404,7 @@ instance Summary Metrics where
     , labelledSummaryIfNotNull "day-services" dayservices'
     , labelledSummaryIfNotNull "distance-adjust" distanceadjust'
     , labelledSummaryIfNotNull "time-adjust" timeadjust'
+    , labelledSummaryIfNotNull "rest-pressure" restpressure'
     , labelledSummaryIfNotNull "fatigue" fatigue'
     , labelledSummaryIfNotNull "rest" rest'
     , labelledSummaryIfNotNull "misc" misc'
@@ -436,6 +461,7 @@ data Solution = Solution {
   , solutionTravelPreferences :: TravelPreferences -- ^ The travel preferences used
   , solutionCaminoPreferences :: CaminoPreferences -- ^ The camino preferences used
   , solutionLocations :: S.Set Location -- ^ The locations that might be part of the solution
+  , solutionChoices :: TripChoices -- ^ The associated trip choices
   , solutionJourneyFailure :: Maybe (Failure Location Leg Metrics Metrics)
   , solutionPilgrimageFailure :: Maybe (Failure Location Day Metrics Metrics)
   , solutionPilgrimage :: Maybe Pilgrimage -- ^ If successful, a pilgrimage solution
@@ -449,6 +475,7 @@ instance FromJSON Solution where
     locations' <- v .: "locations"
     tprefs' <- v .: "travel-preferences"
     cprefs' <- v .: "camino-preferences"
+    choices' <- v .: "choices"
     pilgrimage' <- v .: "pilgrimage"
     return $ Solution {
         solutionID = id'
@@ -456,6 +483,7 @@ instance FromJSON Solution where
       , solutionTravelPreferences = tprefs'
       , solutionCaminoPreferences = cprefs'
       , solutionLocations = locations'
+      , solutionChoices = choices'
       , solutionJourneyFailure = Nothing
       , solutionPilgrimageFailure = Nothing
       , solutionPilgrimage = Just pilgrimage'
@@ -463,17 +491,16 @@ instance FromJSON Solution where
   parseJSON v = error ("Unable to parse solution object " ++ show v)
 
 instance ToJSON Solution where
-  toJSON (Solution id' metadata' tprefs' cprefs' locations' _jf _pf (Just pilgrimage')) =
+  toJSON (Solution id' metadata' tprefs' cprefs' locations' choices' _jf _pf (Just pilgrimage')) =
     object [
         "id" .= id'
       , "metadata" .= metadata'
       , "travel-preferences" .= tprefs'
       , "camino-preferences" .= cprefs'
       , "locations" .= S.map placeholderID locations'
+      , "choices" .= choices'
       , "pilgrimage" .= pilgrimage'
       ]
-    where
-
   toJSON _ = error "Unable to jsonify unsuccessful solution"
 
 instance NFData Solution
@@ -483,11 +510,13 @@ normaliseSolution :: CaminoConfig -> Solution -> Solution
 normaliseSolution config solution = let
     cprefs' = normalisePreferences config (solutionCaminoPreferences solution)
     locations' = dereferenceS config (solutionLocations solution)
+    choices' = normaliseTripChoices config (solutionChoices solution)
     pilgrimage' = normalisePilgrimage config <$> solutionPilgrimage solution
   in
     solution {
-       solutionCaminoPreferences = cprefs'
+        solutionCaminoPreferences = cprefs'
       , solutionLocations = locations'
+      , solutionChoices = choices'
       , solutionPilgrimage = pilgrimage'
     }
 
@@ -690,9 +719,10 @@ locationMetrics :: StopPreferences -- ^ The stop preferences to use
   -> CaminoPreferences -- ^ The camino travelled
   -> TripChoiceMap Accommodation Service -- ^ The map of accommodation choices
   -> TripChoiceMap Location Service -- ^ The map of location choices
+  -> Maybe (TripChoiceMap Location Service) -- ^ The map of rest pressure choices
   -> Location -- ^ The location
-  -> (Penance, Penance, [TripChoice Accommodation Service], Penance, S.Set Service, Penance) -- ^ The metrics associated with the stop (stop penance, location penanance, accommodation choice, accommodation penance, missing services, missing service penance)
-locationMetrics sprefs tprefs cprefs accommodationMap locationMap stop =
+  -> (Penance, Penance, Penance, [TripChoice Accommodation Service], Penance, S.Set Service, Penance) -- ^ The metrics associated with the stop (stop penance, location penanance, accommodation choice, accommodation penance, missing services, missing service penance, rest pressure penance)
+locationMetrics sprefs tprefs cprefs accommodationMap locationMap restPressureMap stop =
   let
     camino = preferenceCamino cprefs
     stopMissing = missingStopServices (preferenceStop tprefs) camino stop
@@ -701,10 +731,12 @@ locationMetrics sprefs tprefs cprefs accommodationMap locationMap stop =
     stopMissingCost = missingServicePenance (stopServices sprefs) stopMissing'
     stopCost = stopPenance tprefs cprefs stop
     locationCost = locationPenance tprefs cprefs locationMap stop
+    restPressureCost = maybe mempty (\rp -> maybe mempty tripChoicePenance (M.lookup stop rp)) restPressureMap
   in
     (
         stopCost
       , locationCost
+      , restPressureCost
       , (if tripChoicePenance accom == Reject then [] else [accom])
       , (tripChoicePenance accom)
       , stopMissing'
@@ -735,9 +767,10 @@ penance :: StopPreferences -- ^ The stop preferences to use
   -> CaminoPreferences -- ^ The camino travelled
   -> TripChoiceMap Accommodation Service -- ^ The map of accommodation choices
   -> TripChoiceMap Location Service -- ^ The map of location choices
+  -> Maybe (TripChoiceMap Location Service) -- ^ The rest pressure map
   -> [Leg] -- ^ The sequence of legs
   -> Metrics -- ^ The penance value
-penance sprefs tprefs cprefs accommodationMap locationMap day =
+penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
   let
     stop = legTo $ last day
     (_normalSpeed, _actualSpeed, time, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics tprefs cprefs day
@@ -752,10 +785,10 @@ penance sprefs tprefs cprefs accommodationMap locationMap day =
     distancePreferences = rangeFilter $ preferenceDistance tprefs
     timeAdjust = maybe Reject (adjustment timePreferences 0.0 walkingSpeed) time
     distanceAdjust = adjustment distancePreferences 0.0 walkingSpeed distance
-    (stopCost, locationCost, accChoice, accCost, stopMissing, stopMissingCost) = locationMetrics sprefs tprefs cprefs accommodationMap locationMap stop
+    (stopCost, locationCost, restPressureCost, accChoice, accCost, stopMissing, stopMissingCost) = locationMetrics sprefs tprefs cprefs accommodationMap locationMap restPressureMap stop
     (dayMissing, dayMissingCost) = routeMetrics sprefs tprefs cprefs accChoice day
     misc = travelAdditional tprefs day
-    total = distanceCost <> locationCost <> accCost <> stopCost <> distanceAdjust <> timeAdjust <> stopMissingCost <> dayMissingCost <> misc
+    total = distanceCost <> locationCost <> accCost <> stopCost <> distanceAdjust <> timeAdjust <> restPressureCost <> stopMissingCost <> dayMissingCost <> misc
     metrics = Metrics
       distance
       time
@@ -773,6 +806,7 @@ penance sprefs tprefs cprefs accommodationMap locationMap day =
       dayMissingCost
       distanceAdjust
       timeAdjust
+      restPressureCost
       mempty
       mempty
       misc
@@ -816,7 +850,7 @@ dayAccept preferences camino choices day =
 --   Acceptable if the time taken or distance travelled is not beyond the hard limits
 dayEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Leg] -> ([Leg], Metrics)
 dayEvaluate tprefs cprefs choices legs =
-  (legs, penance (preferenceStop tprefs) tprefs cprefs (tcStopAccommodation choices) (tcStopLocation choices) legs)
+  (legs, penance (preferenceStop tprefs) tprefs cprefs (tcStopAccommodation choices) (tcStopLocation choices) (Just $ tcRestPressure choices) legs)
 
 -- | Choose a day's stage based on minimum penance
 dayChoice :: TravelPreferences -> CaminoPreferences -> Day -> Day -> Day
@@ -882,20 +916,21 @@ caminoChoice _preferences camino trip1 trip2 =
     -- trace ("Choice between " ++ (T.unpack $ tripLabel trip1) ++ " and " ++ (T.unpack $ tripLabel trip2) ++ " is " ++ (T.unpack $ tripLabel selection)) selection
     selection
 
-isStoppableLocation :: TravelPreferences -> CaminoPreferences -> TripChoices -> Location ->  Bool
-isStoppableLocation _tprefs _cprefs choices location = maybe False (\tc -> tripChoicePenance tc /= Reject) (M.lookup location (tcStopLocation choices))
-
--- | A stage with no stops available, so keep on going
-isStoplessStage :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Day] ->  Bool
-isStoplessStage tprefs cprefs choices stage =
-  all (\d -> not $ isStoppableLocation tprefs cprefs choices (finish d)) stage
+-- | Check to see if this stage has anywhere where you might be able to stop after the minimum distance
+isStopFree :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Day] ->  Bool
+isStopFree tprefs _cprefs choices stage =
+  null stage' || all (\d -> locationCheck (finish d) || accommodationCheck (finish d)) stage'
+  where
+    stage' = maybe stage (\m -> drop m stage) (rangeMinimum $ preferenceRest tprefs)
+    locationCheck l = maybe Reject tripChoicePenance (M.lookup l (tcStopLocation choices)) == Reject
+    accommodationCheck l = maybe Reject tripChoicePenance (M.lookup l (tcStopAccommodation choices)) == Reject
 
 -- | Accept a stage as a possibility
---   Acceptable if the the length of the stage is below the maximum or there are no valid stops
+--   Acceptable if the the length of the stage is below the maximum or there aren't any stoppable locations on the stage
 stageAccept :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Day] ->  Bool
-stageAccept tprefs cprefs choices stage = True
---  isStoplessStage tprefs cprefs choices stage ||
---  isInsideMaximum (preferenceRest tprefs) (length stage)
+stageAccept tprefs cprefs choices stage =
+  isInsideMaximum (preferenceRest tprefs) (length stage) ||
+  isStopFree tprefs cprefs choices stage
 
 -- | Evaluate a stage for penance
 stageEvaluate :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Day] -> ([Day], Metrics)
@@ -906,8 +941,7 @@ stageEvaluate tprefs cprefs choices stage = let
     total = mconcat $ map score stage
     stop = finish last'
     stageLength = length stage
-    stopless = isStoplessStage tprefs cprefs choices stage
-    restPrefs = (if stopless then withoutMaximum else id) $ withoutMinimum $ preferenceRest tprefs
+    restPrefs = (if isStopFree tprefs cprefs choices stage then withoutMaximum else id) $ withoutMinimum $ preferenceRest tprefs
     dayTarget = rangeTarget $ preferenceDistance tprefs
     fatigue = if isOutOfRange restPrefs stageLength then Reject else Penance (dayTarget * (rangeDistanceInt restPrefs stageLength))
     stopMissing = missingStopServices sprefs camino' stop
@@ -934,16 +968,14 @@ stageChoice _preferences _camino stage1 stage2 = if score stage1 < score stage2 
 --   And there is multi-day accommodation at the end of each stage
 pilgrimageAccept :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Journey] -> Bool
 pilgrimageAccept tprefs cprefs choices pilgrimage =
---    trace ("Accept\n" ++ (T.unpack (T.intercalate " :\n" (map journeySummary pilgrimage))) ++ " stagesOK=" ++ show stagesOK) $
-    stagesOK
- where
-    test stage =
-      (if length pilgrimage == 1 then
-        isInsideMaximum (preferenceRest tprefs) (length stage)
-      else
-        isOutOfRange (withoutMaximum $ preferenceRest tprefs) (length stage)
-      )
-    stagesOK = all (test . path) pilgrimage
+    all test pilgrimage
+  where
+    restPrefs = preferenceRest tprefs
+    test stage = if length pilgrimage == 1 then
+      isInsideMaximum restPrefs (length $ path stage)
+    else
+      (not $ isOutOfRange restPrefs (length $ path stage)) ||
+      isStopFree tprefs cprefs choices (initOrEmpty $ path stage)
 
 -- | Evaluate an entire pilgrimage for penance
 pilgrimageEvaluate :: CaminoConfig -> TravelPreferences -> CaminoPreferences -> TripChoices -> [Journey] -> ([Journey], Metrics)
@@ -972,7 +1004,7 @@ pilgrimageEvaluate'' _cc _tprefs _cprefs _choices _current [] = []
 pilgrimageEvaluate'' _cc tprefs cprefs choices current [day] =
   let
     atEnd = finish day == preferenceFinish cprefs
-    metrics' = if atEnd then score day else penance (preferenceRestStop tprefs) tprefs cprefs (tcRestAccommodation choices) (tcRestLocation choices) (path day)
+    metrics' = if atEnd then score day else penance (preferenceRestStop tprefs) tprefs cprefs (tcRestAccommodation choices) (tcRestLocation choices) Nothing (path day)
     rests' = if atEnd then 0 else 1
     restDay = C.addDays rests' current
     day' = day {
@@ -987,7 +1019,7 @@ pilgrimageEvaluate'' _cc tprefs cprefs choices current [day] =
 pilgrimageEvaluate'' cc tprefs cprefs choices current days@(day:rest) =  let
     next = C.addDays 1 current
     metrics' = if isStockUpDay cc current days then let
-        metrics'' = penance (preferenceStockStop tprefs) tprefs cprefs (tcStockAccommodation choices) (tcStockLocation choices) (path day)
+        metrics'' = penance (preferenceStockStop tprefs) tprefs cprefs (tcStockAccommodation choices) (tcStockLocation choices) Nothing (path day)
       in
         metrics'' { metricsStockpoint = True }
      else
@@ -1048,7 +1080,7 @@ buildTripChoiceMap'' chooser _preferences camino trail location = let
 buildTripChoiceMap' :: (Ord f) => (Location -> TripChoice v f) -> TravelPreferences -> Camino -> S.Set Location -> S.Set Location -> S.Set Location -> M.Map Location (TripChoiceTrail v f) -> TripChoiceMap v f
 buildTripChoiceMap' chooser preferences camino reachable' visited next current = if S.null next
   then
-    M.map (\(c, _t) -> c) current
+    M.map fst current
   else
     buildTripChoiceMap' chooser preferences camino reachable' visited' next' (current `M.union` update)
   where
@@ -1068,6 +1100,18 @@ buildTripChoiceMap chooser preferences camino begin end select = let
   in
     M.unionWith (\f -> \b -> if tripChoicePenance f > tripChoicePenance b then f else b) acf acb
 
+-- | Build a measure of rest pressure (how much better something nearby might be with a view to a rest)
+--   This builds off the stop preferences, with anything within minimum walking distances looking kind of good
+buildRestPressure :: TravelPreferences -> StopPreferences
+buildRestPressure tprefs = let
+    sprefs = preferenceRestStop tprefs
+    minp = maybe mempty Penance (rangeMinimum $ preferenceDistance tprefs)
+    pmap = M.fromList $ map (\lt -> maybe (lt, mempty) (\p -> if p == Reject then (lt, mempty) else (lt, p <> minp)) (M.lookup lt (stopLocation sprefs))) locationTypeEnumeration
+  in
+    sprefs {
+      stopLocation = pmap
+    }
+
 -- | Plan a camino based on the stated preferences
 planCamino :: CaminoConfig -> TravelPreferences -> CaminoPreferences -> Solution
 planCamino cc tprefs cprefs  = Solution {
@@ -1076,6 +1120,7 @@ planCamino cc tprefs cprefs  = Solution {
       , solutionTravelPreferences = tprefs
       , solutionCaminoPreferences = cprefs
       , solutionLocations = allowed
+      , solutionChoices = choices
       , solutionJourneyFailure = either Just (const Nothing) journey
       , solutionPilgrimageFailure = either Just (const Nothing) pilgrimage
       , solutionPilgrimage = either (const Nothing) Just pilgrimage
@@ -1084,6 +1129,7 @@ planCamino cc tprefs cprefs  = Solution {
     sprefs = preferenceStop tprefs
     stprefs = preferenceStockStop tprefs
     rprefs = preferenceRestStop tprefs
+    pprefs = buildRestPressure tprefs
     camino = preferenceCamino cprefs
     start' = preferenceStart cprefs
     finish' = preferenceFinish cprefs
@@ -1095,6 +1141,7 @@ planCamino cc tprefs cprefs  = Solution {
     stockLm = buildTripChoiceMap (locationChoice stprefs) tprefs camino start' finish' select
     restAm = buildTripChoiceMap (accommodationChoice accommodationMulti rprefs camino) tprefs camino start' finish' select
     restLm = buildTripChoiceMap (locationChoice rprefs) tprefs camino start' finish' select
+    restPm = buildTripChoiceMap (locationChoice pprefs) tprefs camino start' finish' select
     choices = TripChoices {
         tcStopAccommodation = stopAm
       , tcStopLocation = stopLm
@@ -1102,6 +1149,7 @@ planCamino cc tprefs cprefs  = Solution {
       , tcStockLocation = stockLm
       , tcRestAccommodation = restAm
       , tcRestLocation = restLm
+      , tcRestPressure = restPm
     }
     journey = program
       camino

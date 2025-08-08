@@ -50,6 +50,10 @@ import Data.Text (Text)
 class (Eq s, Ord s, Show s, Monoid s) => Score s where
   -- | Construct an invalid score - a score that indicates that the solution cannot be used
   invalid :: s
+  -- | Is this score invalid?
+  --   By default, this just checks against the invalid score
+  isInvalid :: s -> Bool
+  isInvalid sc = sc == invalid
 
 -- | Describe a chain (path with a score) in
 data (Edge e v, Score s) => Chain v e s = Chain {
@@ -119,7 +123,7 @@ type SelectFunction v = v -> Bool
 fromChains :: (Edge e v, Score s) => EvaluationFunction e s -> [Chain v e s] -> ChainGraph v e s
 fromChains evaluate chains  =
   let
-     chains' = filter (\c -> start c /= finish c && snd (evaluate (path c)) /= invalid) chains
+     chains' = filter (\c -> start c /= finish c && (not $ isInvalid $ score c)) chains
      starts = nub $ map start chains'
      finishes = nub $ map finish chains'
   in ChainGraph {

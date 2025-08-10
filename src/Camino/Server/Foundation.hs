@@ -191,6 +191,7 @@ data PreferenceData = PreferenceData {
   , prefDistance :: PreferenceRange Float -- ^ The distance travelled preferences
   , prefTime :: PreferenceRange Float -- ^ The time travelled preferences
   , prefRest :: PreferenceRange Int -- ^ The rest day preferences
+  , prefRestPressure :: Maybe Float -- ^ The rest pressure
   , prefStop :: StopPreferences -- ^ The day's stop preferences
   , prefStockStop :: StopPreferences -- ^ The preferences for a 'stock-up' day
   , prefRestStop :: StopPreferences -- ^ The preferences for a rest day
@@ -201,6 +202,7 @@ data PreferenceData = PreferenceData {
   , prefFinish :: Location -- ^ The finish location
   , prefStops :: S.Set Location -- ^ Any explcit stops
   , prefExcluded :: S.Set Location -- ^ Any explicit exclusions
+  , prefRestPoints :: S.Set Location -- ^ Any preferred rest points
   , prefPois :: S.Set PointOfInterest -- ^ The points of interest
   , prefStartDate :: Day -- ^ The start date
 } deriving (Show)
@@ -214,6 +216,7 @@ instance FromJSON PreferenceData where
       distance' <- v .: "distance"
       time' <- v .: "time"
       rest' <- v .: "rest"
+      restpressure' <- v .:? "rest-pressure"
       stop' <- v .: "stop"
       stockStop' <- v .: "stop-stock"
       restStop' <- v .: "stop-rest"
@@ -224,6 +227,7 @@ instance FromJSON PreferenceData where
       finish' <- v .: "finish"
       stops' <- v .: "stops"
       excluded' <- v .: "excluded"
+      rests' <- v .: "rest-points"
       pois' <- v .: "pois"
       startDate' <- v .:? "start-date" .!= placeholderDate
       let camino'' = placeholder camino'
@@ -232,6 +236,7 @@ instance FromJSON PreferenceData where
       let finish'' = placeholder finish'
       let stops'' = S.map placeholder stops'
       let excluded'' = S.map placeholder excluded'
+      let rests'' = S.map placeholder rests'
       let pois'' = S.map placeholder pois'
       return PreferenceData {
           prefEasyMode = easy'
@@ -241,6 +246,7 @@ instance FromJSON PreferenceData where
         , prefDistance = distance'
         , prefTime = time'
         , prefRest = rest'
+        , prefRestPressure = restpressure'
         , prefStop = stop'
         , prefStockStop = stockStop'
         , prefRestStop = restStop'
@@ -251,6 +257,7 @@ instance FromJSON PreferenceData where
         , prefFinish = finish''
         , prefStops = stops''
         , prefExcluded = excluded''
+        , prefRestPoints = rests''
         , prefPois = pois''
         , prefStartDate = startDate'
       }
@@ -266,17 +273,19 @@ instance ToJSON PreferenceData where
         , "distance" .= prefDistance prefs
         , "time" .= prefTime prefs
         , "rest" .= prefRest prefs
+        , "rest-pressure" .= prefRestPressure prefs
         , "stop" .= prefStop prefs
         , "stop-stock" .= prefStockStop prefs
         , "stop-rest" .= prefRestStop prefs
         , "poi-categories" .= prefPoiCategories prefs
         , "camino" .= (caminoId $ prefCamino prefs)
-        , "routes" .= (S.map routeID (prefRoutes prefs))
+        , "routes" .= S.map routeID (prefRoutes prefs)
         , "start" .= (locationID $ prefStart prefs)
         , "finish" .= (locationID $ prefFinish prefs)
-        , "stops" .= (S.map locationID (prefStops prefs))
-        , "excluded" .= (S.map locationID (prefExcluded prefs))
-        , "pois" .= (S.map poiID (prefPois prefs))
+        , "stops" .= S.map locationID (prefStops prefs)
+        , "excluded" .= S.map locationID (prefExcluded prefs)
+        , "rest-points" .= S.map locationID (prefRestPoints prefs)
+        , "pois" .= S.map poiID (prefPois prefs)
         , "start-date" .= prefStartDate prefs
       ]
 
@@ -297,6 +306,7 @@ defaultPreferenceData master current = let
       , prefDistance = preferenceDistance dtp
       , prefTime = preferenceTime dtp
       , prefRest = preferenceRest dtp
+      , prefRestPressure = preferenceRestPressure dtp
       , prefStop = preferenceStop dtp
       , prefStockStop = preferenceStockStop dtp
       , prefRestStop = preferenceRestStop dtp
@@ -307,6 +317,7 @@ defaultPreferenceData master current = let
       , prefFinish = preferenceFinish dcp
       , prefStops = preferenceStops dcp
       , prefExcluded = preferenceExcluded dcp
+      , prefRestPoints = preferenceRestPoints dcp
       , prefPois = preferencePois dcp
       , prefStartDate = current
     }
@@ -319,6 +330,7 @@ travelPreferencesFrom prefs = TravelPreferences {
   , preferenceDistance = prefDistance prefs
   , preferenceTime = prefTime prefs
   , preferenceRest = prefRest prefs
+  , preferenceRestPressure = prefRestPressure prefs
   , preferenceStop = prefStop prefs
   , preferenceStockStop = prefStockStop prefs
   , preferenceRestStop = prefRestStop prefs
@@ -334,6 +346,7 @@ caminoPreferencesFrom prefs = CaminoPreferences {
   , preferenceRoutes = prefRoutes prefs
   , preferenceStops = prefStops prefs
   , preferenceExcluded = prefExcluded prefs
+  , preferenceRestPoints = prefRestPoints prefs
   , preferencePois = prefPois prefs
   , preferenceStartDate = Just $ prefStartDate prefs
 }
@@ -349,6 +362,16 @@ permittedStops prefs locs = let
       (M.findWithDefault mempty ac restAc /= Reject)
   in
     S.filter (\l -> any (allowed . accommodationType) (locationAccommodation l)) locs
+
+-- | Find acceptable rest points
+permittedRestPoints :: PreferenceData -> S.Set Location -> S.Set Location
+permittedRestPoints prefs locs = let
+    restLoc = stopLocation $ prefRestStop prefs
+    restAc = stopAccommodation $ prefRestStop prefs
+    allowed lo = M.findWithDefault Reject (locationType lo) restLoc /= Reject &&
+      any (\ac -> M.findWithDefault Reject (accommodationType ac) restAc /= Reject) (locationAccommodation lo)
+   in
+    S.filter allowed locs
 
 
 mkYesodData "CaminoApp" $(parseRoutesFile "config/routes.yesodroutes")

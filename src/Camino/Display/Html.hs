@@ -105,6 +105,8 @@ penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = 
      \ + _{FatiguePenanceMsg (metricsFatigue metrics)}
    $if metricsRest metrics /= mempty
      \ + _{RestPenanceMsg (metricsRest metrics)}
+   $if metricsRestPoints metrics /= mempty
+     \ + _{RestPointsPenanceMsg (metricsRestPoints metrics)}
    $if metricsMisc metrics /= mempty
      \ + _{MiscPenanceMsg (metricsMisc metrics)}
    |]
@@ -871,7 +873,7 @@ tripChoiceSummary' _config showName choiceMap location = [ihamlet|
     <span .services>
       $forall service <- tripChoiceFeatures tc
         ^{caminoServiceIcon service}
-    _{PenanceFormatted (tripChoicePenance tc)}
+    _{PenanceFormatted True (tripChoicePenance tc)}
   $nothing
     #{endash}
 |]
@@ -879,21 +881,26 @@ tripChoiceSummary' _config showName choiceMap location = [ihamlet|
 tripChoiceSummary :: Config -> Maybe Solution -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripChoiceSummary config msolution location = [ihamlet|
   $maybe choices <- solutionChoices <$> msolution
-    <div .row .choice-summary>
-      <div .col>
-        _{StopLabel}
-        ^{tripChoiceSummary' config Nothing (tcStopLocation choices) location} /
-        ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStopAccommodation choices)  location}
-      <div .col>
-        _{StockpointLabel}
-        ^{tripChoiceSummary' config Nothing (tcStockLocation choices) location} /
-        ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStockAccommodation choices)  location}
-      <div .col>
-        _{RestpointLabel}
-        ^{tripChoiceSummary' config Nothing (tcRestLocation choices) location} /
-        ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcRestAccommodation choices)  location}
-      <div .col>
-        ^{tripChoiceSummary' config Nothing (tcRestPressure choices) location}
+    <table .table .trip-choice-summary>
+      <tr>
+        <td>
+          ^{tripChoiceSummary' config Nothing (tcStopLocation choices) location}
+        <td>
+          ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStopAccommodation choices) location}
+      <tr>
+        <td>
+          ^{tripChoiceSummary' config Nothing (tcStockLocation choices) location}
+        <td>
+          ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStockAccommodation choices) location}
+      <tr>
+        <td>
+          ^{tripChoiceSummary' config Nothing (tcRestLocation choices) location}
+        <td>
+          ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcRestAccommodation choices) location}
+      <tr>
+        <td>
+          ^{tripChoiceSummary' config Nothing (tcRestPressure choices) location}
+        <td>
 |]
 
 caminoLocationHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -947,9 +954,10 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
                     <span .ca-globe title="_{ShowOnMapTitle}">
     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
-        ^{locationLegs preferences camino used location}
         $if getDebug config
-          ^{tripChoiceSummary config msolution location}
+          <div .float-end .col-2 .ms-1 .mb-1>
+            ^{tripChoiceSummary config msolution location}
+        ^{locationLegs preferences camino used location}
         $maybe d <- locationDescription location
           <div .row>
             <div .col>
@@ -1011,7 +1019,7 @@ preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg Ca
 preferenceRangeHtml range = [ihamlet|
     <span .text-danger>#{maybe "." (format (fixed 1)) (rangeMinimum range)}
     <span>#{endash}
-    <span>#{format (fixed 1)( rangeLower range)}
+    <span>#{format (fixed 1) (rangeLower range)}
     <span>#{endash}
     <span .text-success .fw-bolder>#{format (fixed 1) (rangeTarget range)}
     <span>#{endash}
@@ -1125,6 +1133,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
       <div .col-4>_{RestPreferencesLabel}
       <div .col>^{preferenceRangeIntHtml $ preferenceRest preferences}
     <div .row>
+      <div .col-4>_{RestPressureLabel}
+      <div .col>#{maybe "-" (format (fixed 1)) (preferenceRestPressure preferences)}
+    <div .row>
       <div .col>
         <table .table .table-striped>
           <thead>
@@ -1146,9 +1157,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   <span .location-type-sample>^{caminoLocationTypeIcon lk}
                   \ _{caminoLocationTypeLabel lk}
-                <td>_{PenanceFormatted (findLoc (preferenceStop preferences) lk)}
-                <td>_{PenanceFormatted (findLoc (preferenceStockStop preferences) lk)}
-                <td>_{PenanceFormatted (findLoc (preferenceRestStop preferences) lk)}
+                <td>_{PenanceFormatted False (findLoc (preferenceStop preferences) lk)}
+                <td>_{PenanceFormatted False (findLoc (preferenceStockStop preferences) lk)}
+                <td>_{PenanceFormatted False (findLoc (preferenceRestStop preferences) lk)}
             <tr colspan=4>
               <td>_{AccommodationPreferencesLabel}
             $forall ak <- accommodationTypes
@@ -1156,9 +1167,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   ^{caminoAccommodationTypeIcon ak}
                   \ _{caminoAccommodationTypeMsg ak}
-                <td>_{PenanceFormatted (findAcc (preferenceStop preferences) ak)}
-                <td>_{PenanceFormatted (findAcc (preferenceStockStop preferences) ak)}
-                <td>_{PenanceFormatted (findAcc (preferenceRestStop preferences) ak)}
+                <td>_{PenanceFormatted False (findAcc (preferenceStop preferences) ak)}
+                <td>_{PenanceFormatted False (findAcc (preferenceStockStop preferences) ak)}
+                <td>_{PenanceFormatted False (findAcc (preferenceRestStop preferences) ak)}
             <tr>
               <td colspan=4>_{ServicesPreferencesLabel}
             $forall sk <- serviceTypes
@@ -1166,9 +1177,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   ^{caminoServiceIcon sk}
                   \ _{caminoServiceMsg sk}
-                <td>_{PenanceFormatted (findSv (preferenceStop preferences) sk)}
-                <td>_{PenanceFormatted (findSv (preferenceStockStop preferences) sk)}
-                <td>_{PenanceFormatted (findSv (preferenceRestStop preferences) sk)}
+                <td>_{PenanceFormatted False (findSv (preferenceStop preferences) sk)}
+                <td>_{PenanceFormatted False (findSv (preferenceStockStop preferences) sk)}
+                <td>_{PenanceFormatted False (findSv (preferenceRestStop preferences) sk)}
             <tr>
               <td colspan=4>_{RouteServicesPreferencesLabel}
             $forall sk <- routeServiceTypes
@@ -1176,9 +1187,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   ^{caminoServiceIcon sk}
                   \ _{caminoServiceMsg sk}
-                <td>_{PenanceFormatted (findRSv (preferenceStop preferences) sk)}
-                <td>_{PenanceFormatted (findRSv (preferenceStockStop preferences) sk)}
-                <td>_{PenanceFormatted (findRSv (preferenceRestStop preferences) sk)}
+                <td>_{PenanceFormatted False (findRSv (preferenceStop preferences) sk)}
+                <td>_{PenanceFormatted False (findRSv (preferenceStockStop preferences) sk)}
+                <td>_{PenanceFormatted False (findRSv (preferenceRestStop preferences) sk)}
     <div .row>
       <div .col-4>_{PoisLabel}
       <div .col>
@@ -1232,18 +1243,28 @@ preferencesHtml showLink preferences camino = [ihamlet|
               $else
                 _{Txt (locationName l)}
     <div .row>
-      <div .col-4>_{PoisLabel}
+      <div .col-4>_{RestpointsLabel}
       <div .col>
         <ul .bar-separated-list>
-          $forall p <- preferencePois camino
+          $forall l <- preferenceRestPoints camino
             <li>
               $if showLink
-                $maybe (_, loc) <- M.lookup (poiID p) pois
-                  <a href="##{poiID p}" data-toggle="tab" onclick="showLocationDescription('#{locationID loc}')">_{Txt (poiName p)}
-                $nothing
-                  _{Txt (poiName p)}
+                <a href="##{locationID l}" data-toggle="tab" onclick="showLocationDescription('#{locationID l}')">_{Txt (locationName l)}
               $else
-                _{Txt (poiName p)}
+                _{Txt (locationName l)}
+    <div .row>
+      <div .col-4>_{PoisLabel}
+      <div .col>
+         <ul .bar-separated-list>
+           $forall p <- preferencePois camino
+             <li>
+               $if showLink
+                 $maybe (_, loc) <- M.lookup (poiID p) pois
+                   <a href="##{poiID p}" data-toggle="tab" onclick="showLocationDescription('#{locationID loc}')">_{Txt (poiName p)}
+                 $nothing
+                   _{Txt (poiName p)}
+               $else
+                 _{Txt (poiName p)}
   |]
   where
     locationTypes = locationStopTypeEnumeration

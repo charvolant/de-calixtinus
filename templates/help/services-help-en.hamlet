@@ -51,7 +51,7 @@
   The location preferences indicate how willing you are to stay in a particular type of location at the end of the day.
   The higher the value, the more willing you are to stay there.
   You can use this section to indicate whether you would prefer more urban or rural stops.
-  The "reject" or _{PenanceFormatted Reject} symbol indicates that you do not wish to stop in this type of location at all.
+  The "reject" or _{PenanceFormatted True Reject} symbol indicates that you do not wish to stop in this type of location at all.
 
 <p>
   Since you can only sleep in one place each night, location preferences work by seeing if there is something
@@ -69,7 +69,7 @@
   or prefer to be more medieval (albergues and hostels have higher values).
 
 <p>
-  The "reject" or _{PenanceFormatted Reject} symbol indicates that you do not wish to use that accommodation type at all.
+  The "reject" or _{PenanceFormatted True Reject} symbol indicates that you do not wish to use that accommodation type at all.
   In many places, if there is no other available accommodation, camping by the roadside
   (^{caminoAccommodationTypeIcon Camping}) is available as an option, although this does not extend to cities or towns.
   Camping by the roadside is set to reject for all but the more frugal pilgrims.

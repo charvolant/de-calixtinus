@@ -287,6 +287,9 @@ a
   color: #{toCssColour caminoBlue}
 .travel.travel-walking-naismith
   color: #506890
+.trip-choice-summary
+  background-color: #{toCssColour mutedBlue}
+  font-size: x-small
 .aside
   background-color: #d0f8ff
   border-radius: 1ex

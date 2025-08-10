@@ -42,11 +42,13 @@ PlanXlsxTitle: Generate a plan as a Xslx file suitable for spreadsheet applicati
 PoisLabel: Points of Interest
 PoiTitle: Point of Interest Preferences
 PoiText: Select the significant point of interests that you intend to stop at while travelling. These stops will be built into the planning time.
+PreferredRestPointsLabel: Preferred Rest Points
 RangeTitle: Distance and Time Preferences
 RangeText: Select the ranges that you will accept for both distance travelled over a day (in km) and time taken (in hours) for each day. Also select the range for how many days you wish to travel before resting. The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RequiredStopsLabel: Required Stops
 RestLocationPreferencesLabel: Rest Location Preferences
 RestPreferencesLabel: Rest Preferences (days travelled)
+RestPressureLabel: Rest Pressure
 RestServicePreferencesLabel: Rest Services
 RoutePreferencesLabel: Routes
 RoutesText: Select the route variants that you wish to walk. The standard route is always selected. Some routes require other routes or cannot be done in conjunction with other routes.

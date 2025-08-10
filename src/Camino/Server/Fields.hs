@@ -22,6 +22,7 @@ module Camino.Server.Fields (
   , extendedRadioFieldList
   , extendedSelectionField
   , fieldSettingsLabelTooltip
+  , floatField
   , implyingCheckListField
   , parsingHiddenField
   , penanceField
@@ -35,6 +36,7 @@ import Camino.Display.I18n (formatPenance)
 import Data.Either (fromRight, isLeft, rights)
 import Data.List (find)
 import qualified Data.Map as M
+import Data.Maybe (isJust)
 import Data.Propositional
 import qualified Data.Set as S
 import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
@@ -186,7 +188,6 @@ rangeField minv maxv stepv = Field
              <*> parseVal upper'
              <*> parseMaybeVal min'
              <*> parseMaybeVal max'
-
           in
             return $ either (Left . SomeMessage) (Right . Just) (validate range)
       [] -> return $ Right Nothing
@@ -223,14 +224,14 @@ penanceServiceOptions :: [(Text, Penance, Bool, Html)]
 penanceServiceOptions =
     map (\(idx, p) -> (pack $ show idx, p, p == mempty, label p)) (zip [1::Int ..] range)
   where
-    label p = if p == mempty then "--" else formatPenance p
+    label p = if p == mempty then "--" else formatPenance True p
     range = [mempty, Penance 0.5, Penance 1.0, Penance 1.5, Penance 2.0, Penance 2.5, Penance 3.0, Penance 4.0, Penance 5.0, Penance 8.0, Penance 10.0, Reject]
 
 
 -- | The standard list of penance options for accommodation
 penanceAccommodationOptions :: [(Text, Penance, Bool, Html)]
 penanceAccommodationOptions =
-    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance p)) (zip [1::Int ..] range)
+    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance True p)) (zip [1::Int ..] range)
   where
     range = [mempty, Penance 1.0, Penance 2.0, Penance 3.0, Penance 4.0, Penance 5.0, Penance 6.0, Penance 7.0, Penance 8.0, Penance 10.0, Penance 12.0, Penance 15.0, Reject]
 
@@ -534,3 +535,17 @@ $newline never
     , fieldEnctype = UrlEncoded
     }
   where showVal = either id (pack . show)
+
+-- | Enter a float number
+floatField :: Monad m => RenderMessage (HandlerSite m) FormMessage => Float -> Float -> Float -> Field m Float
+floatField minv maxv stepv = Field
+    {
+        fieldParse = parseHelper $ parseVal
+      , fieldView = \theId name attrs val _isReq -> toWidget [hamlet|
+$newline never
+    <input .form-control id="#{theId}" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat val} *{attrs}>
+|]
+      , fieldEnctype = UrlEncoded
+    }
+    where
+      showFloat v = either id (pack . show) v

@@ -191,8 +191,8 @@ data CaminoMsg =
   | ParkTitle
   | PathLabel
   | PeakTitle
-  | PenanceFormatted Penance
-  | PenanceFormattedPlain Penance
+  | PenanceFormatted Bool Penance
+  | PenanceFormattedPlain Bool Penance
   | PenanceMsg Penance
   | PenanceReject
   | PenanceSummaryLabel
@@ -235,7 +235,10 @@ data CaminoMsg =
   | RestLocationPreferencesLabel
   | RestPenanceMsg Penance
   | RestpointLabel
+  | RestpointsLabel
+  | RestPointsPenanceMsg Penance
   | RestPreferencesLabel
+  | RestPressureLabel
   | RestPressurePenanceMsg Penance
   | RoadTitle
   | RouteLabel
@@ -307,19 +310,19 @@ thinSpace = "\x2009"
 -- Note the use of direct blaze scans in the following code, rather than shamlet.
 -- Hamlet seems to generate tags as chunks of content, rather than proper blaze HTML,
 -- so the direct formatting allows renderCaminoMsgText to strip tags properly.
-formatPenance :: Penance -> Html
-formatPenance Reject = H.span H.! HA.class_ "penance rejected" H.! HA.title "Rejected" $ text rejectSymbol
-formatPenance (Penance p) = H.span H.! HA.class_ "penance" $ text $  sformat  (fixed 1) p <> thinSpace <> "km"
+formatPenance :: Bool -> Penance -> Html
+formatPenance _ Reject = H.span H.! HA.class_ "penance rejected" H.! HA.title "Rejected" $ text rejectSymbol
+formatPenance showZero (Penance p) = if showZero || p /= 0.0 then H.span H.! HA.class_ "penance" $ text $ sformat  (fixed 1) p <> thinSpace <> "km" else text ""
 
-formatPenancePlain :: Penance -> Html
-formatPenancePlain Reject = "Rejected"
-formatPenancePlain (Penance p) = text $  sformat  (fixed 1) p <> "km"
+formatPenancePlain :: Bool -> Penance -> Html
+formatPenancePlain _ Reject = "Rejected"
+formatPenancePlain showZero (Penance p) = if showZero || p /= 0.0 then text $ sformat  (fixed 1) p <> "km" else text ""
 
 formatDistance :: (Real a) => a -> Html
 formatDistance d = H.span H.! HA.class_ "distance" $ text $ sformat (fixed 1) d <> thinSpace <> "km"
 
 formatMaybeDistance :: (Real a) => Maybe a -> Html
-formatMaybeDistance Nothing = formatPenance Reject
+formatMaybeDistance Nothing = formatPenance True Reject
 formatMaybeDistance (Just d) = formatDistance d
 
 formatHours :: (Real a) => a -> Html
@@ -332,7 +335,7 @@ formatStages :: Int -> Html
 formatStages s = H.span H.! HA.class_ "stages" $ text $  sformat  int s <> thinSpace <> "stages"
 
 formatMaybeHours :: (Real a) => Maybe a -> Html
-formatMaybeHours Nothing = formatPenance Reject
+formatMaybeHours Nothing = formatPenance True Reject
 formatMaybeHours (Just t) = formatHours t
 
 formatHeight :: (Real a) => a -> Html
@@ -343,7 +346,7 @@ renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
 renderCaminoMsgDefault _ AboutLabel = "About"
 renderCaminoMsgDefault _ AccessibleTitle = "Accessible"
 renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
-renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (AccommodationPenanceMsg penance') = [shamlet|Accommodation ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ AddressTitle = "Address"
 renderCaminoMsgDefault _ AlwaysOpenLabel = "Always Open"
@@ -384,7 +387,7 @@ renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
 renderCaminoMsgDefault _ DailyLabel = "Daily"
 renderCaminoMsgDefault _ DateLabel = "Date"
 renderCaminoMsgDefault _ DayLabel = "Day"
-renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (DayServicesPenanceMsg penance') = [shamlet|Missing Services (Day) ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
 renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
 renderCaminoMsgDefault _ DayText = "day"
@@ -392,7 +395,7 @@ renderCaminoMsgDefault _ DescentLabel = "Descent"
 renderCaminoMsgDefault _ (DescentMsg ascent) = [shamlet|Descent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ DirectionsTitle = "Directions"
 renderCaminoMsgDefault _ DinnerTitle = "Dinner"
-renderCaminoMsgDefault _ (DistanceAdjustMsg penance') = [shamlet|Distance Adjustment ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (DistanceAdjustMsg penance') = [shamlet|Distance Adjustment ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ (DistanceMsg actual perceived) = [shamlet|Distance ^{formatDistance actual} (feels like ^{formatMaybeDistance perceived})|]
 renderCaminoMsgDefault _ (DistanceFormatted distance) = formatDistance distance
 renderCaminoMsgDefault _ DistanceLabel = "Distance"
@@ -408,7 +411,7 @@ renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FailureLabel = "Failure"
-renderCaminoMsgDefault _ (FatiguePenanceMsg penance') = [shamlet|Fatigue ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (FatiguePenanceMsg penance') = [shamlet|Fatigue ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
 renderCaminoMsgDefault _ FinishDateLabel = "Finish Date"
@@ -446,9 +449,9 @@ renderCaminoMsgDefault _ JunctionTitle = "Junction"
 renderCaminoMsgDefault _ KeyLabel = "Key"
 renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
 renderCaminoMsgDefault _ LatitudeLabel = "Latitude"
-renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ LinkOut = [shamlet|More information|]
-renderCaminoMsgDefault _ (LocationPenanceMsg penance') = [shamlet|Location ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (LocationPenanceMsg penance') = [shamlet|Location ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ LocationPreferencesLabel = "Location Preferences"
 renderCaminoMsgDefault _ LocationLabel = "Location"
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
@@ -460,7 +463,7 @@ renderCaminoMsgDefault _ MapLabel = "Map"
 renderCaminoMsgDefault _ MassEventTitle = "Mass"
 renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
-renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (MiscPenanceMsg penance') = [shamlet|Other ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
 renderCaminoMsgDefault _ MunicipalTitle = "Town square, market, etc."
 renderCaminoMsgDefault _ MuseumTitle = "Museum or gallery"
@@ -474,9 +477,9 @@ renderCaminoMsgDefault _ OpenText = "open"
 renderCaminoMsgDefault _ ParkTitle = "Park or garden"
 renderCaminoMsgDefault _ PathLabel = "Path"
 renderCaminoMsgDefault _ PeakTitle = "Peak, pass or lookout"
-renderCaminoMsgDefault _ (PenanceFormatted penance') = formatPenance penance'
-renderCaminoMsgDefault _ (PenanceFormattedPlain penance') = formatPenancePlain penance'
-renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (PenanceFormatted showZero penance') = formatPenance showZero penance'
+renderCaminoMsgDefault _ (PenanceFormattedPlain showZero penance') = formatPenancePlain showZero penance'
+renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ PenanceReject = "Rejected"
 renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
 renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
@@ -516,10 +519,13 @@ renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
 renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
 renderCaminoMsgDefault _ RestDaysLabel = "Rest Days"
 renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferences"
-renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ RestPressureLabel = "Rest Pressure"
+renderCaminoMsgDefault _ (RestPenanceMsg penance') = [shamlet|Rest ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ RestpointLabel = "Rest Point"
+renderCaminoMsgDefault _ RestpointsLabel = "Rest Points"
+renderCaminoMsgDefault _ (RestPointsPenanceMsg penance') = [shamlet|Rest Points ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
-renderCaminoMsgDefault _ (RestPressurePenanceMsg penance') = [shamlet|Rest Pressure ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (RestPressurePenanceMsg penance') = [shamlet|Rest Pressure ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ RoadTitle = "Road/path"
 renderCaminoMsgDefault _ RouteLabel = "Route"
 renderCaminoMsgDefault _ RouteServicesPreferencesLabel = "Missing Services on Route"
@@ -540,13 +546,13 @@ renderCaminoMsgDefault _ StartLocationLabel = "Start Location"
 renderCaminoMsgDefault _ StatueTitle = "Statue"
 renderCaminoMsgDefault _ StockpointLabel = "Stocking Point"
 renderCaminoMsgDefault _ StopLabel = "Stop"
-renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance penance'}|]
-renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (StopPenanceMsg penance') = [shamlet|Stop ^{formatPenance True penance'}|]
+renderCaminoMsgDefault _ (StopServicesPenanceMsg penance') = [shamlet|Missing Services (Stop) ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
 renderCaminoMsgDefault _ TableLabel = "Table"
 renderCaminoMsgDefault _ TheatreTitle = "Theatre"
-renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance penance'}|]
+renderCaminoMsgDefault _ (TimeAdjustMsg penance') = [shamlet|Time Adjustment ^{formatPenance True penance'}|]
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
 renderCaminoMsgDefault _ TimeLabel = "Time"
 renderCaminoMsgDefault _ (TimeMsgPlain time) = formatHours time
@@ -665,7 +671,7 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
   over ^{formatMaybeHours $ metricsTime metrics}
   Ascent ^{formatHeight $ metricsAscent metrics} Descent ^{formatHeight $ metricsDescent metrics}
-  Penance ^{formatPenance $ metricsPenance metrics}
+  Penance ^{formatPenance True $ metricsPenance metrics}
   |]
   where
    metrics = score day
@@ -676,7 +682,7 @@ renderCaminoMsg _config locales (JourneySummaryMsg journey) = [shamlet|
   Total distance ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
   over ^{formatDays $ Prelude.length $ path journey}
   Total ascent ^{formatHeight $ metricsAscent metrics} Total descent ^{formatHeight $ metricsDescent metrics}
-  Penance ^{formatPenance $ metricsPenance metrics}
+  Penance ^{formatPenance True $ metricsPenance metrics}
   |]
   where
    metrics = score journey

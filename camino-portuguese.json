@@ -11175,6 +11175,9 @@
       "stops": [
         "P-P20", "P-P32", "P-P78", "P-P138"
       ],
+      "rest-points": [
+        "P-P20", "P-P32", "P-P78", "P-P138", "P-P203"
+      ],
       "starts": [
         "P-P1", "P-P138", "P-P204"
       ],
@@ -11199,6 +11202,9 @@
         "P-F11", "P-F12", "P-F13", "P-F14", "P-F15"
       ],
       "stops": [
+        "P-F10"
+      ],
+      "rest-points": [
         "P-F10"
       ],
       "suggested-pois": [
@@ -11264,6 +11270,9 @@
       ],
       "stops": [
         "P-C13", "P-C36"
+      ],
+      "rest-points": [
+        "P-C36", "P-C57"
       ],
       "palette": {
         "colour": "60e8f0"

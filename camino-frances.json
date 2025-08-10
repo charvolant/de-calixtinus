@@ -8065,7 +8065,10 @@
       "description": "The main Camino route starting in Saint-Jean-Pied-de-Port to Santiago de Compostella",
       "major": true,
       "stops": [
-        "F-F26", "F-F51", "F-F81", "F-F118"
+        "F-F26", "F-F51", "F-F81", "F-F118", "F-F148"
+      ],
+      "rest-points": [
+        "F-F26", "F-F51", "F-F81", "F-F118", "F-F148"
       ],
       "starts": [
         "F-F1", "F-F166", "F-F196"

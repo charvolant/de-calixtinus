@@ -1035,6 +1035,7 @@ data Route = Route {
   , routeMajor :: Bool -- ^ Is this a major route (a multi-day variant to the main route)
   , routeLocations :: S.Set Location -- ^ The locations along the route
   , routeStops :: S.Set Location -- ^ The suggested stops for the route
+  , routeRestPoints :: S.Set Location -- ^ The suggested preferred rest points for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
   , routeFinishes :: [Location] -- ^ A list of suggested finish points for the route
   , routeSuggestedPois :: S.Set PointOfInterest -- ^ A list of suggested points of interest for the route
@@ -1051,6 +1052,7 @@ instance FromJSON Route where
       major' <- v .:? "major" .!= False
       locations' <- v .:? "locations" .!= S.empty
       stops' <- v .:? "stops" .!= S.empty
+      rests' <- v .:? "rest-points" .!= S.empty
       starts' <- v .:? "starts" .!= []
       finishes' <- v .:? "finishes" .!= []
       pois' <- v .:? "suggested-pois" .!= S.empty
@@ -1062,6 +1064,7 @@ instance FromJSON Route where
         , routeMajor = major'
         , routeLocations = locations'
         , routeStops = stops'
+        , routeRestPoints = rests'
         , routeStarts = starts'
         , routeFinishes = finishes'
         , routeSuggestedPois = pois'
@@ -1070,7 +1073,7 @@ instance FromJSON Route where
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' major' locations' stops' starts' finishes' pois' palette') =
+    toJSON (Route id' name' description' major' locations' stops' rests' starts' finishes' pois' palette') =
       object [ 
           "id" .= id'
         , "name" .= name'
@@ -1078,6 +1081,7 @@ instance ToJSON Route where
         , "major" .= major'
         , "locations" .= S.map locationID locations'
         , "stops" .= S.map locationID stops'
+        , "rest-points" .= S.map locationID rests'
         , "starts" .= map locationID starts'
         , "finishes" .= map locationID finishes'
         , "suggested-pois" .= S.map poiID pois'
@@ -1101,6 +1105,7 @@ instance Placeholder Text Route where
     , routeMajor = False
     , routeLocations = S.empty
     , routeStops = S.empty
+    , routeRestPoints = S.empty
     , routeStarts = []
     , routeFinishes = []
     , routeSuggestedPois = S.empty
@@ -1112,6 +1117,7 @@ instance Normaliser Text Route Camino where
   normalise camino route = route {
        routeLocations = dereferenceS camino (routeLocations route)
      , routeStops = dereferenceS camino  (routeStops route)
+     , routeRestPoints = dereferenceS camino  (routeRestPoints route)
      , routeStarts = dereferenceF camino (routeStarts route)
      , routeFinishes = dereferenceF camino (routeFinishes route)
      , routeSuggestedPois = dereferenceS camino (routeSuggestedPois route)

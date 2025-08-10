@@ -31,6 +31,7 @@ module Camino.Preferences (
   , reachableLocations
   , reachablePois
   , recommendedPois
+  , recommendedRestPoints
   , recommendedStops
   , selectedPois
   , selectedRoutes
@@ -253,6 +254,7 @@ data TravelPreferences = TravelPreferences {
   , preferenceStockStop :: StopPreferences -- ^ Preferences for the day before a day where everything will be closed (ie Sunday)
   , preferenceRestStop :: StopPreferences -- ^ Preferences for a rest stop (a stop where you spend a day resting up)
   , preferencePoiCategories :: S.Set PoiCategory -- ^ The types of Poi to visit
+  , preferenceRestPressure :: Maybe Float -- ^ The rest pressure, if requested
 } deriving (Show, Generic)
 
 instance FromJSON TravelPreferences where
@@ -267,6 +269,7 @@ instance FromJSON TravelPreferences where
     stock' <- v .: "stock-stop"
     rests' <- v .: "rest-stop"
     pois' <- v .: "poi-categories"
+    restpressure' <- v .:? "rest-pressure"
     return TravelPreferences {
           preferenceTravel = travel'
         , preferenceFitness = fitness'
@@ -278,11 +281,12 @@ instance FromJSON TravelPreferences where
         , preferenceStockStop = stock'
         , preferenceRestStop = rests'
         , preferencePoiCategories = pois'
+        , preferenceRestPressure = restpressure'
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' comfort' distance' time' rest' stop' stock' rests' pois') =
+  toJSON (TravelPreferences travel' fitness' comfort' distance' time' rest' stop' stock' rests' pois' restpressure') =
     object [ 
         "travel" .= travel'
       , "fitness" .= fitness'
@@ -294,6 +298,7 @@ instance ToJSON TravelPreferences where
       , "stock-stop" .= stock'
       , "rest-stop" .= rests'
       , "poi-categories" .= pois'
+      , "rest-pressure" .= restpressure'
     ]
 
 instance NFData TravelPreferences
@@ -306,6 +311,7 @@ data CaminoPreferences = CaminoPreferences {
   , preferenceRoutes :: S.Set Route -- ^ The routes to use
   , preferenceStops :: S.Set Location -- ^ Locations that we must visit (end a day at)
   , preferenceExcluded :: S.Set Location -- ^ Locations that we will not visit (end a day at, although passing through is OK)
+  , preferenceRestPoints :: S.Set Location -- ^ Locations that are preferred as rest stops
   , preferencePois :: S.Set PointOfInterest -- ^ The significant points of interest that deserve a stop
   , preferenceStartDate :: Maybe Day -- ^ The proposed start date
 } deriving (Show, Generic)
@@ -318,6 +324,7 @@ instance FromJSON CaminoPreferences where
     routes' <- v .:? "routes" .!= S.empty
     stops' <- v .:? "stops" .!= S.empty
     excluded' <- v .:? "excluded" .!= S.empty
+    rests' <- v .:? "rest-points" .!= S.empty
     pois' <- v .:? "pois" .!= S.empty
     startDate' <- v .:? "start-date"
     let camino'' = placeholder camino'
@@ -326,6 +333,7 @@ instance FromJSON CaminoPreferences where
     let routes'' = S.map placeholder routes'
     let stops'' = S.map placeholder stops'
     let excluded'' = S.map placeholder excluded'
+    let rests'' = S.map placeholder rests'
     let pois'' = S.map placeholder pois'
     return CaminoPreferences {
         preferenceCamino = camino''
@@ -334,17 +342,19 @@ instance FromJSON CaminoPreferences where
       , preferenceRoutes = routes''
       , preferenceStops = stops''
       , preferenceExcluded = excluded''
+      , preferenceRestPoints = rests''
       , preferencePois = pois''
       , preferenceStartDate = startDate'
       }
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON CaminoPreferences where
-  toJSON (CaminoPreferences camino' start' finish' routes' stops' excluded' pois' startDate') =
+  toJSON (CaminoPreferences camino' start' finish' routes' stops' excluded' rests' pois' startDate') =
     let
       routes'' = S.map routeID routes'
       stops'' = S.map locationID stops'
       excluded'' = S.map locationID excluded'
+      rests'' = S.map locationID rests'
       pois'' = S.map poiID pois'
     in
       object [
@@ -354,6 +364,7 @@ instance ToJSON CaminoPreferences where
         , "routes" .= routes''
         , "stops" .= stops''
         , "excluded" .= excluded''
+        , "rest-points" .= rests''
         , "pois" .= pois''
         , "start-date" .= startDate'
       ]
@@ -361,16 +372,17 @@ instance ToJSON CaminoPreferences where
 instance NFData CaminoPreferences
 
 instance Summary CaminoPreferences where
-  summary cprefs = "{"
-    <> caminoId (preferenceCamino cprefs)
-    <> ", " <> summary (preferenceStart cprefs)
-    <> ", " <> summary (preferenceFinish cprefs)
-    <> ", " <> summary (S.map routeID $ preferenceRoutes cprefs)
-    <> ", " <> (summary $ preferenceStops cprefs)
-    <> ", " <> (summary $ preferenceExcluded cprefs)
-    <> ", " <> (summary $ preferencePois cprefs)
-    <> ", " <> (pack $ show $ preferenceStartDate cprefs)
-    <> "}"
+  summary cprefs = joinSummaries [
+      labelledSummaryIfNotNull "camino" (caminoId $ preferenceCamino cprefs)
+    , labelledSummaryIfNotNull "start" (preferenceStart cprefs)
+    , labelledSummaryIfNotNull "finish" (preferenceFinish cprefs)
+    , labelledSummaryIfNotNull "routes"  (S.map routeID $ preferenceRoutes cprefs)
+    , labelledSummaryIfNotNull "stops" (preferenceStops cprefs)
+    , labelledSummaryIfNotNull "excluded"  (preferenceExcluded cprefs)
+    , labelledSummaryIfNotNull "rest-points" (preferenceRestPoints cprefs)
+    , labelledSummaryIfNotNull "pois"  (preferencePois cprefs)
+    , labelledSummaryIfNotNull "start-date"  (preferenceStartDate cprefs)
+    ]
 
 -- | Normalise preferences to the correct locations and routes, based on placeholders
 normalisePreferences :: CaminoConfig -- ^ The camino configutation
@@ -387,6 +399,7 @@ normalisePreferences config preferences =
       , preferenceRoutes = dereferenceS camino (preferenceRoutes preferences)
       , preferenceStops = dereferenceS camino (preferenceStops preferences)
       , preferenceExcluded = dereferenceS camino (preferenceExcluded preferences)
+      , preferenceRestPoints = dereferenceS camino (preferenceRestPoints preferences)
       , preferencePois = dereferenceS camino (preferencePois preferences)
     }
 
@@ -401,10 +414,11 @@ withRoutes preferences routes = let
     finish' = if S.member (preferenceFinish prefs') allowed then preferenceFinish prefs' else headWithError $ suggestedFinishes prefs'
     stops' = preferenceStops prefs' `S.intersection` allowed
     excluded' = preferenceExcluded prefs' `S.intersection` allowed
+    rests' = preferenceRestPoints prefs' `S.intersection` allowed
     pois' = preferencePois prefs'
     startDate' = preferenceStartDate preferences
   in
-    CaminoPreferences camino' start' finish' routes' stops' excluded' pois' startDate'
+    CaminoPreferences camino' start' finish' routes' stops' excluded' rests' pois' startDate'
 
 
 -- | Update with a new start and finish and, if necessary, stops etc normalised
@@ -418,10 +432,11 @@ withStartFinish preferences st fin = let
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
     stops' = preferenceStops prefs' `S.intersection` allowed
     excluded' = preferenceExcluded prefs' `S.intersection` allowed
+    rests' = preferenceRestPoints prefs' `S.intersection` allowed
     pois' = preferencePois prefs'
     startDate' = preferenceStartDate preferences
   in
-    CaminoPreferences camino' start' finish' routes' stops' excluded' pois' startDate'
+    CaminoPreferences camino' start' finish' routes' stops' excluded' rests' pois' startDate'
 
 -- | The list of routes selected, in camino order
 selectedRoutes :: CaminoPreferences -- ^ The preference set
@@ -461,6 +476,17 @@ recommendedStops preferences =
     baseStops = S.unions (S.map routeStops routes)
   in
     S.delete (preferenceStart preferences) $ S.delete (preferenceFinish preferences) $ baseStops `S.intersection` reachableLocations preferences
+    
+-- | Generate a set of recommended rest points, based on the selected routes
+recommendedRestPoints :: CaminoPreferences -- ^ The preferences (normalised, see `normalisePreferences`)
+  -> S.Set Location -- ^ The allowed locations
+recommendedRestPoints preferences =
+  let
+    camino = preferenceCamino preferences
+    routes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
+    baseRests = S.unions (S.map routeRestPoints routes)
+  in
+    S.delete (preferenceStart preferences) $ S.delete (preferenceFinish preferences) $ baseRests `S.intersection` reachableLocations preferences
 
 -- | Show possible pionts of interest selected by the preferences
 reachablePois :: CaminoPreferences -- ^ The preferences
@@ -510,6 +536,21 @@ suggestedRestRange _ Normal = PreferenceRange Nothing 6 5 7 (Just 3) (Just 8)
 suggestedRestRange _ Unfit = PreferenceRange Nothing 5 4 7 (Just 3) (Just 8)
 suggestedRestRange _ Casual = PreferenceRange Nothing 5 4 6 (Just 2) (Just 7)
 suggestedRestRange _ VeryUnfit = PreferenceRange Nothing 4 3 5 (Just 2) (Just 6)
+
+-- | Create a suggested rest period, based on the travel mode and fitness level.
+suggestedRestPressure :: Travel -- ^ The method of travel
+  -> Fitness -- ^ The fitness level
+  -> Comfort -- ^ The comfort level
+  -> Maybe Float -- ^ The suggested rest pressure
+suggestedRestPressure _ SuperFit Austere = Nothing
+suggestedRestPressure _ VeryFit Austere = Nothing
+suggestedRestPressure _ Fit Austere = Nothing
+suggestedRestPressure _ Normal Austere = Nothing
+suggestedRestPressure _ _ Austere = Just 5
+suggestedRestPressure _ _ Frugal = Just 8
+suggestedRestPressure _ _ Pilgrim = Just 10
+suggestedRestPressure _ _ Comfortable = Just 12
+suggestedRestPressure _ _ Luxurious = Just 15
 
 -- | Base location preferences from comfort level
 suggestedLocation' :: Comfort -> M.Map LocationType Penance
@@ -1065,6 +1106,7 @@ defaultTravelPreferences travel fitness comfort poics = TravelPreferences {
     , preferenceStockStop = suggestedStockPreferences travel fitness comfort
     , preferenceRestStop = suggestedRestPreferences travel fitness comfort
     , preferencePoiCategories = maybe (suggestedPoiCategories travel fitness comfort) id poics
+    , preferenceRestPressure = suggestedRestPressure travel fitness comfort
   }
 
 
@@ -1083,5 +1125,6 @@ defaultCaminoPreferences camino = let
         , preferenceStops = routeStops dr
         , preferenceExcluded = S.empty
         , preferencePois = S.empty
+        , preferenceRestPoints = routeRestPoints dr
         , preferenceStartDate = Nothing
       }

@@ -230,6 +230,7 @@ data Metrics = Metrics {
     , metricsRestPressure :: Penance -- ^ Pressure to go on to a rest stop
     , metricsFatigue :: Penance -- ^ Cost of accumulated fatigue
     , metricsRest :: Penance -- ^ Cost of taking a rest
+    , metricsRestPoints :: Penance -- ^ Cost of non-optinal rest stops
     , metricsMisc :: Penance -- ^ Additional miscellaneous penance costs and causes
     , metricsRestDays :: Int -- ^ Number of rest days taken
     , metricsDate :: Maybe (C.Day, C.Day) -- ^ An associated date range for this location
@@ -265,6 +266,7 @@ instance Semigroup Metrics where
     , metricsRestPressure = metricsRestPressure m1 <> metricsRestPressure m2
     , metricsFatigue = metricsFatigue m1 <> metricsFatigue m2
     , metricsRest = metricsRest m1 <> metricsRest m2
+    , metricsRestPoints = metricsRestPoints m1 <> metricsRestPoints m2
     , metricsMisc = metricsMisc m1 <> metricsMisc m2
     , metricsRestDays = metricsRestDays m1 + metricsRestDays m2
     , metricsDate = combineDates (metricsDate m1) (metricsDate m2)
@@ -294,6 +296,7 @@ instance FromJSON Metrics where
     restpressure' <- v .: "rest-pressure"
     fatigue' <- v .: "fatigue"
     rest' <- v .: "rest"
+    restpoints' <- v .: "rest-points"
     misc' <- v .: "misc"
     restdays' <- v .: "rest-days"
     date' <- v .:? "date"
@@ -320,6 +323,7 @@ instance FromJSON Metrics where
       , metricsRestPressure = restpressure'
       , metricsFatigue = fatigue'
       , metricsRest = rest'
+      , metricsRestPoints = restpoints'
       , metricsMisc = misc'
       , metricsRestDays = restdays'
       , metricsDate = date'
@@ -330,7 +334,7 @@ instance FromJSON Metrics where
   parseJSON v = error ("Unable to parse metrics object " ++ show v)
 
 instance ToJSON Metrics where
-  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
+  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' date' stockpoint' restpoint' penance') =
     object [
         "distance" .= distance'
       , "time" .= time'
@@ -351,6 +355,7 @@ instance ToJSON Metrics where
       , "rest-pressure" .= restpressure'
       , "fatigue" .= fatigue'
       , "rest" .= rest'
+      , "rest-points" .= restpoints'
       , "misc" .= misc'
       , "rest-days" .= restdays'
       , "date" .= date'
@@ -379,14 +384,14 @@ combineDates r1 Nothing = r1
 combineDates (Just (min1, max1)) (Just (min2, max2)) = Just (min min1 min2, max max1 max2)
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty Reject 0 Nothing False False Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty Reject 0 Nothing False False Reject
   isInvalid metrics = metricsPenance metrics == Reject
 
 instance Summary Metrics where
-  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' misc' restdays' date' stockpoint' restpoint' penance') =
+  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' date' stockpoint' restpoint' penance') =
     joinSummaries [
       labelledSummaryIfNotNull "distance" distance'
     , labelledSummaryIfNotNull "time" time'
@@ -407,6 +412,7 @@ instance Summary Metrics where
     , labelledSummaryIfNotNull "rest-pressure" restpressure'
     , labelledSummaryIfNotNull "fatigue" fatigue'
     , labelledSummaryIfNotNull "rest" rest'
+    , labelledSummaryIfNotNull "rest-points" restpoints'
     , labelledSummaryIfNotNull "misc" misc'
     , labelledSummaryIfNotNull "rest-days" restdays'
     , labelledSummaryIfNotNull "date" date'
@@ -809,6 +815,7 @@ penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
       restPressureCost
       mempty
       mempty
+      mempty
       misc
       0
       Nothing
@@ -982,8 +989,14 @@ pilgrimageEvaluate :: CaminoConfig -> TravelPreferences -> CaminoPreferences -> 
 pilgrimageEvaluate cc tprefs cprefs choices pilgrimage = let
     startDate = maybe (error "No start date") id (preferenceStartDate cprefs)
     pilgrimage' = pilgrimageEvaluate' cc tprefs cprefs choices startDate pilgrimage
+    preferredRests = preferenceRestPoints cprefs
+    rests = S.fromList $ map finish $ initOrEmpty pilgrimage'
+    unpreferredRests = S.size $ rests `S.difference` preferredRests
+    unusedRests = S.size $ preferredRests `S.difference` rests
+    score' = mconcat $ map score pilgrimage'
+    restPenance = if unpreferredRests == 0 || unusedRests == 0 then Nothing else (*) <$> (Just $ fromIntegral $ min unpreferredRests unusedRests) <*> (preferenceRestPressure tprefs)
   in
-    (pilgrimage', mconcat $ map score pilgrimage')
+    (pilgrimage', score' { metricsRestPoints = maybe mempty Penance restPenance })
 
 
 -- Recast stages to take advantage of better accomodation options
@@ -1100,17 +1113,25 @@ buildTripChoiceMap chooser preferences camino begin end select = let
   in
     M.unionWith (\f -> \b -> if tripChoicePenance f > tripChoicePenance b then f else b) acf acb
 
+buildRestPressure' :: Maybe Float -> StopPreferences -> StopPreferences
+buildRestPressure' Nothing _ = StopPreferences {
+    stopTransportLinks = False
+  , stopLocation = M.fromList $ map (\k -> (k, mempty)) locationTypeEnumeration
+  , stopAccommodation = M.fromList $ map (\k -> (k, mempty)) accommodationTypeEnumeration
+  , stopServices = M.empty
+  , stopRouteServices = M.empty
+  }
+buildRestPressure' (Just pressure) sprefs = sprefs {
+    stopLocation = pmap
+  }
+  where
+    minp = Penance pressure
+    pmap = M.fromList $ map (\lt -> maybe (lt, mempty) (\p -> if p == Reject then (lt, mempty) else (lt, p <> minp)) (M.lookup lt (stopLocation sprefs))) locationTypeEnumeration
+
 -- | Build a measure of rest pressure (how much better something nearby might be with a view to a rest)
 --   This builds off the stop preferences, with anything within minimum walking distances looking kind of good
 buildRestPressure :: TravelPreferences -> StopPreferences
-buildRestPressure tprefs = let
-    sprefs = preferenceRestStop tprefs
-    minp = maybe mempty Penance (rangeMinimum $ preferenceDistance tprefs)
-    pmap = M.fromList $ map (\lt -> maybe (lt, mempty) (\p -> if p == Reject then (lt, mempty) else (lt, p <> minp)) (M.lookup lt (stopLocation sprefs))) locationTypeEnumeration
-  in
-    sprefs {
-      stopLocation = pmap
-    }
+buildRestPressure tprefs = buildRestPressure' (preferenceRestPressure tprefs) (preferenceRestStop tprefs)
 
 -- | Plan a camino based on the stated preferences
 planCamino :: CaminoConfig -> TravelPreferences -> CaminoPreferences -> Solution

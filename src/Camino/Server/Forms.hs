@@ -56,6 +56,7 @@ import Data.Time.Calendar (Day)
 import Formatting
 import Text.Hamlet
 import Yesod
+import Camino.Preferences (CaminoPreferences(preferenceRestPoints), recommendedRestPoints)
 
 -- Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
@@ -79,6 +80,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewTime :: FieldView CaminoApp
   , resRest :: FormResult (PreferenceRange Int)
   , viewRest :: FieldView CaminoApp
+  , resRestPressure :: FormResult (Maybe Float)
+  , viewRestPressure :: FieldView CaminoApp
   , resStopTransportLinks :: FormResult Bool
   , viewStopTransportLinks :: FieldView CaminoApp
   , resStopLocation :: FormResult (M.Map LocationType Penance)
@@ -133,6 +136,8 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewStops :: FieldView CaminoApp
   , resExcluded :: FormResult (S.Set Location)
   , viewExcluded :: FieldView CaminoApp
+  , resRestPoints :: FormResult (S.Set Location)
+  , viewRestPoints :: FieldView CaminoApp
   , resPois :: FormResult (S.Set PointOfInterest)
   , viewPois :: FieldView CaminoApp
   , resStartDate :: FormResult Day
@@ -187,6 +192,7 @@ defaultPreferenceFields master prefs = do
     (diRes, diView) <- mreq hiddenField (fieldSettingsName "distance") (prefDistance <$> prefs)
     (tiRes, tiView) <- mreq hiddenField (fieldSettingsName "time") (prefTime <$> prefs)
     (reRes, reView) <- mreq hiddenField (fieldSettingsName "rest") (prefRest <$> prefs)
+    (rpRes, rpView) <- mreq hiddenField (fieldSettingsName "restPressure") (prefRestPressure <$> prefs)
     (sptlRes, sptlView) <- mreq hiddenField (fieldSettingsName "stopTransportLinks") (stopTransportLinks <$> prefStop <$> prefs)
     (sploRes, sploView) <- mreq hiddenField (fieldSettingsName "stopLocation") (stopLocation <$> prefStop <$> prefs)
     (spacRes, spacView) <- mreq hiddenField (fieldSettingsName "stopAccommodation") (stopAccommodation <$> prefStop <$> prefs)
@@ -214,6 +220,7 @@ defaultPreferenceFields master prefs = do
     (fnRes, fnView) <- mreq (parsingHiddenField locationID (findLocationById cRes)) (fieldSettingsName "finish") (prefFinish <$> prefs)
     (spRes, spView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) (fieldSettingsName "stops") (prefStops <$> prefs)
     (exRes, exView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) (fieldSettingsName "excluded") (prefExcluded <$> prefs)
+    (rspRes, rspView) <- mreq (parsingHiddenField (S.map locationID) (findSetById cRes findLocationById)) (fieldSettingsName "restPoints") (prefRestPoints <$> prefs)
     (poRes, poView) <- mreq (parsingHiddenField (S.map poiID) (findSetById cRes findPointOfInterestById)) (fieldSettingsName "pois") (prefPois <$> prefs)
     (sdRes, sdView) <- mreq hiddenField (fieldSettingsName "startDate") (prefStartDate <$> prefs)
     return PreferenceDataFields {
@@ -237,6 +244,8 @@ defaultPreferenceFields master prefs = do
       , viewTime = tiView
       , resRest = reRes
       , viewRest = reView
+      , resRestPressure = rpRes
+      , viewRestPressure = rpView
       , resStopTransportLinks = sptlRes
       , viewStopTransportLinks = sptlView
       , resStopLocation = sploRes
@@ -291,6 +300,8 @@ defaultPreferenceFields master prefs = do
       , viewStops = spView
       , resExcluded = exRes
       , viewExcluded = exView
+      , resRestPoints = rspRes
+      , viewRestPoints = rspView
       , resPois = poRes
       , viewPois = poView
       , resStartDate = sdRes
@@ -333,6 +344,7 @@ makePreferenceData _master fields = let
     distance' = if easy'' || changedTravel then preferenceDistance <$> dtp else resDistance fields
     time' = if easy'' || changedTravel then preferenceTime <$> dtp else resTime fields
     rest' = if easy'' || changedTravel then preferenceRest <$> dtp else resRest fields
+    restpressure' = if easy'' || changedTravel then preferenceRestPressure <$> dtp else resRestPressure fields
     spTransportLinks' = if easy'' || changedTravel then stopTransportLinks <$> preferenceStop <$> dtp else resStopTransportLinks fields
     spLocation' = if easy'' || changedTravel then stopLocation <$> preferenceStop <$> dtp else resStopLocation fields
     spAccommodation' = if easy'' || changedTravel then stopAccommodation <$> preferenceStop <$> dtp else resStopAccommodation fields
@@ -363,6 +375,7 @@ makePreferenceData _master fields = let
     changedStart = changedRoutes || changed (locationID <$> resPrevStart fields) (locationID <$> start') || changed (locationID <$> resPrevFinish fields) (locationID <$> finish')
     stops' = if easy'' || changedStart then recommendedStops <$> dcp'' else resStops fields
     excluded' = if easy'' || changedStart then preferenceExcluded <$> dcp'' else resExcluded fields
+    restpoints' = if easy'' || changedStart then recommendedRestPoints <$> dcp'' else resRestPoints fields
     pois' = if easy'' || changedCamino || changedRoutes || changedPoiCategories then recommendedPois <$> dtp <*> dcp'' else resPois fields
     startDate' = resStartDate fields
   in
@@ -375,6 +388,7 @@ makePreferenceData _master fields = let
       <*> distance'
       <*> time'
       <*> rest'
+      <*> restpressure'
       <*> stop'
       <*> stopStock'
       <*> stopRest'
@@ -385,6 +399,7 @@ makePreferenceData _master fields = let
       <*> finish'
       <*> stops'
       <*> excluded'
+      <*> restpoints'
       <*> pois'
       <*> startDate'
 
@@ -411,6 +426,8 @@ hiddenPreferences exclude fields = [whamlet|
     ^{fvInput (viewTime fields)}
   $if notElem "Rest" exclude
     ^{fvInput (viewRest fields)}
+  $if notElem "RestPressure" exclude
+    ^{fvInput (viewRestPressure fields)}
   $if notElem "StopTransportLinks" exclude
     ^{fvInput (viewStopTransportLinks fields)}
   $if notElem "StopLocation" exclude
@@ -465,6 +482,8 @@ hiddenPreferences exclude fields = [whamlet|
     ^{fvInput (viewStops fields)}
   $if notElem "Excluded" exclude
     ^{fvInput (viewExcluded fields)}
+  $if notElem "RestPoints" exclude
+    ^{fvInput (viewRestPoints fields)}
   $if notElem "Pois" exclude
     ^{fvInput (viewPois fields)}
   $if notElem "StartDate" exclude
@@ -542,9 +561,11 @@ chooseRangeForm help prefs extra = do
     let distanceRangeField = if maybe Walking prefTravel prefs == Cycling then rangeField 0.0 250.0 1.0 else rangeField 0.0 50.0 0.5
     let timeRangeField = rangeField 0.0 16.0 0.1
     let restRangeField = rangeField 0 10 1
+    let restPressureField = floatField 0 20 1
     (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabelName MsgDistancePreferencesLabel "distance") (prefDistance <$> prefs)
     (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabelName MsgTimePreferencesLabel "time") (prefTime <$> prefs)
     (reRes, reView) <- mreq restRangeField (fieldSettingsLabelName MsgRestPreferencesLabel "rest") (prefRest <$> prefs)
+    (rpRes, rpView) <- mopt restPressureField (fieldSettingsLabelName MsgRestPressureLabel "restPressure") (prefRestPressure <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resDistance = diRes
@@ -553,6 +574,8 @@ chooseRangeForm help prefs extra = do
       , viewTime = tiView
       , resRest = reRes
       , viewRest = reView
+      , resRestPressure = rpRes
+      , viewRestPressure = rpView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
@@ -575,7 +598,13 @@ chooseRangeForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{hiddenPreferences ["Distance", "Time", "Rest"] fields}
+      $with view <- viewRestPressure fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      ^{hiddenPreferences ["Distance", "Time", "Rest", "RestPressure"] fields}
     |]
     return (res, widget)
 
@@ -875,7 +904,7 @@ chooseStartForm help prefs extra = do
     let start' = prefStart <$> prefs
     let finish' = prefFinish <$> prefs
     let startDate' = prefStartDate <$> prefs
-    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> pure startDate'
+    let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> pure startDate'
     let caminos = maybe (caminoAppCaminos master) singleton camino
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
@@ -940,23 +969,32 @@ chooseStopsForm help prefs extra = do
     let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
     let possibleStops = reachableLocations <$> cprefs'
     let allowedStops = permittedStops <$> prefs <*> possibleStops
+    let allowedRests = permittedRestPoints <$> prefs <*> possibleStops
     let sortKey l = canonicalise $ localised l
     let stops = sortOn sortKey $ maybe allStops S.toList allowedStops
+    let restpoints = sortOn sortKey $ maybe allStops S.toList allowedRests
     let recommended = maybe S.empty recommendedStops cprefs'
     let (suggested, other) = Data.List.partition (\l -> S.member l recommended) stops
+    let recommendedRests = maybe S.empty recommendedRestPoints cprefs'
+    let (suggestedRests, otherRests) = Data.List.partition (\l -> S.member l recommendedRests) restpoints
     let mkOptions locs = map (\l -> (locationID l, localised l, l)) locs
     let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
     let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . localised) stops))
+    let restOptions = (render MsgSuggestedLabel, mkOptions suggestedRests) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) otherRests))
     let chosenStops = S.intersection <$> allowedStops <*> (prefStops <$> prefs)
     let chosenExcluded = S.intersection <$> allowedStops <*> (prefExcluded <$> prefs)
+    let chosenRestPoints = S.intersection <$> allowedRests <*> (prefRestPoints <$> prefs)
     (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabelName MsgStopsLabel "stops") chosenStops
     (exRes, exView) <- mreq (clickSelectionField exclOptions) (fieldSettingsLabelName MsgExcludedLabel "excluded") chosenExcluded
+    (rspRes, rspView) <- mreq (clickSelectionField restOptions) (fieldSettingsLabelName MsgPreferredRestPointsLabel "restPoints") chosenRestPoints
     df <- defaultPreferenceFields master prefs
     let fields = df {
-      resStops = stRes,
-      viewStops = stView,
-      resExcluded = exRes,
-      viewExcluded = exView
+        resStops = stRes
+      , viewStops = stView
+      , resExcluded = exRes
+      , viewExcluded = exView
+      , resRestPoints = rspRes
+      , viewRestPoints = rspView
     }
     let res = makePreferenceData master fields
     let widget = [whamlet|
@@ -973,7 +1011,13 @@ chooseStopsForm help prefs extra = do
             <label for="#{fvId view}">
               ^{fvLabel view} ^{help}
             ^{fvInput view}
-      ^{hiddenPreferences ["Stops", "Excluded"] fields}
+      $with view <- viewRestPoints fields
+        <div .row .mb-3>
+          <div .col>
+            <label for="#{fvId view}">
+              ^{fvLabel view} ^{help}
+            ^{fvInput view}
+      ^{hiddenPreferences ["Stops", "Excluded", "RestPoints"] fields}
     |]
     return (res, widget)
 

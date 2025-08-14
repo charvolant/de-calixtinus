@@ -66,49 +66,83 @@ conditionalLabel label values = [ihamlet|
         <h6 .pt-3>_{label}
   |]
 
-penanceSummary :: TravelPreferences -> CaminoPreferences -> Bool -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-penanceSummary _preferences _camino accommodationDetail serviceDetail metrics = [ihamlet|
-   _{PenanceMsg (metricsPenance metrics)} =
-   _{DistancePenanceMsg (metricsPerceivedDistance metrics)}
-   $if metricsDistanceAdjust metrics /= mempty
-     \ + _{DistanceAdjustMsg (metricsDistanceAdjust metrics)}
-   $if metricsTimeAdjust metrics /= mempty
-     \ + _{TimeAdjustMsg (metricsTimeAdjust metrics)}
-   $if metricsStop metrics /= mempty
-      \ + _{StopPenanceMsg (metricsStop metrics)}
-   $if metricsLocation metrics /= mempty
-     \ + _{LocationPenanceMsg (metricsLocation metrics)}
-   $if showAccommodation
-     \ + _{AccommodationPenanceMsg (metricsAccommodation metrics)}
-     $if hasAccommodationServices && accommodationDetail
-       \ (
-       $forall service <- acServices
-          ^{caminoServiceIcon service}
-       )
-   $if metricsStopServices metrics /= mempty
-     \ + _{StopServicesPenanceMsg (metricsStopServices metrics)}
-     $if serviceDetail
-       \ (
-       $forall service <- metricsMissingStopServices metrics
-          ^{caminoServiceIcon service}
-       )
-   $if metricsDayServices metrics /= mempty
-     \ + _{DayServicesPenanceMsg (metricsDayServices metrics)}
-     $if serviceDetail
-       \ (
-       $forall service <- metricsMissingDayServices metrics
-          ^{caminoServiceIcon service}
-       )
-   $if metricsRestPressure metrics /= mempty
-     \ + _{RestPressurePenanceMsg (metricsRestPressure metrics)}
-   $if metricsFatigue metrics /= mempty
-     \ + _{FatiguePenanceMsg (metricsFatigue metrics)}
-   $if metricsRest metrics /= mempty
-     \ + _{RestPenanceMsg (metricsRest metrics)}
-   $if metricsRestPoints metrics /= mempty
-     \ + _{RestPointsPenanceMsg (metricsRestPoints metrics)}
-   $if metricsMisc metrics /= mempty
-     \ + _{MiscPenanceMsg (metricsMisc metrics)}
+penanceTable :: TravelPreferences -> CaminoPreferences -> Bool -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
+penanceTable _preferences _camino accommodationDetail serviceDetail metrics = [ihamlet|
+  <div .detail .border .border-info-subtle .rounded .penance-table .float-end .ms-1 .p-1>
+   <table .table .table-sm>
+     <tr>
+      <td>_{DistancePenanceLabel}
+      <td .text-end>#{maybe "-" formatDistance (metricsPerceivedDistance metrics)}
+      <td>
+     $if metricsDistanceAdjust metrics /= mempty
+      <tr>
+        <td>_{DistanceAdjustLabel}
+        <td .text-end>_{PenanceFormatted True (metricsDistanceAdjust metrics)}
+        <td>
+     $if metricsTimeAdjust metrics /= mempty
+      <tr>
+        <td>_{TimeAdjustLabel}
+        <td .text-end>_{PenanceFormatted True (metricsTimeAdjust metrics)}
+        <td>
+     $if metricsStop metrics /= mempty
+      <tr>
+        <td>_{StopPenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsStop metrics)}
+        <td>
+     $if metricsLocation metrics /= mempty
+      <tr>
+        <td>_{LocationPenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsLocation metrics)}
+        <td>
+     $if showAccommodation
+      <tr>
+        <td>_{AccommodationPenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsAccommodation metrics)}
+        <td>
+          $if hasAccommodationServices && accommodationDetail
+            $forall service <- acServices
+              ^{caminoServiceIcon service}
+     $if metricsStopServices metrics /= mempty
+       <tr>
+         <td>_{StopServicesPenanceLabel}
+         <td .text-end>_{PenanceFormatted True (metricsStopServices metrics)}
+         <td>
+           $if serviceDetail
+             $forall service <- metricsMissingStopServices metrics
+               ^{caminoServiceIcon service}
+     $if metricsDayServices metrics /= mempty
+       <tr>
+         <td>_{DayServicesPenanceLabel}
+         <td .text-end>_{PenanceFormatted True (metricsDayServices metrics)}
+         <td>
+           $if serviceDetail
+             $forall service <- metricsMissingDayServices metrics
+               ^{caminoServiceIcon service}
+     $if metricsRestPressure metrics /= mempty
+       <tr>
+        <td>_{RestPressurePenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsRestPressure metrics)}
+        <td>
+     $if metricsFatigue metrics /= mempty
+      <tr>
+        <td>_{FatiguePenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsFatigue metrics)}
+        <td>
+     $if metricsRest metrics /= mempty
+      <tr>
+        <td>_{RestPenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsRest metrics)}
+        <td>
+     $if metricsRestPoints metrics /= mempty
+      <tr>
+        <td>_{RestPointsPenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsRestPoints metrics)}
+        <td>
+     $if metricsMisc metrics /= mempty
+      <tr>
+        <td>_{MiscPenanceLabel}
+        <td .text-end>_{PenanceFormatted True (metricsMisc metrics)}
+        <td>
    |]
   where
     acServices = maybe S.empty (tripChoiceFeatures . fst) (L.uncons $ metricsAccommodationChoice metrics)
@@ -126,6 +160,7 @@ metricsSummary _preferences _camino metrics days stages = [ihamlet|
       \ _{StagesMsg s} #
     _{AscentMsg (metricsAscent metrics)}
     _{DescentMsg (metricsDescent metrics)}
+    _{PenanceMsg (metricsPenance metrics)}
   |]
 
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -881,7 +916,7 @@ tripChoiceSummary' _config showName choiceMap location = [ihamlet|
 tripChoiceSummary :: Config -> Maybe Solution -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripChoiceSummary config msolution location = [ihamlet|
   $maybe choices <- solutionChoices <$> msolution
-    <table .table .trip-choice-summary>
+    <table .table  .table-sm .trip-choice-summary>
       <tr>
         <td>
           ^{tripChoiceSummary' config Nothing (tcStopLocation choices) location}
@@ -955,7 +990,7 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
         $if getDebug config
-          <div .float-end .col-2 .ms-1 .mb-1>
+          <div .detail .border .border-info-subtle .rounded .float-end .ms-1 .p-1>
             ^{tripChoiceSummary config msolution location}
         ^{locationLegs preferences camino used location}
         $maybe d <- locationDescription location
@@ -1283,38 +1318,41 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
   <div .container-fluid>
     <div .row .trip-summary>
       <div .col>
+        ^{penanceTable preferences camino False False (score pilgrimage)}
         <ul .trip-stages>
           $forall stage <- path pilgrimage
-            <li><a href="#leg-#{locationID $ start stage}">_{Txt (locationName $ start stage)}
+            <li>
+              <a href="#leg-#{locationID $ start stage}">
+                _{Txt (locationName $ start stage)}
               $forall l <- map finish $ path stage
-                \ - <a href="#leg-#{locationID l}">_{Txt (locationName l)}
+                \ -
+                <a href="#leg-#{locationID l}">
+                  _{Txt (locationName l)}
         <p>
           ^{metricsSummary preferences camino (score pilgrimage) (Just $ sum $ map (length . path) (path pilgrimage)) (Just $ length $ path pilgrimage)}
-          _{PenanceMsg (metricsPenance (score pilgrimage))}
     $forall stage <- path pilgrimage
       <div .card .stage .border-primary .mt-2>
         <div .card-body>
+          ^{penanceTable preferences camino False False $ score stage}
           <h3 id="stage-#{locationID (start stage)}" .card-title>
             <a href="@{LocationRoute (start stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start stage)}
-            \   -
+            \ -
             <a href="@{LocationRoute (finish stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish stage)}
             $maybe dates <- metricsDate (score stage)
               _{DateRangeMsg (fst dates) (snd dates)}
           <p .card-text>
             ^{metricsSummary preferences camino (score stage) (Just $ length $ path stage) Nothing}
-            <br>
-            ^{penanceSummary preferences camino False False $ score stage}
       $forall day <- path stage
         <div .card .day .ms-1>
           <div .card-header>
             <h4 id="leg-#{locationID (finish day)}">
-             <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
-              \   -
+              <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
+              \ -
               <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
               $if metricsRestpoint (score day)
-                  <span title="_{RestpointLabel}" .ca-restpoint>
+                <span title="_{RestpointLabel}" .ca-restpoint>
               $if metricsStockpoint (score day)
-                  <span title="_{StockpointLabel}" .ca-stockpoint>
+                <span title="_{StockpointLabel}" .ca-stockpoint>
               $maybe (day1, day2) <- metricsDate (score day)
                 _{DateRangeMsg day1 day2}
                 $maybe region <- locationRegion $ finish day
@@ -1323,13 +1361,12 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                       _{Txt (ceName cal)}
                       $if day1 /= day2
                         \ #{endash} _{DateMsg d}
-               _{DistanceFormatted (metricsDistance $ score day)}
-           <div .card-body>
-           <p .card-text>
+              _{DistanceFormatted (metricsDistance $ score day)}
+          <div .card-body>
+            ^{penanceTable preferences camino False True $ score day}
+            <p .card-text>
               ^{metricsSummary preferences camino (score day) Nothing Nothing}
-              <br>
-              ^{penanceSummary preferences camino False True $ score day}
-           <ul .card-text .list-unstyled>
+            <ul .card-text .list-unstyled>
               <li .ms-3>
                 <div .location-summary .plan-leg>
                   ^{caminoLocationTypeIcon (locationType (start day))}
@@ -1351,7 +1388,7 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                               _{Txt (poiName poi)}
                               $maybe time <- poiTime poi
                                 \ _{TimeMsgPlain time}
-           $forall accom <- metricsAccommodationChoice $ score day
+            $forall accom <- metricsAccommodationChoice $ score day
               <p .card-text>
                 ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
  |]
@@ -1863,56 +1900,58 @@ helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtmlBase config preferences camino msolution =
   [ihamlet|
-      <style>
-        $forall css <- caminoCss config (preferenceCamino camino)
-          #{renderCss css }
-      <div>
-        <ul .nav .nav-tabs role="tablist">
+    <style>
+      $forall css <- caminoCss config (preferenceCamino camino)
+        #{renderCss css }
+    <div>
+      <ul .nav .nav-tabs role="tablist">
+        <li .nav-item role="presentation">
+          <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
+        $maybe _p <- pilgrimage
           <li .nav-item role="presentation">
-            <a #map-toggle .nav-link .active role="tab" data-bs-toggle="tab" href="#map-tab">_{MapLabel}
-          $maybe _p <- pilgrimage
-            <li .nav-item role="presentation">
-              <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
+            <a .nav-link role="tab" data-bs-toggle="tab" href="#plan-tab">_{PlanLabel}
+        <li .nav-item role="presentation">
+          <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
+        <li .nav-item role="presentation">
+          <a #preferences-toggle .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
+        $if showFailure
           <li .nav-item role="presentation">
-            <a #locations-toggle .nav-link role="tab" data-bs-toggle="tab" href="#locations-tab">_{LocationsLabel}
-          <li .nav-item role="presentation">
-            <a #preferences-toggle .nav-link role="tab" data-bs-toggle="tab" href="#preferences-tab">_{PreferencesLabel}
-          $if showFailure
-            <li .nav-item role="presentation">
-              <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#failure-tab">_{FailureLabel}
-          <li .nav-item role="presentation">
-            <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
-          <li .nav-item role="presentation">
-            <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
-        $maybe solution <- msolution
-          $maybe sid <- solutionID solution
-            <div .btn-group-vertical .float-end .me-1 .mt-2 .ms-3 .mb-2>
-              <a .btn .btn-secondary .btn-sm href="@{PlanRoute sid}" title="_{PersistentLinkTitle}">
-                <span .ca-link>
-              <a .btn .btn-secondary .btn-sm href="#" onclick="navigator.clipboard.writeText('@{PlanRoute sid}')" title="_{CopyLinkTitle}">
-                <span .ca-copy>
-              <a .btn .btn-secondary .btn-sm href="@{PlanSpreadsheetRoute sid}" title="_{DownloadSpreadsheetTitle}">
-                <span .ca-document-spreadsheet>
-              <a .btn .btn-secondary .btn-sm href="@{PlanKmlRoute sid}" title="_{DownloadKmlTitle}">
-                <span .ca-document-kml>
-        <div .tab-content>
-          <div .tab-pane .active role="tabpanel" id="map-tab">
-            ^{caminoMapHtml preferences camino msolution}
-          $maybe p <- pilgrimage
-            <div .tab-pane role="tabpanel" id="plan-tab">
-              ^{caminoTripHtml config preferences camino p}
-          <div .tab-pane role="tabpanel" id="locations-tab">
-            ^{caminoLocationsHtml config preferences camino msolution}
-          <div .tab-pane role="tabpanel" id="preferences-tab">
-            ^{preferencesHtml True preferences camino}
-          $if showFailure
-            <div .tab-pane role="tabpanel" id="failure-tab">
-              ^{failureHtml preferences camino journeyFailure pilgrimageFailure}
-          <div .tab-pane role="tabpanel" id="about-tab">
-            ^{aboutHtml config True preferences camino msolution}
-          <div .tab-pane role="tabpanel" id="key-tab">
-            ^{keyHtml config preferences camino}
-    ^{caminoMapScript preferences camino msolution}
+            <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#failure-tab">_{FailureLabel}
+        <li .nav-item role="presentation">
+          <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
+        <li .nav-item role="presentation">
+          <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
+      $maybe solution <- msolution
+        $maybe sid <- solutionID solution
+          <div .btn-group-vertical .float-end .me-1 .mt-2 .ms-3 .mb-2>
+            <a .btn .btn-primary .btn-sm href="#" onclick="toggleDetail()" title="_{ToggleDetailTitle}">
+              <span .ca-detail>
+            <a .btn .btn-secondary .btn-sm href="@{PlanRoute sid}" title="_{PersistentLinkTitle}">
+              <span .ca-link>
+            <a .btn .btn-secondary .btn-sm href="#" onclick="navigator.clipboard.writeText('@{PlanRoute sid}')" title="_{CopyLinkTitle}">
+              <span .ca-copy>
+            <a .btn .btn-secondary .btn-sm href="@{PlanSpreadsheetRoute sid}" title="_{DownloadSpreadsheetTitle}">
+              <span .ca-document-spreadsheet>
+            <a .btn .btn-secondary .btn-sm href="@{PlanKmlRoute sid}" title="_{DownloadKmlTitle}">
+              <span .ca-document-kml>
+      <div .tab-content>
+        <div .tab-pane .active role="tabpanel" id="map-tab">
+          ^{caminoMapHtml preferences camino msolution}
+        $maybe p <- pilgrimage
+          <div .tab-pane role="tabpanel" id="plan-tab">
+            ^{caminoTripHtml config preferences camino p}
+        <div .tab-pane role="tabpanel" id="locations-tab">
+          ^{caminoLocationsHtml config preferences camino msolution}
+        <div .tab-pane role="tabpanel" id="preferences-tab">
+          ^{preferencesHtml True preferences camino}
+        $if showFailure
+          <div .tab-pane role="tabpanel" id="failure-tab">
+            ^{failureHtml preferences camino journeyFailure pilgrimageFailure}
+        <div .tab-pane role="tabpanel" id="about-tab">
+          ^{aboutHtml config True preferences camino msolution}
+        <div .tab-pane role="tabpanel" id="key-tab">
+          ^{keyHtml config preferences camino}
+  ^{caminoMapScript preferences camino msolution}
   |]
   where
     pilgrimage = maybe Nothing solutionPilgrimage msolution

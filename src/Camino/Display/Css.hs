@@ -138,6 +138,7 @@ iconList = [
     ("ca-copy", '\xe09d'),
     ("ca-cross", '\xe009'),
     ("ca-cycling", '\xe081'),
+    ("ca-detail", '\xe09e'),
     ("ca-dinner", '\xe065'),
     ("ca-document", '\xe099'),
     ("ca-document-kml", '\xe09b'),

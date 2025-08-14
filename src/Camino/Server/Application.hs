@@ -105,6 +105,7 @@ helpWidget (loc:rest)
  | localeLanguageTag loc == "en" = $(ihamletFile "templates/help/help-en.hamlet")
  | otherwise = helpWidget rest
 
+
 getCaminoR :: Text -> Handler Html
 getCaminoR cid = do
   master <- getYesod
@@ -431,6 +432,9 @@ preferenceHelpPopup stepp = do
 imagePopup :: Widget
 imagePopup = $(widgetFile "image-popup")
 
+detailToggle :: Widget
+detailToggle = $(widgetFile "detail-toggle")
+
 addError' :: (Edge e Location, Score s1, Score s2) => (Failure Location e s1 s2) -> [Locale] -> Html
 addError' (Failure msg loc _ _) locales = [shamlet|
   #{msg}
@@ -494,6 +498,7 @@ showPage solution = do
       setTitle [shamlet|#{localiseText locales $ locationName (preferenceStart cprefs)} - #{localiseText locales $ locationName (preferenceFinish cprefs)}|]
       (toWidget html)
       imagePopup
+      detailToggle
 
 -- | The MIME type for KML
 kmlType :: ContentType

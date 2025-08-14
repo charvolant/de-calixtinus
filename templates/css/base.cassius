@@ -238,6 +238,8 @@ a
   content: ", "
 .or-list li:not(:first-child):last-child:before
   content: " or "
+.penance-table
+  font-size: x-small
 .plan-leg
   .poi-types
     .location-type

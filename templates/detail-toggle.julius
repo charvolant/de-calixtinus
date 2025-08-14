@@ -1,0 +1,15 @@
+var showDetail = false;
+
+function toggleDetail() {
+  showDetail = !showDetail;
+  displayDetail();
+}
+
+function displayDetail() {
+  if (showDetail) {
+    $(".detail").show();
+  } else {
+    $(".detail").hide();
+  }
+}
+$(document).ready(displayDetail);

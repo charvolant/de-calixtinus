@@ -26,3 +26,10 @@
   The default is that camping by the roadside is considered to be unacceptable
   and that limits the number of places where you might stop for the night.
 
+<p>
+  Preferred rest points are those stops where you would like to take a rest day.
+  The planner will try to organise stages to hit these rest points.
+  However, these are only <em>preferences.</em>
+  Stages usually cover about a weeks' worth or travel and some of the preferred rest points
+  may be missed because they are too close together or there is a long stretch without any
+  preferred rest-points and there needs to be a break before you reach somwhere nice.

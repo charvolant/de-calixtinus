@@ -42,7 +42,7 @@
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
     See the Bondi-Manly walk for an example.
-    We have the data for six actual Caminos at the moment, along with all the various
+    We have the data for seven actual Caminos at the moment, along with all the various
     alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
@@ -82,10 +82,10 @@
   You can use the rest day to recover, refit, re-supply and spend a day seeing the sights before travelling on.
   Rest days are also used to help manage the Sunday (and public holiday) famine, where all shops and cafes are closed
   and you need to pick up supplies during the preceeding day.
-  <span .text-bg-warning>
-    Rest days are still a work in progress.
-    The current planner first works out an optimal set of days and then tries to add in rest days.
-    Doing this while planning the day's walking would be better but it needs a re-design.
+  <span .text-warning>
+    Rest days are still a bit of a work in progress.
+    The planner applies a "rest pressure" to try and align walking days with good rest-points.
+    Properly integrating this into the day's walking would be better but it needs a significant re-design.
 
 <h2 #preferences-help>Preferences
 
@@ -153,6 +153,11 @@
       <td>Rest Preferences
       <td>The preference range (<a href="#preference-range-help">see below</a>) for the number of days spent travelling
         \ before you take a rest.
+    <tr>
+      <td>Rest Pressure
+      <td>
+        The distance to the nearest suitable rest point (somewhere where you can take a day to recover and replenish)
+        \ where the planner will start trying to push you to that location.         
     <tr>
       <td>Stop Preferences
       <td>Preferences for your stop at the end of the day.
@@ -246,6 +251,11 @@
         A list of the stops where you want the planner to ensure that you <em>don't</em> finish there at
         \ the end of a day.
     <tr>
+      <td>Preferred Rest Points
+      <td>
+        A list of the stops where you would prefer to take a rest day.
+        \ This is only a preference, since it may not be possible to fit all the preferred rest points into a plan.
+    <tr>
       <td>Points of Interest
       <td>
         A list of the significant points of interest.
@@ -302,7 +312,7 @@
   <a href="#penance-help">penance
   anything between the lower and upper bound is acceptable.
   Between the lower and minimum bounds, similarly for between the upper and maximum bounds, an additional penance is applied.
-  Outside the minimum and maximum values will result in a rejection.
+  Falling outside the minimum and maximum values will result in a rejection.
 
 <h2 #penance-help>Penance
 
@@ -404,9 +414,15 @@
       that it might be worth breaking your journey early or keeping on going for a bit.
     <p>
       In most cases, the local option is the best option and the accommodation penance is 0km.
+  <li #rest-pressure>
+    <p>
+      Rest pressure works in the same way as location penance, but looks to see if there is a suiable
+      rest-point nearby.
+    <p>
+      Good rest-points are relatively rare and rest pressure is more diffuse than the location penance.
   <li>
     The final penance is the combined penance of the perceived walking distance,
-    distance and time penalties, stop, location, accommodation and missing services.
+    distance and time penalties, stop, location, accommodation, rest pressure and missing services.
 
 
 <h4>Further Information
@@ -444,6 +460,8 @@
 <p .clearfix>
   <div .aside .m-1 .p-1 .float-end>
     <div .btn-group-vertical>
+      <button .btn .btn-primary .btn-sm title="Show/hide detail">
+        <span .ca-detail>
       <button .btn .btn-secondary .btn-sm title="Persistent Link">
         <span .ca-link>
       <button .btn .btn-secondary .btn-sm title="Copy Link">
@@ -456,6 +474,15 @@
   This menu allows you to link to and download the plan in various ways:
 
 <dl .row .clearfix>
+  <dt .col-1>
+    <button .btn .btn-primary .btn-sm>
+      <span .ca-detail>
+  <dd .col-11>
+    Show or hide detail.
+    Showing detail will allow you to see tables of information about the penance components for each
+    day, stage and the entire trip.
+    At the start, the detail is hidden; you can show it when you want to dive into whether some location is a good
+    choice or not.
   <dt .col-1>
     <button .btn .btn-secondary .btn-sm>
       <span .ca-link>
@@ -601,11 +628,7 @@
       over <span .time>5.5hrs</span>
       Ascent <span .height>25m</span>
       Descent <span .height>25m</span>
-      <br>
       Penance <span .penance>21.7 km</span>
-      \ = Distance <span .distance>19.2 km</span>
-      \ + Stop <span .penance>2.0 km</span>
-      \ + Accommodation <span .penance>0.5 km</span>
      <ul>
       <li>
         <div .location-summary>
@@ -712,17 +735,101 @@
       <span .days>5 days
       Ascent <span .height>385m</span>
       Descent <span .height>305m</span>
-      <br>
       Penance <span .penance>127.3 km</span>
-      =
-      Distance <span .distance>102.4 km</span>
-      + Distance Adjustment <span .penance>6.9km</span>
-      + Time Adjustment <span .penance>6.0km</span>
-      + Stop <span .penance>10.0km</span>
-      + Rest <span .penance>2.0km</span>
-
 <p>
   The stage shows a summary of the days that comprise it, showing total distance, time and effort.
+
+<h4 #penance-table-help>Penance Tables
+
+<p>
+  If you press the <a href="#plan-help">Show/hide detail button</a> you will see tables of data showing the
+  elements that make up the penance for a day, stage or trip.
+  You can use these tables to dig into why a particular leg or stop has been chosen.
+  A penance table looks like
+  
+<div .detail .border .border-info-subtle .rounded .penance-table .m-1 .p-1>
+  <table .table .table-sm>
+    <tbody>
+      <tr>
+        <td>Distance
+        <td .text-end>
+          <span class=.distance>31.6 km
+        <td>
+      <tr>
+        <td>Distance Adjustment
+        <td .text-end>
+          <span .penance>1.9 km
+        <td>
+      <tr>
+        <td>Time Adjustment
+        <td .text-end>
+          <span .penance>7.6 km
+        <td>
+      <tr>
+        <td>Stop
+        <td .text-end>
+          <span .penance>1.0 km
+        <td>
+      <tr>
+        <td>Missing Services (Stop)
+        <td .text-end>
+          <span .penance>1.0 km
+        <td>
+          <span .service .ca-groceries title="Groceries">
+      <tr>
+        <td>Rest Pressure
+        <td .text-end>
+          <span .penance>9.4 km
+        <td>
+
+<p>
+  The types of penance that might be show are as follows:
+
+<table .table .table-striped>
+  <tr>
+    <th>Penance Type
+    <th>Description
+  <tr>
+    <td>Distance
+    <td>The perceived (feels-like) distance, the base measure for any day's walking
+  <tr>
+    <td>Distance Adjustment
+    <td>An adjustment made for too-long or too-short distances, based on the distance range
+  <tr>
+    <td>Time Adjustment
+    <td>An adjustment made for too-long or too-short time spent walking, based on the time range
+  <tr>
+    <td>Stop
+    <td>The penance associated with stopping for the day, rather than continuing
+  <tr>
+    <td>Location
+    <td>Appears when there is a preferred stop location nearby
+  <tr>
+    <td>Accommodation
+    <td>Appears when there is preferred accommodation in a nearby location
+  <tr>
+    <td>Missing Services (Stop)
+    <td>Penance associated with missing services at the day's end location.
+        For a day's travel, the missing services are shown beside the penance.
+  <tr>
+    <td>Missing Services (Day)
+    <td>Penance associated with missing services needed at some point in the day's travel.
+        For a day's travel, the missing services are shown beside the penance.
+  <tr>
+    <td>Rest Pressure
+    <td>Appears when the chosen stop location for the day is near a suitable rest-point but isn't one itself.
+  <tr>
+    <td>Fatigue
+    <td>Appears when the multi-day stage is too-short or too-long before a rest point is reached
+  <tr>
+    <td>Rest
+    <td>The penance associated with resting for a day, rather than continuing
+  <tr>
+    <td>Rest Points
+    <td>Appears when there is a mismatch between the preferred rest points and the actual rest points chosen by the planner
+  <tr>
+    <td>Other
+    <td>Other penance, usually included because legs between locations have some special penance associated with them
 
 <h3 #location-help>Locations
 
@@ -1323,6 +1430,14 @@
     A day not spent walking or cycling.
     You can use rest days to recover, deal with injuries, resupply, be a tourist and get ready for the next stage
     of travel.
+  <dt>Rest Point
+  <dd>
+    A location where you can take a rest day.
+    These locations are usually chosen, depending on preferences, to be points where you have ready access to
+    accommodation, services and things to do on your day off.
+  <dt>Rest Pressure
+  <dd>
+    A bias towards locations that can be used as a rest point.
   <dt>Route
   <dd>
     A variant route on a larger Camino.

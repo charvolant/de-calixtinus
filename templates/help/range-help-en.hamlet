@@ -80,3 +80,22 @@
 
 <p>
   The rest range is pre-populated with values derived from the travel type and level of fitness that you have supplied.
+
+
+<h3 #rest-pressure-help>Rest Pressure
+
+<p>
+  "Rest Pressure" pushes the planner towards making stops at locations that are good for a rest-break: plenty of
+  services, accommodation options and the like.
+  With rest pressure, if there is a likely-looking spot nearby, the planner will tend to extend or contract
+  the current day to reach that spot.
+
+<p>
+  The rest pressure is defined in terms of how far away the least attractive rest spot needs to be before the planner
+  starts considering it as an option.
+  The closer you get to the rest point, the more the pressure increases.
+  If you do not want the planner to use rest pressure, make this field blank.
+
+<p>
+  By default, the rest pressure is pre-populated with values derived from the travel type and levels of
+  comfort and fitness that you have supplied.

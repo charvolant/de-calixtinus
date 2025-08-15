@@ -222,40 +222,40 @@ testExpandPath = TestList [
 
 
 testExpandPath1 = TestCase (do
-  path <- expandPath "simple.txt"
-  assertEqual "ExpandPath 1" "simple.txt" path
+  path' <- expandPath "simple.txt"
+  assertEqual "ExpandPath 1" "simple.txt" path'
   )
 
 testExpandPath2 = TestCase (do
-  path <- expandPath "/path1/path2/simple.txt"
-  assertEqual "ExpandPath 2" "/path1/path2/simple.txt" path
+  path' <- expandPath "/path1/path2/simple.txt"
+  assertEqual "ExpandPath 2" "/path1/path2/simple.txt" path'
   )
 
 testExpandPath3 = TestCase (do
   tmp <- getTemporaryDirectory
-  path <- expandPath "$TMP"
-  assertEqual "ExpandPath 3" tmp path
+  path' <- expandPath "$TMP"
+  assertEqual "ExpandPath 3" tmp path'
   )
 
 testExpandPath4 = TestCase (do
   tmp <- getTemporaryDirectory
-  path <- expandPath "$TMP/dir"
-  assertEqual "ExpandPath 4" (tmp </> "dir") path
+  path' <- expandPath "$TMP/dir"
+  assertEqual "ExpandPath 4" (tmp </> "dir") path'
   )
 
 testExpandPath5 = TestCase (do
   tmp <- getTemporaryDirectory
-  path <- expandPath "/var/$TMP/dir"
-  assertEqual "ExpandPath 5" ("/" </> "var" </> tmp </> "dir") path
+  path' <- expandPath "/var/$TMP/dir"
+  assertEqual "ExpandPath 5" ("/" </> "var" </> tmp </> "dir") path'
   )
 
 testExpandPath6 = TestCase (do
   home <- getEnv "HOME"
-  path <- expandPath "/var/$HOME"
-  assertEqual "ExpandPath 6" ("/" </> "var" </> home) path
+  path' <- expandPath "/var/$HOME"
+  assertEqual "ExpandPath 6" ("/" </> "var" </> home) path'
   )
 
 testExpandPath7 = TestCase (do
-  path <- expandPath "/var/$FLOOPLE"
-  assertEqual "ExpandPath 6" ("/" </> "var" </> "$FLOOPLE") path
+  path' <- expandPath "/var/$FLOOPLE"
+  assertEqual "ExpandPath 6" ("/" </> "var" </> "$FLOOPLE") path'
   )

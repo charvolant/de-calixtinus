@@ -118,6 +118,7 @@ preferences1 = TravelPreferences {
     preferenceDistance = distanceRange1,
     preferenceTime = timeRange1,
     preferenceRest = restRange1,
+    preferenceRestPressure = Just 10.0,
     preferenceStop = stopPrefs1,
     preferenceStockStop = stopPrefs1,
     preferenceRestStop = stopPrefs1,
@@ -132,6 +133,7 @@ preferences2 = TravelPreferences {
     preferenceDistance = distanceRange1,
     preferenceTime = timeRange1,
     preferenceRest = restRange1,
+    preferenceRestPressure = Just 10.0,
     preferenceStop = stopPrefs2,
     preferenceStockStop = stopPrefs2,
     preferenceRestStop = stopPrefs3,
@@ -166,7 +168,7 @@ location2 = Location {
     locationServices = S.empty,
     locationAccommodation = [
       GenericAccommodation PilgrimAlbergue,
-      Accommodation "B#2" (wildcardText "B2") PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ]) Nothing
+      Accommodation "B#2" (wildcardText "B2") Nothing PrivateAlbergue (S.fromList [ Handwash, Bedlinen, Towels ]) (S.fromList [ Shared, Double ]) Nothing
     ],
     locationPois = [],
     locationEvents = []
@@ -183,7 +185,7 @@ location3 = Location {
     locationRegion = Just $ placeholder "ES-GA",
     locationServices = S.empty,
     locationAccommodation = [
-      Accommodation "C#1" (wildcardText "C1") Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ]) Nothing
+      Accommodation "C#1" (wildcardText "C1") Nothing Hotel (S.fromList [ Restaurant, Breakfast, Dinner, Bedlinen, Towels, Heating ]) (S.fromList [ DoubleWC ]) Nothing
     ],
     locationPois = [],
     locationEvents = []
@@ -240,6 +242,7 @@ route1 = Route {
   routeStarts = [],
   routeFinishes = [],
   routeStops = S.empty,
+  routeRestPoints = S.empty,
   routeSuggestedPois = S.empty,
   routePalette = def 
 }
@@ -271,6 +274,7 @@ cpreferences1 = CaminoPreferences {
   preferenceFinish = location3,
   preferenceStops = S.empty,
   preferenceExcluded = S.empty,
+  preferenceRestPoints = S.empty,
   preferencePois = S.empty,
   preferenceStartDate = Just $ fromGregorian 2025 January 16
 }
@@ -278,6 +282,8 @@ cpreferences1 = CaminoPreferences {
 accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) stopPrefs1 camino1) preferences1 camino1 location1 location3 (const True)
 
 locationMap1 = buildTripChoiceMap (locationChoice stopPrefs1) preferences1 camino1 location1 location3 (const True)
+
+rpMap1 = Nothing
 
 testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3, testHoursSimple4, testHoursSimple5, testHoursSimple6]
 
@@ -366,13 +372,13 @@ testAccommodationSimple6 = let
 
 testPenanceSimple = TestList [ testPenanceSimple1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
 
-testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple1 = TestCase (assertPenanceEqual "Penance Simple 1" (Penance 4.4) (metricsPenance $ penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs0) 0.1)
 
-testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.9) (metricsPenance $ penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs1) 0.1)
 
-testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 legs0) 0.1)
+testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs0) 0.1)
 
-testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 legs1) 0.1)
+testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs1) 0.1)
 
 testIsStockUpDay config = TestList [
   testIsStockUpDay1 config, testIsStockUpDay2 config, testIsStockUpDay3 config, testIsStockUpDay4 config,
@@ -415,6 +421,7 @@ testPlanCamino1 config preferences camino =
       preferenceFinish = (caminoLocations camino) M.! "P-P12",
       preferenceStops = S.empty,
       preferenceExcluded = S.empty,
+      preferenceRestPoints = S.empty,
       preferencePois = S.empty,
       preferenceStartDate = Just $ fromGregorian 2025 January 16
     }
@@ -433,7 +440,7 @@ testPlanCamino1 config preferences camino =
       assertEqual "Plan Camino 1 6" "P-P1" (identifier $ start day1)
       assertEqual "Plan Camino 1 7" "P-P7" (identifier $ finish day1)
       assertEqual "Plan Camino 1 8" 4 (length $ path day1)
-      assertPenanceEqual "Plan Camino 1 9" (Penance 21.0) (metricsPenance $ score day1) 0.1
+      assertPenanceEqual "Plan Camino 1 9" (Penance 24.4) (metricsPenance $ score day1) 0.1
       let day2 = path route !! 1
       assertEqual "Plan Camino 1 10" "P-P7" (identifier $ start day2)
       assertEqual "Plan Camino 1 11" "P-P12" (identifier $ finish day2)
@@ -470,6 +477,7 @@ testSolution2 config preferences camino = TestCase (do
           preferenceFinish = (caminoLocations camino) M.! "P-P12",
           preferenceStops = S.empty,
           preferenceExcluded = S.empty,
+          preferenceRestPoints = S.empty,
           preferencePois = S.empty,
           preferenceStartDate = Just $ fromGregorian 2025 January 16
         }

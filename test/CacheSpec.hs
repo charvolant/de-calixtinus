@@ -6,9 +6,6 @@ module CacheSpec(testCache) where
 import Test.HUnit
 import Data.Cache
 import Control.Concurrent (threadDelay)
-import System.Directory
-import System.FilePath
-import Data.Util
 import TestUtils
 
 testCache :: Test

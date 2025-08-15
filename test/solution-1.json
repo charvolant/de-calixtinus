@@ -4,12 +4,140 @@
     "excluded": [],
     "finish": "C",
     "pois": [],
+    "rest-points": [],
     "routes": [
       "R1"
     ],
     "start": "A",
     "start-date": "2025-01-16",
     "stops": []
+  },
+  "choices": {
+    "rest-accommodation": {
+      "A": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "B": {
+        "choice": "B#2",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C#1",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      }
+    },
+    "rest-location": {
+      "A": {
+        "choice": "A",
+        "features": null,
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "features": null,
+        "penance": null
+      }
+    },
+    "rest-pressure": {
+      "A": {
+        "choice": "A",
+        "features": null,
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "features": null,
+        "penance": null
+      }
+    },
+    "stock-accommodation": {
+      "A": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "B": {
+        "choice": "PilgrimAlbergue",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C#1",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      }
+    },
+    "stock-location": {
+      "A": {
+        "choice": "A",
+        "features": null,
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "features": null,
+        "penance": null
+      }
+    },
+    "stop-accommodation": {
+      "A": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "B": {
+        "choice": "PilgrimAlbergue",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C#1",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      }
+    },
+    "stop-location": {
+      "A": {
+        "choice": "A",
+        "features": null,
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "features": null,
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "features": null,
+        "penance": null
+      }
+    }
   },
   "id": "S-1",
   "locations": [
@@ -86,6 +214,8 @@
               "rest": 0,
               "rest-days": 0,
               "rest-point": true,
+              "rest-points": 0,
+              "rest-pressure": 0,
               "stock-point": false,
               "stop": 2,
               "stop-services": 0.3,
@@ -131,6 +261,8 @@
           "rest": 0,
           "rest-days": 0,
           "rest-point": true,
+          "rest-points": 0,
+          "rest-pressure": 0,
           "stock-point": false,
           "stop": 2,
           "stop-services": 0.3,
@@ -176,6 +308,8 @@
       "rest": 0,
       "rest-days": 0,
       "rest-point": true,
+      "rest-points": 0,
+      "rest-pressure": 0,
       "stock-point": false,
       "stop": 2,
       "stop-services": 0.3,
@@ -198,6 +332,7 @@
     "poi-categories": [
       "ReligiousPoi"
     ],
+    "rest-pressure": 10,
     "rest-range": {
       "derived": null,
       "lower": 5,

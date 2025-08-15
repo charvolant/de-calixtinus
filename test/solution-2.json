@@ -4,12 +4,642 @@
     "excluded": [],
     "finish": "P-P12",
     "pois": [],
+    "rest-points": [],
     "routes": [
       "P-RP"
     ],
     "start": "P-P1",
     "start-date": "2025-01-16",
     "stops": []
+  },
+  "choices": {
+    "rest-accommodation": {
+      "P-P1": {
+        "choice": "Hostel",
+        "features": [
+          "Kitchen",
+          "Bedlinen"
+        ],
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P11": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P12": {
+        "choice": "P-P12#2",
+        "features": [
+          "Kitchen",
+          "Bedlinen"
+        ],
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2#2",
+        "features": [
+          "Bedlinen"
+        ],
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P4": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P5": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P6": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P7": {
+        "choice": "P-P7#1",
+        "features": [
+          "Bedlinen"
+        ],
+        "penance": null
+      },
+      "P-P8": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P9": {
+        "choice": "P-P9#3",
+        "features": [
+          "Bedlinen"
+        ],
+        "penance": null
+      }
+    },
+    "rest-location": {
+      "P-P1": {
+        "choice": "P-P1",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "P-P10",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P11": {
+        "choice": "P-P11",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P12": {
+        "choice": "P-P12",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "P-P3",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P4": {
+        "choice": "P-P4",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": 2.35
+      },
+      "P-P5": {
+        "choice": "P-P5",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": 0.37999988
+      },
+      "P-P6": {
+        "choice": "P-P6",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": 6
+      },
+      "P-P7": {
+        "choice": "P-P7",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": 3.4
+      },
+      "P-P8": {
+        "choice": "P-P8",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": 0.20000005
+      },
+      "P-P9": {
+        "choice": "P-P9",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      }
+    },
+    "rest-pressure": {
+      "P-P1": {
+        "choice": "P-P1",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "P-P10",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P11": {
+        "choice": "P-P11",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P12": {
+        "choice": "P-P12",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "P-P3",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P4": {
+        "choice": "P-P4",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": 2.3500004
+      },
+      "P-P5": {
+        "choice": "P-P5",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": 0.3800001
+      },
+      "P-P6": {
+        "choice": "P-P6",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": 6
+      },
+      "P-P7": {
+        "choice": "P-P7",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": 3.3999996
+      },
+      "P-P8": {
+        "choice": "P-P8",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": 0.19999981
+      },
+      "P-P9": {
+        "choice": "P-P9",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Bank",
+          "Groceries",
+          "Medical"
+        ],
+        "penance": null
+      }
+    },
+    "stock-accommodation": {
+      "P-P1": {
+        "choice": "Hostel",
+        "features": null,
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P11": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P12": {
+        "choice": "P-P12#2",
+        "features": null,
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2#2",
+        "features": null,
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P4": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P5": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P6": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P7": {
+        "choice": "P-P7#1",
+        "features": null,
+        "penance": null
+      },
+      "P-P8": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P9": {
+        "choice": "P-P9#3",
+        "features": null,
+        "penance": null
+      }
+    },
+    "stock-location": {
+      "P-P1": {
+        "choice": "P-P1",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "P-P10",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P11": {
+        "choice": "P-P11",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P12": {
+        "choice": "P-P12",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "P-P3",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P4": {
+        "choice": "P-P4",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      },
+      "P-P5": {
+        "choice": "P-P5",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P6": {
+        "choice": "P-P6",
+        "features": [
+          "Restaurant",
+          "Pharmacy"
+        ],
+        "penance": null
+      },
+      "P-P7": {
+        "choice": "P-P7",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P8": {
+        "choice": "P-P8",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P9": {
+        "choice": "P-P9",
+        "features": [
+          "Restaurant",
+          "Pharmacy",
+          "Groceries"
+        ],
+        "penance": null
+      }
+    },
+    "stop-accommodation": {
+      "P-P1": {
+        "choice": "Hostel",
+        "features": null,
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P11": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P12": {
+        "choice": "P-P12#2",
+        "features": null,
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2#2",
+        "features": null,
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P4": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P5": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P6": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P7": {
+        "choice": "P-P7#1",
+        "features": null,
+        "penance": null
+      },
+      "P-P8": {
+        "choice": "Camping",
+        "features": null,
+        "penance": "reject"
+      },
+      "P-P9": {
+        "choice": "P-P9#3",
+        "features": null,
+        "penance": null
+      }
+    },
+    "stop-location": {
+      "P-P1": {
+        "choice": "P-P1",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P10": {
+        "choice": "P-P10",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      },
+      "P-P11": {
+        "choice": "P-P11",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P12": {
+        "choice": "P-P12",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P2": {
+        "choice": "P-P2",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P3": {
+        "choice": "P-P3",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      },
+      "P-P4": {
+        "choice": "P-P4",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      },
+      "P-P5": {
+        "choice": "P-P5",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P6": {
+        "choice": "P-P6",
+        "features": [
+          "Restaurant"
+        ],
+        "penance": null
+      },
+      "P-P7": {
+        "choice": "P-P7",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P8": {
+        "choice": "P-P8",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      },
+      "P-P9": {
+        "choice": "P-P9",
+        "features": [
+          "Restaurant",
+          "Groceries"
+        ],
+        "penance": null
+      }
+    }
   },
   "id": "S-2",
   "locations": [
@@ -376,12 +1006,14 @@
               "misc": 0,
               "missing-day-services": [],
               "missing-stop-services": [],
-              "penance": 20.98041,
+              "penance": 24.38041,
               "perceived-distance": 18.98041,
               "poi-time": null,
               "rest": 0,
               "rest-days": 0,
               "rest-point": false,
+              "rest-points": 0,
+              "rest-pressure": 3.3999996,
               "stock-point": false,
               "stop": 2,
               "stop-services": 0,
@@ -478,6 +1110,8 @@
               "rest": 0,
               "rest-days": 0,
               "rest-point": true,
+              "rest-points": 0,
+              "rest-pressure": 0,
               "stock-point": false,
               "stop": 2,
               "stop-services": 0,
@@ -515,12 +1149,14 @@
           "misc": 0,
           "missing-day-services": [],
           "missing-stop-services": [],
-          "penance": 100.997635,
+          "penance": 104.39764,
           "perceived-distance": 36.997635,
           "poi-time": null,
           "rest": 0,
           "rest-days": 0,
           "rest-point": true,
+          "rest-points": 0,
+          "rest-pressure": 3.3999996,
           "stock-point": false,
           "stop": 4,
           "stop-services": 0,
@@ -558,12 +1194,14 @@
       "misc": 0,
       "missing-day-services": [],
       "missing-stop-services": [],
-      "penance": 100.997635,
+      "penance": 104.39764,
       "perceived-distance": 36.997635,
       "poi-time": null,
       "rest": 0,
       "rest-days": 0,
       "rest-point": true,
+      "rest-points": 0,
+      "rest-pressure": 3.3999996,
       "stock-point": false,
       "stop": 4,
       "stop-services": 0,
@@ -590,6 +1228,7 @@
       "PilgrimPoi",
       "RecreationPoi"
     ],
+    "rest-pressure": 10,
     "rest-range": {
       "derived": null,
       "lower": 5,
@@ -615,13 +1254,13 @@
       },
       "location": {
         "Bridge": "reject",
-        "City": 8,
+        "City": 10,
         "Intersection": "reject",
         "Monastery": "reject",
         "Peak": "reject",
         "Poi": "reject",
-        "Town": 5,
-        "Village": 0
+        "Town": 0,
+        "Village": "reject"
       },
       "services": {
         "Bank": 2,

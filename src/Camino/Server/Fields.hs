@@ -36,7 +36,6 @@ import Camino.Display.I18n (formatPenance)
 import Data.Either (fromRight, isLeft, rights)
 import Data.List (find)
 import qualified Data.Map as M
-import Data.Maybe (isJust)
 import Data.Propositional
 import qualified Data.Set as S
 import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)

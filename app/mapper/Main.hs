@@ -42,8 +42,8 @@ printLocation l = do
     id' = locationID l
     name' = locationNameLabel l
     position' = locationPosition l
-    lat' = maybe 0.0 latitude position'
-    lon' = maybe 0.0 longitude position'
+    lat' = latitude position'
+    lon' = longitude position'
     region' = maybe "-" (\r -> "(" <> (regionID r) <> ")") (locationRegion l)
     pois' = intercalate ", " $ map poiLabel (locationPois l)
 

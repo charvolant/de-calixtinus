@@ -120,23 +120,21 @@ caminoStyles config locales camino =
     camino' = preferenceCamino camino
     iconBase = appendRoot config $ assetPath $ fromJust $ getAsset "icons" config
 
-pointKml :: Maybe LatLong -> [Node]
-pointKml (Just latlong) = [xml|
+pointKml :: LatLong -> [Node]
+pointKml latlong = [xml|
     <Point>
-      <coordinates>#{pack $ show $ longitude latlong},#{pack $ show $ latitude latlong},0
+      <coordinates>#{pack $ show $ longitude latlong},#{pack $ show $ latitude latlong},#{pack $ show $ maybe 0 id (elevation latlong)}
   |]
-pointKml _ = []
 
-lineKml :: Maybe LatLong -> Maybe LatLong -> [Node]
-lineKml (Just latlong1) (Just latlong2) = [xml|
+lineKml :: LatLong -> LatLong -> [Node]
+lineKml latlong1 latlong2 = [xml|
       <LineString>
         <coordinates>
           #{cstr}
     |]
   where
-    coords latlong = (pack $ show $ longitude latlong) <> "," <> (pack $ show $ latitude latlong) <> ",0 "
+    coords latlong = (pack $ show $ longitude latlong) <> "," <> (pack $ show $ latitude latlong) <> "," <> (pack $ show $ maybe 0 id (elevation latlong))
     cstr = coords latlong1 <> " " <> coords latlong2 -- Required because the template removes spaces
-lineKml _ _ = []
 
 caminoLocationStyle :: CaminoPreferences -> S.Set Location -> S.Set Location -> Location -> Text
 caminoLocationStyle _camino stops waypoints location

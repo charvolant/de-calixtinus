@@ -64,8 +64,8 @@ createElevationsFile :: MapApi -> [Camino] -> FilePath -> IO ()
 createElevationsFile api caminos' output' = do
   let locations = foldr (\c -> \ls -> S.union ls (S.fromList $ caminoLocations c)) S.empty caminos'
   let pois = foldr (\c -> \ls -> S.union ls (S.fromList $ map fst $ M.elems $ caminoPoiMap c)) S.empty caminos'
-  let lrequests = map (\l -> (locationID l, locationNameLabel l, fromJust (locationPosition l))) $ filter (isJust . locationPosition) $ S.toList locations
-  let prequests = map (\p -> (poiID p, poiNameLabel p, fromJust (poiPosition p))) $ filter (isJust . poiPosition) $ S.toList pois
+  let lrequests = map (\l -> (locationID l, locationNameLabel l, locationPosition l)) $ S.toList locations
+  let prequests = map (\p -> (poiID p, poiNameLabel p, poiPosition p)) $ S.toList pois
   let requests = sortOn (\(v, _, _) -> v) $ lrequests ++ prequests
   let requests' = map (\(_i, _n, loc) -> LatLng (latitude loc) (longitude loc)) requests
   elevations' <- getElevations api requests'
@@ -80,11 +80,11 @@ mapPosition elevMap ll@(LatLong lat' long' Nothing srs') = maybe ll (\(LatLngEle
 mapPosition elevMap ll = ll
 
 mapPoi ::  M.Map LatLong LatLngElevation -> PointOfInterest -> PointOfInterest
-mapPoi elevMap poi = poi { poiPosition = mapPosition elevMap <$> poiPosition poi }
+mapPoi elevMap poi = poi { poiPosition = mapPosition elevMap (poiPosition poi) }
 
 mapLocation :: M.Map LatLong LatLngElevation -> Location -> Location
 mapLocation elevMap location = location {
-    locationPosition = mapPosition elevMap <$> locationPosition location
+    locationPosition = mapPosition elevMap (locationPosition location)
   , locationPois = map (mapPoi elevMap) (locationPois location)
   }
 
@@ -103,8 +103,8 @@ addElevations :: MapApi -> Camino -> IO Camino
 addElevations api camino = do
   let locations = S.fromList $ caminoLocations camino
   let pois = S.fromList $ map fst $ M.elems $ caminoPoiMap camino
-  let lrequests = S.map (\loc -> fromJust (locationPosition loc)) $ S.filter (\loc -> maybe False (\p -> isNothing (elevation p)) $ locationPosition loc) locations
-  let prequests = S.map (\poi -> fromJust (poiPosition poi)) $ S.filter (\poi -> maybe False (\p -> isNothing (elevation p)) $ poiPosition poi) pois
+  let lrequests = S.map locationPosition locations
+  let prequests = S.map poiPosition pois
   let requests = S.toList $ S.union lrequests prequests
   let requests' = map (\loc -> LatLng (latitude loc) (longitude loc)) requests
   elevations' <- getElevations api requests'

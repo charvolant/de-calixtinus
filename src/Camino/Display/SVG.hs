@@ -34,7 +34,7 @@ import Text.Hamlet
 
 buildCoordinates' :: [Leg] -> Float -> [(Float, Maybe Float, Maybe Location)]
 buildCoordinates' [] _ = []
-buildCoordinates' (leg:rest) d = (d', realToFrac <$> maybe Nothing elevation (locationPosition to), Just to):(buildCoordinates' rest d')
+buildCoordinates' (leg:rest) d = (d', realToFrac <$> (elevation $ locationPosition to), Just to):(buildCoordinates' rest d')
   where
     d' = d + legDistance leg
     _lf = legFrom leg
@@ -42,7 +42,7 @@ buildCoordinates' (leg:rest) d = (d', realToFrac <$> maybe Nothing elevation (lo
 
 buildCoordinates :: [Leg] -> [(Float, Maybe Float, Maybe Location)]
 buildCoordinates [] = []
-buildCoordinates legs@(st:_) = (0.0, realToFrac <$> maybe Nothing elevation (locationPosition sl), Just sl):(buildCoordinates' legs 0.0)
+buildCoordinates legs@(st:_) = (0.0, realToFrac <$> (elevation $ locationPosition sl), Just sl):(buildCoordinates' legs 0.0)
   where
     sl = legFrom st
 
@@ -141,7 +141,7 @@ showLayout :: Bool
 showLayout = False
 
 showElevation :: Location -> String
-showElevation loc = maybe "" (\p -> maybe "" show (elevation p)) (locationPosition loc)
+showElevation loc = maybe "" show (elevation $ locationPosition loc)
 
 svgElevationProfile :: Config -> Float -> (Location -> Bool) -> (Location -> Bool) -> [Leg] -> HtmlUrlI18n CaminoMsg CaminoRoute
 svgElevationProfile _config maxy label important legs = [ihamlet|

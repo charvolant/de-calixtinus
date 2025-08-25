@@ -114,6 +114,7 @@ data CaminoMsg =
   | DownloadSpreadsheetTitle
   | DryerTitle
   | ElevationFormatted Double
+  | ElevationLabel
   | EventsLabel
   | ExceptText
   | ExcludedStopsLabel
@@ -411,6 +412,7 @@ renderCaminoMsgDefault _ DownloadKmlTitle = "Download KML"
 renderCaminoMsgDefault _ DownloadSpreadsheetTitle = "Download Spreadhseet"
 renderCaminoMsgDefault _ DryerTitle = "Dryer"
 renderCaminoMsgDefault _ (ElevationFormatted elev) = formatHeight elev
+renderCaminoMsgDefault _ ElevationLabel = "Elevation"
 renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"

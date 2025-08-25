@@ -108,7 +108,7 @@ import Data.Event
 import Data.Foldable (foldl', minimumBy, toList)
 import qualified Data.List as L
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, rootLocale, wildcardText)
-import Data.Maybe (catMaybes, fromJust, isJust)
+import Data.Maybe (fromJust)
 import Data.Metadata
 import qualified Data.Map as M
 import Data.Placeholder
@@ -247,6 +247,9 @@ instance ToJSON LatLong where
       <> "srs" .?= (if srs' == def then Nothing else Just srs')
 
 instance NFData LatLong
+
+instance Default LatLong where
+  def = LatLong 0.0 0.0 Nothing def
 
 -- Compute the centroid of a list of lat/longs
 centroid :: (Foldable t) => t LatLong -> LatLong
@@ -679,7 +682,7 @@ data PointOfInterest = PointOfInterest {
   , poiDescription :: Maybe Description -- ^ Detailed description
   , poiType :: LocationType -- ^ The point of interest type, same as a location type
   , poiCategories :: S.Set PoiCategory -- ^ The broad categories that are of interest
-  , poiPosition :: Maybe LatLong -- ^ Location, if it's that sort of thing
+  , poiPosition :: LatLong -- ^ Lat/long/elevation
   , poiHours :: Maybe OpenHours -- ^ Dates and times when the point of interest is open
   , poiTime :: Maybe Float -- ^ The amount of time, in hours that someone might spend investigating the Poi
   , poiEvents :: [Event] -- ^ Associated events
@@ -693,7 +696,7 @@ instance Placeholder Text PointOfInterest where
     , poiDescription = Nothing
     , poiType = PlaceholderLocation
     , poiCategories = S.empty
-    , poiPosition = Nothing
+    , poiPosition = def
     , poiHours = Nothing
     , poiTime = Nothing
     , poiEvents = []
@@ -712,7 +715,7 @@ instance FromJSON PointOfInterest where
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
     categories <- v .:? "categories" .!= defaultPoiCategories type'
-    position' <- v .:? "position"
+    position' <- v .: "position"
     hours' <- v .:? "hours"
     time' <- v .:? "time"
     events' <- v .:? "events" .!= []
@@ -777,7 +780,7 @@ data Location = Location {
   , locationName :: Localised TaggedText
   , locationDescription :: Maybe Description
   , locationType :: LocationType
-  , locationPosition :: Maybe LatLong
+  , locationPosition :: LatLong
   , locationRegion :: Maybe Region
   , locationServices :: S.Set Service
   , locationAccommodation :: [Accommodation]
@@ -794,7 +797,7 @@ instance Placeholder Text Location where
     , locationName = wildcardText $ ("Placeholder for " <> lid)
     , locationDescription = Nothing
     , locationType = PlaceholderLocation
-    , locationPosition = Nothing
+    , locationPosition = def
     , locationRegion = Nothing
     , locationServices = S.empty
     , locationAccommodation = []
@@ -832,7 +835,7 @@ instance FromJSON Location where
     name' <- v .: "name"
     description' <- v .:? "description" .!= Nothing
     type' <- v .:? "type" .!= Poi
-    position' <- v .:? "position"
+    position' <- v .: "position"
     region' <- v .:? "region"
     services' <- v .: "services"
     accommodation' <- v .: "accommodation"
@@ -984,7 +987,7 @@ locationBbox :: (Foldable f) => f Location -- ^ The collection of locations
  -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
 locationBbox locations = (LatLong (maximum lats) (minimum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just minelev)  def, LatLong (minimum lats) (maximum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just maxelev) def)
   where
-    positions = catMaybes $ map locationPosition $ toList locations
+    positions = map locationPosition $ toList locations
     lats = map latitude positions
     longs = map longitude positions
     elevs = map (\p -> maybe 0.0 id (elevation p)) positions
@@ -1271,13 +1274,13 @@ instance Summary Route where
 -- Find the location closest to the centre of the route
 routeCentralLocation :: Route -> Location
 routeCentralLocation route = let
-    locations = filter (isJust . locationPosition) $ routeLocations route
+    locations = routeLocations route
   in
     if null locations then
       headWithError $ routeLocations route
     else let
-        centre = centroid $ map (fromJust . locationPosition) locations
-        closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (fromJust $ locationPosition l1)) (euclidianDistance2 centre (fromJust $ locationPosition l2))) locations
+        centre = centroid $ map locationPosition locations
+        closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (locationPosition l1)) (euclidianDistance2 centre (locationPosition l2))) locations
       in
         closest
 

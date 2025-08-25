@@ -858,7 +858,7 @@ caminoPointOfInterestHtml poi = [ihamlet|
           ^{caminoLocationTypeIcon (poiType poi)}
         <span  title="^{caminoPoiCategoriesAttr (poiCategories poi)}">
           _{Txt (poiName poi)}
-        $maybe pos <- poiPosition poi
+        $with pos <- poiPosition poi
           <a .description-icon .float-end onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
             <span .ca-globe title="_{ShowOnMapTitle}">
         $maybe d <- poiDescription poi
@@ -985,7 +985,7 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
                   $maybe about <- descAbout d
                     <a .description-icon .about href="@{LinkRoute about}" title="_{LinkTitle about (locationName location)}">
                       <span .ca-link>
-                $maybe pos <- locationPosition location
+                $with pos <- locationPosition location
                   <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
                     <span .ca-globe title="_{ShowOnMapTitle} #{formatLatLng (latitude pos)},#{formatLatLng (longitude pos)}#{formatElev (elevation pos)}">
      <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
@@ -1660,36 +1660,35 @@ function showLocationDescription(id) {
 caminoMapScriptCamino :: Bool -> (Location -> String) -> (PointOfInterest -> String) -> (Location -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute) ->  (Leg -> Int) -> (Leg -> Float) -> (Leg -> String) -> S.Set Location -> S.Set Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptCamino tlink chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip chooseWidth chooseOpacity chooseColour locations legs = [ihamlet|
 $forall location <- locations
-  $maybe position <- locationPosition location
+  $with position <- locationPosition location
     marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{chooseLocationIcon location} } );
     marker.bindTooltip(`^{chooseLocationTooltip location}`);
     marker.addTo(locations);
     $if tlink
       marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
   $forall poi <- locationPois location
-    $maybe position <- poiPosition poi
+    $with position <- poiPosition poi
       marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{choosePoiIcon poi} } );
       marker.bindTooltip(`^{choosePoiTooltip poi}`);
       marker.addTo(pois);
       $if tlink
         marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
 $forall leg <- legs
-  $if isJust (locationPosition $ legFrom leg) && isJust (locationPosition $ legTo leg)
-    line = L.polyline([
-      [#{maybe 0.0 latitude (locationPosition $ legFrom leg)}, #{maybe 0.0 longitude (locationPosition $ legFrom leg)}],
-      [#{maybe 0.0 latitude (locationPosition $ legTo leg)}, #{maybe 0.0 longitude (locationPosition $ legTo leg)}]
-    ], {
-       color: '#{chooseColour leg}',
-       weight: #{chooseWidth leg},
-       opacity: #{chooseOpacity leg}
-    });
-    line.addTo(legs);
+  line = L.polyline([
+    [#{latitude (locationPosition $ legFrom leg)}, #{longitude (locationPosition $ legFrom leg)}],
+    [#{latitude (locationPosition $ legTo leg)}, #{longitude (locationPosition $ legTo leg)}]
+  ], {
+     color: '#{chooseColour leg}',
+     weight: #{chooseWidth leg},
+     opacity: #{chooseOpacity leg}
+  });
+  line.addTo(legs);
 |]
 
 caminoMapScriptLabels :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptLabels camino = [ihamlet|
 $forall route <- caminoRoutes camino
-  $maybe position <- locationPosition (routeCentralLocation route)
+  $with position <- locationPosition (routeCentralLocation route)
     $if not (route == defr)
       $if routeMajor route
           label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-minor" });
@@ -1697,7 +1696,7 @@ $forall route <- caminoRoutes camino
       $else
           label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (routeName route)}`, direction: "top", permanent: true, className: "map-label-subminor" });
           label.addTo(minorRouteLabels);
-$maybe position <- locationPosition caminoStart
+$with position <- locationPosition caminoStart
   label = L.tooltip([#{latitude position}, #{longitude position}], { content: `_{Txt (caminoName camino)}`, direction: "top", permanent: true, className: "map-label" });
   label.addTo(caminoLabels);
 |]

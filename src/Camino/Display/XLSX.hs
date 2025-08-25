@@ -430,8 +430,9 @@ createLocationSlab rests stocks stops waypoints location = let
         booleanCell (not $ null $ locationEvents location)
       , booleanCell (locationCamping location)
       , booleanCell (locationAlwaysOpen location)
-      , maybeDoubleCell latLngFormat (latitude <$> locationPosition location)
-      , maybeDoubleCell latLngFormat (longitude <$> locationPosition location)
+      , doubleCell latLngFormat (latitude $ locationPosition location)
+      , doubleCell latLngFormat (longitude $ locationPosition location)
+      , maybeDoubleCell latLngFormat (elevation $ locationPosition location)
       , def & cellValue ?~ CellText (locationID location)
       ]
   in
@@ -457,6 +458,7 @@ locationAdditionalHeaders = rowSlab
     , headingLabel AlwaysOpenLabel
     , headingLabel LatitudeLabel
     , headingLabel LongitudeLabel
+    , headingLabel ElevationLabel
     , headingLabel IdentifierLabel
   ]
 

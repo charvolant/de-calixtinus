@@ -35,7 +35,7 @@ testRegionToJSON1 =
     ec = encode region
   in
     TestCase (do
-      assertEqual "Region ToJSON 1 1" "{\"closed-days\":[],\"description\":null,\"holidays\":[],\"id\":\"World\",\"locale\":\"*\",\"member\":[],\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}" ec
+      assertEqual "Region ToJSON 1 1" "{\"id\":\"World\",\"name\":\"World\",\"type\":\"Planet\",\"locale\":\"*\"}" ec
       )
 
 testRegionToJSON2 =
@@ -46,7 +46,7 @@ testRegionToJSON2 =
     ec = encode region2
   in
     TestCase (do
-      assertEqual "Region ToJSON 2 1" "{\"closed-days\":[],\"description\":\"The French Republic\",\"holidays\":[],\"id\":\"FR\",\"locale\":\"fr\",\"member\":[],\"name\":\"France\",\"parent\":\"World\",\"type\":\"Country\"}" ec
+      assertEqual "Region ToJSON 2 1"  "{\"id\":\"FR\",\"name\":\"France\",\"type\":\"Country\",\"description\":\"The French Republic\",\"parent\":\"World\",\"locale\":\"fr\"}" ec
       )
 
 testRegionToJSON3 =
@@ -56,7 +56,7 @@ testRegionToJSON3 =
     ec = encode region2
   in
     TestCase (do
-      assertEqual "Region ToJSON 2 1" "{\"closed-days\":[],\"description\":null,\"holidays\":[{\"key\":\"Easter\",\"type\":\"named\"}],\"id\":\"FR\",\"locale\":null,\"member\":[],\"name\":\"France\",\"parent\":\"World\",\"type\":\"Country\"}" ec
+      assertEqual "Region ToJSON 2 1"  "{\"id\":\"FR\",\"name\":\"France\",\"type\":\"Country\",\"parent\":\"World\",\"holidays\":[{\"key\":\"Easter\",\"type\":\"named\"}]}" ec
       )
 
 testRegionFromJSON1 =
@@ -112,7 +112,7 @@ testRegionConfigToJSON1 =
     ec = encode config
   in
     TestCase (do
-      assertEqual "RegionConfig ToJSON 1 1" "[{\"closed-days\":[],\"description\":null,\"holidays\":[],\"id\":\"Europe\",\"locale\":null,\"member\":[],\"name\":\"Europe\",\"parent\":\"World\",\"type\":\"Continent\"},{\"closed-days\":[],\"description\":null,\"holidays\":[],\"id\":\"World\",\"locale\":\"*\",\"member\":[],\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}]" ec
+      assertEqual "RegionConfig ToJSON 1 1" "[{\"closed-days\":null,\"description\":null,\"holidays\":null,\"id\":\"Europe\",\"locale\":null,\"member\":null,\"name\":\"Europe\",\"parent\":\"World\",\"type\":\"Continent\"},{\"closed-days\":null,\"description\":null,\"holidays\":null,\"id\":\"World\",\"locale\":\"*\",\"member\":null,\"name\":\"World\",\"parent\":null,\"type\":\"Planet\"}]" ec
       )
 
 testRegionConfigFromJSON1 =

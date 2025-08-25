@@ -13,8 +13,10 @@ Some useful common functions
 module Data.Util (
     canonicalise
   , categorise
+  , ceilingBy
   , commaJoin
   , expandPath
+  , floorBy
   , foldDirectory
   , foldDirectoryIO
   , headWithDefault
@@ -28,6 +30,7 @@ module Data.Util (
   , maybeMin
   , maybeSum
   , partition
+  , roundBy
   , scanDirectory
   , selectFromList
   , tailOrEmpty
@@ -421,3 +424,30 @@ tailOrEmpty (_:t) = t
 initOrEmpty :: [a] -> [a]
 initOrEmpty [] = []
 initOrEmpty (h:t) = NE.init (h NE.:| t)
+
+-- | Ceiling by units of accuracy
+--
+-- >>> ceilingBy 0.1 4.56
+-- 4.6
+-- >>> ceilingBy 10 56
+-- 60
+ceilingBy :: (RealFrac a) => a -> a -> a
+ceilingBy b v = b * fromIntegral (ceiling $ v / b)
+
+-- | Floor by units of accuracy
+--
+-- >>> floorBy 0.1 4.56
+-- 4.5
+-- >>> floorBy 10 56
+-- 50
+floorBy :: (RealFrac a) => a -> a -> a
+floorBy b v = b * fromIntegral (floor $ v / b)
+
+-- | Round by units of accuracy
+--
+-- >>> roundBy 0.1 4.56
+-- 4.6
+-- >>> roundBy 10 54
+-- 50
+roundBy :: (RealFrac a) => a -> a -> a
+roundBy b v = b * fromIntegral (round $ v / b)

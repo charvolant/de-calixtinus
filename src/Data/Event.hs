@@ -383,9 +383,10 @@ data EventHours = EventHours EventCalendar EventTime
     deriving (Show, Eq, Generic)
 
 instance ToJSON EventHours where
+  toJSON (EventHours Daily hours') = toJSON hours'
   toJSON (EventHours calendar' hours') = object [
       "calendar" .= calendar'
-    , "hours" .= hours'
+    , "hours" .= if hours' == EventOpen then Nothing else Just hours'
     ]
 
 instance FromJSON EventHours where
@@ -406,7 +407,6 @@ data OpenHours = OpenHours [EventHours]
     deriving (Show, Eq, Generic)
 
 instance ToJSON OpenHours where
-  toJSON (OpenHours [hours']) = toJSON hours'
   toJSON (OpenHours hours') = toJSON $ map toJSON hours'
 
 instance FromJSON OpenHours where

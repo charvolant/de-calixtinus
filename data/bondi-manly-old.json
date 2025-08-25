@@ -1,16 +1,10 @@
 {
   "id": "BM",
-  "name": "Bondi to Manly Walk@en",
+  "name": [
+    "Bondi to Manly Walk@en"
+  ],
   "description": {
     "text": "The Bondi to Manly walk is an 80km walk around Sydney Harbour. The walk follows the coast-line, crossing the Sydney Harbour Bridge.@en",
-    "notes": [
-      "There are various points on the trip where accommodation can be hard to come by. Walkers often use the ferry or bus links to access either a central point, usually Circular Quay, or nearby accommodation options. Cremorne and Mossman have been added to allow walkers on the North side of the harbour to access additional accommodation and services. To use this facility, check the 'Use Transport Links' option.",
-      {
-        "type": "Warning",
-        "text": "The walk is not suitable for cyclists. There are numerous flights of stairs and foot trails.@en"
-      }
-    ],
-    "about": "https://www.bonditomanly.com/",
     "image": {
       "source": "BM/BM-Harbour.jpg",
       "thumbnail": "BM/BM-Harbour-thumbnail.jpg",
@@ -35,9 +29,31 @@
           }
         ]
       }
-    }
+    },
+    "about": "https://www.bonditomanly.com/",
+    "notes": [
+      {
+        "type": "Information",
+        "text": "There are various points on the trip where accommodation can be hard to come by. Walkers often use the ferry or bus links to access either a central point, usually Circular Quay, or nearby accommodation options. Cremorne and Mossman have been added to allow walkers on the North side of the harbour to access additional accommodation and services. To use this facility, check the 'Use Transport Links' option."
+
+      },
+      {
+        "type": "Warning",
+        "text": "The walk is not suitable for cyclists. There are numerous flights of stairs and foot trails.@en"
+      }
+    ]
   },
   "metadata": {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -74,42 +90,46 @@
       "id": "BM-1",
       "name": "Bondi Beach",
       "type": "Town",
-      "position": { "latitude": -33.89108, "longitude": 151.27612, "elevation": 11 },
+      "position": { "latitude":  -33.89108,	"longitude": 151.27612 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [ "Hostel", "House", "Hotel" ],
       "pois": [
         {
           "id": "BM-1-1",
           "name": "Bondi Beach",
           "type": "Beach",
-          "position": { "latitude": -33.89147, "longitude": 151.27668, "elevation": 7 }
+          "position": { "latitude":  -33.89147,	"longitude": 151.27668 }
         }
-      ]
+       ]
     },
     {
       "id": "BM-2",
       "name": "North Bondi",
       "type": "Town",
-      "position": { "latitude": -33.89051, "longitude": 151.28216, "elevation": 7 },
+      "position": { "latitude":  -33.89051, "longitude": 151.28216 },
       "region": "AU-NSW",
-      "services": [ "Restaurant" ],
-      "accommodation": [ "House", "Hotel" ]
+      "services": ["Restaurant" ],
+      "accommodation": [ "House", "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-3",
       "name": "Bamford Reserve",
       "type": "Park",
-      "position": { "latitude": -33.88340, "longitude": 151.28337, "elevation": 68 },
+      "position": { "latitude":  -33.88340, "longitude": 151.28337 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-4",
       "name": "Rodney Reserve",
       "type": "Park",
-      "position": { "latitude": -33.87313, "longitude": 151.28408, "elevation": 83 },
+      "position": { "latitude":  -33.87313, "longitude": 151.28408 },
       "region": "AU-NSW",
       "services": [ ],
       "accommodation": [ ],
@@ -118,7 +138,7 @@
           "id": "BM-4-1",
           "name": "Radio Astronomy Site",
           "type": "Historical",
-          "position": { "latitude": -33.87345, "longitude": 151.28425, "elevation": 83 }
+          "position": { "latitude":  -33.87345,	"longitude": 151.28425 }
         }
       ]
     },
@@ -126,25 +146,29 @@
       "id": "BM-5",
       "name": "Cliff-Top Walk",
       "type": "Promontory",
-      "position": { "latitude": -33.86666, "longitude": 151.28339, "elevation": 35 },
+      "position": { "latitude":  -33.86666, "longitude": 151.28339 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-6",
       "name": "Diamond Bay",
       "type": "Village",
-      "position": { "latitude": -33.86172, "longitude": 151.28178, "elevation": 46 },
+      "position": { "latitude":  -33.86172, "longitude": 151.28178 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-7",
       "name": "Lighthouse Reserve",
       "type": "Park",
-      "position": { "latitude": -33.85383, "longitude": 151.28609, "elevation": 82 },
+      "position": { "latitude":  -33.85383, "longitude": 151.28609 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
       "accommodation": [ ],
@@ -152,20 +176,20 @@
         {
           "id": "BM-7-1",
           "name": "Macquarie Lighthouse",
-          "type": "Historical",
           "description": {
             "about": "https://en.wikipedia.org/wiki/Macquarie_Lighthouse"
           },
-          "position": { "latitude": -33.85390, "longitude": 151.28519, "elevation": 89 }
+          "type": "Historical",
+          "position": { "latitude":  -33.8539,	"longitude": 151.28519 }
         },
         {
           "id": "BM-7-2",
           "name": "South Head Signal Station",
-          "type": "Historical",
           "description": {
             "about": "https://dictionaryofsydney.org/entry/south_head_signal_station"
           },
-          "position": { "latitude": -33.85036, "longitude": 151.28680, "elevation": 79 }
+          "type": "Historical",
+          "position": { "latitude":  -33.85036,	"longitude": 151.2868 }
         }
       ]
     },
@@ -173,43 +197,51 @@
       "id": "BM-8",
       "name": "Gap Park",
       "type": "Park",
-      "position": { "latitude": -33.84674, "longitude": 151.28623, "elevation": 54 },
+      "position": { "latitude": -33.84674, "longitude": 151.28623 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-9",
       "name": "The Gap",
       "type": "Park",
-      "position": { "latitude": -33.84303, "longitude": 151.28424, "elevation": 24 },
+      "position": { "latitude": -33.84303, "longitude": 151.28424 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-10",
       "name": "Gap Bluff",
       "type": "Lookout",
-      "position": { "latitude": -33.84204, "longitude": 151.28493, "elevation": 39 },
+      "position": { "latitude": -33.84204, "longitude": 151.28493 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-11",
       "name": "Gap Bluff Road",
       "type": "Park",
-      "position": { "latitude": -33.84132, "longitude": 151.28246, "elevation": 30 },
+      "position": { "latitude": -33.84132, "longitude": 151.282464 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-12",
       "name": "Camp Cove",
       "type": "Village",
-      "position": { "latitude": -33.83906, "longitude": 151.27965, "elevation": 6 },
+      "position": { "latitude": -33.83906, "longitude": 151.27965 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
@@ -218,7 +250,7 @@
           "id": "BM-12-1",
           "name": "Camp Cove Beach",
           "type": "Beach",
-          "position": { "latitude": -33.83907, "longitude": 151.27951, "elevation": 5 }
+          "position": { "latitude":  -33.83907,	"longitude": 151.27951 }
         }
       ]
     },
@@ -226,43 +258,43 @@
       "id": "BM-13",
       "name": "South Head",
       "type": "Promontory",
-      "position": { "latitude": -33.83351, "longitude": 151.28093, "elevation": 23 },
+      "position": { "latitude":  -33.83351, "longitude": 151.28093 },
       "region": "AU-NSW",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "BM-13-1",
           "name": "Lady Bay Beach",
-          "type": "Beach",
           "description": {
+            "about": "https://www.nationalparks.nsw.gov.au/things-to-do/swimming-spots/lady-bay-beach",
             "notes": [
               {
                 "type": "Warning",
                 "text": "Lady Bay Beach is a designated nude bathing area.@en"
               }
-            ],
-            "about": "https://www.nationalparks.nsw.gov.au/things-to-do/swimming-spots/lady-bay-beach"
+            ]
           },
-          "position": { "latitude": -33.83553, "longitude": 151.27943, "elevation": 4 }
+          "type": "Beach",
+          "position": { "latitude":  -33.83553,	"longitude": 151.27943 }
         },
         {
           "id": "BM-13-2",
           "name": "Lightkeeper's Cottages",
-          "type": "Historical",
           "description": {
             "about": "https://lighthouses.org.au/nsw/hornby-lighthouse/"
           },
-          "position": { "latitude": -33.83352, "longitude": 151.28009, "elevation": 20 }
+          "type": "Historical",
+          "position": { "latitude":  -33.83352,	"longitude": 151.28009 }
         },
         {
           "id": "BM-13-3",
           "name": "Hornby Lighthouse",
-          "type": "Historical",
           "description": {
             "about": "https://lighthouses.org.au/nsw/hornby-lighthouse/"
           },
-          "position": { "latitude": -33.83350, "longitude": 151.28092, "elevation": 22 }
+          "type": "Historical",
+          "position": { "latitude": -33.8335, "longitude": 151.28092 }
         }
       ]
     },
@@ -270,25 +302,27 @@
       "id": "BM-14",
       "name": "Camp Cove (Return)",
       "type": "Village",
-      "position": { "latitude": -33.83912, "longitude": 151.27959, "elevation": 6 },
+      "position": { "latitude": -33.83912, "longitude": 151.27959 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-15",
       "name": "Green Point Reserve",
       "type": "Park",
-      "position": { "latitude": -33.84082, "longitude": 151.27678, "elevation": 6 },
+      "position": { "latitude": -33.84082, "longitude": 	151.27678 },
       "region": "AU-NSW",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "BM-15-1",
           "name": "First Landing Obelisk",
           "type": "Historical",
-          "position": { "latitude": -33.84068, "longitude": 151.27669, "elevation": 5 }
+          "position": { "latitude": -33.84068, "longitude": 151.27669 }
         }
       ]
     },
@@ -296,25 +330,27 @@
       "id": "BM-16",
       "name": "Watson's Bay",
       "type": "Village",
-      "position": { "latitude": -33.84330, "longitude": 151.28188, "elevation": 6 },
+      "position": { "latitude": -33.84330, "longitude": 151.28188 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus", "Ferry" ],
-      "accommodation": [ "Hotel" ]
+      "accommodation": [ "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-17",
       "name": "Gibson's Beach",
       "type": "Village",
-      "position": { "latitude": -33.84657, "longitude": 151.28104, "elevation": 5 },
+      "position": { "latitude": -33.84657, "longitude": 151.28104 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [  ],
       "pois": [
         {
           "id": "BM-17-1",
           "name": "Gibson's Beach",
           "type": "Beach",
-          "position": { "latitude": -33.84655, "longitude": 151.28099, "elevation": 4 }
+          "position": { "latitude": -33.84655, "longitude": 151.28099 }
         }
       ]
     },
@@ -322,19 +358,19 @@
       "id": "BM-18",
       "name": "Parsley Bay",
       "type": "Bridge",
-      "position": { "latitude": -33.85068, "longitude": 151.27742, "elevation": 11 },
+      "position": { "latitude": -33.85068, "longitude": 151.27742 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [  ],
       "pois": [
         {
           "id": "BM-18-1",
           "name": "Vaucluse House",
-          "type": "Historical",
           "description": {
             "about": "https://mhnsw.au/visit-us/vaucluse-house/"
           },
-          "position": { "latitude": -33.85581, "longitude": 151.27366, "elevation": 18 },
+          "type": "Historical",
+          "position": { "latitude": -33.85581, "longitude": 151.27366 },
           "hours": [
             {
               "calendar": {
@@ -368,9 +404,9 @@
       "id": "BM-19",
       "name": "Steele Point",
       "type": "Park",
-      "position": { "latitude": -33.85102, "longitude": 151.26581, "elevation": 7 },
+      "position": { "latitude": -33.85102, "longitude": 151.26581 },
       "region": "AU-NSW",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [
         {
           "name": "Gardener's Cottage",
@@ -384,34 +420,37 @@
           "services": [ "Kitchen", "Bedlinen", "Towels" ],
           "sleeping": [ "Double" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-20",
       "name": "Milk Beach",
       "type": "Natural",
-      "position": { "latitude": -33.85654, "longitude": 151.26729, "elevation": 4 },
+      "position": { "latitude": -33.85654, "longitude": 151.26729 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-20-1",
           "name": "Milk Beach",
           "type": "Beach",
-          "position": { "latitude": -33.85653, "longitude": 151.26730, "elevation": 4 }
+          "position": { "latitude": -33.85653, "longitude": 151.2673 }
         },
         {
           "id": "BM-20-2",
           "name": "Little Bay",
           "type": "Beach",
-          "position": { "latitude": -33.85734, "longitude": 151.26810, "elevation": 4 }
+          "position": { "latitude": -33.85734, "longitude": 151.2681 }
         },
         {
           "id": "BM-20-3",
           "name": "Hermit Beach",
           "type": "Beach",
-          "position": { "latitude": -33.85875, "longitude": 151.26913, "elevation": 4 }
+          "position": { "latitude": -33.85875, "longitude": 151.26913 }
         }
       ]
     },
@@ -419,16 +458,17 @@
       "id": "BM-21",
       "name": "Queens Beach",
       "type": "Natural",
-      "position": { "latitude": -33.86135, "longitude": 151.26897, "elevation": 6 },
+      "position": { "latitude": -33.86135, "longitude": 151.26897 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-21-1",
           "name": "Queens Beach",
           "type": "Beach",
-          "position": { "latitude": -33.86135, "longitude": 151.26887, "elevation": 4 }
+          "position": { "latitude": -33.86135, "longitude": 151.26887 }
         }
       ]
     },
@@ -436,25 +476,28 @@
       "id": "BM-22",
       "name": "Hermitage Reserve",
       "type": "Park",
-      "position": { "latitude": -33.86346, "longitude": 151.26947, "elevation": 13 },
+      "position": { "latitude": -33.86346, "longitude": 151.26947 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-23",
       "name": "Rose Bay",
       "type": "Town",
-      "position": { "latitude": -33.86851, "longitude": 151.26921, "elevation": 5 },
+      "position": { "latitude": -33.86851, "longitude": 151.26921 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus"  ],
       "accommodation": [ "House" ],
       "pois": [
         {
           "id": "BM-23-1",
           "name": "Rose Bay Beach",
           "type": "Beach",
-          "position": { "latitude": -33.86851, "longitude": 151.26899, "elevation": 4 }
+          "position": { "latitude": -33.86851, "longitude": 151.26899 }
         }
       ]
     },
@@ -462,25 +505,27 @@
       "id": "BM-24",
       "name": "Lyne Park",
       "type": "Park",
-      "position": { "latitude": -33.87078, "longitude": 151.26245, "elevation": 5 },
+      "position": { "latitude": -33.87078, "longitude": 151.26245 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Ferry" ],
-      "accommodation": [ ]
+      "services": [ "Restaurant", "Ferry"  ],
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-25",
       "name": "Rose Bay Park",
       "type": "Park",
-      "position": { "latitude": -33.86993, "longitude": 151.25341, "elevation": 6 },
+      "position": { "latitude": -33.86993, "longitude": 151.25341 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus" ],
+      "services": [ "Restaurant", "Bus"  ],
       "accommodation": [ "House" ],
       "pois": [
         {
           "id": "BM-25-1",
           "name": "Bellamy Beach",
           "type": "Beach",
-          "position": { "latitude": -33.86949, "longitude": 151.25346, "elevation": 4 }
+          "position": { "latitude": -33.86949, "longitude": 151.25346 }
         }
       ]
     },
@@ -488,16 +533,18 @@
       "id": "BM-26",
       "name": "Point Piper",
       "type": "Village",
-      "position": { "latitude": -33.86455, "longitude": 151.25101, "elevation": 26 },
+      "position": { "latitude": -33.86455, "longitude": 151.25101 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-27",
       "name": "Seven Schillings Beach",
       "type": "Village",
-      "position": { "latitude": -33.87152, "longitude": 151.24824, "elevation": 4 },
+      "position": { "latitude": -33.87152, "longitude": 151.24824 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
@@ -506,7 +553,7 @@
           "id": "BM-27-1",
           "name": "Seven Schillings Beach",
           "type": "Beach",
-          "position": { "latitude": -33.87182, "longitude": 151.24781, "elevation": 5 }
+          "position": { "latitude": -33.87182, "longitude": 151.24781 }
         }
       ]
     },
@@ -514,7 +561,7 @@
       "id": "BM-28",
       "name": "Double Bay",
       "type": "Town",
-      "position": { "latitude": -33.87392, "longitude": 151.24312, "elevation": 5 },
+      "position": { "latitude": -33.87392, "longitude": 151.24312 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Bus", "Ferry" ],
       "accommodation": [ "Hotel" ],
@@ -523,7 +570,7 @@
           "id": "BM-28-1",
           "name": "Double Bay Beach",
           "type": "Beach",
-          "position": { "latitude": -33.87391, "longitude": 151.24364, "elevation": 4 }
+          "position": { "latitude": -33.87391, "longitude": 151.24364 }
         }
       ]
     },
@@ -531,34 +578,40 @@
       "id": "BM-29",
       "name": "Darling Point",
       "type": "Town",
-      "position": { "latitude": -33.86668, "longitude": 151.23960, "elevation": 6 },
+      "position": { "latitude": -33.86668, "longitude": 151.23960 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus", "Ferry" ],
-      "accommodation": [ ]
+      "services": [ "Restaurant",  "Bus", "Ferry" ],
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-30",
       "name": "Rushcutters Bay",
       "type": "Town",
-      "position": { "latitude": -33.87429, "longitude": 151.23062, "elevation": 5 },
+      "position": { "latitude": -33.87429, "longitude": 151.23062 },
       "region": "AU-NSW",
-      "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "services": [ "Restaurant",  "Bus" ],
+      "accommodation": [  ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-31",
       "name": "Kings Cross",
       "type": "City",
-      "position": { "latitude": -33.86920, "longitude": 151.22557, "elevation": 33 },
+      "position": { "latitude": -33.86920, "longitude": 151.22557 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
-      "accommodation": [ "Hostel", "GuestHouse", "Hotel" ]
+      "accommodation": [ "Hostel", "GuestHouse", "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-32",
       "name": "Wooloomooloo",
       "type": "City",
-      "position": { "latitude": -33.86920, "longitude": 151.22041, "elevation": 6 },
+      "position": { "latitude": -33.86920, "longitude": 151.22041 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
       "accommodation": [ "GuestHouse", "House", "Hotel" ],
@@ -566,20 +619,20 @@
         {
           "id": "BM-32-1",
           "name": "Finger Wharf",
-          "type": "Historical",
           "description": {
             "about": "https://en.wikipedia.org/wiki/Finger_Wharf"
           },
-          "position": { "latitude": -33.86905, "longitude": 151.22003, "elevation": 6 }
+          "type": "Historical",
+          "position": { "latitude": -33.86905, "longitude": 151.22003 }
         },
         {
           "id": "BM-32-2",
           "name": "Art Gallery of New South Wales",
-          "type": "Museum",
           "description": {
             "about": "https://www.artgallery.nsw.gov.au/"
           },
-          "position": { "latitude": -33.86880, "longitude": 151.21741, "elevation": 26 },
+          "type": "Museum",
+          "position": { "latitude": -33.86880, "longitude": 151.21741 },
           "hours": [
             {
               "calendar": {
@@ -604,7 +657,9 @@
               },
               "hours": "1000-2200"
             },
-            "1000-1700"
+            {
+              "hours": "1000-1700"
+            }
           ],
           "time": 2.0
         }
@@ -614,31 +669,31 @@
       "id": "BM-33",
       "name": "Mrs Macquarie's Point",
       "type": "Park",
-      "position": { "latitude": -33.85966, "longitude": 151.22260, "elevation": 10 },
+      "position": { "latitude": -33.85966, "longitude": 151.22260 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [  ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-34",
       "name": "Farm Cove",
       "type": "Park",
-      "position": { "latitude": -33.86334, "longitude": 151.21849, "elevation": 4 },
+      "position": { "latitude": -33.86334, "longitude": 151.21849 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [  ],
       "pois": [
         {
           "id": "BM-34-1",
           "name": "Royal Botanic Gardens",
-          "type": "Park",
           "description": {
             "about": "https://www.botanicgardens.org.au/"
           },
-          "position": { "latitude": -33.86411, "longitude": 151.21751, "elevation": 5 },
-          "hours": [
-            "0700-1800"
-          ],
+          "type": "Park",
+          "position": { "latitude": -33.86411, "longitude": 151.21751 },
+          "hours": "0700-1800",
           "time": 1.0
         }
       ]
@@ -647,22 +702,20 @@
       "id": "BM-35",
       "name": "Bennelong Point",
       "type": "Promontory",
-      "position": { "latitude": -33.85614, "longitude": 151.21523, "elevation": 6 },
+      "position": { "latitude": -33.85614, "longitude": 151.21523 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
-      "accommodation": [ ],
+      "accommodation": [  ],
       "pois": [
         {
           "id": "BM-35-1",
           "name": "Sydney Opera House",
-          "type": "Theatre",
           "description": {
             "about": "https://www.sydneyoperahouse.com/"
           },
-          "position": { "latitude": -33.85678, "longitude": 151.21529, "elevation": 18 },
-          "hours": [
-            "0900-1700"
-          ],
+          "type": "Theatre",
+          "position": { "latitude": -33.85678, "longitude": 151.21529 },
+          "hours": "0900-1700",
           "time": 1.0
         }
       ]
@@ -671,19 +724,19 @@
       "id": "BM-36",
       "name": "Circular Quay",
       "type": "City",
-      "position": { "latitude": -33.86103, "longitude": 151.20966, "elevation": 6 },
+      "position": { "latitude": -33.86103, "longitude": 151.20966 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus", "Ferry" ],
-      "accommodation": [ "Hostel", "House", "Hotel" ],
+      "accommodation": [ "Hostel", "House", "Hotel"  ],
       "pois": [
         {
           "id": "BM-36-1",
           "name": "Museum of Contemporary Art",
-          "type": "Museum",
           "description": {
             "about": "https://www.mca.com.au/"
           },
-          "position": { "latitude": -33.85993, "longitude": 151.20902, "elevation": 7 },
+          "type": "Museum",
+          "position": { "latitude": -33.85993, "longitude": 151.20902 },
           "hours": [
             {
               "calendar": {
@@ -701,106 +754,125 @@
       "id": "BM-37",
       "name": "The Rocks",
       "type": "City",
-      "position": { "latitude": -33.85449, "longitude": 151.20998, "elevation": 4 },
+      "position": { "latitude": -33.85449, "longitude": 151.20998 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries" ],
-      "accommodation": [ "Hotel" ]
+      "accommodation": [ "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-38",
       "name": "Harbour Bridge (South)",
       "type": "Bridge",
-      "position": { "latitude": -33.85868, "longitude": 151.20682, "elevation": 27 },
+      "position": { "latitude": -33.85868, "longitude": 151.20682 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [  ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-39",
       "name": "Harbour Bridge (North)",
       "type": "Bridge",
-      "position": { "latitude": -33.84626, "longitude": 151.21274, "elevation": 36 },
+      "position": { "latitude": -33.84626, "longitude": 151.21274 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [  ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-40",
       "name": "Milsons Point",
       "type": "Town",
-      "position": { "latitude": -33.84989, "longitude": 151.21159, "elevation": 8 },
+      "position": { "latitude": -33.84989, "longitude": 151.21159 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Milson's Serviced Apartments",
           "type": "House",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Bedlinen", "Towels", "Pool" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "DoubleWC", "Quadruple" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-41",
       "name": "Kirribilli",
       "type": "Town",
-      "position": { "latitude": -33.85094, "longitude": 151.21980, "elevation": 4 },
+      "position": { "latitude": -33.85094, "longitude": 151.21980 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Glenferrie Lodge",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Bedlinen", "Towels"  ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple", "TripleWC", "Quadruple" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-42",
       "name": "Milson Park",
       "type": "Park",
-      "position": { "latitude": -33.84453, "longitude": 151.21529, "elevation": 5 },
+      "position": { "latitude": -33.84453, "longitude": 151.21529 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-43",
       "name": "Kesterton Park",
       "type": "Park",
-      "position": { "latitude": -33.84500, "longitude": 151.21860, "elevation": 5 },
+      "position": { "latitude": -33.84500, "longitude": 151.21860 },
       "region": "AU-NSW",
       "services": [ "Ferry" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-44",
       "name": "Anderson Park",
       "type": "Park",
-      "position": { "latitude": -33.84034, "longitude": 151.21604, "elevation": 6 },
+      "position": { "latitude": -33.84034, "longitude": 151.21604 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-45",
       "name": "Neutral Bay",
       "type": "Town",
-      "position": { "latitude": -33.84099, "longitude": 151.21896, "elevation": 16 },
+      "position": { "latitude": -33.84099, "longitude": 151.21896 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Neutral Bay Lodge",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Bedlinen", "Towels"  ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
         },
         {
-          "name": "Elevera Lodge ",
+          "name": "Elevera Lodge @ Neutral Bay",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Bedlinen", "Towels"  ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ],
@@ -809,7 +881,7 @@
           "id": "BM-45-1",
           "name": "Hayes Street Beach",
           "type": "Beach",
-          "position": { "latitude": -33.84158, "longitude": 151.21937, "elevation": 5 }
+          "position": { "latitude": -33.84158, "longitude": 151.21937 }
         }
       ]
     },
@@ -817,20 +889,21 @@
       "id": "BM-46",
       "name": "Shellcove Beach",
       "type": "Park",
-      "position": { "latitude": -33.83890, "longitude": 151.22496, "elevation": 24 },
+      "position": { "latitude": -33.83890, "longitude": 151.22496 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-46-1",
           "name": "Nutcote",
-          "type": "Museum",
           "description": {
             "text": "The home of May Gibbs (1877-1969), author and illustrator of The Complete Adventures of Snugglepot & Cuddlepie.",
             "about": "https://www.maygibbs.com.au/"
           },
-          "position": { "latitude": -33.84183, "longitude": 151.22168, "elevation": 24 },
+          "type": "Museum",
+          "position": { "latitude": -33.84183, "longitude": 151.22168 },
           "hours": [
             {
               "calendar": {
@@ -855,20 +928,20 @@
       "id": "BM-47",
       "name": "Cremorne Point",
       "type": "Village",
-      "position": { "latitude": -33.84865, "longitude": 151.23295, "elevation": 5 },
+      "position": { "latitude": -33.84865, "longitude": 151.23295 },
       "region": "AU-NSW",
       "services": [ "Bus", "Ferry" ],
       "accommodation": [
         {
           "name": "Cremorne Point Manor",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Breakfast", "Bedlinen", "Towels"  ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Sydney Harbour View Apartment",
           "type": "House",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Bedlinen", "Towels", "Pool" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Bedlinen", "Towels", "Pool"  ],
           "sleeping": [ "DoubleWC" ]
         }
       ],
@@ -877,7 +950,7 @@
           "id": "BM-47-1",
           "name": "Robertson's Point Lighthouse",
           "type": "Historical",
-          "position": { "latitude": -33.84872, "longitude": 151.23301, "elevation": 4 }
+          "position": { "latitude": -33.84872, "longitude": 151.23301 }
         }
       ]
     },
@@ -885,34 +958,41 @@
       "id": "BM-48",
       "name": "Mossman Bay",
       "type": "Village",
-      "position": { "latitude": -33.83838, "longitude": 151.23281, "elevation": 5 },
+      "position": { "latitude": -33.83838, "longitude": 151.23281 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus", "Ferry" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-49",
       "name": "South Mossman",
       "type": "Village",
-      "position": { "latitude": -33.84333, "longitude": 151.23379, "elevation": 34 },
+      "position": { "latitude": -33.84333, "longitude": 151.23379 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-50",
       "name": "Sirius Cove",
       "type": "Park",
-      "position": { "latitude": -33.83934, "longitude": 151.23704, "elevation": 6 },
+      "position": { "latitude": -33.83934, "longitude": 151.23704 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
-      "accommodation": [ "Hotel" ],
+      "accommodation": [ "Hotel"
+      ],
       "pois": [
         {
           "id": "BM-50-1",
           "name": "Sirius Cove Beach",
           "type": "Beach",
-          "position": { "latitude": -33.83953, "longitude": 151.23668, "elevation": 5 }
+          "position": { "latitude": -33.83953, "longitude": 151.23668 }
         }
       ]
     },
@@ -920,31 +1000,32 @@
       "id": "BM-51",
       "name": "Taronga Zoo",
       "type": "Park",
-      "position": { "latitude": -33.84576, "longitude": 151.23990, "elevation": 8 },
+      "position": { "latitude": -33.84576, "longitude": 151.23990 },
       "region": "AU-NSW",
       "services": [ "Bus", "Ferry" ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-51-1",
           "name": "Taronga Zoo",
-          "type": "Park",
           "description": {
             "about": "https://taronga.org.au/sydney-zoo"
           },
-          "position": { "latitude": -33.84328, "longitude": 151.24138, "elevation": 63 },
+          "type": "Park",
+          "position": {"latitude": -33.84328, "longitude": 151.24138},
           "hours": [
             {
               "calendar": {
                 "type": "yearly",
-                "months": [ 0, 1, 2, 3, 8, 9, 10, 11 ]
+                "months": [0, 1, 2, 3, 8, 9, 10, 11]
               },
               "hours": "0900-1700"
             },
             {
               "calendar": {
                 "type": "yearly",
-                "months": [ 4, 5, 6, 7 ]
+                "months": [4, 5, 6, 7]
               },
               "hours": "0900-1630"
             }
@@ -957,19 +1038,20 @@
       "id": "BM-52",
       "name": "Bradleys Head",
       "type": "Promontory",
-      "position": { "latitude": -33.85303, "longitude": 151.24633, "elevation": 16 },
+      "position": { "latitude": -33.85303, "longitude": 151.24633 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-52-1",
           "name": "Rifle Wall",
-          "type": "Historical",
           "description": {
             "about": "https://www.nationalparks.nsw.gov.au/things-to-do/historic-buildings-places/military-relics-at-bradleys-head"
           },
-          "position": { "latitude": -33.85212, "longitude": 151.24577, "elevation": 35 }
+          "type": "Historical",
+          "position": { "latitude": -33.85212, "longitude": 151.24577 }
         }
       ]
     },
@@ -977,34 +1059,41 @@
       "id": "BM-53",
       "name": "Taylors Bay",
       "type": "Natural",
-      "position": { "latitude": -33.84237, "longitude": 151.24594, "elevation": 26 },
+      "position": { "latitude": -33.84237, "longitude": 151.24594 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-54",
       "name": "Chowder Head",
       "type": "Natural",
-      "position": { "latitude": -33.84355, "longitude": 151.25241, "elevation": 29 },
+      "position": { "latitude": -33.84355, "longitude": 151.25241 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-55",
       "name": "Chowder Bay",
       "type": "Village",
-      "position": { "latitude": -33.83834, "longitude": 151.25611, "elevation": 21 },
+      "position": { "latitude": -33.83834, "longitude": 151.25611 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-55-1",
           "name": "Georges Head Lookout",
           "type": "Lookout",
-          "position": { "latitude": -33.83655, "longitude": 151.25887, "elevation": 74 }
+          "position": { "latitude": -33.83655, "longitude": 151.25887 }
         }
       ]
     },
@@ -1012,16 +1101,19 @@
       "id": "BM-56",
       "name": "HMAS Penguin",
       "type": "Village",
-      "position": { "latitude": -33.83126, "longitude": 151.25835, "elevation": 72 },
+      "position": { "latitude": -33.83126, "longitude": 151.25835 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-57",
       "name": "Middle Head – Gubbuh Gubbuh",
       "type": "Park",
-      "position": { "latitude": -33.82737, "longitude": 151.26825, "elevation": 35 },
+      "position": { "latitude": -33.82737, "longitude": 151.26825 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -1031,37 +1123,43 @@
           "services": [ "Heating", "Kitchen", "Bedlinen", "Towels" ],
           "sleeping": [ "Double" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-58",
       "name": "HMAS Penguin (Return)",
       "type": "Village",
-      "position": { "latitude": -33.83124, "longitude": 151.25828, "elevation": 72 },
+      "position": { "latitude": -33.83124, "longitude": 151.25828 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-59",
       "name": "Balmoral",
       "type": "Village",
-      "position": { "latitude": -33.82791, "longitude": 151.25286, "elevation": 6 },
+      "position": { "latitude": -33.82791, "longitude": 151.25286 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-59-1",
           "name": "Balmoral Beach",
           "type": "Beach",
-          "position": { "latitude": -33.82576, "longitude": 151.25158, "elevation": 5 }
+          "position": { "latitude": -33.82576, "longitude": 151.25158 }
         },
         {
           "id": "BM-59-2",
           "name": "Edwards Beach",
           "type": "Beach",
-          "position": { "latitude": -33.82304, "longitude": 151.25277, "elevation": 8 }
+          "position": { "latitude": -33.82304, "longitude": 151.25277 }
         }
       ]
     },
@@ -1069,34 +1167,41 @@
       "id": "BM-60",
       "name": "Wyargine Point",
       "type": "Village",
-      "position": { "latitude": -33.81640, "longitude": 151.25141, "elevation": 37 },
+      "position": { "latitude": -33.81640, "longitude": 151.25141 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-61",
       "name": "Parriwi",
       "type": "Village",
-      "position": { "latitude": -33.81305, "longitude": 151.24591, "elevation": 50 },
+      "position": { "latitude": -33.81305, "longitude": 151.24591 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-62",
       "name": "The Spit",
       "type": "Village",
-      "position": { "latitude": -33.80401, "longitude": 151.24614, "elevation": 4 },
+      "position": { "latitude": -33.80401, "longitude": 151.24614 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-62-1",
           "name": "Spit Bridge",
           "type": "Bridge",
-          "position": { "latitude": -33.80255, "longitude": 151.24619, "elevation": 1 }
+          "position": { "latitude": -33.80255, "longitude": 151.24619 }
         }
       ]
     },
@@ -1104,43 +1209,53 @@
       "id": "BM-63",
       "name": "Shell Cove Bay",
       "type": "Park",
-      "position": { "latitude": -33.80000, "longitude": 151.25105, "elevation": 15 },
+      "position": { "latitude": -33.80000, "longitude": 151.25105 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-64",
       "name": "Sandy Bay",
       "type": "Village",
-      "position": { "latitude": -33.80455, "longitude": 151.25296, "elevation": 3 },
+      "position": { "latitude": -33.80455, "longitude": 151.25296 },
       "region": "AU-NSW",
-      "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "services": [ "Restaurant"  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-65",
       "name": "Castle Rock",
       "type": "Village",
-      "position": { "latitude": -33.80455, "longitude": 151.25296, "elevation": 3 },
+      "position": { "latitude": -33.80455, "longitude": 151.25296 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-66",
       "name": "Grotto Point",
       "type": "Promontory",
-      "position": { "latitude": -33.81345, "longitude": 151.26176, "elevation": 52 },
+      "position": { "latitude": -33.81345, "longitude": 151.26176 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ],
+      "services": [  ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "BM-66-1",
           "name": "Rock Art",
-          "type": "Artwork",
-          "position": { "latitude": -33.81342, "longitude": 151.26294, "elevation": 64 }
+          "position": { "latitude": -33.81342, "longitude": 151.26294 },
+          "type": "Artwork"
         }
       ]
     },
@@ -1148,32 +1263,37 @@
       "id": "BM-67",
       "name": "Dobroyd Head",
       "type": "Promontory",
-      "position": { "latitude": -33.81053, "longitude": 151.27341, "elevation": 42 },
+      "position": { "latitude": -33.81053, "longitude": 151.27341 },
       "region": "AU-NSW",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-68",
       "name": "Wellings Reserve",
       "type": "Natural",
-      "position": { "latitude": -33.80055, "longitude": 151.26568, "elevation": 18 },
+      "position": { "latitude": -33.80055, "longitude": 151.26568 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "The Rangers Cottage",
           "type": "House",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Bedlinen" ],
+          "services": [ "WiFi", "WashingMachine", "Heating", "Kitchen", "Bedlinen" ],
           "sleeping": [ "Double" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-69",
       "name": "Fairlight",
       "type": "Village",
-      "position": { "latitude": -33.79721, "longitude": 151.26837, "elevation": 19 },
+      "position": { "latitude": -33.79721, "longitude": 151.26837 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
       "accommodation": [
@@ -1183,92 +1303,108 @@
           "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-70",
       "name": "Manly",
       "type": "Town",
-      "position": { "latitude": -33.79948, "longitude": 151.28433, "elevation": 5 },
+      "position": { "latitude": -33.79948, "longitude": 151.28433 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus", "Ferry" ],
-      "accommodation": [ "GuestHouse", "Hotel" ]
+      "accommodation": [ "GuestHouse", "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-71",
       "name": "Little Manly Point",
       "type": "Village",
-      "position": { "latitude": -33.80918, "longitude": 151.28706, "elevation": 7 },
+      "position": { "latitude": -33.80918, "longitude": 151.28706 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-72",
       "name": "Spring Cove",
       "type": "Natural",
-      "position": { "latitude": -33.80839, "longitude": 151.29159, "elevation": 2 },
+      "position": { "latitude": -33.80839, "longitude": 151.29159 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-73",
       "name": "Scenic Drive",
       "type": "Natural",
-      "position": { "latitude": -33.80703, "longitude": 151.29635, "elevation": 71 },
+      "position": { "latitude": -33.80703, "longitude": 151.29635 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-74",
       "name": "The Barracks",
       "type": "Historical",
-      "position": { "latitude": -33.81130, "longitude": 151.29760, "elevation": 86 },
+      "position": { "latitude": -33.81130, "longitude": 151.29760 },
       "region": "AU-NSW",
       "services": [ ],
       "accommodation": [
         {
           "name": "The Q Station",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
+      ],
+      "pois": [
       ]
     },
     {
       "id": "BM-75",
       "name": "Third Quarantine Cemetary",
       "type": "Historical",
-      "position": { "latitude": -33.81725, "longitude": 151.29470, "elevation": 94 },
+      "position": { "latitude": -33.81725, "longitude": 151.29470 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-76",
       "name": "North Head",
       "type": "Promontory",
-      "position": { "latitude": -33.82107, "longitude": 151.29957, "elevation": 76 },
+      "position": { "latitude": -33.82107, "longitude": 151.29957 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-77",
       "name": "North Head West",
       "type": "Promontory",
-      "position": { "latitude": -33.82296, "longitude": 151.29863, "elevation": 40 },
+      "position": { "latitude": -33.82296, "longitude": 151.29863 },
       "region": "AU-NSW",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "BM-77-1",
           "name": "Burragula Lookout",
           "type": "Lookout",
-          "position": { "latitude": -33.82320, "longitude": 151.29852, "elevation": 26 }
+          "position": { "latitude": -33.8232, "longitude": 151.29852 }
         }
       ]
     },
@@ -1276,16 +1412,16 @@
       "id": "BM-78",
       "name": "North Head East",
       "type": "Promontory",
-      "position": { "latitude": -33.82190, "longitude": 151.30064, "elevation": 34 },
+      "position": { "latitude": -33.82190, "longitude": 151.30064 },
       "region": "AU-NSW",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "BM-78-1",
           "name": "Yiningma Lookout",
           "type": "Lookout",
-          "position": { "latitude": -33.82184, "longitude": 151.30076, "elevation": 28 }
+          "position": { "latitude": -33.82184, "longitude": 151.30076 }
         }
       ]
     },
@@ -1293,31 +1429,33 @@
       "id": "BM-79",
       "name": "North Head (Return)",
       "type": "Promontory",
-      "position": { "latitude": -33.82107, "longitude": 151.29957, "elevation": 76 },
+      "position": { "latitude": -33.82107, "longitude": 151.29957 },
       "region": "AU-NSW",
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-80",
       "name": "Hanging Swamp",
       "type": "Natural",
-      "position": { "latitude": -33.81444, "longitude": 151.30148, "elevation": 88 },
+      "position": { "latitude": -33.81444, "longitude": 151.30148 },
       "region": "AU-NSW",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "BM-80-1",
           "name": "No 1 Gun Emplacement South",
           "type": "Historical",
-          "position": { "latitude": -33.81782, "longitude": 151.29847, "elevation": 87 }
+          "position": { "latitude": -33.81782, "longitude": 151.29847 }
         },
         {
           "id": "BM-80-2",
           "name": "No 2 Gun Emplacement North",
           "type": "Historical",
-          "position": { "latitude": -33.81657, "longitude": 151.29899, "elevation": 88 }
+          "position": { "latitude": -33.81657, "longitude": 151.29899 }
         }
       ]
     },
@@ -1325,16 +1463,18 @@
       "id": "BM-81",
       "name": "The Barracks (Return)",
       "type": "Historical",
-      "position": { "latitude": -33.81131, "longitude": 151.29761, "elevation": 86 },
+      "position": { "latitude": -33.81131, "longitude": 151.29761 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-82",
       "name": "Old Quarry Swamp",
       "type": "Natural",
-      "position": { "latitude": -33.80500, "longitude": 151.30069, "elevation": 77 },
+      "position": { "latitude": -33.80500, "longitude": 151.30069 },
       "region": "AU-NSW",
       "services": [ ],
       "accommodation": [ ],
@@ -1342,7 +1482,6 @@
         {
           "id": "BM-82-1",
           "name": "Wall Gate",
-          "type": "Poi",
           "description": {
             "notes": [
               {
@@ -1351,7 +1490,8 @@
               }
             ]
           },
-          "position": { "latitude": -33.80278, "longitude": 151.30108, "elevation": 35 }
+          "type": "Poi",
+          "position": { "latitude": -33.80278, "longitude": 151.30108 }
         }
       ]
     },
@@ -1359,48 +1499,59 @@
       "id": "BM-83",
       "name": "Shelly Head",
       "type": "Promontory",
-      "position": { "latitude": -33.79933, "longitude": 151.29755, "elevation": 10 },
+      "position": { "latitude": -33.79933, "longitude": 151.29755 },
       "region": "AU-NSW",
       "services": [ ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-84",
       "name": "Shelly Beach",
       "type": "Village",
-      "position": { "latitude": -33.80094, "longitude": 151.29841, "elevation": 7 },
+      "position": { "latitude": -33.80094, "longitude": 151.29841 },
       "region": "AU-NSW",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [ ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-85",
       "name": "Manly Beach",
       "type": "Town",
-      "position": { "latitude": -33.79695, "longitude": 151.28833, "elevation": 6 },
+      "position": { "latitude": -33.79695, "longitude": 151.28833 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
-      "accommodation": [ "GuestHouse", "Hotel" ]
+      "accommodation": [ "GuestHouse", "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-A1",
       "name": "Cremorne",
       "type": "Town",
-      "position": { "latitude": -33.82813, "longitude": 151.23020, "elevation": 87 },
+      "position": { "latitude": -33.82813, "longitude": 151.23020 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
-      "accommodation": [ "House", "Hotel" ]
+      "accommodation": [ "House", "Hotel" ],
+      "pois": [
+      ]
     },
     {
       "id": "BM-A2",
       "name": "Mosman",
       "type": "Town",
-      "position": { "latitude": -33.82411, "longitude": 151.24153, "elevation": 96 },
+      "position": { "latitude": -33.82411, "longitude": 151.24153 },
       "region": "AU-NSW",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
-      "accommodation": [ "House", "Hotel" ]
+      "accommodation": [ "House", "Hotel" ],
+      "pois": [
+      ]
     }
   ],
+
   "legs": [
     {
       "from": "BM-1",
@@ -1536,20 +1687,20 @@
       "descent": 0
     },
     {
-      "type": "Trail",
       "from": "BM-20",
       "to": "BM-21",
       "distance": 0.77,
       "ascent": 20,
-      "descent": 10
+      "descent": 10,
+      "type": "Trail"
     },
     {
-      "type": "Trail",
       "from": "BM-21",
       "to": "BM-22",
       "distance": 0.27,
       "ascent": 0,
-      "descent": 5
+      "descent": 5,
+      "type": "Trail"
     },
     {
       "from": "BM-22",
@@ -1594,12 +1745,12 @@
       "descent": 15
     },
     {
-      "type": "Trail",
       "from": "BM-28",
       "to": "BM-29",
       "distance": 1.50,
       "ascent": 65,
-      "descent": 70
+      "descent": 70,
+      "type": "Trail"
     },
     {
       "from": "BM-29",
@@ -1917,12 +2068,12 @@
       "descent": 0
     },
     {
-      "type": "Trail",
       "from": "BM-74",
       "to": "BM-75",
       "distance": 0.90,
       "ascent": 5,
-      "descent": 0
+      "descent": 0,
+      "type": "Trail"
     },
     {
       "from": "BM-75",
@@ -1994,13 +2145,13 @@
       "ascent": 0,
       "descent": 0
     }
-  ],
+ ],
   "links": [
     {
       "type": "FerryLink",
       "from": "BM-16",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.5
@@ -2009,7 +2160,7 @@
       "type": "BusLink",
       "from": "BM-23",
       "to": "BM-1",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.5
@@ -2018,7 +2169,7 @@
       "type": "FerryLink",
       "from": "BM-24",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2027,7 +2178,7 @@
       "type": "FerryLink",
       "from": "BM-28",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2036,43 +2187,43 @@
       "type": "FerryLink",
       "from": "BM-29",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.2
+      "time": 0.20
     },
     {
       "type": "FerryLink",
       "from": "BM-40",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.1
+      "time": 0.10
     },
     {
       "type": "FerryLink",
       "from": "BM-41",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.1
+      "time": 0.10
     },
     {
       "type": "FerryLink",
       "from": "BM-43",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.3
+      "time": 0.30
     },
     {
       "type": "FerryLink",
       "from": "BM-45",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.35
@@ -2081,7 +2232,7 @@
       "type": "FerryLink",
       "from": "BM-45",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.35
@@ -2090,7 +2241,7 @@
       "type": "BusLink",
       "from": "BM-47",
       "to": "BM-A1",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2099,7 +2250,7 @@
       "type": "FerryLink",
       "from": "BM-47",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2108,16 +2259,16 @@
       "type": "FerryLink",
       "from": "BM-48",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.2
+      "time": 0.20
     },
     {
       "type": "FerryLink",
       "from": "BM-49",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.35
@@ -2126,25 +2277,25 @@
       "type": "FerryLink",
       "from": "BM-51",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.4
+      "time": 0.40
     },
     {
       "type": "BusLink",
       "from": "BM-51",
       "to": "BM-A2",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
-      "time": 0.4
+      "time": 0.40
     },
     {
       "type": "BusLink",
       "from": "BM-59",
       "to": "BM-A2",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2153,7 +2304,7 @@
       "type": "BusLink",
       "from": "BM-62",
       "to": "BM-A1",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2162,7 +2313,7 @@
       "type": "BusLink",
       "from": "BM-62",
       "to": "BM-A2",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2171,7 +2322,7 @@
       "type": "BusLink",
       "from": "BM-68",
       "to": "BM-70",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.25
@@ -2180,7 +2331,7 @@
       "type": "FerryLink",
       "from": "BM-70",
       "to": "BM-36",
-      "distance": 0.00,
+      "distance": 0,
       "ascent": 0,
       "descent": 0,
       "time": 0.35
@@ -2192,16 +2343,24 @@
       "name": "Full Walk",
       "description": "The full Bondi to Manly walk.",
       "major": true,
-      "stops": [ "BM-36" ],
-      "starts": [ "BM-1" ],
-      "finishes": [ "BM-85" ],
+      "stops": [
+        "BM-36"
+      ],
+      "starts": [
+        "BM-1"
+      ],
+      "finishes": [
+        "BM-85"
+      ],
       "suggested-pois": [ "BM-32-2", "BM-35-1", "BM-36-1", "BM-46-1" ],
       "palette": {
-        "colour": "#fefb39",
-        "text-colour": "#d0d000"
-      }
+        "colour": "fefb39",
+        "text-colour": "d0d000"
+      },
+      "default": true
     }
   ],
-  "route-logic": [ ],
+  "route-logic": [
+  ],
   "default-route": "BM-BM"
 }

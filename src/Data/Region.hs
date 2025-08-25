@@ -103,17 +103,30 @@ instance Normaliser Text Region (M.Map Text Region) where
     }
 
 instance ToJSON Region where
-  toJSON (Region id' name' type' description' parent' member' locale' holidays' closedDays') = object [
-      "id" .= id'
-    , "name" .= name'
-    , "type" .= type'
-    , "description" .= description'
-    , "parent" .= (regionID <$> parent')
-    , "member" .= member'
-    , "locale" .= (localeID <$> locale')
-    , "holidays" .= holidays'
-    , "closed-days" .= closedDays'
-    ]
+  toJSON (Region id' name' type' description' parent' member' locale' holidays' closedDays') =
+    object [
+        "id" .= id'
+      , "name" .= name'
+      , "type" .= type'
+      , "description" .= description'
+      , "parent" .= (regionID <$> parent')
+      , "member" .= (if S.null member' then Nothing else Just $ member')
+      , "locale" .= (localeID <$> locale')
+      , "holidays" .= (if null holidays' then Nothing else Just $ holidays')
+      , "closed-days" .= (if null closedDays' then Nothing else Just closedDays')
+      ]
+  toEncoding (Region id' name' type' description' parent' member' locale' holidays' closedDays') =
+    pairs $
+        "id" .= id'
+      <> "name" .= name'
+      <> "type" .= type'
+      <> "description" .?= description'
+      <> "parent" .?= (regionID <$> parent')
+      <> "member" .?= (if S.null member' then Nothing else Just $ member')
+      <> "locale" .?= (localeID <$> locale')
+      <> "holidays" .?= (if null holidays' then Nothing else Just $ holidays')
+      <> "closed-days" .?= (if null closedDays' then Nothing else Just closedDays')
+
 
 instance FromJSON Region where
   parseJSON (Object v) = do

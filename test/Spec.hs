@@ -16,6 +16,7 @@ import ProgrammingSpec
 import MetadataSpec
 import PropositionalSpec
 import LocalisedSpec
+import SplineSpec
 import UtilSpec
 import XlsxSpec
 import qualified Data.ByteString.Lazy as B
@@ -37,7 +38,7 @@ main = do
     cf <- B.readFile "camino-portuguese.json"
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
-    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoFragment = False, caminoImports = [], caminoLocations = Data.Map.empty, caminoLegs = [], caminoTransportLinks = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X", caminoAccommodation = Data.Map.empty, caminoPois = Data.Map.empty }) ec
+    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoFragment = False, caminoImports = [], caminoLocations = [], caminoLocationMap = Data.Map.empty, caminoLegs = [], caminoTransportLinks = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X", caminoAccommodationMap = Data.Map.empty, caminoPoiMap = Data.Map.empty }) ec
     config <- readConfigFile "config-static.yaml"
     let cconf = createCaminoConfig (fromJust $ configCalendars config) (fromJust $ configRegions config) [camino]
     pf <- B.readFile "test-preferences.json"
@@ -49,6 +50,7 @@ main = do
 
 testList config prefs camino = TestList [
    TestLabel "Util" testUtils,
+   TestLabel "Spline" testSpline,
    TestLabel "Partial" testPartial,
    TestLabel "Localised" testLocalised,
    TestLabel "Metadata" testMetadata,

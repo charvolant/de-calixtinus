@@ -40,7 +40,7 @@ import Network.URI
 data Namespace = Namespace {
   namespacePrefix :: T.Text, -- ^ The prefix to use
   namespaceUri :: T.Text -- ^ The corresponding namespace URI
-} deriving (Show, Generic)
+} deriving (Eq, Ord, Show, Generic)
 
 instance FromJSON Namespace where
   parseJSON (Object v) = do
@@ -50,7 +50,11 @@ instance FromJSON Namespace where
   parseJSON v = error ("Unable to parse namespace " ++ show v)
 
 instance ToJSON Namespace where
-  toJSON (Namespace prefix' namespace') = object [ "prefix" .= (fromJust $ T.stripSuffix ":" prefix'), "namespace" .= namespace' ]
+  toJSON (Namespace prefix' namespace') =
+    object [
+        "prefix" .= (fromJust $ T.stripSuffix ":" prefix')
+      , "namespace" .= namespace'
+    ]
 
 instance NFData Namespace
 
@@ -147,9 +151,14 @@ instance FromJSON Metadata where
 instance ToJSON Metadata where
   toJSON (Metadata namespaces' statements') =
     let
+      defaultNamespaces = metadataNamespaces def
+      namespaces'' = filter (\n -> not (elem n defaultNamespaces)) namespaces'
       statements'' = map (toRawStatement namespaces') statements'
     in
-      object [ "namespaces" .= namespaces', "statements" .= statements'' ]
+      object [
+          "namespaces" .= (if null namespaces'' then Nothing else Just namespaces'')
+        , "statements" .= statements''
+        ]
 
 instance NFData Metadata
 

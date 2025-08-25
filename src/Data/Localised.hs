@@ -125,6 +125,12 @@ instance Eq Locale where
 instance Ord Locale where
   a `compare` b = (localeID a) `compare` (localeID b)
 
+instance FromJSON Locale where
+  parseJSON (String v) = return $ localeFromIDOrError v
+
+instance ToJSON Locale where
+  toJSON locale = String $ localeID locale
+
 instance NFData Locale
 
 localeLanguageTag :: Locale -> Text
@@ -507,6 +513,10 @@ instance ToJSON TaggedText where
       toJSON $ (localeID locale'):(splitOn "\n" text')
     else
       toJSON $ if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
+  toEncoding (TaggedText locale' text') = if isInfixOf "\n" text' then
+      toEncoding $ (localeID locale'):(splitOn "\n" text')
+    else
+      toEncoding $ if locale' == rootLocale then text' else text' <> localeSeparator <> (localeID locale')
 
 instance NFData TaggedText
 
@@ -516,6 +526,22 @@ instance IsString TaggedText where
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)
   deriving (Show, Eq, Ord, Generic)
+
+instance FromJSON Hyperlink where
+  parseJSON (String v) = return $ Hyperlink (textToUri v) Nothing
+  parseJSON (Object v) = do
+    uri' <- v .: "uri"
+    title' <- v .:? "title"
+    return $ Hyperlink uri' title'
+  parseJSON v = error ("Expecting string or object for hyperlink " ++ show v)
+
+instance ToJSON Hyperlink where
+  toJSON (Hyperlink uri' Nothing) = String $ uriToText uri'
+  toJSON (Hyperlink uri' (Just title')) =
+    object [
+        "uri" .= uri'
+      , "title" .= title'
+      ]
 
 instance NFData Hyperlink
 
@@ -553,11 +579,21 @@ instance ToJSON TaggedURL where
       if locale' == rootLocale then url'' else url'' <> localeSeparator <> (localeID locale')
       where
         url'' = uriToText url'
-  toJSON (TaggedURL locale' (Hyperlink url' (Just title'))) = object [
+  toJSON (TaggedURL locale' (Hyperlink url' (Just title'))) =
+    object [
         "locale" .= localeID locale'
       , "url" .= uriToText url'
       , "title" .= title'
-    ]
+      ]
+  toEncoding (TaggedURL locale' (Hyperlink url' Nothing)) = toEncoding $
+      if locale' == rootLocale then url'' else url'' <> localeSeparator <> (localeID locale')
+      where
+        url'' = uriToText url'
+  toEncoding (TaggedURL locale' (Hyperlink url' (Just title'))) =
+    pairs $
+        "locale" .= localeID locale'
+      <> "url" .= uriToText url'
+      <> "title" .?= title'
 
 instance NFData TaggedURL
 
@@ -571,9 +607,13 @@ instance (Tagged a, FromJSON a) => FromJSON (Localised a) where
   parseJSON v = typeMismatch "string or array" v
 
 instance (Tagged a, ToJSON a) => ToJSON (Localised a) where
-  toJSON (Localised []) = toJSON (""::Text)
+  toJSON (Localised []) = String ""
   toJSON (Localised [elt]) = toJSON elt
-  toJSON (Localised elts) = toJSON (map toJSON elts)
+  toJSON (Localised elts) = toJSON elts
+
+  toEncoding (Localised []) = toEncoding (""::Text)
+  toEncoding (Localised [elt]) = toEncoding elt
+  toEncoding (Localised elts) = toEncodingList elts
 
 instance (Tagged a, IsString a) => IsString (Localised a) where
   fromString txt = Localised [fromString txt]

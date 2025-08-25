@@ -160,7 +160,7 @@ testDescriptionToJSON3 =
     et = encode desc
   in
     TestCase (do
-      assertEqual "Description ToJSON 3 1" "{\"about\":{\"locale\":\"en-US\",\"title\":\"Fish\",\"url\":\"https://www.fish.com\"},\"image\":null,\"notes\":null,\"summary\":null,\"text\":\"Hello There@en-US\"}" et
+      assertEqual "Description ToJSON 3 1" "{\"text\":\"Hello There@en-US\",\"about\":{\"locale\":\"en-US\",\"url\":\"https://www.fish.com\",\"title\":\"Fish\"}}" et
       )
 
 
@@ -186,6 +186,6 @@ testLocalisedToJSON2 =
     et = encode desc
   in
     TestCase (do
-      assertEqual "Localised ToJSON 2 1" "{\"about\":\"urn:x-y:z@en\",\"image\":null,\"notes\":null,\"summary\":null,\"text\":\"Hello There@en\"}" et
+      assertEqual "Localised ToJSON 2 1" "{\"text\":\"Hello There@en\",\"about\":\"urn:x-y:z@en\"}" et
       )
 

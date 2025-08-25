@@ -31,9 +31,11 @@ library
       Camino.Display.Css
       Camino.Display.Html
       Camino.Display.I18n
+      Camino.Display.JSON
       Camino.Display.KML
       Camino.Display.Routes
       Camino.Display.Static
+      Camino.Display.SVG
       Camino.Display.XLSX
       Camino.Planner
       Camino.Preferences
@@ -43,6 +45,7 @@ library
       Camino.Server.Foundation
       Camino.Server.Settings
       Camino.Walking
+      Data.Aeson.Formatting
       Data.Cache
       Data.Description
       Data.DublinCore
@@ -54,12 +57,15 @@ library
       Data.Placeholder
       Data.Propositional
       Data.Region
+      Data.Spline
       Data.Summary
       Data.Util
       Data.Xlsx
       Data.Xlsx.Internal
       Graph.Graph
       Graph.Programming
+      Network.Google.Elevation
+      Network.Google.Maps
   other-modules:
       Paths_de_calixtinus
   hs-source-dirs:
@@ -73,6 +79,7 @@ library
     , blaze-markup
     , bytestring
     , colour
+    , conduit
     , containers
     , cookie
     , data-default-class
@@ -87,6 +94,7 @@ library
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , path-pieces
     , scientific
     , shakespeare
     , split
@@ -122,6 +130,7 @@ executable camino-map-exe
     , blaze-markup
     , bytestring
     , colour
+    , conduit
     , containers
     , cookie
     , data-default-class
@@ -137,6 +146,7 @@ executable camino-map-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , path-pieces
     , scientific
     , shakespeare
     , split
@@ -172,6 +182,7 @@ executable camino-planner-exe
     , blaze-markup
     , bytestring
     , colour
+    , conduit
     , containers
     , cookie
     , data-default-class
@@ -187,6 +198,7 @@ executable camino-planner-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , path-pieces
     , scientific
     , shakespeare
     , split
@@ -222,6 +234,7 @@ executable camino-server-exe
     , blaze-markup
     , bytestring
     , colour
+    , conduit
     , containers
     , cookie
     , data-default-class
@@ -237,6 +250,59 @@ executable camino-server-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , path-pieces
+    , scientific
+    , shakespeare
+    , split
+    , template-haskell
+    , text
+    , time
+    , uuid
+    , vector
+    , warp
+    , xlsx
+    , xml-conduit
+    , xml-hamlet
+    , xml-types
+    , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
+    , yesod-static
+  default-language: Haskell2010
+
+executable elevations-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_de_calixtinus
+  hs-source-dirs:
+      app/elevations
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=2
+    , aeson-pretty
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , colour
+    , conduit
+    , containers
+    , cookie
+    , data-default-class
+    , de-calixtinus
+    , deepseq
+    , directory
+    , file-embed
+    , filepath
+    , formatting
+    , http-conduit
+    , lens
+    , mtl
+    , network-uri
+    , numeric-tools ==0.2.*
+    , optparse-applicative
+    , path-pieces
     , scientific
     , shakespeare
     , split
@@ -272,6 +338,7 @@ executable generate-static-exe
     , blaze-markup
     , bytestring
     , colour
+    , conduit
     , containers
     , cookie
     , data-default-class
@@ -287,6 +354,7 @@ executable generate-static-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , path-pieces
     , scientific
     , shakespeare
     , split
@@ -325,6 +393,7 @@ test-suite de-calixtinus-test
       ProgrammingSpec
       PropositionalSpec
       RegionSpec
+      SplineSpec
       TestUtils
       UtilSpec
       WalkingSpec
@@ -342,6 +411,7 @@ test-suite de-calixtinus-test
     , blaze-markup
     , bytestring
     , colour
+    , conduit
     , containers
     , cookie
     , data-default-class
@@ -357,6 +427,7 @@ test-suite de-calixtinus-test
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , path-pieces
     , raw-strings-qq
     , scientific
     , shakespeare

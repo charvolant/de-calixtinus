@@ -26,7 +26,7 @@ module Data.Description (
 
 import GHC.Generics (Generic)
 import Control.DeepSeq
-import Data.Aeson (FromJSON(..), ToJSON(..), Value(..), (.!=), (.:), (.:?), (.=), object)
+import Data.Aeson (FromJSON(..), ToJSON(..), Value(..), (.?=), (.!=), (.:), (.:?), (.=), object, pairs)
 import Data.Aeson.Types (typeMismatch)
 import Data.DublinCore
 import Data.Localised
@@ -64,8 +64,19 @@ instance FromJSON Note where
   parseJSON v = typeMismatch "string or object" v
 
 instance ToJSON Note where
-  toJSON (Note Information (Localised [TaggedText locale' txt'])) = toJSON $ txt' <> "@" <> localeID locale'
-  toJSON (Note type' txt') = object [ "type" .= type', "text" .= txt' ]
+  toJSON (Note Information (Localised [TaggedText locale' txt'])) =
+    toJSON $ txt' <> (if locale' == rootLocale then "" else "@" <> localeID locale')
+  toJSON (Note type' txt') =
+    object [
+        "type" .= type'
+       , "text" .= txt'
+       ]
+  toEncoding (Note Information (Localised [TaggedText locale' txt'])) =
+    toEncoding $ txt' <> "@" <> localeID locale'
+  toEncoding (Note type' txt') =
+    pairs $
+        "type" .= type'
+      <> "text" .= txt'
 
 instance NFData Note
 
@@ -87,12 +98,19 @@ instance FromJSON Image where
   parseJSON v = typeMismatch "object" v
 
 instance ToJSON Image where
-  toJSON (Image source' thumbnail' title' metadata') = object [
+  toJSON (Image source' thumbnail' title' metadata') =
+    object [
         "source" .= uriToText source'
       , "thumbnail" .= (uriToText <$> thumbnail')
       , "title" .= title'
       , "metadata" .= metadata'
-     ]
+      ]
+  toEncoding (Image source' thumbnail' title' metadata') =
+    pairs $
+        "source" .= uriToText source'
+      <> "thumbnail" .?= (uriToText <$> thumbnail')
+      <> "title" .= title'
+      <> "metadata" .?= metadata'
 
 instance NFData Image
 
@@ -165,15 +183,25 @@ instance FromJSON Description where
   parseJSON v = typeMismatch "string or object" v
 
 instance ToJSON Description where
-  toJSON (Description Nothing Nothing [] Nothing Nothing) = ""
+  toJSON (Description Nothing Nothing [] Nothing Nothing) = String ""
   toJSON (Description Nothing (Just (Localised [text'])) [] Nothing Nothing) = toJSON text'
-  toJSON (Description summary' text' notes' about' image') = object [
+  toJSON (Description summary' text' notes' about' image') =
+    object [
         "summary" .= summary'
       , "text" .= text'
-      , "notes" .= if Prelude.null notes' then Nothing else Just notes'
+      , "notes" .= (if Prelude.null notes' then Nothing else Just notes')
       , "about" .= about'
       , "image" .= image'
-    ]
+      ]
+  toEncoding (Description Nothing Nothing [] Nothing Nothing) = ""
+  toEncoding (Description Nothing (Just (Localised [text'])) [] Nothing Nothing) = toEncoding text'
+  toEncoding (Description summary' text' notes' about' image') =
+    pairs $
+        "summary" .?= summary'
+      <> "text" .?= text'
+      <> "notes" .?= (if Prelude.null notes' then Nothing else Just notes')
+      <> "about" .?= about'
+      <> "image" .?= image'
 
 instance NFData Description
 

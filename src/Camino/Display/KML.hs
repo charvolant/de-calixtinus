@@ -215,7 +215,12 @@ caminoLegStyle camino _stops waypoints leg =
     from' = legFrom leg
     to' = legTo leg
     used = if (S.member from' waypoints) && (S.member to' waypoints) then "-used" else "-unused"
-    route = find (\r -> S.member from' (routeLocations r) || S.member to' (routeLocations r)) (caminoRoutes camino')
+    route = find (\r -> let
+        allowed = routeLocationSet r
+      in
+        S.member from' allowed || S.member to' allowed
+      )
+      (caminoRoutes camino')
   in
     "#" <> maybe "default" routeID route <> used
 
@@ -257,7 +262,7 @@ createCaminoDoc config locales tprefs cprefs msolution = Document (Prologue [] N
           <name>#{createCaminoTitle locales camino mpilgrimage}
           <description>#{caminoTextForSolution config locales tprefs cprefs msolution}
           ^{caminoStyles config locales cprefs}
-          $forall location <- caminoLocationList camino
+          $forall location <- caminoLocations camino
             ^{caminoLocationKml config locales tprefs cprefs mpilgrimage stops waypoints location}
           $forall leg <- caminoLegs camino
             ^{caminoLegKml cprefs stops waypoints leg}

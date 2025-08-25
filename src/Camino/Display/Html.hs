@@ -19,11 +19,12 @@ module Camino.Display.Html where
 import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
-import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
+import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, dayLegs, journeyLegs, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
 import Camino.Display.Css (caminoCss, toCssColour)
 import Camino.Display.I18n
 import Camino.Display.Routes
+import Camino.Display.SVG
 import Data.Colour (blend)
 import Data.Colour.Names (lightgrey)
 import Data.Description
@@ -532,7 +533,7 @@ solutionElements camino Nothing = (
     S.empty,
     S.empty,
     S.empty,
-    S.fromList $ caminoLocationList camino,
+    S.fromList $ caminoLocations camino,
     S.fromList $ caminoLegs camino
   )
 solutionElements _camino (Just solution) = (
@@ -986,8 +987,8 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
                       <span .ca-link>
                 $maybe pos <- locationPosition location
                   <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
-                    <span .ca-globe title="_{ShowOnMapTitle}">
-    <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
+                    <span .ca-globe title="_{ShowOnMapTitle} #{formatLatLng (latitude pos)},#{formatLatLng (longitude pos)}#{formatElev (elevation pos)}">
+     <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
         $if getDebug config
           <div .detail .border .border-info-subtle .rounded .float-end .ms-1 .p-1>
@@ -1019,6 +1020,8 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
     isStop = not isRest && not isStockpoint && S.member location stops
     isWaypoint = not isStop && not isStockpoint && not isRest && (S.member location waypoints)
     transportLinks = locationTransportLinks camino' location
+    formatLatLng v = sformat (fixed 5) v
+    formatElev mv = maybe "" (\v -> " " <> sformat (fixed 0) v <> "m") mv
 
 caminoLocationsHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml config preferences camino solution = [ihamlet|
@@ -1046,7 +1049,7 @@ caminoLocationsHtml config preferences camino solution = [ihamlet|
   where
     camino' = preferenceCamino camino
     locationOrder a b = compare (canonicalise $ locationNameLabel a) (canonicalise $ locationNameLabel b)
-    locationsSorted = L.sortBy locationOrder (caminoLocationList camino')
+    locationsSorted = L.sortBy locationOrder (caminoLocations camino')
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationNameLabel l) locationsSorted
     (_trip, _jerrors, _perrors, rests, stocks, stops, waypoints, usedLegs) = solutionElements camino' solution
 
@@ -1311,7 +1314,7 @@ preferencesHtml showLink preferences camino = [ihamlet|
     findLoc prefs lk = M.findWithDefault mempty lk (stopLocation prefs)
     findSv prefs sk = M.findWithDefault mempty sk (stopServices prefs)
     findRSv prefs sk = M.findWithDefault mempty sk (stopRouteServices prefs)
-    pois = caminoPois $ preferenceCamino camino
+    pois = caminoPoiMap $ preferenceCamino camino
 
 caminoTripHtml :: Config -> TravelPreferences -> CaminoPreferences -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTripHtml config preferences camino pilgrimage = [ihamlet|
@@ -1330,6 +1333,10 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                   _{Txt (locationName l)}
         <p>
           ^{metricsSummary preferences camino (score pilgrimage) (Just $ sum $ map (length . path) (path pilgrimage)) (Just $ length $ path pilgrimage)}
+          <div .container-fluid>
+            <div .row>
+              <div .col>
+                ^{svgElevationProfile config maxelev (pilgrimageLabel pilgrimage) (pilgrimageImportant pilgrimage) (pilgrimageLegs pilgrimage)}
     $forall stage <- path pilgrimage
       <div .card .stage .border-primary .mt-2>
         <div .card-body>
@@ -1342,6 +1349,10 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
               _{DateRangeMsg (fst dates) (snd dates)}
           <p .card-text>
             ^{metricsSummary preferences camino (score stage) (Just $ length $ path stage) Nothing}
+          <div .container-fluid>
+            <div .row>
+              <div .col-xs-12 .col-lg-8>
+                ^{svgElevationProfile config maxelev (stageLabel stage) (stageImportant stage) (journeyLegs stage)}
       $forall day <- path stage
         <div .card .day .ms-1>
           <div .card-header>
@@ -1366,6 +1377,10 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
             ^{penanceTable preferences camino False True $ score day}
             <p .card-text>
               ^{metricsSummary preferences camino (score day) Nothing Nothing}
+            <div .container-fluid>
+              <div .row>
+                <div .col-xs-12 .col-md-6 .col-lg-4>
+                  ^{svgElevationProfile config maxelev (const True) (const False) (dayLegs day)}
             <ul .card-text .list-unstyled>
               <li .ms-3>
                 <div .location-summary .plan-leg>
@@ -1392,6 +1407,13 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
               <p .card-text>
                 ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
  |]
+ where
+  stageLabel stage loc = loc == start stage || elem loc (map finish (path stage))
+  stageImportant stage loc = loc == start stage || loc == finish stage
+  pilgrimageLabel pilg loc = loc == start pilg || elem loc (map finish (path pilg)) || (S.member loc $ preferenceStops camino) || (S.member loc $ preferenceRestPoints camino)
+  pilgrimageImportant pilg loc = loc == start pilg || loc == finish pilg
+  (_minll, maxll) = caminoBbox (preferenceCamino camino)
+  maxelev = 100.0 * (fromIntegral $ (ceiling (maybe 1000.0 id (elevation maxll) / 100.0) :: Int))
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapHtml _preferences _camino _solution = [ihamlet|
@@ -1696,7 +1718,7 @@ caminoMapScript tprefs cprefs solution = [ihamlet|
 |]
   where
     camino = preferenceCamino cprefs
-    locations = S.fromList $ M.elems $ caminoLocations camino
+    locations = S.fromList $ caminoLocations camino
     legs = S.fromList $ caminoLegs camino
     (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino solution
     (tl, br) = if S.null waypoints then caminoBbox camino else locationBbox waypoints
@@ -1724,7 +1746,7 @@ caminoAllMapScript tl br caminos = [ihamlet|
  |]
   where
     rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoLegs c)) caminos
-    locations = S.unions $ map (S.fromList . M.elems . caminoLocations) caminos
+    locations = S.unions $ map (S.fromList . caminoLocations) caminos
     legs = S.unions $ map (S.fromList . caminoLegs) caminos
     chooseLocationIcon loc = caminoLocationIconSimple loc
     choosePoiIcon poi = caminoPoiIconSimple poi

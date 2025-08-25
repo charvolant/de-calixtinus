@@ -1,8 +1,19 @@
 {
   "id": "I-VV",
   "name": "Villaviciosa and Amandi@en",
-  "description": "Import for Villaviciosa and surrounding locations, used by both Norte and Primitivo",
-  "metadata": {
+  "description": {
+    "text": "Import for Villaviciosa and surrounding locations, used by both Norte and Primitivo"  },
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -35,31 +46,33 @@
     ]
   },
   "fragment": true,
+  "imports": [
+  ],
   "locations": [
     {
       "id": "N-N138",
       "name": "Villaviciosa",
       "type": "Town",
-      "position": { "latitude": 43.48155, "longitude": -5.43255, "elevation": 10 },
+      "position": { "latitude": 43.48155, "longitude": -5.43255  },
       "region": "ES-AS",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical","Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "Villaviciosa Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "QuadrupleWC" ]
         },
         {
           "name": "El Congreso Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Lockers", "BicycleStorage" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "Hevia Apartments",
           "type": "House",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Heating", "Kitchen", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
@@ -83,19 +96,19 @@
         {
           "name": "Casa España Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Lockers", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Ab Murias Blancas Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Hotel Arcea Villaviciosa",
           "type": "Hotel",
-          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -104,14 +117,14 @@
       "id": "N-N139",
       "name": "Amandi",
       "type": "Village",
-      "position": { "latitude": 43.47229, "longitude": -5.44170, "elevation": 10 },
+      "position": { "latitude": 43.47229, "longitude": -5.44170  },
       "region": "ES-AS",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
           "name": "Hotel La Casona de Amandi",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
         }
       ]
@@ -120,7 +133,7 @@
       "id": "N-N140",
       "name": "Casquita",
       "type": "Village",
-      "position": { "latitude": 43.46624, "longitude": -5.46142, "elevation": 26 },
+      "position": { "latitude": 43.46624, "longitude": -5.46142  },
       "region": "ES-AS",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
@@ -129,17 +142,18 @@
           "id": "N-N140-1",
           "name": "Camino del Norte and Camino Primitivo Split@en",
           "type": "Junction",
-          "position": { "latitude": 43.46625, "longitude": -5.46159, "elevation": 26 }
+          "position": { "latitude": 43.46625, "longitude": -5.46159  }
         },
         {
           "id": "N-N140-2",
           "name": "Camino Primitivo High-level Variant@en",
           "type": "Junction",
-          "position": { "latitude": 43.46625, "longitude": -5.46159, "elevation": 26 }
+          "position": { "latitude": 43.46625, "longitude": -5.46159  }
         }
       ]
     }
   ],
+
   "legs": [
     {
       "from": "N-N138",
@@ -161,11 +175,20 @@
       "id": "VV-VV",
       "name": "Default route",
       "description": "The default route for importing",
+      "stops": [
+      ],
+      "starts": [
+      ],
+      "finishes": [
+      ],
+      "suggested-pois": [ ],
       "palette": {
-        "colour": "#fec953"
-      }
+        "colour": "fec953"
+      },
+      "default": true
     }
   ],
-  "route-logic": [ ],
+  "route-logic": [
+  ],
   "default-route": "VV-VV"
 }

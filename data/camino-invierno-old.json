@@ -7,7 +7,10 @@
   "description": {
     "text": "The Camino Invierno (Winter Way) is a Camino that runs from Ponferrada to Santiago de Compostella, somewhat to the South of the French Way. It then joins the Vía de la Plata and approaches Santiago de Compostella from the South. Traditionally, pilgrims used this way to avoid the snows of O Cebreiro in wintertime, from which its name derives.@en",
     "notes": [
-      "The Winter Way became an official Jacobian way in 2016.@en",
+      {
+        "type": "Information",
+        "text": "The Winter Way became an official Jacobian way in 2016.@en"
+      },
       {
         "type": "Warning",
         "text": "There are long stretches without accommodation and, often, without food or drink. Pilgrims need to be fit and prepared to carry food and water. Water fountains have been marked but may not be reliable.@en"
@@ -16,7 +19,9 @@
     "image": {
       "source": "W/W-Camino-Invierno.jpg",
       "thumbnail": "W/W-Camino-Invierno-thumbnail.jpg",
-      "title": "Las Médulas Gold Mine@en",
+      "title": [
+        "Las Médulas Gold Mine@en"
+      ],
       "metadata": {
         "statements": [
           {
@@ -36,6 +41,16 @@
     }
   },
   "metadata": {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -72,15 +87,14 @@
     ]
   },
   "imports": [
-    "I-ST",
-    "I-PF"
+    "I-ST", "I-PF"
   ],
   "locations": [
     {
       "id": "W-W2",
       "name": "Toral de Merayo",
       "type": "Village",
-      "position": { "latitude": 42.52439, "longitude": -6.63510, "elevation": 497 },
+      "position": { "latitude":  42.52439, "longitude": -6.63510 },
       "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Medical", "Bus" ],
       "accommodation": [
@@ -95,15 +109,17 @@
         {
           "id": "W-W2-1",
           "name": "Caleyón de Merayo@es",
+          "description": {
+            "text": "A 'tunnel' dug into the rocky soil, associated with Roman gold-mining"
+          },
           "type": "Historical",
-          "description": "A 'tunnel' dug into the rocky soil, associated with Roman gold-mining",
-          "position": { "latitude": 42.52884, "longitude": -6.62965, "elevation": 535 }
+          "position": { "latitude": 42.52884, "longitude": -6.62965 }
         },
         {
           "id": "W-W2-2",
           "name": "Medieval Bridge@en",
           "type": "Bridge",
-          "position": { "latitude": 42.52499, "longitude": -6.63452, "elevation": 496 }
+          "position": { "latitude": 42.52499, "longitude": -6.63452 }
         }
       ]
     },
@@ -111,7 +127,7 @@
       "id": "W-W3",
       "name": "Villalibre de la Jurisdicción",
       "type": "Village",
-      "position": { "latitude": 42.51848, "longitude": -6.65825, "elevation": 486 },
+      "position": { "latitude":  42.51848, "longitude": -6.65825 },
       "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -120,7 +136,7 @@
       "id": "W-W4",
       "name": "Priaranza del Bierzo",
       "type": "Village",
-      "position": { "latitude": 42.51087, "longitude": -6.67190, "elevation": 487 },
+      "position": { "latitude": 42.51087, "longitude": -6.67190 },
       "region": "ES-CL",
       "services": [ "Restaurant", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
       "accommodation": [ ],
@@ -132,7 +148,7 @@
             "Wooden Knight Templar Statue@en"
           ],
           "type": "Statue",
-          "position": { "latitude": 42.50469, "longitude": -6.67530, "elevation": 555 }
+          "position": { "latitude": 42.50469, "longitude": -6.67530 }
         }
       ]
     },
@@ -140,16 +156,18 @@
       "id": "W-W5",
       "name": "Santalla del Bierzo",
       "type": "Village",
-      "position": { "latitude": 42.50444, "longitude": -6.68748, "elevation": 542 },
+      "position": { "latitude": 42.50444, "longitude": -6.68748 },
       "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W5-1",
-          "name": "Mirador Santalla del Bierzo@es",
+          "name": [
+            "Mirador Santalla del Bierzo@es"
+          ],
           "type": "Lookout",
-          "position": { "latitude": 42.50710, "longitude": -6.68685, "elevation": 516 }
+          "position": { "latitude": 42.50710, "longitude": -6.68685 }
         }
       ]
     },
@@ -157,7 +175,7 @@
       "id": "W-W6",
       "name": "Villavieja",
       "type": "Village",
-      "position": { "latitude": 42.48384, "longitude": -6.68306, "elevation": 785 },
+      "position": { "latitude": 42.48384, "longitude": -6.68306 },
       "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -176,14 +194,14 @@
             "Castle of Cornatel@en"
           ],
           "type": "Historical",
-          "position": { "latitude": 42.48888, "longitude": -6.69338, "elevation": 722 },
+          "position": { "latitude": 42.48888, "longitude": -6.69338 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
               },
-              "hours": "1000-1400, 1600-2000"
+              "hours": "1000-1400,1600-2000"
             }
           ],
           "time": 1.0
@@ -194,7 +212,7 @@
       "id": "W-W7",
       "name": "Borrenes",
       "type": "Village",
-      "position": { "latitude": 42.49148, "longitude": -6.72628, "elevation": 558 },
+      "position": { "latitude": 42.49148, "longitude": -6.72628 },
       "region": "ES-CL",
       "services": [ "Restaurant", "Pharmacy", "Medical" ],
       "accommodation": [
@@ -222,14 +240,14 @@
       "id": "W-W8",
       "name": "Las Médulas",
       "type": "Village",
-      "position": { "latitude": 42.45788, "longitude": -6.76801, "elevation": 736 },
+      "position": { "latitude": 42.45788, "longitude": -6.76801 },
       "region": "ES-CL",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
           "name": "La Senda Rural Hostel",
           "type": "PrivateAlbergue",
-          "services": [ ],
+          "services": [  ],
           "sleeping": [ "Shared" ]
         },
         {
@@ -265,10 +283,8 @@
             "Las Médulas Vistor Centre@en"
           ],
           "type": "InformationPoint",
-          "position": { "latitude": 42.45659, "longitude": -6.76755, "elevation": 740 },
-          "hours": [
-            "1100-1400, 1600-2000"
-          ]
+          "position": { "latitude": 42.45659, "longitude": -6.76755 },
+          "hours": "1100-1400,1600-2000"
         },
         {
           "id": "W-W8-2",
@@ -276,28 +292,26 @@
             "Aula arqueolologica@es",
             "Archaeological Hall of Las Médulas@en"
           ],
-          "type": "Museum",
           "description": {
             "about": "https://visitlasmedulas.com/que-ver-medulas/centros-interpretacion-medulas"
           },
-          "position": { "latitude": 42.46085, "longitude": -6.76810, "elevation": 735 },
-          "hours": [
-            "1000-1330, 1600-2000"
-          ],
+          "type": "Museum",
+          "position": { "latitude": 42.46085, "longitude": -6.76810 },
+          "hours": "1000-1330,1600-2000",
           "time": 1.0
         },
         {
           "id": "W-W8-3",
-          "name": "Las Médulas@es",
-          "type": "Historical",
+          "name": [
+            "Las Médulas@es"
+          ],
           "description": {
             "text": "A UNESCO World Heritage Site. The landscape was formed by Roman gold mining activities.",
             "about": "https://www.turismodelbierzo.es/medulas/"
           },
-          "position": { "latitude": 42.45991, "longitude": -6.76006, "elevation": 807 },
-          "hours": [
-            "1045-1400, 1600-1930"
-          ],
+          "type": "Historical",
+          "position": { "latitude": 42.45991, "longitude": -6.76006 },
+          "hours": "1045-1400,1600-1930",
           "time": 1.0
         }
       ]
@@ -306,14 +320,14 @@
       "id": "W-W9",
       "name": "Puente de Domingo Florez",
       "type": "Village",
-      "position": { "latitude": 42.41105, "longitude": -6.81871, "elevation": 381 },
+      "position": { "latitude": 42.41105, "longitude": -6.81871 },
       "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
       "accommodation": [
         {
           "name": "Sports Centre",
           "type": "PrivateAlbergue",
-          "services": [ ],
+          "services": [  ],
           "sleeping": [ "Shared" ]
         },
         {
@@ -328,48 +342,56 @@
       "id": "W-W10",
       "name": "Quereño",
       "type": "Village",
-      "position": { "latitude": 42.41862, "longitude": -6.83092, "elevation": 374 },
+      "position": { "latitude": 42.41862, "longitude": -6.83092 },
       "region": "ES-GA",
       "services": [ "Train" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W10-1",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.41953, "longitude": -6.83313, "elevation": 383 }
+          "position": { "latitude": 42.41953, "longitude": -6.83313 }
         },
         {
           "id": "W-W10-2",
-          "name": "Rest Area and Lookout@en",
+          "name": [
+            "Rest Area and Lookout@en"
+          ],
           "type": "Lookout",
-          "position": { "latitude": 42.41414, "longitude": -6.83544, "elevation": 415 }
+          "position": { "latitude": 42.41414, "longitude": -6.83544 }
         },
         {
           "id": "W-W10-3",
-          "name": "Rest Area and Lookout@en",
+          "name": [
+            "Rest Area and Lookout@en"
+          ],
           "type": "Lookout",
-          "position": { "latitude": 42.41118, "longitude": -6.84264, "elevation": 379 }
+          "position": { "latitude": 42.41118, "longitude": -6.84264 }
         }
       ]
     },
     {
       "id": "W-W11",
       "name": "Pumares",
-      "type": "Village",
       "description": {
         "notes": [
           "Pilgrim stamps can be obtained at a casa do teléfono"
         ]
       },
-      "position": { "latitude": 42.40542, "longitude": -6.86067, "elevation": 367 },
+      "type": "Village",
+      "position": { "latitude": 42.405422, "longitude": -6.86067 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W10-1",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
           "position": { "latitude": 42.40547, "longitude": -6.86079 }
         }
@@ -379,7 +401,7 @@
       "id": "W-W12",
       "name": "Sobradelo",
       "type": "Town",
-      "position": { "latitude": 42.41587, "longitude": -6.91060, "elevation": 359 },
+      "position": { "latitude": 42.41587, "longitude": -6.91060 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
@@ -399,9 +421,11 @@
       "pois": [
         {
           "id": "W-W12-1",
-          "name": "A Ponte Nova@es",
+          "name": [
+            "A Ponte Nova@es"
+          ],
           "type": "Bridge",
-          "position": { "latitude": 42.41385, "longitude": -6.91286, "elevation": 339 }
+          "position": { "latitude": 42.41385, "longitude": -6.91286 }
         }
       ]
     },
@@ -409,16 +433,18 @@
       "id": "W-W13",
       "name": "Entoma",
       "type": "Village",
-      "position": { "latitude": 42.42180, "longitude": -6.93738, "elevation": 349 },
+      "position": { "latitude": 42.42180, "longitude": -6.93738 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W13-1",
-          "name": "Ponte de Éntoma",
+          "name": [
+            "Ponte de Éntoma"
+          ],
           "type": "Bridge",
-          "position": { "latitude": 42.42210, "longitude": -6.93578, "elevation": 350 }
+          "position": { "latitude": 42.42210, "longitude": -6.93578 }
         }
       ]
     },
@@ -426,7 +452,7 @@
       "id": "W-W14",
       "name": "O Barco de Valdeorras",
       "type": "Town",
-      "position": { "latitude": 42.41505, "longitude": -6.98430, "elevation": 322 },
+      "position": { "latitude": 42.41505, "longitude": -6.98430 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
@@ -466,16 +492,18 @@
       "id": "W-W15",
       "name": "A Proba",
       "type": "Village",
-      "position": { "latitude": 42.41838, "longitude": -7.01175, "elevation": 325 },
+      "position": { "latitude": 42.41838, "longitude": -7.01175 },
       "region": "ES-GA",
       "services": [ "Groceries", "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W15-1",
-          "name": "Rest Area and Fountain@en",
+          "name": [
+            "Rest Area and Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.41830, "longitude": -7.01332, "elevation": 324 }
+          "position": { "latitude": 42.41830, "longitude": -7.01332 }
         }
       ]
     },
@@ -483,7 +511,7 @@
       "id": "W-W16",
       "name": "Vilamartín de Valdeorras",
       "type": "Town",
-      "position": { "latitude": 42.40984, "longitude": -7.06114, "elevation": 303 },
+      "position": { "latitude": 42.40984, "longitude": -7.06114 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
@@ -509,9 +537,11 @@
       "pois": [
         {
           "id": "W-W16-1",
-          "name": "Rest Area and Fountain@en",
+          "name": [
+            "Rest Area and Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.41042, "longitude": -7.05993, "elevation": 304 }
+          "position": { "latitude": 42.41042, "longitude": -7.05993 }
         }
       ]
     },
@@ -519,7 +549,7 @@
       "id": "W-W17",
       "name": "A Rúa de Valdeorras",
       "type": "Town",
-      "position": { "latitude": 42.39740, "longitude": -7.11597, "elevation": 320 },
+      "position": { "latitude": 42.39740, "longitude": -7.11597 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
@@ -563,10 +593,14 @@
       "pois": [
         {
           "id": "W-W17-1",
-          "name": "No Services until Quiroga@en",
+          "name": [
+            "No Services until Quiroga@en"
+          ],
+          "description": {
+            "text": "With the exception of the drinks available at the pilgrim support point in Albaredos, there is no food or drink and scant accommodation until Quiroga, 27km away."
+          },
           "type": "Hazard",
-          "description": "With the exception of the drinks available at the pilgrim support point in Albaredos, there is no food or drink and scant accommodation until Quiroga, 27km away.",
-          "position": { "latitude": 42.39588, "longitude": -7.11828, "elevation": 324 }
+          "position": { "latitude": 42.39588, "longitude": -7.11828 }
         }
       ]
     },
@@ -574,17 +608,21 @@
       "id": "W-W18",
       "name": "Albaredos",
       "type": "Village",
-      "position": { "latitude": 42.39674, "longitude": -7.17599, "elevation": 474 },
+      "position": { "latitude": 42.39674, "longitude": -7.17599 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W18-1",
-          "name": "Pilgrim Support Point@en",
+          "name": [
+            "Pilgrim Support Point@en"
+          ],
+          "description": {
+            "text": "A corner maintained by two residents, who leave out coffee, tea and juice for pilgrims."
+          },
           "type": "PilgrimResource",
-          "description": "A corner maintained by two residents, who leave out coffee, tea and juice for pilgrims.",
-          "position": { "latitude": 42.39675, "longitude": -7.17608, "elevation": 475 }
+          "position": { "latitude": 42.39675, "longitude": -7.17608 }
         }
       ]
     },
@@ -592,7 +630,7 @@
       "id": "W-W19",
       "name": "Montefurado",
       "type": "Village",
-      "position": { "latitude": 42.39473, "longitude": -7.19768, "elevation": 292 },
+      "position": { "latitude": 42.39473, "longitude": -7.19768 },
       "region": "ES-GA",
       "services": [ "Train" ],
       "accommodation": [ ],
@@ -604,7 +642,7 @@
             "Montefurado Roman Tunnel@en"
           ],
           "type": "Historical",
-          "position": { "latitude": 42.39187, "longitude": -7.20658, "elevation": 281 }
+          "position": { "latitude": 42.39187, "longitude": -7.20658 }
         }
       ]
     },
@@ -612,27 +650,27 @@
       "id": "W-W20",
       "name": "Hermidón",
       "type": "Village",
-      "position": { "latitude": 42.39731, "longitude": -7.20710, "elevation": 400 },
+      "position": { "latitude": 42.39731, "longitude": -7.20710 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     },
     {
       "id": "W-W21",
       "name": "Bendilló",
       "type": "Village",
-      "position": { "latitude": 42.43732, "longitude": -7.20792, "elevation": 445 },
+      "position": { "latitude": 42.43732, "longitude": -7.20792 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     },
     {
       "id": "W-W22",
       "name": "Soldón",
       "type": "Village",
-      "position": { "latitude": 42.44467, "longitude": -7.22302, "elevation": 276 },
+      "position": { "latitude": 42.44467, "longitude": -7.22302 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [
         {
           "name": "O Muiño Apartments",
@@ -646,9 +684,9 @@
       "id": "W-W23",
       "name": "Novais",
       "type": "Village",
-      "position": { "latitude": 42.45560, "longitude": -7.24298, "elevation": 314 },
+      "position": { "latitude": 42.45560, "longitude": -7.24298 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ],
       "pois": [
         {
@@ -657,11 +695,11 @@
             "Castelo dos Novais@es",
             "Castle of Novais@en"
           ],
-          "type": "Historical",
           "description": {
             "about": "https://turismo.ribeirasacra.org/castillo-de-os-novais"
           },
-          "position": { "latitude": 42.46013, "longitude": -7.24789, "elevation": 293 }
+          "type": "Historical",
+          "position": { "latitude": 42.46013, "longitude": -7.24789 }
         }
       ]
     },
@@ -669,16 +707,16 @@
       "id": "W-W24",
       "name": "Caspedro",
       "type": "Village",
-      "position": { "latitude": 42.46650, "longitude": -7.25364, "elevation": 308 },
+      "position": { "latitude": 42.46650, "longitude": -7.25364 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     },
     {
       "id": "W-W25",
       "name": "Quiroga",
       "type": "Town",
-      "position": { "latitude": 42.47491, "longitude": -7.26838, "elevation": 268 },
+      "position": { "latitude": 42.47491, "longitude": -7.26838 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
@@ -694,7 +732,7 @@
           "services": [ "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "TripleWC" ]
         },
-        {
+         {
           "name": "Hotel Remansiño",
           "type": "Hotel",
           "services": [ "Bedlinen", "Towels" ],
@@ -704,16 +742,18 @@
       "pois": [
         {
           "id": "W-W25-1",
-          "name": "Tourist Office of Quiroga@en",
+          "name": [
+            "Tourist Office of Quiroga@en"
+          ],
           "type": "InformationPoint",
-          "position": { "latitude": 42.47626, "longitude": -7.27396, "elevation": 273 },
+          "position": { "latitude": 42.47626, "longitude": -7.27396 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
               },
-              "hours": "0800-1500, 1600-2000"
+              "hours": "0800-1500,1600-2000"
             },
             {
               "calendar": {
@@ -726,21 +766,23 @@
         },
         {
           "id": "W-W25-2",
-          "name": "Ethnographical Museum@en",
+          "name": [
+            "Ethnographical Museum@en"
+          ],
           "type": "Museum",
-          "position": { "latitude": 42.47626, "longitude": -7.27396, "elevation": 273 },
+          "position": {"latitude": 42.47626, "longitude": -7.27396},
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+                "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
               },
               "hours": "1300-1400"
             },
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "saturday", "sunday" ]
+                "days": ["saturday", "sunday"]
               },
               "hours": "1200-1300"
             }
@@ -753,16 +795,16 @@
       "id": "W-W26",
       "name": "San Clodio",
       "type": "Village",
-      "position": { "latitude": 42.46625, "longitude": -7.28714, "elevation": 244 },
+      "position": { "latitude": 42.46625, "longitude": -7.28714 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus", "Train" ],
       "accommodation": [ ]
     },
     {
       "id": "W-W27",
       "name": "Espandariz",
       "type": "Village",
-      "position": { "latitude": 42.47140, "longitude": -7.29725, "elevation": 246 },
+      "position": { "latitude": 42.471395, "longitude": -7.29725 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -771,7 +813,7 @@
       "id": "W-W28",
       "name": "Nocedo",
       "type": "Village",
-      "position": { "latitude": 42.47015, "longitude": -7.30926, "elevation": 274 },
+      "position": { "latitude": 42.47015, "longitude": -7.30926 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -780,22 +822,26 @@
       "id": "W-W29",
       "name": "Carballo de Lor",
       "type": "Village",
-      "position": { "latitude": 42.50124, "longitude": -7.33556, "elevation": 470 },
+      "position": { "latitude": 42.50124, "longitude": -7.33556 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W29-1",
-          "name": "Waterfall@en",
+          "name": [
+            "Waterfall@en"
+          ],
           "type": "Natural",
-          "position": { "latitude": 42.49680, "longitude": -7.31800, "elevation": 548 }
+          "position": { "latitude": 42.49680, "longitude": -7.31800 }
         },
         {
           "id": "W-W29-2",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.50278, "longitude": -7.33482, "elevation": 473 }
+          "position": { "latitude": 42.50278, "longitude": -7.33482 }
         }
       ]
     },
@@ -803,7 +849,7 @@
       "id": "W-W30",
       "name": "Barxa de Lor",
       "type": "Village",
-      "position": { "latitude": 42.51322, "longitude": -7.34335, "elevation": 344 },
+      "position": { "latitude": 42.51322, "longitude": -7.34335 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -817,9 +863,11 @@
       "pois": [
         {
           "id": "W-W30-1",
-          "name": "Ponde do Barxa@es",
+          "name": [
+            "Ponde do Barxa@es"
+          ],
           "type": "Bridge",
-          "position": { "latitude": 42.51049, "longitude": -7.34200, "elevation": 296 }
+          "position": { "latitude": 42.51049, "longitude": -7.34200 }
         }
       ]
     },
@@ -827,16 +875,18 @@
       "id": "W-W31",
       "name": "Castroncelos",
       "type": "Village",
-      "position": { "latitude": 42.54289, "longitude": -7.37820, "elevation": 504 },
+      "position": { "latitude": 42.54289, "longitude": -7.37820 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W31-1",
-          "name": "Rest Stop and Fountain@en",
+          "name": [
+            "Rest Stop and Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.54309, "longitude": -7.37842, "elevation": 507 }
+          "position": { "latitude": 42.54309, "longitude": -7.37842 }
         }
       ]
     },
@@ -844,7 +894,7 @@
       "id": "W-W32",
       "name": "Pobra de Brollón",
       "type": "Village",
-      "position": { "latitude": 42.55670, "longitude": -7.39328, "elevation": 385 },
+      "position": { "latitude": 42.55670, "longitude": -7.39328 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
       "accommodation": [
@@ -866,7 +916,7 @@
       "id": "W-W33",
       "name": "Cerexia",
       "type": "Village",
-      "position": { "latitude": 42.55231, "longitude": -7.42220, "elevation": 359 },
+      "position": { "latitude": 42.55231, "longitude": -7.42220 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -874,13 +924,16 @@
     {
       "id": "W-W34",
       "name": "Monforte de Lemos",
-      "type": "Town",
       "description": {
         "notes": [
-          "Monforte de Lemos is the start point if you wish to travel the 100km to gain your Compostella. It is 132km to Santiago de Compostella. A passport can be obtained from the pilgrim's office.@en"
+          {
+            "type": "Information",
+            "text": "Monforte de Lemos is the start point if you wish to travel the 100km to gain your Compostella. It is 132km to Santiago de Compostella. A passport can be obtained from the pilgrim's office.@en"
+          }
         ]
       },
-      "position": { "latitude": 42.52248, "longitude": -7.51604, "elevation": 292 },
+      "type": "Town",
+      "position": { "latitude": 42.52248,  "longitude": -7.51604 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
@@ -929,13 +982,13 @@
         {
           "name": "Hotel Condes de Lemos",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Restaurant", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Cardenal Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Accessible", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
@@ -947,23 +1000,25 @@
         {
           "name": "Parador de Monforte de Lemos",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Accessible", "Bedlinen", "Towels", "Pool" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Restaurant", "Breakfast", "Accessible", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "DoubleWC", "QuadrupleWC" ]
         }
       ],
       "pois": [
         {
           "id": "W-W34-1",
-          "name": "Monteforte Tourist Office@en",
+          "name": [
+            "Monteforte Tourist Office@en"
+          ],
           "type": "InformationPoint",
-          "position": { "latitude": 42.52241, "longitude": -7.51358, "elevation": 297 },
+          "position": { "latitude": 42.52241, "longitude": -7.51358 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+                "days": ["tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
               },
-              "hours": "1000-1400, 1700-2100"
+              "hours": "1000-1400,1700-2100"
             }
           ]
         },
@@ -974,19 +1029,19 @@
             "Convent of the Poor Clares@en"
           ],
           "type": "Monastery",
-          "position": { "latitude": 42.52325, "longitude": -7.51609, "elevation": 293 },
+          "position": { "latitude": 42.52325, "longitude": -7.51609 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
               },
-              "hours": "1130-1300, 1730-1900"
+              "hours": "1130-1300,1730-1900"
             },
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "sunday" ]
+                "days": [ "sunday"]
               },
               "hours": "1200-1300"
             }
@@ -996,9 +1051,7 @@
             {
               "name": "Mass",
               "type": "Mass",
-              "hours": [
-                "2030-2130"
-              ]
+              "hours": "2030-2130"
             }
           ]
         },
@@ -1009,23 +1062,27 @@
             "Roman Bridge@en"
           ],
           "type": "Bridge",
-          "position": { "latitude": 42.52296, "longitude": -7.51481, "elevation": 292 }
+          "position": { "latitude": 42.52296,  "longitude": -7.51481 }
         },
         {
           "id": "W-W34-4",
-          "name": "Colexio Nosa Señora de Antigua@es",
-          "type": "Historical",
+          "name": [
+            "Colexio Nosa Señora de Antigua@es"
+          ],
           "description": {
             "about": "https://escolapiosmonforte.es"
           },
-          "position": { "latitude": 42.51854, "longitude": -7.51704, "elevation": 290 },
+          "type": "Historical",
+          "position": { "latitude": 42.51854, "longitude": -7.51704 },
           "time": 0.5
         },
         {
           "id": "W-W34-5",
-          "name": "Medieval Walls@en",
+          "name": [
+            "Medieval Walls@en"
+          ],
           "type": "Historical",
-          "position": { "latitude": 42.52250, "longitude": -7.51208, "elevation": 317 },
+          "position": { "latitude": 42.52250, "longitude": -7.51208 },
           "time": 0.5
         },
         {
@@ -1035,7 +1092,7 @@
             "Gate of Alcazaba@en"
           ],
           "type": "Historical",
-          "position": { "latitude": 42.52357, "longitude": -7.51213, "elevation": 325 }
+          "position": { "latitude": 42.52357, "longitude": -7.51213 }
         },
         {
           "id": "W-W34-7",
@@ -1044,7 +1101,7 @@
             "New Gate@en"
           ],
           "type": "Historical",
-          "position": { "latitude": 42.52360, "longitude": -7.50884, "elevation": 324 }
+          "position": { "latitude": 42.52360, "longitude": -7.50884 }
         },
         {
           "id": "W-W34-8",
@@ -1053,7 +1110,7 @@
             "Monforte Keep@en"
           ],
           "type": "Historical",
-          "position": { "latitude": 42.52415, "longitude": -7.51108, "elevation": 341 }
+          "position": { "latitude": 42.52415, "longitude": -7.51108 }
         },
         {
           "id": "W-W34-9",
@@ -1062,10 +1119,8 @@
             "Monforte Pilgrim's Office@en"
           ],
           "type": "PilgrimResource",
-          "position": { "latitude": 42.52300, "longitude": -7.51405, "elevation": 295 },
-          "hours": [
-            "0900-1400, 1700-2000"
-          ]
+          "position": { "latitude": 42.52300, "longitude": -7.51405 },
+          "hours": "0900-1400,1700-2000"
         }
       ]
     },
@@ -1073,7 +1128,7 @@
       "id": "W-W35",
       "name": "A Corga",
       "type": "Village",
-      "position": { "latitude": 42.52870, "longitude": -7.55759, "elevation": 298 },
+      "position": { "latitude": 42.52870, "longitude": -7.55759 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
@@ -1089,7 +1144,7 @@
       "id": "W-W36",
       "name": "Regueiro",
       "type": "Village",
-      "position": { "latitude": 42.53952, "longitude": -7.59007, "elevation": 338 },
+      "position": { "latitude": 42.53952, "longitude": -7.59007 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1098,7 +1153,7 @@
       "id": "W-W37",
       "name": "Castrotañe",
       "type": "Village",
-      "position": { "latitude": 42.54054, "longitude": -7.61799, "elevation": 439 },
+      "position": { "latitude": 42.54054, "longitude": -7.61799 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1107,7 +1162,7 @@
       "id": "W-W38",
       "name": "Piñeiro",
       "type": "Village",
-      "position": { "latitude": 42.54329, "longitude": -7.62203, "elevation": 494 },
+      "position": { "latitude": 42.54329, "longitude": -7.62203 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
@@ -1119,7 +1174,7 @@
             "Rest Area and Fountain@en"
           ],
           "type": "Fountain",
-          "position": { "latitude": 42.54377, "longitude": -7.62221, "elevation": 495 }
+          "position": { "latitude": 42.54377, "longitude": -7.62221 }
         }
       ]
     },
@@ -1127,7 +1182,7 @@
       "id": "W-W39",
       "name": "Fión",
       "type": "Village",
-      "position": { "latitude": 42.56351, "longitude": -7.66544, "elevation": 598 },
+      "position": { "latitude": 42.56351, "longitude": -7.66544 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
@@ -1146,7 +1201,7 @@
             "Cabo do Mundo Observation Deck@en"
           ],
           "type": "Lookout",
-          "position": { "latitude": 42.56533, "longitude": -7.67054, "elevation": 560 }
+          "position": { "latitude": 42.56533, "longitude": -7.67054 }
         }
       ]
     },
@@ -1154,7 +1209,7 @@
       "id": "W-W40",
       "name": "Cerdeiro",
       "type": "Village",
-      "position": { "latitude": 42.58240, "longitude": -7.68621, "elevation": 615 },
+      "position": { "latitude": 42.58240, "longitude": -7.68621 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1163,7 +1218,7 @@
       "id": "W-W41",
       "name": "Vendanova",
       "type": "Village",
-      "position": { "latitude": 42.58332, "longitude": -7.69377, "elevation": 614 },
+      "position": { "latitude": 42.58332, "longitude": -7.69377 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -1172,9 +1227,9 @@
       "id": "W-W42",
       "name": "Diomondi",
       "type": "Village",
-      "position": { "latitude": 42.59378, "longitude": -7.71267, "elevation": 496 },
+      "position": {"latitude": 42.59378, "longitude": -7.71267 },
       "region": "ES-GA",
-      "services": [ "Bus" ],
+      "services": ["Bus"],
       "accommodation": [
         {
           "name": "Diomondi Pilgrims Hostel",
@@ -1188,7 +1243,7 @@
       "id": "W-W43",
       "name": "Belesar",
       "type": "Village",
-      "position": { "latitude": 42.59141, "longitude": -7.72436, "elevation": 217 },
+      "position": { "latitude": 42.59141, "longitude": -7.72436 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
@@ -1200,7 +1255,7 @@
             "Fountain@en"
           ],
           "type": "Fountain",
-          "position": { "latitude": 42.59135, "longitude": -7.72365, "elevation": 234 }
+          "position": { "latitude": 42.59135, "longitude": -7.72365 }
         }
       ]
     },
@@ -1208,16 +1263,18 @@
       "id": "W-W44",
       "name": "Ermida",
       "type": "Village",
-      "position": { "latitude": 42.59431, "longitude": -7.73022, "elevation": 345 },
+      "position": { "latitude": 42.59431, "longitude": -7.73022 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W44-1",
-          "name": "Mill and Stone Pasal@en",
+          "name": [
+            "Mill and Stone Pasal@en"
+          ],
           "type": "Historical",
-          "position": { "latitude": 42.59329, "longitude": -7.73322, "elevation": 358 }
+          "position": { "latitude": 42.59329, "longitude": -7.73322 }
         }
       ]
     },
@@ -1225,7 +1282,7 @@
       "id": "W-W45",
       "name": "Os Queixeiros",
       "type": "Village",
-      "position": { "latitude": 42.59494, "longitude": -7.73594, "elevation": 428 },
+      "position": { "latitude": 42.59494, "longitude": -7.73594 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1234,7 +1291,7 @@
       "id": "W-W46",
       "name": "Rubias",
       "type": "Village",
-      "position": { "latitude": 42.59800, "longitude": -7.74065, "elevation": 525 },
+      "position": { "latitude": 42.59800, "longitude": -7.74065 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1243,7 +1300,7 @@
       "id": "W-W47",
       "name": "Líncora",
       "type": "Village",
-      "position": { "latitude": 42.59822, "longitude": -7.74228, "elevation": 534 },
+      "position": { "latitude": 42.59822, "longitude": -7.74228 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -1252,7 +1309,7 @@
       "id": "W-W48",
       "name": "Asma",
       "type": "Village",
-      "position": { "latitude": 42.60215, "longitude": -7.76263, "elevation": 490 },
+      "position": { "latitude": 42.60215, "longitude": -7.76263 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1261,9 +1318,9 @@
       "id": "W-W49",
       "name": "Chantada",
       "type": "Village",
-      "position": { "latitude": 42.60997, "longitude": -7.77141, "elevation": 490 },
+      "position": {"latitude": 42.60997, "longitude": -7.77141 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
           "name": "Dpaso Hostel",
@@ -1293,24 +1350,26 @@
       "pois": [
         {
           "id": "W-W49-1",
-          "name": "Tourist Office of Chantada@en",
-          "type": "InformationPoint",
+          "name": [
+            "Tourist Office of Chantada@en"
+          ],
           "description": {
             "about": "https://www.concellodechantada.org/turismo/"
           },
-          "position": { "latitude": 42.60798, "longitude": -7.76995, "elevation": 485 },
+          "type": "InformationPoint",
+          "position": { "latitude": 42.60798, "longitude": -7.76995 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday"]
               },
-              "hours": "1000-1400, 1600-1800"
+              "hours": "1000-1400,1600-1800"
             },
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "saturday", "sunday" ]
+                "days": [ "saturday", "sunday"]
               },
               "hours": "1000-1400"
             }
@@ -1322,9 +1381,11 @@
             "Petó das Animas@es",
             "Chapel of Souls in Purgatory@en"
           ],
+          "description": {
+            "text": "A small chapel honouring souls that await in purgatory. The 'peto' alms box allows the faithful to fund masses to help them get to heaven."
+           },
           "type": "Church",
-          "description": "A small chapel honouring souls that await in purgatory. The 'peto' alms box allows the faithful to fund masses to help them get to heaven.",
-          "position": { "latitude": 42.61615, "longitude": -7.77897, "elevation": 551 }
+          "position": { "latitude": 42.61615, "longitude": -7.77897 }
         }
       ]
     },
@@ -1332,7 +1393,7 @@
       "id": "W-W50",
       "name": "Centulle",
       "type": "Village",
-      "position": { "latitude": 42.61765, "longitude": -7.78131, "elevation": 562 },
+      "position": { "latitude": 42.61765, "longitude": -7.78131 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
@@ -1341,7 +1402,7 @@
           "id": "W-W50-1",
           "name": "Fountain@en",
           "type": "Fountain",
-          "position": { "latitude": 42.61740, "longitude": -7.78079, "elevation": 558 }
+          "position": { "latitude": 42.61740, "longitude": -7.78079 }
         }
       ]
     },
@@ -1349,14 +1410,14 @@
       "id": "W-W51",
       "name": "Vilaseco",
       "type": "Village",
-      "position": { "latitude": 42.62463, "longitude": -7.83172, "elevation": 657 },
+      "position": {"latitude": 42.62463, "longitude": -7.83172 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
           "name": "Vilaseco Hotel",
           "type": "Hotel",
-          "services": [ "WashingMachine", "Dryer", "Breakfast", "Dinner", "Bedlinen", "Towels", "Pool" ],
+          "services": [ "WashingMachine", "Dryer", "Breakfast", "Dinner", "Bedlinen", "Towels", "Pool"],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
       ]
@@ -1365,7 +1426,7 @@
       "id": "W-W52",
       "name": "Penasillás",
       "type": "Village",
-      "position": { "latitude": 42.62546, "longitude": -7.84994, "elevation": 691 },
+      "position": { "latitude": 42.62546, "longitude": -7.84994 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
@@ -1374,20 +1435,22 @@
           "id": "W-W52-1",
           "name": "Fountain@en",
           "type": "Fountain",
-          "position": { "latitude": 42.62585, "longitude": -7.85005, "elevation": 691 }
+          "position": { "latitude": 42.62585, "longitude": -7.85005 }
         },
         {
           "id": "W-W52-2",
           "name": "Alternative Route to Monte Faro@en",
           "type": "Junction",
-          "position": { "latitude": 42.62561, "longitude": -7.85073, "elevation": 694 }
+          "position": { "latitude": 42.62561, "longitude": -7.85073 }
         },
         {
           "id": "W-W52-3",
           "name": "No Food until Río@en",
+          "description": {
+            "text": "The Taberna do Peto is the only source of food and drink until Río, 15km away."
+          },
           "type": "Hazard",
-          "description": "The Taberna do Peto is the only source of food and drink until Río, 15km away.",
-          "position": { "latitude": 42.62552, "longitude": -7.84986, "elevation": 691 }
+          "position": { "latitude": 42.62552, "longitude": -7.84986 }
         }
       ]
     },
@@ -1395,7 +1458,7 @@
       "id": "W-W53",
       "name": "Monte Faro",
       "type": "Peak",
-      "position": { "latitude": 42.62678, "longitude": -7.89537, "elevation": 1110 },
+      "position": { "latitude": 42.62678, "longitude": -7.89537 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
@@ -1404,7 +1467,7 @@
           "id": "W-W53-1",
           "name": "Memorial to Uxío Novoneyra@en",
           "type": "Artwork",
-          "position": { "latitude": 42.62787, "longitude": -7.87671, "elevation": 927 }
+          "position": { "latitude": 42.62787, "longitude": -7.87671 }
         },
         {
           "id": "W-W53-2",
@@ -1413,7 +1476,7 @@
             "Stations of the Cross Climb@en"
           ],
           "type": "Cross",
-          "position": { "latitude": 42.62615, "longitude": -7.89401, "elevation": 1132 }
+          "position": { "latitude": 42.62615, "longitude": -7.89401 }
         },
         {
           "id": "W-W53-3",
@@ -1421,9 +1484,11 @@
             "Ermida do Faro@es",
             "Hermitage of Our Lady of Faro@en"
           ],
+          "description": {
+            "text": "A pilgrimage site in itself, considered to be at the centre of Galicia@en"
+          },
           "type": "Church",
-          "description": "A pilgrimage site in itself, considered to be at the centre of Galicia@en",
-          "position": { "latitude": 42.62501, "longitude": -7.89263, "elevation": 1155 },
+          "position": { "latitude": 42.62501, "longitude": -7.89263 },
           "hours": [
             {
               "calendar": {
@@ -1437,7 +1502,6 @@
         {
           "id": "W-W53-4",
           "name": "Fonte dos Meniños@es",
-          "type": "Fountain",
           "description": {
             "text": "A fountain credited with healing powers@en",
             "notes": [
@@ -1447,7 +1511,8 @@
               }
             ]
           },
-          "position": { "latitude": 42.64763, "longitude": -7.88908, "elevation": 995 }
+          "type": "Fountain",
+          "position": { "latitude": 42.64763, "longitude": -7.88908 }
         }
       ]
     },
@@ -1455,7 +1520,7 @@
       "id": "W-W54",
       "name": "Monte Cabeza",
       "type": "Intersection",
-      "position": { "latitude": 42.66773, "longitude": -7.88953, "elevation": 874 },
+      "position": { "latitude": 42.66773, "longitude": -7.88953 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
@@ -1463,9 +1528,11 @@
         {
           "id": "W-W54-1",
           "name": "Mámoas@es",
+          "description": {
+            "text": "Neolithic burial mounds@en"
+          },
           "type": "Historical",
-          "description": "Neolithic burial mounds@en",
-          "position": { "latitude": 42.67177, "longitude": -7.89151, "elevation": 874 }
+          "position": { "latitude": 42.67177, "longitude": -7.89151 }
         }
       ]
     },
@@ -1473,7 +1540,7 @@
       "id": "W-W55",
       "name": "Vilanova",
       "type": "Village",
-      "position": { "latitude": 42.67238, "longitude": -7.90519, "elevation": 762 },
+      "position": { "latitude": 42.67238, "longitude": -7.90519 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
@@ -1482,7 +1549,7 @@
           "id": "W-W55-1",
           "name": "Fountain@en",
           "type": "Fountain",
-          "position": { "latitude": 42.67236, "longitude": -7.90468, "elevation": 768 }
+          "position": { "latitude": 42.67236, "longitude": -7.90468 }
         }
       ]
     },
@@ -1490,7 +1557,7 @@
       "id": "W-W56",
       "name": "Río",
       "type": "Village",
-      "position": { "latitude": 42.65814, "longitude": -7.93182, "elevation": 720 },
+      "position": { "latitude": 42.65814, "longitude": -7.93182 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
@@ -1499,18 +1566,18 @@
       "id": "W-W57",
       "name": "Rodeiro",
       "type": "Village",
-      "position": { "latitude": 42.64939, "longitude": -7.94795, "elevation": 635 },
+      "position": { "latitude": 42.64939, "longitude": -7.94795 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
           "name": "Pavillón Municipal de Rodeiro",
-          "type": "PilgrimAlbergue",
           "description": {
-            "notes": [
+            "notes":[
               "Pilgrims may enter the premises to spend the night once all activities are over@en"
             ]
           },
+          "type": "PilgrimAlbergue",
           "services": [ ],
           "sleeping": [ "Mattress" ]
         },
@@ -1526,7 +1593,7 @@
       "id": "W-W58",
       "name": "Penerbosa",
       "type": "Village",
-      "position": { "latitude": 42.66231, "longitude": -7.98104, "elevation": 610 },
+      "position": { "latitude": 42.66231, "longitude": -7.98104 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
@@ -1535,7 +1602,7 @@
           "id": "W-W58-1",
           "name": "Bridge over River Arnego@en",
           "type": "Bridge",
-          "position": { "latitude": 42.65732, "longitude": -7.98180, "elevation": 591 }
+          "position": { "latitude": 42.65732, "longitude": -7.98180 }
         }
       ]
     },
@@ -1543,7 +1610,7 @@
       "id": "W-W59",
       "name": "Penela",
       "type": "Village",
-      "position": { "latitude": 42.67253, "longitude": -7.99116, "elevation": 596 },
+      "position": { "latitude": 42.67253, "longitude": -7.99116 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
@@ -1552,7 +1619,7 @@
           "id": "W-W59-1",
           "name": "Mausoleum of the Gained Waters@en",
           "type": "Artwork",
-          "position": { "latitude": 42.67152, "longitude": -7.99224, "elevation": 600 }
+          "position": { "latitude": 42.67152, "longitude": -7.99224 }
         }
       ]
     },
@@ -1560,7 +1627,7 @@
       "id": "W-W60",
       "name": "Eirexe",
       "type": "Village",
-      "position": { "latitude": 42.68491, "longitude": -7.99318, "elevation": 581 },
+      "position": { "latitude": 42.68491, "longitude": -7.99318 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
@@ -1569,7 +1636,7 @@
           "id": "W-W60-1",
           "name": "Rest Place and Vending Machine@en",
           "type": "PilgrimResource",
-          "position": { "latitude": 42.68497, "longitude": -7.99336, "elevation": 581 }
+          "position": { "latitude": 42.68497, "longitude": -7.99336 }
         }
       ]
     },
@@ -1577,7 +1644,7 @@
       "id": "W-W61",
       "name": "Ponte Pedroso",
       "type": "Bridge",
-      "position": { "latitude": 42.68608, "longitude": -8.00860, "elevation": 553 },
+      "position": { "latitude": 42.68608, "longitude": -8.00860 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1586,45 +1653,45 @@
       "id": "W-W62",
       "name": "Lalín",
       "type": "Town",
-      "position": { "latitude": 42.66178, "longitude": -8.11297, "elevation": 542 },
+      "position": {"latitude": 42.66178, "longitude": -8.11297},
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
           "name": "Lalín Centro Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WashingMachine", "Dryer", "Kitchen", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Double" ]
+          "services": ["WashingMachine", "Dryer", "Kitchen", "Bedlinen", "Towels"],
+          "sleeping": ["Shared", "Double"]
         },
         {
           "name": "Las Palmeras Boarding House",
           "type": "GuestHouse",
-          "services": [ "Bedlinen", "Towels" ],
-          "sleeping": [ "Double" ]
+          "services": ["Bedlinen", "Towels"],
+          "sleeping": ["Double"]
         },
         {
           "name": "Hostal As Vilas",
           "type": "GuestHouse",
-          "services": [ "Bedlinen", "Towels" ],
-          "sleeping": [ "Double" ]
+          "services": ["Bedlinen", "Towels"],
+          "sleeping": ["Double"]
         },
         {
           "name": "Casa Mouriño Boarding House",
           "type": "GuestHouse",
-          "services": [ "Bedlinen", "Towels" ],
-          "sleeping": [ "Double" ]
+          "services": ["Bedlinen", "Towels"],
+          "sleeping": ["Double"]
         },
         {
           "name": "El Palacio Hotel",
           "type": "Hotel",
-          "services": [ "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
+          "services": ["Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
         },
         {
           "name": "Hotel Pontiñas",
           "type": "Hotel",
-          "services": [ "Breakfast", "Dinner", "Pets", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "Double", "TripleWC", "QuadrupleWC" ]
+          "services": ["Breakfast", "Dinner", "Pets", "Bedlinen", "Towels"],
+          "sleeping": ["Shared", "Single", "Double", "TripleWC", "QuadrupleWC"]
         }
       ],
       "pois": [
@@ -1632,14 +1699,14 @@
           "id": "W-W62-1",
           "name": "Lalín Tourist Office@en",
           "type": "InformationPoint",
-          "position": { "latitude": 42.65663, "longitude": -8.11325, "elevation": 566 },
+          "position": {"latitude": 42.65663, "longitude": -8.11325},
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+                "days": ["tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
               },
-              "hours": "1200-1400, 1700-2000"
+              "hours": "1200-1400,1700-2000"
             }
           ]
         },
@@ -1647,14 +1714,16 @@
           "id": "W-W62-2",
           "name": "Monument to Joaquín Loriga@en",
           "type": "Statue",
-          "position": { "latitude": 42.66219, "longitude": -8.11291, "elevation": 540 }
+          "position": {"latitude": 42.66219, "longitude": -8.11291 }
         },
         {
           "id": "W-W62-3",
           "name": "Km 0@en",
+          "description": {
+            "text": "Lalín stands more or less one hour from all the major cities in Galicia. The location is marked by a plaque in the road.@en"
+          },
           "type": "Statue",
-          "description": "Lalín stands more or less one hour from all the major cities in Galicia. The location is marked by a plaque in the road.@en",
-          "position": { "latitude": 42.66146, "longitude": -8.11219, "elevation": 546 }
+          "position": {"latitude": 42.66146, "longitude": -8.11219 }
         },
         {
           "id": "W-W62-4",
@@ -1662,18 +1731,18 @@
             "Museo Municipal \"Ramón María Aller\"@es",
             "Ramón María Aller Museum@en"
           ],
-          "type": "Museum",
           "description": {
             "about": "https://www.lalin.gal/musesos"
           },
-          "position": { "latitude": 42.66136, "longitude": -8.11343, "elevation": 540 },
+          "type": "Museum",
+          "position": {"latitude": 42.66136, "longitude": -8.11343 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
               },
-              "hours": "1000-1400, 1900-2100"
+              "hours": "1000-1400,1900-2100"
             }
           ],
           "time": 1.0
@@ -1682,7 +1751,7 @@
           "id": "W-W62-5",
           "name": "Water Mills@en",
           "type": "Historical",
-          "position": { "latitude": 42.66211, "longitude": -8.11867, "elevation": 514 }
+          "position": {"latitude": 42.66211, "longitude": -8.11867 }
         }
       ]
     },
@@ -1690,9 +1759,9 @@
       "id": "W-W63",
       "name": "Espiño",
       "type": "Village",
-      "position": { "latitude": 42.66940, "longitude": -8.13876, "elevation": 501 },
+      "position": { "latitude": 42.66940, "longitude": -8.13876 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Bus" ],
+      "services": [ "Restaurant","Bus" ],
       "accommodation": [
         {
           "name": "Hotel Naval do Espiño",
@@ -1706,7 +1775,7 @@
       "id": "W-W64",
       "name": "Bergazos (A Laxe)",
       "type": "Village",
-      "position": { "latitude": 42.67622, "longitude": -8.16341, "elevation": 469 },
+      "position": { "latitude": 42.67622, "longitude": -8.16341 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
@@ -1726,9 +1795,11 @@
       "pois": [
         {
           "id": "W-W64-1",
-          "name": "Merging of the Camino Invierno and the Vía de la Plata@en",
+          "name": [
+            "Merging of the Camino Invierno and the Vía de la Plata@en"
+          ],
           "type": "Junction",
-          "position": { "latitude": 42.67533, "longitude": -8.16306, "elevation": 471 }
+          "position": { "latitude": 42.67533, "longitude": -8.16306}
         }
       ]
     },
@@ -1736,7 +1807,7 @@
       "id": "W-W65",
       "name": "Prado",
       "type": "Village",
-      "position": { "latitude": 42.68315, "longitude": -8.18398, "elevation": 448 },
+      "position": { "latitude": 42.68315, "longitude": -8.18398 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [ ]
@@ -1745,39 +1816,49 @@
       "id": "W-W66",
       "name": "Taboada",
       "type": "Village",
-      "position": { "latitude": 42.68080, "longitude": -8.21062, "elevation": 373 },
+      "position": { "latitude": 42.68080, "longitude": -8.21062 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W66-1",
-          "name": "Ponte Taboada@es",
-          "type": "Bridge",
+          "name": [
+            "Ponte Taboada@es"
+          ],
           "description": {
             "text": "Built in 912, part of the royal roadway connecting Santiago and Ourense",
             "about": "https://www.guiarepsol.com/es/viajar/vamos-de-excursion/naturaleza-o-deza-pontevedra/"
           },
-          "position": { "latitude": 42.67959, "longitude": -8.20991, "elevation": 357 }
+          "type": "Bridge",
+          "position": { "latitude": 42.67959, "longitude": -8.20991 }
         },
         {
           "id": "W-W66-2",
-          "name": "Roman Road@en",
+          "name": [
+            "Roman Road@en"
+          ],
           "type": "Historical",
-          "position": { "latitude": 42.67979, "longitude": -8.21021, "elevation": 364 }
+          "position": { "latitude": 42.67979, "longitude": -8.21021 }
         },
         {
           "id": "W-W66-3",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.68543, "longitude": -8.21729, "elevation": 436 }
+          "position": { "latitude": 42.68543, "longitude": -8.21729 }
         },
         {
           "id": "W-W66-4",
-          "name": "Church of Santiago@en",
+          "name": [
+            "Church of Santiago@en"
+          ],
+          "description": {
+            "text": "Legend has it that any pilgrim passing this church must tap the door with their head.@en"
+          },
           "type": "Church",
-          "description": "Legend has it that any pilgrim passing this church must tap the door with their head.@en",
-          "position": { "latitude": 42.68695, "longitude": -8.21794, "elevation": 444 }
+          "position": { "latitude": 42.68695, "longitude": -8.21794 }
         }
       ]
     },
@@ -1785,7 +1866,7 @@
       "id": "W-W67",
       "name": "Transfontao",
       "type": "Village",
-      "position": { "latitude": 42.68723, "longitude": -8.23414, "elevation": 466 },
+      "position": { "latitude": 42.68723, "longitude": -8.23414 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
@@ -1801,73 +1882,77 @@
       "id": "W-W68",
       "name": "Silleda",
       "type": "Town",
-      "position": { "latitude": 42.69745, "longitude": -8.24705, "elevation": 489 },
+      "position": {"latitude": 42.69745, "longitude": -8.24705},
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
           "name": "The Gran Albergue Silleda",
           "type": "PrivateAlbergue",
-          "services": [ "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared" ]
+          "services": ["Kitchen", "Breakfast", "Bedlinen", "Towels"],
+          "sleeping": ["Shared"]
         },
         {
           "name": "Trabazo Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared" ]
+          "services": ["WashingMachine", "Dryer", "Bedlinen", "Towels"],
+          "sleeping": ["Shared"]
         },
         {
           "name": "Santa Olaia Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WashingMachine", "Kitchen" ],
-          "sleeping": [ "Shared" ]
+          "services": ["WashingMachine", "Kitchen"],
+          "sleeping": ["Shared"]
         },
         {
           "name": "Silleda Tourist Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Double" ]
+          "services": [
+            "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels"
+          ],
+          "sleeping": ["Shared", "Double"]
         },
         {
           "name": "Casa Novas Hostal",
           "type": "House",
-          "services": [ "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Quadruple" ]
+          "services": ["Bedlinen", "Towels"],
+          "sleeping": ["Single", "DoubleWC", "Quadruple"]
         },
         {
           "name": "Toxa Hostal",
           "type": "GuestHouse",
-          "services": [ "Bedlinen", "Towels" ],
-          "sleeping": [ "Double" ]
+          "services": ["Bedlinen", "Towels"],
+          "sleeping": ["Double"]
         },
         {
           "name": "Ramos Hotel",
           "type": "Hotel",
-          "services": [ "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
+          "services": ["WashingMachine", "Dryer", "Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
         },
         {
           "name": "Hotel Vía Argentum",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Groceries", "Heating", "Accessible", "Pets", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
+          "services": ["WiFi", "Heating", "Groceries", "Restaurant", "Accessible", "Pets", "Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
         }
       ],
       "pois": [
         {
           "id": "W-W68-1",
-          "name": "Tourist Office of Silleda@en",
-          "type": "InformationPoint",
+          "name": [
+            "Tourist Office of Silleda@en"
+          ],
           "description": {
             "about": "https://turismosilleda.es"
           },
-          "position": { "latitude": 42.69978, "longitude": -8.24666, "elevation": 491 },
+          "type": "InformationPoint",
+          "position": {"latitude": 42.69978, "longitude": -8.24666},
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
-                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+                "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
               },
               "hours": "0800-1400"
             }
@@ -1879,22 +1964,26 @@
       "id": "W-W69",
       "name": "Foxo de Deza",
       "type": "Village",
-      "position": { "latitude": 42.70124, "longitude": -8.25699, "elevation": 450 },
+      "position": { "latitude": 42.70124, "longitude": -8.25699 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W69-1",
-          "name": "Ethnographical House@en",
+          "name": [
+            "Ethnographical House@en"
+          ],
           "type": "Historical",
-          "position": { "latitude": 42.70121, "longitude": -8.25684, "elevation": 451 }
+          "position": { "latitude": 42.70121, "longitude": -8.25684 }
         },
         {
           "id": "W-W68-2",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.70136, "longitude": -8.25800, "elevation": 447 }
+          "position": { "latitude": 42.70136, "longitude": -8.25800 }
         }
       ]
     },
@@ -1902,7 +1991,7 @@
       "id": "W-W70",
       "name": "Bandeira",
       "type": "Town",
-      "position": { "latitude": 42.72897, "longitude": -8.30268, "elevation": 352 },
+      "position": { "latitude": 42.72897, "longitude":  -8.30268 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
@@ -1916,7 +2005,7 @@
           "name": "Casa de Cacheiro",
           "type": "CasaRural",
           "services": [ "WiFi", "Heating" ],
-          "sleeping": [ "Single", "DoubleWC" ]
+          "sleeping": [ "Single", "DoubleWC"]
         },
         {
           "name": "Conde Rey Lodging House",
@@ -1936,7 +2025,7 @@
       "id": "W-W71",
       "name": "Dornelas",
       "type": "Village",
-      "position": { "latitude": 42.75577, "longitude": -8.33814, "elevation": 289 },
+      "position": { "latitude": 42.75577, "longitude": -8.33814 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
@@ -1950,9 +2039,11 @@
       "pois": [
         {
           "id": "W-W71-1",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.75668, "longitude": -8.33868, "elevation": 288 }
+          "position": { "latitude": 42.75668, "longitude": -8.33868 }
         }
       ]
     },
@@ -1960,7 +2051,7 @@
       "id": "W-W72",
       "name": "O Seixo",
       "type": "Village",
-      "position": { "latitude": 42.77343, "longitude": -8.38463, "elevation": 262 },
+      "position": { "latitude": 42.77343, "longitude": -8.38463 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
@@ -1969,16 +2060,18 @@
       "id": "W-W73",
       "name": "Aldea de O Castro",
       "type": "Village",
-      "position": { "latitude": 42.77900, "longitude": -8.38669, "elevation": 223 },
+      "position": { "latitude": 42.77900, "longitude": -8.38669 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W73-1",
-          "name": "A Fonde dos Carballiños@es",
+          "name": [
+            "A Fonde dos Carballiños@es"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.77757, "longitude": -8.38638, "elevation": 240 }
+          "position": { "latitude": 42.77757, "longitude": -8.38638 }
         }
       ]
     },
@@ -1986,7 +2079,7 @@
       "id": "W-W74",
       "name": "Ponte Ulla",
       "type": "Town",
-      "position": { "latitude": 42.77780, "longitude": -8.40374, "elevation": 69 },
+      "position": { "latitude": 42.77780, "longitude": -8.40374 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [
@@ -2011,7 +2104,7 @@
             "Tourist Office of Ponte Ulla@en"
           ],
           "type": "InformationPoint",
-          "position": { "latitude": 42.77865, "longitude": -8.40260, "elevation": 65 }
+          "position": { "latitude": 42.77865, "longitude": -8.40260 }
         }
       ]
     },
@@ -2019,7 +2112,7 @@
       "id": "W-W75",
       "name": "Outeiro (Vedra)",
       "type": "Village",
-      "position": { "latitude": 42.79087, "longitude": -8.43217, "elevation": 282 },
+      "position": { "latitude": 42.79087, "longitude": -8.43217 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
@@ -2032,7 +2125,7 @@
         {
           "name": "Residencial Victoria Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Kitchen", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Kitchen", "Restaurant", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -2041,7 +2134,7 @@
       "id": "W-W76",
       "name": "Rubial",
       "type": "Village",
-      "position": { "latitude": 42.81025, "longitude": -8.46458, "elevation": 244 },
+      "position": { "latitude": 42.81025, "longitude": -8.46458 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -2050,7 +2143,7 @@
       "id": "W-W77",
       "name": "Deseiro (Sergude)",
       "type": "Village",
-      "position": { "latitude": 42.81934, "longitude": -8.48068, "elevation": 195 },
+      "position": { "latitude": 42.81934, "longitude": -8.48068 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
@@ -2066,16 +2159,18 @@
       "id": "W-W78",
       "name": "Susana",
       "type": "Village",
-      "position": { "latitude": 42.82692, "longitude": -8.48883, "elevation": 214 },
+      "position": { "latitude": 42.82692, "longitude": -8.48883 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Pharmacy", "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W78-1",
-          "name": "Rest Area@en",
+          "name": [
+            "Rest Area@en"
+          ],
           "type": "Park",
-          "position": { "latitude": 42.82912, "longitude": -8.49106, "elevation": 198 }
+          "position": { "latitude": 42.82912, "longitude": -8.49106 }
         }
       ]
     },
@@ -2083,7 +2178,7 @@
       "id": "W-W79",
       "name": "Aldrei",
       "type": "Village",
-      "position": { "latitude": 42.83586, "longitude": -8.50478, "elevation": 214 },
+      "position": { "latitude": 42.83586, "longitude": -8.50478 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -2092,7 +2187,7 @@
       "id": "W-W80",
       "name": "Piñeiro",
       "type": "Village",
-      "position": { "latitude": 42.84833, "longitude": -8.52298, "elevation": 148 },
+      "position": { "latitude": 42.848327, "longitude": -8.52298 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
@@ -2101,24 +2196,27 @@
       "id": "W-W81",
       "name": "Angrois",
       "type": "Village",
-      "position": { "latitude": 42.85977, "longitude": -8.52889, "elevation": 226 },
+      "position": { "latitude": 42.85977, "longitude": -8.52889 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "W-W81-1",
-          "name": "Fountain@en",
+          "name": [
+            "Fountain@en"
+          ],
           "type": "Fountain",
-          "position": { "latitude": 42.85909, "longitude": -8.52847, "elevation": 227 }
+          "position": { "latitude": 42.85909, "longitude": -8.52847 }
         }
       ]
     },
+
     {
       "id": "W-F1",
       "name": "San Cristobal",
       "type": "Village",
-      "position": { "latitude": 42.63325, "longitude": -7.84209, "elevation": 634 },
+      "position": { "latitude": 42.63325, "longitude": -7.84209 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
@@ -2129,11 +2227,11 @@
             "Espacio Vilaseco@es",
             "Space of Rememberance@en"
           ],
-          "type": "Artwork",
           "description": {
             "about": "https://espaciovilaseco.com"
           },
-          "position": { "latitude": 42.63371, "longitude": -7.84291, "elevation": 641 }
+          "type": "Artwork",
+          "position": { "latitude": 42.63371, "longitude": -7.84291  }
         }
       ]
     },
@@ -2141,21 +2239,22 @@
       "id": "W-F2",
       "name": "Ferreiros",
       "type": "Village",
-      "position": { "latitude": 42.64699, "longitude": -7.85831, "elevation": 700 },
+      "position": { "latitude": 42.64699, "longitude": -7.85831 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     },
     {
       "id": "W-F3",
       "name": "Argozón",
       "type": "Village",
-      "position": { "latitude": 42.66107, "longitude": -7.87282, "elevation": 718 },
+      "position": { "latitude":42.66107, "longitude": -7.87282 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
     }
   ],
+
   "legs": [
     {
       "from": "F-F148",
@@ -2197,7 +2296,7 @@
       "type": "CyclePath",
       "from": "W-W5",
       "to": "W-W7",
-      "distance": 5.80,
+      "distance": 5.8,
       "ascent": 125,
       "descent": 105
     },
@@ -2734,6 +2833,7 @@
       "ascent": 70,
       "descent": 40
     },
+
     {
       "from": "W-W52",
       "to": "W-F1",
@@ -2769,34 +2869,44 @@
       "name": "Camino Invierno",
       "description": "The main Winter Camino route",
       "major": true,
-      "stops": [ "W-W34" ],
-      "starts": [ "F-F148", "W-W34" ],
-      "finishes": [ "ST-ST1" ],
+      "stops": [
+        "W-W34"
+      ],
+      "starts": [
+        "F-F148", "W-W34"
+      ],
+      "finishes": [
+        "ST-ST1"
+      ],
       "suggested-pois": [ "W-W8-3", "W-W34-5", "ST-ST1-1" ],
       "palette": {
-        "colour": "#f4c86c"
-      }
+        "colour": "f4c86c"
+      },
+      "default": true
     },
     {
       "id": "W-RF",
       "name": "Bypass Monte Faro",
       "description": {
         "text": "An alternative to climbing Monte Faro and visiting the Hermitage of Nuestra Señora de Faro pilgrimage site at the summit. This route goes North and follows the pass towards Río.@en",
-        "notes": [
+       "notes": [
           "This bypass is recommended in Winter, since the peak of Monte Faro at 1138m@en"
         ]
       },
       "locations": [ "W-F1", "W-F2", "W-F3" ],
       "palette": {
-        "colour": "#fe8d37"
-      }
+        "colour": "fe8d37"
+      },
+      "default": true
     }
   ],
   "route-logic": [
     {
       "description": "Changes for the Monte Faro bypass",
-      "condition": "W-RF",
-      "exclude": [ "W-W53" ]
+      "condition" : "W-RF",
+      "exclude": [
+        "W-W53"
+      ]
     }
   ],
   "default-route": "W-RW"

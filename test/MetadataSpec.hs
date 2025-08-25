@@ -158,5 +158,5 @@ testWrite1 =
     em = encode testMetadata1
   in
     TestCase (do
-        assertEqual "Write 1 1" "{\"namespaces\":[{\"namespace\":\"http://purl.org/dc/elements/1.1/\",\"prefix\":\"dc\"}],\"statements\":[{\"term\":\"dc:title\",\"value\":\"A test title@en\"},{\"term\":\"dc:created\",\"value\":\"2024-02-10\"},{\"term\":\"dc:created\",\"value\":\"2024-02-11\"}]}" em
+        assertEqual "Write 1 1" "{\"namespaces\":null,\"statements\":[{\"term\":\"dc:title\",\"value\":\"A test title@en\"},{\"term\":\"dc:created\",\"value\":\"2024-02-10\"},{\"term\":\"dc:created\",\"value\":\"2024-02-11\"}]}" em
       )

@@ -29,6 +29,7 @@ dependencies:
   - bytestring
   - colour
   - cookie
+  - conduit
   - containers
   - data-default-class
   - deepseq
@@ -42,6 +43,7 @@ dependencies:
   - network-uri
   - numeric-tools == 0.2.*
   - optparse-applicative
+  - path-pieces
   - scientific
   - shakespeare
   - split
@@ -109,6 +111,15 @@ executables:
   generate-static-exe:
     main: Main.hs
     source-dirs: app/generate-static
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - de-calixtinus
+  elevations-exe:
+    main: Main.hs
+    source-dirs: app/elevations
     ghc-options:
       - -threaded
       - -rtsopts

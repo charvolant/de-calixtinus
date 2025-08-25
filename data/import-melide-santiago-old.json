@@ -1,8 +1,19 @@
 {
   "id": "I-MS",
   "name": "Melide to Santiago@en",
-  "description": "Import for Melide to Santiago, used by both French and Primitivo",
-  "metadata": {
+  "description": {
+    "text": "Import for Melide to Santiago, used by both French and Primitivo"  },
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -43,9 +54,9 @@
       "id": "F-F229",
       "name": "Melide",
       "type": "Town",
-      "position": { "latitude": 42.91386, "longitude": -8.01474, "elevation": 454 },
+      "position": { "latitude": 42.91386, "longitude": -8.01474 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Pharmacy", "Bank", "BicycleRepair", "Groceries", "Medical", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "Xunta de Galacia Melide Pilgrims Hostel",
@@ -62,7 +73,7 @@
           "id": "F-F229-1",
           "name": "Meeting of the Camino Frances and the Camino Primitivo@en",
           "type": "Junction",
-          "position": { "latitude": 42.91424, "longitude": -8.01613, "elevation": 459 }
+          "position": { "latitude": 42.91424, "longitude": -8.01613 }
         }
       ]
     },
@@ -70,7 +81,7 @@
       "id": "F-F230",
       "name": "Santa María de Melide",
       "type": "Village",
-      "position": { "latitude": 42.91142, "longitude": -8.02537, "elevation": 424 },
+      "position": { "latitude": 42.91142, "longitude": -8.02537 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ],
@@ -79,7 +90,7 @@
           "id": "F-F230-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
-          "position": { "latitude": 42.91283, "longitude": -8.03758, "elevation": 425 }
+          "position": { "latitude": 42.91283, "longitude": -8.03758 }
         }
       ]
     },
@@ -87,7 +98,7 @@
       "id": "F-F231",
       "name": "Parabispo",
       "type": "Intersection",
-      "position": { "latitude": 42.91557, "longitude": -8.05665, "elevation": 459 },
+      "position": { "latitude": 42.91557, "longitude": -8.05665 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
@@ -96,38 +107,38 @@
       "id": "F-F232",
       "name": "Boente",
       "type": "Village",
-      "position": { "latitude": 42.91606, "longitude": -8.07822, "elevation": 397 },
+      "position": { "latitude": 42.91606, "longitude": -8.07822 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "El alemán Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Fuente Saleta Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Boente Hostel and Boarding House",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "VUT Boente",
           "type": "CasaRural",
-          "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Pets", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Rectoral de Boente",
           "type": "Hotel",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast","BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ],
@@ -136,7 +147,7 @@
           "id": "F-F232-1",
           "name": "Area de descanso de Peregrinos@es",
           "type": "Park",
-          "position": { "latitude": 42.91909, "longitude": -8.08778, "elevation": 347 }
+          "position": { "latitude": 42.919093, "longitude": -8.08778 }
         }
       ]
     },
@@ -144,14 +155,14 @@
       "id": "F-F233",
       "name": "Castañeda",
       "type": "Village",
-      "position": { "latitude": 42.92481, "longitude": -8.09732, "elevation": 414 },
+      "position": { "latitude": 42.92481, "longitude": -8.09732 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Santiago Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "BicycleStorage" ],
           "sleeping": [ "Shared", "DoubleWC" ]
         },
         {
@@ -169,7 +180,7 @@
         {
           "name": "La Calleja Apartments",
           "type": "House",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
         }
       ],
@@ -178,7 +189,7 @@
           "id": "F-F233-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
-          "position": { "latitude": 42.92050, "longitude": -8.09240, "elevation": 395 }
+          "position": { "latitude": 42.92050, "longitude": -8.09240 }
         }
       ]
     },
@@ -186,14 +197,14 @@
       "id": "F-F234",
       "name": "Ribadiso",
       "type": "Village",
-      "position": { "latitude": 42.93067, "longitude": -8.13067, "elevation": 304 },
+      "position": { "latitude": 42.93067, "longitude": -8.13067 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Ribadiso Xunta de Galicia Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
@@ -205,30 +216,31 @@
         {
           "name": "Milpes Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Dinner", "Breakfast", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Los Caminantes Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Accessible", "Pets", "BicycleStorage", "CampSite", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage", "Pets", "CampSite" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Ribadiso Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
         {
           "name": "Pazo Santa María",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Restaurant", "Dinner", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
       ]
     }
   ],
+
   "legs": [
     {
       "from": "F-F229",
@@ -278,11 +290,20 @@
       "id": "MS-MS",
       "name": "Default route",
       "description": "The default route for importing",
+      "stops": [
+      ],
+      "starts": [
+      ],
+      "finishes": [
+      ],
+      "suggested-pois": [ ],
       "palette": {
-        "colour": "#fec953"
-      }
+        "colour": "fec953"
+      },
+      "default": true
     }
   ],
-  "route-logic": [ ],
+  "route-logic": [
+  ],
   "default-route": "MS-MS"
 }

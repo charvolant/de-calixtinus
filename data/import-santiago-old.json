@@ -1,8 +1,20 @@
 {
   "id": "I-ST",
   "name": "Santiago Location",
-  "description": "Santiago location for importing",
-  "metadata": {
+  "description": {
+    "text": "Santiago location for importing"
+  },
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -40,16 +52,10 @@
       "id": "ST-ST1",
       "name": "Santiago de Compostela",
       "type": "City",
-      "position": {"latitude": 42.88051, "longitude": -8.54556, "elevation": 251 },
+      "position": { "latitude": 42.88051, "longitude": -8.54556 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Pharmacy", "Bank", "Groceries", "Medical", "Train", "Bus" ],
-      "accommodation": [
-        "PilgrimAlbergue",
-        "PrivateAlbergue",
-        "GuestHouse",
-        "House",
-        "Hotel"
-      ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
       "pois": [
         {
           "id": "ST-ST1-1",
@@ -58,7 +64,6 @@
             "Catedral Basílica de Santiago de Compostela@es",
             "Santiago de Compostela Cathedral@en"
           ],
-          "type": "Cathedral",
           "description": {
             "text": "Journey's End@en",
             "about": "https://catedraldesantiago.es/",
@@ -92,73 +97,74 @@
               }
             }
           },
-          "position": {"latitude": 42.88060, "longitude": -8.54466, "elevation": 260 },
+          "type": "Cathedral",
+          "position": { "latitude": 42.88060, "longitude": -8.54466 },
           "hours": "1000-2000",
           "time": 2.0,
           "events": [
             {
               "name": "Pilgrim's Mass",
               "type": "PilgrimMass",
-              "hours": "0730-0830, 0930-1030, 1200-1300, 1930-2030"
+              "hours": "0730-0830,0930-1030,1200-1300,1930-2030"
             }
           ]
         },
         {
           "id": "ST-ST1-2",
           "name": "Praza das Platerias@ga",
-          "type": "Municipal",
           "description": {
             "summary": "The entrance point to the cathedral for those travelling the Portuguese Camino.@en",
             "text": "The entrance point to the cathedral for those travelling the Portuguese Camino. The entrance way has the traditional alpha-omega signs inverted, indicating that this is the end of your journey and the start of a new life.@en"
           },
-          "position": {"latitude": 42.88019, "longitude": -8.54431, "elevation": 258 }
+          "type": "Municipal",
+          "position": { "latitude": 42.88019, "longitude":  -8.54431 }
         },
         {
           "id": "ST-ST1-3",
           "name": "Praza do Obradoiro@ga",
+          "description": {
+            "text": "The main arrival point for pilgrims@en"
+          },
           "type": "Municipal",
-          "description": "The main arrival point for pilgrims@en",
-          "position": {"latitude": 42.88046, "longitude": -8.54572, "elevation": 251 }
+          "position": { "latitude": 42.88046, "longitude":  -8.54572 }
         },
         {
           "id": "ST-ST1-4",
           "name": "Pilgrim Office@en",
-          "type": "PilgrimResource",
           "description": {
             "text": "This is where you can pick up your Compostela (pilgrim's certificate).@en",
+            "about": "https://catedral.df-server.info/agencias/Banderas.aspx?ind=1",
             "notes": [
               {
                 "type": "Warning",
                 "text": "This office can get very busy during the high season. Book a ticket ahead by using the link above.@en"
               }
-            ],
-            "about": "https://catedral.df-server.info/agencias/Banderas.aspx?ind=1"
+            ]
           },
-          "position": {"latitude": 42.88207, "longitude": -8.54683, "elevation": 240 }
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.88207, "longitude":  -8.546826 }
         },
         {
           "id": "ST-ST1-5",
           "name": "Casa Ivar@es",
-          "type": "Shop",
           "description": {
             "text": "Casa Ivar is a bookshop that provides a luggage-storage service and Camino noticeboard@en",
             "about": "https://casaivar.com"
           },
-          "position": {"latitude": 42.87951, "longitude": -8.54326, "elevation": 261 },
           "hours": [
             {
               "calendar": {
                 "type": "public-holiday",
                 "region": "ES-GA"
               },
-              "hours": "1000-1100, 1700-1800"
+              "hours": "1000-1100,1700-1800"
             },
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
               },
-              "hours": "1000-1400, 1600-1800"
+              "hours": "1000-1400,1600-1800"
             },
             {
               "calendar": {
@@ -174,11 +180,14 @@
               },
               "hours": "0730-0800"
             }
-          ]
+          ],
+          "type": "Shop",
+          "position": { "latitude": 42.87951, "longitude": -8.54326 }
         }
       ]
     }
   ],
+
   "legs": [
   ],
   "routes": [
@@ -186,9 +195,8 @@
       "id": "ST-ST",
       "name": "Santiago",
       "description": "Add to the default route",
-      "locations": [
-        "ST-ST1"
-      ],
+      "stops": [ ],
+      "starts": [ ],
       "finishes": [
         "ST-ST1"
       ],
@@ -196,8 +204,9 @@
         "ST-ST1-1"
       ],
       "palette": {
-        "colour": "#fec953"
-      }
+        "colour": "fec953"
+      },
+      "default": true
     }
   ],
   "route-logic": [

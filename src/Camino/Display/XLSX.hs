@@ -465,7 +465,7 @@ createLocationsSheet :: TravelPreferences -> CaminoPreferences -> Solution -> Ce
 createLocationsSheet _tprefs cprefs solution = let
     camino = preferenceCamino cprefs
     locationOrder a b = compare (canonicalise $ locationNameLabel a) (canonicalise $ locationNameLabel b)
-    locationsSorted = L.sortBy locationOrder (caminoLocationList camino)
+    locationsSorted = L.sortBy locationOrder (caminoLocations camino)
     (_trip, _jerrors, _perrors, rests, stocks, stops, waypoints, _usedLegs) = solutionElements camino (Just solution)
     headings = (
       locationHeaders

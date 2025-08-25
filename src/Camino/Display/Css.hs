@@ -13,6 +13,7 @@ Portability : POSIX
 module Camino.Display.Css (
     caminoBlue
   , caminoCss
+  , caminoLightGrey
   , caminoYellow
   , informationBlue
   , mutedBlue
@@ -45,6 +46,10 @@ caminoBlue = sRGB24read "1964c0"
 -- The traditional yellow tile colour. Used as a primary lightish colour
 caminoYellow :: Colour Double
 caminoYellow = sRGB24read "f9b34a"
+
+-- A light grey version of the background colour
+caminoLightGrey :: Colour Double
+caminoLightGrey = sRGB24read "e4e0cb"
 
 -- A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
 informationBlue :: Colour Double

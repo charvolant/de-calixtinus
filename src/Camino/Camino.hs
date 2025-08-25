@@ -55,7 +55,6 @@ module Camino.Camino (
   , caminoBbox
   , caminoDump
   , caminoLegRoute
-  , caminoLocationList
   , caminoNameLabel
   , caminoRegions
   , caminoRoute
@@ -87,6 +86,7 @@ module Camino.Camino (
   , normaliseLeg
   , normaliseLeg'
   , poiCategoryEnumeration
+  , poiNameLabel
   , readCamino
   , routeCentralLocation
   , serviceEnumeration
@@ -106,25 +106,25 @@ import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
 import Data.Event
 import Data.Foldable (foldl', minimumBy, toList)
-import qualified Data.List as L (find, partition)
+import qualified Data.List as L
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, rootLocale, wildcardText)
 import Data.Maybe (catMaybes, fromJust, isJust)
 import Data.Metadata
-import qualified Data.Map as M (Map, (!), empty, filter, fromList, elems, keys, lookup, map, unions)
+import qualified Data.Map as M
 import Data.Placeholder
 import Data.Propositional
 import Data.Region
-import qualified Data.Set as S (Set, difference, empty, insert, intersection, map, null, fromList, member, union, unions, singleton, toList)
+import qualified Data.Set as S
 import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Summary
 import Data.Text (Text, isPrefixOf, pack, unpack)
+import qualified Data.Text as T
 import Data.Util (headWithError)
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
 import Text.Read (readMaybe)
--- import Debug.Trace
 
 -- For debugging
 -- _traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v
@@ -192,7 +192,7 @@ subtractFloor (Penance p1) (Penance p2) = if p2 > p1 then mempty else Penance (p
 
 -- | Spatial reference system
 data SRS = SRS Text
-  deriving (Eq, Show, Generic)
+  deriving (Eq, Ord, Show, Generic)
 
 srsID :: SRS -> Text
 srsID (SRS sid) = sid
@@ -200,39 +200,69 @@ srsID (SRS sid) = sid
 instance Default SRS where
   def = SRS "WGS84"
 
+instance FromJSON SRS where
+  parseJSON Null = return $ def
+  parseJSON (String v) = return $ SRS v
+  parseJSON v = error ("Can't parse SRS object " ++ show v)
+
+instance ToJSON SRS where
+  toJSON srs' = if srs' == def then Null else String (srsID srs')
+
 instance NFData SRS
 
 data LatLong = LatLong {
-  latitude :: Double,
-  longitude :: Double,
-  srs :: SRS
-} deriving (Show, Generic)
+    latitude :: Double
+  , longitude :: Double
+  , elevation :: Maybe Double
+  , srs :: SRS
+} deriving (Eq, Ord, Show, Generic)
 
 instance FromJSON LatLong where
   parseJSON (Object v) = do
     latitude' <- v .: "latitude"
     longitude' <- v .: "longitude"
-    srs' <- v .:? "srs"
-    return LatLong { latitude = latitude', longitude = longitude', srs = maybe def SRS srs' }
+    elevation' <- v .:? "elevation"
+    srs' <- v .:? "srs" .!= def
+    return LatLong {
+        latitude = latitude'
+      , longitude = longitude'
+      , elevation = elevation'
+      , srs = srs'
+      }
   parseJSON v = error ("Unable to parse lat/long object " ++ show v)
 
 instance ToJSON LatLong where
-  toJSON (LatLong latitude' longitude' srs') = object [ "latitude" .= latitude', "longitude" .= longitude', "srs" .= (if srs' == def then Nothing else Just (srsID srs')) ]
+  toJSON (LatLong latitude' longitude' elevation' srs') =
+    object [
+        "latitude" .= latitude'
+      , "longitude" .= longitude'
+      , "elevation" .= elevation'
+      , "srs" .= (if srs' == def then Nothing else Just srs')
+    ]
+  toEncoding (LatLong latitude' longitude' elevation' srs') =
+    pairs $
+         "latitude" .= latitude'
+      <> "longitude" .= longitude'
+      <> "elevation" .?= elevation'
+      <> "srs" .?= (if srs' == def then Nothing else Just srs')
 
 instance NFData LatLong
 
 -- Compute the centroid of a list of lat/longs
 centroid :: (Foldable t) => t LatLong -> LatLong
 centroid lls = let
-    (slats, slongs, srs'') = foldl' (\(lats, longs, _srs) -> \(LatLong lat lon srs') -> (lats + lat, longs + lon, srs')) (0.0, 0.0, def) lls
-    len = fromIntegral $ max 1 (length lls)
+    (slats, slongs, selevs, len, len', srs'') = foldl' (\(lats, longs, elevs, slen, slen', _srs) -> \(LatLong lat lon elev srs') -> (lats + lat, longs + lon, elevs + maybe 0.0 id elev, slen + 1, slen' + maybe 0 (const 1) elev, srs')) (0.0, 0.0, 0.0, 0, 0, def) lls
   in
-    LatLong (slats / len) (slongs / len) srs''
+    LatLong
+      (if len == 0 then 0.0 else (slats / len))
+      (if len == 0 then 0.0 else (slongs / len))
+      (if len' == 0 then Nothing else Just (selevs / len'))
+      srs''
 
 -- Squared Euclidian distance between two lat longs
 -- This is not accurate, but good enough for quick estimation
 euclidianDistance2 :: LatLong -> LatLong -> Double
-euclidianDistance2 (LatLong lat1 long1 _srs1) (LatLong lat2 long2 _srs2) = (lat2 - lat1) * (lat2 - lat1) + (long2 - long1) * (long2 - long1)
+euclidianDistance2 (LatLong lat1 long1 _elev1 _srs1) (LatLong lat2 long2 _elev2 _srs2) = (lat2 - lat1) * (lat2 - lat1) + (long2 - long1) * (long2 - long1)
 
 -- | Broad accommodation types
 data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local volunteers
@@ -271,11 +301,15 @@ accommodationDefaultMulti _ = True
 -- | Services available in a location or accommodation
 data Service = WiFi -- ^ Wireless internet available
   | Restaurant -- ^ Bar and/or Restaurant
+  | Groceries -- ^ Convenience store or supermarket
   | Pharmacy -- ^ Pharmacy
+  | Medical -- ^ Doctor, hospital or other healthcare
   | Bank -- ^ Banking facilities, including an automated teller machine
   | BicycleRepair -- ^ Bicycle repair shop
-  | Groceries -- ^ Convenience store or supermarket
-  | Medical -- ^ Doctor, hospital or other healthcare
+  | Train -- ^ Train station (or tram or subway)
+  | Bus -- ^ Bus stop
+  | Ferry -- ^ Ferry terminal
+  | Heating -- ^ Heated building
   | WashingMachine -- ^ Washing machine available
   | Dryer -- ^ Dryer or spin-dryer available
   | Handwash -- ^ Handwash laundry facilities
@@ -291,11 +325,7 @@ data Service = WiFi -- ^ Wireless internet available
   | Bedlinen -- ^ Bedlinen provided
   | Towels -- ^ Towels provided
   | Pool -- ^ Swimming pool available
-  | Heating -- ^ Heated building
-  | Prayer -- ^ Community prayer/liturgy 
-  | Train -- ^ Train station (or tram or subway)
-  | Bus -- ^ Bus stop
-  | Ferry -- ^ Ferry terminal
+  | Prayer -- ^ Community prayer/liturgy
   deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
 
 instance FromJSON Service
@@ -355,7 +385,7 @@ accommodationNameLabel accommodation = localiseDefault $ accommodationName accom
 
 accommodationDescription :: Accommodation -> Maybe Description
 accommodationDescription (Accommodation _id' _name' description' _type _services _sleeping _multi) = description'
-accommodationDescription (GenericAccommodation type') = Nothing
+accommodationDescription (GenericAccommodation _type') = Nothing
 
 accommodationType :: Accommodation -> AccommodationType
 accommodationType (Accommodation _id _name _description type' _services _sleeping _multi) = type'
@@ -431,7 +461,7 @@ instance Placeholder Text Accommodation where
 
 instance Dereferencer Text Accommodation Camino where
   dereference camino ac@(Accommodation id' _name _description PlaceholderAccommodation _services _sleeping _multi) =
-    maybe ac fst (M.lookup id' (caminoAccommodation camino))
+    maybe ac fst (M.lookup id' (caminoAccommodationMap camino))
   dereference _camino ac = ac
 
 instance Dereferencer Text Accommodation CaminoConfig where
@@ -454,10 +484,30 @@ instance FromJSON Accommodation where
      return $ Accommodation id' name' description' type' services' sleeping' multi'
    parseJSON v = error ("Unable to parse accommodation object " ++ show v)
 instance ToJSON Accommodation where
-    toJSON (Accommodation id' name' description' type' services' sleeping' multi') =
-      object [ "id" .= id', "name" .= name', "description" .= description', "type" .= type', "services" .= services', "sleeping" .= sleeping', "multi-day" .= multi' ]
-    toJSON (GenericAccommodation type' ) =
-      toJSON type'
+  toJSON (Accommodation id' name' description' type' services' sleeping' multi') =
+    object [
+        "id" .= (if T.null id' then Nothing else Just id')
+      , "name" .= name'
+      , "description" .= description'
+      , "type" .= type'
+      , "services" .= services'
+      , "sleeping" .= sleeping'
+      , "multi-day" .= multi'
+    ]
+  toJSON (GenericAccommodation type') =
+    toJSON type'
+    
+  toEncoding (Accommodation id' name' description' type' services' sleeping' multi') =
+      pairs $
+          "id" .= id'
+        <> "name" .= name'
+        <> "description" .?= description'
+        <> "type" .= type'
+        <> "services" .= services'
+        <> "sleeping" .= sleeping'
+        <> "multi-day" .= multi'
+  toEncoding (GenericAccommodation type') =
+    toEncoding type'
 
 instance NFData Accommodation
 
@@ -507,7 +557,13 @@ instance ToJSON Event where
         , "description" .= description'
         , "type" .= type'
         , "hours" .= hours'
-      ]
+        ]
+    toEncoding (Event name' description' type' hours') =
+      pairs $ 
+          "name" .= name'
+        <> "description" .?= description'
+        <> "type" .= type'
+        <> "hours" .?= hours'
 
 instance NFData Event
 
@@ -645,7 +701,7 @@ instance Placeholder Text PointOfInterest where
   isPlaceholder poi = poiType poi == PlaceholderLocation
 
 instance Dereferencer Text PointOfInterest Camino where
-  dereference camino poi = maybe poi fst (M.lookup (placeholderID poi) (caminoPois camino))
+  dereference camino poi = maybe poi fst (M.lookup (placeholderID poi) (caminoPoiMap camino))
 
 instance FromJSON PointOfInterest where
   parseJSON (String v) = do
@@ -680,12 +736,23 @@ instance ToJSON PointOfInterest where
         , "name" .= name'
         , "description" .= description'
         , "type" .= type'
-        , "categories" .= categories'
+        , "categories" .= (if categories' == defaultPoiCategories type' then Nothing else Just categories')
         , "position" .= position'
         , "hours" .= hours'
         , "time" .= time'
-        , "events" .= if null events' then Nothing else Just events'
-      ]
+        , "events" .= (if null events' then Nothing else Just events')
+        ]
+    toEncoding (PointOfInterest id' name' description' type' categories' position' hours' time' events') =
+      pairs $
+          "id" .= id'
+        <> "name" .= name'
+        <> "description" .?= description'
+        <> "type" .= type'
+        <> "categories" .?= (if categories' == defaultPoiCategories type' then Nothing else Just categories')
+        <> "position" .?= position'
+        <> "hours" .?= hours'
+        <> "time" .?= time'
+        <> "events" .?= (if null events' then Nothing else Just events')
 
 instance NFData PointOfInterest
 
@@ -697,6 +764,10 @@ instance Ord PointOfInterest where
 
 instance Summary PointOfInterest where
   summary = placeholderLabel
+
+-- | Get a simple text version of the poi name
+poiNameLabel :: PointOfInterest -> Text
+poiNameLabel poi = localiseDefault $ poiName poi
 
 -- | A location, usually a city/town/village that marks the start and end points of a leg
 --   and which may have accommodation and other services available.
@@ -787,7 +858,7 @@ instance FromJSON Location where
 
 instance ToJSON Location where
     toJSON (Location id' name' description' type' position' region' services' accommodation' pois' events' camping' alwaysOpen') =
-      object [ 
+      object [
           "id" .= id'
         , "name" .= name'
         , "description" .= description'
@@ -796,11 +867,26 @@ instance ToJSON Location where
         , "region" .= (placeholderID <$> region')
         , "services" .= services'
         , "accommodation" .= accommodation'
-        , "pois" .= pois'
-        , "events" .= events'
-        , "camping" .= if camping' == locationCampingDefault type' then Nothing else Just camping'
-        , "always-open" .= if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen'
-     ]
+        , "pois" .= (if null pois' then Nothing else Just pois')
+        , "events" .= (if null events' then Nothing else Just events')
+        , "camping" .= (if camping' == locationCampingDefault type' then Nothing else Just camping')
+        , "always-open" .= (if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen')
+        ]
+        
+    toEncoding (Location id' name' description' type' position' region' services' accommodation' pois' events' camping' alwaysOpen') =
+      pairs $
+          "id" .= id'
+        <> "name" .= name'
+        <> "description" .?= description'
+        <> "type" .= type'
+        <> "position" .?= position'
+        <> "region" .?= (placeholderID <$> region')
+        <> "services" .= services'
+        <> "accommodation" .= accommodation'
+        <> "pois" .?= (if null pois' then Nothing else Just pois')
+        <> "events" .?= (if null events' then Nothing else Just events')
+        <> "camping" .?= (if camping' == locationCampingDefault type' then Nothing else Just camping')
+        <> "always-open" .?= (if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen')
 
 instance FromJSONKey Location where
   fromJSONKey = FromJSONKeyTextParser $ \lid -> pure $ placeholder lid
@@ -896,11 +982,14 @@ locationNameLabel location = localiseDefault $ locationName location
 -- | Get a bounding box for set of locations
 locationBbox :: (Foldable f) => f Location -- ^ The collection of locations
  -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
-locationBbox locations = (LatLong (maximum lats) (minimum longs) def, LatLong (minimum lats) (maximum longs) def)
+locationBbox locations = (LatLong (maximum lats) (minimum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just minelev)  def, LatLong (minimum lats) (maximum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just maxelev) def)
   where
     positions = catMaybes $ map locationPosition $ toList locations
     lats = map latitude positions
     longs = map longitude positions
+    elevs = map (\p -> maybe 0.0 id (elevation p)) positions
+    minelev = minimum elevs
+    maxelev = maximum elevs
 
 -- | The type of transport available on a leg
 data LegType = Road -- ^ Walk or cycle on a road or suitable path
@@ -948,13 +1037,34 @@ instance FromJSON Leg where
       ascent' <- v .: "ascent"
       descent' <- v .: "descent"
       penance' <- v .:? "penance" .!= Nothing
-       
+
       return Leg { legType = type', legFrom = from', legTo = to', legDescription = description',  legDistance = distance', legTime = time',  legAscent = ascent', legDescent = descent', legPenance = penance' }
     parseJSON v = error ("Unable to parse leg object " ++ show v)
 
 instance ToJSON Leg where
-    toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance') =
-      object [ "type" .= (if type' == def then Nothing else Just type'), "from" .= locationID from', "to" .= locationID to', "description" .= description', "distance" .= distance', "time" .= time', "ascent" .= ascent', "descent" .= descent', "penance" .= penance' ]
+  toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance') =
+      object [
+          "type" .= (if type' == def then Nothing else Just type')
+        , "from" .= locationID from'
+        , "to" .= locationID to'
+        , "description" .= description'
+        , "distance" .= distance'
+        , "time" .= time'
+        , "ascent" .= ascent'
+        , "descent" .= descent'
+        , "penance" .= penance'
+        ]
+  toEncoding (Leg type' from' to' description' distance' time' ascent' descent' penance') =
+      pairs $
+          "type" .?= (if type' == def then Nothing else Just type')
+        <> "from" .= locationID from'
+        <> "to" .= locationID to'
+        <> "description" .?= description'
+        <> "distance" .= distance'
+        <> "time" .?= time'
+        <> "ascent" .= ascent'
+        <> "descent" .= descent'
+        <> "penance" .?= penance'
 
 instance NFData Leg
 
@@ -1014,10 +1124,14 @@ instance FromJSON Palette where
 
 instance ToJSON Palette where
   toJSON (Palette colour' textColour') =
-    object [ 
+    object [
         "colour" .= sRGB24show colour'
-      , "text-colour" .= sRGB24show textColour'
-    ]
+      , "text-colour" .= (if colour' == textColour' then Nothing else Just $ sRGB24show textColour')
+      ]
+  toEncoding (Palette colour' textColour') =
+    pairs $ 
+        "colour" .= sRGB24show colour'
+      <> "text-colour" .?= (if colour' == textColour' then Nothing else Just $ sRGB24show textColour')
 
 instance NFData Palette
 
@@ -1033,12 +1147,13 @@ data Route = Route {
   , routeName :: Localised TaggedText -- ^ The route name
   , routeDescription :: Description -- ^ The route description
   , routeMajor :: Bool -- ^ Is this a major route (a multi-day variant to the main route)
-  , routeLocations :: S.Set Location -- ^ The locations along the route
-  , routeStops :: S.Set Location -- ^ The suggested stops for the route
-  , routeRestPoints :: S.Set Location -- ^ The suggested preferred rest points for the route
+  , routeLocations :: [Location] -- ^ The locations along the route
+  , routeLocationSet :: S.Set Location -- ^ Locations for easy membership checks
+  , routeStops :: [Location] -- ^ The suggested stops for the route
+  , routeRestPoints :: [Location] -- ^ The suggested preferred rest points for the route
   , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
   , routeFinishes :: [Location] -- ^ A list of suggested finish points for the route
-  , routeSuggestedPois :: S.Set PointOfInterest -- ^ A list of suggested points of interest for the route
+  , routeSuggestedPois :: [PointOfInterest] -- ^ A list of suggested points of interest for the route
   , routePalette :: Palette
 } deriving (Show, Generic)
 
@@ -1050,12 +1165,12 @@ instance FromJSON Route where
       name' <- v .: "name"
       description' <- v .: "description"
       major' <- v .:? "major" .!= False
-      locations' <- v .:? "locations" .!= S.empty
-      stops' <- v .:? "stops" .!= S.empty
-      rests' <- v .:? "rest-points" .!= S.empty
+      locations' <- v .:? "locations" .!= []
+      stops' <- v .:? "stops" .!= []
+      rests' <- v .:? "rest-points" .!= []
       starts' <- v .:? "starts" .!= []
       finishes' <- v .:? "finishes" .!= []
-      pois' <- v .:? "suggested-pois" .!= S.empty
+      pois' <- v .:? "suggested-pois" .!= []
       palette' <- v .: "palette"
       return Route { 
           routeID = id'
@@ -1063,6 +1178,7 @@ instance FromJSON Route where
         , routeDescription = description'
         , routeMajor = major'
         , routeLocations = locations'
+        , routeLocationSet = S.fromList locations'
         , routeStops = stops'
         , routeRestPoints = rests'
         , routeStarts = starts'
@@ -1073,20 +1189,34 @@ instance FromJSON Route where
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' major' locations' stops' rests' starts' finishes' pois' palette') =
+    toJSON (Route id' name' description' major' locations' _locationSet' stops' rests' starts' finishes' pois' palette') =
       object [ 
           "id" .= id'
         , "name" .= name'
         , "description" .= description'
-        , "major" .= major'
-        , "locations" .= S.map locationID locations'
-        , "stops" .= S.map locationID stops'
-        , "rest-points" .= S.map locationID rests'
-        , "starts" .= map locationID starts'
-        , "finishes" .= map locationID finishes'
-        , "suggested-pois" .= S.map poiID pois'
+        , "major" .= (if major' then Just major' else Nothing)
+        , "locations" .= (if null locations' then Nothing else Just $ map locationID locations')
+        , "stops" .= (if null stops' then Nothing else Just $ map locationID stops')
+        , "rest-points" .= (if null rests' then Nothing else Just $ map locationID rests')
+        , "starts" .= (if null starts' then Nothing else Just $ map locationID starts')
+        , "finishes" .= (if null finishes' then Nothing else Just $ map locationID finishes')
+        , "suggested-pois" .= (if null pois' then Nothing else Just $ map poiID pois')
         , "palette" .= palette'
-      ]
+        ]
+    toEncoding (Route id' name' description' major' locations' _locationSet' stops' rests' starts' finishes' pois' palette') =
+      pairs $ 
+          "id" .= id'
+        <> "name" .= name'
+        <> "description" .= description'
+        <> "major" .?= (if major' then Just major' else Nothing)
+        <> "locations" .= (if null locations' then Nothing else Just $ map locationID locations')
+        <> "stops" .= (if null stops' then Nothing else Just $ map locationID stops')
+        <> "rest-points" .?= (if null rests' then Nothing else Just $ map locationID rests')
+        <> "starts" .?= (if null starts' then Nothing else Just $ map locationID starts')
+        <> "finishes" .?= (if null finishes' then Nothing else Just $ map locationID finishes')
+        <> "suggested-pois" .?= (if null pois' then Nothing else Just $ map poiID pois')
+        <> "palette" .= palette'
+
 
 instance NFData Route
 
@@ -1103,25 +1233,29 @@ instance Placeholder Text Route where
     , routeName = wildcardText $ ("Placeholder for " <> rid)
     , routeDescription = wildcardDescription ""
     , routeMajor = False
-    , routeLocations = S.empty
-    , routeStops = S.empty
-    , routeRestPoints = S.empty
+    , routeLocations = []
+    , routeLocationSet = S.empty
+    , routeStops = []
+    , routeRestPoints = []
     , routeStarts = []
     , routeFinishes = []
-    , routeSuggestedPois = S.empty
+    , routeSuggestedPois = []
     , routePalette = def
   }
   isPlaceholder route = isPlaceholderName (routeName route)
 
 instance Normaliser Text Route Camino where
   normalise camino route = route {
-       routeLocations = dereferenceS camino (routeLocations route)
-     , routeStops = dereferenceS camino  (routeStops route)
-     , routeRestPoints = dereferenceS camino  (routeRestPoints route)
+       routeLocations = locations'
+     , routeLocationSet = S.fromList locations'
+     , routeStops = dereferenceF camino  (routeStops route)
+     , routeRestPoints = dereferenceF camino  (routeRestPoints route)
      , routeStarts = dereferenceF camino (routeStarts route)
      , routeFinishes = dereferenceF camino (routeFinishes route)
-     , routeSuggestedPois = dereferenceS camino (routeSuggestedPois route)
+     , routeSuggestedPois = dereferenceF camino (routeSuggestedPois route)
    }
+   where
+    locations' = dereferenceF camino (routeLocations route)
 
 instance Dereferencer Text Route Camino where
   dereference camino route = dereference (caminoRoutes camino) route
@@ -1137,10 +1271,10 @@ instance Summary Route where
 -- Find the location closest to the centre of the route
 routeCentralLocation :: Route -> Location
 routeCentralLocation route = let
-    locations = filter (isJust . locationPosition) $ S.toList $ routeLocations route
+    locations = filter (isJust . locationPosition) $ routeLocations route
   in
     if null locations then
-      headWithError $ S.toList $ routeLocations route
+      headWithError $ routeLocations route
     else let
         centre = centroid $ map (fromJust . locationPosition) locations
         closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (fromJust $ locationPosition l1)) (euclidianDistance2 centre (fromJust $ locationPosition l2))) locations
@@ -1157,8 +1291,8 @@ data RouteLogic = RouteLogic {
   , routeLogicRequires :: S.Set Route -- ^ Routes that must be included for things to work
   , routeLogicAllows :: S.Set Route -- ^ Routes that this implies can be included
   , routeLogicProhibits :: S.Set Route -- ^ Routes that this implies should be excluded
-  , routeLogicInclude :: S.Set Location -- ^ Stuff to add to the allowed locations
-  , routeLogicExclude :: S.Set Location -- ^ Stuff to remove from the allowed locations
+  , routeLogicInclude :: [Location] -- ^ Stuff to add to the allowed locations
+  , routeLogicExclude :: [Location] -- ^ Stuff to remove from the allowed locations
 } deriving (Show, Generic)
 
 -- | Read formulas a JSON
@@ -1197,8 +1331,8 @@ instance FromJSON RouteLogic where
     requires' <- v .:? "requires" .!= S.empty
     allows' <- v .:? "allows" .!= S.empty
     prohibits' <- v .:? "prohibits" .!= S.empty
-    include' <- v .:? "include" .!= S.empty
-    exclude' <- v .:? "exclude" .!= S.empty
+    include' <- v .:? "include" .!= []
+    exclude' <- v .:? "exclude" .!= []
     return RouteLogic {
         routeLogicDescription = description'
       , routeLogicCondition = condition'
@@ -1215,14 +1349,28 @@ instance ToJSON RouteLogic where
     object [
         "description" .= description'
       , "condition" .= condition'
-      , "requires" .= nonEmpty requires'
-      , "allows" .= nonEmpty allows'
-      , "prohibits" .= nonEmpty prohibits'
-      , "include" .= nonEmpty include'
-      , "exclude" .= nonEmpty exclude'
-    ]
+      , "requires" .= nonEmptyS (S.map placeholderID requires')
+      , "allows" .= nonEmptyS (S.map placeholderID allows')
+      , "prohibits" .= nonEmptyS (S.map placeholderID prohibits')
+      , "include" .= nonEmptyL (map placeholderID include')
+      , "exclude" .= nonEmptyL (map placeholderID exclude')
+      ]
     where
-      nonEmpty v = if S.null v then Nothing else Just v
+      nonEmptyL v = if null v then Nothing else Just v
+      nonEmptyS v = if S.null v then Nothing else Just v
+      
+  toEncoding (RouteLogic description' condition' requires' allows' prohibits' include' exclude') =
+    pairs $
+        "description" .?= description'
+      <> "condition" .= condition'
+      <> "requires" .?= nonEmptyS requires'
+      <> "allows" .?= nonEmptyS allows'
+      <> "prohibits" .?= nonEmptyS prohibits'
+      <> "include" .?= nonEmptyL (map placeholderID include')
+      <> "exclude" .?= nonEmptyL (map placeholderID exclude')
+    where
+      nonEmptyL v = if null v then Nothing else Just v
+      nonEmptyS v = if S.null v then Nothing else Just v
 
 instance NFData RouteLogic
 
@@ -1240,8 +1388,8 @@ normaliseRouteLogic camino logic = logic {
     , routeLogicRequires = S.map (dereference camino) (routeLogicRequires logic)
     , routeLogicAllows = S.map (dereference camino) (routeLogicAllows logic)
     , routeLogicProhibits = S.map (dereference camino) (routeLogicProhibits logic)
-    , routeLogicInclude = S.map (dereference camino) (routeLogicInclude logic)
-    , routeLogicExclude = S.map (dereference camino) (routeLogicExclude logic)
+    , routeLogicInclude = map (dereference camino) (routeLogicInclude logic)
+    , routeLogicExclude = map (dereference camino) (routeLogicExclude logic)
   }
 
 createLogicClauses' :: RouteLogic -> S.Set Route -> [Formula Route]
@@ -1274,15 +1422,21 @@ data Camino = Camino {
   , caminoMetadata :: Metadata
   , caminoFragment :: Bool -- ^ Indicates that this a fragmentary camino intended to be imported by other caminos
   , caminoImports :: [Camino] -- ^ Imported segments of other camino information
-  , caminoLocations :: M.Map Text Location -- ^ The camino locations
+  , caminoLocations :: [Location] -- ^ The camino locations
   , caminoLegs :: [Leg] -- ^ The legs between locations
   , caminoTransportLinks :: [Leg] -- ^ Transport links between locations
   , caminoRoutes :: [Route] -- ^ Named sub-routes
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
-  , caminoAccommodation :: M.Map Text (Accommodation, Location) -- ^ The camino accommodation
-  , caminoPois :: M.Map Text (PointOfInterest, Location) -- ^ The camino points of interest
+  , caminoLocationMap :: M.Map Text Location -- ^ The camino locations as a map
+  , caminoAccommodationMap :: M.Map Text (Accommodation, Location) -- ^ The camino accommodation
+  , caminoPoiMap :: M.Map Text (PointOfInterest, Location) -- ^ The camino points of interest
 } deriving (Show, Generic)
+
+
+-- Internal, construct the location map from a list of locations
+buildLocationMap :: [Location] -> M.Map Text Location
+buildLocationMap locs = M.fromList $ map (\l -> (placeholderID l, l)) locs
 
 -- Internal, construct the PoI map from a list of locations
 buildPoiMap :: [Location] -> M.Map Text (PointOfInterest, Location)
@@ -1308,8 +1462,7 @@ instance FromJSON Camino where
     metadata' <- v .:? "metadata" .!= def
     fragment' <- v .:? "fragment" .!= False
     imports' <- v .:? "imports" .!= []
-    locs <- v .: "locations"
-    let locMap = M.fromList $ map (\w -> (locationID w, w)) locs
+    locs' <- v .: "locations"
     legs' <- v .: "legs"
     links' <- v .:? "links" .!= []
     routes' <- v .: "routes"
@@ -1317,10 +1470,15 @@ instance FromJSON Camino where
     defaultRoute' <- v .:? "default-route" .!= (routeID $ headWithError routes')
     let defaultRoute'' = fromJust $ L.find (\r -> routeID r == defaultRoute') routes'
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
-    let defaultRoute''' = defaultRoute'' { routeLocations = (defaultRouteLocations locs otherRoutes) `S.union` (routeLocations defaultRoute'') } -- Add unassigned locations to the default
+    let defaultLocations' = (defaultRouteLocations locs' otherRoutes) ++ (routeLocations defaultRoute'')
+    let defaultRoute''' = defaultRoute'' { -- Add unassigned locations to the default
+        routeLocations = defaultLocations'
+      , routeLocationSet = S.fromList defaultLocations'
+      }
     let routes'' = defaultRoute''' : otherRoutes
-    let accommodation' = buildAccommodationMap locs
-    let pois' = buildPoiMap locs
+    let locMap' = buildLocationMap locs'
+    let accommodation' = buildAccommodationMap locs'
+    let pois' = buildPoiMap locs'
     return $ Camino {
         caminoId = id'
       , caminoName = name'
@@ -1328,53 +1486,77 @@ instance FromJSON Camino where
       , caminoMetadata = metadata'
       , caminoFragment = fragment'
       , caminoImports = imports'
-      , caminoLocations = locMap
+      , caminoLocations = locs'
       , caminoLegs = legs'
       , caminoTransportLinks = links'
       , caminoRoutes = routes''
       , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
-      , caminoAccommodation = accommodation'
-      , caminoPois = pois'
+      , caminoLocationMap = locMap'
+      , caminoAccommodationMap = accommodation'
+      , caminoPoiMap = pois'
     }
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _accommodation _pois) =
-    object [ 
+  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation _pois) =
+    object [
         "id" .= id'
       , "name" .= name'
       , "description" .= description'
-      , "metadata" .= metadata'
-      , "fragment" .= fragment'
-      , "imports" .= map placeholderID imports'
-      , "locations" .= (M.elems locations')
+      , "metadata" .= (if null (metadataStatements metadata') then Nothing else Just metadata')
+      , "fragment" .= (if fragment' then Just fragment' else Nothing)
+      , "imports" .= (if null imports' then Nothing else Just (map placeholderID imports'))
+      , "locations" .= locations'
       , "legs" .= legs'
-      , "links" .= links'
-      , "routes" .= routes'
+      , "links" .= (if null links' then Nothing else Just links')
+      , "routes" .= map (\r -> if routeID r == routeID defaultRoute' then r { routeLocations = [], routeLocationSet = S.empty } else r) routes'
       , "route-logic" .= routeLogic'
-      , "default-route" .= routeID defaultRoute' 
-    ]
+      , "default-route" .= routeID defaultRoute'
+      ]
+  toEncoding (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation _pois) =
+    pairs $
+        "id" .= id'
+      <> "name" .= name'
+      <> "description" .= description'
+      <> "metadata" .?= (if null (metadataStatements metadata') then Nothing else Just metadata')
+      <> "fragment" .?= (if fragment' then Just fragment' else Nothing)
+      <> "imports" .?= (if null imports' then Nothing else Just (map placeholderID imports'))
+      <> "locations" .= locations'
+      <> "legs" .= legs'
+      <> "links" .?= (if null links' then Nothing else Just links')
+      <> "routes" .= routes'
+      <> "route-logic" .= routeLogic'
+      <> "default-route" .= routeID defaultRoute'
 
 instance NFData Camino
 
 instance Graph Camino Leg Location where
-  vertex camino vid = (caminoLocations camino) M.! (pack vid)
+  vertex camino vid = (caminoLocationMap camino) M.! (pack vid)
   edge camino loc1 loc2 = L.find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _accommodation' _pois') allowed  =
+  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation' _pois') allowed  =
     let
       id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
-      locations'' = M.filter (\l -> S.member l allowed) locations'
+      locations'' = filter (\l -> S.member l allowed) locations'
       legs'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) legs'
       links'' = filter (\l -> S.member (legFrom l) allowed && S.member (legTo l) allowed) links'
-      routes'' = map (\r -> r { routeLocations = routeLocations r `S.intersection` allowed, routeStops = routeStops r `S.intersection` allowed }) routes'
-      routeLogic'' = map (\l -> l { routeLogicInclude = routeLogicInclude l `S.intersection` allowed, routeLogicExclude = routeLogicExclude l `S.intersection` allowed}) routeLogic'
+      isAllowed l = S.member l allowed
+      routes'' = map (\r -> r {
+          routeLocations = filter isAllowed (routeLocations r)
+        , routeLocationSet = S.filter isAllowed (routeLocationSet r)
+        , routeStops = filter isAllowed (routeStops r)
+        }) routes'
+      routeLogic'' = map (\l -> l {
+          routeLogicInclude = filter isAllowed (routeLogicInclude l)
+        , routeLogicExclude = filter isAllowed (routeLogicExclude l)
+        }) routeLogic'
       defaultRoute'' = fromJust $ L.find (\r -> routeID r == routeID defaultRoute') routes'
-      accommodation'' = buildAccommodationMap $ M.elems locations'
-      pois'' = buildPoiMap $ M.elems locations'
+      locMap'' = buildLocationMap locations''
+      accommodation'' = buildAccommodationMap locations''
+      pois'' = buildPoiMap locations''
     in
       Camino {
           caminoId = id''
@@ -1389,8 +1571,9 @@ instance Graph Camino Leg Location where
         , caminoRoutes = routes''
         , caminoRouteLogic = routeLogic''
         , caminoDefaultRoute = defaultRoute''
-        , caminoAccommodation = accommodation''
-        , caminoPois = pois''
+        , caminoLocationMap = locMap''
+        , caminoAccommodationMap = accommodation''
+        , caminoPoiMap = pois''
       }
   mirror camino =
     let
@@ -1409,14 +1592,15 @@ instance Placeholder Text Camino where
       , caminoMetadata = Metadata [] []
       , caminoFragment = False
       , caminoImports = []
-      , caminoLocations = M.empty
+      , caminoLocations = []
       , caminoLegs = []
       , caminoTransportLinks = []
       , caminoRoutes = [dr]
       , caminoRouteLogic = []
       , caminoDefaultRoute = dr
-      , caminoAccommodation = M.empty
-      , caminoPois = M.empty
+      , caminoLocationMap = M.empty
+      , caminoAccommodationMap = M.empty
+      , caminoPoiMap = M.empty
     }
     where
       dr = placeholder ("DR-" <> cid)
@@ -1428,23 +1612,24 @@ instance Placeholder Text Camino where
 instance Normaliser Text Camino CaminoConfig where
   normalise config camino = let
       imports' = dereferenceF config (caminoImports camino) -- ^ Imports have already been normalised
-      locations' = M.map (normalise config) (caminoLocations camino)
+      locations' = map (normalise config) (caminoLocations camino)
       locations'' = map caminoLocations imports'
-      locations''' = M.unions (locations':locations'')
+      locations''' = concat (locations':locations'')
       camino1 = camino {
           caminoImports = [] -- ^ We've done the importing by the end of this
         , caminoLocations = locations'''
+        , caminoLocationMap = buildLocationMap locations'''
       }
       legs' = map (normaliseLeg camino1) (caminoLegs camino1)
       legs'' = map caminoLegs imports'
       links' = map (normaliseLeg camino1) (caminoTransportLinks camino1)
       links'' = map caminoTransportLinks imports'
-      locs' = caminoLocationList camino1
+      locs' = caminoLocations camino1
       camino2 = camino1 {
           caminoLegs = concat (legs':legs'')
         , caminoTransportLinks = concat (links':links'')
-        , caminoAccommodation = buildAccommodationMap locs'
-        , caminoPois = buildPoiMap locs'
+        , caminoAccommodationMap = buildAccommodationMap locs'
+        , caminoPoiMap = buildPoiMap locs'
       }
       splitroutes c rs = let
           drid = routeID $ caminoDefaultRoute c
@@ -1461,11 +1646,12 @@ instance Normaliser Text Camino CaminoConfig where
       sunion field r rs = S.unions (field r:map field rs)
       lunion field r rs = S.toList $ sunion (S.fromList . field) r rs
       d' = d {
-          routeLocations = sunion routeLocations d ids
-        , routeStops = sunion routeStops d ids
+          routeLocations = lunion routeLocations d ids
+        , routeLocationSet = sunion routeLocationSet d ids
+        , routeStops = lunion routeStops d ids
         , routeStarts = lunion routeStarts d ids
         , routeFinishes = lunion routeFinishes d ids
-        , routeSuggestedPois = sunion routeSuggestedPois d ids
+        , routeSuggestedPois = lunion routeSuggestedPois d ids
       }
       nds' = concat (nds:inds)
       camino3 = camino2 {
@@ -1491,26 +1677,20 @@ instance Summary Camino where
 caminoNameLabel :: Camino -> Text
 caminoNameLabel camino = localiseDefault $ caminoName camino
 
--- | Get a list of locations for the camino
-caminoLocationList :: Camino -- ^ The camino
-  -> [Location] -- ^ The list of locations
-caminoLocationList camino = M.elems $ caminoLocations camino
-
 -- | Get a bounding box for the camino
 caminoBbox :: Camino -- ^ The entire camino
  -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
-caminoBbox camino = locationBbox $ M.elems $ caminoLocations camino  
+caminoBbox camino = locationBbox $ caminoLocations camino
 
 -- | All the locations on the camino assumed to be part of the default route
 defaultRouteLocations :: [Location] -- ^ The possible locations
   -> [Route]
-  -> S.Set Location -- ^ The locations on the camino that have not been explicitly assigned to a route
+  -> [Location] -- ^ The locations on the camino that have not been explicitly assigned to a route
 defaultRouteLocations locations routes =
   let
-    allLocs = S.fromList locations
-    routeLocs = S.unions $ map routeLocations routes
+    routeLocs = S.unions $ map routeLocationSet routes
   in
-    allLocs `S.difference` routeLocs
+    filter (\l -> not $ S.member l routeLocs) locations
 
 -- | Choose a route for a location
 --   If the location isn't on a specific route, then the default route is returned
@@ -1520,8 +1700,8 @@ caminoRoute :: Camino -- ^ The camino being interrogated
   -> Location -- ^ The location to test
   -> Route -- ^ The route that the location is on
 caminoRoute camino routes location = let
-    route = L.find (\r -> S.member r routes && S.member location (routeLocations r)) (reverse $ caminoRoutes camino)
-    route' = maybe (caminoDefaultRoute camino) id (L.find (\r -> S.member location (routeLocations r)) (reverse $ caminoRoutes camino))
+    route = L.find (\r -> S.member r routes && S.member location (routeLocationSet r)) (reverse $ caminoRoutes camino)
+    route' = maybe (caminoDefaultRoute camino) id (L.find (\r -> S.member location (routeLocationSet r)) (reverse $ caminoRoutes camino))
   in
     maybe route' id route
 
@@ -1534,7 +1714,7 @@ caminoLegRoute camino leg = let
     dflt = caminoDefaultRoute camino
     from' = legFrom leg
     to' = legTo leg
-    route = L.find (\r -> r /= dflt && (S.member from' (routeLocations r) || S.member to' (routeLocations r))) (caminoRoutes camino)
+    route = L.find (\r -> r /= dflt && (S.member from' (routeLocationSet r) || S.member to' (routeLocationSet r))) (caminoRoutes camino)
   in
     maybe dflt id route
 
@@ -1563,15 +1743,15 @@ caminoRouteLocations :: Camino -- ^ The base camino definition
 caminoRouteLocations camino used =
   let
     (routes, membership) = completeRoutes camino used
-    baseLocations = S.unions $ S.map routeLocations routes
+    baseLocations = S.unions $ S.map routeLocationSet routes
     logics =  filter (\l -> evaluate membership (routeLogicCondition l) == T) (caminoRouteLogic camino)
   in
-    foldl (\allowed -> \logic -> (allowed `S.union` routeLogicInclude logic) `S.difference` routeLogicExclude logic) baseLocations logics
+    foldl (\allowed -> \logic -> (allowed `S.union` (S.fromList $ routeLogicInclude logic) `S.difference` (S.fromList $ routeLogicExclude logic))) baseLocations logics
 
 -- | Get all the regions in the Camino.
 --  This does not include parent regions.
 caminoRegions :: Camino -> S.Set Region
-caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locationRegion l)) S.empty (M.elems $ caminoLocations camino)
+caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locationRegion l)) S.empty (caminoLocations camino)
 
 -- | Get any transport links from this location
 locationTransportLinks :: Camino -> Location -> [Leg]
@@ -1639,8 +1819,8 @@ createCaminoConfig' config (camino:rest) = let
     camino' = normalise config camino
     caminos' = (caminoConfigCaminos config) ++ [camino']
     caminoMap' = M.fromList $ map (\c -> (placeholderID c, c)) caminos'
-    locationMap' =  M.unions (map caminoLocations caminos')
-    accommodationMap' =  M.unions (map caminoAccommodation caminos')
+    locationMap' =  M.unions (map caminoLocationMap caminos')
+    accommodationMap' =  M.unions (map caminoAccommodationMap caminos')
     config' = config {
         caminoConfigCaminos = caminos'
       , caminoConfigLookup = \k -> M.lookup k caminoMap'
@@ -1718,4 +1898,4 @@ caminoDump :: Camino -> String
 caminoDump camino = "Camino { " ++ unpack (caminoId camino) ++ ": " ++ unpack (localiseDefault $ caminoName camino) ++
   ", defaultRoute = " ++ unpack (routeID $ caminoDefaultRoute camino) ++
   ", routes = " ++ show (map routeID $ caminoRoutes camino) ++
-  ", locations = "++ show (M.keys $ caminoLocations camino)
+  ", locations = "++ show (map locationID $ caminoLocations camino)

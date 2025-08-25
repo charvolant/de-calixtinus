@@ -473,7 +473,7 @@ recommendedStops preferences =
   let
     camino = preferenceCamino preferences
     routes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
-    baseStops = S.unions (S.map routeStops routes)
+    baseStops = S.unions (S.map (S.fromList . routeStops) routes)
   in
     S.delete (preferenceStart preferences) $ S.delete (preferenceFinish preferences) $ baseStops `S.intersection` reachableLocations preferences
     
@@ -484,7 +484,7 @@ recommendedRestPoints preferences =
   let
     camino = preferenceCamino preferences
     routes = S.insert (caminoDefaultRoute camino) (preferenceRoutes preferences)
-    baseRests = S.unions (S.map routeRestPoints routes)
+    baseRests = S.unions (S.map (S.fromList . routeRestPoints) routes)
   in
     S.delete (preferenceStart preferences) $ S.delete (preferenceFinish preferences) $ baseRests `S.intersection` reachableLocations preferences
 
@@ -499,7 +499,7 @@ recommendedPois preferences camino = S.filter (\poi -> (S.member poi possible) &
   where
     camino' = preferenceCamino camino
     possible = reachablePois camino
-    suggestions = S.unions $ (routeSuggestedPois $ caminoDefaultRoute camino'):(map routeSuggestedPois $ caminoRoutes camino')
+    suggestions = S.unions $ (S.fromList $ routeSuggestedPois $ caminoDefaultRoute camino'):(map (S.fromList . routeSuggestedPois) $ caminoRoutes camino')
     prefPois = preferencePoiCategories preferences
 
 -- | Create a suggested range for distances, based on the travel mode and fitness level.
@@ -1122,9 +1122,9 @@ defaultCaminoPreferences camino = let
         , preferenceStart = headWithError $ routeStarts dr
         , preferenceFinish = headWithError $ routeFinishes dr
         , preferenceRoutes = S.singleton dr
-        , preferenceStops = routeStops dr
+        , preferenceStops = S.fromList $ routeStops dr
         , preferenceExcluded = S.empty
         , preferencePois = S.empty
-        , preferenceRestPoints = routeRestPoints dr
+        , preferenceRestPoints = S.fromList $ routeRestPoints dr
         , preferenceStartDate = Nothing
       }

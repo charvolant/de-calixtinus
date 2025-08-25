@@ -497,7 +497,7 @@ testOpenHoursToJSON1 =
     eh = encode hours
   in
     TestCase (do
-      assertEqual "OpenHours ToJSON 1 1" "{\"calendar\":{\"type\":\"daily\"},\"hours\":\"open\"}" eh
+      assertEqual "OpenHours ToJSON 1 1" "[\"open\"]" eh
       )
 
 testOpenHoursToJSON2 =
@@ -506,7 +506,7 @@ testOpenHoursToJSON2 =
     eh = encode hours
   in
     TestCase (do
-      assertEqual "OpenHours ToJSON 1 1" "{\"calendar\":{\"days\":[\"friday\"],\"type\":\"weekly\"},\"hours\":\"1000-1100\"}" eh
+      assertEqual "OpenHours ToJSON 1 1" "[{\"calendar\":{\"days\":[\"friday\"],\"type\":\"weekly\"},\"hours\":\"1000-1100\"}]" eh
       )
 
 testOpenHoursFromJSON1 =

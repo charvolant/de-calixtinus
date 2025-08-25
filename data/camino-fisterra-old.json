@@ -35,7 +35,17 @@
       }
     }
   },
-  "metadata": {
+  "metadata" : {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -79,7 +89,7 @@
       "id": "FI-F2",
       "name": "Sarela de Baixo",
       "type": "Village",
-      "position": { "latitude": 42.87872, "longitude": -8.56837, "elevation": 233 },
+      "position": { "latitude":  42.87872, "longitude": -8.56837 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -88,33 +98,35 @@
       "id": "FI-F3",
       "name": "Quintáns",
       "type": "Village",
-      "position": { "latitude": 42.88035, "longitude": -8.58761, "elevation": 153 },
+      "position": { "latitude":  42.88035, "longitude": -8.58761 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ]
     },
     {
       "id": "FI-F4",
       "name": "Alto do Vento",
       "type": "Village",
-      "position": { "latitude": 42.88098, "longitude": -8.62415, "elevation": 174 },
+      "position": { "latitude":  42.88098, "longitude": -8.62415 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ]
     },
     {
       "id": "FI-F5",
       "name": "Lombao",
       "type": "Village",
-      "position": { "latitude": 42.88642, "longitude": -8.63250, "elevation": 107 },
+      "position": { "latitude":  42.88642, "longitude": -8.63250 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Bus" ],
+      "services": ["Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "A Casa do Boi",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "DoubleWC", "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Accessible", "Bedlinen", "Towels"],
+          "sleeping": ["Shared", "DoubleWC", "Quadruple"]
         }
       ]
     },
@@ -122,34 +134,34 @@
       "id": "FI-F6",
       "name": "Augapesada",
       "type": "Village",
-      "position": { "latitude": 42.88858, "longitude": -8.65071, "elevation": 59 },
+      "position": { "latitude":  42.88858, "longitude": -8.65071 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [ ]
     },
     {
       "id": "FI-F7",
       "name": "Trasmonte",
       "type": "Village",
-      "position": { "latitude": 42.89324, "longitude": -8.68286, "elevation": 218 },
+      "position": { "latitude":  42.89324, "longitude": -8.68286 },
       "region": "ES-GA",
-      "services": [ "Restaurant" ],
+      "services": ["Restaurant" ],
       "accommodation": [ ]
     },
     {
       "id": "FI-F8",
       "name": "Ponte Maceira",
       "type": "Bridge",
-      "position": { "latitude": 42.90536, "longitude": -8.69505, "elevation": 140 },
+      "position": { "latitude":  42.90536, "longitude": -8.69505 },
       "region": "ES-GA",
-      "services": [ "Restaurant" ],
+      "services": ["Restaurant" ],
       "accommodation": [ ]
     },
     {
       "id": "FI-F9",
       "name": "Barca",
       "type": "Village",
-      "position": { "latitude": 42.90565, "longitude": -8.71560, "elevation": 143 },
+      "position": { "latitude":  42.90565, "longitude": -8.71560 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -158,21 +170,21 @@
       "id": "FI-F10",
       "name": "A Chancela",
       "type": "Village",
-      "position": { "latitude": 42.90897, "longitude": -8.72922, "elevation": 180 },
+      "position": { "latitude":  42.90897, "longitude": -8.72922 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
           "name": "Anjana Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Pool" ],
-          "sleeping": [ "Shared", "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Accessible", "Pets", "CampSite", "Bedlinen", "Towels", "Pool"],
+          "sleeping": ["Shared", "Quadruple"]
         },
         {
           "name": "Logrosa Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage" ],
-          "sleeping": [ "Shared", "Single", "Double", "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "BicycleStorage" ],
+          "sleeping": ["Shared", "Single", "Double", "Quadruple"]
         }
       ]
     },
@@ -180,62 +192,62 @@
       "id": "FI-F11",
       "name": "Negreira",
       "type": "Town",
-      "position": { "latitude": 42.90957, "longitude": -8.73470, "elevation": 157 },
+      "position": { "latitude":  42.90957, "longitude": -8.73470 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
       "accommodation": [
         {
           "name": "Negreira Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible" ],
-          "sleeping": [ "Shared" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible" ],
+          "sleeping": ["Shared" ]
         },
         {
           "name": "Coton Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared" ]
         },
         {
           "name": "Alecrin Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared" ]
         },
         {
           "name": "San José Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "El Carmen Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": ["Shared" ]
         },
         {
           "name": "Bergando Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "DoubleWC" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Pets", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "DoubleWC" ]
         },
         {
           "name": "A Parada del Camino",
           "type": "House",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Lockers", "Accessible", "Towels" ],
-          "sleeping": [ "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Kitchen", "Lockers", "Accessible", "Towels" ],
+          "sleeping": ["Quadruple" ]
         },
         {
           "name": "La Mezquita Hostel",
           "type": "GuestHouse",
-          "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner" ],
-          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+          "services": ["Heating", "WashingMachine", "Dryer", "Handwash", "Dinner" ],
+          "sleeping": ["Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Milán Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": ["WiFi", "Heating", "Restaurant", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -244,21 +256,21 @@
       "id": "FI-F12",
       "name": "A Pena",
       "type": "Village",
-      "position": { "latitude": 42.93104, "longitude": -8.80939, "elevation": 359 },
+      "position": { "latitude":  42.93104, "longitude": -8.80939 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
-        {
+         {
           "name": "Rectoral San Mamede da Pena Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "Alto da Pena Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Double" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "Double" ]
         }
       ]
     },
@@ -266,21 +278,21 @@
       "id": "FI-F13",
       "name": "Vilaserio",
       "type": "Village",
-      "position": { "latitude": 42.94291, "longitude": -8.84989, "elevation": 349 },
+      "position": { "latitude":  42.94291, "longitude": -8.84989 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Casa Vella Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Pets", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "Single", "Double", "DoubleWC" ]
         },
         {
           "name": "O Rueiro Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared" ]
         }
       ]
     },
@@ -288,7 +300,7 @@
       "id": "FI-F14",
       "name": "Maroñas",
       "type": "Village",
-      "position": { "latitude": 42.96359, "longitude": -8.91163, "elevation": 320 },
+      "position": { "latitude":  42.96359, "longitude": -8.91163 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
@@ -297,29 +309,29 @@
       "id": "FI-F15",
       "name": "Santa Mariña",
       "type": "Village",
-      "position": { "latitude": 42.95695, "longitude": -8.91911, "elevation": 332 },
+      "position": { "latitude":  42.95695, "longitude": -8.91911 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Casa Pepa Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Pets", "BicycleStorage" ],
-          "sleeping": [ "Shared", "DoubleWC" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Pets" ],
+          "sleeping": ["Shared", "DoubleWC" ]
         },
         {
           "name": "Santa Mariña Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Double" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "Double" ]
         }
-      ]
+       ]
     },
     {
       "id": "FI-F16",
       "name": "Vilar do Castro",
       "type": "Village",
-      "position": { "latitude": 42.95666, "longitude": -8.95715, "elevation": 415 },
+      "position": { "latitude":  42.95666, "longitude":  -8.95715 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ],
@@ -328,7 +340,7 @@
           "id": "FI-F16-1",
           "name": "Alternative Routes@en",
           "type": "Junction",
-          "position": { "latitude": 42.95664, "longitude": -8.95717, "elevation": 415 }
+          "position": { "latitude":  42.95664, "longitude":  -8.95717 }
         }
       ]
     },
@@ -336,15 +348,15 @@
       "id": "FI-F17",
       "name": "Lago - Abeleiroas",
       "type": "Village",
-      "position": { "latitude": 42.96275, "longitude": -8.98381, "elevation": 329 },
+      "position": { "latitude":  42.96275, "longitude": -8.98381 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [
         {
           "name": "Monte Aro Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "Triple", "Quadruple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": ["Shared", "Single", "Triple", "Quadruple" ]
         }
       ]
     },
@@ -352,14 +364,14 @@
       "id": "FI-F18",
       "name": "San Cristovo de Corzón",
       "type": "Village",
-      "position": { "latitude": 42.96193, "longitude": -9.00440, "elevation": 278 },
+      "position": { "latitude":  42.96193, "longitude": -9.00440 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [
         {
           "name": "Campomento Corzón",
           "type": "CampGround",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "CampSite" ],
+          "services": ["WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Restaurant", "CampSite" ],
           "sleeping": [ "SleepingBag" ]
         }
       ]
@@ -368,15 +380,15 @@
       "id": "FI-F19",
       "name": "Mallón",
       "type": "Village",
-      "position": { "latitude": 42.96144, "longitude": -9.01666, "elevation": 263 },
+      "position": { "latitude":  42.96144, "longitude": -9.01666 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Ponte Olveira Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage" ],
-          "sleeping": [ "Shared", "Double", "DoubleWC", "Triple" ]
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage" ],
+          "sleeping": ["Shared", "Double", "DoubleWC", "Triple" ]
         }
       ]
     },
@@ -384,7 +396,7 @@
       "id": "FI-F20",
       "name": "Ponte Olveira",
       "type": "Bridge",
-      "position": { "latitude": 42.96252, "longitude": -9.01851, "elevation": 260 },
+      "position": { "latitude":  42.96252, "longitude": -9.01851 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -393,14 +405,14 @@
       "id": "FI-F21",
       "name": "Olveiroa",
       "type": "Village",
-      "position": { "latitude": 42.96669, "longitude": -9.03956, "elevation": 276 },
+      "position": { "latitude":  42.96669, "longitude": -9.03956 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Olveiroa Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
@@ -412,25 +424,25 @@
         {
           "name": "O Hórreo Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "BicycleStorage" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Restaurant", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Santa Lucia Pilgrims Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WashingMachine", "Dryer", "Kitchen", "Lockers", "Pets", "BicycleStorage" ],
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "Lockers", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared", "Single", "Double" ]
         },
         {
           "name": "Boarding House As Pias",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Accessible", "Pets", "Bedlinen", "Towels" ],
+          "services": [ "Heating", "WiFi", "Dinner", "Breakfast", "Restaurant", "Accessible", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double" ]
         },
         {
           "name": "Casa Loncho Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
         }
       ]
@@ -439,20 +451,20 @@
       "id": "FI-F22",
       "name": "A Picota",
       "type": "Town",
-      "position": { "latitude": 42.93870, "longitude": -8.99260, "elevation": 310 },
+      "position": { "latitude": 42.93870, "longitude": -8.99260 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
           "name": "Picota Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Double" ]
         },
         {
           "name": "Casa Jurjo Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -461,20 +473,20 @@
       "id": "FI-F23",
       "name": "Logoso",
       "type": "Village",
-      "position": { "latitude": 42.97370, "longitude": -9.06745, "elevation": 295 },
+      "position": { "latitude": 42.97370, "longitude": -9.06745 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "O Logoso Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "A Pedra Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "services": ["Heating", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "Double", "DoubleWC", "TripleWC" ]
         }
       ]
@@ -483,14 +495,14 @@
       "id": "FI-F24",
       "name": "Hospital",
       "type": "Village",
-      "position": { "latitude": 42.98450, "longitude": -9.07664, "elevation": 339 },
+      "position": { "latitude": 42.98450, "longitude": -9.07664 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "O Cateliño Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared", "Double" ]
         }
       ],
@@ -499,16 +511,16 @@
           "id": "FI-F24-1",
           "name": "Alternative Routes (Muxia)@en",
           "type": "Junction",
-          "position": { "latitude": 42.98626, "longitude": -9.08587, "elevation": 375 }
+          "position": { "latitude": 42.98626, "longitude": -9.08587 }
         },
         {
           "id": "FI-F24-2",
           "name": "Punto de Información ao Peregrino de Hospital (Dumbría)@ga",
-          "type": "PilgrimResource",
           "description": {
             "about": "http://www.dumbriaturismo.com/"
           },
-          "position": { "latitude": 42.98289, "longitude": -9.07786, "elevation": 343 },
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.98289, "longitude": -9.07786 },
           "hours": [
             {
               "calendar": {
@@ -525,14 +537,14 @@
       "id": "FI-F25",
       "name": "Camiños Cháns",
       "type": "Village",
-      "position": { "latitude": 42.94791, "longitude": -9.18031, "elevation": 30 },
+      "position": { "latitude": 42.947907, "longitude": -9.18031 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
           "name": "O Bordón Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         }
       ]
@@ -541,50 +553,59 @@
       "id": "FI-F26",
       "name": "Cee",
       "type": "Town",
-      "position": { "latitude": 42.95626, "longitude": -9.19055, "elevation": 6 },
+      "position": {"latitude": 42.95626, "longitude": -9.19055},
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
           "name": "A Casa da Fonte Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
+          "services": [
+            "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible",
+            "BicycleStorage", "Pets", "Bedlinen"
+          ],
+          "sleeping": ["Shared"]
         },
         {
           "name": "Moreira Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "Double", "Quadruple" ]
+          "services": [
+            "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage",
+            "Bedlinen", "Towels"
+          ],
+          "sleeping": ["Shared", "Single", "Double", "Quadruple"]
         },
         {
           "name": "Tequeron Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+          "services": [
+            "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Breakfast", "Lockers", "Accessible",
+            "BicycleStorage", "Bedlinen", "Towels"
+          ],
+          "sleeping": ["Shared", "Single", "DoubleWC"]
         },
         {
           "name": "Boarding House Beiramar",
           "type": "GuestHouse",
-          "services": [ "Lockers", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
+          "services": ["Lockers", "Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
         },
         {
           "name": "La Marina Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
+          "services": ["WiFi", "Heating", "Breakfast", "Restaurant", "Bedlinen", "Towels"],
+          "sleeping": ["DoubleWC"]
         },
         {
           "name": "Oca Insua Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Heating", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Larry Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Breakfast", "Restaurant", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ]
@@ -593,39 +614,46 @@
       "id": "FI-F27",
       "name": "Corcubión",
       "type": "Town",
-      "position": { "latitude": 42.94451, "longitude": -9.19326, "elevation": 10 },
+      "position": {"latitude": 42.94451, "longitude": -9.19326 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Bank", "Bus" ],
+      "services": ["Restaurant", "Groceries","Bank", "Bus"],
       "accommodation": [
         {
           "name": "Boarding House Casa sa Balea",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [
+            "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Lockers", "Accessible", "BicycleStorage",
+            "Bedlinen", "Towels"
+          ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Boarding House Casa Bernarda",
           "type": "GuestHouse",
-          "services": [ "Heating", "Breakfast", "Lockers", "Bedlinen", "Towels" ],
+          "services": [
+            "Heating", "Breakfast", "Lockers",  "Bedlinen", "Towels"
+          ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Mar Viva Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "services": [
+            "WiFi", "Heating", "Breakfast", "Restaurant", "Bedlinen", "Towels"
+          ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Hotel As Hortensias",
           "type": "Hotel",
-          "services": [ "Restaurant", "Heating", "Breakfast", "Dinner", "Pets", "Bedlinen", "Towels" ],
+          "services": [ "Heating", "Dinner", "Breakfast", "Restaurant", "Pets", "Bedlinen", "Towels"],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Hotel Playa de Quenxe",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "BicycleStorage", "CampSite" ],
-          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Heating", "Kitchen", "Breakfast", "Restaurant", "BicycleStorage", "CampSite" ],
+          "sleeping": [  "DoubleWC", "QuadrupleWC" ]
         }
       ]
     },
@@ -633,20 +661,22 @@
       "id": "FI-F28",
       "name": "O Vilar",
       "type": "Intersection",
-      "position": { "latitude": 42.93778, "longitude": -9.20152, "elevation": 117 },
+      "position": {"latitude": 42.93778, "longitude": -9.20152 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [
         {
           "name": "San Roque Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "services": [ "WiFi", "Heating", "Handwash", "Dinner", "Breakfast", "Accessible", "BicycleStorage",  "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "San Pedro Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "services": [
+            "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets", "CampSite", "Bedlinen", "Towels"
+          ],
           "sleeping": [ "Shared", "DoubleWC" ]
         }
       ]
@@ -655,20 +685,20 @@
       "id": "FI-F29",
       "name": "Estorde",
       "type": "Village",
-      "position": { "latitude": 42.94391, "longitude": -9.21790, "elevation": 8 },
+      "position": {"latitude": 42.94391, "longitude": -9.21790 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [
         {
           "name": "Boarding House Playa de Estorde",
           "type": "GuestHouse",
-          "services": [ "Restaurant", "Heating", "Lockers", "Bedlinen", "Towels" ],
+          "services": [ "Heating", "Restaurant", "Lockers", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Camping Ruta Finisterre",
           "type": "CampGround",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Handwash", "Accessible", "Pets", "BicycleStorage", "CampSite" ],
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Restaurant", "Accessible", "BicycleStorage", "Pets", "CampSite" ],
           "sleeping": [ "SleepingBag" ]
         }
       ]
@@ -677,20 +707,20 @@
       "id": "FI-F30",
       "name": "Sardiñeiro",
       "type": "Village",
-      "position": { "latitude": 42.94302, "longitude": -9.23268, "elevation": 8 },
+      "position": {"latitude": 42.94302, "longitude":  -9.23268 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
           "name": "Boarding House El Merendero",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Boarding House Playa Sardiñeiro",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -698,25 +728,27 @@
     {
       "id": "FI-F31",
       "name": "Fisterra (Outgoing)",
+      "description": {
+        "text": "This is Fisterra as a waypoint, on the way to Faro de Fisterra. See \"Fisterra (Return)\" for the final point of the journey."
+      },
       "type": "Town",
-      "description": "This is Fisterra as a waypoint, on the way to Faro de Fisterra. See \"Fisterra (Return)\" for the final point of the journey.",
-      "position": { "latitude": 42.90501, "longitude": -9.26437, "elevation": 30 },
+      "position": {"latitude": 42.90501, "longitude":  -9.26437 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "FI-F31-1",
           "name": "Monumento al Peregrino@ga",
           "type": "Statue",
-          "position": { "latitude": 42.89418, "longitude": -9.26422, "elevation": 86 }
+          "position": {"latitude": 42.89418, "longitude": -9.26422 }
         }
       ]
     },
     {
       "id": "FI-F32",
       "name": "Faro de Fisterra",
-      "type": "Poi",
       "description": {
         "image": {
           "source": "FI/FI-F32-Faro.jpg",
@@ -748,14 +780,15 @@
           }
         }
       },
-      "position": { "latitude": 42.88264, "longitude": -9.27187, "elevation": 99 },
+      "type": "Poi",
+      "position": {"latitude": 42.88264, "longitude":  -9.27187 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "O SemafORO Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ],
@@ -763,16 +796,14 @@
         {
           "id": "FI-F32-1",
           "name": "Faro de Fisterra@ga",
-          "type": "Poi",
           "description": {
             "notes": [
               "You can get your pilgrim's document, the Finisterrana, at the lighthouse.@en"
             ]
           },
-          "position": { "latitude": 42.88264, "longitude": -9.27187, "elevation": 99 },
-          "hours": [
-            "1100-1900"
-          ]
+          "type": "Poi",
+          "position": {"latitude": 42.88264, "longitude":  -9.27187 },
+          "hours": "1100-1900"
         },
         {
           "id": "FI-F32-2",
@@ -781,28 +812,28 @@
             "Pilgrim's Boot@en"
           ],
           "type": "Statue",
-          "position": { "latitude": 42.88193, "longitude": -9.27212, "elevation": 82 }
+          "position": {"latitude": 42.88193, "longitude": -9.27212 }
         }
       ]
     },
     {
       "id": "FI-F33",
       "name": "Fisterra (Return)",
-      "type": "Town",
       "description": {
         "text": "This is Fisterra on return from the Faro de Fisterra. See \"Fisterra (Outgoing)\" for Fisterra as a waypoint.@en",
         "notes": [
           "You can get your pilgrim's document, the Finisterrana, at the tourism office or the lighthouse. The tourism office is closed during the low season and the Finisterrana can be obtained at the pilgrim albergue.@en"
         ]
       },
-      "position": { "latitude": 42.90593, "longitude": -9.26266, "elevation": 19 },
+      "type": "Town",
+      "position": {"latitude": 42.90593, "longitude":  -9.26266 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "Albergue Piedra Santa - Fisterra",
           "type": "PilgrimAlbergue",
-          "services": [ "Heating", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "services": [ "Handwash", "Heating", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
@@ -813,66 +844,65 @@
       "pois": [
         {
           "id": "FI-F33-1",
-          "name": [
+          "name":[
             "Punto Información@ga",
             "Tourism Office@en"
           ],
           "type": "InformationPoint",
-          "position": { "latitude": 42.90564, "longitude": -9.26259, "elevation": 18 },
-          "hours": [
-            "1000-1400, 1530-1830"
-          ]
+          "position": {"latitude": 42.90564, "longitude": -9.26259 },
+          "hours": "1000-1400,1530-1830"
         },
         {
           "id": "FI-F33-2",
           "name": "Castelo de San Carlos@ga",
           "type": "Museum",
-          "position": { "latitude": 42.90461, "longitude": -9.26082, "elevation": 8 },
+          "position": {"latitude": 42.90461, "longitude":  -9.26082 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
               },
-              "hours": "1100-1400, 1600-1900"
+              "hours": "1100-1400,1600-1900"
             }
           ]
         }
       ]
     },
+
     {
       "id": "FI-M1",
       "name": "As Carizas",
       "type": "Village",
-      "position": { "latitude": 42.99880, "longitude": -9.10839, "elevation": 207 },
+      "position": {"latitude": 42.99880,  "longitude":  -9.10839 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     },
     {
       "id": "FI-M2",
       "name": "Dumbria",
       "type": "Village",
-      "position": { "latitude": 43.00924, "longitude": -9.11521, "elevation": 201 },
+      "position": {"latitude": 43.00924, "longitude":  -9.11521 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
         {
           "name": "O Conco Pilgrims Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Casa a Pichonca",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "El Argentino Boarding House",
           "type": "GuestHouse",
-          "services": [ "Restaurant", "Heating", "Kitchen", "Lockers", "Bedlinen", "Towels" ],
+          "services": [ "Heating", "Kitchen", "Restaurant", "Lockers", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -881,16 +911,16 @@
       "id": "FI-M3",
       "name": "Trasufre",
       "type": "Village",
-      "position": { "latitude": 43.02457, "longitude": -9.14137, "elevation": 144 },
+      "position": {"latitude": 43.02457, "longitude": -9.14137 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     },
     {
       "id": "FI-M4",
       "name": "Senande",
       "type": "Village",
-      "position": { "latitude": 43.04199, "longitude": -9.14857, "elevation": 144 },
+      "position": {"latitude": 43.04199, "longitude": -9.14857 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [ ]
@@ -899,15 +929,15 @@
       "id": "FI-M5",
       "name": "A Grixa",
       "type": "Village",
-      "position": { "latitude": 43.04875, "longitude": -9.15388, "elevation": 128 },
+      "position": {"latitude": 43.04875, "longitude": -9.153878 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [
         {
           "name": "O Cabanel Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "CampSite", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "Stables", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single","DoubleWC" ]
         }
       ]
     },
@@ -915,14 +945,14 @@
       "id": "FI-M6",
       "name": "Quintans",
       "type": "Village",
-      "position": { "latitude": 43.08332, "longitude": -9.15188, "elevation": 90 },
+      "position": {"latitude": 43.08332, "longitude": -9.15188  },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy" ],
       "accommodation": [
         {
           "name": "Boarding House Plaza",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Kitchen", "Breakfast", "Dinner", "Pets", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating","Kitchen", "Dinner", "Breakfast", "Restaurant", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -931,7 +961,7 @@
       "id": "FI-M7",
       "name": "San Martiño de Ozón",
       "type": "Village",
-      "position": { "latitude": 43.08393, "longitude": -9.16776, "elevation": 71 },
+      "position": {"latitude": 43.08393, "longitude": -9.16776 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
@@ -947,7 +977,7 @@
       "id": "FI-M8",
       "name": "Vilar de Sobremonte",
       "type": "Village",
-      "position": { "latitude": 43.08515, "longitude": -9.17173, "elevation": 108 },
+      "position": {"latitude": 43.08515, "longitude": -9.17173 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -956,7 +986,7 @@
       "id": "FI-M9",
       "name": "Merexo",
       "type": "Village",
-      "position": { "latitude": 43.09883, "longitude": -9.17762, "elevation": 27 },
+      "position": {"latitude": 43.09883, "longitude": -9.17762 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -972,7 +1002,7 @@
       "id": "FI-M10",
       "name": "Os Muiños",
       "type": "Village",
-      "position": { "latitude": 43.08356, "longitude": -9.18947, "elevation": 40 },
+      "position": {"latitude": 43.08356, "longitude": -9.18947 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Pharmacy", "Bus" ],
       "accommodation": [ ]
@@ -981,14 +1011,14 @@
       "id": "FI-M11",
       "name": "Moraime",
       "type": "Village",
-      "position": { "latitude": 43.08517, "longitude": -9.19982, "elevation": 62 },
+      "position": {"latitude": 43.08517, "longitude": -9.19982 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Hostel Monasterio de Moraime",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "DoubleWC" ]
         }
       ]
@@ -996,13 +1026,13 @@
     {
       "id": "FI-M12",
       "name": "Muxia",
-      "type": "Town",
       "description": {
         "notes": [
           "You can get your pilgrim's document, the Muxiana, at the tourism office, the Bela Muxia hostel or the town hall.@en"
         ]
       },
-      "position": { "latitude": 43.10561, "longitude": -9.21746, "elevation": 12 },
+      "type": "Town",
+      "position": {"latitude": 43.10561, "longitude": -9.21746 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
       "accommodation": [
@@ -1033,13 +1063,13 @@
         {
           "name": "Bela Muxia Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Pets", "BicycleStorage" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Pets" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "@Muxia Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "DoubleWC" ]
         },
         {
@@ -1051,25 +1081,25 @@
         {
           "name": "Hostal La Cruz",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Alemana Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Pedra D'Abalar Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Heating", "Accessible", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Hotel A Loló",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Breakfast", "Dinner", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ],
@@ -1081,14 +1111,14 @@
             "Tourism Office@en"
           ],
           "type": "InformationPoint",
-          "position": { "latitude": 43.10722, "longitude": -9.21723, "elevation": 13 },
+          "position": {"latitude": 43.10722, "longitude": -9.21723 },
           "hours": [
             {
               "calendar": {
                 "type": "weekly",
                 "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
               },
-              "hours": "0930-1330, 1630-1900"
+              "hours": "0930-1330,1630-1900"
             }
           ]
         }
@@ -1098,7 +1128,7 @@
       "id": "FI-M13",
       "name": "Morquintián",
       "type": "Village",
-      "position": { "latitude": 43.04690, "longitude": -9.23171, "elevation": 168 },
+      "position": {"latitude": 43.04690, "longitude": -9.23171 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -1114,7 +1144,7 @@
       "id": "FI-M14",
       "name": "Frixe",
       "type": "Village",
-      "position": { "latitude": 43.01191, "longitude": -9.23350, "elevation": 66 },
+      "position": {"latitude": 43.01191, "longitude": -9.23350 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [
@@ -1130,26 +1160,26 @@
       "id": "FI-M15",
       "name": "Lires",
       "type": "Village",
-      "position": { "latitude": 42.99809, "longitude": -9.24338, "elevation": 44 },
+      "position": {"latitude": 42.99809, "longitude": -9.24338 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "As Eiras Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage" ],
+          "services": [ "WiFi", "Handwash", "Kitchen", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Stables", "Pets" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Cabanas da Ria",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Pets", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Cabanas da Lires",
           "type": "House",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Breakfast", "Restaurant", "Lockers", "BicycleStorage", "Pets", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
@@ -1167,13 +1197,13 @@
         {
           "name": "Lires Ca Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Dinner", "Breakfast", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Hotel Restaurante As Eiras Lires",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Handwash", "Breakfast", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Handwash", "Breakfast", "Restaurant", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ],
@@ -1181,7 +1211,6 @@
         {
           "id": "FI-M15-1",
           "name": "Coastal Route@en",
-          "type": "Junction",
           "description": {
             "text": "An alternative route to just past A Canosa, following the estuary and coast. This route is approximately 1km longer than the standard route.@en",
             "notes": [
@@ -1191,7 +1220,8 @@
               }
             ]
           },
-          "position": { "latitude": 42.99691, "longitude": -9.24468, "elevation": 21 }
+          "type": "Junction",
+          "position": {"latitude": 42.99691, "longitude": -9.24468 }
         }
       ]
     },
@@ -1199,7 +1229,7 @@
       "id": "FI-M16",
       "name": "A Canosa",
       "type": "Village",
-      "position": { "latitude": 42.98688, "longitude": -9.24798, "elevation": 58 },
+      "position": {"latitude": 42.98688, "longitude": -9.24798 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -1208,7 +1238,7 @@
       "id": "FI-M17",
       "name": "Padris",
       "type": "Village",
-      "position": { "latitude": 42.97227, "longitude": -9.25128, "elevation": 86 },
+      "position": {"latitude": 42.97227, "longitude": -9.25128 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -1217,16 +1247,16 @@
       "id": "FI-M18",
       "name": "Buxán",
       "type": "Village",
-      "position": { "latitude": 42.95631, "longitude": -9.26259, "elevation": 89 },
+      "position": {"latitude": 42.95631, "longitude": -9.26259 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries" ],
+      "services": [ "Restaurant", "Groceries"],
       "accommodation": [ ]
     },
     {
       "id": "FI-M19",
       "name": "San Salvador",
       "type": "Village",
-      "position": { "latitude": 42.93346, "longitude": -9.26924, "elevation": 32 },
+      "position": {"latitude": 42.93346, "longitude": -9.26924 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -1235,12 +1265,13 @@
       "id": "FI-M20",
       "name": "San Martiño de Duio",
       "type": "Village",
-      "position": { "latitude": 42.92022, "longitude": -9.27127, "elevation": 66 },
+      "position": {"latitude":42.92022, "longitude": -9.27127 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [ ]
     }
   ],
+
   "legs": [
     {
       "from": "ST-ST1",
@@ -1348,12 +1379,12 @@
       "descent": 5
     },
     {
-      "description": "Via Lago",
       "from": "FI-F16",
       "to": "FI-F17",
       "distance": 3.69,
       "ascent": 70,
-      "descent": 160
+      "descent": 160,
+      "description": "Via Lago"
     },
     {
       "from": "FI-F17",
@@ -1384,12 +1415,12 @@
       "descent": 5
     },
     {
-      "description": "Via A Picola",
       "from": "FI-F16",
       "to": "FI-F22",
       "distance": 4.82,
       "ascent": 90,
-      "descent": 195
+      "descent": 195,
+      "description": "Via A Picola"
     },
     {
       "from": "FI-F22",
@@ -1464,17 +1495,18 @@
     {
       "from": "FI-F31",
       "to": "FI-F32",
-      "distance": 2.90,
+      "distance": 2.9,
       "ascent": 95,
       "descent": 0
     },
     {
       "from": "FI-F32",
       "to": "FI-F33",
-      "distance": 2.90,
+      "distance": 2.9,
       "ascent": 0,
       "descent": 95
     },
+
     {
       "from": "FI-F24",
       "to": "FI-M1",
@@ -1622,6 +1654,7 @@
       "ascent": 15,
       "descent": 50
     }
+
   ],
   "routes": [
     {
@@ -1629,6 +1662,8 @@
       "name": "Camino Fisterra",
       "description": "The main Camino route starting in Stantiago de Compostella and following the Southern route",
       "major": true,
+      "stops": [
+      ],
       "starts": [
         "ST-ST1"
       ],
@@ -1636,23 +1671,28 @@
         "FI-F33"
       ],
       "palette": {
-        "colour": "#fec953"
-      }
+        "colour": "fec953"
+      },
+      "default": true
     },
     {
       "id": "FI-M",
       "name": "Muxia Variant",
       "description": "A longer variant that travels North to Muxia and then Southwards to Fisterra",
+      "major": true,
       "locations": [
-        "FI-M1", "FI-M2", "FI-M3", "FI-M4", "FI-M5", "FI-M6", "FI-M7", "FI-M8", "FI-M9", "FI-M10",
+        "FI-M1",  "FI-M2",  "FI-M3",  "FI-M4",  "FI-M5",  "FI-M6",  "FI-M7",  "FI-M8",  "FI-M9",  "FI-M10",
         "FI-M11", "FI-M12", "FI-M13", "FI-M14", "FI-M15", "FI-M16", "FI-M17", "FI-M18", "FI-M19", "FI-M20"
       ],
-      "major": true,
       "stops": [
         "FI-M12"
       ],
+      "starts": [
+      ],
+      "finishes": [
+      ],
       "palette": {
-        "colour": "#46d767"
+        "colour": "46d767"
       }
     }
   ],
@@ -1660,7 +1700,9 @@
     {
       "description": "Changes for the Muxia variant",
       "condition": "FI-M",
-      "exclude": [ "FI-F25", "FI-F26", "FI-F27", "FI-F28", "FI-F29", "FI-F30" ]
+      "exclude": [
+                                                "FI-F25", "FI-F26", "FI-F27", "FI-F28", "FI-F29", "FI-F30"
+      ]
     }
   ],
   "default-route": "FI-F"

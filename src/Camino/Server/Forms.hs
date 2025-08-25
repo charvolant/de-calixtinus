@@ -152,11 +152,11 @@ findRouteById (FormSuccess camino) val = find (\r -> routeID r == val) (caminoRo
 findRouteById _ val = Just $ placeholder val
 
 findLocationById :: FormResult Camino -> Text -> Maybe Location
-findLocationById (FormSuccess camino) val = M.lookup val (caminoLocations camino)
+findLocationById (FormSuccess camino) val = M.lookup val (caminoLocationMap camino)
 findLocationById _ val = Just $ placeholder val
 
 findPointOfInterestById :: FormResult Camino -> Text -> Maybe PointOfInterest
-findPointOfInterestById (FormSuccess camino) val = fst <$> M.lookup val (caminoPois camino)
+findPointOfInterestById (FormSuccess camino) val = fst <$> M.lookup val (caminoPoiMap camino)
 findPointOfInterestById _ val = Just $ placeholder val
 
 findSetById :: (Ord a) => FormResult Camino -> (FormResult Camino -> Text -> Maybe a) -> S.Set Text -> Maybe (S.Set a)
@@ -167,7 +167,7 @@ findSetById cres finder val = let
 
 findLocationByPoi :: Maybe Camino -> PointOfInterest -> Maybe Location
 findLocationByPoi Nothing _poi = Nothing
-findLocationByPoi (Just camino) poi = snd <$> M.lookup (poiID poi) (caminoPois camino)
+findLocationByPoi (Just camino) poi = snd <$> M.lookup (poiID poi) (caminoPoiMap camino)
 
 fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Camino.Route
 fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
@@ -906,7 +906,7 @@ chooseStartForm help prefs extra = do
     let startDate' = prefStartDate <$> prefs
     let cprefs = CaminoPreferences <$> camino <*> start' <*> finish' <*> routes <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> pure S.empty <*> pure startDate'
     let caminos = maybe (caminoAppCaminos master) singleton camino
-    let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
+    let allStops = Prelude.concat (map caminoLocations caminos)
     let possibleStops = caminoRouteLocations <$> camino <*> routes
     let allowedStops = permittedStops <$> prefs <*> possibleStops
     let sortKey l = canonicalise $ localiseText locales (locationName l)
@@ -966,7 +966,7 @@ chooseStopsForm help prefs extra = do
     let cprefs = withRoutes <$> (defaultCaminoPreferences <$> camino) <*> routes
     let cprefs' = withStartFinish <$> cprefs <*> start' <*> finish'
     let caminos = maybe (caminoAppCaminos master) singleton camino
-    let allStops = Prelude.concat (map (M.elems . caminoLocations) caminos)
+    let allStops = Prelude.concat (map caminoLocations caminos)
     let possibleStops = reachableLocations <$> cprefs'
     let allowedStops = permittedStops <$> prefs <*> possibleStops
     let allowedRests = permittedRestPoints <$> prefs <*> possibleStops
@@ -1050,7 +1050,7 @@ choosePoiForm help prefs extra = do
     let cprefs = withRoutes <$> (defaultCaminoPreferences <$> camino) <*> routes
     let cprefs' = withStartFinish <$> cprefs <*> start' <*> finish'
     let caminos = maybe (caminoAppCaminos master) singleton camino
-    let allPois = S.unions (map (S.fromList . (map fst) . M.elems . caminoPois) caminos)
+    let allPois = S.unions (map (S.fromList . (map fst) . M.elems . caminoPoiMap) caminos)
     let possiblePois = S.filter (\p -> isJust $ poiTime p) $ maybe allPois reachablePois cprefs'
     let sortKey p = canonicalise $ localised p
     let pois = sortOn sortKey $ S.toList possiblePois

@@ -76,37 +76,45 @@ leg5 = Leg Road location1 location3 Nothing 1.3 Nothing 20.0 10.0 Nothing
 leg6 = Leg Road location1 location3 Nothing 1.3 Nothing 25.0 0.0 Nothing
 
 route1 :: Route
-route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") True (S.fromList [location1]) S.empty S.empty [] [] S.empty def
+route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") True [location1] (S.fromList [location1]) [] [] [] [] [] def
 
 route2 :: Route
-route2 = Route "R2" (wildcardText "Route 2") (wildcardDescription "Route 2") True (S.fromList [location2]) S.empty S.empty [] [] S.empty def
+route2 = Route "R2" (wildcardText "Route 2") (wildcardDescription "Route 2") True [location2] (S.fromList [location2]) [] [] [] [] [] def
 
 route3 :: Route
-route3 = Route "R3" (wildcardText "Route 3") (wildcardDescription "Route 3") True (S.fromList [location3]) S.empty S.empty [] [] S.empty def
+route3 = Route "R3" (wildcardText "Route 3") (wildcardDescription "Route 3") True [location3] (S.fromList [location3]) [] [] [] [] [] def
 
 route4 :: Route
-route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") True (S.fromList [location1, location2]) S.empty S.empty [] [] S.empty def
+route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") True [location1, location2] (S.fromList [location1, location2]) [] [] [] [] [] def
 
 condition1 = And [Variable route1, Not $ Variable route2]
 
-logic1 = RouteLogic (Just "Route Logic 1") condition1 (S.singleton route3) S.empty (S.singleton route4) (S.fromList [ locationI1, locationI2]) (S.fromList [locationE1] )
+logic1 = RouteLogic (Just "Route Logic 1") condition1 (S.singleton route3) S.empty (S.singleton route4) [locationI1, locationI2] [locationE1]
 
 camino1 :: Camino
-camino1 = Camino 
-  "C1" 
-  (wildcardText "Camino 1")
-  (wildcardDescription "Test camino 1")
-  metadata1
-  False
-  []
-  (M.fromList $ map (\l -> (locationID l, l)) [location1, location2, location3, locationI1, locationI2]) 
-  [leg1, leg2, leg3, leg4, leg5, leg6]
-  []
-  [route1, route2, route3, route4]
-  [logic1]
-  route1
-  M.empty
-  M.empty
+camino1 = Camino {
+    caminoId = "C1"
+  , caminoName =   (wildcardText "Camino 1")
+  , caminoDescription = (wildcardDescription "Test camino 1")
+  , caminoMetadata = metadata1
+  , caminoFragment = False
+  , caminoImports = []
+  , caminoLocations = locations
+  , caminoLegs = [leg1, leg2, leg3, leg4, leg5, leg6]
+  , caminoTransportLinks = []
+  , caminoRoutes = [route1, route2, route3, route4]
+  , caminoRouteLogic = [logic1]
+  , caminoDefaultRoute = route1
+  , caminoLocationMap = locationMap
+  , caminoAccommodationMap = accommodationMap
+  , caminoPoiMap = M.empty
+  }
+  where
+    locations = [location1, location2, location3, locationI1, locationI2]
+    locationMap = M.fromList $ map (\l -> (locationID l, l)) locations
+    accommodation = foldl (\as -> \l -> map (\a -> (a, l)) (filter (not . isGenericAccommodation) (locationAccommodation l)) ++ as) [] locations
+    accommodationMap = M.fromList $ map (\a -> (accommodationID $ fst a, a)) accommodation
+
 
 testLegEqual = TestList [
   testLegEqual1, testLegEqual2, testLegEqual3, testLegEqual4, testLegEqual5, testLegEqual6
@@ -186,8 +194,8 @@ testRouteLogicRead1 =
       assertEqual "Read RouteLogic 1 1" (Just "Information") (routeLogicDescription logic)
       assertEqual "Read RouteLogic 1 2" (S.singleton route3) (routeLogicAllows logic)
       assertEqual "Read RouteLogic 1 3" (S.singleton route4) (routeLogicProhibits logic)
-      assertEqual "Read RouteLogic 1 4" 2 (S.size $ routeLogicInclude logic)
-      assertEqual "Read RouteLogic 1 5" 2 (S.size $ routeLogicExclude logic)
+      assertEqual "Read RouteLogic 1 4" 2 (length $ routeLogicInclude logic)
+      assertEqual "Read RouteLogic 1 5" 2 (length $ routeLogicExclude logic)
       assertEqual "Read RouteLogic 1 6" condition1 (routeLogicCondition logic)
     )
     

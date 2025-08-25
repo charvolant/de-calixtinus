@@ -9,7 +9,9 @@
     "image": {
       "source": "I/I-Camino-Ingles.jpg",
       "thumbnail": "I/I-Camino-Ingles-thumbnail.jpg",
-      "title": "Camiño De Santiago Inglés Ou Do Faro@es",
+      "title": [
+        "Camiño De Santiago Inglés Ou Do Faro@es"
+      ],
       "metadata": {
         "statements": [
           {
@@ -33,6 +35,16 @@
     }
   },
   "metadata": {
+    "namespaces": [
+      {
+        "prefix": "dc",
+        "namespace": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+        "prefix": "dcterms",
+        "namespace": "http://purl.org/dc/terms/"
+      }
+    ],
     "statements": [
       {
         "term": "dcterms:title",
@@ -80,9 +92,9 @@
       "id": "I-I1",
       "name": "Ferrol",
       "type": "City",
-      "position": { "latitude": 43.47848, "longitude": -8.24376, "elevation": 7 },
+      "position": { "latitude":  43.478476, "longitude": -8.24376 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus" ],
       "accommodation": [
         {
           "name": "Xunta de Galicia Ferrol Pilgrim's Hostel",
@@ -97,25 +109,21 @@
         {
           "id": "I-I1-1",
           "name": "Via Compostellam@es",
-          "type": "PilgrimResource",
           "description": {
             "notes": [
               "You can obtain a pilgrim's credential from the pilgrim's office.@en"
             ]
           },
-          "position": { "latitude": 43.47863, "longitude": -8.24405, "elevation": 7 },
-          "hours": [
-            "0800-1300"
-          ]
+          "type": "PilgrimResource",
+          "position": { "latitude": 43.47863, "longitude": -8.244054 },
+          "hours": "0800-1300"
         },
         {
           "id": "I-I1-2",
           "name": "Museo da Constructión Naval@es",
           "type": "Museum",
-          "position": { "latitude": 43.48263, "longitude": -8.23110, "elevation": 8 },
-          "hours": [
-            "1000-1900"
-          ]
+          "position": { "latitude": 43.48263, "longitude": -8.23110 },
+          "hours": "1000-1900"
         }
       ]
     },
@@ -123,15 +131,15 @@
       "id": "I-I2",
       "name": "Polígono Gándara",
       "type": "City",
-      "position": { "latitude": 43.49382, "longitude": -8.18834, "elevation": 14 },
+      "position": { "latitude":  43.49382, "longitude": -8.18834 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Bus"],
       "accommodation": [
         {
           "name": "Hotel Odeón",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Accessible", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+          "services": ["Heating", "WiFi", "Restaurant", "Breakfast", "Dinner", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC"]
         }
       ]
     },
@@ -139,20 +147,20 @@
       "id": "I-I3",
       "name": "Xubia",
       "type": "Town",
-      "position": { "latitude": 43.51673, "longitude": -8.15104, "elevation": 5 },
+      "position": { "latitude":  43.51673, "longitude": -8.15104 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "BicycleRepair", "Bus" ],
+      "services": ["Restaurant", "BicycleRepair", "Bus"],
       "accommodation": [
         {
           "name": "Marcial Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "services": ["Heating", "WiFi", "Restaurant", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "Kensington Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": ["Heating", "WiFi", "Restaurant", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -161,20 +169,20 @@
       "id": "I-I4",
       "name": "Neda",
       "type": "Town",
-      "position": { "latitude": 43.50401, "longitude": -8.15414, "elevation": 7 },
+      "position": { "latitude": 43.50401, "longitude": -8.15414 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus"],
       "accommodation": [
         {
           "name": "Neda Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "CampSite", "Bedlinen" ],
+          "services": ["Heating", "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "CampSite", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Maragoto Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC" ]
         }
       ]
@@ -183,32 +191,32 @@
       "id": "I-I5",
       "name": "Fene",
       "type": "Town",
-      "position": { "latitude": 43.47410, "longitude": -8.16234, "elevation": 27 },
+      "position": { "latitude": 43.47410, "longitude": -8.16234 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus"],
       "accommodation": [ ]
     },
-    {
+     {
       "id": "I-I6",
       "name": "O Pereiro",
       "type": "Village",
-      "position": { "latitude": 43.44282, "longitude": -8.16640, "elevation": 178 },
+      "position": { "latitude": 43.44282, "longitude": -8.16640 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Bus"],
       "accommodation": [ ]
     },
     {
       "id": "I-I7",
       "name": "Cabanas",
       "type": "Village",
-      "position": { "latitude": 43.42006, "longitude": -8.17182, "elevation": 5 },
+      "position": { "latitude": 43.42006, "longitude": -8.17182 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Bus"],
       "accommodation": [
         {
           "name": "Sarga Hotel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -217,9 +225,9 @@
       "id": "I-I8",
       "name": "Pontedeume",
       "type": "Town",
-      "position": { "latitude": 43.40631, "longitude": -8.17048, "elevation": 20 },
+      "position": { "latitude": 43.40631, "longitude": -8.17048 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus"],
       "accommodation": [
         {
           "name": "Pontedeume Pilgrims Hostel",
@@ -242,20 +250,20 @@
         {
           "name": "Luis Boarding House Restaurant",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Allegue Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC" ]
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ,"DoubleWC" ]
         },
         {
           "name": "Eumesa Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ,"DoubleWC", "Triple", "Quadruple" ]
         }
       ],
       "pois": [
@@ -263,7 +271,7 @@
           "id": "I-I8-1",
           "name": "Fragas do Eume",
           "type": "Natural",
-          "position": { "latitude": 43.42863, "longitude": -8.11934, "elevation": 242 },
+          "position": { "latitude": 43.42863, "longitude": -8.11934 },
           "time": 4.0
         }
       ]
@@ -272,9 +280,9 @@
       "id": "I-I9",
       "name": "Miño",
       "type": "Town",
-      "position": { "latitude": 43.34701, "longitude": -8.20626, "elevation": 40 },
+      "position": { "latitude": 43.34701, "longitude": -8.20626 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus"],
       "accommodation": [
         {
           "name": "Miño Pilgrims Hostel",
@@ -286,7 +294,7 @@
           "name": "La Terraza Hotel",
           "type": "Hotel",
           "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+          "sleeping": [ "Single" ,"DoubleWC", "Triple", "Quadruple" ]
         }
       ]
     },
@@ -294,14 +302,14 @@
       "id": "I-I10",
       "name": "Ponte do Porco",
       "type": "Village",
-      "position": { "latitude": 43.33557, "longitude": -8.20086, "elevation": 7 },
+      "position": { "latitude": 43.33557, "longitude": -8.20086 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Bus" ],
+      "services": ["Restaurant", "Bus"],
       "accommodation": [
         {
           "name": "Brisa Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ]
@@ -310,30 +318,31 @@
       "id": "I-I11",
       "name": "Porto Abaixo",
       "type": "Village",
-      "position": { "latitude": 43.32388, "longitude": -8.19811, "elevation": 46 },
+      "position": { "latitude": 43.32388, "longitude": -8.19811 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Bus" ],
-      "accommodation": [ ]
+      "services": ["Restaurant", "Bus"],
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I12",
       "name": "Betanzos",
       "type": "Town",
-      "position": { "latitude": 43.27967, "longitude": -8.21027, "elevation": 21 },
+      "position": { "latitude": 43.279666, "longitude": -8.21027  },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "services": ["Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus"],
       "accommodation": [
         {
           "name": "Betanzos Pilgrim's Hostel",
           "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
+          "sleeping": [ "Shared"]
         },
         {
           "name": "Santa María de la Azogue - ACC Pilgrim's Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Lockers", "Bedlinen", "Towels", "Prayer" ],
-          "sleeping": [ "Shared" ]
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Lockers", "Prayer", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared"]
         },
         {
           "name": "Rio Mandeo Hostel",
@@ -350,13 +359,13 @@
         {
           "name": "Hotel Garelos",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Hotel Villa de Batanzos",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -365,16 +374,16 @@
       "id": "I-I13",
       "name": "Xanrozo",
       "type": "Village",
-      "position": { "latitude": 43.25502, "longitude": -8.22868, "elevation": 167 },
+      "position": { "latitude": 43.25502,  "longitude": -8.22868 },
       "region": "ES-GA",
-      "services": [ "Bus" ],
+      "services": ["Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "I-I13-1",
           "name": "No shoulder on road",
           "type": "Hazard",
-          "position": { "latitude": 43.24324, "longitude": -8.22868, "elevation": 115 }
+          "position": { "latitude": 43.24324, "longitude": -8.22868 }
         }
       ]
     },
@@ -382,24 +391,24 @@
       "id": "I-I14",
       "name": "Cos",
       "type": "Village",
-      "position": { "latitude": 43.23378, "longitude": -8.24325, "elevation": 73 },
+      "position": { "latitude": 43.23378, "longitude": -8.24325 },
       "region": "ES-GA",
-      "services": [ "Bus" ],
+      "services": ["Bus" ],
       "accommodation": [ ],
       "pois": [
         {
           "id": "I-I14-1",
           "name": "Old route",
           "type": "Junction",
-          "position": { "latitude": 43.23270, "longitude": -8.24610, "elevation": 82 }
+          "position": { "latitude": 43.23270, "longitude": -8.24610 }
         }
       ]
     },
-    {
+     {
       "id": "I-I15",
       "name": "Meangos",
       "type": "Village",
-      "position": { "latitude": 43.22451, "longitude": -8.25193, "elevation": 115 },
+      "position": { "latitude": 43.22451, "longitude": -8.25193 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
@@ -408,7 +417,7 @@
       "id": "I-I16",
       "name": "Presedo",
       "type": "Village",
-      "position": { "latitude": 43.20418, "longitude": -8.26297, "elevation": 172 },
+      "position": { "latitude": 43.20418, "longitude": -8.262970 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
@@ -416,7 +425,7 @@
           "name": "Presedo Pilgrim's Hostel",
           "type": "PilgrimAlbergue",
           "services": [ "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
+          "sleeping": [ "Shared"]
         }
       ],
       "pois": [
@@ -424,10 +433,8 @@
           "id": "I-I16-1",
           "name": "Mesón-Museo Xente no Camiño@ga",
           "type": "Shop",
-          "position": { "latitude": 43.20110, "longitude": -8.26632, "elevation": 170 },
-          "hours": [
-            "0830-2330"
-          ]
+          "position": { "latitude": 43.20110, "longitude": -8.26632 },
+          "hours": "0830-2330"
         }
       ]
     },
@@ -435,16 +442,16 @@
       "id": "I-I17",
       "name": "Leiro",
       "type": "Village",
-      "position": { "latitude": 43.19341, "longitude": -8.27473, "elevation": 174 },
+      "position": { "latitude": 43.19341, "longitude": -8.27473 },
       "region": "ES-GA",
-      "services": [ "Bus" ],
+      "services": [  "Bus" ],
       "accommodation": [ ]
     },
     {
       "id": "I-I18",
       "name": "Beche",
       "type": "Village",
-      "position": { "latitude": 43.18313, "longitude": -8.30713, "elevation": 292 },
+      "position": { "latitude": 43.183131, "longitude": -8.30713 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ],
@@ -456,7 +463,7 @@
             "Beche Dam@en"
           ],
           "type": "Park",
-          "position": { "latitude": 43.18235, "longitude": -8.30711, "elevation": 289 }
+          "position": { "latitude":43.18235, "longitude": -8.30711 }
         }
       ]
     },
@@ -464,7 +471,7 @@
       "id": "I-I19",
       "name": "As Travesas",
       "type": "Village",
-      "position": { "latitude": 43.16970, "longitude": -8.35077, "elevation": 450 },
+      "position": { "latitude": 43.16970, "longitude": -8.35077 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -473,7 +480,7 @@
       "id": "I-I20",
       "name": "Hospital de Bruma",
       "type": "Village",
-      "position": { "latitude": 43.15281, "longitude": -8.36326, "elevation": 394 },
+      "position": { "latitude": 43.15281, "longitude": -8.36326 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -481,43 +488,45 @@
           "name": "Hospital de Bruma Pilgrim's Hostel",
           "type": "PilgrimAlbergue",
           "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
+          "sleeping": [ "Shared"]
         },
         {
           "name": "San Lorenzo de Bruma Hostel",
           "type": "PrivateAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "Bedlinen" ],
-          "sleeping": [ "Shared", "DoubleWC" ]
+          "sleeping": [ "Shared", "DoubleWC"]
         },
         {
           "name": "A Casiña de Brume",
           "type": "CasaRural",
           "services": [ "WiFi", "Heating", "Kitchen", "Bedlinen", "Towels" ],
-          "sleeping": [ "DoubleWC" ]
+          "sleeping": [ "DoubleWC"]
         }
+
       ]
     },
     {
       "id": "I-I21",
       "name": "O Castro",
       "type": "Village",
-      "position": { "latitude": 43.12643, "longitude": -8.37934, "elevation": 369 },
+      "position": { "latitude": 43.12643, "longitude": -8.37933777528290 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I22",
       "name": "A Rúa (Buscás)",
       "type": "Village",
-      "position": { "latitude": 43.09553, "longitude": -8.38199, "elevation": 306 },
+      "position": { "latitude": 43.09553, "longitude": -8.38199 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Bus" ],
+      "services": [ "Restaurant", "Bus"],
       "accommodation": [
         {
           "name": "Casa Dona María",
           "type": "CasaRural",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -526,21 +535,21 @@
       "id": "I-I23",
       "name": "O Outeiro (Poulo)",
       "type": "Village",
-      "position": { "latitude": 43.07373, "longitude": -8.38113, "elevation": 337 },
+      "position": { "latitude": 43.07373, "longitude": -8.38113 },
       "region": "ES-GA",
-      "services": [ ],
+      "services": [  ],
       "accommodation": [
         {
           "name": "Poulo Pilgrim's Hostel",
           "type": "PilgrimAlbergue",
           "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "CampSite", "Towels" ],
-          "sleeping": [ "Shared" ]
+          "sleeping": [ "Shared"]
         },
         {
           "name": "Casa Antón Veiras",
           "type": "CasaRural",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Double" ]
+          "services": [ "WiFi", "Restaurant", "Breakfast", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double"]
         }
       ]
     },
@@ -548,33 +557,35 @@
       "id": "I-I24",
       "name": "A Calle (Poulo)",
       "type": "Village",
-      "position": { "latitude": 43.05906, "longitude": -8.38075, "elevation": 300 },
+      "position": { "latitude": 43.05906, "longitude": -8.38075 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I25",
       "name": "A Baxoia",
       "type": "Village",
-      "position": { "latitude": 43.01958, "longitude": -8.41465, "elevation": 311 },
+      "position": { "latitude": 43.01958, "longitude": -8.41465 },
       "region": "ES-GA",
       "services": [ "Bus" ],
-      "accommodation": [ ],
+      "accommodation": [
+      ],
       "pois": [
         {
           "id": "I-I25-1",
           "name": "Paved track",
-          "type": "Junction",
           "description": "The official track runs parallel to the highway. An alternative is a paved track through pines and eucalyptus.@en",
-          "position": { "latitude": 43.01712, "longitude": -8.41274, "elevation": 297 }
+          "type": "Junction",
+          "position": { "latitude": 43.01712, "longitude": -8.41274 }
         },
         {
           "id": "I-I25-2",
           "name": "English Route Information Point",
           "type": "PilgrimResource",
-          "position": { "latitude": 42.97132, "longitude": -8.44043, "elevation": 228 },
-          "hours": [
+          "position": { "latitude": 42.97132, "longitude": -8.44043 },
+          "hours":  [
             {
               "calendar": {
                 "type": "yearly",
@@ -589,7 +600,7 @@
       "id": "I-I26",
       "name": "Sigüeiro",
       "type": "Town",
-      "position": { "latitude": 42.96894, "longitude": -8.44159, "elevation": 225 },
+      "position": { "latitude": 42.96894, "longitude": -8.44159 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
@@ -614,13 +625,13 @@
         {
           "name": "Mirás Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Restaurant", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Ultreia et Suseia Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Accessible", "Pets", "BicycleStorage", "Towels" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Pets", "Towels" ],
           "sleeping": [ "Shared", "Double" ]
         },
         {
@@ -632,8 +643,8 @@
         {
           "name": "Vilanova Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Restaurant", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [  "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
       ]
     },
@@ -641,14 +652,14 @@
       "id": "I-I27",
       "name": "Formarís",
       "type": "Village",
-      "position": { "latitude": 42.92064, "longitude": -8.49220, "elevation": 319 },
+      "position": { "latitude": 42.920637, "longitude": -8.49220 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [
         {
           "name": "Castro Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Stables", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -657,14 +668,14 @@
       "id": "I-I28",
       "name": "Polígono do Tambre",
       "type": "Intersection",
-      "position": { "latitude": 42.90290, "longitude": -8.52777, "elevation": 338 },
+      "position": { "latitude": 42.902895, "longitude": -8.52777 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
       "accommodation": [
         {
           "name": "Hospedaje José Rey",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Kitchen", "Bedlinen", "Towels", "Pool" ],
+          "services": [ "WiFi", "Heating", "Kitchen", "Restaurant", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -673,34 +684,35 @@
       "id": "I-I29",
       "name": "A Coruña",
       "type": "City",
-      "position": { "latitude": 43.36971, "longitude": -8.39396, "elevation": 13 },
+      "position": { "latitude": 43.36971, "longitude": -8.39396 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "GuestHouse", "Hotel" ],
+      "accommodation": [
+        "GuestHouse",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "I-I29-1",
           "name": "Tower of Hercules@en",
-          "type": "Historical",
           "description": "The oldest Roman lighthouse in the world, built in the second century and still in operation.@en",
-          "position": { "latitude": 43.38593, "longitude": -8.40651, "elevation": 48 },
-          "hours": [
-            "1000-2000"
-          ],
+          "type": "Historical",
+          "position": { "latitude": 43.38593, "longitude": -8.40651 },
+          "hours": "1000-2000",
           "time": 1.0
         },
         {
           "id": "I-I29-2",
           "name": "Praza de Maria Pita@es",
           "type": "Municipal",
-          "position": { "latitude": 43.37096, "longitude": -8.39593, "elevation": 6 }
+          "position": { "latitude": 43.37096, "longitude": -8.39593 }
         },
         {
           "id": "I-I29-3",
           "name": "Alternative Route@en",
-          "type": "Junction",
           "description": "The official route follows the N-550. This alternative route avoids the traffic.@en",
-          "position": { "latitude": 43.33213, "longitude": -8.39119, "elevation": 48 }
+          "type": "Junction",
+          "position": { "latitude": 43.33213, "longitude": -8.39119 }
         }
       ]
     },
@@ -708,7 +720,7 @@
       "id": "I-I30",
       "name": "O Portádego",
       "type": "City",
-      "position": { "latitude": 43.32609, "longitude": -8.38598, "elevation": 43 },
+      "position": { "latitude": 43.32609, "longitude": -8.38598 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Bus" ],
       "accommodation": [
@@ -721,7 +733,7 @@
         {
           "name": "Hotel Crunia",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "Accessible", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "TripleWC" ]
         }
       ]
@@ -730,14 +742,14 @@
       "id": "I-I31",
       "name": "O Burgo",
       "type": "Town",
-      "position": { "latitude": 43.31507, "longitude": -8.36524, "elevation": 23 },
+      "position": { "latitude": 43.31507, "longitude": -8.36524 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
         {
           "name": "O Mesón Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
@@ -758,20 +770,20 @@
       "id": "I-I32",
       "name": "Alvedro",
       "type": "Town",
-      "position": { "latitude": 43.30266, "longitude": -8.37066, "elevation": 81 },
+      "position": { "latitude": 43.30266,  "longitude": -8.37066 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Bus" ],
       "accommodation": [
         {
           "name": "A Gramalleira Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Dinner", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "La Paz Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Lockers", "BicycleStorage", "Towels" ],
+          "services": [ "WiFi", "Heating", "Restaurant", "Lockers", "BicycleStorage", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -780,32 +792,34 @@
       "id": "I-I33",
       "name": "Sigras",
       "type": "Village",
-      "position": { "latitude": 43.28627, "longitude": -8.36524, "elevation": 73 },
+      "position": { "latitude": 43.28627, "longitude": -8.36524 },
       "region": "ES-GA",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I34",
       "name": "Drozo",
       "type": "Village",
-      "position": { "latitude": 43.26753, "longitude": -8.36549, "elevation": 113 },
+      "position": { "latitude": 43.26753, "longitude": -8.36549 },
       "region": "ES-GA",
       "services": [ "Bus" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I35",
       "name": "Montecarlo (Sergude)",
       "type": "Village",
-      "position": { "latitude": 43.24633, "longitude": -8.34511, "elevation": 135 },
+      "position": { "latitude": 43.24633, "longitude": -8.34511 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
       "accommodation": [
         {
           "name": "Sergude's Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen",  "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
@@ -826,30 +840,34 @@
       "id": "I-I36",
       "name": "Sarandóns",
       "type": "Village",
-      "position": { "latitude": 43.22118, "longitude": -8.33478, "elevation": 71 },
+      "position": { "latitude": 43.22118, "longitude": -8.33478 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries" ],
-      "accommodation": [ ]
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I37",
       "name": "Bordelle",
       "type": "Village",
-      "position": { "latitude": 43.21162, "longitude": -8.33534, "elevation": 135 },
+      "position": { "latitude": 43.21162, "longitude": -8.33534 },
       "region": "ES-GA",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ]
     },
     {
       "id": "I-I38",
       "name": "Abeleira",
       "type": "Intersection",
-      "position": { "latitude": 43.19086, "longitude": -8.34599, "elevation": 383 },
+      "position": { "latitude": 43.19086, "longitude": -8.34599 },
       "region": "ES-GA",
-      "services": [ ],
-      "accommodation": [ ]
+      "services": [  ],
+      "accommodation": [
+      ]
     }
   ],
+
   "legs": [
     {
       "from": "I-I1",
@@ -950,12 +968,12 @@
       "descent": 0
     },
     {
-      "description": "Via old route@en",
       "from": "I-I14",
       "to": "I-I16",
-      "distance": 4.90,
+      "distance": 4.9,
       "ascent": 270,
-      "descent": 165
+      "descent": 165,
+      "description": "Via old route@en"
     },
     {
       "from": "I-I15",
@@ -964,7 +982,7 @@
       "ascent": 70,
       "descent": 10
     },
-    {
+     {
       "from": "I-I16",
       "to": "I-I17",
       "distance": 2.05,
@@ -1028,22 +1046,22 @@
       "descent": 45
     },
     {
-      "description": "Official route@en",
       "from": "I-I25",
       "to": "I-I26",
       "distance": 7.14,
       "ascent": 15,
-      "descent": 100
+      "descent": 100,
+      "description": "Official route@en"
     },
     {
-      "description": "Via paved track@en",
       "from": "I-I25",
       "to": "I-I26",
       "distance": 7.04,
       "ascent": 10,
-      "descent": 95
+      "descent": 95,
+      "description": "Via paved track@en"
     },
-    {
+     {
       "from": "I-I26",
       "to": "I-I27",
       "distance": 8.72,
@@ -1134,25 +1152,26 @@
       "ascent": 65,
       "descent": 0
     }
-  ],
+ ],
   "routes": [
     {
       "id": "I-RI",
       "name": "Camino Ingles",
       "description": "The main Camino route starting in Ferrol.",
       "major": true,
+      "stops": [
+      ],
       "starts": [
         "I-I1"
       ],
       "finishes": [
         "ST-ST1"
       ],
-      "suggested-pois": [
-        "ST-ST1-1"
-      ],
+      "suggested-pois": [ "ST-ST1-1" ],
       "palette": {
-        "colour": "#fec953"
-      }
+        "colour": "fec953"
+      },
+      "default": true
     },
     {
       "id": "I-RC",
@@ -1166,16 +1185,21 @@
           }
         ]
       },
-      "locations": [ "I-I29", "I-I30", "I-I31", "I-I32", "I-I33", "I-I34", "I-I35", "I-I36", "I-I37", "I-I38" ],
       "major": true,
+      "locations": [
+        "I-I29", "I-I30",
+        "I-I31", "I-I32", "I-I33", "I-I34", "I-I35", "I-I36", "I-I37", "I-I38"
+      ],
+      "stops": [
+      ],
       "starts": [
         "I-I29"
       ],
-      "suggested-pois": [
-        "I-I29-1"
+      "finishes": [
       ],
+      "suggested-pois": [ "I-I29-1" ],
       "palette": {
-        "colour": "#feda53"
+        "colour": "feda53"
       }
     }
   ],
@@ -1184,7 +1208,7 @@
       "description": "Changes for the A Coruña start",
       "condition": "I-RC",
       "exclude": [
-        "I-I1", "I-I2", "I-I3", "I-I4", "I-I5", "I-I6", "I-I7", "I-I8", "I-I9", "I-I10",
+        "I-I1",  "I-I2",  "I-I3",  "I-I4",  "I-I5",  "I-I6",  "I-I7",  "I-I8",  "I-I9",  "I-I10",
         "I-I11", "I-I12", "I-I13", "I-I14", "I-I15", "I-I16", "I-I17", "I-I18"
       ]
     }

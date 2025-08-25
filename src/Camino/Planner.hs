@@ -25,12 +25,14 @@ module Camino.Planner (
 
   , accommodationChoice
   , buildTripChoiceMap
+  , dayLegs
   , daysLabel
   , findDay
   , findStage
   , locationChoice
   , hasNonTravel
   , isStockUpDay
+  , journeyLegs
   , nonTravelHours
   , normaliseSolution
   , penance
@@ -1214,6 +1216,14 @@ pilgrimageStops pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> (start d):s'
 -- | Get all the waypoints on a pilgrimage in order
 pilgrimageWaypoints :: Pilgrimage -> [Location]
 pilgrimageWaypoints pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> foldr (\l -> \s'' -> (legTo l):s'') s' (path d)) s (path j)) [finish pilgrimage] (path pilgrimage)
+
+-- All the legs in a day
+dayLegs :: Day -> [Leg]
+dayLegs day = path day
+
+-- All the legs in a journey
+journeyLegs :: Journey -> [Leg]
+journeyLegs journey = foldr (\d -> \s' -> path d ++ s') [] (path journey)
 
 -- | Get all the legs actually used by a trip
 pilgrimageLegs :: Pilgrimage -> [Leg]

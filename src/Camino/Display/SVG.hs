@@ -34,11 +34,13 @@ import Text.Hamlet
 
 buildCoordinates' :: [Leg] -> Float -> [(Float, Maybe Float, Maybe Location)]
 buildCoordinates' [] _ = []
-buildCoordinates' (leg:rest) d = (d', realToFrac <$> (elevation $ locationPosition to), Just to):(buildCoordinates' rest d')
+buildCoordinates' (leg:rest) d = (d', realToFrac <$> (elevation $ locationPosition lt), Just lt):(buildCoordinates' rest d')
   where
-    d' = d + legDistance leg
-    _lf = legFrom leg
-    to = legTo leg
+    lf = legFrom leg
+    lt = legTo leg
+    ld = legDistance leg
+    ld' = if ld > 0.0 then ld else (realToFrac $ haversineDistance (locationPosition lf) (locationPosition lt)) / 1000.0
+    d' = d + ld'
 
 buildCoordinates :: [Leg] -> [(Float, Maybe Float, Maybe Location)]
 buildCoordinates [] = []
@@ -158,7 +160,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
       $forall tic <- ticLabels
         <line x1="#{makeX 0.0} - 10" y1="#{makeY tic}" x2="#{makeX 0.0 - 1}" y2="#{makeY tic}" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
     $forall (x, _y1, y2, a, b, l) <- labelPos
-      <text x="#{makeXP x}%" y="#{makeYP y2}%" font-size="10" text-anchor="#{a}" font-weight="#{fontWeight l}" titke="#{showElevation l}">_{Txt (locationName l)}
+      <text x="#{makeXP x}%" y="#{makeYP y2}%" font-size="10" text-anchor="#{a}" font-weight="#{fontWeight l}" title="#{showElevation l}">_{TxtPlain False False (locationName l)}
       $if showLayout
         <rect x="#{makeXP (boxLeft b)}%" y="#{makeYP (boxBottom b)}%" width="#{makeXP (boxWidth b)}%" height="#{makeYP (boxHeight b)}%" vector-effect="non-scaling-stroke" fill="none" stroke="#{toCssColour caminoBlue}" stroke-width="1">
     $forall tic <- ticLabels
@@ -183,7 +185,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     anchor d = if d < maxx / 5.0 then "start" else if d > maxx * 4.0 / 5.0 then "end" else "middle" :: Text
     fontWeight l = if important l then "bold" else "normal" :: Text
     splines = makeSpline NaturalBoundary NaturalBoundary coordinates'
-    beziers = map makeBezier splines
+    beziers = map toBezier splines
     (_, es) = headWithError coordinates'
     elevationPath = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ " " ++ (concat $ map (\b -> pathBezier False makeX makeY b ++ " ") beziers) ++ " L " ++ (show $ makeX maxx) ++ " " ++ (show $ makeY 0.0) ++ " Z"
     elevationLines = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ (concat $ map (\(d, e) -> " L " ++ (show $ makeX d) ++ " " ++ (show $ makeY e)) coordinates')

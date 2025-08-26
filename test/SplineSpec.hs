@@ -10,6 +10,7 @@ testSpline = TestList [
   , TestLabel "SplineSlopeAt" testSplineSlopeAt
   , TestLabel "SplineSecondDevs" testSplineSecondDevs
   , TestLabel "MakeSpline" testSplineMakeSpline
+  , TestLabel "ToBezier" testToBezier
   ]
 
 spline1 = Spline 0.0 1.0 1.0 2.0 3.0 4.0 :: Spline Float
@@ -189,3 +190,81 @@ testSplineMakeSpline7 = TestCase (do
     assertFloatEqual "Make Spline 7 2" (splineAt sp1 1.0) (splineAt sp2 1.0) 0.001
     assertFloatEqual "Make Spline 7 3" (splineSlopeAt sp1 1.0) (splineSlopeAt sp2 1.0) 0.001
   )
+  
+
+testToBezier = TestList [
+  testToBezier1, testToBezier2, testToBezier3, testToBezier4,
+  testToBezier5, testToBezier6, testToBezier7
+  ]
+
+testToBezier1 = TestCase (do
+  let [spline] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)]
+  let bezier = toBezier spline
+  assertFloatEqual "To Bezier 1 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
+  assertFloatEqual "To Bezier 1 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
+  assertFloatEqual "To Bezier 1 2" (splineAt spline 1.0) (snd $ bezierAt bezier 1.0) 0.001
+  )
+
+testToBezier2 = TestCase (do
+  let [spline] = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 1.0)]
+  let bezier = toBezier spline
+  assertFloatEqual "To Bezier 2 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
+  assertFloatEqual "To Bezier 2 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
+  assertFloatEqual "To Bezier 2 2" (splineAt spline 1.0) (snd $ bezierAt bezier 1.0) 0.001
+  )
+
+testToBezier3 = TestCase (do
+  let [spline] = makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 1.0)]
+  let bezier = toBezier spline
+  assertFloatEqual "To Bezier 3 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
+  assertFloatEqual "To Bezier 3 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
+  assertFloatEqual "To Bezier 3 2" (splineAt spline 1.0) (snd $ bezierAt bezier 1.0) 0.001
+  )
+
+testToBezier4 = TestCase (do
+  let [sp1, sp2] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 3.0)]
+  let bz1 = toBezier sp1
+  assertFloatEqual "To Bezier 4 1" (splineAt sp1 0.0) (snd $ bezierAt bz1 0.0) 0.001
+  assertFloatEqual "To Bezier 4 2" (splineAt sp1 0.5) (snd $ bezierAt bz1 0.5) 0.001
+  assertFloatEqual "To Bezier 4 2" (splineAt sp1 1.0) (snd $ bezierAt bz1 1.0) 0.001
+  let bz2 = toBezier sp2
+  assertFloatEqual "To Bezier 4 4" (splineAt sp2 1.0) (snd $ bezierAt bz2 1.0) 0.001
+  assertFloatEqual "To Bezier 4 5" (splineAt sp2 1.5) (snd $ bezierAt bz2 1.5) 0.001
+  assertFloatEqual "To Bezier 4 6" (splineAt sp2 2.0) (snd $ bezierAt bz2 2.0) 0.001
+  )
+
+testToBezier5 = TestCase (do
+  let [sp1, sp2] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 2.0), (1.0, 1.0), (2.0, 3.0)]
+  let bz1 = toBezier sp1
+  assertFloatEqual "To Bezier 5 1" (splineAt sp1 0.0) (snd $ bezierAt bz1 0.0) 0.001
+  assertFloatEqual "To Bezier 5 2" (splineAt sp1 0.5) (snd $ bezierAt bz1 0.5) 0.001
+  assertFloatEqual "To Bezier 5 2" (splineAt sp1 1.0) (snd $ bezierAt bz1 1.0) 0.001
+  let bz2 = toBezier sp2
+  assertFloatEqual "To Bezier 5 4" (splineAt sp2 1.0) (snd $ bezierAt bz2 1.0) 0.001
+  assertFloatEqual "To Bezier 5 5" (splineAt sp2 1.5) (snd $ bezierAt bz2 1.5) 0.001
+  assertFloatEqual "To Bezier 5 6" (splineAt sp2 2.0) (snd $ bezierAt bz2 2.0) 0.001
+  )
+
+testToBezier6 = TestCase (do
+  let [sp1, sp2, sp3] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 2.0), (1.0, 1.0), (2.0, 3.0), (4.0, 1.0)]
+  let bz1 = toBezier sp1
+  assertFloatEqual "To Bezier 6 1" (splineAt sp1 0.0) (snd $ bezierAt bz1 0.0) 0.001
+  assertFloatEqual "To Bezier 6 2" (splineAt sp1 0.5) (snd $ bezierAt bz1 0.5) 0.001
+  assertFloatEqual "To Bezier 6 2" (splineAt sp1 1.0) (snd $ bezierAt bz1 1.0) 0.001
+  let bz2 = toBezier sp2
+  assertFloatEqual "To Bezier 6 4" (splineAt sp2 1.0) (snd $ bezierAt bz2 1.0) 0.001
+  assertFloatEqual "To Bezier 6 5" (splineAt sp2 1.5) (snd $ bezierAt bz2 1.5) 0.001
+  assertFloatEqual "To Bezier 6 6" (splineAt sp2 2.0) (snd $ bezierAt bz2 2.0) 0.001
+  let bz3 = toBezier sp3
+  assertFloatEqual "To Bezier 6 7" (splineAt sp3 2.0) (snd $ bezierAt bz3 2.0) 0.001
+  assertFloatEqual "To Bezier 6 8" (splineAt sp3 3.5) (snd $ bezierAt bz3 3.5) 0.001
+  assertFloatEqual "To Bezier 6 9" (splineAt sp3 4.0) (snd $ bezierAt bz3 4.0) 0.001
+  )
+
+testToBezier7 = TestCase (do
+  let bz1 = toBezier spline1
+  assertFloatEqual "To Bezier 6 1" (splineAt spline1 0.0) (snd $ bezierAt bz1 0.0) 0.001
+  assertFloatEqual "To Bezier 6 2" (splineAt spline1 0.5) (snd $ bezierAt bz1 0.5) 0.001
+  assertFloatEqual "To Bezier 6 2" (splineAt spline1 1.0) (snd $ bezierAt bz1 1.0) 0.001
+  )
+

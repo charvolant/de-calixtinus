@@ -68,6 +68,7 @@ module Camino.Camino (
   , createProhibitsClauses
   , fitnessEnumeration
   , getCamino
+  , haversineDistance
   , isGenericAccommodation
   , locationAccommodationTypes
   , locationAdditionalAccommodationTypes
@@ -266,6 +267,24 @@ centroid lls = let
 -- This is not accurate, but good enough for quick estimation
 euclidianDistance2 :: LatLong -> LatLong -> Double
 euclidianDistance2 (LatLong lat1 long1 _elev1 _srs1) (LatLong lat2 long2 _elev2 _srs2) = (lat2 - lat1) * (lat2 - lat1) + (long2 - long1) * (long2 - long1)
+
+-- | Distance for small angle differences using the Haverisne formula
+--   https://en.wikipedia.org/wiki/Haversine_formula
+haversineDistance :: LatLong -- ^ From lat/long
+  -> LatLong -- ^ To lat/long
+  -> Double -- ^ Distance in metres
+haversineDistance (LatLong lat1 long1 _elev1 _srs1) (LatLong lat2 long2 _elev2 _srs2) = let
+  lat1r = lat1 * pi / 180.0
+  long1r = long1 * pi / 180.0
+  lat2r = lat2 * pi / 180.0
+  long2r = long2 * pi / 180.0
+  deltalat = lat2r - lat1r
+  deltalong = long2r - long1r
+  r = 6378137.0
+  hav = sqrt (1.0 - cos deltalat + cos lat1r * cos lat2r * (1 - cos deltalong))
+  hav' = max (-1.0) (min 1.0 hav)
+  in
+    2.0 * r * hav'
 
 -- | Broad accommodation types
 data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local volunteers

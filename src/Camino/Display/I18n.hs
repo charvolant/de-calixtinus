@@ -594,8 +594,8 @@ renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 hasLocalisedText :: (Tagged a) => [Locale] -> Localised a -> Bool
 hasLocalisedText locales locd = maybe False (\t -> plainText t /= "") $ localise locales locd
 
-renderLocalisedText :: (Tagged a) => [Locale] -> Bool -> Bool -> Localised a -> Html
-renderLocalisedText locales attr js locd = let
+renderLocalisedText :: (Tagged a) => [Locale] -> Bool -> Bool -> Bool -> Localised a -> Html
+renderLocalisedText locales plain attr js locd = let
     elt = localise locales locd
     txt = maybe "" plainText elt
     txt' = if attr then replace "\"" "'" txt else txt
@@ -603,7 +603,7 @@ renderLocalisedText locales attr js locd = let
     loc = maybe rootLocale locale elt
     lng = localeLanguageTag loc
   in
-    if attr || Data.Text.null lng then
+    if plain || attr || Data.Text.null lng then
       toHtml txt''
     else
       H.span H.! HA.lang (toValue lng) $ Text.Blaze.Html.text txt''
@@ -649,13 +649,13 @@ renderLocalisedPublicHoliday :: Config -> [Locale] -> Text -> Html
 renderLocalisedPublicHoliday config locs rid = [shamlet|^{renderCaminoMsg config locs PublicHolidayText} (^{name})|]
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
-    name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False (regionName r)) region
+    name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False False (regionName r)) region
 
 renderLocalisedClosedDay :: Config -> [Locale] -> Text -> Html
 renderLocalisedClosedDay config locs rid = [shamlet|^{renderCaminoMsg config locs ClosedDayText} (^{name})|]
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
-    name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False (regionName r)) region
+    name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False False (regionName r)) region
 
 -- | Convert a message placeholder into actual HTML
 renderCaminoMsg :: Config -- ^ The configuration
@@ -682,8 +682,8 @@ renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
   |]
   where
    metrics = score day
-   start' = renderLocalisedText locales False False (locationName $ start day)
-   finish' = renderLocalisedText locales False False (locationName $ finish day)
+   start' = renderLocalisedText locales False False False (locationName $ start day)
+   finish' = renderLocalisedText locales False False False (locationName $ finish day)
 renderCaminoMsg _config locales (JourneySummaryMsg journey) = [shamlet|
   #{start'} to #{finish'}
   Total distance ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
@@ -693,12 +693,12 @@ renderCaminoMsg _config locales (JourneySummaryMsg journey) = [shamlet|
   |]
   where
    metrics = score journey
-   start' = renderLocalisedText locales False False (locationName $ start journey)
-   finish' = renderLocalisedText locales False False (locationName $ finish journey)
+   start' = renderLocalisedText locales False False False (locationName $ start journey)
+   finish' = renderLocalisedText locales False False False (locationName $ finish journey)
 renderCaminoMsg _config locales (LinkTitle locd defd) = if hasLocalisedText locales locd then
-    renderLocalisedText locales True False locd
+    renderLocalisedText locales True True False locd
   else
-    renderLocalisedText locales True False defd
+    renderLocalisedText locales True True False defd
 renderCaminoMsg config locales (ListMsg msgs) = [shamlet|
   <ul .comma-separated-list>
     $forall m <- msgs
@@ -707,12 +707,12 @@ renderCaminoMsg config locales (ListMsg msgs) = [shamlet|
 renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
 renderCaminoMsg config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderLocalisedDayOfWeek locales dow} ^{renderLocalisedBeforeAfter config locales nth}|]
 renderCaminoMsg config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderCaminoMsg config locales unit} ^{renderLocalisedBeforeAfter config locales nth}|]
-renderCaminoMsg config locales (NamedCalendarLabel key) = renderLocalisedText locales False False $ getCalendarName config key
+renderCaminoMsg config locales (NamedCalendarLabel key) = renderLocalisedText locales False False False $ getCalendarName config key
 renderCaminoMsg _config locales (NthWeekdayText nth dow) = [shamlet|^{renderLocalisedWeekOfMonth locales nth} ^{renderLocalisedDayOfWeek locales dow}|]
 renderCaminoMsg config locales (PublicHolidayLabel region) = renderLocalisedPublicHoliday config locales region
 renderCaminoMsg _config locales (Time time) = renderLocalisedTime locales "%H%M" time
-renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False locd
-renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales attr js locd
+renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False False locd
+renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales True attr js locd
 renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg
 
 -- | Render a camino message as un-markup text

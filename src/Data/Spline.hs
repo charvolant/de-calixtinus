@@ -15,11 +15,12 @@ module Data.Spline (
   , Spline(..)
   , SplineBoundary(..)
 
-  , makeBezier
+  , bezierAt
   , makeSpline
   , spline2ndDevs
   , splineAt
   , splineSlopeAt
+  , toBezier
 ) where
 
 -- | A spline piece
@@ -62,6 +63,16 @@ data (RealFrac a) => Bezier a = Bezier
   (a, a) -- ^ (x2, y2)
   (a, a) -- ^ (x3, y3)
   deriving (Eq, Ord, Show)
+
+-- | Evaluate a Bezier curve at a given point
+bezierAt :: (RealFrac a) => Bezier a -> a -> (a, a)
+bezierAt (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) x = let
+    t = (x - x0) / (x3 - x0)
+    t1 = 1.0 - t
+    x' = x0 * t1 * t1 * t1 + 3.0 * x1 * t * t1 * t1 + 3.0 * x2 * t * t * t1 + x3 * t * t * t
+    y' = y0 * t1 * t1 * t1 + 3.0 * y1 * t * t1 * t1 + 3.0 * y2 * t * t * t1 + y3 * t * t * t
+  in
+    (x', y')
 
 -- | Spline boundary conditions
 data (RealFrac a) => SplineBoundary a =
@@ -136,8 +147,8 @@ makeSpline'' xi1 yi1 xi yi y2i1 y2i = let
     Spline xi1 xi (a / (h * h * h)) (b / (h * h)) (c / h) d
 
 -- Convert a cubic spline into an equivalent cubic Bezier curve
-makeBezier :: (RealFrac a) => Spline a -> Bezier a
-makeBezier s@(Spline x0 x3 _a b c d) = let
+toBezier :: (RealFrac a) => Spline a -> Bezier a
+toBezier s@(Spline x0 x3 _a b c d) = let
     x1 = (2.0 * x0 + x3) / 3.0
     x2 = (x0 + 2.0 * x3) / 3.0
     y0 = d

@@ -76,6 +76,7 @@ caminoPrintOptions = buildPrintOptions [
   , def & foName .~ "ascent" & foNumberFormat .~ fieldIntFormat
   , def & foName .~ "descent" & foNumberFormat .~ fieldIntFormat
   , def & foName .~ "penance"  & foRemove .~ removeNull
+  , def & foName .~ "waypoints"  & foRemove .~ removeNullEmpty & foInlineChildren .~ inlineAlways
   , def & foName .~ "categories" & foRemove .~ removeNull & foInline .~ inlineAlways
   , def & foName .~ "calendar" & foRemove .~ removeNull
   , def & foName .~ "months" & foRemove .~ removeNull & foInline .~ inlineAlways & foNumberFormat .~ fieldIntFormat

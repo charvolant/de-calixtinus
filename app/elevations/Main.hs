@@ -79,6 +79,9 @@ mapPosition :: M.Map LatLong LatLngElevation -> LatLong -> LatLong
 mapPosition elevMap ll@(LatLong lat' long' Nothing srs') = maybe ll (\(LatLngElevation _loc elev' _res) -> LatLong lat' long' (roundElevation <$> elev') srs') $ M.lookup ll elevMap
 mapPosition elevMap ll = ll
 
+mapLeg :: M.Map LatLong LatLngElevation -> Leg -> Leg
+mapLeg elevMap leg = leg { legWaypoints = map (mapPosition elevMap) (legWaypoints leg) }
+
 mapPoi ::  M.Map LatLong LatLngElevation -> PointOfInterest -> PointOfInterest
 mapPoi elevMap poi = poi { poiPosition = mapPosition elevMap (poiPosition poi) }
 
@@ -93,19 +96,22 @@ mapCamino :: M.Map LatLong LatLngElevation -> Camino -> Camino
 mapCamino elevMap camino = let
   locations' = map (mapLocation elevMap) (caminoLocations camino)
   locations'' = M.fromList $ map (\l -> (locationID l, l)) locations'
+  legs' = map (mapLeg elevMap) (caminoLegs camino)
   in
     camino {
         caminoLocations = locations'
       , caminoLocationMap = locations''
+      , caminoLegs = legs'
     }
 
 addElevations :: MapApi -> Camino -> IO Camino
 addElevations api camino = do
   let locations = S.fromList $ caminoLocations camino
   let pois = S.fromList $ map fst $ M.elems $ caminoPoiMap camino
+  let waypoints = S.fromList $ concat $ map legWaypoints $ caminoLegs camino
   let lrequests = S.map locationPosition locations
   let prequests = S.map poiPosition pois
-  let requests = S.toList $ S.union lrequests prequests
+  let requests = S.toList $ S.unions [lrequests, prequests, waypoints]
   let requests' = map (\loc -> LatLng (latitude loc) (longitude loc)) requests
   elevations' <- getElevations api requests'
   let elevations'' = M.fromList $ zip requests elevations'

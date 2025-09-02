@@ -21,6 +21,7 @@ module Data.Aeson.Formatting (
   , fieldFixedFormat
   , fieldIntFormat
   , foInline
+  , foInlineChildren
   , foName
   , foNumberFormat
   , foRemove
@@ -57,6 +58,7 @@ data FieldOptions = FieldOptions {
     _foName :: Key
   , _foRemove :: Value -> Bool -- ^ Conditions under which a field will not be output
   , _foInline :: Value -> Bool -- ^ Conditions under which a field will be output inline
+  , _foInlineChildren :: Value -> Bool -- ^ Conditions under which children should default to be inline
   , _foWrap :: Maybe Int -- ^ If inlined data is to be wrapped, the number of elements on each line
   , _foNumberFormat :: Scientific -> B.Builder -- ^ Formatting for numbers
 } deriving (Generic)
@@ -64,7 +66,7 @@ data FieldOptions = FieldOptions {
 makeLenses ''FieldOptions
 
 instance Default FieldOptions where
-  def = FieldOptions "def" (const False) (const False) Nothing (B.stringUtf8 . show)
+  def = FieldOptions "def" (const False) (const False) (const False) Nothing (B.stringUtf8 . show)
 
 data PrintOptions = PrintOptions {
     _poFields :: M.Map Key FieldOptions
@@ -141,16 +143,17 @@ keyOrder po k1 k2 = case (mo1, mo2) of
     mo1 = M.lookup k1 order
     mo2 = M.lookup k2 order
 
-encodePretty' :: PrintOptions -> FieldOptions -> Int -> Value -> B.Builder
-encodePretty' _po _fo _indent Null = "null"
-encodePretty' _po _fo _indent(Bool b) = if b then "true" else "false"
-encodePretty' _po fo _indent (Number n) = (fo ^. foNumberFormat) n
-encodePretty' _po _fo _indent (String s) = textToLiteral s
-encodePretty' po fo indent v@(Array av) = let
-    inline = (fo ^. foInline) v
+encodePretty' :: PrintOptions -> FieldOptions -> Bool -> Int -> Value -> B.Builder
+encodePretty' _po _fo _pinline _indent Null = "null"
+encodePretty' _po _fo _pinline _indent(Bool b) = if b then "true" else "false"
+encodePretty' _po fo _pinline _indent (Number n) = (fo ^. foNumberFormat) n
+encodePretty' _po _fo _pinline _indent (String s) = textToLiteral s
+encodePretty' po fo pinline indent v@(Array av) = let
+    inline = pinline || (fo ^. foInline) v
+    cinline = pinline || (fo ^. foInlineChildren) v
     fo' = fo & foInline .~ (\v' -> (fo ^. foInline) v' && not (isObject v'))
     indent' = indent + (po ^. poIndent)
-    parts = map (encodePretty' po fo' indent') (V.toList av)
+    parts = map (encodePretty' po fo' cinline indent') (V.toList av)
     chunks = maybe [parts] (\n -> chunksOf n parts) (fo ^. foWrap)
     indentBuffer = makeIndentBuffer indent
     indentBuffer' = makeIndentBuffer indent'
@@ -170,8 +173,9 @@ encodePretty' po fo indent v@(Array av) = let
         "["
         <> (fst $ foldl (\(bs, follow) -> \b -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> b, True)) (mempty, False) parts)
         <> "\n" <> indentBuffer <> "]"
-encodePretty' po fo indent v@(Object km) = let
-    inline = (fo ^. foInline) v
+encodePretty' po fo pinline indent v@(Object km) = let
+    inline = pinline || (fo ^. foInline) v
+    cinline = pinline || (fo ^. foInlineChildren) v
     indent' = indent + (po ^. poIndent)
     indentBuffer = makeIndentBuffer indent
     indentBuffer' = makeIndentBuffer indent'
@@ -183,7 +187,7 @@ encodePretty' po fo indent v@(Object km) = let
           if (fo' ^. foRemove) mv then
               (k, Nothing)
             else
-              (k, Just (encodePretty' po fo' indent' mv))
+              (k, Just (encodePretty' po fo' cinline indent' mv))
         ) ko
   in
     if null parts then
@@ -199,4 +203,4 @@ encodePretty' po fo indent v@(Object km) = let
         <> "\n" <> indentBuffer <> "}"
 
 encodePretty :: PrintOptions -> Value -> LB.ByteString
-encodePretty po val = B.toLazyByteString $ encodePretty' po def 0 val
+encodePretty po val = B.toLazyByteString $ encodePretty' po def False 0 val

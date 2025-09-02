@@ -211,26 +211,26 @@ location4 = Location {
   
 
 legs0 = [
-  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
 legs1 = [
-  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing },
-  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
   
 legs2 = [
-  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legDescription = Nothing },
-  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing },
-  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legDescription = Nothing }
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
+  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = []}
   ]
 
 legs4 = [
-  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing }
+  Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
 links1 = [
-  Leg { legType = BusLink, legFrom = location1, legTo = location2, legDistance = 0.0, legTime = Just 0.5, legAscent = 0, legDescent = 0, legPenance = Nothing, legDescription = Nothing }
+  Leg { legType = BusLink, legFrom = location1, legTo = location2, legDistance = 0.0, legTime = Just 0.5, legAscent = 0, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
 route1 = Route { 

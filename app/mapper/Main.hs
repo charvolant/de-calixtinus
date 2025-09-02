@@ -36,14 +36,15 @@ poiLabel poi =
 
 printLocation :: Location -> IO ()
 printLocation l = do
-  putStr $ unpack $ locFormat id' name' lat' lon' region' pois'
+  putStr $ unpack $ locFormat id' name' lat' lon' elv' region' pois'
   where
-    locFormat = sformat (stext % " " % stext % " " % fixed 5 % "," % fixed 5 % " " % stext % " " % stext % "\n")
+    locFormat = sformat (stext % " " % stext % " " % fixed 5 % "," % fixed 5 % "," % stext % " " % stext % " " % stext % "\n")
     id' = locationID l
     name' = locationNameLabel l
     position' = locationPosition l
     lat' = latitude position'
     lon' = longitude position'
+    elv' = maybe "-" (sformat (fixed 0)) (elevation position')
     region' = maybe "-" (\r -> "(" <> (regionID r) <> ")") (locationRegion l)
     pois' = intercalate ", " $ map poiLabel (locationPois l)
 

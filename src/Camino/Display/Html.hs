@@ -1413,7 +1413,7 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
   pilgrimageLabel pilg loc = loc == start pilg || elem loc (map finish (path pilg)) || (S.member loc $ preferenceStops camino) || (S.member loc $ preferenceRestPoints camino)
   pilgrimageImportant pilg loc = loc == start pilg || loc == finish pilg
   (_minll, maxll) = caminoBbox (preferenceCamino camino)
-  maxelev = 100.0 * (fromIntegral $ (ceiling (maybe 1000.0 id (elevation maxll) / 100.0) :: Int))
+  maxelev = realToFrac $ ceilingBy 500.0 (maybe 1000.0 id (elevation maxll))
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapHtml _preferences _camino _solution = [ihamlet|
@@ -1675,8 +1675,9 @@ $forall location <- locations
         marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
 $forall leg <- legs
   line = L.polyline([
-    [#{latitude (locationPosition $ legFrom leg)}, #{longitude (locationPosition $ legFrom leg)}],
-    [#{latitude (locationPosition $ legTo leg)}, #{longitude (locationPosition $ legTo leg)}]
+      [#{latitude (locationPosition $ legFrom leg)}, #{longitude (locationPosition $ legFrom leg)}]
+  $forall seg <- legSegments leg
+    , [#{latitude (lsTo seg)}, #{longitude (lsTo seg)}]
   ], {
      color: '#{chooseColour leg}',
      weight: #{chooseWidth leg},

@@ -16,12 +16,15 @@ module Data.Spline (
   , SplineBoundary(..)
 
   , bezierAt
+  , bezierSlopeAt
   , makeSpline
   , spline2ndDevs
   , splineAt
   , splineSlopeAt
   , toBezier
 ) where
+
+import Debug.Trace
 
 -- | A spline piece
 --   The spline piece runs from x0 to x1 (x0 < x1) with the equation
@@ -74,6 +77,15 @@ bezierAt (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) x = let
   in
     (x', y')
 
+bezierSlopeAt :: (RealFrac a) => Bezier a -> a -> (a, a)
+bezierSlopeAt (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) x = let
+    t = (x - x0) / (x3 - x0)
+    t1 = 1.0 - t
+    x' = (-3.0) * x0 * t1 * t1 + 3.0 * x1 * (t1 * t1 - 2.0 * t * t1) + 3.0 * x2 * (2 * t * t1 - t * t) + 3.0 * x3 * t * t
+    y' = (-3.0) * y0 * t1 * t1 + 3.0 * y1 * (t1 * t1 - 2.0 * t * t1) + 3.0 * y2 * (2 * t * t1 - t * t) + 3.0 * y3 * t * t
+  in
+    (x', y')
+
 -- | Spline boundary conditions
 data (RealFrac a) => SplineBoundary a =
   NaturalBoundary -- ^ Natural boundary conditions, where y'' = 0 and the spline continues on its natural incoming slope
@@ -82,10 +94,10 @@ data (RealFrac a) => SplineBoundary a =
 
 -- Compute the second dervivatives of the spline
 -- Based on Numerical Recipes in C, 2nd ed, p115
-spline2ndDevs :: (RealFrac a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [a]
+spline2ndDevs :: (RealFrac a, Show a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [a]
 spline2ndDevs _sb0 _sbn [] = error "No points for spline"
 spline2ndDevs _sb0 _sbn [_] = error "Require at least two points for spline"
-spline2ndDevs NaturalBoundary sbn (p1@(x1, y1):rest@((x2, y2):_)) = let
+spline2ndDevs NaturalBoundary sbn (p1@(x1, y1):rest@(_:_)) = let
     u1 = 0.0
     y21 = 0.0
     (y2'2, y2s) = spline2ndDevs' sbn u1 y21 p1 rest
@@ -100,11 +112,11 @@ spline2ndDevs (ClampBoundary s) sbn (p1@(x1, y1):rest@((x2, y2):_)) = let
   in
     y21':y2s
 
-spline2ndDevs' :: (RealFrac a) => SplineBoundary a -> a -> a -> (a, a) -> [(a, a)] -> (a, [a])
+spline2ndDevs' :: (RealFrac a, Show a) => SplineBoundary a -> a -> a -> (a, a) -> [(a, a)] -> (a, [a])
 spline2ndDevs' _sb _ui1 _y2i1 _pi1 [] = error "Empty spline coordinates"
 spline2ndDevs' NaturalBoundary _ui1 _y2i1 _pi1 [_pi] = (y2i, [y2i])
   where
-    y2i = 0.0 -- (ui - qi * ui1) / (qi * y2i1 +1.0) where ui = qu = 0.0
+    y2i = 0.0 -- (ui - qi * ui1) / (qi * y2i1 +1.0) where ui = qi = 0.0
 spline2ndDevs' (ClampBoundary s) ui1 y2i1 (xi1, yi1) [(xi, yi)] = (y2i, [y2i])
   where
     qi = 0.5
@@ -112,10 +124,10 @@ spline2ndDevs' (ClampBoundary s) ui1 y2i1 (xi1, yi1) [(xi, yi)] = (y2i, [y2i])
     y2i = (ui - qi * ui1) / (qi * y2i1 +1.0)
 spline2ndDevs' sbn ui1 y2i1 (xi1, yi1) ((pi'@(xi, yi)):rest@((xi'1, yi'1):_)) = let
     sig = (xi -xi1) / (xi'1 - xi1)
-    p= sig * y2i1 + 2.0
+    p = sig * y2i1 + 2.0
     y2i = (sig - 1.0) / p;
     ui = (yi'1 - yi) / (xi'1 - xi) - (yi - yi1) / (xi -xi1)
-    ui'= (6.0 * ui / (xi'1 - xi1) - sig * ui1) / p
+    ui'= 6.0 * ui / (xi'1 - xi1) - sig * ui1 / p
     (y2'i, y2s) = spline2ndDevs' sbn ui' y2i pi' rest
     y2i'=y2i * y2'i + ui'
   in
@@ -124,7 +136,7 @@ spline2ndDevs' sbn ui1 y2i1 (xi1, yi1) ((pi'@(xi, yi)):rest@((xi'1, yi'1):_)) = 
 -- Create a piecewise spline, with each point between x0 = x[i] and x[i + 1] modelled
 -- by a cubic equation y = a * (x - x0)^3 + b * (x - x0)^2 + c * (x - x0) + d
 -- The result is a vector of (x[i], x[i+1], a, b, c, d) one less than the original data
-makeSpline :: (RealFrac a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [Spline a]
+makeSpline :: (RealFrac a, Show a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [Spline a]
 makeSpline sb1 sbn points = let
     y2s = spline2ndDevs sb1 sbn points
   in

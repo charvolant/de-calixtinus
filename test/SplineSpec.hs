@@ -1,7 +1,13 @@
+{-# LANGUAGE OverloadedStrings #-}
 module SplineSpec(testSpline) where
 
 import Test.HUnit
+import Control.Monad
+import Data.Default.Class
+import Data.Placeholder
 import Data.Spline
+import Camino.Camino
+import Camino.Display.SVG
 import TestUtils
 
 testSpline :: Test
@@ -11,6 +17,7 @@ testSpline = TestList [
   , TestLabel "SplineSecondDevs" testSplineSecondDevs
   , TestLabel "MakeSpline" testSplineMakeSpline
   , TestLabel "ToBezier" testToBezier
+  , TestLabel "SVG" testSVGSpline
   ]
 
 spline1 = Spline 0.0 1.0 1.0 2.0 3.0 4.0 :: Spline Float
@@ -203,7 +210,13 @@ testToBezier1 = TestCase (do
   assertFloatEqual "To Bezier 1 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 1 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
   assertFloatEqual "To Bezier 1 2" (splineAt spline 1.0) (snd $ bezierAt bezier 1.0) 0.001
-  )
+  let (sx1, sy1) = bezierSlopeAt bezier 0.0
+  assertFloatEqual "To Bezier 1 4" (splineSlopeAt spline 0.0) (sy1 / sx1) 0.001
+  let (sx2, sy2) = bezierSlopeAt bezier 0.5
+  assertFloatEqual "To Bezier 1 5" (splineSlopeAt spline 0.5) (sy2 / sx2) 0.001
+  let (sx3, sy3) = bezierSlopeAt bezier 1.0
+  assertFloatEqual "To Bezier 1 6" (splineSlopeAt spline 1.0) (sy3 / sx3) 0.001
+ )
 
 testToBezier2 = TestCase (do
   let [spline] = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 1.0)]
@@ -211,6 +224,12 @@ testToBezier2 = TestCase (do
   assertFloatEqual "To Bezier 2 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 2 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
   assertFloatEqual "To Bezier 2 2" (splineAt spline 1.0) (snd $ bezierAt bezier 1.0) 0.001
+  let (sx1, sy1) = bezierSlopeAt bezier 0.0
+  assertFloatEqual "To Bezier 2 4" (splineSlopeAt spline 0.0) (sy1 / sx1) 0.001
+  let (sx2, sy2) = bezierSlopeAt bezier 0.5
+  assertFloatEqual "To Bezier 2 5" (splineSlopeAt spline 0.5) (sy2 / sx2) 0.001
+  let (sx3, sy3) = bezierSlopeAt bezier 1.0
+  assertFloatEqual "To Bezier 2 6" (splineSlopeAt spline 1.0) (sy3 / sx3) 0.001
   )
 
 testToBezier3 = TestCase (do
@@ -219,6 +238,12 @@ testToBezier3 = TestCase (do
   assertFloatEqual "To Bezier 3 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 3 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
   assertFloatEqual "To Bezier 3 2" (splineAt spline 1.0) (snd $ bezierAt bezier 1.0) 0.001
+  let (sx1, sy1) = bezierSlopeAt bezier 0.0
+  assertFloatEqual "To Bezier 3 4" (splineSlopeAt spline 0.0) (sy1 / sx1) 0.001
+  let (sx2, sy2) = bezierSlopeAt bezier 0.5
+  assertFloatEqual "To Bezier 3 5" (splineSlopeAt spline 0.5) (sy2 / sx2) 0.001
+  let (sx3, sy3) = bezierSlopeAt bezier 1.0
+  assertFloatEqual "To Bezier 3 6" (splineSlopeAt spline 1.0) (sy3 / sx3) 0.001
   )
 
 testToBezier4 = TestCase (do
@@ -231,6 +256,18 @@ testToBezier4 = TestCase (do
   assertFloatEqual "To Bezier 4 4" (splineAt sp2 1.0) (snd $ bezierAt bz2 1.0) 0.001
   assertFloatEqual "To Bezier 4 5" (splineAt sp2 1.5) (snd $ bezierAt bz2 1.5) 0.001
   assertFloatEqual "To Bezier 4 6" (splineAt sp2 2.0) (snd $ bezierAt bz2 2.0) 0.001
+  let (sx1, sy1) = bezierSlopeAt bz1 0.0
+  assertFloatEqual "To Bezier 4 7" (splineSlopeAt sp1 0.0) (sy1 / sx1) 0.001
+  let (sx2, sy2) = bezierSlopeAt bz1 0.5
+  assertFloatEqual "To Bezier 4 8" (splineSlopeAt sp1 0.5) (sy2 / sx2) 0.001
+  let (sx3, sy3) = bezierSlopeAt bz1 1.0
+  assertFloatEqual "To Bezier 4 9" (splineSlopeAt sp1 1.0) (sy3 / sx3) 0.001
+  let (sx4, sy4) = bezierSlopeAt bz2 1.0
+  assertFloatEqual "To Bezier 4 10" (splineSlopeAt sp2 1.0) (sy4 / sx4) 0.001
+  let (sx5, sy5) = bezierSlopeAt bz2 1.5
+  assertFloatEqual "To Bezier 4 11" (splineSlopeAt sp2 1.5) (sy5 / sx5) 0.001
+  let (sx6, sy6) = bezierSlopeAt bz2 2.0
+  assertFloatEqual "To Bezier 4 12" (splineSlopeAt sp2 2.0) (sy6 / sx6) 0.001
   )
 
 testToBezier5 = TestCase (do
@@ -259,6 +296,12 @@ testToBezier6 = TestCase (do
   assertFloatEqual "To Bezier 6 7" (splineAt sp3 2.0) (snd $ bezierAt bz3 2.0) 0.001
   assertFloatEqual "To Bezier 6 8" (splineAt sp3 3.5) (snd $ bezierAt bz3 3.5) 0.001
   assertFloatEqual "To Bezier 6 9" (splineAt sp3 4.0) (snd $ bezierAt bz3 4.0) 0.001
+  let (sx1, sy1) = bezierSlopeAt bz1 0.5
+  assertFloatEqual "To Bezier 6 10" (splineSlopeAt sp1 0.5) (sy1 / sx1) 0.001
+  let (sx2, sy2) = bezierSlopeAt bz2 1.5
+  assertFloatEqual "To Bezier 6 11" (splineSlopeAt sp2 1.5) (sy2 / sx2) 0.001
+  let (sx3, sy3) = bezierSlopeAt bz3 3.5
+  assertFloatEqual "To Bezier 6 12" (splineSlopeAt sp3 3.5) (sy3 / sx3) 0.001
   )
 
 testToBezier7 = TestCase (do
@@ -266,5 +309,74 @@ testToBezier7 = TestCase (do
   assertFloatEqual "To Bezier 6 1" (splineAt spline1 0.0) (snd $ bezierAt bz1 0.0) 0.001
   assertFloatEqual "To Bezier 6 2" (splineAt spline1 0.5) (snd $ bezierAt bz1 0.5) 0.001
   assertFloatEqual "To Bezier 6 2" (splineAt spline1 1.0) (snd $ bezierAt bz1 1.0) 0.001
+  let (sx1, sy1) = bezierSlopeAt bz1 0.0
+  assertFloatEqual "To Bezier 3 4" (splineSlopeAt spline1 0.0) (sy1 / sx1) 0.001
+  let (sx2, sy2) = bezierSlopeAt bz1 0.5
+  assertFloatEqual "To Bezier 3 5" (splineSlopeAt spline1 0.5) (sy2 / sx2) 0.001
+  let (sx3, sy3) = bezierSlopeAt bz1 1.0
+  assertFloatEqual "To Bezier 3 6" (splineSlopeAt spline1 1.0) (sy3 / sx3) 0.001
   )
 
+-- Test against difficult cases
+testSVGSpline = TestList [
+    testSVGSpline1
+  ]
+
+location1 :: Location
+location1 = (placeholder "P-P275") { locationPosition = LatLong 42.82827 (-8.60971) (Just 128) def }
+
+location2 :: Location
+location2 = (placeholder "P-P276") { locationPosition = LatLong 42.83347 (-8.60106) (Just 164) def }
+
+location3 :: Location
+location3 = (placeholder "P-P277") { locationPosition = LatLong 42.84746 (-8.58026) (Just 244) def }
+
+location4 :: Location
+location4 = (placeholder "P-P278") { locationPosition = LatLong 42.85097 (-8.57719) (Just 220) def }
+
+location5 :: Location
+location5 = (placeholder "P-P279") { locationPosition = LatLong 42.86016 (-8.57696) (Just 206) def }
+
+withSegments :: Leg -> Leg
+withSegments leg = leg {
+    legSegments = buildLegSegments (legFrom leg) (legTo leg) (legWaypoints leg) (legDistance leg) (legAscent leg) (legDescent leg)
+  }
+
+leg1 = withSegments $ Leg Road location1 location2 Nothing 1.19 Nothing 35 0 Nothing [] []
+
+leg2 = withSegments $ Leg Road location2 location3 Nothing 2.40 Nothing 85 5 Nothing [] []
+
+leg3 = withSegments $ Leg Road location3 location4 Nothing 1.22 Nothing 5 30 Nothing waypoints []
+  where
+    waypoints = [
+        LatLong 42.84846 (-8.58008) (Just 246) def
+      , LatLong 42.84816 (-8.57802) (Just 230) def
+      ]
+
+leg4 = withSegments $ Leg Road location4 location4 Nothing 1.58 Nothing 30 40 Nothing [] []
+
+testSVGSpline1 = TestCase (do
+  let legs = [leg1, leg2, leg3, leg4]
+  let coords = buildCoordinates legs
+  let coords' = map (\(d, me, _) -> (d, maybe 0.0 id me)) coords
+  let sps = makeSpline NaturalBoundary NaturalBoundary coords'
+  assertEqual "SVG Spline 1 1" 6 (length sps)
+  let sp1 = sps !! 0
+  let sp2 = sps !! 1
+  let sp3 = sps !! 2
+  let sp4 = sps !! 3
+  let sp5 = sps !! 4
+  let sp6 = sps !! 5
+  assertFloatEqual "SVG Spline 1 2" 128.0 (splineAt sp1 0.000) 0.1
+  assertFloatEqual "SVG Spline 1 3" 164.0 (splineAt sp2 1.190) 0.1
+  assertFloatEqual "SVG Spline 1 4" 244.0 (splineAt sp3 3.590) 0.1
+  assertFloatEqual "SVG Spline 1 5" 246.0 (splineAt sp4 3.817) 0.1
+  assertFloatEqual "SVG Spline 1 6" 230.0 (splineAt sp5 4.163) 0.1
+  assertFloatEqual "SVG Spline 1 7" 220.0 (splineAt sp6 6.390) 0.1
+  assertBool "SVG Spline 1 8" (all (\x -> splineAt sp1 x >= 128.0 && splineAt sp1 x <= 164.0) [0.000, 0.001 .. 1.190])
+  assertBool "SVG Spline 1 9" (all (\x -> splineAt sp2 x >= 164.0 && splineAt sp2 x <= 244.0) [1.190, 0.001 .. 3.590])
+  forM [3.590, 0.001 .. 3.817] (\x -> assertBool ("SVG Spline 1 10 " ++ (show x) ++ "=" ++ (show $ splineAt sp3 x)) (splineAt sp3 x >= 243.5 && splineAt sp3 x <= 246.5))
+  forM [3.817, 0.001 .. 4.163] (\x -> assertBool ("SVG Spline 1 11 " ++ (show x) ++ "=" ++ (show $ splineAt sp4 x)) (splineAt sp4 x >= 229.5 && splineAt sp4 x <= 246.5))
+  forM [4.163, 0.001 .. 4.810] (\x -> assertBool ("SVG Spline 1 12 " ++ (show x) ++ "=" ++ (show $ splineAt sp5 x)) (splineAt sp5 x >= 219.5 && splineAt sp5 x <= 230.5))
+  assertBool "SVG Spline 1 13" (all (\x -> splineAt sp6 x >= 206.0 && splineAt sp6 x <= 220.0) [4.163, 0.001 .. 6.390])
+  )

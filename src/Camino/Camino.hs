@@ -28,6 +28,7 @@ module Camino.Camino (
   , HasCaminoConfig(..)
   , LatLong(..)
   , Leg(..)
+  , LegSegment(..)
   , LegType(..)
   , Location(..)
   , LocationType(..)
@@ -39,6 +40,7 @@ module Camino.Camino (
   , RouteLogic(..)
   , Service(..)
   , Sleeping(..)
+  , SRS(..)
   , Travel(..)
 
   , module Graph.Programming
@@ -52,6 +54,7 @@ module Camino.Camino (
   , accommodationTypeEnumeration
   , accommodationServices
   , accommodationSleeping
+  , buildLegSegments -- For testing only
   , caminoBbox
   , caminoDump
   , caminoLegRoute
@@ -120,12 +123,13 @@ import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Summary
 import Data.Text (Text, isPrefixOf, pack, unpack)
 import qualified Data.Text as T
-import Data.Util (headWithError)
+import Data.Util (headWithError, lastWithError)
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
 import Text.Read (readMaybe)
+import Debug.Trace
 
 -- For debugging
 -- _traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v
@@ -1030,6 +1034,18 @@ instance NFData LegType
 instance Default LegType where
   def = Road
 
+-- | A leg segment is a convienient part of a leg
+--   It is used to partition up complex legs into segments that can be processed easily
+data LegSegment = LegSegment {
+    lsFrom :: LatLong
+  , lsTo :: LatLong
+  , lsDistance :: Float
+  , lsAscent :: Float
+  , lsDescent :: Float
+} deriving (Eq, Show, Generic)
+
+instance NFData LegSegment
+
 -- | A leg from one location to another.
 --   Legs form the edges of a camino graph.
 -- 
@@ -1046,6 +1062,8 @@ data Leg = Leg {
   , legAscent :: Float -- ^ The total ascent on the leg in metres
   , legDescent :: Float -- ^ The total descent on the leg in metres
   , legPenance :: Maybe Penance -- ^ Any additional penance associated with the leg
+  , legWaypoints :: [LatLong] -- ^ Intermediate waypoints on the leg, usually empty
+  , legSegments :: [LegSegment] -- ^ Pre-calculated leg segments
 } deriving (Show, Generic)
 
 instance FromJSON Leg where
@@ -1059,12 +1077,25 @@ instance FromJSON Leg where
       ascent' <- v .: "ascent"
       descent' <- v .: "descent"
       penance' <- v .:? "penance" .!= Nothing
+      waypoints' <- v .:? "waypoints" .!= []
 
-      return Leg { legType = type', legFrom = from', legTo = to', legDescription = description',  legDistance = distance', legTime = time',  legAscent = ascent', legDescent = descent', legPenance = penance' }
+      return Leg {
+          legType = type'
+        , legFrom = from'
+        , legTo = to'
+        , legDescription = description'
+        , legDistance = distance'
+        , legTime = time'
+        , legAscent = ascent'
+        , legDescent = descent'
+        , legPenance = penance'
+        , legWaypoints = waypoints'
+        , legSegments = []
+        }
     parseJSON v = error ("Unable to parse leg object " ++ show v)
 
 instance ToJSON Leg where
-  toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance') =
+  toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance' waypoints' _segments') =
       object [
           "type" .= (if type' == def then Nothing else Just type')
         , "from" .= locationID from'
@@ -1075,8 +1106,9 @@ instance ToJSON Leg where
         , "ascent" .= ascent'
         , "descent" .= descent'
         , "penance" .= penance'
+        , "waypoints" .= if null waypoints' then Nothing else Just waypoints'
         ]
-  toEncoding (Leg type' from' to' description' distance' time' ascent' descent' penance') =
+  toEncoding (Leg type' from' to' description' distance' time' ascent' descent' penance' waypoints' _segments') =
       pairs $
           "type" .?= (if type' == def then Nothing else Just type')
         <> "from" .= locationID from'
@@ -1087,6 +1119,7 @@ instance ToJSON Leg where
         <> "ascent" .= ascent'
         <> "descent" .= descent'
         <> "penance" .?= penance'
+        <> "waypoints" .?= if null waypoints' then Nothing else Just waypoints'
 
 instance NFData Leg
 
@@ -1111,17 +1144,56 @@ instance Summary Leg where
 normaliseLeg :: Camino -> Leg -> Leg
 normaliseLeg camino leg =
   leg {
-      legFrom = dereference camino (legFrom leg)
-    , legTo = dereference camino (legTo leg)
-  }
+      legFrom = lf
+    , legTo = lt
+    , legSegments = segs
+  } where
+    lf = dereference camino (legFrom leg)
+    lt = dereference camino (legTo leg)
+    segs = buildLegSegments lf lt (legWaypoints leg) (legDistance leg) (legAscent leg) (legDescent leg)
 
 -- | Ensure a leg has locations mapped correctly within a camino, using the full camino config
 normaliseLeg' :: CaminoConfig -> Leg -> Leg
 normaliseLeg' config leg =
   leg {
-      legFrom = dereference config (legFrom leg)
-    , legTo = dereference config (legTo leg)
-  }
+      legFrom = lf
+    , legTo = lt
+    , legSegments = segs
+  } where
+    lf = dereference config (legFrom leg)
+    lt = dereference config (legTo leg)
+    segs = buildLegSegments lf lt (legWaypoints leg) (legDistance leg) (legAscent leg) (legDescent leg)
+
+-- Portion out distance and elevation changes to segments, based on the distance between points
+buildLegSegments :: Location -> Location -> [LatLong] -> Float -> Float -> Float -> [LegSegment]
+buildLegSegments fl tl [] distance ascent descent = let
+    fll = locationPosition fl
+    tll = locationPosition tl
+  in
+    [LegSegment fll tll distance ascent descent]
+buildLegSegments fl tl waypoints distance ascent descent = let
+    fll = locationPosition fl
+    tll = locationPosition tl
+    llpairs = (snd $ foldl (\(sp, ps) -> \p -> (p, ps ++ [(sp, p)])) (fll, []) waypoints) ++ [(lastWithError waypoints, tll)]
+    dists = map (\(sp, ep) -> realToFrac $ haversineDistance sp ep / 1000.0) llpairs -- Distance weights
+    tdist = max 0.01 (sum dists)
+    tdist' = if distance == 0.0 then (realToFrac $ haversineDistance fll tll / 1000.0) else distance
+    dists' = map (\d -> d / tdist * tdist') dists -- Matching actual distance
+    mdelevs = map (\(sp, ep) -> realToFrac <$> ((-) <$> elevation ep <*> elevation sp)) llpairs
+    ascs = map (\me -> maybe 0.0 (\e -> if e >= 0 then e else 0.0) me) mdelevs
+    dscs = map (\me -> maybe 0.0 (\e -> if e < 0 then negate e else 0.0) me) mdelevs
+    usedasc = sum ascs
+    useddsc = sum dscs
+    slop = 20.0 -- A bit left over for everyone
+    unusedasc = if ascent < usedasc then error ("Total ascent is less than provided ascent from " ++ (T.unpack $ locationID fl) ++ " - " ++ show fll ++ " to " ++ (T.unpack $ locationID tl) ++ " - " ++ show tll ++ " expected=" ++ show ascent ++ " actual=" ++ show ascs ++ "=" ++ show usedasc) else ascent - usedasc
+    unuseddsc = if descent < useddsc then error ("Total descent is less than provided descent from " ++ (T.unpack $ locationID fl) ++ " - " ++ show fll ++ " to " ++ (T.unpack $ locationID tl) ++ " - " ++ show tll ++ " expected=" ++ show descent ++ " actual=" ++ show dscs ++ "=" ++ show useddsc) else descent - useddsc
+    ascprop = unusedasc / (usedasc + tdist' * slop)
+    dscprop = unuseddsc / (useddsc + tdist' * slop)
+    ascs' = map (\(d, u) -> u + (slop * d + u) * ascprop) (zip dists' ascs)
+    dscs' = map (\(d, u) -> u + (slop * d + u) * dscprop) (zip dists' dscs)
+    segs = map (\((sp, ep), d, asc, dsc) -> LegSegment sp ep d asc dsc) (L.zip4 llpairs dists' ascs' dscs')
+  in
+    segs
 
 -- Make Colour NFData
 -- Colour is already strict, so leave it be

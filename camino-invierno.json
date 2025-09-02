@@ -2424,7 +2424,10 @@
       "to": "W-W38",
       "distance": 0.62,
       "ascent": 80,
-      "descent": 25
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.54116, "longitude": -7.62146, "elevation": 479 }
+      ]
     },
     {
       "from": "W-W38",
@@ -2710,8 +2713,12 @@
       "from": "W-W78",
       "to": "W-W79",
       "distance": 2.12,
-      "ascent": 50,
-      "descent": 50
+      "ascent": 55,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.83069, "longitude": -8.49090, "elevation": 189 },
+        { "latitude": 42.83420, "longitude": -8.49448, "elevation": 230 }
+      ]
     },
     {
       "from": "W-W79",

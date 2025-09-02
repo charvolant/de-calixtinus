@@ -45,7 +45,7 @@
       "type": "Town",
       "position": { "latitude": 42.92732, "longitude": -8.16037, "elevation": 388 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Pharmacy", "Bank", "BicycleRepair", "Groceries", "Medical", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "Xunta de Galicia Arzúa Pilgrims Hostel",
@@ -56,7 +56,7 @@
         {
           "name": "De Camino Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
@@ -95,7 +95,7 @@
         {
           "name": "Camiño das Ocas Hostel and Boarding House",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
         }
       ]
@@ -111,13 +111,13 @@
         {
           "name": "Taberna Bella - Heidi's Place",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "A Chousa",
           "type": "CasaRural",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Dinner", "Lockers", "Accessible", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Quadruple" ]
         }
       ]
@@ -142,13 +142,13 @@
         {
           "name": "A Ponte de Ferreiros Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating", "Prayer" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Prayer" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Casa do Hórreo",
           "type": "CasaRural",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
@@ -170,25 +170,25 @@
         {
           "name": "La Corona Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "Triple", "Quadruple" ]
         },
         {
           "name": "Casa Tia Teresa Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Stables", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Double", "DoubleWC", "Triple" ]
         },
         {
           "name": "Salceda Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "DoubleWC", "Triple" ]
         },
         {
           "name": "Pensión Tasaga",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Dinner", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -204,13 +204,13 @@
         {
           "name": "O Mesón Boarding House",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Mar de Frisia Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Pool", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared", "Double", "DoubleWC" ]
         }
       ]
@@ -226,25 +226,25 @@
         {
           "name": "Xunta de Galicia Santa Irene Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Stables", "BicycleStorage", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Stables", "BicycleStorage", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Santa Irene Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Astrar Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Stables", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Stables", "BicycleStorage" ],
           "sleeping": [ "Shared", "Double", "DoubleWC", "Quadruple" ]
         },
         {
           "name": "Andaina Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared", "Triple", "Quadruple" ]
         }
       ]
@@ -260,25 +260,25 @@
         {
           "name": "Espíritu Xacobeo Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "DoubleWC", "Quadruple" ]
         },
         {
           "name": "Casa da Galega",
           "type": "GuestHouse",
-          "services": [ "Kitchen", "Lockers", "Heating" ],
+          "services": [ "Heating", "Kitchen", "Lockers" ],
           "sleeping": [ ]
         },
         {
           "name": "O Acivro",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Pool", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "DoubleWC", "TripleWC", "QuadrupleWC" ]
         },
         {
           "name": "O Pino",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Stables", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
@@ -295,18 +295,18 @@
       "type": "Town",
       "position": { "latitude": 42.90726, "longitude": -8.36406, "elevation": 288 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Pharmacy", "Bank", "BicycleRepair", "Groceries", "Medical", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "Porta de Santiago Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Arca do Pino Xunta de Galicia Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Stables", "BicycleStorage", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Stables", "BicycleStorage", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         "PrivateAlbergue",
@@ -324,19 +324,19 @@
         {
           "name": "Kilómetro 15 Boarding House",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Lockers", "Accessible", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Lockers", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         },
         {
           "name": "CHE Hostel",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "Amenal Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
       ]
@@ -356,48 +356,48 @@
       "type": "Village",
       "position": { "latitude": 42.90074, "longitude": -8.44485, "elevation": 302 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Pharmacy", "Groceries", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [
         {
           "name": "O Fogar de Maru",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Labacolla Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Stables", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Stables", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "Double", "Quadruple" ]
         },
         {
           "name": "Pazo Xan Xordo",
           "type": "CasaRural",
-          "services": [ "WiFi", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
         },
         {
           "name": "La Concha Hostal",
           "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
         {
           "name": "Ruta Jacobea Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Hotel Restaurante San Paio",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "Garcas Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ]
@@ -413,7 +413,7 @@
         {
           "name": "Casa de Amancio",
           "type": "CasaRural",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
       ]
@@ -429,7 +429,7 @@
         {
           "name": "Akelarre Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         }
       ]
@@ -440,18 +440,18 @@
       "type": "Village",
       "position": { "latitude": 42.88802, "longitude": -8.50179, "elevation": 311 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Bank", "Groceries", "Medical" ],
+      "services": [ "Restaurant", "Groceries", "Medical", "Bank" ],
       "accommodation": [
         {
           "name": "Xunta de Galicia Monte del Gozo Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Accessible", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Accessible", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Monte del Gozo Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Pool", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared", "DoubleWC", "Quadruple" ]
         },
         {
@@ -463,7 +463,7 @@
         {
           "name": "Santiago Apóstol Hotel",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Breakfast", "Accessible", "Pets", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Accessible", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "TripleWC" ]
         }
       ],
@@ -504,8 +504,11 @@
       "from": "F-F237",
       "to": "F-F238",
       "distance": 1.73,
-      "ascent": 60,
-      "descent": 35
+      "ascent": 50,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.92771, "longitude": -8.20095, "elevation": 369 }
+      ]
     },
     {
       "from": "F-F238",

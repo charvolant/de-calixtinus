@@ -1122,7 +1122,7 @@
       "id": "BM-65",
       "name": "Castle Rock",
       "type": "Village",
-      "position": { "latitude": -33.80455, "longitude": 151.25296, "elevation": 3 },
+      "position": { "latitude": -33.81141, "longitude": 151.25932, "elevation": 17 },
       "region": "AU-NSW",
       "services": [ ],
       "accommodation": [ ]
@@ -1420,8 +1420,8 @@
       "from": "BM-3",
       "to": "BM-4",
       "distance": 1.40,
-      "ascent": 25,
-      "descent": 50
+      "ascent": 20,
+      "descent": 0
     },
     {
       "from": "BM-4",
@@ -1434,22 +1434,25 @@
       "from": "BM-5",
       "to": "BM-6",
       "distance": 0.71,
-      "ascent": 45,
-      "descent": 25
+      "ascent": 30,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": -33.86572, "longitude": 151.28070, "elevation": 61 }
+      ]
     },
     {
       "from": "BM-6",
       "to": "BM-7",
       "distance": 1.26,
-      "ascent": 90,
-      "descent": 80
+      "ascent": 50,
+      "descent": 15
     },
     {
       "from": "BM-7",
       "to": "BM-8",
       "distance": 0.88,
-      "ascent": 40,
-      "descent": 50
+      "ascent": 0,
+      "descent": 25
     },
     {
       "from": "BM-8",
@@ -1555,8 +1558,11 @@
       "from": "BM-22",
       "to": "BM-23",
       "distance": 0.88,
-      "ascent": 20,
-      "descent": 30
+      "ascent": 25,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": -33.86619, "longitude": 151.27187, "elevation": 35 }
+      ]
     },
     {
       "from": "BM-23",
@@ -1598,22 +1604,31 @@
       "from": "BM-28",
       "to": "BM-29",
       "distance": 1.50,
-      "ascent": 65,
-      "descent": 70
+      "ascent": 40,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": -33.87340, "longitude": 151.23876, "elevation": 42 }
+      ]
     },
     {
       "from": "BM-29",
       "to": "BM-30",
       "distance": 1.58,
       "ascent": 40,
-      "descent": 40
+      "descent": 40,
+      "waypoints": [
+        { "latitude": -33.86882, "longitude": 151.23909, "elevation": 34 }
+      ]
     },
     {
       "from": "BM-30",
       "to": "BM-31",
       "distance": 0.86,
       "ascent": 50,
-      "descent": 15
+      "descent": 15,
+      "waypoints": [
+        { "latitude": -33.87134, "longitude": 151.22523, "elevation": 42 }
+      ]
     },
     {
       "from": "BM-31",
@@ -1633,15 +1648,15 @@
       "from": "BM-33",
       "to": "BM-34",
       "distance": 0.68,
-      "ascent": 20,
-      "descent": 35
+      "ascent": 0,
+      "descent": 5
     },
     {
       "from": "BM-34",
       "to": "BM-35",
       "distance": 0.99,
-      "ascent": 35,
-      "descent": 25
+      "ascent": 0,
+      "descent": 0
     },
     {
       "from": "BM-35",
@@ -1661,15 +1676,18 @@
       "from": "BM-37",
       "to": "BM-38",
       "distance": 0.78,
-      "ascent": 65,
-      "descent": 30
+      "ascent": 20,
+      "descent": 0
     },
     {
       "from": "BM-38",
       "to": "BM-39",
       "distance": 1.53,
-      "ascent": 40,
-      "descent": 45
+      "ascent": 30,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": -33.85584, "longitude": 151.20851, "elevation": 16 }
+      ]
     },
     {
       "from": "BM-39",
@@ -1703,8 +1721,11 @@
       "from": "BM-43",
       "to": "BM-44",
       "distance": 0.86,
-      "ascent": 20,
-      "descent": 30
+      "ascent": 15,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": -33.84256, "longitude": 151.21418, "elevation": 20 }
+      ]
     },
     {
       "from": "BM-44",
@@ -1767,21 +1788,27 @@
       "to": "BM-53",
       "distance": 1.32,
       "ascent": 30,
-      "descent": 7
+      "descent": 5
     },
     {
       "from": "BM-53",
       "to": "BM-54",
       "distance": 0.69,
-      "ascent": 15,
-      "descent": 25
+      "ascent": 20,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": -33.84273, "longitude": 151.24931, "elevation": 13 }
+      ]
     },
     {
       "from": "BM-54",
       "to": "BM-55",
       "distance": 1.02,
       "ascent": 25,
-      "descent": 30
+      "descent": 30,
+      "waypoints": [
+        { "latitude": -33.83989, "longitude": 151.25208, "elevation": 6 }
+      ]
     },
     {
       "from": "BM-55",
@@ -1836,8 +1863,13 @@
       "from": "BM-62",
       "to": "BM-63",
       "distance": 0.80,
-      "ascent": 60,
-      "descent": 35
+      "ascent": 20,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": -33.80117, "longitude": 151.24647, "elevation": 15 },
+        { "latitude": -33.80139, "longitude": 151.24889, "elevation": 16 },
+        { "latitude": -33.80000, "longitude": 151.24964, "elevation": 20 }
+      ]
     },
     {
       "from": "BM-63",
@@ -1864,8 +1896,12 @@
       "from": "BM-66",
       "to": "BM-67",
       "distance": 1.42,
-      "ascent": 25,
-      "descent": 55
+      "ascent": 40,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": -33.81289, "longitude": 151.26337, "elevation": 77 },
+        { "latitude": -33.81009, "longitude": 151.26756, "elevation": 87 }
+      ]
     },
     {
       "from": "BM-67",
@@ -1879,7 +1915,10 @@
       "to": "BM-69",
       "distance": 0.72,
       "ascent": 25,
-      "descent": 20
+      "descent": 20,
+      "waypoints": [
+        { "latitude": -33.79921, "longitude": 151.26531, "elevation": 0 }
+      ]
     },
     {
       "from": "BM-69",

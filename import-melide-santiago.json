@@ -45,7 +45,7 @@
       "type": "Town",
       "position": { "latitude": 42.91386, "longitude": -8.01474, "elevation": 454 },
       "region": "ES-GA",
-      "services": [ "Restaurant", "Pharmacy", "Bank", "BicycleRepair", "Groceries", "Medical", "Bus" ],
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
         {
           "name": "Xunta de Galacia Melide Pilgrims Hostel",
@@ -103,31 +103,31 @@
         {
           "name": "El alemán Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Fuente Saleta Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Boente Hostel and Boarding House",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
         },
         {
           "name": "VUT Boente",
           "type": "CasaRural",
-          "services": [ "WiFi", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC" ]
         },
         {
           "name": "Rectoral de Boente",
           "type": "Hotel",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC" ]
         }
       ],
@@ -151,7 +151,7 @@
         {
           "name": "Santiago Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage" ],
           "sleeping": [ "Shared", "DoubleWC" ]
         },
         {
@@ -169,7 +169,7 @@
         {
           "name": "La Calleja Apartments",
           "type": "House",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
         }
       ],
@@ -193,7 +193,7 @@
         {
           "name": "Ribadiso Xunta de Galicia Pilgrims Hostel",
           "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
         {
@@ -205,25 +205,25 @@
         {
           "name": "Milpes Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
           "sleeping": [ "Shared" ]
         },
         {
           "name": "Los Caminantes Hostel",
           "type": "PrivateAlbergue",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Accessible", "Pets", "BicycleStorage", "CampSite", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Accessible", "Pets", "BicycleStorage", "CampSite" ],
           "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
         },
         {
           "name": "Ribadiso Boarding House",
           "type": "GuestHouse",
-          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "DoubleWC", "Triple" ]
         },
         {
           "name": "Pazo Santa María",
           "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Heating" ],
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
         }
       ]
@@ -255,8 +255,11 @@
       "from": "F-F232",
       "to": "F-F233",
       "distance": 2.13,
-      "ascent": 60,
-      "descent": 45
+      "ascent": 80,
+      "descent": 60,
+      "waypoints": [
+        { "latitude": 42.91842, "longitude": -8.08591, "elevation": 338 }
+      ]
     },
     {
       "from": "F-F233",

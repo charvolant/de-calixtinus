@@ -1366,7 +1366,7 @@
       "accommodation": [ ],
       "pois": [
         {
-          "id": "PR-P68-1",
+          "id": "PR-P70-1",
           "name": "Alternate routes to A Montouto@en",
           "type": "Junction",
           "position": { "latitude": 43.13492, "longitude": -7.05620, "elevation": 841 }
@@ -1550,7 +1550,7 @@
       "id": "PR-P78",
       "name": "A Degolada",
       "type": "Village",
-      "position": { "latitude": 43.06729, "longitude": -7.17481, "elevation": 732 },
+      "position": { "latitude": 43.06864, "longitude": -7.17354, "elevation": 709 },
       "region": "ES-GA",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -1559,7 +1559,7 @@
       "id": "PR-P79",
       "name": "O Couto",
       "type": "Village",
-      "position": { "latitude": 43.05776, "longitude": -7.17267, "elevation": 674 },
+      "position": { "latitude": 43.06616, "longitude": -7.17249, "elevation": 715 },
       "region": "ES-GA",
       "services": [ ],
       "accommodation": [ ]
@@ -2468,7 +2468,10 @@
       "to": "PR-P4",
       "distance": 1.30,
       "ascent": 30,
-      "descent": 85
+      "descent": 85,
+      "waypoints": [
+        { "latitude": 43.37897, "longitude": -5.91871, "elevation": 149 }
+      ]
     },
     {
       "from": "PR-P4",
@@ -2639,8 +2642,11 @@
       "from": "PR-P26",
       "to": "PR-P27",
       "distance": 1.77,
-      "ascent": 80,
-      "descent": 50
+      "ascent": 85,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 43.38530, "longitude": -6.35327, "elevation": 766 }
+      ]
     },
     {
       "from": "PR-P27",
@@ -2653,15 +2659,24 @@
       "from": "PR-P28",
       "to": "PR-P29",
       "distance": 0.74,
-      "ascent": 20,
-      "descent": 30
+      "ascent": 25,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.37598, "longitude": -6.36141, "elevation": 690 }
+      ]
     },
     {
       "from": "PR-P29",
       "to": "PR-P30",
       "distance": 7.26,
-      "ascent": 245,
-      "descent": 285
+      "ascent": 90,
+      "descent": 130,
+      "waypoints": [
+        { "latitude": 43.35790, "longitude": -6.38828, "elevation": 724 },
+        { "latitude": 43.35155, "longitude": -6.39947, "elevation": 729 },
+        { "latitude": 43.34467, "longitude": -6.40263, "elevation": 719 },
+        { "latitude": 43.33893, "longitude": -6.40236, "elevation": 716 }
+      ]
     },
     {
       "from": "PR-P30",
@@ -2674,8 +2689,11 @@
       "from": "PR-P31",
       "to": "PR-P32",
       "distance": 1.82,
-      "ascent": 0,
-      "descent": 70
+      "ascent": 25,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.34238, "longitude": -6.49149, "elevation": 656 }
+      ]
     },
     {
       "from": "PR-P32",
@@ -2810,8 +2828,8 @@
       "from": "PR-P51",
       "to": "PR-P52",
       "distance": 1.87,
-      "ascent": 155,
-      "descent": 0
+      "ascent": 5,
+      "descent": 60
     },
     {
       "from": "PR-P52",
@@ -2852,8 +2870,11 @@
       "from": "PR-P54",
       "to": "PR-P55",
       "distance": 2.33,
-      "ascent": 165,
-      "descent": 50
+      "ascent": 175,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 43.22578, "longitude": -6.81130, "elevation": 1042 }
+      ]
     },
     {
       "description": "Steep descent@en",
@@ -2965,8 +2986,11 @@
       "from": "PR-P70",
       "to": "PR-P71",
       "distance": 1.43,
-      "ascent": 105,
-      "descent": 0
+      "ascent": 125,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 43.13198, "longitude": -7.06081, "elevation": 832 }
+      ]
     },
     {
       "from": "PR-P71",
@@ -3000,8 +3024,11 @@
       "from": "PR-P70",
       "to": "PR-P75",
       "distance": 2.99,
-      "ascent": 110,
-      "descent": 270
+      "ascent": 20,
+      "descent": 170,
+      "waypoints": [
+        { "latitude": 43.13585, "longitude": -7.07307, "elevation": 849 }
+      ]
     },
     {
       "from": "PR-P75",
@@ -3028,15 +3055,20 @@
       "from": "PR-P78",
       "to": "PR-P79",
       "distance": 0.49,
-      "ascent": 55,
-      "descent": 105
+      "ascent": 5,
+      "descent": 0
     },
     {
       "from": "PR-P79",
       "to": "PR-P80",
       "distance": 2.72,
-      "ascent": 205,
-      "descent": 65
+      "ascent": 130,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 43.06175, "longitude": -7.17652, "elevation": 695 },
+        { "latitude": 43.05764, "longitude": -7.17310, "elevation": 685 },
+        { "latitude": 43.05229, "longitude": -7.17818, "elevation": 813 }
+      ]
     },
     {
       "from": "PR-P80",
@@ -3063,8 +3095,11 @@
       "from": "PR-P83",
       "to": "PR-P84",
       "distance": 4.16,
-      "ascent": 75,
-      "descent": 160
+      "ascent": 135,
+      "descent": 225,
+      "waypoints": [
+        { "latitude": 43.01332, "longitude": -7.26709, "elevation": 836 }
+      ]
     },
     {
       "from": "PR-P84",
@@ -3078,7 +3113,11 @@
       "to": "PR-P85",
       "distance": 5.07,
       "ascent": 160,
-      "descent": 230
+      "descent": 230,
+      "waypoints": [
+        { "latitude": 43.01439, "longitude": -7.26771, "elevation": 848 },
+        { "latitude": 43.02133, "longitude": -7.27478, "elevation": 861 }
+      ]
     },
     {
       "from": "PR-P85",

@@ -89,7 +89,7 @@
       "id": "N-N1",
       "name": "Irun",
       "type": "City",
-      "position": { "latitude": 43.34134, "longitude": -1.79789, "elevation": 14 },
+      "position": { "latitude": 43.34931, "longitude": -1.78460, "elevation": 0 },
       "region": "ES-PV",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
@@ -517,7 +517,7 @@
       "id": "N-N14",
       "name": "Deba",
       "type": "Town",
-      "position": { "latitude": 43.29775, "longitude": -2.35525, "elevation": 6 },
+      "position": { "latitude": 43.29432, "longitude": -2.35526, "elevation": 8 },
       "region": "ES-PV",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [
@@ -1008,7 +1008,7 @@
       "id": "N-N32",
       "name": "Bilbao",
       "type": "City",
-      "position": { "latitude": 43.25990, "longitude": -2.95289, "elevation": 47 },
+      "position": { "latitude": 43.25725, "longitude": -2.92299, "elevation": 16 },
       "region": "ES-PV",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
       "accommodation": [ "PrivateAlbergue", "GuestHouse", "Hotel" ],
@@ -2241,7 +2241,7 @@
       "id": "N-N81",
       "name": "Mogro",
       "type": "Village",
-      "position": { "latitude": 43.42743, "longitude": -3.97236, "elevation": 31 },
+      "position": { "latitude": 43.42504, "longitude": -3.96090, "elevation": 5 },
       "region": "ES-CB",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train" ],
       "accommodation": [
@@ -5421,8 +5421,7 @@
           "id": "N-N211-9",
           "name": "Cathedral Mondoñedo@es",
           "type": "Cathedral",
-          "description": {
-          },
+          "description": "",
           "position": { "latitude": 43.42824, "longitude": -7.36270, "elevation": 132 },
           "hours": [
             {
@@ -6790,8 +6789,14 @@
       "from": "N-N1",
       "to": "N-N2",
       "distance": 6.97,
-      "ascent": 190,
-      "descent": 15
+      "ascent": 210,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 43.33926, "longitude": -1.78820, "elevation": 17 },
+        { "latitude": 43.34140, "longitude": -1.79784, "elevation": 13 },
+        { "latitude": 43.34720, "longitude": -1.80136, "elevation": 3 },
+        { "latitude": 43.35804, "longitude": -1.80813, "elevation": 39 }
+      ]
     },
     {
       "type": "Trail",
@@ -6799,7 +6804,13 @@
       "to": "N-N3",
       "distance": 8.91,
       "ascent": 400,
-      "descent": 585
+      "descent": 585,
+      "waypoints": [
+        { "latitude": 43.35423, "longitude": -1.84084, "elevation": 395 },
+        { "latitude": 43.34838, "longitude": -1.84998, "elevation": 493 },
+        { "latitude": 43.34535, "longitude": -1.85588, "elevation": 527 },
+        { "latitude": 43.33991, "longitude": -1.86791, "elevation": 421 }
+      ]
     },
     {
       "from": "N-N2",
@@ -6894,7 +6905,12 @@
       "to": "N-N14",
       "distance": 9.90,
       "ascent": 75,
-      "descent": 275
+      "descent": 275,
+      "waypoints": [
+        { "latitude": 43.27670, "longitude": -2.29583, "elevation": 174 },
+        { "latitude": 43.27903, "longitude": -2.31190, "elevation": 130 },
+        { "latitude": 43.29202, "longitude": -2.34397, "elevation": 185 }
+      ]
     },
     {
       "from": "N-N13",
@@ -6907,22 +6923,39 @@
       "from": "N-N14",
       "to": "N-N15",
       "distance": 4.76,
-      "ascent": 310,
-      "descent": 40
+      "ascent": 280,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.29252, "longitude": -2.35619, "elevation": 8 },
+        { "latitude": 43.29292, "longitude": -2.35747, "elevation": 19 },
+        { "latitude": 43.29443, "longitude": -2.35698, "elevation": 7 },
+        { "latitude": 43.30008, "longitude": -2.36329, "elevation": 180 },
+        { "latitude": 43.30040, "longitude": -2.37507, "elevation": 203 }
+      ]
     },
     {
       "from": "N-N15",
       "to": "N-N16",
       "distance": 2.85,
-      "ascent": 65,
-      "descent": 130
+      "ascent": 90,
+      "descent": 160,
+      "waypoints": [
+        { "latitude": 43.29141, "longitude": -2.39041, "elevation": 323 },
+        { "latitude": 43.28704, "longitude": -2.39132, "elevation": 350 },
+        { "latitude": 43.29031, "longitude": -2.39983, "elevation": 239 }
+      ]
     },
     {
       "from": "N-N16",
       "to": "N-N17",
       "distance": 15.54,
-      "ascent": 275,
-      "descent": 390
+      "ascent": 420,
+      "descent": 530,
+      "waypoints": [
+        { "latitude": 43.28143, "longitude": -2.42859, "elevation": 423 },
+        { "latitude": 43.26881, "longitude": -2.44054, "elevation": 181 },
+        { "latitude": 43.27268, "longitude": -2.47675, "elevation": 373 }
+      ]
     },
     {
       "from": "N-N17",
@@ -6949,8 +6982,13 @@
       "from": "N-N20",
       "to": "N-N21",
       "distance": 3.49,
-      "ascent": 165,
-      "descent": 185
+      "ascent": 110,
+      "descent": 200,
+      "waypoints": [
+        { "latitude": 43.24735, "longitude": -2.56988, "elevation": 358 },
+        { "latitude": 43.24961, "longitude": -2.57246, "elevation": 387 },
+        { "latitude": 43.25228, "longitude": -2.57247, "elevation": 370 }
+      ]
     },
     {
       "from": "N-N21",
@@ -6964,14 +7002,22 @@
       "to": "N-N23",
       "distance": 5.58,
       "ascent": 150,
-      "descent": 175
+      "descent": 175,
+      "waypoints": [
+        { "latitude": 43.26710, "longitude": -2.60854, "elevation": 264 },
+        { "latitude": 43.28050, "longitude": -2.63168, "elevation": 107 }
+      ]
     },
     {
       "from": "N-N23",
       "to": "N-N24",
       "distance": 3.00,
-      "ascent": 20,
-      "descent": 50
+      "ascent": 40,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 43.29129, "longitude": -2.63597, "elevation": 146 },
+        { "latitude": 43.29654, "longitude": -2.63732, "elevation": 87 }
+      ]
     },
     {
       "from": "N-N24",
@@ -6991,8 +7037,15 @@
       "from": "N-N26",
       "to": "N-N27",
       "distance": 9.54,
-      "ascent": 475,
-      "descent": 205
+      "ascent": 430,
+      "descent": 170,
+      "waypoints": [
+        { "latitude": 43.30596, "longitude": -2.68271, "elevation": 20 },
+        { "latitude": 43.30384, "longitude": -2.69158, "elevation": 23 },
+        { "latitude": 43.30613, "longitude": -2.71132, "elevation": 189 },
+        { "latitude": 43.30737, "longitude": -2.72285, "elevation": 247 },
+        { "latitude": 43.29876, "longitude": -2.74423, "elevation": 139 }
+      ]
     },
     {
       "from": "N-N27",
@@ -7027,21 +7080,40 @@
       "to": "N-N32",
       "distance": 7.57,
       "ascent": 315,
-      "descent": 320
+      "descent": 320,
+      "waypoints": [
+        { "latitude": 43.27557, "longitude": -2.86704, "elevation": 102 },
+        { "latitude": 43.27047, "longitude": -2.87330, "elevation": 246 },
+        { "latitude": 43.26983, "longitude": -2.88741, "elevation": 323 },
+        { "latitude": 43.26879, "longitude": -2.89918, "elevation": 282 },
+        { "latitude": 43.26148, "longitude": -2.91548, "elevation": 72 }
+      ]
     },
     {
       "from": "N-N32",
       "to": "N-N33",
       "distance": 13.49,
-      "ascent": 210,
-      "descent": 225
+      "ascent": 255,
+      "descent": 245,
+      "waypoints": [
+        { "latitude": 43.26010, "longitude": -2.95455, "elevation": 52 },
+        { "latitude": 43.25722, "longitude": -2.95644, "elevation": 108 },
+        { "latitude": 43.25543, "longitude": -2.97126, "elevation": 23 },
+        { "latitude": 43.25756, "longitude": -2.98074, "elevation": 183 }
+      ]
     },
     {
       "from": "N-N33",
       "to": "N-N34",
       "distance": 4.22,
-      "ascent": 60,
-      "descent": 30
+      "ascent": 70,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.29428, "longitude": -2.99659, "elevation": 33 },
+        { "latitude": 43.29859, "longitude": -2.99976, "elevation": 14 },
+        { "latitude": 43.30360, "longitude": -2.99072, "elevation": 4 },
+        { "latitude": 43.30753, "longitude": -2.99297, "elevation": 9 }
+      ]
     },
     {
       "from": "N-N34",
@@ -7090,7 +7162,11 @@
       "to": "N-N40",
       "distance": 5.71,
       "ascent": 185,
-      "descent": 160
+      "descent": 160,
+      "waypoints": [
+        { "latitude": 43.32834, "longitude": -3.17458, "elevation": 250 },
+        { "latitude": 43.32119, "longitude": -3.17983, "elevation": 179 }
+      ]
     },
     {
       "from": "N-N40",
@@ -7152,8 +7228,12 @@
       "from": "N-N48",
       "to": "N-N49",
       "distance": 3.56,
-      "ascent": 170,
-      "descent": 0
+      "ascent": 175,
+      "descent": 10,
+      "waypoints": [
+        { "latitude": 43.36204, "longitude": -3.32429, "elevation": 9 },
+        { "latitude": 43.36793, "longitude": -3.33261, "elevation": 145 }
+      ]
     },
     {
       "from": "N-N49",
@@ -7167,7 +7247,14 @@
       "to": "N-N51",
       "distance": 9.41,
       "ascent": 240,
-      "descent": 265
+      "descent": 265,
+      "waypoints": [
+        { "latitude": 43.40081, "longitude": -3.36960, "elevation": 26 },
+        { "latitude": 43.41140, "longitude": -3.37281, "elevation": 84 },
+        { "latitude": 43.40360, "longitude": -3.39275, "elevation": 225 },
+        { "latitude": 43.40667, "longitude": -3.40166, "elevation": 178 },
+        { "latitude": 43.41124, "longitude": -3.39112, "elevation": 185 }
+      ]
     },
     {
       "type": "FerryLink",
@@ -7184,7 +7271,10 @@
       "to": "N-N58",
       "distance": 4.72,
       "ascent": 0,
-      "descent": 0
+      "descent": 10,
+      "waypoints": [
+        { "latitude": 43.46384, "longitude": -3.47739, "elevation": 8 }
+      ]
     },
     {
       "from": "N-N51",
@@ -7211,8 +7301,12 @@
       "from": "N-N54",
       "to": "N-N55",
       "distance": 2.18,
-      "ascent": 75,
-      "descent": 100
+      "ascent": 80,
+      "descent": 110,
+      "waypoints": [
+        { "latitude": 43.41129, "longitude": -3.51125, "elevation": 14 },
+        { "latitude": 43.41051, "longitude": -3.50157, "elevation": 92 }
+      ]
     },
     {
       "from": "N-N55",
@@ -7310,7 +7404,13 @@
       "to": "N-N68",
       "distance": 8.88,
       "ascent": 175,
-      "descent": 210
+      "descent": 210,
+      "waypoints": [
+        { "latitude": 43.48651, "longitude": -3.60874, "elevation": 39 },
+        { "latitude": 43.48843, "longitude": -3.61913, "elevation": 32 },
+        { "latitude": 43.48855, "longitude": -3.64170, "elevation": 147 },
+        { "latitude": 43.47619, "longitude": -3.64685, "elevation": 147 }
+      ]
     },
     {
       "from": "N-N68",
@@ -7331,7 +7431,11 @@
       "to": "N-N70",
       "distance": 4.26,
       "ascent": 15,
-      "descent": 40
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 43.46980, "longitude": -3.72602, "elevation": 9 },
+        { "latitude": 43.47006, "longitude": -3.72240, "elevation": 22 }
+      ]
     },
     {
       "from": "N-N70",
@@ -7396,8 +7500,12 @@
       "from": "N-N77",
       "to": "N-N78",
       "distance": 3.96,
-      "ascent": 55,
-      "descent": 85
+      "ascent": 35,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 43.41974, "longitude": -3.95654, "elevation": 5 },
+        { "latitude": 43.41304, "longitude": -3.95778, "elevation": 4 }
+      ]
     },
     {
       "from": "N-N78",
@@ -7434,8 +7542,13 @@
       "from": "N-N81",
       "to": "N-N82",
       "distance": 6.30,
-      "ascent": 100,
-      "descent": 110
+      "ascent": 135,
+      "descent": 120,
+      "waypoints": [
+        { "latitude": 43.42733, "longitude": -3.96846, "elevation": 26 },
+        { "latitude": 43.41516, "longitude": -3.99368, "elevation": 102 },
+        { "latitude": 43.42665, "longitude": -4.01118, "elevation": 68 }
+      ]
     },
     {
       "from": "N-N82",
@@ -7477,7 +7590,11 @@
       "to": "N-N88",
       "distance": 2.61,
       "ascent": 80,
-      "descent": 60
+      "descent": 60,
+      "waypoints": [
+        { "latitude": 43.39495, "longitude": -4.11785, "elevation": 141 },
+        { "latitude": 43.39973, "longitude": -4.12468, "elevation": 96 }
+      ]
     },
     {
       "from": "N-N88",
@@ -7498,7 +7615,10 @@
       "to": "N-N91",
       "distance": 2.72,
       "ascent": 70,
-      "descent": 80
+      "descent": 80,
+      "waypoints": [
+        { "latitude": 43.39215, "longitude": -4.16908, "elevation": 116 }
+      ]
     },
     {
       "from": "N-N91",
@@ -7512,7 +7632,12 @@
       "to": "N-N93",
       "distance": 2.86,
       "ascent": 105,
-      "descent": 50
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 43.39366, "longitude": -4.22001, "elevation": 7 },
+        { "latitude": 43.39174, "longitude": -4.22194, "elevation": 4 },
+        { "latitude": 43.39499, "longitude": -4.22679, "elevation": 89 }
+      ]
     },
     {
       "from": "N-N93",
@@ -7561,7 +7686,12 @@
       "to": "N-N100",
       "distance": 6.80,
       "ascent": 140,
-      "descent": 140
+      "descent": 140,
+      "waypoints": [
+        { "latitude": 43.39492, "longitude": -4.34541, "elevation": 74 },
+        { "latitude": 43.39221, "longitude": -4.36664, "elevation": 8 },
+        { "latitude": 43.38607, "longitude": -4.38062, "elevation": 55 }
+      ]
     },
     {
       "from": "N-N100",
@@ -7596,7 +7726,11 @@
       "to": "N-N105",
       "distance": 1.87,
       "ascent": 50,
-      "descent": 5
+      "descent": 5,
+      "waypoints": [
+        { "latitude": 43.37068, "longitude": -4.47936, "elevation": 7 },
+        { "latitude": 43.37238, "longitude": -4.47966, "elevation": 10 }
+      ]
     },
     {
       "from": "N-N105",
@@ -7630,9 +7764,13 @@
       "type": "Trail",
       "from": "N-N109",
       "to": "N-N110",
-      "distance": 7.71,
-      "ascent": 25,
-      "descent": 20
+      "distance": 4.33,
+      "ascent": 40,
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 43.38898, "longitude": -4.58656, "elevation": 15 },
+        { "latitude": 43.39497, "longitude": -4.59008, "elevation": 52 }
+      ]
     },
     {
       "type": "CyclePath",
@@ -7654,8 +7792,13 @@
       "from": "N-N111",
       "to": "N-N112",
       "distance": 4.10,
-      "ascent": 20,
-      "descent": 10
+      "ascent": 45,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.39781, "longitude": -4.64573, "elevation": 52 },
+        { "latitude": 43.39962, "longitude": -4.65349, "elevation": 22 },
+        { "latitude": 43.40105, "longitude": -4.65861, "elevation": 34 }
+      ]
     },
     {
       "from": "N-N112",
@@ -7839,7 +7982,11 @@
       "to": "N-N137",
       "distance": 1.75,
       "ascent": 50,
-      "descent": 30
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.49258, "longitude": -5.41709, "elevation": 38 },
+        { "latitude": 43.49213, "longitude": -5.42210, "elevation": 8 }
+      ]
     },
     {
       "from": "N-N137",
@@ -7852,22 +7999,40 @@
       "from": "N-N140",
       "to": "N-N141",
       "distance": 5.84,
-      "ascent": 125,
-      "descent": 0
+      "ascent": 170,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 43.46596, "longitude": -5.46676, "elevation": 28 },
+        { "latitude": 43.46530, "longitude": -5.47701, "elevation": 48 },
+        { "latitude": 43.46115, "longitude": -5.48469, "elevation": 55 },
+        { "latitude": 43.45813, "longitude": -5.50010, "elevation": 61 },
+        { "latitude": 43.46502, "longitude": -5.50276, "elevation": 130 },
+        { "latitude": 43.46830, "longitude": -5.49499, "elevation": 102 }
+      ]
     },
     {
       "from": "N-N141",
       "to": "N-N142",
       "distance": 6.29,
-      "ascent": 275,
-      "descent": 350
+      "ascent": 280,
+      "descent": 360,
+      "waypoints": [
+        { "latitude": 43.47364, "longitude": -5.51432, "elevation": 435 }
+      ]
     },
     {
       "from": "N-N142",
       "to": "N-N143",
       "distance": 6.32,
       "ascent": 205,
-      "descent": 225
+      "descent": 225,
+      "waypoints": [
+        { "latitude": 43.49105, "longitude": -5.54669, "elevation": 79 },
+        { "latitude": 43.49301, "longitude": -5.54704, "elevation": 87 },
+        { "latitude": 43.49694, "longitude": -5.55573, "elevation": 195 },
+        { "latitude": 43.49799, "longitude": -5.56235, "elevation": 261 },
+        { "latitude": 43.51072, "longitude": -5.58744, "elevation": 167 }
+      ]
     },
     {
       "from": "N-N143",
@@ -7930,7 +8095,12 @@
       "to": "N-N153",
       "distance": 3.26,
       "ascent": 85,
-      "descent": 65
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 43.55901, "longitude": -5.92498, "elevation": 8 },
+        { "latitude": 43.56686, "longitude": -5.94596, "elevation": 84 },
+        { "latitude": 43.55912, "longitude": -5.96355, "elevation": 22 }
+      ]
     },
     {
       "from": "N-N151",
@@ -7993,7 +8163,10 @@
       "to": "N-N160",
       "distance": 2.39,
       "ascent": 100,
-      "descent": 60
+      "descent": 60,
+      "waypoints": [
+        { "latitude": 43.55093, "longitude": -6.14800, "elevation": 86 }
+      ]
     },
     {
       "from": "N-N159",
@@ -8014,7 +8187,11 @@
       "to": "N-N162",
       "distance": 1.41,
       "ascent": 0,
-      "descent": 125
+      "descent": 130,
+      "waypoints": [
+        { "latitude": 43.55697, "longitude": -6.18529, "elevation": 94 },
+        { "latitude": 43.56067, "longitude": -6.18465, "elevation": 59 }
+      ]
     },
     {
       "from": "N-N162",
@@ -8050,56 +8227,90 @@
       "to": "N-N174",
       "distance": 17.97,
       "ascent": 695,
-      "descent": 710
+      "descent": 710,
+      "waypoints": [
+        { "latitude": 43.55690, "longitude": -6.25388, "elevation": 248 },
+        { "latitude": 43.53180, "longitude": -6.31583, "elevation": 420 },
+        { "latitude": 43.53180, "longitude": -6.31583, "elevation": 420 },
+        { "latitude": 43.52112, "longitude": -6.34860, "elevation": 693 },
+        { "latitude": 43.53066, "longitude": -6.39797, "elevation": 153 }
+      ]
     },
     {
       "from": "N-N166",
       "to": "N-N167",
       "distance": 1.64,
       "ascent": 70,
-      "descent": 75
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 43.56446, "longitude": -6.27554, "elevation": 67 }
+      ]
     },
     {
       "from": "N-N167",
       "to": "N-N168",
       "distance": 1.81,
-      "ascent": 60,
-      "descent": 70
+      "ascent": 65,
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 43.56075, "longitude": -6.29147, "elevation": 58 },
+        { "latitude": 43.55848, "longitude": -6.29270, "elevation": 78 }
+      ]
     },
     {
       "from": "N-N168",
       "to": "N-N169",
       "distance": 2.54,
       "ascent": 90,
-      "descent": 75
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 43.55319, "longitude": -6.31386, "elevation": 134 },
+        { "latitude": 43.55301, "longitude": -6.32321, "elevation": 77 }
+      ]
     },
     {
       "from": "N-N169",
       "to": "N-N170",
       "distance": 2.21,
-      "ascent": 45,
-      "descent": 60
+      "ascent": 65,
+      "descent": 80,
+      "waypoints": [
+        { "latitude": 43.55958, "longitude": -6.30114, "elevation": 62 },
+        { "latitude": 43.56096, "longitude": -6.30345, "elevation": 113 }
+      ]
     },
     {
       "from": "N-N170",
       "to": "N-N171",
       "distance": 1.82,
       "ascent": 105,
-      "descent": 110
+      "descent": 110,
+      "waypoints": [
+        { "latitude": 43.55320, "longitude": -6.34365, "elevation": 24 }
+      ]
     },
     {
       "from": "N-N171",
       "to": "N-N172",
       "distance": 1.83,
-      "ascent": 20,
-      "descent": 30
+      "ascent": 60,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 43.55031, "longitude": -6.35814, "elevation": 53 },
+        { "latitude": 43.55010, "longitude": -6.35880, "elevation": 64 }
+      ]
     },
     {
       "from": "N-N172",
       "to": "N-N173",
       "distance": 3.26,
-      "ascent": 80,
-      "descent": 95
+      "ascent": 90,
+      "descent": 110,
+      "waypoints": [
+        { "latitude": 43.54349, "longitude": -6.36471, "elevation": 135 },
+        { "latitude": 43.54710, "longitude": -6.37017, "elevation": 94 },
+        { "latitude": 43.54882, "longitude": -6.37500, "elevation": 30 }
+      ]
     },
     {
       "from": "N-N173",
@@ -8127,14 +8338,23 @@
       "to": "N-N177",
       "distance": 1.72,
       "ascent": 10,
-      "descent": 35
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 43.54952, "longitude": -6.44388, "elevation": 92 },
+        { "latitude": 43.54648, "longitude": -6.45349, "elevation": 89 }
+      ]
     },
     {
       "from": "N-N177",
       "to": "N-N178",
       "distance": 6.02,
       "ascent": 135,
-      "descent": 125
+      "descent": 125,
+      "waypoints": [
+        { "latitude": 43.54281, "longitude": -6.46163, "elevation": 11 },
+        { "latitude": 43.54611, "longitude": -6.46609, "elevation": 19 },
+        { "latitude": 43.53712, "longitude": -6.48013, "elevation": 141 }
+      ]
     },
     {
       "from": "N-N178",
@@ -8281,7 +8501,11 @@
       "to": "N-N199",
       "distance": 2.95,
       "ascent": 50,
-      "descent": 40
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 43.54377, "longitude": -7.02209, "elevation": 30 },
+        { "latitude": 43.54311, "longitude": -7.04017, "elevation": 30 }
+      ]
     },
     {
       "from": "N-N199",
@@ -8322,8 +8546,11 @@
       "from": "N-N204",
       "to": "N-N205",
       "distance": 2.16,
-      "ascent": 65,
-      "descent": 10
+      "ascent": 70,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 43.48848, "longitude": -7.20842, "elevation": 272 }
+      ]
     },
     {
       "from": "N-N205",
@@ -8343,8 +8570,11 @@
       "from": "N-N207",
       "to": "N-N208",
       "distance": 4.82,
-      "ascent": 135,
-      "descent": 170
+      "ascent": 145,
+      "descent": 180,
+      "waypoints": [
+        { "latitude": 43.48523, "longitude": -7.27247, "elevation": 232 }
+      ]
     },
     {
       "from": "N-N208",
@@ -8652,8 +8882,17 @@
       "from": "N-N38",
       "to": "N-RC1",
       "distance": 4.77,
-      "ascent": 145,
-      "descent": 145
+      "ascent": 155,
+      "descent": 150,
+      "waypoints": [
+        { "latitude": 43.35514, "longitude": -3.17651, "elevation": 75 },
+        { "latitude": 43.35372, "longitude": -3.18225, "elevation": 131 },
+        { "latitude": 43.35891, "longitude": -3.18572, "elevation": 167 },
+        { "latitude": 43.36128, "longitude": -3.18896, "elevation": 135 },
+        { "latitude": 43.36244, "longitude": -3.18602, "elevation": 113 },
+        { "latitude": 43.36162, "longitude": -3.18772, "elevation": 115 },
+        { "latitude": 43.36358, "longitude": -3.19054, "elevation": 68 }
+      ]
     },
     {
       "from": "N-RC1",
@@ -8687,8 +8926,14 @@
       "from": "N-E92",
       "to": "N-E93",
       "distance": 2.73,
-      "ascent": 65,
-      "descent": 80
+      "ascent": 80,
+      "descent": 85,
+      "waypoints": [
+        { "latitude": 43.40752, "longitude": -4.71980, "elevation": 91 },
+        { "latitude": 43.40968, "longitude": -4.71469, "elevation": 131 },
+        { "latitude": 43.41126, "longitude": -4.72024, "elevation": 108 },
+        { "latitude": 43.41300, "longitude": -4.72633, "elevation": 58 }
+      ]
     },
     {
       "from": "N-E93",
@@ -8751,7 +8996,12 @@
       "to": "N-ER4",
       "distance": 7.45,
       "ascent": 250,
-      "descent": 235
+      "descent": 235,
+      "waypoints": [
+        { "latitude": 43.45928, "longitude": -7.06117, "elevation": 136 },
+        { "latitude": 43.45049, "longitude": -7.07007, "elevation": 141 },
+        { "latitude": 43.44264, "longitude": -7.07449, "elevation": 231 }
+      ]
     },
     {
       "from": "N-ER4",
@@ -8771,8 +9021,16 @@
       "from": "N-ER6",
       "to": "N-ER7",
       "distance": 10.03,
-      "ascent": 340,
-      "descent": 430
+      "ascent": 210,
+      "descent": 300,
+      "waypoints": [
+        { "latitude": 43.44519, "longitude": -7.21328, "elevation": 202 },
+        { "latitude": 43.45051, "longitude": -7.22006, "elevation": 209 },
+        { "latitude": 43.44428, "longitude": -7.23431, "elevation": 389 },
+        { "latitude": 43.43782, "longitude": -7.25879, "elevation": 256 },
+        { "latitude": 43.43947, "longitude": -7.26900, "elevation": 127 },
+        { "latitude": 43.44122, "longitude": -7.27207, "elevation": 115 }
+      ]
     },
     {
       "from": "N-ER7",
@@ -8946,8 +9204,11 @@
       "from": "N-FR12",
       "to": "N-FR13",
       "distance": 3.10,
-      "ascent": 75,
-      "descent": 70
+      "ascent": 80,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 42.94380, "longitude": -8.28070, "elevation": 315 }
+      ]
     },
     {
       "from": "N-FR13",

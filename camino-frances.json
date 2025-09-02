@@ -414,9 +414,12 @@
     },
     {
       "id": "F-F13",
-      "name": "Pass of Erro",
+      "name": [
+        "Alto de Erro@es",
+        "Pass of Erro@en"
+      ],
       "type": "Peak",
-      "position": { "latitude": 42.94657, "longitude": -1.47826, "elevation": 715 },
+      "position": { "latitude": 42.94164, "longitude": -1.47045, "elevation": 798 },
       "region": "ES-NA",
       "services": [ "Restaurant", "Bus" ],
       "accommodation": [ ]
@@ -6299,7 +6302,10 @@
       "to": "F-F7",
       "distance": 17.52,
       "ascent": 680,
-      "descent": 535
+      "descent": 535,
+      "waypoints": [
+        { "latitude": 43.02618, "longitude": -1.29545, "elevation": 1419 }
+      ]
     },
     {
       "from": "F-F1",
@@ -6362,14 +6368,18 @@
       "to": "F-F12",
       "distance": 1.98,
       "ascent": 0,
-      "descent": 40
+      "descent": 55
     },
     {
       "from": "F-F12",
       "to": "F-F13",
       "distance": 4.37,
       "ascent": 130,
-      "descent": 145
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 42.96085, "longitude": -1.45244, "elevation": 838 },
+        { "latitude": 42.94913, "longitude": -1.46588, "elevation": 852 }
+      ]
     },
     {
       "from": "F-F13",
@@ -6451,7 +6461,7 @@
     {
       "from": "F-F24",
       "to": "F-F25",
-      "distance": 0.87,
+      "distance": 0.79,
       "ascent": 0,
       "descent": 5
     },
@@ -6484,7 +6494,10 @@
       "to": "F-F32",
       "distance": 6.21,
       "ascent": 140,
-      "descent": 275
+      "descent": 280,
+      "waypoints": [
+        { "latitude": 42.73560, "longitude": -1.74237, "elevation": 759 }
+      ]
     },
     {
       "description": "Alternative road route for cyclists",
@@ -6648,8 +6661,15 @@
       "from": "F-F49",
       "to": "F-F50",
       "distance": 10.66,
-      "ascent": 250,
-      "descent": 245
+      "ascent": 160,
+      "descent": 150,
+      "waypoints": [
+        { "latitude": 42.54228, "longitude": -2.29724, "elevation": 551 },
+        { "latitude": 42.54099, "longitude": -2.30625, "elevation": 581 },
+        { "latitude": 42.53981, "longitude": -2.31322, "elevation": 518 },
+        { "latitude": 42.53123, "longitude": -2.32103, "elevation": 471 },
+        { "latitude": 42.52488, "longitude": -2.33117, "elevation": 502 }
+      ]
     },
     {
       "from": "F-F50",
@@ -6817,7 +6837,10 @@
       "to": "F-F72",
       "distance": 4.75,
       "ascent": 120,
-      "descent": 130
+      "descent": 130,
+      "waypoints": [
+        { "latitude": 42.37911, "longitude": -3.53542, "elevation": 1073 }
+      ]
     },
     {
       "from": "F-F72",
@@ -7486,8 +7509,12 @@
       "from": "F-F153",
       "to": "F-F155",
       "distance": 5.20,
-      "ascent": 125,
-      "descent": 155
+      "ascent": 100,
+      "descent": 130,
+      "waypoints": [
+        { "latitude": 42.60124, "longitude": -6.77640, "elevation": 519 },
+        { "latitude": 42.60476, "longitude": -6.79165, "elevation": 574 }
+      ]
     },
     {
       "description": "Southern route",
@@ -7552,7 +7579,10 @@
       "to": "F-F163",
       "distance": 1.14,
       "ascent": 35,
-      "descent": 15
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 42.67242, "longitude": -6.97742, "elevation": 691 }
+      ]
     },
     {
       "from": "F-F163",
@@ -7586,8 +7616,12 @@
       "from": "F-F167",
       "to": "F-F168",
       "distance": 2.44,
-      "ascent": 70,
-      "descent": 60
+      "ascent": 85,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 42.69872, "longitude": -7.08361, "elevation": 1264 },
+        { "latitude": 42.70124, "longitude": -7.09410, "elevation": 1202 }
+      ]
     },
     {
       "from": "F-F168",
@@ -7665,21 +7699,32 @@
       "to": "F-F179",
       "distance": 1.12,
       "ascent": 35,
-      "descent": 35
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 42.73941, "longitude": -7.29819, "elevation": 575 },
+        { "latitude": 42.74121, "longitude": -7.30269, "elevation": 586 },
+        { "latitude": 42.74183, "longitude": -7.30837, "elevation": 571 }
+      ]
     },
     {
       "from": "F-F179",
       "to": "F-F180",
       "distance": 1.25,
-      "ascent": 45,
-      "descent": 50
+      "ascent": 25,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.73738, "longitude": -7.31419, "elevation": 562 }
+      ]
     },
     {
       "from": "F-F180",
       "to": "F-F181",
       "distance": 1.46,
       "ascent": 30,
-      "descent": 75
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 42.73548, "longitude": -7.31956, "elevation": 608 }
+      ]
     },
     {
       "from": "F-F181",
@@ -7692,15 +7737,22 @@
       "from": "F-F182",
       "to": "F-F183",
       "distance": 1.30,
-      "ascent": 85,
-      "descent": 30
+      "ascent": 90,
+      "descent": 85,
+      "waypoints": [
+        { "latitude": 42.72706, "longitude": -7.34517, "elevation": 531 },
+        { "latitude": 42.73212, "longitude": -7.34211, "elevation": 606 }
+      ]
     },
     {
       "from": "F-F183",
       "to": "F-F184",
       "distance": 1.46,
-      "ascent": 20,
-      "descent": 80
+      "ascent": 55,
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 42.74002, "longitude": -7.34920, "elevation": 575 }
+      ]
     },
     {
       "from": "F-F184",
@@ -7778,7 +7830,7 @@
       "to": "F-F194",
       "distance": 0.84,
       "ascent": 0,
-      "descent": 75
+      "descent": 30
     },
     {
       "from": "F-F194",
@@ -7860,7 +7912,7 @@
     {
       "from": "F-F205",
       "to": "F-F206",
-      "distance": 0.38,
+      "distance": 0.20,
       "ascent": 5,
       "descent": 0
     },
@@ -7901,7 +7953,11 @@
       "to": "F-F210",
       "distance": 1.59,
       "ascent": 40,
-      "descent": 80
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.80490, "longitude": -7.61685, "elevation": 350 },
+        { "latitude": 42.80156, "longitude": -7.62230, "elevation": 353 }
+      ]
     },
     {
       "description": "Compimentary route",
@@ -7950,8 +8006,11 @@
       "from": "F-F215",
       "to": "F-F216",
       "distance": 1.17,
-      "ascent": 25,
-      "descent": 25
+      "ascent": 30,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 42.86225, "longitude": -7.78364, "elevation": 602 }
+      ]
     },
     {
       "from": "F-F216",
@@ -8007,7 +8066,7 @@
       "to": "F-F224",
       "distance": 0.99,
       "ascent": 0,
-      "descent": 65
+      "descent": 45
     },
     {
       "from": "F-F224",

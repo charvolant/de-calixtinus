@@ -16,6 +16,8 @@ import Data.Propositional
 import qualified Data.Set as S
 import Camino.Camino
 import Text.RawString.QQ
+import TestUtils
+import Camino.Camino (haversineDistance, LegSegment (lsDescent))
 
 
 testCamino :: Test
@@ -46,14 +48,15 @@ testPenanceAppend4 = TestCase (assertEqual "Penance Plus 8" (Penance 2.0) (simpl
 
 testLeg = TestList [
   TestLabel "LegEqual" testLegEqual,
-  TestLabel "LegCompare" testLegCompare
+  TestLabel "LegCompare" testLegCompare,
+  TestLabel "BuildLegSegments" testBuildLegSegments
   ]
 
 metadata1 = def
 
-location1 = placeholder "L1"
+location1 = (placeholder "L1") { locationPosition = LatLong 43.16340 (-1.23579) (Just 185) def }
 
-location2 = placeholder "L2"
+location2 = (placeholder "L2") { locationPosition = LatLong 43.12428 (-1.24495) (Just 495) def }
 
 location3 = placeholder "L3"
 
@@ -63,17 +66,29 @@ locationI2 = placeholder "I2"
 
 locationE1 = placeholder "E1"
 
-leg1 = Leg Road location1 location2 Nothing 1.2 Nothing 20.0 10.0 Nothing 
+leg1 :: Leg
+leg1 = Leg Road location1 location2 Nothing 5.28 Nothing 320.0 20.0 Nothing [] []
 
-leg2 = Leg Trail location1 location2 Nothing 1.2 Nothing 20.0 10.0 Nothing
+leg1a :: Leg
+leg1a = Leg Road location1 location2 Nothing 5.28 Nothing 320.0 20.0 Nothing [LatLong 43.14417 (-1.24028) (Just 200) def] []
 
-leg3 = Leg Road location1 location3 Nothing 1.2 Nothing 20.0 10.0 Nothing
+leg1b :: Leg
+leg1b = Leg Road location1 location2 Nothing 5.28 Nothing 330.0 30.0 Nothing [LatLong 43.14417 (-1.24028) (Just 200) def, LatLong 43.13470 (-1.23803) (Just 185) def] []
 
-leg4 = Leg Road location2 location3 Nothing 1.2 Nothing 20.0 10.0 Nothing 
+leg2 :: Leg
+leg2 = Leg Trail location1 location2 Nothing 1.2 Nothing 20.0 10.0 Nothing [] []
 
-leg5 = Leg Road location1 location3 Nothing 1.3 Nothing 20.0 10.0 Nothing
+leg3 :: Leg
+leg3 = Leg Road location1 location3 Nothing 1.2 Nothing 20.0 10.0 Nothing [] []
 
-leg6 = Leg Road location1 location3 Nothing 1.3 Nothing 25.0 0.0 Nothing
+leg4 :: Leg
+leg4 = Leg Road location2 location3 Nothing 1.2 Nothing 20.0 10.0 Nothing [] []
+
+leg5 :: Leg
+leg5 = Leg Road location1 location3 Nothing 1.3 Nothing 20.0 10.0 Nothing [] []
+
+leg6 :: Leg
+leg6 = Leg Road location1 location3 Nothing 1.3 Nothing 25.0 0.0 Nothing [] []
 
 route1 :: Route
 route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") True [location1] (S.fromList [location1]) [] [] [] [] [] def
@@ -157,6 +172,63 @@ testLegCompare8 = TestCase (assertEqual "Leg Compare 8" GT (leg3 `compare` leg1)
 testLegCompare9 = TestCase (assertEqual "Leg Compare 9" GT (leg4 `compare` leg1))
 
 testLegCompare10 = TestCase (assertEqual "Leg Compare 10" EQ (leg6 `compare` leg5))
+
+testBuildLegSegments = TestList [
+      testBuildLegSegments1
+    , testBuildLegSegments2
+    , testBuildLegSegments3
+  ]
+
+testBuildLegSegments1 = TestCase (do
+  let segs = buildLegSegments (legFrom leg1) (legTo leg1) (legWaypoints leg1) (legDistance leg1) (legAscent leg1) (legDescent leg1)
+  assertEqual "Build Leg Segments 1 1" 1 (length segs)
+  let seg1 = segs !! 0
+  assertEqual "Build Leg Segments 1 2" (locationPosition $ legFrom leg1) (lsFrom seg1)
+  assertEqual "Build Leg Segments 1 3" (locationPosition $ legTo leg1) (lsTo seg1)
+  assertEqual "Build Leg Segments 1 4" (legDistance leg1) (lsDistance seg1)
+  assertEqual "Build Leg Segments 1 5" (legAscent leg1) (lsAscent seg1)
+  assertEqual "Build Leg Segments 1 6" (legDescent leg1) (lsDescent seg1)
+  )
+
+testBuildLegSegments2 = TestCase (do
+  let segs = buildLegSegments (legFrom leg1a) (legTo leg1a) (legWaypoints leg1a) (legDistance leg1a) (legAscent leg1a) (legDescent leg1a)
+  assertEqual "Build Leg Segments 2 1" 2 (length segs)
+  let seg1 = segs !! 0
+  let seg2 = segs !! 1
+  assertEqual "Build Leg Segments 2 2" (locationPosition $ legFrom leg1a) (lsFrom seg1)
+  assertEqual "Build Leg Segments 2 3" (locationPosition $ legTo leg1a) (lsTo seg2)
+  assertFloatEqual "Build Leg Segments 2 4" (legDistance leg1a) (lsDistance seg1 + lsDistance seg2) 0.001
+  assertFloatEqual "Build Leg Segments 2 5" (legAscent leg1a) (lsAscent seg1 + lsAscent seg2) 0.001
+  assertFloatEqual "Build Leg Segments 2 6" (legDescent leg1a) (lsDescent seg1 + lsDescent seg2) 0.001
+  assertFloatEqual "Build Leg Segments 2 7" 2.60 (lsDistance seg1) 0.01
+  assertFloatEqual "Build Leg Segments 2 8" 17.0 (lsAscent seg1) 1.0
+  assertFloatEqual "Build Leg Segments 2 9" 10.0 (lsDescent seg1) 1.0
+  assertFloatEqual "Build Leg Segments 2 10" 2.68 (lsDistance seg2) 0.01
+  assertFloatEqual "Build Leg Segments 2 11" 300 (lsAscent seg2) 1.0
+  assertFloatEqual "Build Leg Segments 2 12" 10.0 (lsDescent seg2) 1.0
+  )
+
+testBuildLegSegments3 = TestCase (do
+  let segs = buildLegSegments (legFrom leg1b) (legTo leg1b) (legWaypoints leg1b) (legDistance leg1b) (legAscent leg1b) (legDescent leg1b)
+  assertEqual "Build Leg Segments 3 1" 3 (length segs)
+  let seg1 = segs !! 0
+  let seg2 = segs !! 1
+  let seg3 = segs !! 2
+  assertEqual "Build Leg Segments 3 2" (locationPosition $ legFrom leg1b) (lsFrom seg1)
+  assertEqual "Build Leg Segments 3 3" (locationPosition $ legTo leg1b) (lsTo seg3)
+  assertFloatEqual "Build Leg Segments 3 4" (legDistance leg1b) (lsDistance seg1 + lsDistance seg2 + lsDistance seg3) 0.001
+  assertFloatEqual "Build Leg Segments 3 5" (legAscent leg1b) (lsAscent seg1 + lsAscent seg2 + lsAscent seg3) 0.001
+  assertFloatEqual "Build Leg Segments 3 6" (legDescent leg1b) (lsDescent seg1 + lsDescent seg2 + lsDescent seg3) 0.001
+  assertFloatEqual "Build Leg Segments 3 7" 2.53 (lsDistance seg1) 0.01
+  assertFloatEqual "Build Leg Segments 3 8" 16.0 (lsAscent seg1) 1.0
+  assertFloatEqual "Build Leg Segments 3 9" 7.0 (lsDescent seg1) 1.0
+  assertFloatEqual "Build Leg Segments 3 10" 1.25 (lsDistance seg2) 0.01
+  assertFloatEqual "Build Leg Segments 3 11" 1 (lsAscent seg2) 1.0
+  assertFloatEqual "Build Leg Segments 3 12" 18.0 (lsDescent seg2) 1.0
+  assertFloatEqual "Build Leg Segments 3 13" 1.50 (lsDistance seg3) 0.01
+  assertFloatEqual "Build Leg Segments 3 14" 311 (lsAscent seg3) 1.0
+  assertFloatEqual "Build Leg Segments 3 15" 4.0 (lsDescent seg3) 1.0
+  )
 
 logicJson1 = [r|
   {

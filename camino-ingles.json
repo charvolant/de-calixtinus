@@ -905,7 +905,12 @@
       "to": "I-I9",
       "distance": 9.65,
       "ascent": 175,
-      "descent": 150
+      "descent": 150,
+      "waypoints": [
+        { "latitude": 43.39225, "longitude": -8.16940, "elevation": 150 },
+        { "latitude": 43.35925, "longitude": -8.17944, "elevation": 64 },
+        { "latitude": 43.35676, "longitude": -8.19097, "elevation": 8 }
+      ]
     },
     {
       "from": "I-I9",
@@ -918,8 +923,12 @@
       "from": "I-I10",
       "to": "I-I11",
       "distance": 2.63,
-      "ascent": 130,
-      "descent": 85
+      "ascent": 65,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 43.32931, "longitude": -8.18859, "elevation": 8 },
+        { "latitude": 43.32572, "longitude": -8.19185, "elevation": 67 }
+      ]
     },
     {
       "from": "I-I11",
@@ -954,15 +963,24 @@
       "from": "I-I14",
       "to": "I-I16",
       "distance": 4.90,
-      "ascent": 270,
-      "descent": 165
+      "ascent": 165,
+      "descent": 60,
+      "waypoints": [
+        { "latitude": 43.22690, "longitude": -8.25643, "elevation": 137 },
+        { "latitude": 43.21921, "longitude": -8.26237, "elevation": 147 },
+        { "latitude": 43.21083, "longitude": -8.26284, "elevation": 116 }
+      ]
     },
     {
       "from": "I-I15",
       "to": "I-I16",
       "distance": 2.60,
       "ascent": 70,
-      "descent": 10
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 43.19762, "longitude": -8.26728, "elevation": 156 },
+        { "latitude": 43.19626, "longitude": -8.27135, "elevation": 184 }
+      ]
     },
     {
       "from": "I-I16",
@@ -1003,15 +1021,22 @@
       "from": "I-I21",
       "to": "I-I22",
       "distance": 3.44,
-      "ascent": 25,
-      "descent": 90
+      "ascent": 35,
+      "descent": 95,
+      "waypoints": [
+        { "latitude": 43.10977, "longitude": -8.37863, "elevation": 303 },
+        { "latitude": 43.10465, "longitude": -8.37831, "elevation": 334 }
+      ]
     },
     {
       "from": "I-I22",
       "to": "I-I23",
       "distance": 2.92,
       "ascent": 100,
-      "descent": 50
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 43.08463, "longitude": -8.38248, "elevation": 271 }
+      ]
     },
     {
       "from": "I-I23",
@@ -1025,7 +1050,10 @@
       "to": "I-I25",
       "distance": 1.79,
       "ascent": 55,
-      "descent": 45
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 43.04089, "longitude": -8.39971, "elevation": 258 }
+      ]
     },
     {
       "description": "Official route@en",
@@ -1055,7 +1083,11 @@
       "to": "I-I28",
       "distance": 3.54,
       "ascent": 60,
-      "descent": 40
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.90842, "longitude": -8.51059, "elevation": 346 },
+        { "latitude": 42.90070, "longitude": -8.52391, "elevation": 322 }
+      ]
     },
     {
       "from": "I-I28",
@@ -1089,8 +1121,11 @@
       "from": "I-I32",
       "to": "I-I33",
       "distance": 2.47,
-      "ascent": 55,
-      "descent": 70
+      "ascent": 65,
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 43.29250, "longitude": -8.36681, "elevation": 10 }
+      ]
     },
     {
       "from": "I-I33",
@@ -1104,14 +1139,21 @@
       "to": "I-I35",
       "distance": 3.28,
       "ascent": 75,
-      "descent": 65
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 43.25820, "longitude": -8.36277, "elevation": 184 }
+      ]
     },
     {
       "from": "I-I35",
       "to": "I-I36",
       "distance": 3.34,
-      "ascent": 50,
-      "descent": 105
+      "ascent": 60,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 43.23888, "longitude": -8.33779, "elevation": 73 },
+        { "latitude": 43.23207, "longitude": -8.33660, "elevation": 120 }
+      ]
     },
     {
       "from": "I-I36",
@@ -1141,15 +1183,9 @@
       "name": "Camino Ingles",
       "description": "The main Camino route starting in Ferrol.",
       "major": true,
-      "starts": [
-        "I-I1"
-      ],
-      "finishes": [
-        "ST-ST1"
-      ],
-      "suggested-pois": [
-        "ST-ST1-1"
-      ],
+      "starts": [ "I-I1" ],
+      "finishes": [ "ST-ST1" ],
+      "suggested-pois": [ "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"
       }
@@ -1168,12 +1204,8 @@
       },
       "locations": [ "I-I29", "I-I30", "I-I31", "I-I32", "I-I33", "I-I34", "I-I35", "I-I36", "I-I37", "I-I38" ],
       "major": true,
-      "starts": [
-        "I-I29"
-      ],
-      "suggested-pois": [
-        "I-I29-1"
-      ],
+      "starts": [ "I-I29" ],
+      "suggested-pois": [ "I-I29-1" ],
       "palette": {
         "colour": "#feda53"
       }

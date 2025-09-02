@@ -1247,7 +1247,10 @@
       "to": "FI-F2",
       "distance": 2.06,
       "ascent": 55,
-      "descent": 75
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 42.87381, "longitude": -8.56457, "elevation": 178 }
+      ]
     },
     {
       "from": "FI-F2",
@@ -1352,8 +1355,12 @@
       "from": "FI-F16",
       "to": "FI-F17",
       "distance": 3.69,
-      "ascent": 70,
-      "descent": 160
+      "ascent": 35,
+      "descent": 120,
+      "waypoints": [
+        { "latitude": 42.96526, "longitude": -8.96003, "elevation": 427 },
+        { "latitude": 42.96606, "longitude": -8.97661, "elevation": 320 }
+      ]
     },
     {
       "from": "FI-F17",
@@ -1522,7 +1529,10 @@
       "to": "FI-M7",
       "distance": 1.44,
       "ascent": 15,
-      "descent": 30
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 43.08231, "longitude": -9.16536, "elevation": 56 }
+      ]
     },
     {
       "from": "FI-M7",
@@ -1592,7 +1602,11 @@
       "to": "FI-M17",
       "distance": 2.24,
       "ascent": 80,
-      "descent": 50
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 42.98521, "longitude": -9.24620, "elevation": 42 },
+        { "latitude": 42.97767, "longitude": -9.24573, "elevation": 113 }
+      ]
     },
     {
       "from": "FI-M17",
@@ -1629,12 +1643,8 @@
       "name": "Camino Fisterra",
       "description": "The main Camino route starting in Stantiago de Compostella and following the Southern route",
       "major": true,
-      "starts": [
-        "ST-ST1"
-      ],
-      "finishes": [
-        "FI-F33"
-      ],
+      "starts": [ "ST-ST1" ],
+      "finishes": [ "FI-F33" ],
       "palette": {
         "colour": "#fec953"
       }
@@ -1648,9 +1658,7 @@
         "FI-M11", "FI-M12", "FI-M13", "FI-M14", "FI-M15", "FI-M16", "FI-M17", "FI-M18", "FI-M19", "FI-M20"
       ],
       "major": true,
-      "stops": [
-        "FI-M12"
-      ],
+      "stops": [ "FI-M12" ],
       "palette": {
         "colour": "#46d767"
       }

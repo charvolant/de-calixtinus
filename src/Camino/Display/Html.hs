@@ -941,7 +941,7 @@ tripChoiceSummary config msolution location = [ihamlet|
 
 caminoLocationHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml config preferences camino msolution containerId rests stocks stops waypoints used location = [ihamlet|
-  <div id="#{lid}" .accordion-item .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
+  <div id="#{lid}" .accordion-item .p-0 .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
     <div .accordion-header>
       <button .accordion-button .collapsed data-bs-toggle="collapse" data-bs-target="#location-body-#{lid}" aria-expanded="false" aria-controls="location-body-#{lid}">
         <div .container-fluid>

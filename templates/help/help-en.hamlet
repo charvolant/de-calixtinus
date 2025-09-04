@@ -15,12 +15,12 @@
           <a .nav-link .active .dropdown-toggle role="button" data-bs-toggle="dropdown" aria-expanded="false">Plan
           <ul .dropdown-menu>
             <li .nav-item>
-              <a .nav-link .active href="#plan-help">Overview
+              <a .nav-link .active href="#plan-help-overview">Overview
             <li><hr .dropdown-divider>
             <li .nav-item>
               <a .nav-link .active href="#map-help">Map
             <li .nav-item>
-              <a .nav-link .active href="#plan-help">Plan
+              <a .nav-link .active href="#stage-help">Plan
             <li .nav-item>
               <a .nav-link .active href="#location-help">Locations
             <li .nav-item>
@@ -441,7 +441,7 @@
     <a target="_blank" href="https://en.wikipedia.org/wiki/VAM_(bicycling)">VAM
     \ Used to estimate the effects of climbing for cyclists.
 
-<h2 #plan-help>Plan
+<h2 #plan-help-overview>Plan
 
 <p>
   Once you have entered your <a href="#preferences-help">preferences</a>, the De Calixtinus planner will generate
@@ -450,8 +450,8 @@
 
 <ul>
   <li><a href="#map-help">Map</a> - A map of the route.
-  <li><a href="stage-help">Plan</a> - A plan for the Camino, showing each stage's and day's activity
-  <li><a href="location-help">Locations</a> - Detailed information about each location
+  <li><a href="#stage-help">Plan</a> - A plan for the Camino, showing each stage's and day's activity
+  <li><a href="#location-help">Locations</a> - Detailed information about each location
   <li>Preferences - A summary of the <a href="#preferences-help">preferences</a> that you specified
   <li>About - Information about the camino data
   <li>Key - A key for the various symbols and markers
@@ -629,7 +629,32 @@
       Ascent <span .height>25m</span>
       Descent <span .height>25m</span>
       Penance <span .penance>21.7 km</span>
-     <ul>
+    <div .col-xs-12 .col-md-6 .col-lg-4>
+      <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none">
+          <path d="M 10 200 L 10 196 C 79 196, 147 197, 216 197 C 345 197, 473 197, 602 196 C 668 196, 733 196, 799 196 C 850 196, 901 197, 952 197 C 1034 197, 1117 198, 1200 198  L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
+          <line x1="10" y1="194" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="1200" y1="196" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="216" y1="195" x2="216" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="602" y1="194" x2="602" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="799" y1="194" x2="799" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="952" y1="195" x2="952" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="9" y1="200" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="5" y1="170" x2="9" y2="170" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="5" y1="140" x2="9" y2="140" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="5" y1="110" x2="9" y2="110" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="5" y1="80" x2="9" y2="80" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="10 - 10" y1="200" x2="9" y2="200" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="10 - 10" y1="50" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="14.0">Santa Iria de Azoia
+        <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="7.0">Vila Franca de Xira
+        <text x="18.0%" y="20.0%" font-size="8" text-anchor="start" font-weight="normal" title="10.0">Póvoa de Santa Iria
+        <text x="50.166666666666664%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="12.0">Alverca do Ribatejo
+        <text x="66.58333333333333%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="15.0">Sobralinho
+        <text x="79.33333333333333%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="10.0">Alhandra
+        <text x="1.1666666666666667%" y="104.0%" font-size="6" text-anchor="start" fill="grey">0
+        <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">500
+    <ul>
       <li>
         <div .location-summary>
           Vila Franca de Xira
@@ -703,6 +728,72 @@
   Different components will appear in this line, as needed.
 
 <p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    We aware that the elevation/distance profile is exagerrated for display purposes.
+    Real life is not that steep.
+
+  Beneath the time and distance is an elevation summary, showing the various waypoints and a
+  (rough) profile showing climbs and descents.
+  Note that the actual trip will, usually, involve many more small ascents and descents that are not
+  visible in the profile.
+  The example given above is somewhat flat.
+  A more hilly example is
+
+<div .row .p-3>
+  <div .col-xs-12 .col-md-6 .col-lg-4>
+    <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none">
+        <path d="M 10 200 L 10 104 C 69 105, 128 107, 187 109 C 203 107, 219 106, 235 105 C 253 107, 271 108, 290 110 C 302 109, 315 108, 328 107 C 375 106, 422 105, 469 103 C 476 102, 483 101, 490 100 C 556 101, 621 102, 687 103 C 732 106, 778 108, 824 111 C 880 117, 935 122, 991 128 C 1017 132, 1043 136, 1070 140 C 1113 143, 1157 147, 1200 150  L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
+        <line x1="10" y1="102" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="1200" y1="148" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="187" y1="107" x2="187" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="328" y1="105" x2="328" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="469" y1="101" x2="469" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="490" y1="98" x2="490" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="687" y1="101" x2="687" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="824" y1="109" x2="824" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="991" y1="126" x2="991" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="1070" y1="138" x2="1070" y2="82" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="9" y1="200" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="192" x2="9" y2="192" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="185" x2="9" y2="185" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="178" x2="9" y2="178" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="170" x2="9" y2="170" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="155" x2="9" y2="155" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="148" x2="9" y2="148" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="140" x2="9" y2="140" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="132" x2="9" y2="132" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="118" x2="9" y2="118" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="110" x2="9" y2="110" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="102" x2="9" y2="102" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="95" x2="9" y2="95" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="80" x2="9" y2="80" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="72" x2="9" y2="72" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="65" x2="9" y2="65" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="5" y1="58" x2="9" y2="58" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="10 - 10" y1="200" x2="9" y2="200" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="10 - 10" y1="162" x2="9" y2="162" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="10 - 10" y1="125" x2="9" y2="125" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="10 - 10" y1="88" x2="9" y2="88" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="10 - 10" y1="50" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+      <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="1283.0">O Cebreiro
+      <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="668.0">Triacastela
+      <text x="15.583333333333334%" y="20.0%" font-size="8" text-anchor="start" font-weight="normal" title="1218.0">Liñares
+      <text x="27.333333333333332%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1238.0">Hospital da Condesa
+      <text x="39.083333333333336%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1288.0">Padornelo
+      <text x="40.833333333333336%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1340.0">Alto do Poio
+      <text x="57.25%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1290.0">Fonfría
+      <text x="68.66666666666667%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1187.0">O Biduedo
+      <text x="82.58333333333333%" y="30.0%" font-size="8" text-anchor="end" font-weight="normal" title="964.0">Filobal
+      <text x="89.16666666666667%" y="40.0%" font-size="8" text-anchor="end" font-weight="normal" title="799.0">Pasantes
+      <text x="1.1666666666666667%" y="104.0%" font-size="6" text-anchor="start" fill="grey">0
+      <text x="1.1666666666666667%" y="85.0%" font-size="6" text-anchor="start" fill="grey">500
+      <text x="1.1666666666666667%" y="66.5%" font-size="6" text-anchor="start" fill="grey">1000
+      <text x="1.1666666666666667%" y="48.0%" font-size="6" text-anchor="start" fill="grey">1500
+      <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">2000
+  
+
+<p>
   The following lines give the waypoints for the day.
   Each waypoint summarises the location in terms of the accommodation and services available.
   The amount of
@@ -720,29 +811,62 @@
 
 <div .card .stage .border-primary .mt-2>
   <div .card-body>
-    <h3 .card-title #stage-P-P1>
-      <a href="#">
-        <span lang="en">Lisbon
-      -
-      <a href="#">
-        <span lang="en">Santarém
-      <span .date-range>Mon 2025-04-28 - Sat 2025-05-03
+    <h3 .card-title>
+      Porto - Valença do Minho
+      <span .date-range>Fri 2025-09-26 - Fri 2025-10-03
     <p .card-text>
-      Distance <span .distance">89.8km</span>
-      (feels like <span .distance>102.4km</span>)
-      over <span .time>27.6hrs</span>
-      (<span .time>2.0hrs</span> stops)
-      <span .days>5 days
-      Ascent <span .height>385m</span>
-      Descent <span .height>305m</span>
-      Penance <span .penance>127.3 km</span>
+      Distance 
+      <span .distance>123.6 km
+      (feels like <span .distance>141.8 km</span>)
+      over 
+      <span .time>35.5hrs
+      <span .days>7days
+      Ascent
+      <span.height>1665 m
+      Descent 
+      <span .height>1680 m
+      Penance 
+      <span .penance>194.6 km
+    <div .container-fluid>
+      <div .row>
+        <div .col-xs-12 .col-lg-8>
+          <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none">
+              <path d="M 10 200 L 10 181 C 31 177, 53 172, 74 168 C 83 171, 92 174, 101 178 C 109 182, 116 186, 124 190 C 128 186, 132 181, 137 177 C 148 177, 159 178, 170 179 C 176 183, 182 187, 188 190 C 192 189, 195 187, 199 185 C 208 184, 216 184, 225 183 C 231 178, 238 174, 244 170 C 248 173, 251 177, 255 180 C 260 181, 265 181, 269 181 C 275 186, 280 192, 286 198 C 287 195, 288 192, 289 190 C 290 192, 291 195, 292 197 C 296 192, 300 187, 303 182 C 310 182, 317 182, 323 182 C 332 184, 341 185, 350 187 C 361 185, 371 182, 382 180 C 392 177, 401 175, 410 172 C 421 170, 432 168, 443 165 C 454 165, 464 165, 475 165 C 482 172, 490 178, 498 185 C 507 189, 517 192, 527 195 C 529 193, 532 190, 535 188 C 544 185, 553 183, 563 180 C 564 179, 566 178, 567 177 C 571 180, 575 184, 580 187 C 581 186, 582 185, 584 184 C 598 171, 613 158, 628 145 C 632 151, 636 156, 640 162 C 651 169, 661 176, 671 182 C 678 178, 685 174, 692 169 C 697 172, 701 174, 705 177 C 711 174, 718 171, 724 168 C 727 168, 730 169, 733 169 C 737 167, 741 165, 745 163 C 749 158, 754 152, 758 147 C 766 157, 775 168, 784 179 C 789 181, 795 183, 800 185 C 801 187, 802 189, 803 191 C 809 192, 815 194, 821 195 C 822 195, 824 194, 826 194 C 827 194, 829 193, 830 193 C 833 194, 836 195, 838 196 C 845 196, 852 197, 859 197 C 860 197, 862 197, 863 197 C 867 196, 872 195, 876 194 C 880 193, 884 192, 889 191 C 896 190, 904 190, 911 189 C 919 186, 927 183, 935 179 C 936 178, 938 177, 940 176 C 944 169, 949 162, 953 154 C 955 153, 957 151, 960 150 C 967 127, 975 104, 982 81 C 987 91, 993 101, 998 111 C 1002 117, 1006 123, 1010 129 C 1013 128, 1016 127, 1019 126 C 1023 131, 1027 137, 1031 142 C 1032 143, 1034 144, 1035 145 C 1036 146, 1036 147, 1037 148 C 1039 150, 1041 151, 1043 153 C 1051 143, 1059 133, 1067 124 C 1069 122, 1071 120, 1073 118 C 1078 127, 1082 136, 1086 146 C 1090 155, 1094 165, 1098 174 C 1100 176, 1102 177, 1104 178 C 1112 180, 1120 181, 1127 182 C 1131 185, 1135 187, 1139 190 C 1146 191, 1153 192, 1160 193 C 1165 193, 1169 193, 1174 193 C 1183 189, 1191 184, 1200 180  L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
+              <line x1="10" y1="179" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="1200" y1="178" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="188" y1="188" x2="188" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="350" y1="185" x2="350" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="527" y1="194" x2="527" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="692" y1="167" x2="692" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="859" y1="195" x2="859" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="1031" y1="140" x2="1031" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="9" y1="200" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="5" y1="170" x2="9" y2="170" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="5" y1="140" x2="9" y2="140" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="5" y1="110" x2="9" y2="110" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="5" y1="80" x2="9" y2="80" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="10 - 10" y1="200" x2="9" y2="200" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+              <line x1="10 - 10" y1="50" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+            <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="bold" title="64.0">Porto
+            <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="bold" title="67.0">Valença do Minho
+            <text x="15.666666666666666%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="32.0">Mosteiró
+            <text x="29.166666666666668%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="44.0">São Miguel de Arcos
+            <text x="43.916666666666664%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="15.0">Barcelinhos
+            <text x="57.666666666666664%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="102.0">Balugães
+            <text x="71.58333333333333%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="11.0">Ponte de Lima
+            <text x="85.91666666666667%" y="20.0%" font-size="8" text-anchor="end" font-weight="normal" title="193.0">Rubiães
+            <text x="1.1666666666666667%" y="104.0%" font-size="6" text-anchor="start" fill="grey">0
+            <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">500
+
 <p>
-  The stage shows a summary of the days that comprise it, showing total distance, time and effort.
+  The stage shows a summary of the days that comprise it, showing total distance, time and effort,
+  along with a larger-scale elevation profile for the entire stage.
 
 <h4 #penance-table-help>Penance Tables
 
 <p>
-  If you press the <a href="#plan-help">Show/hide detail button</a> you will see tables of data showing the
+  If you press the <a href="#plan-help-overview">Show/hide detail button</a> you will see tables of data showing the
   elements that make up the penance for a day, stage or trip.
   You can use these tables to dig into why a particular leg or stop has been chosen.
   A penance table looks like
@@ -844,10 +968,10 @@
   <a href="#stage-help">plan
   An example location is
 
-<div .card .border .border-info .m-2 .p-2 style="clear: both;">
-  <div .accordion .container-fluid>
+<div .card .m-2 style="clear: both;">
+  <div .accordion .container-fluid .p-0>
     <div .row>
-      <div .accordion-item .location-P-RP .location-waypoint .location #P-P109>
+      <div .accordion-item  .p-0 .location-P-RP .location-waypoint .location #P-P109>
         <div .accordion-header>
           <button .accordion-button data-bs-toggle="collapse" data-bs-target="#location-body-P-P109" aria-expanded="true" aria-controls="location-body-P-P109">
             <div .container-fluid>
@@ -979,10 +1103,14 @@
 
 <p>
   The first element on the header is an icon showing the type of location, followed by the name.
+  The Key tab contains a complete list of location icons.
   The location type is a very rough indicator of the type of location.
-  The exact line between what is a village, a town or a city is not well-defined, monasteries are often attached
-  to villages and a point of interest could be almost anything.
-  There are a number of icons that might be shown after the location name:
+  The exact line between what is a village, a town or a city is not well-defined;
+  monasteries, bridges and intersections are often attached to villages;
+  and so on.
+
+<p>
+  There are also a number of icons that might be shown after the location name:
 
 <dl>
   <dt>
@@ -1030,24 +1158,24 @@
 
 <p>
   Finally, clicking on the globe
-  <span .ca-globe>
+  <a href="#"><span .ca-globe>
   will show the location on the map.
   If there is a link
-  <span .ca-link">
+  <A href="#"><span .ca-link">
   then clicking on the link will take you to a web page with more information.
 
 <p>
   Another example location is
 
-<div .card .border .border-info .m-2 .p-2 style="clear: both;">
-  <div .accordion .container-fluid>
+<div .card .m-2 style="clear: both;">
+  <div .accordion .container-fluid .p-0>
     <div .row>
-      <div .accordion-item .location-BM-BM .location-waypoint .location id="BM-28">
+      <div .accordion-item .p-0 .location-BM-BM .location-waypoint .location id="BM-28">
         <div .accordion-header>
           <button .accordion-button data-bs-toggle="collapse" data-bs-target="#location-body-BM-28" aria-expanded="true" aria-controls="location-body-BM-28">
             <div .container-fluid>
               <div .row>
-                <h5 .col-4>
+                <h5 .location-type-sample .col-4>
                   <span .location-type .ca-town title="Town">
                   Double Bay
                 <div .col-3 .services>
@@ -1253,7 +1381,7 @@
 <p>
   An example point of interest is
 
-<div .card .g-0>
+<div .card .border .border-info .m-2 style="clear: both;">
   <div .card-header>
     <span .poi-types>
       <span .location-type .ca-museum title="Museum or gallery">
@@ -1299,7 +1427,7 @@
   Some points or interest or locations have events associated with them.
   An example of a church that has a special pilgrims' mass every Sunday at 1830 (6:30 pm) is
 
-<div .card .g-0>
+<div .card .border .border-info .m-2 style="clear: both;">
   <div .card-header>
     <span .poi-types>
       <span .location-type .ca-church title="Church">

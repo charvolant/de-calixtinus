@@ -1,0 +1,18 @@
+﻿ID,Name,PoI ID,PoI Name,To ID,To Name,Latitude,Longitude,Elevation
+F-F229,Melide,,,,,42.91386,-8.01474,454
+,,F-F229-1,Meeting of the Camino Frances and the Camino Primitivo,,,42.91424,-8.01613,459
+,,,,F-F230,Santa María de Melide,42.91142,-8.02537,424
+F-F230,Santa María de Melide,,,,,42.91142,-8.02537,424
+,,F-F230-1,Alternative Routes,,,42.91283,-8.03758,425
+,,,,F-F231,Parabispo,42.91557,-8.05665,459
+F-F231,Parabispo,,,,,42.91557,-8.05665,459
+,,,,F-F232,Boente,42.91606,-8.07822,397
+F-F232,Boente,,,,,42.91606,-8.07822,397
+,,F-F232-1,Area de descanso de Peregrinos,,,42.91909,-8.08778,347
+,,,,.,,42.91842,-8.08591,338
+,,,,F-F233,Castañeda,42.92481,-8.09732,414
+F-F233,Castañeda,,,,,42.92481,-8.09732,414
+,,F-F233-1,Alternative Routes,,,42.92050,-8.09240,395
+,,,,F-F234,Ribadiso,42.93067,-8.13067,304
+F-F234,Ribadiso,,,,,42.93067,-8.13067,304
+,,,,F-F235,Placeholder for F-F235,0.00000,0.00000,--

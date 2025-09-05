@@ -126,9 +126,9 @@ executables:
       - -with-rtsopts=-N
     dependencies:
       - de-calixtinus
-  rangecheck-exe:
+  camino-check-exe:
     main: Main.hs
-    source-dirs: app/rangecheck
+    source-dirs: app/check
     ghc-options:
       - -threaded
       - -rtsopts

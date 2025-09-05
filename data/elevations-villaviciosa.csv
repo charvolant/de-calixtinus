@@ -1,0 +1,8 @@
+﻿ID,Name,PoI ID,PoI Name,To ID,To Name,Latitude,Longitude,Elevation
+N-N138,Villaviciosa,,,,,43.48155,-5.43255,10
+,,,,N-N139,Amandi,43.47229,-5.44170,10
+N-N139,Amandi,,,,,43.47229,-5.44170,10
+,,,,N-N140,Casquita,43.46624,-5.46142,26
+N-N140,Casquita,,,,,43.46624,-5.46142,26
+,,N-N140-1,Camino del Norte and Camino Primitivo Split,,,43.46625,-5.46159,26
+,,N-N140-2,Camino Primitivo High-level Variant,,,43.46625,-5.46159,26

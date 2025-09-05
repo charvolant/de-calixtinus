@@ -16,15 +16,17 @@ import Camino.Display.JSON
 import Camino.Display.Static
 import Camino.Camino
 import Camino.Config
+import Control.Monad
 import Data.Aeson
 import Data.Aeson.Formatting
 import qualified Data.ByteString.Lazy as LB
 import Data.Default.Class
 import Data.List (sortOn)
 import qualified Data.Map as M
-import Data.Maybe (fromJust, isJust, isNothing)
 import qualified Data.Set as S
-import Data.Text (Text, intercalate, pack, unpack)
+import Data.Text (Text, unpack)
+import Formatting
+import Graph.Graph
 import Network.Google.Elevation
 import Options.Applicative
 import System.FilePath
@@ -32,45 +34,60 @@ import System.Directory
 import System.IO
 
 data Elevations = Elevations {
-  caminoInput :: FilePath,
-  caminoOutput :: FilePath,
-  mapApiKey :: Text
+    caminoOutput :: Maybe FilePath
+  , reportOutput :: Maybe FilePath
+  , mapApiKey :: Text
+  , caminoInput :: FilePath
 }
 
 arguments :: Parser Elevations
 arguments =  Elevations
-    <$> strArgument (metavar "INPUT" <> value "--" <> help "Source camino definition, if not used than stdin is used")
-    <*> strOption (long "output" <> short 'o' <> metavar "OUTPUT" <> value "--" <> help "Output file, if not specified then stdout is used")
+    <$> optional (strOption (long "output" <> short 'o' <> metavar "OUTPUT" <> help "Output file, if not specified then stdout is used"))
+    <*> optional (strOption (long "report" <> short 'r' <> metavar "REPORT" <> help "Create a CSV report of elevation information"))
     <*> strOption (long "key" <> short 'k' <> value "API_KEY" <> metavar "API_KEY" <> help "Google elevations API key")
+    <*> strArgument (metavar "INPUT" <> value "--" <> help "Source camino definition, if not used than stdin is used")
 
 loadCamino :: AssetConfig -> IO Camino
 loadCamino asset = do
   result <- readAsset asset
   return $ readCamino result
 
-writeElevations' :: [(Text, Text, LatLong, Maybe Double)] -> Handle -> IO ()
-writeElevations' elevations handle = do
+lineFormat :: Format r (Text -> Text -> Text -> Text -> Text -> Text -> Double -> Double -> Maybe Double -> r)
+lineFormat = stext % "," % stext % "," % stext % "," % stext % "," % stext % "," % stext % "," % fixed 5 % "," % fixed 5 % "," % (maybed "--" (fixed 0))
+
+writeReportWaypoint :: Camino -> Handle -> LatLong -> IO ()
+writeReportWaypoint _camino handle pos =
+  hprintLn handle lineFormat "" "" "" "" "." "" (latitude pos) (longitude pos) (elevation pos)
+
+writeReportLeg :: Camino -> Handle -> Leg -> IO ()
+writeReportLeg camino handle leg = do
+  let lt = legTo leg
+  let pos = locationPosition lt
+  mapM_ (writeReportWaypoint camino handle) (legWaypoints leg)
+  hprintLn handle lineFormat "" "" "" "" (locationID lt) (locationNameLabel lt) (latitude pos) (longitude pos) (elevation pos)
+
+writeReportPoi :: Camino -> Handle -> PointOfInterest -> IO ()
+writeReportPoi _camino handle poi = do
+  hprintLn handle lineFormat "" "" (poiID poi) (poiNameLabel poi) "" "" (latitude pos) (longitude pos) (elevation pos)
+    where
+      pos = poiPosition poi
+
+writeReportLocation :: Camino -> Handle -> Location -> IO ()
+writeReportLocation camino handle location = do
+  let pos = locationPosition location
+  hprintLn handle lineFormat (locationID location) (locationNameLabel location) "" "" "" "" (latitude pos) (longitude pos) (elevation pos)
+  mapM_ (writeReportPoi camino handle) (locationPois location)
+  mapM_ (writeReportLeg camino handle) (outgoing camino location)
+
+writeReport' :: Camino -> Handle -> IO ()
+writeReport' camino handle = do
   hSetEncoding handle utf8_bom -- Needed for excel to play nice
-  hPutStrLn handle "ID,Name,Latitude,Longitude,Elevation"
-  mapM_ (\(ident, name, position, elevation) ->
-    hPutStrLn handle (unpack ident ++ "," ++ unpack name ++ "," ++ (show $ latitude position) ++ "," ++ (show $ longitude position) ++  "," ++ (maybe "" (show . round) elevation))
-    ) elevations
+  hPutStrLn handle "ID,Name,PoI ID,PoI Name,To ID,To Name,Latitude,Longitude,Elevation"
+  mapM_ (writeReportLocation camino handle) (caminoLocations camino)
 
-writeElevations :: FilePath -> [(Text, Text, LatLong, Maybe Double)] -> IO ()
-writeElevations output' elevations =
-  withFile output' WriteMode (writeElevations' elevations)
-
-createElevationsFile :: MapApi -> [Camino] -> FilePath -> IO ()
-createElevationsFile api caminos' output' = do
-  let locations = foldr (\c -> \ls -> S.union ls (S.fromList $ caminoLocations c)) S.empty caminos'
-  let pois = foldr (\c -> \ls -> S.union ls (S.fromList $ map fst $ M.elems $ caminoPoiMap c)) S.empty caminos'
-  let lrequests = map (\l -> (locationID l, locationNameLabel l, locationPosition l)) $ S.toList locations
-  let prequests = map (\p -> (poiID p, poiNameLabel p, poiPosition p)) $ S.toList pois
-  let requests = sortOn (\(v, _, _) -> v) $ lrequests ++ prequests
-  let requests' = map (\(_i, _n, loc) -> LatLng (latitude loc) (longitude loc)) requests
-  elevations' <- getElevations api requests'
-  let elevations'' = map (\((ident, name, position), LatLngElevation _latlng elevation _resolution) -> (ident, name, position, elevation)) (zip requests elevations')
-  writeElevations output' elevations''
+writeReport :: Camino -> FilePath -> IO ()
+writeReport camino output =
+  withFile output WriteMode (writeReport' camino)
 
 roundElevation :: Double -> Double
 roundElevation v = fromIntegral $ round v
@@ -79,8 +96,15 @@ mapPosition :: M.Map LatLong LatLngElevation -> LatLong -> LatLong
 mapPosition elevMap ll@(LatLong lat' long' Nothing srs') = maybe ll (\(LatLngElevation _loc elev' _res) -> LatLong lat' long' (roundElevation <$> elev') srs') $ M.lookup ll elevMap
 mapPosition elevMap ll = ll
 
-mapLeg :: M.Map LatLong LatLngElevation -> Leg -> Leg
-mapLeg elevMap leg = leg { legWaypoints = map (mapPosition elevMap) (legWaypoints leg) }
+mapLeg :: M.Map LatLong LatLngElevation -> M.Map Text Location -> Leg -> Leg
+mapLeg elevMap locMap leg = leg {
+    legFrom = M.findWithDefault lf (locationID lf) locMap
+  , legTo = M.findWithDefault lt (locationID lt) locMap
+  , legWaypoints = map (mapPosition elevMap) (legWaypoints leg)
+  }
+  where
+    lf = legFrom leg
+    lt = legTo leg
 
 mapPoi ::  M.Map LatLong LatLngElevation -> PointOfInterest -> PointOfInterest
 mapPoi elevMap poi = poi { poiPosition = mapPosition elevMap (poiPosition poi) }
@@ -96,7 +120,7 @@ mapCamino :: M.Map LatLong LatLngElevation -> Camino -> Camino
 mapCamino elevMap camino = let
   locations' = map (mapLocation elevMap) (caminoLocations camino)
   locations'' = M.fromList $ map (\l -> (locationID l, l)) locations'
-  legs' = map (mapLeg elevMap) (caminoLegs camino)
+  legs' = map (mapLeg elevMap locations'') (caminoLegs camino)
   in
     camino {
         caminoLocations = locations'
@@ -123,12 +147,19 @@ elevations opts = do
     bytes <- if caminoInput opts == "--" then LB.hGetContents stdin else LB.readFile (caminoInput opts)
     let camino = readCamino bytes
     camino' <- addElevations api camino
+    let report' = reportOutput opts
+    case report' of
+      Nothing -> do
+        return ()
+      (Just report'') -> do
+        writeReport camino' report''
     let output' = caminoOutput opts
-    if output' == "--" then do
-      LB.putStr $ encodePretty caminoPrintOptions $ toJSON camino'
-    else do
-      createDirectoryIfMissing True (takeDirectory output')
-      encodeFile output' camino'
+    case output' of
+      Nothing -> do
+        LB.putStr $ encodePretty caminoPrintOptions $ toJSON camino'
+      (Just output'') -> do
+        createDirectoryIfMissing True (takeDirectory output'')
+        encodeFile output'' camino'
 
 main :: IO ()
 main = do

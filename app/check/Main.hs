@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-|
 Module      : Main
-Description : Check for legs that seem to be out of kilter
+Description : Check the camino for possible problems
 Copyright   : (c) Doug Palmer, 2025
 License     : MIT
 Maintainer  : doug@charvolant.org
@@ -36,14 +36,14 @@ import System.Directory
 import System.IO
 
 data RangeCheck = RangeCheck {
-  rangeCamino :: Text,
-  rangeConfig :: FilePath
+    rangeConfig :: FilePath
+  , rangeCamino :: Text
 }
 
 arguments :: Parser RangeCheck
 arguments =  RangeCheck
-    <$> strArgument (metavar "CAMINO" <> value "--" <> help "Source camino identifier")
-    <*> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
+    <$> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
+    <*> strArgument (metavar "CAMINO" <> value "--" <> help "Source camino identifier")
 
 rangeCheckSegment :: Leg -> LegSegment -> IO ()
 rangeCheckSegment leg (LegSegment sf st distance ascent descent) = do
@@ -100,5 +100,5 @@ rangeCheck opts = do
 
 main :: IO ()
 main = do
-    opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Check locations and legs for poorly distributed changes")
+    opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Check the camino for possible errors")
     rangeCheck opts

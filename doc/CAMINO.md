@@ -19,9 +19,13 @@
   * [Points of Interest](#points-of-interest)
   * [Events](#events)
 * [Legs](#legs)
+  * [Waypoints](#waypoints)
 * [Routes](#routes)
 * [Route Logic](#route-logic)
   * [Conditions](#conditions)
+* [Tools](#tools)
+  * [Elevations](#elevations)
+  * [Camino Checker](#camino-check)
 
 A "Camino" from the point of view of De Calixtinus is a coherent collection of
 locations, legs between locations and options and variants about how one might approach
@@ -158,9 +162,9 @@ appearing depending on the requested languages.
 
 | Language   | Code | Messages | Camino | Date & Time |
 |------------|------|----------|--------| --- |
-| Basque     | eu   | N | N      | Y |
+| Basque     | eu   | N | Y      | Y |
 | English    | en   | Y        | Y      | Y |
-| French     | fr   | N | N      | Y |
+| French     | fr   | N | Y      | Y |
 | Gallacian  | ga   | N | Y      | Y |
 | Portuguese | pt   | N        | Y      | Y |
 | Spanish    | es   | N        | Y      | Y |
@@ -619,7 +623,7 @@ An example location is:
   "id": "P-P15",
   "name": "Azambuja",
   "type": "Town",
-  "position": { "latitude": 39.0695, "longitude": -8.8667 },
+  "position": { "latitude": 39.0695, "longitude": -8.8667, "elevation": 14 },
   "region": "PT",
   "services": ["BicycleRepair", "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
   "accommodation": [
@@ -652,6 +656,8 @@ The elements are:
 * `description` Optional descriptive information
 * `type` The type of location. See [below](#types-services-etc)
 * `position` The position of the location in decimal latitude and longitude.
+  An elevation should be included in the final camino.
+  However, elevations can be added into the camino (from the Google maps API) by using the `elevations-exe` program.
 * `region` The region code for the location.
 * `services` A list of the publicly available services at the location. See [below](#types-services-etc).
 * `accommodation` A list of the accommodation options. See [below](#accommodation)
@@ -693,6 +699,7 @@ A typical accommodation entry looks like:
 
 * The `name` is the name of the guest house, camp site, hotel, etc.
 * The `type` is the type of accommodation. See [above](#types-services-etc)
+* An optional `description` for additional [descriptive](#description) information.
 * The `services` lists the services available to guests. See [above](#types-services-etc).
   These can overlap with public services.
 * `sleeping` lists the types of sleeping arrangements available. See [above](#types-services-etc)
@@ -733,7 +740,7 @@ And example PoI is
     "National Tile Museum@en"
   ],
   "type": "Museum",
-  "position": { "latitude": 38.72508, "longitude": -9.11347 },
+  "position": { "latitude": 38.72508, "longitude": -9.11347, "elevation": 6 },
   "hours": [
     {
       "calendar": {
@@ -841,6 +848,40 @@ For example, a leg by ferry, rather than walking, might be:
   For example, out of two routes, the most direct passes though a particularly miserable
   industrial area.
 * `description` Allow you to add additional description to the leg.
+
+### Waypoints
+
+The ideal leg is, more or less, straight, with a simple ascent or descent.
+Since legs run from location to location, this is not always true.
+The `waypoints` field allows you to specify a series of latitude/longitude/elevation
+intermediate points to allow significant changes in elevation (eg. hills or valleys) to
+be shown, or routes that meander to more closely fit the leg distance.
+
+And example leg with waypoints is:
+
+```json
+{
+  "from": "P-P91",
+  "to": "P-P92",
+  "distance": 3.45,
+  "ascent": 30,
+  "descent": 90,
+  "waypoints": [
+    { "latitude": 40.42576, "longitude": -8.44070, "elevation": 74 },
+    { "latitude": 40.43984, "longitude": -8.44404, "elevation": 62 }
+  ]
+}
+```
+
+Within the leg, the distance, ascent and descent is distributed between the leg segments,
+based on straight line distance between the locations and waypoints and elevation changes.
+It is possible to have a larger ascent/descent than the exact elevation change, to account for bumpy terrain.
+An ascent/descent that is less than the total elevation change is an error.
+
+The `elevation-exe` program will allow you to fill out elevation changes.
+The `camino-check-exe` program will produce a report of any legs that look like they're
+in need of additional waypoints; either because the distance seems to be much longer than
+the straight line (great circle) distance on the map, or because there appears to be a hidden elevation change.
 
 ## Routes
 
@@ -970,3 +1011,42 @@ Complex conditions can be nested so "either R3 or R2 and not R1 are selected" ca
 }
 ```
 
+## Tools
+
+### Elevations
+
+The `elevations-exe` program will take a camino specification,
+extract all the positional data and fill out elevation information
+by using the [Google Maps Elevation API](https://developers.google.com/maps/documentation/elevation/overview).
+To use this application, you will need to register with Google and
+obtain an [API key](https://developers.google.com/maps/documentation/elevation/get-api-key?setupProd=prerequisites).
+
+To run the elevations program, use
+
+```shell
+elevations-exe -k KEY CAMINO [-o OUTPUT] [-r REPORT]
+```
+
+| Argument | Description                                                         | Example                    |                   |
+|----------|---------------------------------------------------------------------|----------------------------|-------------------| 
+| CAMINO   | A camino description in JSON form                                   | camino-portuguese.json     |                   |
+| KEY      | The API key                                                         | API_KEY                    |                   |
+| OUTPUT   | An optional output file. If not specified, the output is to stdout. | camino-portuguese-new.json |                   |                                                                     
+| REPORT   | Generate a report of position and elevation information in CSV form | elevations-portuguese.csv  |                   |                                                                     
+
+
+### Camino Check
+
+The `camino-check-exe` program will take a [configuration](CONFIG.md) and check a single camino for possible errors,
+producing a report of possible problems.
+
+To run the checker, use
+
+```shell
+camino-check-exe CAMINO [-c CONFIG]
+```
+
+| Argument | Description                                                         | Example                    |                   |
+|----------|---------------------------------------------------------------------|----------------------------|-------------------| 
+| CAMINO   | The camino identifier to check                                      | F                          |                   |
+| CONFIG   | A camino configuration, including all caminos, holidays etc.        | ./config.yaml              |                   |

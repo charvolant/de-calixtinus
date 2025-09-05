@@ -84,9 +84,9 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is source data for six caminos:
+  Currently, there is source data for seven caminos:
   the Camino Portuguese, the one we walked; the Camino Frances; the Camino del Norte; the Camino Ingles;
-  the Camino Primitivo and the Camino Fisterra.
+  the Camino Primitivo; the Camino Invierno (the winter camino); and the Camino Fisterra.
   I've also added in the Bondi-Manly walk, about as far away from the Camino Santiago as you can get, both
   figuratively and physically, for funsies.
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
@@ -120,6 +120,7 @@
 <p>
   Good-old Google Maps was used to estimate total ascent and descent between
   waypoints and fix suitable waypoint locations.
+  The map elevation API was also used to gather elevation data.
   Google Maps was also used to estimate train and bus stations.
 
 <p>

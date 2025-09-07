@@ -550,7 +550,8 @@ travelHours :: TravelPreferences -- ^ The calculation preferences
 travelHours preferences day = let
     fitness = preferenceFitness preferences
     baseHours = travelFunction (preferenceTravel preferences) fitness
-    simple = sum $ map (\l -> baseHours fitness (legDistance l) (legAscent l) (legDescent l)) day
+    segments = concat $ map legSegments day
+    simple = sum $ map (\s -> baseHours fitness (lsDistance s) (lsAscent s) (lsDescent s)) segments
   in
     tranter (preferenceFitness preferences) simple
 

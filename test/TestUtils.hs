@@ -9,11 +9,11 @@ import Data.Util
 import System.Directory
 import System.FilePath
 
-assertFloatEqual :: String -> Float -> Float -> Float -> Assertion
+assertFloatEqual :: (Show a, RealFrac a) => String -> a -> a -> a -> Assertion
 assertFloatEqual msg expected actual precision =
   assertBool (msg ++ " expected " ++ show expected ++ " but got " ++ show actual) (abs (expected - actual) < precision)
 
-assertMaybeFloatEqual :: String -> Maybe Float -> Maybe Float -> Float -> Assertion
+assertMaybeFloatEqual :: (Show a, RealFrac a) => String -> Maybe a -> Maybe a -> a -> Assertion
 assertMaybeFloatEqual msg expected actual precision
   | isNothing expected && isJust actual = assertBool (msg ++ " expected " ++ show expected ++ " but got " ++ show actual) False
   | isJust expected && isNothing actual = assertBool (msg ++ " expected " ++ show expected ++ " but got " ++ show actual) False

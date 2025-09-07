@@ -204,8 +204,8 @@ testBuildLegSegments2 = TestCase (do
   assertFloatEqual "Build Leg Segments 2 8" 17.0 (lsAscent seg1) 1.0
   assertFloatEqual "Build Leg Segments 2 9" 10.0 (lsDescent seg1) 1.0
   assertFloatEqual "Build Leg Segments 2 10" 2.68 (lsDistance seg2) 0.01
-  assertFloatEqual "Build Leg Segments 2 11" 300 (lsAscent seg2) 1.0
-  assertFloatEqual "Build Leg Segments 2 12" 10.0 (lsDescent seg2) 1.0
+  assertFloatEqual "Build Leg Segments 2 11" 303 (lsAscent seg2) 1.0
+  assertFloatEqual "Build Leg Segments 2 12" 10 (lsDescent seg2) 1.0
   )
 
 testBuildLegSegments3 = TestCase (do
@@ -224,9 +224,9 @@ testBuildLegSegments3 = TestCase (do
   assertFloatEqual "Build Leg Segments 3 9" 7.0 (lsDescent seg1) 1.0
   assertFloatEqual "Build Leg Segments 3 10" 1.25 (lsDistance seg2) 0.01
   assertFloatEqual "Build Leg Segments 3 11" 1 (lsAscent seg2) 1.0
-  assertFloatEqual "Build Leg Segments 3 12" 18.0 (lsDescent seg2) 1.0
+  assertFloatEqual "Build Leg Segments 3 12" 20.0 (lsDescent seg2) 1.0
   assertFloatEqual "Build Leg Segments 3 13" 1.50 (lsDistance seg3) 0.01
-  assertFloatEqual "Build Leg Segments 3 14" 311 (lsAscent seg3) 1.0
+  assertFloatEqual "Build Leg Segments 3 14" 314 (lsAscent seg3) 1.0
   assertFloatEqual "Build Leg Segments 3 15" 4.0 (lsDescent seg3) 1.0
   )
 

@@ -164,7 +164,8 @@
                 "penance": null,
                 "time": null,
                 "to": "B",
-                "type": null
+                "type": null,
+                "waypoints": null
               },
               {
                 "ascent": 0,
@@ -175,7 +176,8 @@
                 "penance": null,
                 "time": null,
                 "to": "C",
-                "type": null
+                "type": null,
+                "waypoints": null
               }
             ],
             "score": {

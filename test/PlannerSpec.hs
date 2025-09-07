@@ -209,27 +209,31 @@ location4 = Location {
     locationEvents = []
   }
   
+annotateLeg :: Leg -> Leg
+annotateLeg leg = leg {
+    legSegments = buildLegSegments (legFrom leg) (legTo leg) (legWaypoints leg) (legDistance leg) (legAscent leg) (legDescent leg)
+  }
 
-legs0 = [
+legs0 = map annotateLeg [
   Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
-legs1 = [
+legs1 = map annotateLeg [
   Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 50, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
   Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
   
-legs2 = [
+legs2 = map annotateLeg [
   Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 2.0, legTime = Nothing, legAscent = 100, legDescent = 5, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
   Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
-  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = []}
+  Leg { legType = Road, legFrom = location3, legTo = location4, legDistance = 4.5, legTime = Nothing, legAscent = 200, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
-legs4 = [
+legs4 = map annotateLeg [
   Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
-links1 = [
+links1 = map annotateLeg [
   Leg { legType = BusLink, legFrom = location1, legTo = location2, legDistance = 0.0, legTime = Just 0.5, legAscent = 0, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 

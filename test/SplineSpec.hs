@@ -96,13 +96,14 @@ testSplineSecondDevs7 = TestCase (do
   )
 
 
+
 testSplineMakeSpline = TestList [
   testSplineMakeSpline1, testSplineMakeSpline2, testSplineMakeSpline3, testSplineMakeSpline4,
   testSplineMakeSpline5, testSplineMakeSpline6, testSplineMakeSpline7
   ]
 
 testSplineMakeSpline1 = TestCase (do
-    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)]
+    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
     assertEqual "Make Spline 1 1" 1 (length sps)
     let sp1 = sps !! 0
     assertFloatEqual "Make Spline 1 2" 1.0 (splineAt sp1 0.0) 0.001
@@ -114,7 +115,7 @@ testSplineMakeSpline1 = TestCase (do
   )
 
 testSplineMakeSpline2 = TestCase (do
-    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 2.0)]
+    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 2.0)] :: [Spline Float]
     assertEqual "Make Spline 2 1" 1 (length sps)
     let sp1 = sps !! 0
     assertFloatEqual "Make Spline 2 2" 1.0 (splineAt sp1 0.0) 0.001
@@ -126,7 +127,7 @@ testSplineMakeSpline2 = TestCase (do
   )
 
 testSplineMakeSpline3 = TestCase (do
-    let sps = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 2.0)]
+    let sps = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 2.0)] :: [Spline Float]
     assertEqual "Make Spline 3 1" 1 (length sps)
     let sp1 = sps !! 0
     assertFloatEqual "Make Spline 3 2" 1.0 (splineAt sp1 0.0) 0.001
@@ -138,7 +139,7 @@ testSplineMakeSpline3 = TestCase (do
   )
 
 testSplineMakeSpline4 = TestCase (do
-    let sps = makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 2.0)]
+    let sps = makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 2.0)] :: [Spline Float]
     assertEqual "Make Spline 4 1" 1 (length sps)
     let sp1 = sps !! 0
     assertFloatEqual "Make Spline 4 2" 1.0 (splineAt sp1 0.0) 0.001
@@ -150,7 +151,7 @@ testSplineMakeSpline4 = TestCase (do
   )
 
 testSplineMakeSpline5 = TestCase (do
-    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 1.0)]
+    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 1.0)] :: [Spline Float]
     assertEqual "Make Spline 5 1" 2 (length sps)
     let sp1 = sps !! 0
     let sp2 = sps !! 1
@@ -169,7 +170,7 @@ testSplineMakeSpline5 = TestCase (do
   )
 
 testSplineMakeSpline6 = TestCase (do
-    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 2.0)]
+    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 2.0)] :: [Spline Float]
     assertEqual "Make Spline 6 1" 2 (length sps)
     let sp1 = sps !! 0
     let sp2 = sps !! 1
@@ -190,7 +191,7 @@ testSplineMakeSpline6 = TestCase (do
   )
 
 testSplineMakeSpline7 = TestCase (do
-    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 2.0), (2.0, 1.0)]
+    let sps = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 2.0), (2.0, 1.0)] :: [Spline Float]
     assertEqual "Make Spline 7 1" 2 (length sps)
     let sp1 = sps !! 0
     let sp2 = sps !! 1
@@ -205,7 +206,7 @@ testToBezier = TestList [
   ]
 
 testToBezier1 = TestCase (do
-  let [spline] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)]
+  let [spline] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
   let bezier = toBezier spline
   assertFloatEqual "To Bezier 1 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 1 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
@@ -219,7 +220,7 @@ testToBezier1 = TestCase (do
  )
 
 testToBezier2 = TestCase (do
-  let [spline] = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 1.0)]
+  let [spline] = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
   let bezier = toBezier spline
   assertFloatEqual "To Bezier 2 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 2 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
@@ -233,7 +234,7 @@ testToBezier2 = TestCase (do
   )
 
 testToBezier3 = TestCase (do
-  let [spline] = makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 1.0)]
+  let [spline] = makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
   let bezier = toBezier spline
   assertFloatEqual "To Bezier 3 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 3 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
@@ -247,7 +248,7 @@ testToBezier3 = TestCase (do
   )
 
 testToBezier4 = TestCase (do
-  let [sp1, sp2] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 3.0)]
+  let [sp1, sp2] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0), (2.0, 3.0)] :: [Spline Float]
   let bz1 = toBezier sp1
   assertFloatEqual "To Bezier 4 1" (splineAt sp1 0.0) (snd $ bezierAt bz1 0.0) 0.001
   assertFloatEqual "To Bezier 4 2" (splineAt sp1 0.5) (snd $ bezierAt bz1 0.5) 0.001
@@ -271,7 +272,7 @@ testToBezier4 = TestCase (do
   )
 
 testToBezier5 = TestCase (do
-  let [sp1, sp2] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 2.0), (1.0, 1.0), (2.0, 3.0)]
+  let [sp1, sp2] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 2.0), (1.0, 1.0), (2.0, 3.0)] :: [Spline Float]
   let bz1 = toBezier sp1
   assertFloatEqual "To Bezier 5 1" (splineAt sp1 0.0) (snd $ bezierAt bz1 0.0) 0.001
   assertFloatEqual "To Bezier 5 2" (splineAt sp1 0.5) (snd $ bezierAt bz1 0.5) 0.001
@@ -283,7 +284,7 @@ testToBezier5 = TestCase (do
   )
 
 testToBezier6 = TestCase (do
-  let [sp1, sp2, sp3] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 2.0), (1.0, 1.0), (2.0, 3.0), (4.0, 1.0)]
+  let [sp1, sp2, sp3] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 2.0), (1.0, 1.0), (2.0, 3.0), (4.0, 1.0)] :: [Spline Float]
   let bz1 = toBezier sp1
   assertFloatEqual "To Bezier 6 1" (splineAt sp1 0.0) (snd $ bezierAt bz1 0.0) 0.001
   assertFloatEqual "To Bezier 6 2" (splineAt sp1 0.5) (snd $ bezierAt bz1 0.5) 0.001
@@ -357,7 +358,7 @@ leg4 = withSegments $ Leg Road location4 location4 Nothing 1.58 Nothing 30 40 No
 
 testSVGSpline1 = TestCase (do
   let legs = [leg1, leg2, leg3, leg4]
-  let coords = buildCoordinates legs
+  let coords = buildCoordinates 1.0 1.0 legs
   let coords' = map (\(d, me, _) -> (d, maybe 0.0 id me)) coords
   let sps = makeSpline NaturalBoundary NaturalBoundary coords'
   assertEqual "SVG Spline 1 1" 6 (length sps)

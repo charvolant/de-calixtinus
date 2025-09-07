@@ -121,13 +121,13 @@ spline2ndDevs' (ClampBoundary s) ui1 y2i1 (xi1, yi1) [(xi, yi)] = (y2i, [y2i])
   where
     qi = 0.5
     ui = (3.0 / (xi -xi1)) * (s - (yi - yi1) / (xi - xi1))
-    y2i = (ui - qi * ui1) / (qi * y2i1 +1.0)
+    y2i = (ui - qi * ui1) / (qi * y2i1 + 1.0)
 spline2ndDevs' sbn ui1 y2i1 (xi1, yi1) ((pi'@(xi, yi)):rest@((xi'1, yi'1):_)) = let
-    sig = (xi -xi1) / (xi'1 - xi1)
+    sig = (xi - xi1) / (xi'1 - xi1)
     p = sig * y2i1 + 2.0
     y2i = (sig - 1.0) / p;
-    ui = (yi'1 - yi) / (xi'1 - xi) - (yi - yi1) / (xi -xi1)
-    ui'= 6.0 * ui / (xi'1 - xi1) - sig * ui1 / p
+    ui = (yi'1 - yi) / (xi'1 - xi) - (yi - yi1) / (xi - xi1)
+    ui'= (6.0 * ui / (xi'1 - xi1) - sig * ui1) / p
     (y2'i, y2s) = spline2ndDevs' sbn ui' y2i pi' rest
     y2i'=y2i * y2'i + ui'
   in
@@ -151,12 +151,12 @@ makeSpline' _ _ = error "Invalid or mismathing spline points"
 makeSpline'' :: (RealFrac a) => a -> a -> a -> a -> a -> a -> Spline a
 makeSpline'' xi1 yi1 xi yi y2i1 y2i = let
     h = xi - xi1
-    a = (y2i - y2i1) / 6.0
+    a = (y2i - y2i1) / (6.0 * h)
     b = y2i1 / 2.0
     d = yi1
-    c = yi - d - b - a
+    c = (yi - yi1) / h - (y2i1 / 2.0) * h - ((y2i - y2i1) / 6.0) * h
   in
-    Spline xi1 xi (a / (h * h * h)) (b / (h * h)) (c / h) d
+    Spline xi1 xi a b c d
 
 -- Convert a cubic spline into an equivalent cubic Bezier curve
 toBezier :: (RealFrac a) => Spline a -> Bezier a

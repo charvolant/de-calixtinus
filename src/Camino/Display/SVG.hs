@@ -190,13 +190,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
   where
     viewx = 1200 :: Int
     viewy = 200 :: Int
-    -- Allow splines to be graceful, otherwise the spline interpolation is either too angular to too wiggly
-    scalecoords = buildCoordinates 1.0 1.0 legs
-    maxd = ceilingBy 1.0 $ maximum $ map (\(d, _, _) -> d) scalecoords
-    mind = floorBy 1.0 $ minimum $ map (\(d, _, _) -> d) scalecoords
-    csx = max 5.0 (fromIntegral viewx) / (max 1.0 (maxd - mind))
-    -- csy = (fromIntegral viewy) / (max 1.0 maxy)
-    coordinates = buildCoordinates csx 1.0 legs
+    coordinates = buildCoordinates 1.0 1.0 legs
     coordinates' = map (\(d, me, _) -> (d, maybe 0.0 id me)) $ filter (\(_, me, _) -> isJust me) coordinates
     maxx = max 1.0 (maximum $ map (\(d, _) -> d) coordinates')
     offsetx = 10.0

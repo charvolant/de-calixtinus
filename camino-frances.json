@@ -8112,8 +8112,8 @@
       "major": true,
       "stops": [ "F-F26", "F-F51", "F-F81", "F-F118", "F-F148" ],
       "rest-points": [ "F-F26", "F-F51", "F-F81", "F-F118", "F-F148" ],
-      "starts": [ "F-F1", "F-F166", "F-F196" ],
-      "finishes": [ "ST-ST1" ],
+      "starts": [ "F-F1@0", "F-F166@100", "F-F196@200" ],
+      "finishes": [ "ST-ST1@0" ],
       "suggested-pois": [ "F-F58-1", "F-F69-2", "F-F81-1", "F-81-2", "F-87-1", "F-F106-1", "F-118-1", "F-F148-1", "F-212-1", "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"

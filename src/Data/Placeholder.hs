@@ -24,12 +24,17 @@ module Data.Placeholder (
     Dereferencer(..)
   , Normaliser(..)
   , Placeholder(..)
+  , Prioritised(..)
 
+  , normalisePrioritised
   , normaliseReferences
   , placeholderLabel
+  , uniquePrioritised
 ) where
 
-import Data.List (find, partition)
+import Control.DeepSeq (NFData(..), deepseq)
+import Data.Aeson
+import Data.List (find, partition, sortBy)
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.Text as T
@@ -51,7 +56,7 @@ class (Eq k, Ord k, Show k) => Placeholder k a | a -> k where
     -> S.Set a
   internalReferences _ = S.empty
 
-class (Placeholder k a) => Normaliser k a ctx | a -> ctx where
+class (Placeholder k a) => Normaliser k a ctx where
   -- | Normalise an item, with references normalised
   --   By default, this returns the original item, override this if you have an internal structure that needs resolving
   normalise :: ctx -- The context to rebuild in
@@ -89,6 +94,42 @@ instance (Placeholder k a) => Dereferencer k a (M.Map k a) where
 instance (Placeholder k a) => Dereferencer k a (k -> Maybe a) where
   dereference ctx v = maybe v id (ctx (placeholderID v))
 
+
+-- A placeholder item with an attached priority
+data (Placeholder k a) => Prioritised k a = Prioritised {
+    prItem :: a -- The prioritised item
+  , prPriority :: Int -- ^ The priority
+} deriving (Eq, Show)
+
+-- | Parse a piece of text with an optional priority at the end
+parsePrioritised :: T.Text -> (T.Text, Int)
+parsePrioritised txt = (val, priority)
+  where
+    (val', priority') = T.breakOnEnd "@" txt
+    priority = if T.null val' || T.null priority' then 0 else read (T.unpack priority')
+    val = if T.null val' then priority' else if T.isSuffixOf "@" val' then T.dropEnd 1 val' else val
+
+instance (Placeholder T.Text a) => FromJSON (Prioritised T.Text a) where
+  parseJSON (String v) = do
+    let (pid, pri) = parsePrioritised v
+    return $ Prioritised (placeholder pid) pri
+
+instance (Placeholder T.Text a) => ToJSON (Prioritised T.Text a) where
+  toJSON (Prioritised item priority) = toJSON $ (placeholderID item) <> (if priority == 0 then "" else "@" <> (T.pack $ show priority))
+
+instance (NFData k, NFData a, Placeholder k a) => NFData (Prioritised k a) where
+  rnf (Prioritised item priority) = item `deepseq` priority `deepseq` ()
+
+uniquePrioritised :: (Ord a, Placeholder k a) => [Prioritised k a] -> [Prioritised k a]
+uniquePrioritised items = unique
+  where
+    order a b = if prPriority a == prPriority b then prItem a `compare` prItem b else prPriority a `compare` prPriority b
+    sorted = sortBy order items
+    unique = fst $ foldl (\(is, seen) -> \item -> if S.member (prItem item) seen then (is, seen) else (is ++ [item], S.insert (prItem item) seen)) ([], S.empty) sorted
+
+normalisePrioritised :: (Dereferencer k a ctx) => ctx -> Prioritised k a -> Prioritised k a
+normalisePrioritised ctx (Prioritised item priority) = Prioritised (dereference ctx item) priority
+
 -- | Normalise internal references
 --   This takes a list of items with placeholder references and proceeds to rebuild the set with correct references.
 --   This implementation uses
@@ -109,3 +150,4 @@ normaliseReferences' remaining seen = let
 --   Useful for generating debugging summaries
 placeholderLabel :: (Placeholder T.Text a) => a -> T.Text
 placeholderLabel p = if isPlaceholder p then placeholderID p <> "*" else placeholderID p
+

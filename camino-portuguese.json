@@ -11235,8 +11235,8 @@
       "major": true,
       "stops": [ "P-P20", "P-P32", "P-P78", "P-P138" ],
       "rest-points": [ "P-P20", "P-P32", "P-P78", "P-P138", "P-P203" ],
-      "starts": [ "P-P1", "P-P138", "P-P204" ],
-      "finishes": [ "ST-ST1" ],
+      "starts": [ "P-P1@0", "P-P138@100", "P-P204@200" ],
+      "finishes": [ "ST-ST1@0" ],
       "suggested-pois": [
         "P-P1-1", "P-P2-1", "P-P32-1", "P-P32-2", "P-P63-1", "P-P66-1", "P-P78-1", "P-P123-1", "P-P123-2", "P-P138-2",
         "ST-ST1-1"
@@ -11256,6 +11256,7 @@
       "major": true,
       "stops": [ "P-F10" ],
       "rest-points": [ "P-F10" ],
+      "finishes": [ "P-F10@100" ],
       "suggested-pois": [ "P-F10-1" ],
       "palette": {
         "colour": "#2a78ff"
@@ -11274,6 +11275,7 @@
       ],
       "major": true,
       "stops": [ "P-F10" ],
+      "finishes": [ "P-F10@100" ],
       "suggested-pois": [ "P-F10-1" ],
       "palette": {
         "colour": "#2a78ff"

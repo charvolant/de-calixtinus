@@ -1183,8 +1183,8 @@
       "name": "Camino Ingles",
       "description": "The main Camino route starting in Ferrol.",
       "major": true,
-      "starts": [ "I-I1" ],
-      "finishes": [ "ST-ST1" ],
+      "starts": [ "I-I1@100" ],
+      "finishes": [ "ST-ST1@0" ],
       "suggested-pois": [ "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"
@@ -1204,7 +1204,7 @@
       },
       "locations": [ "I-I29", "I-I30", "I-I31", "I-I32", "I-I33", "I-I34", "I-I35", "I-I36", "I-I37", "I-I38" ],
       "major": true,
-      "starts": [ "I-I29" ],
+      "starts": [ "I-I29@0" ],
       "suggested-pois": [ "I-I29-1" ],
       "palette": {
         "colour": "#feda53"

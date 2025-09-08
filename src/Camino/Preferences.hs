@@ -57,6 +57,7 @@ module Camino.Preferences (
 import GHC.Generics
 import Control.DeepSeq
 import Data.Aeson
+import Data.List (sortOn)
 import Data.Placeholder
 import Data.Text (Text)
 import Camino.Camino
@@ -66,7 +67,6 @@ import Data.Time.Calendar (Day)
 import qualified Data.Map as M (Map, difference, fromList, singleton, union)
 import qualified Data.Set as S (Set, delete, disjoint, empty, filter, fold, fromList, insert, intersection, map, member, singleton, union, unions)
 import Data.Summary
-import Data.Text (pack)
 import Graph.Graph (successors, predecessors)
 
 -- | Acceptable range boundaries for various parameters.
@@ -410,8 +410,8 @@ withRoutes preferences routes = let
     routes' = S.map (normalise camino') routes
     prefs' = preferences { preferenceRoutes = routes' }
     allowed = caminoRouteLocations (preferenceCamino preferences) routes'
-    start' = if S.member (preferenceStart prefs') allowed then preferenceStart prefs' else headWithError $ suggestedStarts prefs'
-    finish' = if S.member (preferenceFinish prefs') allowed then preferenceFinish prefs' else headWithError $ suggestedFinishes prefs'
+    start' = headWithError $ suggestedStarts prefs'
+    finish' = headWithError $ suggestedFinishes prefs'
     stops' = preferenceStops prefs' `S.intersection` allowed
     excluded' = preferenceExcluded prefs' `S.intersection` allowed
     rests' = preferenceRestPoints prefs' `S.intersection` allowed
@@ -1071,8 +1071,8 @@ suggestedRestPreferences travel fitness comfort = let
       , stopRouteServices = (suggestedRouteServices travel fitness comfort) `M.difference` services
     }
 
-suggested :: (Route -> [Location]) -> CaminoPreferences -> [Location]
-suggested accessor preferences  = foldl merge (accessor $ caminoDefaultRoute camino) (filter (\r -> S.member r selected) (caminoRoutes camino))
+suggested :: (Route -> [Prioritised Text Location]) -> CaminoPreferences -> [Location]
+suggested accessor preferences  = map prItem $ uniquePrioritised $ foldl merge (accessor $ caminoDefaultRoute camino) (filter (\r -> S.member r selected) (caminoRoutes camino))
   where
      camino = preferenceCamino preferences
      merge current route = current ++ (filter (\r -> not (elem r current)) (accessor route))
@@ -1119,8 +1119,8 @@ defaultCaminoPreferences camino = let
     in
       CaminoPreferences {
           preferenceCamino = camino
-        , preferenceStart = headWithError $ routeStarts dr
-        , preferenceFinish = headWithError $ routeFinishes dr
+        , preferenceStart = prItem $ headWithError $ routeStarts dr
+        , preferenceFinish = prItem $ headWithError $ routeFinishes dr
         , preferenceRoutes = S.singleton dr
         , preferenceStops = S.fromList $ routeStops dr
         , preferenceExcluded = S.empty

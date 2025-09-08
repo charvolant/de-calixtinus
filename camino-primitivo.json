@@ -3455,8 +3455,8 @@
       "name": "Camino Primitivo",
       "description": "The main Camino route starting in Oviedo and ending at Stantiago de Compostella and following the Southern route",
       "major": true,
-      "starts": [ "PR-P1", "PR-P95" ],
-      "finishes": [ "ST-ST1" ],
+      "starts": [ "PR-P1@100", "PR-P95@200" ],
+      "finishes": [ "ST-ST1@0" ],
       "suggested-pois": [ "PR-P1-1", "PR-P57-1", "PR-P95-1", "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"
@@ -3502,7 +3502,7 @@
       ],
       "major": true,
       "stops": [ "PR-P1" ],
-      "starts": [ "N-N138" ],
+      "starts": [ "N-N138@0" ],
       "palette": {
         "colour": "#37b5fe"
       }

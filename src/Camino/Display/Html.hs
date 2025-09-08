@@ -1703,7 +1703,7 @@ $with position <- locationPosition caminoStart
 |]
   where
     defr = caminoDefaultRoute camino
-    caminoStart = maybe (error "No camino start") fst $ L.uncons $ routeStarts defr
+    caminoStart = maybe (error "No camino start") (prItem . fst) $ L.uncons $ routeStarts defr
 
 
 caminoMapScript :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

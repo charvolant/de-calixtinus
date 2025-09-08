@@ -1643,8 +1643,8 @@
       "name": "Camino Fisterra",
       "description": "The main Camino route starting in Stantiago de Compostella and following the Southern route",
       "major": true,
-      "starts": [ "ST-ST1" ],
-      "finishes": [ "FI-F33" ],
+      "starts": [ "ST-ST1@0" ],
+      "finishes": [ "FI-F33@0" ],
       "palette": {
         "colour": "#fec953"
       }

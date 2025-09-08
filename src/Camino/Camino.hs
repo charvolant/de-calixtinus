@@ -36,6 +36,7 @@ module Camino.Camino (
   , Penance(..)
   , PoiCategory(..)
   , PointOfInterest(..)
+  , Prioritised(..)
   , Route(..)
   , RouteLogic(..)
   , Service(..)
@@ -1243,10 +1244,10 @@ data Route = Route {
   , routeMajor :: Bool -- ^ Is this a major route (a multi-day variant to the main route)
   , routeLocations :: [Location] -- ^ The locations along the route
   , routeLocationSet :: S.Set Location -- ^ Locations for easy membership checks
-  , routeStops :: [Location] -- ^ The suggested stops for the route
+  , routeStops :: [Location] -- ^ The suggested stops for the route, with priorities
   , routeRestPoints :: [Location] -- ^ The suggested preferred rest points for the route
-  , routeStarts :: [Location] -- ^ A list of suggested start points for the route, ordered by likelyhood
-  , routeFinishes :: [Location] -- ^ A list of suggested finish points for the route
+  , routeStarts :: [Prioritised Text Location] -- ^ A list of suggested start points for the route, with priorities
+  , routeFinishes :: [Prioritised Text Location] -- ^ A list of suggested finish points for the route, with priorities
   , routeSuggestedPois :: [PointOfInterest] -- ^ A list of suggested points of interest for the route
   , routePalette :: Palette
 } deriving (Show, Generic)
@@ -1292,8 +1293,8 @@ instance ToJSON Route where
         , "locations" .= (if null locations' then Nothing else Just $ map locationID locations')
         , "stops" .= (if null stops' then Nothing else Just $ map locationID stops')
         , "rest-points" .= (if null rests' then Nothing else Just $ map locationID rests')
-        , "starts" .= (if null starts' then Nothing else Just $ map locationID starts')
-        , "finishes" .= (if null finishes' then Nothing else Just $ map locationID finishes')
+        , "starts" .= (if null starts' then Nothing else Just starts')
+        , "finishes" .= (if null finishes' then Nothing else Just finishes')
         , "suggested-pois" .= (if null pois' then Nothing else Just $ map poiID pois')
         , "palette" .= palette'
         ]
@@ -1306,8 +1307,8 @@ instance ToJSON Route where
         <> "locations" .= (if null locations' then Nothing else Just $ map locationID locations')
         <> "stops" .= (if null stops' then Nothing else Just $ map locationID stops')
         <> "rest-points" .?= (if null rests' then Nothing else Just $ map locationID rests')
-        <> "starts" .?= (if null starts' then Nothing else Just $ map locationID starts')
-        <> "finishes" .?= (if null finishes' then Nothing else Just $ map locationID finishes')
+        <> "starts" .?= (if null starts' then Nothing else Just starts')
+        <> "finishes" .?= (if null finishes' then Nothing else Just finishes')
         <> "suggested-pois" .?= (if null pois' then Nothing else Just $ map poiID pois')
         <> "palette" .= palette'
 
@@ -1342,10 +1343,10 @@ instance Normaliser Text Route Camino where
   normalise camino route = route {
        routeLocations = locations'
      , routeLocationSet = S.fromList locations'
-     , routeStops = dereferenceF camino  (routeStops route)
-     , routeRestPoints = dereferenceF camino  (routeRestPoints route)
-     , routeStarts = dereferenceF camino (routeStarts route)
-     , routeFinishes = dereferenceF camino (routeFinishes route)
+     , routeStops = dereferenceF camino (routeStops route)
+     , routeRestPoints = dereferenceF camino (routeRestPoints route)
+     , routeStarts = map (normalisePrioritised camino) (routeStarts route)
+     , routeFinishes = map (normalisePrioritised camino) (routeFinishes route)
      , routeSuggestedPois = dereferenceF camino (routeSuggestedPois route)
    }
    where
@@ -1358,8 +1359,8 @@ instance Summary Route where
   summary route = "R{"
     <> routeID route
     <> ", locs=" <> summary (routeLocations route)
-    <> ", starts=" <> summary (routeStarts route)
-    <> ", finishes=" <> summary (routeFinishes route)
+    <> ", starts=" <> summary (map prItem $ routeStarts route)
+    <> ", finishes=" <> summary (map prItem $ routeFinishes route)
     <> "}"
 
 -- Find the location closest to the centre of the route
@@ -1739,12 +1740,13 @@ instance Normaliser Text Camino CaminoConfig where
       inds = map snd routes''
       sunion field r rs = S.unions (field r:map field rs)
       lunion field r rs = S.toList $ sunion (S.fromList . field) r rs
+      punion field r rs = uniquePrioritised (concat (field r:map field rs))
       d' = d {
           routeLocations = lunion routeLocations d ids
         , routeLocationSet = sunion routeLocationSet d ids
         , routeStops = lunion routeStops d ids
-        , routeStarts = lunion routeStarts d ids
-        , routeFinishes = lunion routeFinishes d ids
+        , routeStarts = punion routeStarts d ids
+        , routeFinishes = punion routeFinishes d ids
         , routeSuggestedPois = lunion routeSuggestedPois d ids
       }
       nds' = concat (nds:inds)

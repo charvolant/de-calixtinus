@@ -2777,8 +2777,8 @@
       "description": "The main Winter Camino route",
       "major": true,
       "stops": [ "W-W34" ],
-      "starts": [ "F-F148", "W-W34" ],
-      "finishes": [ "ST-ST1" ],
+      "starts": [ "F-F148@0", "W-W34@100" ],
+      "finishes": [ "ST-ST1@0" ],
       "suggested-pois": [ "W-W8-3", "W-W34-5", "ST-ST1-1" ],
       "palette": {
         "colour": "#f4c86c"

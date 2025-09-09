@@ -27,25 +27,26 @@ import Data.Localised
 import Data.Maybe (fromJust, isJust, isNothing)
 import qualified Data.Set as S
 import Data.Spline
+import Data.Summary
 import Data.Text (Text)
 import qualified Data.Text as T
-import Data.Util (ceilingBy, floorBy, headWithError)
+import Data.Util (ceilingBy, floorBy, headWithError, tailOrEmpty)
 import qualified Data.Vector as V
 import Text.Hamlet
 import Debug.Trace
 
-buildCoordinates'' :: Double -> Double -> Location -> [LegSegment] -> Double ->  [(Double, Maybe Double, Maybe Location)]
-buildCoordinates'' _scalex _scaley _lt [] _d = []
-buildCoordinates'' scalex scaley lt [seg] d = [(d', maybe Nothing (\e -> Just $ realToFrac (scaley * e)) (elevation $ locationPosition lt), Just lt)]
+buildCoordinates'' :: Double -> Double -> Maybe Leg -> Location -> [LegSegment] -> Double ->  [(Double, Maybe Double, Maybe Leg, Maybe Location)]
+buildCoordinates'' _scalex _scaley _leg _lt [] _d = []
+buildCoordinates'' scalex scaley leg lt [seg] d = [(d', maybe Nothing (\e -> Just $ realToFrac (scaley * e)) (elevation $ locationPosition lt), leg, Just lt)]
   where
     d' = d + (realToFrac $ lsDistance seg) * scalex
-buildCoordinates'' scalex scaley lt (seg:rest) d = (d', maybe Nothing (\e -> Just $ realToFrac (scaley * e)) (elevation $ lsTo seg), Nothing):(buildCoordinates'' scalex scaley lt rest d')
+buildCoordinates'' scalex scaley leg lt (seg:rest) d = (d', maybe Nothing (\e -> Just $ realToFrac (scaley * e)) (elevation $ lsTo seg), leg, Nothing):(buildCoordinates'' scalex scaley Nothing lt rest d')
   where
     d' = d + (realToFrac $ lsDistance seg) * scalex
 
-buildCoordinates' :: Double -> Double -> [Leg] -> Double -> [(Double, Maybe Double, Maybe Location)]
+buildCoordinates' :: Double -> Double -> [Leg] -> Double -> [(Double, Maybe Double, Maybe Leg, Maybe Location)]
 buildCoordinates' _scalex _scaley [] _d = []
-buildCoordinates' scalex scaley (leg:rest) d = (buildCoordinates'' scalex scaley lt (legSegments leg) d) ++ (buildCoordinates' scalex scaley rest d')
+buildCoordinates' scalex scaley (leg:rest) d = (buildCoordinates'' scalex scaley (Just leg) lt (legSegments leg) d) ++ (buildCoordinates' scalex scaley rest d')
   where
     lf = legFrom leg
     lt = legTo leg
@@ -53,9 +54,9 @@ buildCoordinates' scalex scaley (leg:rest) d = (buildCoordinates'' scalex scaley
     ld' = if ld > 0.0 then realToFrac ld else haversineDistance (locationPosition lf) (locationPosition lt) / 1000.0
     d' = d + ld' * scalex
 
-buildCoordinates :: Double -> Double -> [Leg] -> [(Double, Maybe Double, Maybe Location)]
+buildCoordinates :: Double -> Double -> [Leg] -> [(Double, Maybe Double, Maybe Leg, Maybe Location)]
 buildCoordinates _scalex _scaley [] = []
-buildCoordinates scalex scaley legs@(st:_) = (0.0, realToFrac <$> (scaley *) <$> (elevation $ locationPosition sl), Just sl):(buildCoordinates' scalex scaley legs 0.0)
+buildCoordinates scalex scaley legs@(st:_) = (0.0, realToFrac <$> (scaley *) <$> (elevation $ locationPosition sl), Nothing, Just sl):(buildCoordinates' scalex scaley legs 0.0)
   where
     sl = legFrom st
 
@@ -136,10 +137,10 @@ positionLabels' label important anchor makeX makeY points = let
   in
     imps' ++ nonimps'
 
-positionLabels :: (Location -> Bool) -> (Location -> Bool) -> (Double -> Text) -> (Double -> Int) -> (Double -> Int) -> Double -> [(Double, Maybe Double, Maybe Location)] -> [LabelPosition]
+positionLabels :: (Location -> Bool) -> (Location -> Bool) -> (Double -> Text) -> (Double -> Int) -> (Double -> Int) -> Double -> [(Double, Maybe Double, Maybe Leg, Maybe Location)] -> [LabelPosition]
 positionLabels label important anchor makeX makeY defElev coordinates = positionLabels' label important' anchor makeX makeY labels
   where
-    labels = map (\(d, me, ml) -> (d, maybe defElev id me, fromJust ml)) $ filter (\(_, _, ml) -> maybe False label ml) coordinates
+    labels = map (\(d, me, _, ml) -> (d, maybe defElev id me, fromJust ml)) $ filter (\(_, _, _, ml) -> maybe False label ml) coordinates
     sloc = \l -> maybe False (\((_, _, hl), _) -> l == hl) (uncons labels)
     lloc = \l -> maybe False (\(_, (_, _, ll)) -> l == ll) (unsnoc labels)
     important' l = (important l) || (sloc l) || (lloc l)
@@ -151,6 +152,32 @@ pathBezier move makeX makeY (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) =
   (show $ makeX x1) ++ " " ++ (show $ makeY y1) ++ ", " ++
   (show $ makeX x2) ++ " " ++ (show $ makeY y2) ++ ", " ++
   (show $ makeX x3) ++ " " ++ (show $ makeY y3)
+
+lineBezier :: (RealFrac a) => Bool -> (a -> Int) -> (a -> Int) -> Bezier a -> String
+lineBezier move makeX makeY (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) =
+  (if move then "M" ++ (show $ makeX x0) ++ " " ++ show (makeY y0) else "") ++
+  "L " ++
+  (show $ makeX x3) ++ " " ++ (show $ makeY y3)
+
+makePath :: (RealFrac a) => (a -> Int) -> (a -> Int) -> [Bezier a] -> [(a, Maybe a, Maybe Leg, Maybe Location)] -> String
+makePath makeX makeY [] [] = ""
+makePath _makeX _makeY [] _ = error "Mismatching curves and coordinates"
+makePath _makeX _makeY _ [] = error "Mismatching curves and coordinates"
+makePath makeX makeY (bezier:restb) (coord:restc) = " " ++ makePath' makeX makeY bezier coord ++ makePath makeX makeY restb restc
+
+makePath' :: (RealFrac a) => (a -> Int) -> (a -> Int) -> Bezier a -> (a, Maybe a, Maybe Leg, Maybe Location) -> String
+makePath' makeX makeY bezier (_, _, mleg, _) =
+  if maybe False (straightLine . legType) mleg then
+    lineBezier False makeX makeY bezier
+  else
+    pathBezier False makeX makeY bezier
+
+straightLine :: LegType -> Bool
+straightLine FerryLink = True
+straightLine BoatLink = True
+straightLine BusLink = True
+straightLine TrainLink = True
+straightLine _ = False
 
 -- For debugging layouts
 showTextLayout :: Bool
@@ -191,7 +218,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     viewx = 1200 :: Int
     viewy = 200 :: Int
     coordinates = buildCoordinates 1.0 1.0 legs
-    coordinates' = map (\(d, me, _) -> (d, maybe 0.0 id me)) $ filter (\(_, me, _) -> isJust me) coordinates
+    coordinates' = map (\(d, me, _, _) -> (d, maybe 0.0 id me)) $ filter (\(_, me, _, _) -> isJust me) coordinates
     maxx = max 1.0 (maximum $ map (\(d, _) -> d) coordinates')
     offsetx = 10.0
     scalex = (fromIntegral viewx - offsetx) / maxx
@@ -208,7 +235,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     splines = makeSpline NaturalBoundary NaturalBoundary coordinates'
     beziers = map toBezier splines
     (_, es) = headWithError coordinates'
-    elevationPath = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ " " ++ (concat $ map (\b -> pathBezier False makeX makeY b ++ " ") beziers) ++ " L " ++ (show $ makeX maxx) ++ " " ++ (show $ makeY 0.0) ++ " Z"
+    elevationPath = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ makePath makeX makeY beziers (tailOrEmpty coordinates) ++ " L " ++ (show $ makeX maxx) ++ " " ++ (show $ makeY 0.0) ++ " Z"
     elevationLines = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ (concat $ map (\(d, e) -> " L " ++ (show $ makeX d) ++ " " ++ (show $ makeY e)) coordinates')
     labelPos = positionLabels label important anchor makeX makeY offsety coordinates
     ticLabels = [0.0, step .. (floorBy step maxy)] where step = if maxy < 200.0 then 100.0 else 500.0

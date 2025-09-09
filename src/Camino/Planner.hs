@@ -550,10 +550,18 @@ travelHours :: TravelPreferences -- ^ The calculation preferences
 travelHours preferences day = let
     fitness = preferenceFitness preferences
     baseHours = travelFunction (preferenceTravel preferences) fitness
-    segments = concat $ map legSegments day
-    simple = sum $ map (\s -> baseHours fitness (lsDistance s) (lsAscent s) (lsDescent s)) segments
+    simple = sum $ map (travelHours' (baseHours fitness)) day
   in
     tranter (preferenceFitness preferences) simple
+
+travelHours' :: (Float -> Float -> Float -> Float) -> Leg -> Float
+travelHours' baseHours leg =
+  if legDistance leg == 0.0 then
+    lt
+  else
+    lt + (sum $ map (\s -> baseHours (lsDistance s) (lsAscent s) (lsDescent s)) (legSegments leg))
+  where
+    lt = maybe 0.0 id (legTime leg)
 
 -- | Calculate the expected non-travel hours, for a sequence of legs
 --   Usually associated with something like a ferry

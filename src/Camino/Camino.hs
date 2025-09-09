@@ -1170,8 +1170,9 @@ buildLegSegments :: Location -> Location -> [LatLong] -> Float -> Float -> Float
 buildLegSegments fl tl [] distance ascent descent = let
     fll = locationPosition fl
     tll = locationPosition tl
+    distance' = if distance == 0.0 then (realToFrac $ haversineDistance fll tll / 1000.0) else distance
   in
-    [LegSegment fll tll distance ascent descent]
+    [LegSegment fll tll distance' ascent descent]
 buildLegSegments fl tl waypoints distance ascent descent = let
     fll = locationPosition fl
     tll = locationPosition tl

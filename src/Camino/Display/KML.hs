@@ -126,15 +126,15 @@ pointKml latlong = [xml|
       <coordinates>#{pack $ show $ longitude latlong},#{pack $ show $ latitude latlong},#{pack $ show $ maybe 0 id (elevation latlong)}
   |]
 
-lineKml :: LatLong -> LatLong -> [Node]
-lineKml latlong1 latlong2 = [xml|
+lineKml :: [LatLong] -> [Node]
+lineKml latlongs = [xml|
       <LineString>
         <coordinates>
           #{cstr}
     |]
   where
     coords latlong = (pack $ show $ longitude latlong) <> "," <> (pack $ show $ latitude latlong) <> "," <> (pack $ show $ maybe 0 id (elevation latlong))
-    cstr = coords latlong1 <> " " <> coords latlong2 -- Required because the template removes spaces
+    cstr = intercalate " " $ map coords latlongs -- Required because the template removes spaces
 
 caminoLocationStyle :: CaminoPreferences -> S.Set Location -> S.Set Location -> Location -> Text
 caminoLocationStyle _camino stops waypoints location
@@ -227,8 +227,10 @@ caminoLegKml camino stops waypoints leg = [xml|
     <Placemark>
       <name>#{(pack $ show $ legDistance leg) <> "km"}
       <styleUrl>#{caminoLegStyle camino stops waypoints leg}
-      ^{lineKml (locationPosition $ legFrom leg) (locationPosition $ legTo leg)}
+      ^{lineKml positions}
   |]
+  where
+    positions = (locationPosition $ legFrom leg):(legWaypoints leg ++ [locationPosition $ legTo leg])
 
 -- | Use CDATA to rander some text.
 --   Used to ensure the inner HTML in the description element is encased in CDATA as KML requires

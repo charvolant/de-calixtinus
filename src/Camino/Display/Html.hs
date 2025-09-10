@@ -1413,7 +1413,7 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
   pilgrimageLabel pilg loc = loc == start pilg || elem loc (map finish (path pilg)) || (S.member loc $ preferenceStops camino) || (S.member loc $ preferenceRestPoints camino)
   pilgrimageImportant pilg loc = loc == start pilg || loc == finish pilg
   (_minll, maxll) = caminoBbox (preferenceCamino camino)
-  maxelev = realToFrac $ ceilingBy 500.0 (maybe 1000.0 id (elevation maxll))
+  maxelev = ceilingBy 500.0 (maybe 1000.0 id (elevation maxll))
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapHtml _preferences _camino _solution = [ihamlet|

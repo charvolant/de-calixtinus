@@ -2,6 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE InstanceSigs #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-|
 Module      : Data.Xlsx.Internal
 Description : Implementation of Data.Xslx

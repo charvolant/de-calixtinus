@@ -11,20 +11,16 @@ Portability : POSIX
 -}
 module Main (main) where
 
-import GHC.Generics (Generic)
 import Camino.Display.JSON
-import Camino.Display.Static
 import Camino.Camino
-import Camino.Config
-import Control.Monad
 import Data.Aeson
 import Data.Aeson.Formatting
 import qualified Data.ByteString.Lazy as LB
 import Data.Default.Class
-import Data.List (sortOn)
 import qualified Data.Map as M
 import qualified Data.Set as S
-import Data.Text (Text, unpack)
+import Data.Text (Text)
+import Data.Util (roundBy)
 import Formatting
 import Graph.Graph
 import Network.Google.Elevation
@@ -46,11 +42,6 @@ arguments =  Elevations
     <*> optional (strOption (long "report" <> short 'r' <> metavar "REPORT" <> help "Create a CSV report of elevation information"))
     <*> strOption (long "key" <> short 'k' <> value "API_KEY" <> metavar "API_KEY" <> help "Google elevations API key")
     <*> strArgument (metavar "INPUT" <> value "--" <> help "Source camino definition, if not used than stdin is used")
-
-loadCamino :: AssetConfig -> IO Camino
-loadCamino asset = do
-  result <- readAsset asset
-  return $ readCamino result
 
 lineFormat :: Format r (Text -> Text -> Text -> Text -> Text -> Text -> Double -> Double -> Maybe Double -> r)
 lineFormat = stext % "," % stext % "," % stext % "," % stext % "," % stext % "," % stext % "," % fixed 5 % "," % fixed 5 % "," % (maybed "--" (fixed 0))
@@ -90,11 +81,11 @@ writeReport camino output =
   withFile output WriteMode (writeReport' camino)
 
 roundElevation :: Double -> Double
-roundElevation v = fromIntegral $ round v
+roundElevation v = roundBy 1.0 v
 
 mapPosition :: M.Map LatLong LatLngElevation -> LatLong -> LatLong
 mapPosition elevMap ll@(LatLong lat' long' Nothing srs') = maybe ll (\(LatLngElevation _loc elev' _res) -> LatLong lat' long' (roundElevation <$> elev') srs') $ M.lookup ll elevMap
-mapPosition elevMap ll = ll
+mapPosition _elevMap ll = ll
 
 mapLeg :: M.Map LatLong LatLngElevation -> M.Map Text Location -> Leg -> Leg
 mapLeg elevMap locMap leg = leg {
@@ -144,8 +135,8 @@ addElevations api camino = do
 elevations :: Elevations -> IO ()
 elevations opts = do
     let api = def { apiKey = mapApiKey opts }
-    bytes <- if caminoInput opts == "--" then LB.hGetContents stdin else LB.readFile (caminoInput opts)
-    let camino = readCamino bytes
+    bytes' <- if caminoInput opts == "--" then LB.hGetContents stdin else LB.readFile (caminoInput opts)
+    let camino = readCamino bytes'
     camino' <- addElevations api camino
     let report' = reportOutput opts
     case report' of

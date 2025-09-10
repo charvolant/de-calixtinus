@@ -359,7 +359,7 @@ leg4 = withSegments $ Leg Road location4 location4 Nothing 1.58 Nothing 30 40 No
 testSVGSpline1 = TestCase (do
   let legs = [leg1, leg2, leg3, leg4]
   let coords = buildCoordinates 1.0 1.0 legs
-  let coords' = map (\(d, me, _) -> (d, maybe 0.0 id me)) coords
+  let coords' = map (\(d, me, _, _) -> (d, maybe 0.0 id me)) coords
   let sps = makeSpline NaturalBoundary NaturalBoundary coords'
   assertEqual "SVG Spline 1 1" 6 (length sps)
   let sp1 = sps !! 0

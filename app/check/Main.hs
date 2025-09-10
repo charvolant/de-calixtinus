@@ -11,29 +11,13 @@ Portability : POSIX
 -}
 module Main (main) where
 
-import GHC.Generics (Generic)
 import Control.Monad
-import Control.Monad.Reader
-import Camino.Display.JSON
-import Camino.Display.Static
 import Camino.Camino
 import Camino.Config
-import Data.Aeson
-import Data.Aeson.Formatting
-import qualified Data.ByteString.Lazy as LB
-import Data.Default.Class
 import Data.Event (getCalendarConfig)
-import Data.List (sortOn)
-import qualified Data.Map as M
-import Data.Maybe (fromJust, isJust, isNothing)
 import Data.Region (getRegionConfig)
-import qualified Data.Set as S
-import Data.Text (Text, intercalate, pack, unpack)
-import Network.Google.Elevation
+import Data.Text (Text, unpack)
 import Options.Applicative
-import System.FilePath
-import System.Directory
-import System.IO
 
 data RangeCheck = RangeCheck {
     rangeConfig :: FilePath

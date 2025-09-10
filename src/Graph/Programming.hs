@@ -121,7 +121,7 @@ type SelectFunction v = v -> Bool
 
 -- | Construct a chain graph from a list of chains
 fromChains :: (Edge e v, Score s) => EvaluationFunction e s -> [Chain v e s] -> ChainGraph v e s
-fromChains evaluate chains  =
+fromChains _evaluate chains  =
   let
      chains' = filter (\c -> start c /= finish c && (not $ isInvalid $ score c)) chains
      starts = nub $ map start chains'

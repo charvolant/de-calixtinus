@@ -130,7 +130,6 @@ import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
 import Text.Read (readMaybe)
-import Debug.Trace
 
 -- For debugging
 -- _traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v

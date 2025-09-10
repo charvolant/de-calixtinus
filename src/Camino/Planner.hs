@@ -70,9 +70,6 @@ import qualified Data.Text as T
 import qualified Data.Time.Calendar as C
 import Data.Util (headWithError, initOrEmpty, lastWithError, maybeSum, tailOrEmpty)
 import Graph.Graph (Edge(..), available, incoming, mirror, reachable, subgraph)
-import Graph.Programming
-import Data.Placeholder (Placeholder)
-import Debug.Trace
 
 instance (Placeholder T.Text v, FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
     parseJSON (Object v) = do
@@ -1262,9 +1259,9 @@ tripLabel :: Journey -> T.Text
 tripLabel trip = T.concat [daysLabel $ path trip, " <", T.pack $ show $ metricsPenance $ score trip, ">"]
 
 -- | Useful summary for a day
-daySummary :: Day -> T.Text
-daySummary day = "[" <> summary (start day) <> "->" <> summary (finish day) <> ", " <> summary (score day) <> "]"
+_daySummary :: Day -> T.Text
+_daySummary day = "[" <> summary (start day) <> "->" <> summary (finish day) <> ", " <> summary (score day) <> "]"
 
 -- | Useful summary for a journey
-journeySummary :: Journey -> T.Text
-journeySummary journey = "[" <> summary (start journey) <> "->" <> summary (finish journey) <> ", " <> summary (score journey) <> ", " <> (T.concat (map (\d -> "\n  " <> daySummary d) (path journey))) <> "\n]"
+_journeySummary :: Journey -> T.Text
+_journeySummary journey = "[" <> summary (start journey) <> "->" <> summary (finish journey) <> ", " <> summary (score journey) <> ", " <> (T.concat (map (\d -> "\n  " <> _daySummary d) (path journey))) <> "\n]"

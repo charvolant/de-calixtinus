@@ -20,27 +20,22 @@ import Camino.Config
 import Camino.Display.Css
 import Camino.Display.I18n
 import Camino.Display.Routes
-import Data.Description
-import Data.Colour (Colour)
 import Data.List (partition, uncons, unsnoc)
 import Data.Localised
-import Data.Maybe (fromJust, isJust, isNothing)
-import qualified Data.Set as S
+import Data.Maybe (fromJust, isJust)
 import Data.Spline
-import Data.Summary
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Util (ceilingBy, floorBy, headWithError, tailOrEmpty)
-import qualified Data.Vector as V
+import Formatting (fixed, format)
 import Text.Hamlet
-import Debug.Trace
 
 buildCoordinates'' :: Double -> Double -> Maybe Leg -> Location -> [LegSegment] -> Double ->  [(Double, Maybe Double, Maybe Leg, Maybe Location)]
 buildCoordinates'' _scalex _scaley _leg _lt [] _d = []
-buildCoordinates'' scalex scaley leg lt [seg] d = [(d', maybe Nothing (\e -> Just $ realToFrac (scaley * e)) (elevation $ locationPosition lt), leg, Just lt)]
+buildCoordinates'' scalex scaley leg lt [seg] d = [(d', maybe Nothing (\e -> Just $ scaley * e) (elevation $ locationPosition lt), leg, Just lt)]
   where
     d' = d + (realToFrac $ lsDistance seg) * scalex
-buildCoordinates'' scalex scaley leg lt (seg:rest) d = (d', maybe Nothing (\e -> Just $ realToFrac (scaley * e)) (elevation $ lsTo seg), leg, Nothing):(buildCoordinates'' scalex scaley Nothing lt rest d')
+buildCoordinates'' scalex scaley leg lt (seg:rest) d = (d', maybe Nothing (\e -> Just $ scaley * e) (elevation $ lsTo seg), leg, Nothing):(buildCoordinates'' scalex scaley Nothing lt rest d')
   where
     d' = d + (realToFrac $ lsDistance seg) * scalex
 
@@ -56,7 +51,7 @@ buildCoordinates' scalex scaley (leg:rest) d = (buildCoordinates'' scalex scaley
 
 buildCoordinates :: Double -> Double -> [Leg] -> [(Double, Maybe Double, Maybe Leg, Maybe Location)]
 buildCoordinates _scalex _scaley [] = []
-buildCoordinates scalex scaley legs@(st:_) = (0.0, realToFrac <$> (scaley *) <$> (elevation $ locationPosition sl), Nothing, Just sl):(buildCoordinates' scalex scaley legs 0.0)
+buildCoordinates scalex scaley legs@(st:_) = (0.0, (scaley *) <$> (elevation $ locationPosition sl), Nothing, Just sl):(buildCoordinates' scalex scaley legs 0.0)
   where
     sl = legFrom st
 
@@ -121,7 +116,7 @@ positionLabel label important anchor makeX makeY seen offset v@(d, e, l) = let
       (x, makeY e, offset, anch, box, l)
 
 positionLabels'' :: (Location -> Bool) -> (Location -> Bool) -> (Double -> Text) -> (Double -> Int) -> (Double -> Int) -> [LabelPosition] -> [(Double, Double, Location)] -> [LabelPosition]
-positionLabels'' label important anchor makeX makeY seen [] = []
+positionLabels'' _label _important _anchor _makeX _makeY _seen [] = []
 positionLabels'' label important anchor makeX makeY seen (v:rest) = let
     pos = positionLabel label important anchor makeX makeY seen 20 v
   in
@@ -154,13 +149,13 @@ pathBezier move makeX makeY (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) =
   (show $ makeX x3) ++ " " ++ (show $ makeY y3)
 
 lineBezier :: (RealFrac a) => Bool -> (a -> Int) -> (a -> Int) -> Bezier a -> String
-lineBezier move makeX makeY (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) =
+lineBezier move makeX makeY (Bezier (x0, y0) (_x1, _y1) (_x2, _y2) (x3, y3)) =
   (if move then "M" ++ (show $ makeX x0) ++ " " ++ show (makeY y0) else "") ++
   "L " ++
   (show $ makeX x3) ++ " " ++ (show $ makeY y3)
 
 makePath :: (RealFrac a) => (a -> Int) -> (a -> Int) -> [Bezier a] -> [(a, Maybe a, Maybe Leg, Maybe Location)] -> String
-makePath makeX makeY [] [] = ""
+makePath _makeX _makeY [] [] = ""
 makePath _makeX _makeY [] _ = error "Mismatching curves and coordinates"
 makePath _makeX _makeY _ [] = error "Mismatching curves and coordinates"
 makePath makeX makeY (bezier:restb) (coord:restc) = " " ++ makePath' makeX makeY bezier coord ++ makePath makeX makeY restb restc
@@ -212,7 +207,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
       $if showTextLayout
         <rect x="#{makeXP (boxLeft b)}%" y="#{makeYP (boxBottom b)}%" width="#{makeXP (boxWidth b)}%" height="#{makeYP (boxHeight b)}%" vector-effect="non-scaling-stroke" fill="none" stroke="#{toCssColour caminoBlue}" stroke-width="1">
     $forall tic <- ticLabels
-      <text x="#{makeXP (makeX 0.0 + 4)}%" y="#{makeYP (makeY tic + 8)}%" font-size="6" text-anchor="start" fill="grey">#{show $ round tic}
+      <text x="#{makeXP (makeX 0.0 + 4)}%" y="#{makeYP (makeY tic + 8)}%" font-size="6" text-anchor="start" fill="grey">#{format (fixed 0) tic}
   |]
   where
     viewx = 1200 :: Int
@@ -227,9 +222,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     makeX d = (round $ offsetx + scalex * d) :: Int
     makeXP x = 100.0 * fromIntegral x / fromIntegral viewx :: Double
     makeY e = (viewy - (round $ scaley * e)) :: Int
-    makeYD e = (round $ scaley * e) :: Int
     makeYP y = 100.0 * fromIntegral y / fromIntegral viewy :: Double
-    dropY me = maybe (round offsety) makeY me - 4
     anchor d = if d < maxx / 5.0 then "start" else if d > maxx * 4.0 / 5.0 then "end" else "middle" :: Text
     fontWeight l = if important l then "bold" else "normal" :: Text
     splines = makeSpline NaturalBoundary NaturalBoundary coordinates'
@@ -238,5 +231,5 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     elevationPath = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ makePath makeX makeY beziers (tailOrEmpty coordinates) ++ " L " ++ (show $ makeX maxx) ++ " " ++ (show $ makeY 0.0) ++ " Z"
     elevationLines = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ (concat $ map (\(d, e) -> " L " ++ (show $ makeX d) ++ " " ++ (show $ makeY e)) coordinates')
     labelPos = positionLabels label important anchor makeX makeY offsety coordinates
-    ticLabels = [0.0, step .. (floorBy step maxy)] where step = if maxy < 200.0 then 100.0 else 500.0
-    tics = filter (\t -> not $ elem t ticLabels) [0.0, step  .. (ceilingBy step maxy)] where step = if maxy < 200.0 then 10.0 else 100.0
+    ticLabels = [0.0, step' .. (floorBy step' maxy)] where step' = if maxy < 200.0 then 100.0 else 500.0
+    tics = filter (\t -> not $ elem t ticLabels) [0.0, step'  .. (ceilingBy step' maxy)] where step' = if maxy < 200.0 then 10.0 else 100.0

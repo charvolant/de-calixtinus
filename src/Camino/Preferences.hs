@@ -57,7 +57,6 @@ module Camino.Preferences (
 import GHC.Generics
 import Control.DeepSeq
 import Data.Aeson
-import Data.List (sortOn)
 import Data.Placeholder
 import Data.Text (Text)
 import Camino.Camino

@@ -432,7 +432,7 @@ initOrEmpty (h:t) = NE.init (h NE.:| t)
 -- >>> ceilingBy 10 56
 -- 60
 ceilingBy :: (RealFrac a) => a -> a -> a
-ceilingBy b v = b * fromIntegral (ceiling $ v / b)
+ceilingBy b v = b * fromInteger (ceiling $ v / b)
 
 -- | Floor by units of accuracy
 --
@@ -441,7 +441,7 @@ ceilingBy b v = b * fromIntegral (ceiling $ v / b)
 -- >>> floorBy 10 56
 -- 50
 floorBy :: (RealFrac a) => a -> a -> a
-floorBy b v = b * fromIntegral (floor $ v / b)
+floorBy b v = b * fromInteger (floor $ v / b)
 
 -- | Round by units of accuracy
 --
@@ -450,4 +450,4 @@ floorBy b v = b * fromIntegral (floor $ v / b)
 -- >>> roundBy 10 54
 -- 50
 roundBy :: (RealFrac a) => a -> a -> a
-roundBy b v = b * fromIntegral (round $ v / b)
+roundBy b v = b * fromInteger (round $ v / b)

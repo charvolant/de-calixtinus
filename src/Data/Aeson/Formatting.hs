@@ -40,7 +40,6 @@ module Data.Aeson.Formatting (
 import GHC.Generics (Generic)
 import Control.Lens
 import Data.Aeson
-import Data.Aeson.Encoding (bool, null_, pair, scientific, text)
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Builder as B
 import Data.ByteString.Lazy as LB (ByteString)
@@ -48,7 +47,6 @@ import Data.Default.Class
 import Data.List (sortBy)
 import Data.List.Split (chunksOf)
 import qualified Data.Map as M
-import Data.Maybe (catMaybes)
 import Data.Scientific (FPFormat(..), Scientific, formatScientific)
 import qualified Data.Text as T
 import Data.Text.Encoding
@@ -84,10 +82,12 @@ buildPrintOptions options = PrintOptions {
   }
 
 -- | Remove a null value
+removeNull :: Value -> Bool
 removeNull Null = True
 removeNull _ = False
 
 -- | Remove an empty value
+removeNullEmpty :: Value -> Bool
 removeNullEmpty Null = True
 removeNullEmpty (String v) = T.null v
 removeNullEmpty (Array v) = V.null v
@@ -95,22 +95,28 @@ removeNullEmpty (Object v) = KM.null v
 removeNullEmpty _ = False
 
 -- | Remove a null or false value
+removeNullFalse :: Value -> Bool
+
 removeNullFalse Null = True
 removeNullFalse (Bool False) = True
 removeNullFalse _ = False
 
 -- | Remove a null or zero value
+removeNullZero :: Value -> Bool
 removeNullZero Null = True
 removeNullZero (Number 0) = True
 removeNullZero _ = False
 
 -- | Always show inline
+inlineAlways :: Value -> Bool
 inlineAlways = const True
 
 isObject :: Value -> Bool
 isObject (Object _) = True
 isObject _ = False
+
 -- | Show inline if all sub-elements are leaf values
+inlineWhenLiterals :: Value -> Bool
 inlineWhenLiterals Null = True
 inlineWhenLiterals (Bool _) = True
 inlineWhenLiterals (Number _) = True
@@ -123,6 +129,7 @@ fieldFixedFormat :: Int -> Scientific -> B.Builder
 fieldFixedFormat decimals n = B.stringUtf8 $ formatScientific Fixed (Just decimals) n
 
 -- | Format a number field as an integer
+fieldIntFormat :: Scientific -> B.Builder
 fieldIntFormat = fieldFixedFormat 0
 
 textToLiteral :: T.Text -> B.Builder
@@ -153,25 +160,25 @@ encodePretty' po fo pinline indent v@(Array av) = let
     cinline = pinline || (fo ^. foInlineChildren) v
     fo' = fo & foInline .~ (\v' -> (fo ^. foInline) v' && not (isObject v'))
     indent' = indent + (po ^. poIndent)
-    parts = map (encodePretty' po fo' cinline indent') (V.toList av)
-    chunks = maybe [parts] (\n -> chunksOf n parts) (fo ^. foWrap)
+    parts' = map (encodePretty' po fo' cinline indent') (V.toList av)
+    chunks = maybe [parts'] (\n -> chunksOf n parts') (fo ^. foWrap)
     indentBuffer = makeIndentBuffer indent
     indentBuffer' = makeIndentBuffer indent'
     inlineBuffers vs = fst $ foldl (\(bs, follow) -> \b -> (bs <> (if follow then ", " else mempty) <> b, True)) (mempty, False) vs
   in
-    if null parts then
+    if null parts' then
       "[ ]"
     else
       if inline then
         if length chunks == 1 then
-          "[ " <> inlineBuffers parts <> " ]"
+          "[ " <> inlineBuffers parts' <> " ]"
         else
           "["
           <> (fst $ foldl (\(bs, follow) -> \c -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> inlineBuffers c, True)) (mempty, False) chunks)
           <> "\n" <> indentBuffer <> "]"
       else
         "["
-        <> (fst $ foldl (\(bs, follow) -> \b -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> b, True)) (mempty, False) parts)
+        <> (fst $ foldl (\(bs, follow) -> \b -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> b, True)) (mempty, False) parts')
         <> "\n" <> indentBuffer <> "]"
 encodePretty' po fo pinline indent v@(Object km) = let
     inline = pinline || (fo ^. foInline) v
@@ -180,7 +187,7 @@ encodePretty' po fo pinline indent v@(Object km) = let
     indentBuffer = makeIndentBuffer indent
     indentBuffer' = makeIndentBuffer indent'
     ko = sortBy (keyOrder po) $ KM.keys km
-    parts = map (\k -> let
+    parts' = map (\k -> let
           fo' = M.findWithDefault def k (po ^. poFields)
           mv = maybe Null id $ KM.lookup k km
         in
@@ -190,16 +197,16 @@ encodePretty' po fo pinline indent v@(Object km) = let
               (k, Just (encodePretty' po fo' cinline indent' mv))
         ) ko
   in
-    if null parts then
+    if null parts' then
       "{ }"
     else
       if inline then
         "{ "
-        <> (fst $ foldl (\(bs, follow) -> \(k, mb) -> maybe (bs, follow) (\b -> (bs <> (if follow then ", " else mempty) <> (B.stringUtf8 $ show k) <> ": " <> b, True)) mb) (mempty, False) parts)
+        <> (fst $ foldl (\(bs, follow) -> \(k, mb) -> maybe (bs, follow) (\b -> (bs <> (if follow then ", " else mempty) <> (B.stringUtf8 $ show k) <> ": " <> b, True)) mb) (mempty, False) parts')
         <> " }"
       else
         "{"
-        <> (fst $ foldl (\(bs, follow) -> \(k, mb) -> maybe (bs, follow) (\b -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> (B.stringUtf8 $ show k) <> ": " <> b, True)) mb) (mempty, False) parts)
+        <> (fst $ foldl (\(bs, follow) -> \(k, mb) -> maybe (bs, follow) (\b -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> (B.stringUtf8 $ show k) <> ": " <> b, True)) mb) (mempty, False) parts')
         <> "\n" <> indentBuffer <> "}"
 
 encodePretty :: PrintOptions -> Value -> LB.ByteString

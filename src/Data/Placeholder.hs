@@ -34,6 +34,7 @@ module Data.Placeholder (
 
 import Control.DeepSeq (NFData(..), deepseq)
 import Data.Aeson
+import Data.Aeson.Types (typeMismatch)
 import Data.List (find, partition, sortBy)
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -113,11 +114,12 @@ instance (Placeholder T.Text a) => FromJSON (Prioritised T.Text a) where
   parseJSON (String v) = do
     let (pid, pri) = parsePrioritised v
     return $ Prioritised (placeholder pid) pri
+  parseJSON v = typeMismatch "expecting string" v
 
 instance (Placeholder T.Text a) => ToJSON (Prioritised T.Text a) where
   toJSON (Prioritised item priority) = toJSON $ (placeholderID item) <> (if priority == 0 then "" else "@" <> (T.pack $ show priority))
 
-instance (NFData k, NFData a, Placeholder k a) => NFData (Prioritised k a) where
+instance (NFData a, Placeholder k a) => NFData (Prioritised k a) where
   rnf (Prioritised item priority) = item `deepseq` priority `deepseq` ()
 
 uniquePrioritised :: (Ord a, Placeholder k a) => [Prioritised k a] -> [Prioritised k a]

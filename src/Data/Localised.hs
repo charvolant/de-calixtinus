@@ -127,9 +127,10 @@ instance Ord Locale where
 
 instance FromJSON Locale where
   parseJSON (String v) = return $ localeFromIDOrError v
+  parseJSON v = typeMismatch "expecting String" v
 
 instance ToJSON Locale where
-  toJSON locale = String $ localeID locale
+  toJSON loc = String $ localeID loc
 
 instance NFData Locale
 

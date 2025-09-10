@@ -23,7 +23,7 @@ import Data.Maybe (catMaybes)
 import qualified Data.Set as S (Set, null, toList)
 import Data.Text (Text, intercalate, pack, unpack)
 import Data.Time.Calendar (Day)
-import Data.Time.Format.ISO8601 (ISO8601, iso8601Show)
+import Data.Time.Format.ISO8601 (iso8601Show)
 import Debug.Trace (trace)
 
 class Summary a where

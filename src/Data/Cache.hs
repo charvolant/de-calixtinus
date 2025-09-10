@@ -307,7 +307,7 @@ writeCacheFile path value =
 fileCacheEntries :: FileCache k v -> Cache k v -> IO Int
 fileCacheEntries cache _base = foldDirectory (fcRoot cache) (\c -> \_f -> c + 1) 0
 
-fileCacheLookup :: (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v -> Cache k v  -> k -> IO (Maybe v)
+fileCacheLookup :: (IsNamer k, Ord k, FromJSON v) => FileCache k v -> Cache k v  -> k -> IO (Maybe v)
 fileCacheLookup cache base key = do
   let path = fileForKey (fcRoot cache) key
   fileCacheExpire False cache base
@@ -318,7 +318,7 @@ fileCacheLookup cache base key = do
     value <- readCacheFile path
     return $ Just value
 
-fileCachePut :: (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v -> Cache k v  -> k -> v -> IO ()
+fileCachePut :: (IsNamer k, Ord k, ToJSON v) => FileCache k v -> Cache k v  -> k -> v -> IO ()
 fileCachePut cache base key value = do
   let path = fileForKey (fcRoot cache) key
   let dir = takeDirectory path
@@ -327,7 +327,7 @@ fileCachePut cache base key value = do
   createDirectoryIfMissing True dir
   writeCacheFile path value
 
-fileCacheDelete :: (IsNamer k, Ord k, ToJSON v, FromJSON v) => FileCache k v -> Cache k v  -> k -> IO ()
+fileCacheDelete :: (IsNamer k, Ord k) => FileCache k v -> Cache k v  -> k -> IO ()
 fileCacheDelete cache base key = do
   let path = fileForKey (fcRoot cache) key
   fileCacheExpire False cache base

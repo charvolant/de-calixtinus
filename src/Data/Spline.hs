@@ -24,8 +24,6 @@ module Data.Spline (
   , toBezier
 ) where
 
-import Debug.Trace
-
 -- | A spline piece
 --   The spline piece runs from x0 to x1 (x0 < x1) with the equation
 --   y(x) = a * t^3 + b * t^2 + c * t + d where t = x - x0
@@ -97,7 +95,7 @@ data (RealFrac a) => SplineBoundary a =
 spline2ndDevs :: (RealFrac a, Show a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [a]
 spline2ndDevs _sb0 _sbn [] = error "No points for spline"
 spline2ndDevs _sb0 _sbn [_] = error "Require at least two points for spline"
-spline2ndDevs NaturalBoundary sbn (p1@(x1, y1):rest@(_:_)) = let
+spline2ndDevs NaturalBoundary sbn (p1:rest@(_:_)) = let
     u1 = 0.0
     y21 = 0.0
     (y2'2, y2s) = spline2ndDevs' sbn u1 y21 p1 rest

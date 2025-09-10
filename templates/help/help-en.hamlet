@@ -632,13 +632,11 @@
     <div .col-xs-12 .col-md-6 .col-lg-4>
       <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none">
-          <path d="M 10 200 L 10 196 C 79 196, 147 197, 216 197 C 345 197, 473 197, 602 196 C 668 196, 733 196, 799 196 C 850 196, 901 197, 952 197 C 1034 197, 1117 198, 1200 198  L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
-          <line x1="10" y1="194" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-          <line x1="1200" y1="196" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-          <line x1="216" y1="195" x2="216" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-          <line x1="602" y1="194" x2="602" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-          <line x1="799" y1="194" x2="799" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-          <line x1="952" y1="195" x2="952" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <path d="M 10 200 L 10 198 C 158 198, 307 198, 455 198 C 551 199, 648 199, 744 198 C 896 198, 1048 197, 1200 196 L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
+          <line x1="10" y1="196" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="1200" y1="194" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="455" y1="196" x2="455" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+          <line x1="744" y1="196" x2="744" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
           <line x1="9" y1="200" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
           <line x1="5" y1="170" x2="9" y2="170" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
           <line x1="5" y1="140" x2="9" y2="140" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
@@ -646,12 +644,10 @@
           <line x1="5" y1="80" x2="9" y2="80" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
           <line x1="10 - 10" y1="200" x2="9" y2="200" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
           <line x1="10 - 10" y1="50" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="14.0">Santa Iria de Azoia
-        <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="7.0">Vila Franca de Xira
-        <text x="18.0%" y="20.0%" font-size="8" text-anchor="start" font-weight="normal" title="10.0">Póvoa de Santa Iria
-        <text x="50.166666666666664%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="12.0">Alverca do Ribatejo
-        <text x="66.58333333333333%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="15.0">Sobralinho
-        <text x="79.33333333333333%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="10.0">Alhandra
+        <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="7.0">Vila Franca de Xira
+        <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="14.0">Azambuja
+        <text x="37.916666666666664%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="5.0">Estación de Carregado
+        <text x="62.0%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="5.0">Vila Nova de Rainha
         <text x="1.1666666666666667%" y="104.0%" font-size="6" text-anchor="start" fill="grey">0
         <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">500
     <ul>
@@ -743,56 +739,41 @@
   <div .col-xs-12 .col-md-6 .col-lg-4>
     <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none">
-        <path d="M 10 200 L 10 104 C 69 105, 128 107, 187 109 C 203 107, 219 106, 235 105 C 253 107, 271 108, 290 110 C 302 109, 315 108, 328 107 C 375 106, 422 105, 469 103 C 476 102, 483 101, 490 100 C 556 101, 621 102, 687 103 C 732 106, 778 108, 824 111 C 880 117, 935 122, 991 128 C 1017 132, 1043 136, 1070 140 C 1113 143, 1157 147, 1200 150  L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
-        <line x1="10" y1="102" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="1200" y1="148" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="187" y1="107" x2="187" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="328" y1="105" x2="328" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="469" y1="101" x2="469" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="490" y1="98" x2="490" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="687" y1="101" x2="687" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="824" y1="109" x2="824" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="991" y1="126" x2="991" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="1070" y1="138" x2="1070" y2="82" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <path d="M 10 200 L 10 163 C 28 164, 46 166, 65 166 C 86 167, 107 168, 128 167 C 163 166, 198 159, 233 172 C 237 174, 242 176, 247 177 C 259 179, 270 173, 282 171 C 292 168, 302 168, 311 168 C 317 168, 323 169, 329 169 C 348 169, 366 170, 385 169 C 418 167, 452 162, 486 162 C 560 161, 634 183, 708 158 C 731 150, 754 138, 777 144 C 784 146, 791 149, 798 151 C 823 158, 848 144, 873 141 C 913 134, 953 155, 993 168 C 1062 191, 1131 192, 1200 192 L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
+        <line x1="10" y1="161" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="1200" y1="190" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="65" y1="164" x2="65" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="128" y1="165" x2="128" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="233" y1="170" x2="233" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="282" y1="169" x2="282" y2="82" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="385" y1="167" x2="385" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="486" y1="160" x2="486" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="708" y1="156" x2="708" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="798" y1="149" x2="798" y2="42" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="873" y1="139" x2="873" y2="62" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="993" y1="166" x2="993" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="9" y1="200" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="192" x2="9" y2="192" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="185" x2="9" y2="185" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="178" x2="9" y2="178" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="5" y1="170" x2="9" y2="170" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="155" x2="9" y2="155" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="148" x2="9" y2="148" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="5" y1="140" x2="9" y2="140" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="132" x2="9" y2="132" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="118" x2="9" y2="118" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="5" y1="110" x2="9" y2="110" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="102" x2="9" y2="102" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="95" x2="9" y2="95" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="5" y1="80" x2="9" y2="80" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="72" x2="9" y2="72" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="65" x2="9" y2="65" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="5" y1="58" x2="9" y2="58" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="10 - 10" y1="200" x2="9" y2="200" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="10 - 10" y1="162" x2="9" y2="162" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="10 - 10" y1="125" x2="9" y2="125" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-        <line x1="10 - 10" y1="88" x2="9" y2="88" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
         <line x1="10 - 10" y1="50" x2="9" y2="50" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
-      <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="1283.0">O Cebreiro
-      <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="668.0">Triacastela
-      <text x="15.583333333333334%" y="20.0%" font-size="8" text-anchor="start" font-weight="normal" title="1218.0">Liñares
-      <text x="27.333333333333332%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1238.0">Hospital da Condesa
-      <text x="39.083333333333336%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1288.0">Padornelo
-      <text x="40.833333333333336%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1340.0">Alto do Poio
-      <text x="57.25%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1290.0">Fonfría
-      <text x="68.66666666666667%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="1187.0">O Biduedo
-      <text x="82.58333333333333%" y="30.0%" font-size="8" text-anchor="end" font-weight="normal" title="964.0">Filobal
-      <text x="89.16666666666667%" y="40.0%" font-size="8" text-anchor="end" font-weight="normal" title="799.0">Pasantes
+      <text x="0.8333333333333334%" y="10.0%" font-size="8" text-anchor="start" font-weight="normal" title="122.0">Valada (Condeixa-a-Nova)
+      <text x="100.0%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="25.0">Coímbra
+      <text x="5.416666666666667%" y="20.0%" font-size="8" text-anchor="start" font-weight="normal" title="112.0">Atadoa
+      <text x="10.666666666666666%" y="30.0%" font-size="8" text-anchor="start" font-weight="normal" title="109.0">Avessada
+      <text x="19.416666666666668%" y="20.0%" font-size="8" text-anchor="start" font-weight="normal" title="92.0">Orelhudo
+      <text x="23.5%" y="40.0%" font-size="8" text-anchor="middle" font-weight="normal" title="98.0">Ribeira de Casconha
+      <text x="32.083333333333336%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="104.0">Cernache
+      <text x="40.5%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="127.0">Pousada
+      <text x="59.0%" y="10.0%" font-size="8" text-anchor="middle" font-weight="normal" title="141.0">Palheira
+      <text x="66.5%" y="20.0%" font-size="8" text-anchor="middle" font-weight="normal" title="162.0">Qunita do Limoneiro
+      <text x="72.75%" y="30.0%" font-size="8" text-anchor="middle" font-weight="normal" title="198.0">Cruz dos Morouços
+      <text x="82.75%" y="10.0%" font-size="8" text-anchor="end" font-weight="normal" title="106.0">Bordalo
       <text x="1.1666666666666667%" y="104.0%" font-size="6" text-anchor="start" fill="grey">0
-      <text x="1.1666666666666667%" y="85.0%" font-size="6" text-anchor="start" fill="grey">500
-      <text x="1.1666666666666667%" y="66.5%" font-size="6" text-anchor="start" fill="grey">1000
-      <text x="1.1666666666666667%" y="48.0%" font-size="6" text-anchor="start" fill="grey">1500
-      <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">2000
+      <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">500
   
-
 <p>
   The following lines give the waypoints for the day.
   Each waypoint summarises the location in terms of the accommodation and services available.
@@ -832,7 +813,7 @@
         <div .col-xs-12 .col-lg-8>
           <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none">
-              <path d="M 10 200 L 10 181 C 31 177, 53 172, 74 168 C 83 171, 92 174, 101 178 C 109 182, 116 186, 124 190 C 128 186, 132 181, 137 177 C 148 177, 159 178, 170 179 C 176 183, 182 187, 188 190 C 192 189, 195 187, 199 185 C 208 184, 216 184, 225 183 C 231 178, 238 174, 244 170 C 248 173, 251 177, 255 180 C 260 181, 265 181, 269 181 C 275 186, 280 192, 286 198 C 287 195, 288 192, 289 190 C 290 192, 291 195, 292 197 C 296 192, 300 187, 303 182 C 310 182, 317 182, 323 182 C 332 184, 341 185, 350 187 C 361 185, 371 182, 382 180 C 392 177, 401 175, 410 172 C 421 170, 432 168, 443 165 C 454 165, 464 165, 475 165 C 482 172, 490 178, 498 185 C 507 189, 517 192, 527 195 C 529 193, 532 190, 535 188 C 544 185, 553 183, 563 180 C 564 179, 566 178, 567 177 C 571 180, 575 184, 580 187 C 581 186, 582 185, 584 184 C 598 171, 613 158, 628 145 C 632 151, 636 156, 640 162 C 651 169, 661 176, 671 182 C 678 178, 685 174, 692 169 C 697 172, 701 174, 705 177 C 711 174, 718 171, 724 168 C 727 168, 730 169, 733 169 C 737 167, 741 165, 745 163 C 749 158, 754 152, 758 147 C 766 157, 775 168, 784 179 C 789 181, 795 183, 800 185 C 801 187, 802 189, 803 191 C 809 192, 815 194, 821 195 C 822 195, 824 194, 826 194 C 827 194, 829 193, 830 193 C 833 194, 836 195, 838 196 C 845 196, 852 197, 859 197 C 860 197, 862 197, 863 197 C 867 196, 872 195, 876 194 C 880 193, 884 192, 889 191 C 896 190, 904 190, 911 189 C 919 186, 927 183, 935 179 C 936 178, 938 177, 940 176 C 944 169, 949 162, 953 154 C 955 153, 957 151, 960 150 C 967 127, 975 104, 982 81 C 987 91, 993 101, 998 111 C 1002 117, 1006 123, 1010 129 C 1013 128, 1016 127, 1019 126 C 1023 131, 1027 137, 1031 142 C 1032 143, 1034 144, 1035 145 C 1036 146, 1036 147, 1037 148 C 1039 150, 1041 151, 1043 153 C 1051 143, 1059 133, 1067 124 C 1069 122, 1071 120, 1073 118 C 1078 127, 1082 136, 1086 146 C 1090 155, 1094 165, 1098 174 C 1100 176, 1102 177, 1104 178 C 1112 180, 1120 181, 1127 182 C 1131 185, 1135 187, 1139 190 C 1146 191, 1153 192, 1160 193 C 1165 193, 1169 193, 1174 193 C 1183 189, 1191 184, 1200 180  L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
+              <path d="M 10 200 L 10 181 C 31 174, 53 168, 74 168 C 83 168, 92 170, 101 178 C 109 184, 116 195, 124 190 C 128 188, 132 181, 137 177 C 148 165, 159 169, 170 179 C 176 184, 182 191, 188 190 C 192 190, 195 187, 199 185 C 208 182, 216 189, 225 183 C 231 178, 238 166, 244 170 C 248 172, 251 179, 255 180 C 260 183, 265 174, 269 181 C 275 188, 280 213, 286 198 C 287 195, 288 190, 289 190 C 290 190, 291 194, 292 197 C 296 206, 300 190, 303 182 C 310 168, 317 177, 323 182 C 332 189, 341 188, 350 187 C 361 185, 371 183, 382 180 C 392 177, 401 174, 410 172 C 421 169, 432 168, 443 165 C 454 163, 464 160, 475 165 C 482 169, 490 177, 498 185 C 507 195, 517 203, 527 196 C 529 193, 532 190, 535 188 C 544 181, 553 189, 563 180 C 564 179, 566 177, 567 177 C 571 176, 575 188, 580 187 C 581 187, 582 185, 584 184 C 598 164, 613 134, 628 145 C 632 149, 636 156, 640 162 C 651 177, 661 187, 671 182 C 678 179, 685 167, 692 169 C 697 171, 701 176, 705 177 C 711 179, 718 169, 724 168 C 727 167, 730 169, 733 169 C 737 170, 741 169, 745 163 C 749 158, 754 149, 758 147 C 766 143, 775 173, 784 179 C 789 183, 795 177, 800 185 C 801 187, 802 189, 803 191 C 809 200, 815 197, 821 196 C 822 195, 824 195, 826 194 C 827 194, 829 193, 830 193 C 833 193, 836 195, 838 196 C 845 199, 852 197, 859 197 C 860 197, 862 197, 863 197 C 867 197, 872 195, 876 194 C 880 193, 884 192, 889 191 C 896 190, 904 191, 911 189 C 919 187, 927 183, 935 179 C 936 179, 938 178, 940 176 C 944 171, 949 158, 953 154 C 955 153, 957 153, 960 150 C 967 139, 975 85, 982 81 C 987 78, 993 97, 998 111 C 1002 123, 1006 130, 1010 129 C 1013 129, 1016 125, 1019 126 C 1023 127, 1027 138, 1031 142 C 1032 143, 1034 144, 1035 145 C 1036 146, 1036 147, 1037 148 C 1039 150, 1041 152, 1043 153 C 1051 157, 1059 136, 1067 124 C 1069 120, 1071 117, 1073 118 C 1078 118, 1082 132, 1086 146 C 1090 157, 1094 169, 1098 174 C 1100 177, 1102 178, 1104 178 C 1112 180, 1120 178, 1127 182 C 1131 184, 1135 188, 1139 190 C 1146 194, 1153 193, 1160 193 C 1165 193, 1169 194, 1174 193 C 1183 192, 1191 186, 1200 180 L 1200 200 Z" vector-effect="non-scaling-stroke" fill="#e4e0cb" stroke="#f9b34a" stroke-width="1">
               <line x1="10" y1="179" x2="10" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
               <line x1="1200" y1="178" x2="1200" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
               <line x1="188" y1="188" x2="188" y2="22" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
@@ -858,7 +839,7 @@
             <text x="85.91666666666667%" y="20.0%" font-size="8" text-anchor="end" font-weight="normal" title="193.0">Rubiães
             <text x="1.1666666666666667%" y="104.0%" font-size="6" text-anchor="start" fill="grey">0
             <text x="1.1666666666666667%" y="29.0%" font-size="6" text-anchor="start" fill="grey">500
-
+  
 <p>
   The stage shows a summary of the days that comprise it, showing total distance, time and effort,
   along with a larger-scale elevation profile for the entire stage.
@@ -934,11 +915,11 @@
   <tr>
     <td>Missing Services (Stop)
     <td>Penance associated with missing services at the day's end location.
-        For a day's travel, the missing services are shown beside the penance.
+        \ For a day's travel, the missing services are shown beside the penance.
   <tr>
     <td>Missing Services (Day)
     <td>Penance associated with missing services needed at some point in the day's travel.
-        For a day's travel, the missing services are shown beside the penance.
+        \ For a day's travel, the missing services are shown beside the penance.
   <tr>
     <td>Rest Pressure
     <td>Appears when the chosen stop location for the day is near a suitable rest-point but isn't one itself.

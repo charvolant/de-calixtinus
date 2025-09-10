@@ -187,7 +187,7 @@
      <td colspan="3" .fw-lighter><sup>1</sup> Sustained road speed on a flat, well-maintained road
    <tr>
      <td colspan="3" .fw-lighter><sup>2</sup> Sustained climb over an hour or so on a 5% gradient.
-       \ As a rule of thumb, add 50 for every extra 1% gradient and subtract 50 for every 1% reduction in gradient.
+       \ As a rule of thumb, subtract 50 for every extra 1% gradient and add 50 for every 1% reduction in gradient.
 
 <h2 #comfort-help>Comfort
 
@@ -195,7 +195,7 @@
   Comfort is a broad description of how much hardship you're prepared to put up with while walking.
   Most of the time, comfort levels translate into pre-packaged accommodation and service preferences
   while walking the camino.
-  You can adjust these pre-packaged defaults on the following screens to suit your needs.
+  If you are not using easy mode, you can adjust these pre-packaged defaults on the following screens to suit your needs.
   Comfort levels also adjust the bias towards longer or shorter daily stages.
 
 <table .table .table-striped>

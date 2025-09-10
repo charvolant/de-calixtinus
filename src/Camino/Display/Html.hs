@@ -256,6 +256,7 @@ caminoLocationTypeIcon Park = [ihamlet| <span .location-type .ca-park title="_{P
 caminoLocationTypeIcon Beach = [ihamlet| <span .location-type .ca-beach title="_{BeachTitle}"> |]
 caminoLocationTypeIcon Natural = [ihamlet| <span .location-type .ca-natural title="_{NaturalTitle}"> |]
 caminoLocationTypeIcon Hazard = [ihamlet| <span .location-type .ca-hazard title="_{HazardTitle}"> |]
+caminoLocationTypeIcon Wharf = [ihamlet| <span .location-type .ca-wharf title="_{WharfTitle}"> |]
 caminoLocationTypeIcon PlaceholderLocation = [ihamlet| <span .text-warning .location-type .ca-poi title="_{PlaceholderLabel}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
@@ -288,6 +289,7 @@ caminoLocationTypeLabel Park = ParkTitle
 caminoLocationTypeLabel Beach = BeachTitle
 caminoLocationTypeLabel Natural = NaturalTitle
 caminoLocationTypeLabel Hazard = HazardTitle
+caminoLocationTypeLabel Wharf = WharfTitle
 caminoLocationTypeLabel Poi = PoiTitle
 caminoLocationTypeLabel PlaceholderLocation = PlaceholderLabel
 
@@ -1634,6 +1636,7 @@ $forall (lt, location, poi) <- icons
       , (Beach, (24, 24), (24, 18))
       , (Natural, (24, 24), (24, 25))
       , (Hazard, (24, 24), (20, 18))
+      , (Wharf, (24, 24), (24, 16))
       , (Poi, (16, 24), (16, 24))
       ] :: [(LocationType, (Int, Int), (Int, Int))]
 

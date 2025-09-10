@@ -4097,7 +4097,7 @@
     {
       "id": "P-P233RT",
       "name": "Río Tomeza",
-      "type": "Poi",
+      "type": "Natural",
       "position": { "latitude": 42.40670, "longitude": -8.63615, "elevation": 22 },
       "region": "ES-GA",
       "services": [ ],
@@ -4415,7 +4415,7 @@
         {
           "id": "P-P258-2",
           "name": "Porto de Pontecesures@es",
-          "type": "Poi",
+          "type": "Wharf",
           "description": "Disembarkation point for the ferry from Vilanova de Arousa@en",
           "position": { "latitude": 42.72153, "longitude": -8.65390, "elevation": 4 }
         }
@@ -4760,7 +4760,7 @@
     {
       "id": "P-P281",
       "name": "Camino complementario",
-      "type": "Poi",
+      "type": "Junction",
       "position": { "latitude": 42.86336, "longitude": -8.56569, "elevation": 193 },
       "region": "ES-GA",
       "services": [ ],
@@ -5343,7 +5343,7 @@
     {
       "id": "P-F51",
       "name": "Capela de Nossa Senhora da Graça",
-      "type": "Poi",
+      "type": "Church",
       "position": { "latitude": 39.80135, "longitude": -8.45777, "elevation": 153 },
       "region": "PT",
       "services": [ ],
@@ -5645,7 +5645,7 @@
     {
       "id": "P-E22",
       "name": "Ruta maritima ría de Arousa y río Ulla",
-      "type": "Poi",
+      "type": "Wharf",
       "position": { "latitude": 42.56467, "longitude": -8.83447, "elevation": 0 },
       "region": "ES-GA",
       "services": [ "Ferry" ],
@@ -6475,7 +6475,7 @@
     {
       "id": "P-C37",
       "name": "Caminha Ferry",
-      "type": "Poi",
+      "type": "Wharf",
       "position": { "latitude": 41.87867, "longitude": -8.83637, "elevation": 3 },
       "region": "PT",
       "services": [ "Ferry" ],
@@ -7101,7 +7101,7 @@
     {
       "id": "L1",
       "name": "Porto (coast)",
-      "type": "Poi",
+      "type": "Junction",
       "position": { "latitude": 41.14051, "longitude": -8.61650, "elevation": 13 },
       "region": "PT",
       "services": [ "Restaurant", "Train", "Bus" ],
@@ -7419,7 +7419,7 @@
     {
       "id": "P-T8",
       "name": "Ponte Rodo-Ferroviária de Valença jetty",
-      "type": "Poi",
+      "type": "Wharf",
       "position": { "latitude": 42.03713, "longitude": -8.64375, "elevation": 3 },
       "region": "PT",
       "services": [ ],

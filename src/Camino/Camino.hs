@@ -623,6 +623,7 @@ data LocationType =
    | Beach -- ^ A beach
    | Natural -- ^ A site of natural beauty
    | Hazard -- ^ A dangerous location (busy road crossing, etc)
+   | Wharf -- ^ A boat/ferry transfer point
    | Poi -- ^ A generic point of interest
    | PlaceholderLocation -- ^ A placeholder location
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)

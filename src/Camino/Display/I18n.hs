@@ -301,6 +301,7 @@ data CaminoMsg =
   | WarningTitle
   | WashingMachineTitle
   | WaypointLabel
+  | WharfTitle
   | WiFiTitle
   | WineryTitle
   deriving (Show)
@@ -587,6 +588,7 @@ renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
 renderCaminoMsgDefault _ WarningTitle= "Warning"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
+renderCaminoMsgDefault _ WharfTitle = "Wharf"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
 renderCaminoMsgDefault _ WineryTitle = "Winery"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]

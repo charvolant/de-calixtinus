@@ -220,7 +220,7 @@
         {
           "id": "N-N4-1",
           "name": "Ferry@en",
-          "type": "Poi",
+          "type": "Wharf",
           "description": {
             "about": "https://turismopasaia.com/linea-regular-en-barco-motora-donibane-san-pedro/"
           },

@@ -215,7 +215,7 @@ iconList = [
     ("ca-walking", '\xe080'),
     ("ca-warning", '\xe093'),
     ("ca-washing-machine", '\xe061'),
-    ("ca-wharf", '\xe048'),
+    ("ca-wharf", '\xe054'),
     ("ca-wifi", '\xe060'),
     ("ca-winery", '\xe01c')
   ]

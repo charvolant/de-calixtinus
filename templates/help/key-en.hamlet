@@ -208,6 +208,12 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon Wharf}
+          <td>Wharf
+          <td>A wharf, quay or pier connecting to a boat
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Poi}
           <td>Locality
           <td>An unspecified waypoint or point of interest

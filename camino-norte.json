@@ -1903,7 +1903,7 @@
       "id": "N-N70",
       "name": "Loredo",
       "type": "Village",
-      "position": { "latitude": 43.46076, "longitude": -3.72058, "elevation": 22 },
+      "position": { "latitude": 43.46354, "longitude": -3.72292, "elevation": 13 },
       "region": "ES-CB",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -7304,8 +7304,8 @@
       "ascent": 80,
       "descent": 110,
       "waypoints": [
-        { "latitude": 43.41129, "longitude": -3.51125, "elevation": 14 },
-        { "latitude": 43.41051, "longitude": -3.50157, "elevation": 92 }
+        { "latitude": 43.41051, "longitude": -3.50157, "elevation": 92 },
+        { "latitude": 43.41129, "longitude": -3.51125, "elevation": 14 }
       ]
     },
     {
@@ -7433,8 +7433,8 @@
       "ascent": 15,
       "descent": 40,
       "waypoints": [
-        { "latitude": 43.46980, "longitude": -3.72602, "elevation": 9 },
-        { "latitude": 43.47006, "longitude": -3.72240, "elevation": 22 }
+        { "latitude": 43.47291, "longitude": -3.72215, "elevation": 16 },
+        { "latitude": 43.46567, "longitude": -3.72086, "elevation": 13 }
       ]
     },
     {
@@ -8264,8 +8264,8 @@
       "ascent": 90,
       "descent": 75,
       "waypoints": [
-        { "latitude": 43.55319, "longitude": -6.31386, "elevation": 134 },
-        { "latitude": 43.55301, "longitude": -6.32321, "elevation": 77 }
+        { "latitude": 43.55958, "longitude": -6.30114, "elevation": 62 },
+        { "latitude": 43.56096, "longitude": -6.30345, "elevation": 113 }
       ]
     },
     {
@@ -8275,8 +8275,8 @@
       "ascent": 65,
       "descent": 80,
       "waypoints": [
-        { "latitude": 43.55958, "longitude": -6.30114, "elevation": 62 },
-        { "latitude": 43.56096, "longitude": -6.30345, "elevation": 113 }
+        { "latitude": 43.55319, "longitude": -6.31386, "elevation": 134 },
+        { "latitude": 43.55301, "longitude": -6.32321, "elevation": 77 }
       ]
     },
     {
@@ -9225,8 +9225,8 @@
       "description": "The main Camino route starting in Irun.",
       "major": true,
       "stops": [ "N-N26", "N-N32", "N-N138", "N-N144", "N-N199", "N-N211" ],
-      "starts": [ "N-N1@0", "N-N224@100" ],
-      "finishes": [ "ST-ST1@0", "N-N138@100" ],
+      "starts": [ "N-N1", "N-N224@100" ],
+      "finishes": [ "ST-ST1", "N-N138@100" ],
       "suggested-pois": [ "N-N211-9", "N-N26-4", "N-N32-1", "N-N32-3", "N-N73-1", "N-N87-1", "N-N9-1", "N-N98-2" ],
       "palette": {
         "colour": "#fec953"

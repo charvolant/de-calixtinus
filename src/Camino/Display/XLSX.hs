@@ -52,7 +52,6 @@ import Data.Time.Format.ISO8601
 import Data.Util
 import Data.Xlsx
 
-
 -- What most of the sheets work in
 type Cslab = Slab (Cell CaminoMsg)
 
@@ -497,12 +496,12 @@ createLegSlab leg = do
     return $ (rowSlab [
         emptyCell
       , emptyCell
+      , emptyCell
       , def & cellText ?~ Txt (locationName $ legTo leg)
       , (distanceCell $ legDistance leg) & cellID ?~ disid
       , (maybeTimeCell $ legTime leg)
       , emptyCell
       , (penanceCell False $ legPenance leg)
-      , emptyCell
       , (heightCell $ legAscent leg) & cellID ?~ asid
       , (heightCell $ legDescent leg) & cellID ?~ deid
       , emptyCell
@@ -511,6 +510,7 @@ createLegSlab leg = do
       , servicesCell (locationServices $ legTo leg)
       , accommodationCell (locationAccommodationTypes $ legTo leg)
       , poisCell (locationPois $ legTo leg)
+      , emptyCell
       , emptyCell
       , legDescriptionCell leg
       ], disid, asid, deid)
@@ -575,7 +575,7 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
           ((\rc -> let
               match = FApply "MATCH" [
                   FRef dayid
-                , FRef $ CellSubrangeID Nothing Nothing Nothing (Just 1) htable
+                , FRef $ CellSubrangeID Nothing (Just 1) Nothing (Just 1) htable
                 , FInt 0
                 ]
             in

@@ -437,7 +437,7 @@ minColumnCoord :: ColumnCoord -> ColumnCoord -> ColumnCoord
 minColumnCoord r1@(ColumnRel ri1) r2@(ColumnRel ri2) = if ri2 > ri1 then r1 else r2
 minColumnCoord r1@(ColumnRel ri1) r2@(ColumnAbs ri2) = if ri2 > ri1 then r1 else r2
 minColumnCoord r1@(ColumnAbs ri1) r2@(ColumnRel ri2) = if ri2 > ri1 then r1 else r2
-minColumnCoord r1@(ColumnAbs ri1) r2@(ColumnAbs ri2) = if ri2 < ri1 then r1 else r2
+minColumnCoord r1@(ColumnAbs ri1) r2@(ColumnAbs ri2) = if ri2 > ri1 then r1 else r2
 
 minCellCoord :: CellCoord -> CellCoord -> CellCoord
 minCellCoord (rc1, cc1) (rc2, cc2) = (minRowCoord rc1 rc2, minColumnCoord cc1 cc2)

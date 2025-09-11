@@ -251,6 +251,7 @@ a
   .poi-types
     .location-type
       color: #{toCssColour informationBlue}
+      width: auto
   .location-type
     display: inline-block
     color: #{toCssColour caminoYellow}

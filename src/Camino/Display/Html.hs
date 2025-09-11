@@ -721,10 +721,10 @@ locationLineSimple location = [ihamlet|
     <span .accommodation-types>
       $forall accommodation <- locationAccommodationTypes location
         ^{caminoAccommodationTypeIcon accommodation}
-    <span .services>
+    <span .services .ms-1>
       $forall service <- locationServices location
         ^{caminoServiceIcon service}
-    <span .poi-types>
+    <span .poi-types .ms-1>
       $forall poi <- locationPoiTypes location
         ^{caminoLocationTypeIcon poi}
       $forall event <- locationEventTypes location

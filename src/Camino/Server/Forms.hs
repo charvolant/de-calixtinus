@@ -56,7 +56,6 @@ import Data.Time.Calendar (Day)
 import Formatting
 import Text.Hamlet
 import Yesod
-import Camino.Preferences (CaminoPreferences(preferenceRestPoints), recommendedRestPoints)
 
 -- Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {

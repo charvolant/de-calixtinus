@@ -201,13 +201,13 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
       $forall tic <- tics
         <line x1="#{makeX 0.0 - 5}" y1="#{makeY tic}" x2="#{makeX 0.0 - 1}" y2="#{makeY tic}" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
       $forall tic <- ticLabels
-        <line x1="#{makeX 0.0} - 10" y1="#{makeY tic}" x2="#{makeX 0.0 - 1}" y2="#{makeY tic}" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
+        <line x1="#{makeX 0.0 - 10}" y1="#{makeY tic}" x2="#{makeX 0.0 - 1}" y2="#{makeY tic}" vector-effect="non-scaling-stroke" stroke="grey" stroke-width="1">
     $forall (x, _y1, y2, a, b, l) <- labelPos
       <text x="#{makeXP x}%" y="#{makeYP y2}%" font-size="8" text-anchor="#{a}" font-weight="#{fontWeight l}" title="#{showElevation l}">_{TxtPlain False False (locationName l)}
       $if showTextLayout
         <rect x="#{makeXP (boxLeft b)}%" y="#{makeYP (boxBottom b)}%" width="#{makeXP (boxWidth b)}%" height="#{makeYP (boxHeight b)}%" vector-effect="non-scaling-stroke" fill="none" stroke="#{toCssColour caminoBlue}" stroke-width="1">
     $forall tic <- ticLabels
-      <text x="#{makeXP (makeX 0.0 + 4)}%" y="#{makeYP (makeY tic + 8)}%" font-size="6" text-anchor="start" fill="grey">#{format (fixed 0) tic}
+      <text x="#{makeXP (makeX 0.0 + 4)}%" y="#{makeYP (makeY tic + 4)}%" font-size="6" text-anchor="start" fill="grey">#{format (fixed 0) tic}
   |]
   where
     viewx = 1200 :: Int

@@ -44,6 +44,7 @@ import Text.Cassius (renderCss)
 import Text.Hamlet
 import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, take, toLower, toUpper)
 import Formatting
+import Data.Text (Text)
 
 -- A useful separator
 endash :: Char
@@ -861,8 +862,8 @@ caminoPointOfInterestHtml poi = [ihamlet|
         <span  title="^{caminoPoiCategoriesAttr (poiCategories poi)}">
           _{Txt (poiName poi)}
         $with pos <- poiPosition poi
-          <a .description-icon .float-end onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
-            <span .ca-globe title="_{ShowOnMapTitle}">
+          <a .description-icon .float-end onclick="showLocationOnMap(#{latitude pos}, #{longitude pos}, '#{formatLatLng pos}')">
+            <span .ca-globe title="_{ShowOnMapTitle} #{formatLatLng pos}">
         $maybe d <- poiDescription poi
           $maybe about <- descAbout d
             <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about (poiName poi)}">
@@ -941,6 +942,12 @@ tripChoiceSummary config msolution location = [ihamlet|
         <td>
 |]
 
+latlngFormat :: (RealFrac a) => Format r (a -> a -> Maybe a -> r)
+latlngFormat = (fixed 5) % "," % (fixed 5) % (optioned $ " " % (fixed 0) % "m")
+
+formatLatLng :: LatLong -> Text
+formatLatLng latlng = sformat latlngFormat (latitude latlng) (longitude latlng) (elevation latlng)
+
 caminoLocationHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml config preferences camino msolution containerId rests stocks stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .p-0 .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
@@ -988,8 +995,8 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
                     <a .description-icon .about href="@{LinkRoute about}" title="_{LinkTitle about (locationName location)}">
                       <span .ca-link>
                 $with pos <- locationPosition location
-                  <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos})">
-                    <span .ca-globe title="_{ShowOnMapTitle} #{formatLatLng (latitude pos)},#{formatLatLng (longitude pos)}#{formatElev (elevation pos)}">
+                  <a .show-on-map onclick="showLocationOnMap(#{latitude pos}, #{longitude pos}, '#{formatLatLng pos}')">
+                    <span .ca-globe title="_{ShowOnMapTitle} #{formatLatLng pos}">
      <div id="location-body-#{lid}" .accordion-collapse .collapse aria-labelledby="location-heading-#{lid}" data-parent="##{containerId}">
       <div .accordion-body .container-fluid>
         $if getDebug config
@@ -1022,8 +1029,6 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
     isStop = not isRest && not isStockpoint && S.member location stops
     isWaypoint = not isStop && not isStockpoint && not isRest && (S.member location waypoints)
     transportLinks = locationTransportLinks camino' location
-    formatLatLng v = sformat (fixed 5) v
-    formatElev mv = maybe "" (\v -> " " <> sformat (fixed 0) v <> "m") mv
 
 caminoLocationsHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml config preferences camino solution = [ihamlet|
@@ -1540,9 +1545,11 @@ locations.setZIndex(30);
 legs.setZIndex(20);
 pois.setZIndex(10);
 
-function showLocationOnMap(lat, lng) {
+function showLocationOnMap(lat, lng, txt) {
   \$('#map-toggle').tab('show');
   map.fitBounds([ [lat + 0.01, lng - 0.01], [lat - 0.01, lng + 0.01] ]);
+  if (txt)
+    navigator.clipboard.writeText(txt);
 }
 
 function selectZoom() {

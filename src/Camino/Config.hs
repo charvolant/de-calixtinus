@@ -33,6 +33,7 @@ module Camino.Config (
   , getLink
   , getLinks
   , getMap
+  , getNotice
   , getWebRoot
   , readAsset
   , readConfigFile
@@ -255,6 +256,7 @@ data Config = Config {
   , configCalendars :: Maybe CalendarConfig -- ^ Common calendar definitions for named holidays
   , configRegions:: Maybe RegionConfig -- ^ Common region definitions
   , configCaches :: [CacheConfig]
+  , configNotice :: Maybe (Localised TaggedText)
   , configDebug :: Maybe Bool -- ^ Show debugging information
 } deriving (Show)
 
@@ -368,6 +370,7 @@ defaultConfig = Config {
       , cacheConfigFileStore = Just "$TMP/de-calixtinus/store"
     }
   ],
+  configNotice = Nothing,
   configDebug = Just False
 }
 
@@ -384,6 +387,7 @@ instance FromJSON Config where
     calendar' <- v .:? "calendar"
     regions' <- v .:? "regions"
     caches' <- v .:? "caches" .!= []
+    notice' <- v .:? "notice"
     debug' <- v .:? "debug"
     return $ Config {
         configParent = (Just defaultConfig)
@@ -392,13 +396,22 @@ instance FromJSON Config where
       , configCalendars = calendar'
       , configRegions = regions'
       , configCaches = caches'
+      , configNotice = notice'
       , configDebug = debug'
       }
   parseJSON v = unexpected v
     
 instance ToJSON Config where
-  toJSON (Config _parent' web' caminos' calendar' regions' caches' debug') =
-    object [ "web" .= web', "caminos" .= caminos', "calendar" .= calendar', "regions" .= regions', "caches" .= caches', "debug" .= debug' ]
+  toJSON (Config _parent' web' caminos' calendar' regions' caches' notice' debug') =
+    object [
+        "web" .= web'
+      , "caminos" .= caminos'
+      , "calendar" .= calendar'
+      , "regions" .= regions'
+      , "caches" .= caches'
+      , "notice" .= notice'
+      , "debug" .= debug'
+      ]
 
 -- | Create a configuration with a specific root
 withRoot :: Config -> Text -> Config
@@ -414,6 +427,7 @@ withRoot parent root = Config {
   , configCalendars = Nothing
   , configRegions = Nothing
   , configCaches = []
+  , configNotice = Nothing
   , configDebug = Nothing
   }
 
@@ -459,6 +473,18 @@ getRecursive' access config = let
         Just p -> getRecursive' access p
       Just r -> r
 
+-- | Get something optional recursively from the configurations
+getRecursive'' :: (Config -> Maybe b) -> Config -> Maybe b
+getRecursive'' access config = let
+    parent = configParent config
+    result = access config
+  in
+    case result of
+      Nothing -> case parent of
+        Nothing -> Nothing
+        Just p -> getRecursive'' access p
+      Just _ -> result
+
 -- | Get an asset based on identifier
 --   If the configuration has a parent and the requisite asset is not present, then the parent is tried
 getAsset :: Text -- ^ The asset identifier
@@ -502,7 +528,12 @@ getWebRoot :: Config -- ^ The configuration
   -> Text -- ^ The root URL
 getWebRoot config = getRecursive' (webRoot . configWeb) config
 
--- Get the root URL
+-- Get the notice, if anything
+getNotice :: Config -- ^ The configuration
+  -> Maybe (Localised TaggedText) -- ^ The notice, if anything
+getNotice config = getRecursive'' configNotice config
+
+-- Get the debug state
 -- This assumes that the value is set somewhere in the heirarchy, otherwise an error is shown
 getDebug :: Config -- ^ The configuration
   -> Bool -- ^ The debug flag

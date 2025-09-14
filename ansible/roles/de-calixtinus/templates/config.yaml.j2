@@ -744,4 +744,7 @@ caches:
 {% endif %}
     file-expiry: {{ dcx_plan_cache_file_expiry }}
     file-store: {{ dcx_plan_cache_file_store }}
+{% if dcx_notice %}
+notice: "{{ dcx_notice }}"
+{% endif %}
 debug: {{ dcx_debug }}

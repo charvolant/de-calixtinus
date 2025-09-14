@@ -1,4 +1,7 @@
 <div .container-fluid>
+  $maybe n <- mnotice
+    <div .alert .alert-info role="alert">
+      _{Txt n}
   <div .row>
     <div .col>
       <p .lead>_{MsgHomeText1}

@@ -22,7 +22,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Config (AssetConfig(..), getAsset, getWebRoot)
+import Camino.Config (AssetConfig(..), getAsset, getNotice, getWebRoot)
 import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution, planCamino)
 import Camino.Preferences
 import Camino.Display.Html
@@ -74,6 +74,7 @@ homeP = do
   master <- getYesod
   (help, helpPop) <- helpPopup $ Just $(ihamletFile "templates/help/homepage-help-en.hamlet")
   let mapUrl = maybe "" assetPath (getAsset "images" (caminoAppConfig master)) <> "/Map.png"
+  let mnotice = getNotice $ caminoAppConfig master
   defaultLayout $ do
     setTitleI MsgAppName
     toWidget helpPop
@@ -222,7 +223,7 @@ getPlanR sid = do
   case msolution of
     Nothing -> do
       setMessage [shamlet|
-        <div ..alert .alert-warning role="alert">
+        <div .alert .alert-warning role="alert">
           Can't find #{sid}
         |]
       notFound

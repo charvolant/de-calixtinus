@@ -7,6 +7,8 @@ dcx_dist_bucket: de-calixtinus
 dcx_group: dcx
 dcx_maximum_heap_size: 768m
 dcx_log_dir: /var/log/de-calixtinus
+# Any notice that needs to be included
+dcx_notice:
 # The plan cache (in memory size, file store size (-1) for no limit, file expiry in days, store location)
 dcx_plan_cache_mem_size: 10
 dcx_plan_cache_file_expiry: 30

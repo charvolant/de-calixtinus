@@ -653,14 +653,14 @@ createPilgrimageSlab stocks htable rtable (Just pilgrimage) = do
       , def & cellStyle ?~ longDateStyle & cellFormula ?~ FRef fsid
       , localisedCell (locationName $ start pilgrimage)
       , localisedCell (locationName $ finish pilgrimage)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 4 c) sids)
-      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 5 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 3 c) sids)
+      , def & cellStyle ?~ timeStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 4 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 5 c) sids)
       , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 6 c) sids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 7 c) sids)
+      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 7 c) sids)
       , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 8 c) sids)
-      , def & cellStyle ?~ heightStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 9 c) sids)
-      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 10 c) sids)
-      , def & cellStyle ?~ integerStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 11 c) sids)
+      , def & cellStyle ?~ distanceStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 9 c) sids)
+      , def & cellStyle ?~ integerStyle & cellFormula ?~ FApply "SUM" (map (\c -> FRef $ CellOffsetID 0 10 c) sids)
       ]
   return (ps >>! footer)
 

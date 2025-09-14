@@ -19,6 +19,9 @@ caminos:
   - id: I-VV
     type: CaminoDefinition
     path: "file:/app/lib/import-villaviciosa.json"
+  - id: I-PF
+    type: CaminoDefinition
+    path: "file:/app/lib/import-ponferrada.json"
   - id: I-AS
     type: CaminoDefinition
     path: "file:/app/lib/import-arzua-santiago.json"
@@ -40,6 +43,9 @@ caminos:
   - id: I
     type: CaminoDefinition
     path: "file:/app/lib/camino-ingles.json"
+  - id: W
+    type: CaminoDefinition
+    path: "file:/app/lib/camino-invierno.json"
   - id: FI
     type: CaminoDefinition
     path: "file:/app/lib/camino-fisterra.json"
@@ -481,7 +487,7 @@ regions:
         - Principáu d'Asturies@ast
         - Principado de Asturias@es
         - Principao d'Asturias@ga
-      about: https://www.xunta.gal/
+      about: https://www.asturias.es/
     type: Province
     parent: ES
     locale: ast

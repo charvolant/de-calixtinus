@@ -6,9 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.8 - 2025-09-12
+
+### Added
+
+* Camino Invierno
+* Elevation profiles
+* Rest pressure for location selection
+* Additional description for accommodation options
+* Intermediate waypoints for wiggly legs
+* Elevation and checking tools for camino builders
+
+### Changed 
+
+* Wharf location type
+
 ## 0.7 - 2025-07-04
 
-#### Added
+### Added
 
 * Camino del Norte
 * Download spreadsheet version of camino

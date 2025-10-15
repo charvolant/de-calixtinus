@@ -1647,7 +1647,34 @@
       "finishes": [ "FI-F33@0" ],
       "palette": {
         "colour": "#fec953"
-      }
+      },
+      "features": [
+        {
+          "id": "FI-F-F1",
+          "name": "Main Camino Fisterra Route",
+          "geometry": "FI/FI-F-F1.geojson"
+        },
+        {
+          "id": "FI-F-F2",
+          "name": "Bypass A Picota",
+          "condition": {
+            "not": "FI-F22"
+          },
+          "geometry": "FI/FI-F-F2.geojson"
+        },
+        {
+          "id": "FI-F-F3",
+          "name": "Main Camino via A Picota",
+          "condition": "FI-F22",
+          "geometry": "FI/FI-F-F3.geojson"
+        },
+        {
+          "id": "FI-F-F4",
+          "name": "Main Camino without Muxia Variant",
+          "condition": "FI-F27",
+          "geometry": "FI/FI-F-F4.geojson"
+        }
+      ]
     },
     {
       "id": "FI-M",
@@ -1660,8 +1687,28 @@
       "major": true,
       "stops": [ "FI-M12" ],
       "palette": {
-        "colour": "#46d767"
-      }
+        "colour": "#10f048",
+        "text-colour": "#10d440"
+      },
+      "features": [
+        {
+          "id": "FI-M-F1",
+          "name": "Muxia Variant Trail",
+          "geometry": "FI/FI-M-F1.geojson"
+        },
+        {
+          "id": "FI-M-F2",
+          "name": "Lires Coastal Route",
+          "condition": false,
+          "geometry": "FI/FI-M-F2.geojson"
+        },
+        {
+          "id": "FI-M-F3",
+          "name": "Padris Road Route",
+          "condition": false,
+          "geometry": "FI/FI-M-F3.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [

@@ -1221,7 +1221,7 @@ pilgrimageStops pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> (start d):s'
 
 -- | Get all the waypoints on a pilgrimage in order
 pilgrimageWaypoints :: Pilgrimage -> [Location]
-pilgrimageWaypoints pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> foldr (\l -> \s'' -> (legTo l):s'') s' (path d)) s (path j)) [finish pilgrimage] (path pilgrimage)
+pilgrimageWaypoints pilgrimage = foldr (\j -> \s -> foldr (\d -> \s' -> foldr (\l -> \s'' -> (legTo l):s'') s' (path d)) s (path j)) [start pilgrimage] (path pilgrimage)
 
 -- All the legs in a day
 dayLegs :: Day -> [Leg]

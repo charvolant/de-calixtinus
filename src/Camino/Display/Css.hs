@@ -111,6 +111,7 @@ iconCss ident ch = [cassius|
 iconList :: [(String, Char)]
 iconList = [
     ("ca-accessible", '\xe067'),
+    ("ca-airport", '\xe056'),
     ("ca-albergue", '\xe010'),
     ("ca-altar", '\xe030'),
     ("ca-artwork", '\xe050'),
@@ -149,6 +150,7 @@ iconList = [
     ("ca-document-kml", '\xe09b'),
     ("ca-document-spreadsheet", '\xe09a'),
     ("ca-dryer", '\xe062'),
+    ("ca-farmland", '\xe057'),
     ("ca-ferry", '\xe082'),
     ("ca-festival", '\xe032'),
     ("ca-food", '\xe036'),
@@ -202,6 +204,7 @@ iconList = [
     ("ca-shop", '\xe01d'),
     ("ca-sleeping-bag", '\xe028'),
     ("ca-stables", '\xe068'),
+    ("ca-station", '\xe055'),
     ("ca-statue", '\xe01b'),
     ("ca-stockpoint", '\xe041'),
     ("ca-stop", '\xe020'),

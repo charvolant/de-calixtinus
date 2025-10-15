@@ -34,6 +34,7 @@ testConfig1 = Config {
   configCalendars = Nothing,
   configRegions = Nothing,
   configCaches = [],
+  configNotice = Nothing,
   configDebug = Just False
 }
 
@@ -55,6 +56,7 @@ testConfig2 = Config {
   configCalendars = Nothing,
   configRegions = Nothing,
   configCaches = [],
+  configNotice = Nothing,
   configDebug = Just False
 }
 

@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           de-calixtinus
-version:        0.8.0
+version:        0.9.0
 description:    Please see the README on GitHub at <https://github.com/charvolant/de-calixtinus#readme>
 homepage:       https://github.com/charvolant/de-calixtinus#readme
 bug-reports:    https://github.com/charvolant/de-calixtinus/issues
@@ -33,6 +33,7 @@ library
       Camino.Display.I18n
       Camino.Display.JSON
       Camino.Display.KML
+      Camino.Display.Ophelia
       Camino.Display.Routes
       Camino.Display.Static
       Camino.Display.SVG
@@ -94,6 +95,7 @@ library
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -146,6 +148,7 @@ executable camino-check-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -198,6 +201,7 @@ executable camino-map-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -250,6 +254,7 @@ executable camino-planner-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -302,6 +307,7 @@ executable camino-server-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -354,6 +360,7 @@ executable elevations-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -406,6 +413,60 @@ executable generate-static-exe
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
+    , path-pieces
+    , scientific
+    , shakespeare
+    , split
+    , template-haskell
+    , text
+    , time
+    , uuid
+    , vector
+    , warp
+    , xlsx
+    , xml-conduit
+    , xml-hamlet
+    , xml-types
+    , yaml
+    , yesod
+    , yesod-core
+    , yesod-form
+    , yesod-static
+  default-language: Haskell2010
+
+executable pretty-json-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_de_calixtinus
+  hs-source-dirs:
+      app/pretty-json
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wmissing-exported-signatures -Wno-missing-signatures -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=2
+    , aeson-pretty
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , colour
+    , conduit
+    , containers
+    , cookie
+    , data-default-class
+    , de-calixtinus
+    , deepseq
+    , directory
+    , file-embed
+    , filepath
+    , formatting
+    , http-conduit
+    , lens
+    , mtl
+    , network-uri
+    , numeric-tools ==0.2.*
+    , optparse-applicative
+    , parsec
     , path-pieces
     , scientific
     , shakespeare
@@ -437,6 +498,7 @@ test-suite de-calixtinus-test
       DescriptionSpec
       EventDateSpec
       EventSpec
+      FormattingSpec
       GraphSpec
       LocalisedSpec
       MetadataSpec
@@ -479,6 +541,7 @@ test-suite de-calixtinus-test
     , network-uri
     , numeric-tools ==0.2.*
     , optparse-applicative
+    , parsec
     , path-pieces
     , raw-strings-qq
     , scientific

@@ -1188,7 +1188,51 @@
       "suggested-pois": [ "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"
-      }
+      },
+      "features": [
+        {
+          "id": "I-RI-F1",
+          "name": "Main Camino Ingles Route",
+          "geometry": "I/I-RI-F1.geojson"
+        },
+        {
+          "id": "I-RI-F2",
+          "name": "Ferrol Bridge Shortcut",
+          "condition": false,
+          "geometry": "I/I-RI-F2.geojson"
+        },
+        {
+          "id": "I-RI-F3",
+          "name": "Alternative Route from Beche",
+          "condition": false,
+          "geometry": "I/I-RI-F3.geojson"
+        },
+        {
+          "id": "I-RI-F4",
+          "name": "Ferrol Start Variant",
+          "condition": "I-I18",
+          "geometry": "I/I-RI-F4.geojson"
+        },
+        {
+          "id": "I-RI-F5",
+          "name": "New Route via Meangos",
+          "condition": "I-I15",
+          "geometry": "I/I-RI-F5.geojson"
+        },
+        {
+          "id": "I-RI-F6",
+          "name": "Old Route around Meangos",
+          "condition": {
+            "and": [
+              "I-I14",
+              {
+                "not": "I-I15"
+              }
+            ]
+          },
+          "geometry": "I/I-RI-F6.geojson"
+        }
+      ]
     },
     {
       "id": "I-RC",
@@ -1208,7 +1252,14 @@
       "suggested-pois": [ "I-I29-1" ],
       "palette": {
         "colour": "#feda53"
-      }
+      },
+      "features": [
+        {
+          "id": "I-RC-F1",
+          "name": "A Coruna Variant Route",
+          "geometry": "I/I-RC-F1.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [

@@ -2782,7 +2782,39 @@
       "suggested-pois": [ "W-W8-3", "W-W34-5", "ST-ST1-1" ],
       "palette": {
         "colour": "#f4c86c"
-      }
+      },
+      "features": [
+        {
+          "id": "W-RW-F1",
+          "name": "Main Camino Invierno",
+          "geometry": "W/W-RW-F1.geojson"
+        },
+        {
+          "id": "W-RW-F2",
+          "name": "Camino Invierno via Monte Faro",
+          "condition": "W-W53",
+          "geometry": "W/W-RW-F2.geojson"
+        },
+        {
+          "id": "W-RW-F3",
+          "name": "Camino Invierno via Villavieja",
+          "condition": "W-W6",
+          "geometry": "W/W-RW-F3.geojson"
+        },
+        {
+          "id": "W-RW-F4",
+          "name": "Camino Invierno bypass Villavieja",
+          "condition": {
+            "not": "W-W6"
+          },
+          "geometry": "W/W-RW-F4.geojson"
+        },
+        {
+          "id": "X-BS-F1",
+          "name": "Camino Sanabres Bergazo to SdC",
+          "geometry": "X/X-BS-F1.geojson"
+        }
+      ]
     },
     {
       "id": "W-RF",
@@ -2796,7 +2828,14 @@
       "locations": [ "W-F1", "W-F2", "W-F3" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "W-RF-F1",
+          "name": "Bypass Monte Faro",
+          "geometry": "W/W-RF-F1.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [

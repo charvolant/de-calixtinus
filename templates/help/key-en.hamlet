@@ -214,6 +214,24 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon Station}
+          <td>Station
+          <td>A train or bus station
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Airport}
+          <td>Airport
+          <td>An airport, airfield or aerodrome
+        <tr>
+          <td>
+            <span .location-type-sample>
+              ^{caminoLocationTypeIcon Farmland}
+          <td>Farmland
+          <td>Farmland, greenhouses, pasture etc.
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Poi}
           <td>Locality
           <td>An unspecified waypoint or point of interest

@@ -7,6 +7,7 @@ import ConfigSpec
 import DescriptionSpec
 import EventSpec
 import EventDateSpec
+import FormattingSpec
 import WalkingSpec
 import PlannerSpec
 import RegionSpec
@@ -57,6 +58,7 @@ testList config prefs camino = TestList [
    TestLabel "Description" testDescription,
    TestLabel "Event" testEvent,
    TestLabel "Region" testRegion,
+   TestLabel "Formatting" testFormatting,
    TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
    TestLabel "Cache" testCache,

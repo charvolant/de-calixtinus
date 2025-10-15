@@ -25,6 +25,7 @@ import Data.Text
 -- | Common Camino routes
 data CaminoRoute = AssetRoute Text -- ^ An identified font or asset
   | IconRoute Text -- ^ A specific icon
+  | FeatureRoute Text -- ^ A specific feature
   | ImgRoute Image Bool -- ^ The (locale specific) path for an image
   | LinkRoute (Localised TaggedURL) -- ^ The (locale specific) path for a link
   | LocationRoute Location -- ^ A location
@@ -42,6 +43,7 @@ appendRoot config p = if isPrefixOf "http:" p || isPrefixOf "https:" p then p el
 renderCaminoRoute :: Config -> [Locale] -> CaminoRoute -> [(Text, Text)] -> Text
 renderCaminoRoute config _locales (AssetRoute ident) _ = appendRoot config $ findAssetPath ident config
 renderCaminoRoute config _locales (IconRoute ident) _ = appendRoot config $ (findAssetPath "icons" config) <> "/" <> ident
+renderCaminoRoute config _locales (FeatureRoute path) _ = appendRoot config $ (findAssetPath "features" config) <> "/" <> path
 renderCaminoRoute config _locales (ImgRoute img thumb) _ = appendRoot config $ resolveLink (findAssetPath "images" config) (imageToLink thumb img)
 renderCaminoRoute config locales (LinkRoute tl) _ = appendRoot config $ resolveLink (findAssetPath "links" config) (maybe invalidLink id (localise locales tl))
 renderCaminoRoute _config  _locales (LocationRoute location) _ = "#" <> locationID location

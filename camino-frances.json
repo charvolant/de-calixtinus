@@ -10,9 +10,9 @@
   "description": {
     "text": "The Camino Frances is the most popular Camino route, running from Saint-Jean-Pied-de-Port in France to Santiago de Compostella.",
     "image": {
+      "title": "Alto del Perdon@es",
       "source": "F/F-Alto-del-Perdon.jpg",
       "thumbnail": "F/F-Alto-del-Perdon-thumbnail.jpg",
-      "title": "Alto del Perdon@es",
       "metadata": {
         "statements": [
           {
@@ -95,7 +95,13 @@
       "position": { "latitude": 43.16340, "longitude": -1.23579, "elevation": 185 },
       "region": "FR-NAQ",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Gite", "GuestHouse", "Hotel" ]
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "Gite",
+        "GuestHouse",
+        "Hotel"
+      ]
     },
     {
       "id": "F-F2",
@@ -721,7 +727,12 @@
       "position": { "latitude": 42.81831, "longitude": -1.64510, "elevation": 445 },
       "region": "ES-NA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "GuestHouse",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "F-F26-1",
@@ -3492,7 +3503,12 @@
       "position": { "latitude": 42.59897, "longitude": -5.56715, "elevation": 833 },
       "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "PrivateAlbergue", "House", "GuestHouse", "Hotel" ],
+      "accommodation": [
+        "PrivateAlbergue",
+        "House",
+        "GuestHouse",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "F-F118-1",
@@ -3762,7 +3778,7 @@
       "id": "F-F130",
       "name": "Hospital de Órbigo y Puente Órbigo",
       "type": "Village",
-      "position": { "latitude": 42.45905, "longitude": -5.88100, "elevation": 817 },
+      "position": { "latitude": 42.46300, "longitude": -5.88810, "elevation": 821 },
       "region": "ES-CL",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
       "accommodation": [
@@ -8112,12 +8128,253 @@
       "major": true,
       "stops": [ "F-F26", "F-F51", "F-F81", "F-F118", "F-F148" ],
       "rest-points": [ "F-F26", "F-F51", "F-F81", "F-F118", "F-F148" ],
-      "starts": [ "F-F1@0", "F-F166@100", "F-F196@200" ],
-      "finishes": [ "ST-ST1@0" ],
+      "starts": [ "F-F1", "F-F166@100", "F-F196@200" ],
+      "finishes": [ "ST-ST1" ],
       "suggested-pois": [ "F-F58-1", "F-F69-2", "F-F81-1", "F-81-2", "F-87-1", "F-F106-1", "F-118-1", "F-F148-1", "F-212-1", "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"
-      }
+      },
+      "features": [
+        {
+          "id": "F-F-F1",
+          "name": "Main Camino Frances Trail",
+          "geometry": "F/F-F-F1.geojson"
+        },
+        {
+          "id": "F-F-F2",
+          "name": "Roncevilles via Arnéguy",
+          "condition": "F-F4",
+          "geometry": "F/F-F-F2.geojson"
+        },
+        {
+          "id": "F-F-F3",
+          "name": "Roncevilles via Huntto",
+          "condition": "F-F2",
+          "geometry": "F/F-F-F3.geojson"
+        },
+        {
+          "id": "F-F-F4",
+          "name": "Zubiri (Road)",
+          "geometry": "F/F-F-F4.geojson"
+        },
+        {
+          "id": "F-F-F5",
+          "name": "Road route via Cizur Mayor",
+          "condition": "F-F29",
+          "geometry": "F/F-F-F5.geojson"
+        },
+        {
+          "id": "F-F-F6",
+          "name": "Trail route via Alto del Perdón",
+          "condition": "F-F28",
+          "geometry": "F/F-F-F6.geojson"
+        },
+        {
+          "id": "F-F-F7",
+          "name": "Main Route via Estella",
+          "condition": "F-F40",
+          "geometry": "F/F-F-F7.geojson"
+        },
+        {
+          "id": "F-F-F8",
+          "name": "Main Route bypass Sotés",
+          "condition": {
+            "not": "F-F53"
+          },
+          "geometry": "F/F-F-F8.geojson"
+        },
+        {
+          "id": "F-F-F9",
+          "name": "Main Route bypass Ventosa",
+          "condition": {
+            "not": "F-F54"
+          },
+          "geometry": "F/F-F-F9.geojson"
+        },
+        {
+          "id": "F-F-F10",
+          "name": "Sotes - Ventosa",
+          "condition": "F-F53",
+          "geometry": "F/F-F-F10.geojson"
+        },
+        {
+          "id": "F-F-F11",
+          "name": "Ventosa only",
+          "condition": {
+            "and": [
+              { "not": "F-F53" },
+              "F-F54"
+            ]
+          },
+          "geometry": "F/F-F-F11.geojson"
+        },
+        {
+          "id": "F-F-F12",
+          "name": "Main Route to Burgos Airport",
+          "condition": "F-F71",
+          "geometry": "F/F-F-F12.geojson"
+        },
+        {
+          "id": "F-F-F13",
+          "name": "Main Route from Burgos Airport to Burgos",
+          "condition": "F-F76",
+          "geometry": "F/F-F-F13.geojson"
+        },
+        {
+          "id": "F-F-F14",
+          "name": "Burgos via Airport",
+          "condition": {
+            "and": [
+              { "not": "F-F78" },
+              "F-F80"
+            ]
+          },
+          "geometry": "F/F-F-F14.geojson"
+        },
+        {
+          "id": "F-F-F15",
+          "name": "Burgos Shortcut",
+          "condition": {
+            "and": [
+              "F-F71",
+              { "not": "F-F72" }
+            ]
+          },
+          "geometry": "F/F-F-F15.geojson"
+        },
+        {
+          "id": "F-F-F16",
+          "name": "Main Route bypassing Villovieco",
+          "condition": {
+            "not": "F-F95"
+          },
+          "geometry": "F/F-F-F16.geojson"
+        },
+        {
+          "id": "F-F-F17",
+          "name": "Villovieco and River Route",
+          "condition": "F-F95",
+          "geometry": "F/F-F-F17.geojson"
+        },
+        {
+          "id": "F-F-F18",
+          "name": "Main Route bypass Villada",
+          "condition": {
+            "not": "F-F95"
+          },
+          "geometry": "F/F-F-F18.geojson"
+        },
+        {
+          "id": "F-F-F19",
+          "name": "Main Route via Villada",
+          "condition": "F-F105",
+          "geometry": "F/F-F-F19.geojson"
+        },
+        {
+          "id": "F-F-F20",
+          "name": "Main Route North from La Virgen del Camino",
+          "condition": "F-F121",
+          "geometry": "F/F-F-F20.geojson"
+        },
+        {
+          "id": "F-F-F21",
+          "name": "Main Route South from La Virgen del Camino",
+          "condition": "F-F125",
+          "geometry": "F/F-F-F21.geojson"
+        },
+        {
+          "id": "F-F-F22",
+          "name": "Main Route via Villares de Orbigo",
+          "condition": "F-F131",
+          "geometry": "F/F-F-F22.geojson"
+        },
+        {
+          "id": "F-F-F23",
+          "name": "Bypass Villares de Orbigo",
+          "condition": {
+            "not": "F-F131"
+          },
+          "geometry": "F/F-F-F23.geojson"
+        },
+        {
+          "id": "F-F-F24",
+          "name": "Main Route bypassing Castrillo de los Polvazares",
+          "condition": {
+            "not": "F-F137"
+          },
+          "geometry": "F/F-F-F24.geojson"
+        },
+        {
+          "id": "F-F-F25",
+          "name": "Detour to Castrillo de los Polvazares",
+          "condition": "F-F137",
+          "geometry": "F/F-F-F25.geojson"
+        },
+        {
+          "id": "F-F-F26",
+          "name": "Main Route bypassing Valtuille de Arriba",
+          "condition": {
+            "not": "F-F154"
+          },
+          "geometry": "F/F-F-F26.geojson"
+        },
+        {
+          "id": "F-F-F27",
+          "name": "Detour to Valtuille de Arriba",
+          "condition": "F-F154",
+          "geometry": "F/F-F-F27.geojson"
+        },
+        {
+          "id": "F-F-F28",
+          "name": "Main Route bypassing Pradela",
+          "condition": {
+            "not": "F-F157"
+          },
+          "geometry": "F/F-F-F28.geojson"
+        },
+        {
+          "id": "F-F-F29",
+          "name": "Detour to Pradela",
+          "condition": "F-F157",
+          "geometry": "F/F-F-F29.geojson"
+        },
+        {
+          "id": "F-F-F30",
+          "name": "Main Route via Campo de Ponferrada",
+          "condition": "F-F147",
+          "geometry": "F/F-F-F30.geojson"
+        },
+        {
+          "id": "F-F-F31",
+          "name": "Bypass Campo de Ponferrada",
+          "condition": {
+            "not": "F-F147"
+          },
+          "geometry": "F/F-F-F31.geojson"
+        },
+        {
+          "id": "F-F-F32",
+          "name": "Main Route without Samos variant",
+          "condition": {
+            "not": "F-F181"
+          },
+          "geometry": "F/F-F-F32.geojson"
+        },
+        {
+          "id": "F-F-F33",
+          "name": "Main Route without San Roque",
+          "condition": {
+            "not": "F-F210"
+          },
+          "geometry": "F/F-F-F33.geojson"
+        },
+        {
+          "id": "F-F-F34",
+          "name": "Route via San Roque",
+          "condition": "F-F210",
+          "geometry": "F/F-F-F34.geojson"
+        }
+      ]
     },
     {
       "id": "F-A1",
@@ -8126,7 +8383,14 @@
       "locations": [ "F-F46", "F-F47" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "F-A1-F1",
+          "name": "Old Zaraputz Trail",
+          "geometry": "F/F-A1-F1.geojson"
+        }
+      ]
     },
     {
       "id": "F-A2",
@@ -8135,7 +8399,14 @@
       "locations": [ "F-F77", "F-F78", "F-F79" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "F-A2-F1",
+          "name": "Burgos via N120 Trail",
+          "geometry": "F/F-A2-F1.geojson"
+        }
+      ]
     },
     {
       "id": "F-A3",
@@ -8144,7 +8415,14 @@
       "locations": [ "F-F117" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "F-A3-F1",
+          "name": "Via Trajana Trail",
+          "geometry": "F/F-A3-F1.geojson"
+        }
+      ]
     },
     {
       "id": "F-A4",
@@ -8157,7 +8435,14 @@
       "suggested-pois": [ "F-181-1" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "F-A4-F1",
+          "name": "Sarria via Samos Trail",
+          "geometry": "F/F-A4-F1.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [

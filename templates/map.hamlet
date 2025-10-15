@@ -11,4 +11,4 @@
       <table .w-100>
         <tbody>
           ^{caminoMapKeyHtml False}
-^{caminoAllMapScript (LatLong 44.0 -10.0 Nothing def) (LatLong 39.0 -1.0 Nothing def) caminos}
+^{caminoAllMapScript config (LatLong 44.0 -10.0 Nothing def) (LatLong 39.0 -1.0 Nothing def) caminos}

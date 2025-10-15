@@ -1,0 +1,84 @@
+{
+  "Doug": {
+    "identifier": "P-RFA-F8-1",
+    "title": "Camino Segment derived from Doug and Alison's Travels",
+    "date": "2025-10-06",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "rightsHolder": "https://github.com/charvolant",
+    "creator": "Doug Palmer",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  },
+  "Buen Camino": {
+    "identifier": "P-RP-F11-1",
+    "title": "Camino Segment derived from Buen Camino App",
+    "date": "2025-10-04",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://www.editorialbuencamino.com",
+    "rightsHolder": "Editorial Buen Camino",
+    "creator": "Doug Palmer",
+    "bibliographicCitation": "De-Calixtinus trails, derived from https://www.editorialbuencamino.com Buen Camino app",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  },
+  "Netherlands - Portuguese": {
+    "identifier": "P-RP-F9-1",
+    "title": "Camino Segment derived from Netherlands Society of St James, Portugeuese tracks",
+    "date": "2025-10-06",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://www.santiago.nl/wp-content/uploads/2025/03/Jacobswegen-wandelaars-PT-20250309.kml",
+    "rightsHolder": "Het Nederlands Genootschap van Sint Jacob - https://www.santiago.nl",
+    "creator": "Doug Palmer",
+    "bibliographicCitation": "De-Calixtinus trails, derived from https://www.santiago.nl All Pilgrim Routes Portugal 09-03-2025 KML",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  },
+  "Netherlands - Spanish": {
+    "identifier": "F-F-F1-1",
+    "title": "Camino Segment derived from Netherlands Society of St James, Spanish tracks",
+    "date": "2025-10-06",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://www.santiago.nl/wp-content/uploads/2025/08/Jacobswegen-wandelaars-ES-20250825.kml",
+    "rightsHolder": "Het Nederlands Genootschap van Sint Jacob - https://www.santiago.nl",
+    "creator": "Doug Palmer",
+    "bibliographicCitation": "De-Calixtinus trails, derived from https://www.santiago.nl All Pilgrim Routes Spain 25-08-2025 KML",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  },
+  "CNC - Northern Route": {
+    "identifier": "P-RFA-F11-1",
+    "title": "Camino Segment derived from Centro Nacional de Cultura, Fátima Northern Route",
+    "date": "2025-10-06",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://caminhosdefatima.org/_cf/wp-content/uploads/2023/11/caminho-do-norte-completo.kml",
+    "rightsHolder": "Centro Nacional de Cultura - https://www.cnc.pt",
+    "creator": "Doug Palmer",
+    "bibliographicCitation": "De-Calixtinus trails, derived from https://www.cnc.pt Northern Route, Valença - Fátima 11-2023 KML",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  },
+  "CNC - Tomar Route": {
+    "identifier": "P-RFT-F1-1",
+    "title": "Camino Segment derived from Centro Nacional de Cultura, Tomar (Médio Tejo) Route",
+    "date": "2025-10-06",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://caminhosdefatima.org/_cf/wp-content/uploads/2024/04/Rota-Tomar-Fatima_v3.kml",
+    "rightsHolder": "Centro Nacional de Cultura - https://www.cnc.pt",
+    "creator": "Doug Palmer",
+    "provenance": "Constructed from Médio Tejo Route, Tomar - Fátima 04-2024 KML",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  },
+  "CNIG": {
+    "identifier": "P-RFT-F1-1",
+    "title": "Camino Segment derived from Instituto Geográfico Nacional",
+    "date": "2025-10-06",
+    "version": "1.0.0",
+    "license": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://centrodedescargas.cnig.es/CentroDescargas/loadCamSan - PT03a_05a_caminha-valenca.kml",
+    "rightsHolder": "Federación Española de Asociaciones de Amigos del Camino de Santiago (FEAACS) y Asociaciones Jacobeas Españolas y Europeas colaboradoras con la FEAACS",
+    "creator": "Doug Palmer",
+    "provenance": "Obra derivada de Caminos de Santiago 2020-2025 CC-BY 4.0 FEAACS - https://www.caminosantiago.org/cpperegrino/comun/inicio.asp",
+    "publisher": "https://github.com/charvolant/de-calixtinus"
+  }
+}

@@ -147,7 +147,7 @@ caminoLocationHtmlForPlacemark :: Config -> [Locale] -> TravelPreferences -> Cam
 caminoLocationHtmlForPlacemark config locales tprefs cprefs pilgrimage _stops waypoints location = htmlToNodes config locales $ [ihamlet|
   <div .container-fluid .p-3>
     <div .row>
-      <h3>^{locationLineSimple location}
+      <h3>^{locationLineSimple config location}
     ^{locationLegSummary tprefs cprefs usedLegs location}
     $maybe desc <- locationDescription location
       <div .row>

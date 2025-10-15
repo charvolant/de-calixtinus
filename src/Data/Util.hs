@@ -11,7 +11,8 @@ Portability : POSIX
 Some useful common functions
 -}
 module Data.Util (
-    canonicalise
+    backupFilePath
+  , canonicalise
   , categorise
   , ceilingBy
   , commaJoin
@@ -369,6 +370,30 @@ foldDirectoryIO dir folder val = do
           foldDirectoryIO ff folder v
     ) val list
   return value
+
+-- | Return the first value from a list, if any, satisfying the given predicate.
+--  Borrowed from Control.Monad.Loop
+firstM :: (Monad m) => (a -> m Bool) -> [a] -> m (Maybe a)
+firstM _ [] = return Nothing
+firstM p (x:xs) = do
+        q <- p x
+        if q
+                then return (Just x)
+                else firstM p xs
+
+-- Create an backup file path with an unused filename as the backup
+backupFilePath :: FilePath -> IO FilePath
+backupFilePath file = do
+  let dir = takeDirectory file
+  let base = takeBaseName file
+  let ext = takeExtension file
+  let names = map (\i -> dir </> (base <> "-" <> show i) <.> ext) [1 :: Int ..]
+  mname <- firstM (\f -> do
+    exist <- doesFileExist f
+    return $ not exist) names
+  return $ maybe (error ("Can't create backup for " ++ file)) id mname
+
+
 
 -- | A monadic loop, where the predicate returns 'Left' as a seed for the next loop
 --   or 'Right' to abort the loop.

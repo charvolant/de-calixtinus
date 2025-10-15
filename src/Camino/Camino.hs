@@ -2,6 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-|
 Module      : Camino
 Description : Data models for travelling the Camino
@@ -24,6 +26,7 @@ module Camino.Camino (
   , Comfort(..)
   , Event(..)
   , EventType(..)
+  , Feature(..)
   , Fitness(..)
   , HasCaminoConfig(..)
   , LatLong(..)
@@ -55,14 +58,17 @@ module Camino.Camino (
   , accommodationTypeEnumeration
   , accommodationServices
   , accommodationSleeping
+  , allFeatures
   , buildLegSegments -- For testing only
   , caminoBbox
   , caminoDump
+  , caminoFeatureMap
   , caminoLegRoute
   , caminoNameLabel
   , caminoRegions
   , caminoRoute
   , caminoRouteLocations
+  , caminoUsedFeatures
   , centroid
   , comfortEnumeration
   , completeRoutes
@@ -623,7 +629,10 @@ data LocationType =
    | Beach -- ^ A beach
    | Natural -- ^ A site of natural beauty
    | Hazard -- ^ A dangerous location (busy road crossing, etc)
+   | Station -- ^ A train station, bus terminal etc.
    | Wharf -- ^ A boat/ferry transfer point
+   | Airport -- ^ An airport, airfield, aerodrome etc.
+   | Farmland -- ^ Field, greenhouses, pasture etc.
    | Poi -- ^ A generic point of interest
    | PlaceholderLocation -- ^ A placeholder location
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
@@ -1237,6 +1246,137 @@ instance Default Palette where
     , paletteTextColour = sRGB24read "f9b34a" -- Camino yellow
   }
 
+-- | Read formulas from JSON
+instance (Eq a, Placeholder Text a) => FromJSON (Formula a) where
+  parseJSON (Bool v) = do
+    return $ if v then T else F
+  parseJSON (String v) = do
+    return $ Variable $ placeholder v
+  parseJSON (Object v) = do
+    and' <- v .:? "and"
+    or' <- v .:? "or"
+    not' <- v .:? "not"
+    imp' <- v .:? "implies"
+    return $ case (and', or', not', imp') of
+      (Just a, Nothing, Nothing, Nothing) -> And a
+      (Nothing, Just a, Nothing, Nothing) -> Or a
+      (Nothing, Nothing, Just a, Nothing) -> Not a
+      (Nothing, Nothing, Nothing, Just [a, b]) -> Implies a b
+      _ -> error ("No logical object, must have one of and, or, not or implies: " ++ show v)
+  parseJSON v = typeMismatch "Unable to parse condition" v
+
+-- | Produce formulas a JSON
+instance (Eq a, Placeholder Text a) => ToJSON (Formula a) where
+  toJSON T = Bool True
+  toJSON F = Bool False
+  toJSON (Variable v) = String $ placeholderID v
+  toJSON (And fs) = object [ "and" .= fs ]
+  toJSON (Or fs) = object [ "or" .= fs ]
+  toJSON (Not f) = object [ "not" .= f ]
+  toJSON (Implies p c) = object [ "implies" .= [p, c] ]
+  
+dereferenceFormula :: (Eq a, Dereferencer k a ctx) => ctx -> Formula a -> Formula a
+dereferenceFormula context (Variable v) = Variable $ dereference context v
+dereferenceFormula context (And fs) = And (map (dereferenceFormula context) fs)
+dereferenceFormula context (Or fs) = Or (map (dereferenceFormula context) fs)
+dereferenceFormula context (Not f) = Not $ dereferenceFormula context f
+dereferenceFormula context (Implies p c) = Implies (dereferenceFormula context p) (dereferenceFormula context c)
+dereferenceFormula _context f = f
+
+-- | A geographical feature, used to display things like route trails.
+--   Features have conditions under which they
+data Feature = Feature {
+    featureID :: Text -- ^ The feature identifier
+  , featureType :: LegType -- ^ The sort of route that this represents
+  , featureName :: Localised TaggedText -- ^ The feature name
+  , featureDescription :: Maybe Description -- ^ Any descriptive information
+  , featureCondition :: Formula Location -- ^ The conditions under which a feature is used
+  , featureGeometry :: Maybe Text -- ^ The geometry identifier (currently just a reference to GeoJSON)
+  , featureFeatures :: [Feature] -- ^ Any identified sub-features
+} deriving (Show, Generic)
+
+instance FromJSON Feature where
+  parseJSON (String v) = do
+    return $ placeholder v
+  parseJSON (Object v) = do
+    id' <- v .: "id"
+    type' <- v .:? "type" .!= Road
+    name' <- v .: "name"
+    description' <- v .:? "description"
+    condition' <- v .:? "condition" .!= T
+    geometry' <- v .:? "geometry"
+    features' <- v .:? "features" .!= []
+    return Feature {
+        featureID = id'
+      , featureType = type'
+      , featureName = name'
+      , featureDescription = description'
+      , featureCondition = condition'
+      , featureGeometry = geometry'
+      , featureFeatures = features'
+      }
+  parseJSON v = typeMismatch "Feature must be string or object" v
+
+instance ToJSON Feature where
+  toJSON (Feature id' type' name' description' condition' geometry' features') =
+    object [
+        "id" .= id'
+      , "type" .= (if type' == Road then Nothing else Just type')
+      , "name" .= name'
+      , "description" .= description'
+      , "condition" .= (if condition' == T then Nothing else Just condition')
+      , "geometry" .= geometry'
+      , "features" .= (if null features' then Nothing else Just features')
+      ]
+  toEncoding (Feature id' type' name' description' condition' geometry' features') =
+    pairs $
+         "id" .= id'
+      <> "type" .?= (if type' == Road then Nothing else Just type')
+      <> "name" .= name'
+      <> "description" .?= description'
+      <> "condition" .?= (if condition' == T then Nothing else Just condition')
+      <> "geometry" .?= geometry'
+      <> "features" .?= (if null features' then Nothing else Just features')
+
+instance NFData Feature
+
+instance Eq Feature where
+  a == b = featureID a == featureID b
+
+instance Ord Feature where
+  a `compare` b = featureID a `compare` featureID b
+
+instance Placeholder Text Feature where
+  placeholderID = featureID
+  placeholder fid = Feature {
+      featureID = fid
+    , featureType = Road
+    , featureName = wildcardText $ ("Placeholder for " <> fid)
+    , featureDescription = Nothing
+    , featureCondition = F
+    , featureGeometry = Nothing
+    , featureFeatures = []
+  }
+  isPlaceholder feature = isPlaceholderName (featureName feature)
+
+instance Normaliser Text Feature Camino where
+  normalise camino feature = feature {
+       featureCondition = dereferenceFormula camino $ featureCondition feature
+  }
+
+instance Dereferencer Text Feature Camino where
+  dereference camino route = dereference (caminoFeatureMap camino) route
+
+instance Summary Feature where
+  summary feature = "F{"
+    <> featureID feature
+    <> ", geometry=" <> summary (featureGeometry feature)
+    <> "}"
+
+-- | Get all the features, including sub-features as a list
+allFeatures :: Feature -> [Feature]
+allFeatures feature = feature:(concat $ map allFeatures $ featureFeatures feature)
+
 -- | A route, a sub-section of the camino with graphical information
 data Route = Route {
     routeID :: Text -- ^ An identifier for the route
@@ -1251,6 +1391,7 @@ data Route = Route {
   , routeFinishes :: [Prioritised Text Location] -- ^ A list of suggested finish points for the route, with priorities
   , routeSuggestedPois :: [PointOfInterest] -- ^ A list of suggested points of interest for the route
   , routePalette :: Palette
+  , routeFeatures :: [Feature] -- ^ Features that map the route
 } deriving (Show, Generic)
 
 instance FromJSON Route where
@@ -1268,6 +1409,7 @@ instance FromJSON Route where
       finishes' <- v .:? "finishes" .!= []
       pois' <- v .:? "suggested-pois" .!= []
       palette' <- v .: "palette"
+      features' <- v .:? "features" .!= []
       return Route { 
           routeID = id'
         , routeName = name'
@@ -1281,11 +1423,12 @@ instance FromJSON Route where
         , routeFinishes = finishes'
         , routeSuggestedPois = pois'
         , routePalette = palette'
+        , routeFeatures = features'
       }
     parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON Route where
-    toJSON (Route id' name' description' major' locations' _locationSet' stops' rests' starts' finishes' pois' palette') =
+    toJSON (Route id' name' description' major' locations' _locationSet' stops' rests' starts' finishes' pois' palette' features') =
       object [ 
           "id" .= id'
         , "name" .= name'
@@ -1298,8 +1441,9 @@ instance ToJSON Route where
         , "finishes" .= (if null finishes' then Nothing else Just finishes')
         , "suggested-pois" .= (if null pois' then Nothing else Just $ map poiID pois')
         , "palette" .= palette'
+        , "features" .= (if null features' then Nothing else Just features')
         ]
-    toEncoding (Route id' name' description' major' locations' _locationSet' stops' rests' starts' finishes' pois' palette') =
+    toEncoding (Route id' name' description' major' locations' _locationSet' stops' rests' starts' finishes' pois' palette' features') =
       pairs $ 
           "id" .= id'
         <> "name" .= name'
@@ -1312,6 +1456,7 @@ instance ToJSON Route where
         <> "finishes" .?= (if null finishes' then Nothing else Just finishes')
         <> "suggested-pois" .?= (if null pois' then Nothing else Just $ map poiID pois')
         <> "palette" .= palette'
+        <> "features" .?= (if null features' then Nothing else Just features')
 
 
 instance NFData Route
@@ -1337,6 +1482,7 @@ instance Placeholder Text Route where
     , routeFinishes = []
     , routeSuggestedPois = []
     , routePalette = def
+    , routeFeatures = []
   }
   isPlaceholder route = isPlaceholderName (routeName route)
 
@@ -1391,35 +1537,6 @@ data RouteLogic = RouteLogic {
   , routeLogicExclude :: [Location] -- ^ Stuff to remove from the allowed locations
 } deriving (Show, Generic)
 
--- | Read formulas a JSON
-instance FromJSON (Formula Route) where
-  parseJSON (Bool v) = do
-    return $ if v then T else F
-  parseJSON (String v) = do
-    return $ Variable $ placeholder v
-  parseJSON (Object v) = do
-    and' <- v .:? "and"
-    or' <- v .:? "or"
-    not' <- v .:? "not"
-    imp' <- v .:? "implies"
-    return $ case (and', or', not', imp') of
-      (Just a, Nothing, Nothing, Nothing) -> And a
-      (Nothing, Just a, Nothing, Nothing) -> Or a
-      (Nothing, Nothing, Just a, Nothing) -> Not a
-      (Nothing, Nothing, Nothing, Just [a, b]) -> Implies a b
-      _ -> error ("No logical object, must have one of and, or, not or implies: " ++ show v)
-  parseJSON v = error ("Unable to parse route object " ++ show v)
-
--- | Produce formulas a JSON
-instance ToJSON (Formula Route) where
-  toJSON T = Bool True
-  toJSON F = Bool False
-  toJSON (Variable route) = String $ placeholderID route
-  toJSON (And fs) = object [ "and" .= fs ]
-  toJSON (Or fs) = object [ "or" .= fs ]
-  toJSON (Not f) = object [ "not" .= f ]
-  toJSON (Implies p c) = object [ "implies" .= [p, c] ]
-
 instance FromJSON RouteLogic where
   parseJSON (Object v) = do
     description' <- v .:? "description"
@@ -1469,14 +1586,6 @@ instance ToJSON RouteLogic where
       nonEmptyS v = if S.null v then Nothing else Just v
 
 instance NFData RouteLogic
-
-dereferenceFormula :: Camino -> Formula Route -> Formula Route
-dereferenceFormula camino (Variable route) = Variable $ dereference camino route
-dereferenceFormula camino (And fs) = And (map (dereferenceFormula camino) fs)
-dereferenceFormula camino (Or fs) = Or (map (dereferenceFormula camino) fs)
-dereferenceFormula camino (Not f) = Not $ dereferenceFormula camino f
-dereferenceFormula camino (Implies p c) = Implies (dereferenceFormula camino p) (dereferenceFormula camino c)
-dereferenceFormula _camino f = f
 
 normaliseRouteLogic :: Camino -> RouteLogic -> RouteLogic
 normaliseRouteLogic camino logic = logic {
@@ -1845,10 +1954,25 @@ caminoRouteLocations camino used =
   in
     foldl (\allowed -> \logic -> (allowed `S.union` (S.fromList $ routeLogicInclude logic) `S.difference` (S.fromList $ routeLogicExclude logic))) baseLocations logics
 
+-- | Work out which route featurees are being used by this set of routes and locations
+caminoUsedFeatures :: Camino -- ^ The base camino definition
+  -> S.Set Route -- ^ The base routes that are being used
+  -> S.Set Location -- ^ The locations that are being used
+  -> S.Set Feature -- ^ The features that are being used
+caminoUsedFeatures camino routes locations =
+  let
+    membership = substitutionFromDomain (S.fromList $ caminoLocations camino) locations
+  in
+    foldl (\fs -> \r -> fs `S.union` (S.fromList $ filter (\f -> evaluate membership (featureCondition f) == T) $ routeFeatures r)) S.empty routes
+
 -- | Get all the regions in the Camino.
 --  This does not include parent regions.
 caminoRegions :: Camino -> S.Set Region
 caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locationRegion l)) S.empty (caminoLocations camino)
+
+-- Get all the geographical features as a map
+caminoFeatureMap :: Camino -> M.Map Text Feature
+caminoFeatureMap camino = foldr (\r -> \fs -> M.union fs (M.fromList $ map (\f -> (placeholderID f, f)) (routeFeatures r))) M.empty (caminoRoutes camino)
 
 -- | Get any transport links from this location
 locationTransportLinks :: Camino -> Location -> [Leg]

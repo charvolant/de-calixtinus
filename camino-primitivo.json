@@ -3460,7 +3460,76 @@
       "suggested-pois": [ "PR-P1-1", "PR-P57-1", "PR-P95-1", "ST-ST1-1" ],
       "palette": {
         "colour": "#fec953"
-      }
+      },
+      "features": [
+        {
+          "id": "PR-P-F1",
+          "name": "Main Camino Primitivo to Melide",
+          "geometry": "PR/PR-P-F1.geojson"
+        },
+        {
+          "id": "PR-P-F2",
+          "name": "Main Camino Primitivo via Vilalle",
+          "condition": "PR-P84",
+          "geometry": "PR/PR-P-F2.geojson"
+        },
+        {
+          "id": "PR-P-F3",
+          "name": "Main Camino Primitivo bypass Vilalle",
+          "condition": {
+            "not": "PR-P84"
+          },
+          "geometry": "PR/PR-P-F3.geojson"
+        },
+        {
+          "id": "PR-P-F4",
+          "name": "Main Camino Primitivo bypass Burón",
+          "condition": {
+            "not": "PR-P75"
+          },
+          "geometry": "PR/PR-P-F4.geojson"
+        },
+        {
+          "id": "PR-P-F4",
+          "name": "Main Camino Primitivo bypass Burón",
+          "condition": {
+            "not": "PR-P75"
+          },
+          "geometry": "PR/PR-P-F4.geojson"
+        },
+        {
+          "id": "PR-P-F5",
+          "name": "Main Camino Primitivo bypass Hospital Variant",
+          "condition": {
+            "not": "PR-P52"
+          },
+          "geometry": "PR/PR-P-F5.geojson"
+        },
+        {
+          "id": "X-MS-F1",
+          "name": "Melide to Arzúa",
+          "condition": "F-F229",
+          "geometry": "X/X-MS-F1.geojson"
+        },
+        {
+          "id": "X-MS-F2",
+          "name": "Arzúa to A Brea",
+          "condition": "F-F235",
+          "geometry": "X/X-MS-F2.geojson"
+        },
+        {
+          "id": "X-MS-F3",
+          "name": "A Brea to San Paio",
+          "condition": "F-F242",
+          "geometry": "X/X-MS-F3.geojson"
+        },
+        {
+          "id": "X-MS-F4",
+          "name": "San Paio to Santiago de Compostella",
+          "condition": "F-F247",
+          "geometry": "X/X-MS-F4.geojson"
+        }
+      ]
     },
     {
       "id": "PR-H",
@@ -3480,7 +3549,14 @@
       "locations": [ "PR-P49", "PR-P50", "PR-P51", "PR-P52" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "PR-H-F1",
+          "name": "Hospital Route Variant",
+          "geometry": "PR/PR-H-F1.geojson"
+        }
+      ]
     },
     {
       "id": "PR-B",
@@ -3489,7 +3565,14 @@
       "locations": [ "PR-P75" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "PR-B-F1",
+          "name": "Burón Route Variant",
+          "geometry": "PR/PR-B-F1.geojson"
+        }
+      ]
     },
     {
       "id": "PR-N",
@@ -3505,7 +3588,22 @@
       "starts": [ "N-N138@0" ],
       "palette": {
         "colour": "#37b5fe"
-      }
+      },
+      "features": [
+        {
+          "id": "PR-N-F1",
+          "name": "Main Camino del Norte Connection",
+          "geometry": "PR/PR-N-F1.geojson"
+        },
+        {
+          "id": "PR-N-F2",
+          "name": "Main Camino del Norte Connection, Low-Level Variant",
+          "condition": {
+            "not": "PR-N8"
+          },
+          "geometry": "PR/PR-N-F2.geojson"
+        }
+      ]
     },
     {
       "id": "PR-NH",
@@ -3514,7 +3612,14 @@
       "locations": [ "PR-N7", "PR-N8" ],
       "palette": {
         "colour": "#37b5fe"
-      }
+      },
+      "features": [
+        {
+          "id": "PR-NH-F1",
+          "name": "Camino del Norte Connection, High Level",
+          "geometry": "PR/PR-NH-F1.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [

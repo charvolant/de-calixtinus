@@ -22,7 +22,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Config (AssetConfig(..), getAsset, getNotice, getWebRoot)
+import Camino.Config (AssetConfig(..), Config(..), getAsset, getNotice, getWebRoot)
 import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution, planCamino)
 import Camino.Preferences
 import Camino.Display.Html
@@ -143,11 +143,11 @@ getMapR = do
   let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI MsgMapTitle
-    toWidget ((mapWidget (caminoAppCaminos master)) messages router)
+    toWidget ((mapWidget (caminoAppConfig master) (caminoAppCaminos master)) messages router)
 
 -- | Map of all caminos
-mapWidget :: [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
-mapWidget caminos = $(ihamletFile "templates/map.hamlet")
+mapWidget :: Config -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
+mapWidget config caminos = $(ihamletFile "templates/map.hamlet")
 
 getMetricR :: Handler Html
 getMetricR = do

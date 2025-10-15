@@ -144,6 +144,7 @@ data AssetType = JavaScript
   | Icon
   | CaminoDefinition
   | Directory
+  | GeoJSON
   deriving (Eq, Ord, Show, Generic)
 
 instance FromJSON AssetType
@@ -334,6 +335,13 @@ defaultConfig = Config {
         assetId = "images",
         assetType = Directory,
         assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/images",
+        assetIntegrity = Nothing,
+        assetCrossOrigin = Unused
+      },
+      Asset {
+        assetId = "features",
+        assetType = Directory,
+        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/features",
         assetIntegrity = Nothing,
         assetCrossOrigin = Unused
       },

@@ -43,6 +43,7 @@ dependencies:
   - network-uri
   - numeric-tools == 0.2.*
   - optparse-applicative
+  - parsec
   - path-pieces
   - scientific
   - shakespeare
@@ -129,6 +130,15 @@ executables:
   camino-check-exe:
     main: Main.hs
     source-dirs: app/check
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - de-calixtinus
+  pretty-json-exe:
+    main: Main.hs
+    source-dirs: app/pretty-json
     ghc-options:
       - -threaded
       - -rtsopts

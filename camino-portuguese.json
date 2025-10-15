@@ -8,9 +8,9 @@
   "description": {
     "text": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the French route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
     "image": {
+      "title": "Flowers near Rabçal@en",
       "source": "P/P-Rabcal-Flowers.jpg",
       "thumbnail": "P/P-Rabcal-Flowers-thumbnail.jpg",
-      "title": "Flowers near Rabçal@en",
       "metadata": {
         "statements": [
           {
@@ -96,9 +96,9 @@
         "text": "Capital city of Portugal and the start of the Portuguese Camino",
         "about": "https://en.wikipedia.org/wiki/Lisbon",
         "image": {
+          "title": "Praça do Comércio@pt",
           "source": "P/P-P1-Lisbon.jpg",
           "thumbnail": "P/P-P1-Lisbon-thumbnail.jpg",
-          "title": "Praça do Comércio@pt",
           "metadata": {
             "statements": [
               {
@@ -124,7 +124,11 @@
       "position": { "latitude": 38.70980, "longitude": -9.13330, "elevation": 20 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "Hostel", "GuestHouse", "Hotel" ],
+      "accommodation": [
+        "Hostel",
+        "GuestHouse",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "P-P1-1",
@@ -350,7 +354,7 @@
     {
       "id": "P-P13",
       "name": "Estación de Carregado",
-      "type": "Poi",
+      "type": "Station",
       "position": { "latitude": 39.00580, "longitude": -8.95340, "elevation": 5 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Train", "Bus" ],
@@ -481,7 +485,7 @@
       "id": "P-P20",
       "name": "Santarém",
       "type": "City",
-      "position": { "latitude": 39.23380, "longitude": -8.68610, "elevation": 110 },
+      "position": { "latitude": 39.23391, "longitude": -8.68540, "elevation": 109 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
@@ -550,7 +554,7 @@
           "id": "P-P20-3",
           "name": "Fátima Variant@en",
           "type": "Junction",
-          "position": { "latitude": 39.23458, "longitude": -8.68591, "elevation": 110 }
+          "position": { "latitude": 39.23554, "longitude": -8.68057, "elevation": 106 }
         }
       ]
     },
@@ -605,7 +609,7 @@
       "id": "P-P24",
       "name": "Golegã",
       "type": "Town",
-      "position": { "latitude": 39.40650, "longitude": -8.48600, "elevation": 24 },
+      "position": { "latitude": 39.40541, "longitude": -8.48266, "elevation": 24 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
       "accommodation": [
@@ -823,7 +827,7 @@
       "id": "P-P33",
       "name": "Ponte de Peniche",
       "type": "Bridge",
-      "position": { "latitude": 39.62040, "longitude": -8.40000, "elevation": 71 },
+      "position": { "latitude": 39.62334, "longitude": -8.40004, "elevation": 63 },
       "region": "PT",
       "services": [ "Restaurant" ],
       "accommodation": [ ]
@@ -835,7 +839,9 @@
       "position": { "latitude": 39.65230, "longitude": -8.38440, "elevation": 152 },
       "region": "PT",
       "services": [ "Restaurant", "Pharmacy", "Medical" ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-P35",
@@ -853,7 +859,9 @@
       "position": { "latitude": 39.67440, "longitude": -8.37640, "elevation": 212 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries" ],
-      "accommodation": [ "PilgrimAlbergue" ]
+      "accommodation": [
+        "PilgrimAlbergue"
+      ]
     },
     {
       "id": "P-P37",
@@ -876,7 +884,7 @@
     {
       "id": "P-P39",
       "name": "Escoural",
-      "type": "Poi",
+      "type": "Natural",
       "position": { "latitude": 39.69980, "longitude": -8.35590, "elevation": 187 },
       "region": "PT",
       "services": [ ],
@@ -916,7 +924,9 @@
       "position": { "latitude": 39.75200, "longitude": -8.36250, "elevation": 237 },
       "region": "PT",
       "services": [ "Groceries" ],
-      "accommodation": [ "Hotel" ]
+      "accommodation": [
+        "Hotel"
+      ]
     },
     {
       "id": "P-P44",
@@ -925,7 +935,9 @@
       "position": { "latitude": 39.78090, "longitude": -8.38220, "elevation": 238 },
       "region": "PT",
       "services": [ "Groceries" ],
-      "accommodation": [ "PrivateAlbergue" ]
+      "accommodation": [
+        "PrivateAlbergue"
+      ]
     },
     {
       "id": "P-P45",
@@ -970,7 +982,10 @@
       "position": { "latitude": 39.82550, "longitude": -8.38140, "elevation": 318 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue" ]
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue"
+      ]
     },
     {
       "id": "P-P50",
@@ -1021,10 +1036,13 @@
       "id": "P-P55",
       "name": "Ansião",
       "type": "Town",
-      "position": { "latitude": 39.91080, "longitude": -8.43830, "elevation": 203 },
+      "position": { "latitude": 39.91364, "longitude": -8.43554, "elevation": 196 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
-      "accommodation": [ "PrivateAlbergue", "Hotel" ]
+      "accommodation": [
+        "PrivateAlbergue",
+        "Hotel"
+      ]
     },
     {
       "id": "P-P56",
@@ -1051,7 +1069,10 @@
       "position": { "latitude": 39.95409, "longitude": -8.45848, "elevation": 267 },
       "region": "PT",
       "services": [ ],
-      "accommodation": [ "GuestHouse", "House" ]
+      "accommodation": [
+        "GuestHouse",
+        "House"
+      ]
     },
     {
       "id": "P-P59",
@@ -1066,10 +1087,13 @@
       "id": "P-P60",
       "name": "Alvorge",
       "type": "Town",
-      "position": { "latitude": 39.97881, "longitude": -8.45580, "elevation": 294 },
+      "position": { "latitude": 39.97940, "longitude": -8.45496, "elevation": 294 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Bank" ],
-      "accommodation": [ "PilgrimAlbergue", "GuestHouse" ]
+      "accommodation": [
+        "PilgrimAlbergue",
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-P61",
@@ -1078,7 +1102,9 @@
       "position": { "latitude": 40.01172, "longitude": -8.45301, "elevation": 200 },
       "region": "PT",
       "services": [ ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-P62",
@@ -1087,7 +1113,9 @@
       "position": { "latitude": 40.02915, "longitude": -8.45484, "elevation": 187 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Bank", "BicycleRepair" ],
-      "accommodation": [ "PrivateAlbergue" ],
+      "accommodation": [
+        "PrivateAlbergue"
+      ],
       "pois": [
         {
           "id": "P-P62-1",
@@ -1124,7 +1152,9 @@
       "position": { "latitude": 40.05548, "longitude": -8.44599, "elevation": 173 },
       "region": "PT",
       "services": [ ],
-      "accommodation": [ "GuestHouse" ],
+      "accommodation": [
+        "GuestHouse"
+      ],
       "pois": [
         {
           "id": "P-P63-1",
@@ -1139,8 +1169,8 @@
     {
       "id": "P-P64",
       "name": "Fonte Coberta",
-      "type": "Poi",
-      "position": { "latitude": 40.06932, "longitude": -8.46211, "elevation": 150 },
+      "type": "Village",
+      "position": { "latitude": 40.06958, "longitude": -8.46340, "elevation": 151 },
       "region": "PT",
       "services": [ ],
       "accommodation": [ ]
@@ -1237,7 +1267,9 @@
       "position": { "latitude": 40.13786, "longitude": -8.46969, "elevation": 104 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue" ]
+      "accommodation": [
+        "PilgrimAlbergue"
+      ]
     },
     {
       "id": "P-P73",
@@ -1255,7 +1287,9 @@
       "position": { "latitude": 40.16453, "longitude": -8.45126, "elevation": 141 },
       "region": "PT",
       "services": [ "Bus" ],
-      "accommodation": [ "PrivateAlbergue" ]
+      "accommodation": [
+        "PrivateAlbergue"
+      ]
     },
     {
       "id": "P-P75",
@@ -1286,7 +1320,7 @@
       "id": "P-P77",
       "name": "Bordalo",
       "type": "Village",
-      "position": { "latitude": 40.19297, "longitude": -8.44637, "elevation": 106 },
+      "position": { "latitude": 40.19270, "longitude": -8.44836, "elevation": 85 },
       "region": "PT",
       "services": [ "Bus" ],
       "accommodation": [ ]
@@ -1299,9 +1333,9 @@
         "text": "Coímbra is a city in central Portugal. It is the home of the oldest Academic instituion in the Portuguese-speaking world.@en",
         "about": "https://en.wikipedia.org/wiki/Coimbra",
         "image": {
+          "title": "Coímbra e o rio Mondego@pt",
           "source": "P/P-P78-Coimbra.jpg",
           "thumbnail": "P/P-P78-Coimbra-thumbnail.jpg",
-          "title": "Coímbra e o rio Mondego@pt",
           "metadata": {
             "statements": [
               {
@@ -1327,7 +1361,12 @@
       "position": { "latitude": 40.20705, "longitude": -8.42957, "elevation": 25 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "Hotel" ],
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "GuestHouse",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "P-P78-1",
@@ -1464,7 +1503,9 @@
       "position": { "latitude": 40.35749, "longitude": -8.46366, "elevation": 94 },
       "region": "PT",
       "services": [ "Groceries" ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-P88",
@@ -1526,7 +1567,7 @@
       "id": "P-P92",
       "name": "Anadia",
       "type": "Town",
-      "position": { "latitude": 40.44406, "longitude": -8.45208, "elevation": 30 },
+      "position": { "latitude": 40.44050, "longitude": -8.44228, "elevation": 65 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
       "accommodation": [
@@ -1889,7 +1930,7 @@
       "id": "P-P116",
       "name": "Pinheiro da Bemposta",
       "type": "Village",
-      "position": { "latitude": 40.78461, "longitude": -8.49200, "elevation": 139 },
+      "position": { "latitude": 40.78394, "longitude": -8.48765, "elevation": 149 },
       "region": "PT",
       "services": [ ],
       "accommodation": [
@@ -2177,7 +2218,7 @@
       "id": "P-P135",
       "name": "Perosinho",
       "type": "Village",
-      "position": { "latitude": 41.06243, "longitude": -8.59778, "elevation": 127 },
+      "position": { "latitude": 41.06286, "longitude": -8.58737, "elevation": 132 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
       "accommodation": [ ]
@@ -2198,7 +2239,10 @@
       "position": { "latitude": 41.12256, "longitude": -8.60603, "elevation": 118 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "PrivateAlbergue", "Hotel" ],
+      "accommodation": [
+        "PrivateAlbergue",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "P-P137-1",
@@ -2227,9 +2271,9 @@
         ],
         "about": "https://wikipedia.org/wiki/Porto",
         "image": {
+          "title": "Porto Panorama@en",
           "source": "P/P-P138-Porto.jpg",
           "thumbnail": "P/P-P138-Porto-thumbnail.jpg",
-          "title": "Porto Panorama@en",
           "metadata": {
             "statements": [
               {
@@ -2259,7 +2303,13 @@
       "position": { "latitude": 41.14310, "longitude": -8.61098, "elevation": 64 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "GuestHouse", "House", "Hotel" ],
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "GuestHouse",
+        "House",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "P-P138-1",
@@ -2541,7 +2591,7 @@
       "id": "P-P154",
       "name": "São Pedro de Rates",
       "type": "Village",
-      "position": { "latitude": 41.42524, "longitude": -8.66699, "elevation": 67 },
+      "position": { "latitude": 41.42377, "longitude": -8.67294, "elevation": 54 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
       "accommodation": [
@@ -2849,7 +2899,7 @@
       "id": "P-P170",
       "name": "Igreja",
       "type": "Village",
-      "position": { "latitude": 41.68244, "longitude": -8.61580, "elevation": 122 },
+      "position": { "latitude": 41.68337, "longitude": -8.61774, "elevation": 138 },
       "region": "PT",
       "services": [ "Restaurant" ],
       "accommodation": [
@@ -2865,7 +2915,7 @@
           "id": "P-P170-1",
           "name": "Alternative Ascent for Cyclists via Rúa de Reborido@en",
           "type": "Junction",
-          "position": { "latitude": 41.68650, "longitude": -8.62092, "elevation": 171 }
+          "position": { "latitude": 41.68539, "longitude": -8.61992, "elevation": 165 }
         }
       ]
     },
@@ -4128,7 +4178,11 @@
       "position": { "latitude": 42.43110, "longitude": -8.64361, "elevation": 18 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Hotel" ],
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "Hotel"
+      ],
       "pois": [
         {
           "id": "P-P236-1",
@@ -4285,7 +4339,11 @@
       "position": { "latitude": 42.60405, "longitude": -8.64201, "elevation": 25 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Hotel" ]
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "Hotel"
+      ]
     },
     {
       "id": "P-P248",
@@ -4388,7 +4446,7 @@
       "id": "P-P258",
       "name": "Pontecesures",
       "type": "Town",
-      "position": { "latitude": 42.72170, "longitude": -8.64894, "elevation": 36 },
+      "position": { "latitude": 42.72462, "longitude": -8.65050, "elevation": 19 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
       "accommodation": [
@@ -4444,7 +4502,11 @@
       "position": { "latitude": 42.73903, "longitude": -8.66146, "elevation": 8 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
-      "accommodation": [ "PilgrimAlbergue", "PrivateAlbergue", "Hotel" ],
+      "accommodation": [
+        "PilgrimAlbergue",
+        "PrivateAlbergue",
+        "Hotel"
+      ],
       "events": [
         {
           "name": "Padrón Herbón Pepper Festival@en",
@@ -5131,7 +5193,9 @@
       "position": { "latitude": 39.72670, "longitude": -8.49880, "elevation": 122 },
       "region": "PT",
       "services": [ "Restaurant", "Pharmacy", "Bank" ],
-      "accommodation": [ "House" ]
+      "accommodation": [
+        "House"
+      ]
     },
     {
       "id": "P-F27",
@@ -5167,7 +5231,9 @@
       "position": { "latitude": 39.78090, "longitude": -8.50510, "elevation": 178 },
       "region": "PT",
       "services": [ "Groceries" ],
-      "accommodation": [ "PrivateAlbergue" ]
+      "accommodation": [
+        "PrivateAlbergue"
+      ]
     },
     {
       "id": "P-F31",
@@ -5203,7 +5269,9 @@
       "position": { "latitude": 39.62645, "longitude": -8.62048, "elevation": 268 },
       "region": "PT",
       "services": [ ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-F36",
@@ -5230,7 +5298,9 @@
       "position": { "latitude": 39.65694, "longitude": -8.57748, "elevation": 168 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-F39",
@@ -5257,7 +5327,9 @@
       "position": { "latitude": 39.67490, "longitude": -8.52471, "elevation": 119 },
       "region": "PT",
       "services": [ "Restaurant", "Train" ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-F42",
@@ -5311,7 +5383,9 @@
       "position": { "latitude": 39.76227, "longitude": -8.45920, "elevation": 115 },
       "region": "PT",
       "services": [ "Groceries" ],
-      "accommodation": [ "GuestHouse" ]
+      "accommodation": [
+        "GuestHouse"
+      ]
     },
     {
       "id": "P-F48",
@@ -5356,7 +5430,9 @@
       "position": { "latitude": 39.81381, "longitude": -8.43084, "elevation": 198 },
       "region": "PT",
       "services": [ ],
-      "accommodation": [ "PrivateAlbergue" ]
+      "accommodation": [
+        "PrivateAlbergue"
+      ]
     },
     {
       "id": "P-F53",
@@ -5606,7 +5682,7 @@
       "id": "P-E21",
       "name": "Vilanova de Arousa",
       "type": "Town",
-      "position": { "latitude": 42.56043, "longitude": -8.82554, "elevation": 4 },
+      "position": { "latitude": 42.56251, "longitude": -8.83120, "elevation": 1 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
       "accommodation": [
@@ -5921,7 +5997,7 @@
     {
       "id": "P-C16",
       "name": "Estela",
-      "type": "Poi",
+      "type": "Farmland",
       "position": { "latitude": 41.45919, "longitude": -8.77003, "elevation": 10 },
       "region": "PT",
       "services": [ ],
@@ -6177,7 +6253,10 @@
       "position": { "latitude": 41.68067, "longitude": -8.80692, "elevation": 16 },
       "region": "PT",
       "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train" ],
-      "accommodation": [ "GuestHouse", "Hotel" ]
+      "accommodation": [
+        "GuestHouse",
+        "Hotel"
+      ]
     },
     {
       "id": "P-C29",
@@ -7014,8 +7093,8 @@
     },
     {
       "id": "P-C58",
-      "name": "Senda da Agua (Teis)",
-      "type": "Poi",
+      "name": "Teis (Senda da Agua)",
+      "type": "Village",
       "position": { "latitude": 42.25297, "longitude": -8.67856, "elevation": 149 },
       "region": "ES-GA",
       "services": [ ],
@@ -7023,8 +7102,8 @@
     },
     {
       "id": "P-C59",
-      "name": "Senda da Agua (Chapela)",
-      "type": "Poi",
+      "name": "Chapela (Senda da Agua)",
+      "type": "Village",
       "position": { "latitude": 42.25996, "longitude": -8.66897, "elevation": 159 },
       "region": "ES-GA",
       "services": [ ],
@@ -7032,8 +7111,8 @@
     },
     {
       "id": "P-C60",
-      "name": "Senda da Agua (Transmañó)",
-      "type": "Poi",
+      "name": "Transmañó (Senda da Agua)",
+      "type": "Natural",
       "position": { "latitude": 42.27701, "longitude": -8.65879, "elevation": 161 },
       "region": "ES-GA",
       "services": [ "Restaurant" ],
@@ -7437,7 +7516,7 @@
     {
       "id": "P-T10",
       "name": "Aerodromo Povóa de Varzim",
-      "type": "Poi",
+      "type": "Airport",
       "position": { "latitude": 41.44825, "longitude": -8.70577, "elevation": 67 },
       "region": "PT",
       "services": [ ],
@@ -10181,9 +10260,9 @@
       "ascent": 5,
       "descent": 35,
       "waypoints": [
-        { "latitude": 42.55026, "longitude": -8.82059, "elevation": 22 },
-        { "latitude": 42.55614, "longitude": -8.82858, "elevation": 10 },
-        { "latitude": 42.55959, "longitude": -8.82479, "elevation": 5 }
+        { "latitude": 42.54505, "longitude": -8.83078, "elevation": 3 },
+        { "latitude": 42.55236, "longitude": -8.83606, "elevation": 2 },
+        { "latitude": 42.56037, "longitude": -8.83155, "elevation": 2 }
       ]
     },
     {
@@ -10198,10 +10277,10 @@
       "from": "P-E22",
       "to": "P-P258",
       "distance": 0.00,
+      "time": 2.5,
       "ascent": 0,
       "descent": 0,
-      "penance": 2.0,
-      "time": 2.5
+      "penance": 2.0
     },
     {
       "from": "P-P139",
@@ -10465,10 +10544,10 @@
       "from": "P-C37",
       "to": "P-C38",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
       "descent": 0,
-      "penance": 1.0,
-      "time": 0.5
+      "penance": 1.0
     },
     {
       "from": "P-C38",
@@ -10833,10 +10912,10 @@
       "from": "P-C37",
       "to": "P-T8",
       "distance": 0.00,
+      "time": 6.0,
       "ascent": 0,
       "descent": 0,
-      "penance": 20.0,
-      "time": 6.0
+      "penance": 20.0
     },
     {
       "from": "P-T8",
@@ -10898,333 +10977,333 @@
       "from": "P-P2",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.2,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.25
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P3",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P4",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P5",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P7",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P8",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P9",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P11",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P12",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P13",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P14",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P15",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P21",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P22",
       "to": "P-P1",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P26",
       "to": "P-P32",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P72",
       "to": "P-P78",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P73",
       "to": "P-P78",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P74",
       "to": "P-P78",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P79",
       "to": "P-P78",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P88",
       "to": "P-P78",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P104",
       "to": "P-P101",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P119",
       "to": "P-P123",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P120",
       "to": "P-P123",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P125",
       "to": "P-P123",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P139",
       "to": "P-P138",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P140",
       "to": "P-P138",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-P164",
       "to": "P-P160",
       "distance": 0.00,
+      "time": 0.2,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.25
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P244",
       "to": "P-P236",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P254",
       "to": "P-P247",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P256",
       "to": "P-P260",
       "distance": 0.00,
+      "time": 0.8,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.75
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-P274",
       "to": "ST-ST1",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-C7",
       "to": "P-P138",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-C9",
       "to": "P-C13",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-C56",
       "to": "P-C57",
       "distance": 0.00,
+      "time": 0.5,
       "ascent": 0,
-      "descent": 0,
-      "time": 0.5
+      "descent": 0
     },
     {
       "type": "BusLink",
       "from": "P-E18",
       "to": "P-E21",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-F25",
       "to": "P-P32",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     },
     {
       "type": "TrainLink",
       "from": "P-F25",
       "to": "P-P78",
       "distance": 0.00,
+      "time": 1.0,
       "ascent": 0,
-      "descent": 0,
-      "time": 1.0
+      "descent": 0
     }
   ],
   "routes": [
@@ -11235,15 +11314,130 @@
       "major": true,
       "stops": [ "P-P20", "P-P32", "P-P78", "P-P138" ],
       "rest-points": [ "P-P20", "P-P32", "P-P78", "P-P138", "P-P203" ],
-      "starts": [ "P-P1@0", "P-P138@100", "P-P204@200" ],
-      "finishes": [ "ST-ST1@0" ],
+      "starts": [ "P-P1", "P-P138@100", "P-P204@200" ],
+      "finishes": [ "ST-ST1" ],
       "suggested-pois": [
         "P-P1-1", "P-P2-1", "P-P32-1", "P-P32-2", "P-P63-1", "P-P66-1", "P-P78-1", "P-P123-1", "P-P123-2", "P-P138-2",
         "ST-ST1-1"
       ],
       "palette": {
         "colour": "#fec953"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RP-F1",
+          "name": "Common Lisbon - SdC features",
+          "geometry": "P/P-RP-F1.geojson"
+        },
+        {
+          "id": "P-RP-F2",
+          "name": "Lisbon - Povoa de Santa Iria via Alpriate",
+          "condition": "P-P5",
+          "geometry": "P/P-RP-F2.geojson"
+        },
+        {
+          "id": "P-RP-F3",
+          "name": "Lisbon - Povoa de Santa Iria via Santa Iria de Azoia",
+          "condition": "P-P7",
+          "geometry": "P/P-RP-F3.geojson"
+        },
+        {
+          "id": "P-RP-F4",
+          "name": "Santarem - Tomar (main route)",
+          "condition": "P-P24",
+          "geometry": "P/P-RP-F4.geojson"
+        },
+        {
+          "id": "P-RP-F5",
+          "name": "Tomar - Venda do Negro",
+          "condition": "P-P49",
+          "geometry": "P/P-RP-F5.geojson"
+        },
+        {
+          "id": "P-RP-F6",
+          "name": "Porto - Junqueira",
+          "condition": "P-P140",
+          "geometry": "P/P-RP-F6.geojson"
+        },
+        {
+          "id": "P-RP-F7",
+          "name": "Junqueira - São Pedro de Rates",
+          "condition": "P-P153",
+          "geometry": "P/P-RP-F7.geojson"
+        },
+        {
+          "id": "P-RP-F8",
+          "name": "São Pedro de Rates - Valença do Minho",
+          "condition": "P-P179",
+          "geometry": "P/P-RP-F8.geojson"
+        },
+        {
+          "id": "P-RP-F9",
+          "name": "Valença do Minho - Tui",
+          "condition": {
+            "and": [ "P-P203", "P-P204" ]
+          },
+          "geometry": "P/P-RP-F9.geojson"
+        },
+        {
+          "id": "P-RP-F10",
+          "name": "Tui - Redondela",
+          "condition": "P-P215",
+          "geometry": "P/P-RP-F10.geojson"
+        },
+        {
+          "id": "P-RP-F11",
+          "name": "Rio Tomeza to Pontevedra",
+          "condition": "P-P233RT",
+          "geometry": "P/P-RP-F11.geojson"
+        },
+        {
+          "id": "P-RP-F12",
+          "name": "O Pobo - Pontevedra",
+          "condition": "P-P235",
+          "geometry": "P/P-RP-F12.geojson"
+        },
+        {
+          "id": "P-RP-F13",
+          "name": "Pontevedra - Pontecabras",
+          "condition": "P-P237",
+          "geometry": "P/P-RP-F13.geojson"
+        },
+        {
+          "id": "P-RP-F14",
+          "name": "Pontecabras - Pontecesures",
+          "condition": "P-P247",
+          "geometry": "P/P-RP-F14.geojson"
+        },
+        {
+          "id": "P-RP-F15",
+          "name": "Pontecesures to Padrón via Herbón",
+          "condition": "P-P259",
+          "geometry": "P/P-RP-F15.geojson"
+        },
+        {
+          "id": "P-RP-F16",
+          "name": "Pontecesures to Padrón (main route)",
+          "condition": {
+            "not": "P-P259"
+          },
+          "geometry": "P/P-RP-F16.geojson"
+        },
+        {
+          "id": "P-RP-F17",
+          "name": "Ponte Vella de Arriba - SdC (direct)",
+          "condition": {
+            "not": "P-P282"
+          },
+          "geometry": "P/P-RP-F17.geojson"
+        },
+        {
+          "id": "P-RP-F18",
+          "name": "Ponte Vella de Arriba - SdC via Conxo",
+          "condition": "P-P282",
+          "geometry": "P/P-RP-F18.geojson"
+        }
+      ]
     },
     {
       "id": "P-RFT",
@@ -11260,7 +11454,21 @@
       "suggested-pois": [ "P-F10-1" ],
       "palette": {
         "colour": "#2a78ff"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RF-F1",
+          "name": "Santarem - Fatima",
+          "condition": "P-F7",
+          "geometry": "P/P-RF-F1.geojson"
+        },
+        {
+          "id": "P-RFT-F1",
+          "name": "Fatima - Tomar",
+          "condition": "P-F14",
+          "geometry": "P/P-RFT-F1.geojson"
+        }
+      ]
     },
     {
       "id": "P-RFA",
@@ -11279,7 +11487,106 @@
       "suggested-pois": [ "P-F10-1" ],
       "palette": {
         "colour": "#2a78ff"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RF-F1",
+          "name": "Santarem - Fatima",
+          "condition": "P-F7",
+          "geometry": "P/P-RF-F1.geojson"
+        },
+        {
+          "id": "P-RFA-F1",
+          "name": "Fatima - Ansião (common elements)",
+          "condition": "P-F29",
+          "geometry": "P/P-RFA-F1.geojson"
+        },
+        {
+          "id": "P-RFA-F2",
+          "name": "Fatima - Vale da Perra via Avleijar",
+          "condition": {
+            "and": [ "P-F11", "P-F35" ]
+          },
+          "geometry": "P/P-RFA-F2.geojson"
+        },
+        {
+          "id": "P-RFA-F3",
+          "name": "Fatima - Pinheiro via Murtal",
+          "condition": "P-F16",
+          "geometry": "P/P-RFA-F3.geojson"
+        },
+        {
+          "id": "P-RFA-F4",
+          "name": "Fatima - Vale da Perra bypassing Alveijar",
+          "condition": {
+            "and": [
+              { "not": "P-F11" },
+              "P-F35"
+            ]
+          },
+          "geometry": "P/P-RFA-F5.geojson"
+        },
+        {
+          "id": "P-RFA-F5",
+          "name": "Vale da Perra - Ourem",
+          "condition": {
+            "and": [ "P-F35", "P-F38" ]
+          },
+          "geometry": "P/P-RFA-F5.geojson"
+        },
+        {
+          "id": "P-RFA-F6",
+          "name": "Pinheiro - Caxarias",
+          "condition": {
+            "and": [ "P-F20", "P-F25" ]
+          },
+          "geometry": "P/P-RFA-F6.geojson"
+        },
+        {
+          "id": "P-RFA-F7",
+          "name": "Caxarias - Rio de Couros",
+          "condition": {
+            "and": [ "P-F25", "P-F26" ]
+          },
+          "geometry": "P/P-RFA-F7.geojson"
+        },
+        {
+          "id": "P-RFA-F8",
+          "name": "Rio de Couros - Casal do Ribeiro",
+          "condition": {
+            "and": [ "P-F26", "P-F28" ]
+          },
+          "geometry": "P/P-RFA-F8.geojson"
+        },
+        {
+          "id": "P-RFA-F9",
+          "name": "Caxarias - Casal do Ribeiro (direct route)",
+          "condition": {
+            "and": [ "P-F25", "P-F27", "P-F28" ]
+          },
+          "geometry": "P/P-RFA-F9.geojson"
+        },
+        {
+          "id": "P-RFA-F10",
+          "name": "Ourem - Rio de Couros",
+          "condition": "P-F43",
+          "geometry": "P/P-RFA-F10.geojson"
+        },
+        {
+          "id": "P-RFA-F11",
+          "name": "Rio de Couros - Venda do Negro",
+          "condition": "P-F47",
+          "geometry": "P/P-RFA-F11.geojson"
+        },
+        {
+          "id": "P-RFA-F12",
+          "name": "Beltroa - Pinheiro",
+          "condition": {
+            "and": [ "P-F37", "P-F20" ]
+          },
+          "geometry": "P/P-RFA-F12.geojson"
+        }
+      ]
     },
     {
       "id": "P-RS",
@@ -11294,7 +11601,25 @@
       "stops": [ "P-E21" ],
       "palette": {
         "colour": "#f00810"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RS-F1",
+          "name": "Main Spiritual Variant",
+          "geometry": "P/P-RS-F1.geojson"
+        },
+        {
+          "id": "P-RS-F2",
+          "type": "FerryLink",
+          "name": "Vilanova de Arousa - Pontecesures (ferry link)",
+          "geometry": "P/P-RS-F2.geojson"
+        },
+        {
+          "id": "P-RS-F3",
+          "name": "Pontecesures, wharf to main camino",
+          "geometry": "P/P-RS-F3.geojson"
+        }
+      ]
     },
     {
       "id": "P-RC",
@@ -11314,7 +11639,71 @@
       "rest-points": [ "P-C36", "P-C57" ],
       "palette": {
         "colour": "#60e8f0"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RC-F1",
+          "name": "Coastal Route (common)",
+          "geometry": "P/P-RC-F1.geojson"
+        },
+        {
+          "id": "P-RC-F2",
+          "name": "Porto - Azuara (inland)",
+          "condition": "P-C2",
+          "geometry": "P/P-RC-F2.geojson"
+        },
+        {
+          "id": "P-RC-F3",
+          "name": "Curuxo - Sanda da Agua bypass Vigo via Matamá",
+          "condition": "P-C63",
+          "geometry": "P/P-RC-F3.geojson"
+        },
+        {
+          "id": "P-RC-F4",
+          "name": "Coruxo - Senda da Agua via Vigo",
+          "condition": "P-C57",
+          "geometry": "P/P-RC-F4.geojson"
+        },
+        {
+          "id": "P-RC-F5",
+          "name": "Oia - San Xose Obreiro long route",
+          "condition": false,
+          "geometry": "P/P-RC-F5.geojson"
+        },
+        {
+          "id": "P-RC-F6",
+          "name": "Vila do Conde - Fão",
+          "condition": "P-C13",
+          "geometry": "P/P-RC-F6.geojson"
+        },
+        {
+          "id": "P-RC-F7",
+          "name": "Fão - Caminha",
+          "condition": "P-C29",
+          "geometry": "P/P-RC-F7.geojson"
+        },
+        {
+          "id": "P-RC-F8",
+          "type": "FerryLink",
+          "name": "Caminha Ferry - A Pasaxe (ferry)",
+          "condition": {
+            "and": [ "P-C37", "P-C38" ]
+          },
+          "geometry": "P/P-RC-F8.geojson"
+        },
+        {
+          "id": "P-RC-F9",
+          "name": "A Pasaxe - Coruxo",
+          "condition": "P-C41",
+          "geometry": "P/P-RC-F9.geojson"
+        },
+        {
+          "id": "P-RC-F10",
+          "name": "Senda da Aqua to Redondela",
+          "condition": "P-C59",
+          "geometry": "P/P-RC-F10.geojson"
+        }
+      ]
     },
     {
       "id": "P-RL",
@@ -11326,7 +11715,14 @@
       ],
       "palette": {
         "colour": "#30e0f0"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RL-F1",
+          "name": "Porto - Azurara, Littotal Route",
+          "geometry": "P/P-RL-F1.geojson"
+        }
+      ]
     },
     {
       "id": "P-RT1",
@@ -11336,7 +11732,14 @@
       "stops": [ "P-P154" ],
       "palette": {
         "colour": "#f09860"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RT1-F1",
+          "name": "Coastal to Central Transfer, Vila do Conde - Junqueira",
+          "geometry": "P/P-RT1-F1.geojson"
+        }
+      ]
     },
     {
       "id": "P-RT2",
@@ -11346,7 +11749,14 @@
       "stops": [ "P-P154" ],
       "palette": {
         "colour": "#f09860"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RT2-F1",
+          "name": "Central to Coastal Transfer, São Pedro de Rates - Fão",
+          "geometry": "P/P-RT2-F1.geojson"
+        }
+      ]
     },
     {
       "id": "P-RT3",
@@ -11355,7 +11765,14 @@
       "locations": [ "P-T1", "P-T2", "P-T3", "P-T4", "P-T5", "P-T6", "P-T7" ],
       "palette": {
         "colour": "#f09860"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RT3-F1",
+          "name": "Caminha - Valença Landing (by land)",
+          "geometry": "P/P-RT3-F1.geojson"
+        }
+      ]
     },
     {
       "id": "P-RT4",
@@ -11364,7 +11781,20 @@
       "locations": [ "P-T8" ],
       "palette": {
         "colour": "#f09860"
-      }
+      },
+      "features": [
+        {
+          "id": "P-RT4-F1",
+          "type": "BoatLink",
+          "name": "Caminha - Valença Landing (by boat)",
+          "geometry": "P/P-RT4-F1.geojson"
+        },
+        {
+          "id": "P-RT4-F2",
+          "name": "Valença Landing - Tui",
+          "geometry": "P/P-RT4-F2.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [
@@ -11419,10 +11849,7 @@
     {
       "description": "Re-introduce the small segment of the central route if we're going coastal-central-coastal",
       "condition": {
-        "and": [
-          "P-RT1",
-          "P-RT2"
-        ]
+        "and": [ "P-RT1", "P-RT2" ]
       },
       "requires": [ "P-RC" ],
       "include": [ "P-P152", "P-P153", "P-P154" ],
@@ -11433,9 +11860,7 @@
       "condition": {
         "and": [
           "P-RT1",
-          {
-            "not": "P-RT2"
-          }
+          { "not": "P-RT2" }
         ]
       },
       "requires": [ "P-RC" ],
@@ -11463,9 +11888,7 @@
       "description": "Transferring from the central route down to the coastal route",
       "condition": {
         "and": [
-          {
-            "not": "P-RT1"
-          },
+          { "not": "P-RT1" },
           "P-RT2"
         ]
       },

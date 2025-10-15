@@ -50,6 +50,7 @@ data CaminoMsg =
   | AccommodationPreferencesLabel
   | AddressTitle
   | AfterText
+  | AirportTitle
   | AlwaysOpenLabel
   | ArtworkTitle
   | AscentLabel
@@ -119,6 +120,7 @@ data CaminoMsg =
   | ExceptText
   | ExcludedStopsLabel
   | FailureLabel
+  | FarmlandTitle
   | FatiguePenanceLabel
   | FerryTitle
   | FestivalEventTitle
@@ -260,6 +262,7 @@ data CaminoMsg =
   | StagesMsg Int
   | StartDateLabel
   | StartLocationLabel
+  | StationTitle
   | StatueTitle
   | StockpointLabel
   | StopLabel
@@ -354,6 +357,7 @@ renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ AccommodationPenanceLabel = "Accommodation"
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ AddressTitle = "Address"
+renderCaminoMsgDefault _ AirportTitle = "Airport"
 renderCaminoMsgDefault _ AlwaysOpenLabel = "Always Open"
 renderCaminoMsgDefault _ AfterText = "after"
 renderCaminoMsgDefault _ ArtworkTitle = "Art"
@@ -418,6 +422,7 @@ renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FailureLabel = "Failure"
+renderCaminoMsgDefault _ FarmlandTitle = "Farmland"
 renderCaminoMsgDefault _ FatiguePenanceLabel = "Fatigue"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
 renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
@@ -550,6 +555,7 @@ renderCaminoMsgDefault _ StageLabel = "Stage"
 renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
 renderCaminoMsgDefault _ StartDateLabel = "Start Date"
 renderCaminoMsgDefault _ StartLocationLabel = "Start Location"
+renderCaminoMsgDefault _ StationTitle = "Station"
 renderCaminoMsgDefault _ StatueTitle = "Statue"
 renderCaminoMsgDefault _ StockpointLabel = "Stocking Point"
 renderCaminoMsgDefault _ StopLabel = "Stop"

@@ -9181,10 +9181,10 @@
     },
     {
       "from": "N-FR10",
-      "to": "F-F248",
-      "distance": 4.54,
-      "ascent": 30,
-      "descent": 100
+      "to": "F-F247",
+      "distance": 2.45,
+      "ascent": 10,
+      "descent": 50
     },
     {
       "from": "N-FR3",
@@ -9230,7 +9230,396 @@
       "suggested-pois": [ "N-N211-9", "N-N26-4", "N-N32-1", "N-N32-3", "N-N73-1", "N-N87-1", "N-N9-1", "N-N98-2" ],
       "palette": {
         "colour": "#fec953"
-      }
+      },
+      "features": [
+        {
+          "id": "N-N-F1",
+          "name": "Pajaes to Bilbao",
+          "geometry": "N/N-N-F1.geojson",
+          "features": [
+            {
+              "id": "N-N-F1-5",
+              "type": "FerryLink",
+              "name": "Pasajes Ferry"
+            }
+          ]
+        },
+        {
+          "id": "N-N-F2",
+          "name": "Monte Jaizkibel (Southern route)",
+          "condition": "N-N3",
+          "geometry": "N/N-N-F2.geojson"
+        },
+        {
+          "id": "N-N-F3",
+          "name": "Monte Jaizkibel (Northern route)",
+          "condition": {
+            "not": "N-N3"
+          },
+          "geometry": "N/N-N-F3.geojson"
+        },
+        {
+          "id": "N-N-F4",
+          "name": "Bilabo to Portugalete (main camino)",
+          "condition": "N-N33",
+          "geometry": "N/N-N-F4.geojson"
+        },
+        {
+          "id": "N-N-F6",
+          "name": "Laredo to Escalante (inland route)",
+          "condition": "N-N52",
+          "geometry": "N/N-N-F6.geojson"
+        },
+        {
+          "id": "N-N-F7",
+          "name": "Laredo to Santoña junction (ferry route)",
+          "condition": "N-N57",
+          "geometry": "N/N-N-F7.geojson",
+          "features": [
+            {
+              "id": "N-N-F7-3",
+              "type": "FerryLink",
+              "name": "Laredo Ferry"
+            }
+          ]
+        },
+        {
+          "id": "N-N-F8",
+          "name": "Santoña junction to Barrio Pereda",
+          "condition": {
+            "and": [ "N-N57", "N-N58" ]
+          },
+          "geometry": "N/N-N-F8.geojson"
+        },
+        {
+          "id": "N-N-F9",
+          "name": "Santoña to Noja",
+          "condition": {
+            "and": [ "N-N57", "N-N61" ]
+          },
+          "geometry": "N/N-N-F9.geojson"
+        },
+        {
+          "id": "N-N-F10",
+          "name": "Noja to Castillo Siete Villas",
+          "condition": {
+            "and": [ "N-N61", "N-N59" ]
+          },
+          "geometry": "N/N-N-F10.geojson"
+        },
+        {
+          "id": "N-N-F11",
+          "name": "Escalante to Castillo Siete Villas",
+          "condition": {
+            "and": [
+              "N-N56",
+              "N-N59",
+              {
+                "not": "N-N58"
+              }
+            ]
+          },
+          "geometry": "N/N-N-F11.geojson"
+        },
+        {
+          "id": "N-N-F12",
+          "name": "Barrio Pederas to Castillo Siete Villas",
+          "condition": {
+            "and": [ "N-N58", "N-N59" ]
+          },
+          "geometry": "N/N-N-F12.geojson"
+        },
+        {
+          "id": "N-N-F13",
+          "name": "Noja to Baryeo",
+          "condition": "N-N62",
+          "geometry": "N/N-N-F13.geojson"
+        },
+        {
+          "id": "N-N-F14",
+          "name": "Castillo Siete Villas to Baryeo turnoff",
+          "condition": "N-N60",
+          "geometry": "N/N-N-F14.geojson"
+        },
+        {
+          "id": "N-N-F15",
+          "name": "Baryeo",
+          "condition": "N-N64",
+          "geometry": "N/N-N-F15.geojson"
+        },
+        {
+          "id": "N-N-F16",
+          "name": "Bareyo to Güemes fork",
+          "condition": "N-N65",
+          "geometry": "N/N-N-F16.geojson"
+        },
+        {
+          "id": "N-N-F17",
+          "name": "Güemes",
+          "condition": "N-N65",
+          "geometry": "N/N-N-F17.geojson"
+        },
+        {
+          "id": "N-N-F18",
+          "name": "Bareyo to Galizano via Ajo",
+          "condition": "N-N67",
+          "geometry": "N/N-N-F18.geojson"
+        },
+        {
+          "id": "N-N-F19",
+          "name": "San Miguel de Meruleo to Güemes (Southern route)",
+          "condition": {
+            "and": [
+              "N-N60",
+              "N-N65",
+              {
+                "not": "N-N64"
+              }
+            ]
+          },
+          "geometry": "N/N-N-F19.geojson"
+        },
+        {
+          "id": "N-N-F20",
+          "name": "Güemes to Galizano",
+          "condition": "N-N66",
+          "geometry": "N/N-N-F20.geojson"
+        },
+        {
+          "id": "N-N-F21",
+          "name": "Galizano to Loredo (cliff walk)",
+          "condition": "N-N69",
+          "geometry": "N/N-N-F21.geojson"
+        },
+        {
+          "id": "N-N-F22",
+          "name": "Galizano to Loredo (inland walk)",
+          "condition": {
+            "and": [
+              "N-N68",
+              "N-N70",
+              {
+                "not": "N-N69"
+              }
+            ]
+          },
+          "geometry": "N/N-N-F22.geojson"
+        },
+        {
+          "id": "N-N-F23",
+          "name": "Galizano to Somo (road walk)",
+          "condition": {
+            "and": [
+              "N-N68",
+              "N-N71",
+              {
+                "not": "N-N70"
+              }
+            ]
+          },
+          "geometry": "N/N-N-F23.geojson"
+        },
+        {
+          "id": "N-N-F24",
+          "name": "Loredo to Somo wharf",
+          "condition": {
+            "and": [ "N-N70", "N-N71" ]
+          },
+          "geometry": "N/N-N-F24.geojson"
+        },
+        {
+          "id": "N-N-F25",
+          "type": "FerryLink",
+          "name": "Somo to Santander ferry",
+          "condition": {
+            "and": [ "N-N71", "N-N73" ]
+          },
+          "geometry": "N/N-N-F25.geojson"
+        },
+        {
+          "id": "N-N-F26",
+          "name": "Somo to Peñacastillo via El Astillero",
+          "condition": "N-N72",
+          "geometry": "N/N-N-F26.geojson"
+        },
+        {
+          "id": "N-N-F27",
+          "name": "Santander to Peñacastillo",
+          "condition": "N-N73",
+          "geometry": "N/N-N-F27.geojson"
+        },
+        {
+          "id": "N-N-F28",
+          "name": "Boo de Piélagos to Requjada via Mogro",
+          "condition": "N-N81",
+          "geometry": "N/N-N-F28.geojson",
+          "features": [
+            {
+              "id": "N-N-F28-2",
+              "type": "TrainLink",
+              "name": "Train across bridge from Boo de Piélagos to Mogro"
+            }
+          ]
+        },
+        {
+          "id": "N-N-F29",
+          "name": "Boo de Piélagos to Requjada via Oruña",
+          "condition": "N-N79",
+          "geometry": "N/N-N-F29.geojson"
+        },
+        {
+          "id": "N-N-F30",
+          "name": "Requjada to E9 turnoff",
+          "condition": "N-N107",
+          "geometry": "N/N-N-F30.geojson"
+        },
+        {
+          "id": "N-N-F31",
+          "name": "E9 turnoff to E9 rejoin at Llanes (main route)",
+          "condition": "N-N114",
+          "geometry": "N/N-N-F31.geojson"
+        },
+        {
+          "id": "N-N-F32",
+          "name": "Llanes to Póo",
+          "condition": "N-N115",
+          "geometry": "N/N-N-F32.geojson"
+        },
+        {
+          "id": "N-N-F33",
+          "name": "Póo to Celoriu (main route)",
+          "condition": {
+            "not": "N-E94"
+          },
+          "geometry": "N/N-N-F33.geojson"
+        },
+        {
+          "id": "N-N-F34",
+          "name": "Celoriu to Avilés",
+          "condition": "N-N144",
+          "geometry": "N/N-N-F34.geojson"
+        },
+        {
+          "id": "N-N-F35",
+          "name": "Avilés to Las Palancas turnoff",
+          "condition": "N-N157",
+          "geometry": "N/N-N-F35.geojson"
+        },
+        {
+          "id": "N-N-F36",
+          "name": "Las Palancas",
+          "condition": "N-N165",
+          "geometry": "N/N-N-F36.geojson"
+        },
+        {
+          "id": "N-N-F37",
+          "name": "Las Palancas turnoff to Villademoros",
+          "condition": "N-N170",
+          "geometry": "N/N-N-F37.geojson"
+        },
+        {
+          "id": "N-N-F38",
+          "name": "Villademoros to Porcia",
+          "condition": "N-N192",
+          "geometry": "N/N-N-F38.geojson"
+        },
+        {
+          "id": "N-N-F39",
+          "name": "Porcia to Tol",
+          "condition": "N-N195",
+          "geometry": "N/N-N-F39.geojson"
+        },
+        {
+          "id": "N-N-F40",
+          "name": "Tol to Figueras",
+          "condition": "N-N197",
+          "geometry": "N/N-N-F40.geojson"
+        },
+        {
+          "id": "N-N-F41",
+          "name": "Ribadeo (Figueras) to Mondoñedo",
+          "condition": "N-N208",
+          "geometry": "N/N-N-F41.geojson"
+        },
+        {
+          "id": "N-N-F42",
+          "name": "Mondoñedo to Toar",
+          "condition": "N-N221",
+          "geometry": "N/N-N-F42.geojson"
+        },
+        {
+          "id": "N-N-F43",
+          "name": "Toar to Sobrado dos Monxes",
+          "condition": "N-N233",
+          "geometry": "N/N-N-F43.geojson"
+        },
+        {
+          "id": "N-N-F44",
+          "name": "Sobrado dos Monxes to Boimil",
+          "condition": "N-N244",
+          "geometry": "N/N-N-F44.geojson"
+        },
+        {
+          "id": "N-N-F45",
+          "name": "Boimil to Boimorto",
+          "condition": "N-N247",
+          "geometry": "N/N-N-F45.geojson"
+        },
+        {
+          "id": "N-N-F46",
+          "name": "Boimorto to Arzúa",
+          "condition": "N-N249",
+          "geometry": "N/N-N-F46.geojson"
+        },
+        {
+          "id": "N-N-F47",
+          "name": "Ontón to Castro Urdiales main route",
+          "condition": "N-N42",
+          "geometry": "N/N-N-F47.geojson"
+        },
+        {
+          "id": "N-N-F48",
+          "name": "Irun to Mount Jaizkibel",
+          "condition": "N-N1",
+          "geometry": "N/N-N-F48.geojson"
+        },
+        {
+          "id": "N-N-F49",
+          "name": "Castro Urdiales to Laredo",
+          "condition": "N-N48",
+          "geometry": "N/N-N-F49.geojson"
+        },
+        {
+          "id": "N-N-F50",
+          "name": "Peñacastillo to Mompía",
+          "condition": "N-N75",
+          "geometry": "N/N-N-F50.geojson"
+        },
+        {
+          "id": "N-N-F51",
+          "name": "Portugalete to Ontón",
+          "condition": "N-N37",
+          "geometry": "N/N-N-F51.geojson"
+        },
+        {
+          "id": "X-MS-F2",
+          "name": "Arzúa to A Brea",
+          "condition": "F-F235",
+          "geometry": "X/X-MS-F2.geojson"
+        },
+        {
+          "id": "X-MS-F3",
+          "name": "A Brea to San Paio",
+          "condition": "F-F242",
+          "geometry": "X/X-MS-F3.geojson"
+        },
+        {
+          "id": "X-MS-F4",
+          "name": "San Paio to Santiago de Compostella",
+          "condition": "F-F247",
+          "geometry": "X/X-MS-F4.geojson"
+        }
+      ]
     },
     {
       "id": "N-RC",
@@ -9247,7 +9636,15 @@
       "locations": [ "N-RC1" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "N-RC-F1",
+          "name": "Ontón to Castro Urdiales by road",
+          "condition": "N-RC1",
+          "geometry": "N/N-RC-F1.geojson"
+        }
+      ]
     },
     {
       "id": "N-BN",
@@ -9256,7 +9653,15 @@
       "locations": [ "N-N35" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "N-N-F5",
+          "name": "Bilabo to Portugalete (river route)",
+          "condition": "N-N35",
+          "geometry": "N/N-N-F5.geojson"
+        }
+      ]
     },
     {
       "id": "N-E9",
@@ -9268,7 +9673,14 @@
       "locations": [ "N-E91", "N-E92", "N-E93", "N-E94" ],
       "palette": {
         "colour": "#10a0f0"
-      }
+      },
+      "features": [
+        {
+          "id": "N-E9-F1",
+          "name": "Coastal GR E9 variant",
+          "geometry": "N/N-E9-F1.geojson"
+        }
+      ]
     },
     {
       "id": "N-TC",
@@ -9277,7 +9689,14 @@
       "locations": [ "N-T1" ],
       "palette": {
         "colour": "#10a0f0"
-      }
+      },
+      "features": [
+        {
+          "id": "N-TC-F1",
+          "name": "Ribadeo via Tapia del Casariego",
+          "geometry": "N/N-TC-F1.geojson"
+        }
+      ]
     },
     {
       "id": "N-ER",
@@ -9287,7 +9706,14 @@
       "major": true,
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "N-ER-F1",
+          "name": "Tol to Mondoñedo",
+          "geometry": "N/N-ER-F1.geojson"
+        }
+      ]
     },
     {
       "id": "N-NR",
@@ -9296,7 +9722,23 @@
       "locations": [ "N-NR1", "N-NR2", "N-NR3", "N-NR4", "N-NR5" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "N-NR-F1",
+          "name": "Toar to As Cruces",
+          "condition": "N-NR5",
+          "geometry": "N/N-NR-F1.geojson"
+        },
+        {
+          "id": "N-NR-F2",
+          "name": "As Cruces to Sobrado dos Monxes",
+          "condition": {
+            "and": [ "N-NR5", "N-N241" ]
+          },
+          "geometry": "N/N-NR-F2.geojson"
+        }
+      ]
     },
     {
       "id": "N-NE",
@@ -9305,7 +9747,15 @@
       "locations": [ "N-NR6", "N-NR7" ],
       "palette": {
         "colour": "#fe8d37"
-      }
+      },
+      "features": [
+        {
+          "id": "N-NE-F1",
+          "name": "As Cruces to Boimil",
+          "condition": "N-NR7",
+          "geometry": "N/N-NE-F1.geojson"
+        }
+      ]
     },
     {
       "id": "N-NF",
@@ -9314,7 +9764,21 @@
       "locations": [ "N-FR1", "N-FR2", "N-FR3", "N-FR4", "N-FR5", "N-FR6", "N-FR7", "N-FR8", "N-FR9", "N-FR10" ],
       "palette": {
         "colour": "#fe5537"
-      }
+      },
+      "features": [
+        {
+          "id": "N-NF-F1",
+          "name": "Boimorto to As Calles",
+          "condition": "N-FR3",
+          "geometry": "N/N-NF-F1.geojson"
+        },
+        {
+          "id": "N-NF-F2",
+          "name": "As Calles to San Paio",
+          "condition": "N-FR8",
+          "geometry": "N/N-NF-F2.geojson"
+        }
+      ]
     },
     {
       "id": "N-NO",
@@ -9323,7 +9787,15 @@
       "locations": [ "N-FR11", "N-FR12", "N-FR13" ],
       "palette": {
         "colour": "#fe3e1c"
-      }
+      },
+      "features": [
+        {
+          "id": "N-NO-F1",
+          "name": "As Calles to A Brea",
+          "condition": "N-FR11",
+          "geometry": "N/N-NO-F1.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [

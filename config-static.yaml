@@ -12,6 +12,9 @@ web:
     - id: "Camino Icons"
       type: Font
       path: /static/fonts/Camino-Icons.woff
+    - id: features
+      type: Directory
+      path: /static/features
 caminos:
   - id: I-ST
     type: CaminoDefinition

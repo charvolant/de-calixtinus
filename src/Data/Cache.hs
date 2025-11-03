@@ -425,7 +425,6 @@ newFileCache' ident mlogger root msize mexpiry = do
     , caLog = maybe nullLog id mlogger
     }
   createDirectoryIfMissing True root
-  putStrLn "Made directory"
   cacheLog cache ("File directory " ++ root)
   fileCacheExpire True fileCache cache
   return cache

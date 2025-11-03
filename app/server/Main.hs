@@ -53,9 +53,7 @@ main = do
   let cconfig' = createCaminoConfig (getCalendarConfig config'') (getRegionConfig config'') caminos'
   static' <- (if devel opts then staticDevel else static) (staticDir opts)
   feature' <- (if devel opts then staticDevel else static) (featureDir opts)
-  putStrLn $ "Feature = " ++ (featureDir opts)
   image' <- (if devel opts then staticDevel else static) (imageDir opts)
-  putStrLn $ "Image = " ++ (imageDir opts)
   cache' <- createCache config'' "plans"
   let app = CaminoApp {
       caminoAppPort = port opts

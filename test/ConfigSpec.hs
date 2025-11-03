@@ -3,6 +3,7 @@ module ConfigSpec(testConfig) where
 
 import Test.HUnit
 import Camino.Config
+import Data.Default.Class
 import Data.Localised
 import Data.Maybe (fromJust, isJust)
 
@@ -39,7 +40,7 @@ testConfig1 = Config {
 }
 
 testConfig2 = Config {
-  configParent = Just defaultConfig,
+  configParent = Just def,
   configWeb = Web {
     webRoot = Just "https:/nowhere2.com",
     webAssets = [],
@@ -93,7 +94,7 @@ testGetAsset2 = TestCase (do
     )
 
 testGetAsset3 = TestCase (
-    assertEqual "getAsset 3" False (isJust $ getAsset "foo" defaultConfig)
+    assertEqual "getAsset 3" False (isJust $ getAsset "foo" def)
     )
 
 

@@ -245,13 +245,13 @@ route1 = Route {
   routeLocations = [location1, location2, location3],
   routeLocationSet = S.fromList [location1, location2, location3],
   routeLegs = [],
-  routeLegSet = S.empty,
   routeStarts = [],
   routeFinishes = [],
   routeStops = [],
   routeRestPoints = [],
   routeSuggestedPois = [],
-  routePalette = def 
+  routePalette = def,
+  routeFeatures = []
 }
 
 camino1 = Camino {

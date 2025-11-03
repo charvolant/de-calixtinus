@@ -17,7 +17,6 @@ import qualified Data.Set as S
 import Camino.Camino
 import Text.RawString.QQ
 import TestUtils
-import Camino.Camino (haversineDistance, LegSegment (lsDescent))
 
 
 testCamino :: Test
@@ -91,16 +90,16 @@ leg6 :: Leg
 leg6 = Leg Road location1 location3 Nothing 1.3 Nothing 25.0 0.0 Nothing [] []
 
 route1 :: Route
-route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") True [location1] (S.fromList [location1]) [] [] [] [] [] def []
+route1 = Route "R1" (wildcardText "Route 1") (wildcardDescription "Route 1") True [location1] (S.fromList [location1]) [] [][] [] [] [] def []
 
 route2 :: Route
-route2 = Route "R2" (wildcardText "Route 2") (wildcardDescription "Route 2") True [location2] (S.fromList [location2]) [] [] [] [] [] def []
+route2 = Route "R2" (wildcardText "Route 2") (wildcardDescription "Route 2") True [location2] (S.fromList [location2]) [] [] [] [] [] [] def []
 
 route3 :: Route
-route3 = Route "R3" (wildcardText "Route 3") (wildcardDescription "Route 3") True [location3] (S.fromList [location3]) [] [] [] [] [] def []
+route3 = Route "R3" (wildcardText "Route 3") (wildcardDescription "Route 3") True [location3] (S.fromList [location3]) [] [][] [] [] [] def []
 
 route4 :: Route
-route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") True [location1, location2] (S.fromList [location1, location2]) [] [] [] [] [] def []
+route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") True [location1, location2] (S.fromList [location1, location2]) [] [] [] [] [] [] def []
 
 condition1 = And [Variable route1, Not $ Variable route2]
 

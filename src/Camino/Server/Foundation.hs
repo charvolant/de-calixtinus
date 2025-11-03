@@ -27,7 +27,7 @@ import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
-import Data.Cache (Cache(..))
+import Data.Cache (Cache(..), newDummyCache)
 import Data.Localised (Locale, Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
@@ -174,10 +174,13 @@ data CaminoApp = CaminoApp {
     caminoAppPort :: Int
   , caminoAppDevel :: Bool
   , caminoAppStatic :: Static
+  , caminoAppFeature :: Static
+  , caminoAppImage :: Static
   , caminoAppPlans :: Cache Text Solution
   , caminoAppConfig :: C.Config
   , caminoAppCaminoConfig :: CaminoConfig
 }
+
 
 -- | Get a list if the available full caminos
 caminoAppCaminos :: CaminoApp -> [Camino]

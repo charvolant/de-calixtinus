@@ -85,7 +85,8 @@
   },
   "imports": [
     "I-MS",
-    "I-PF"
+    "I-PF",
+    "I-AT"
   ],
   "locations": [
     {
@@ -3922,26 +3923,6 @@
           "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Pets", "Bedlinen", "Towels" ],
           "sleeping": [ "Single", "DoubleWC", "Triple" ]
         }
-      ]
-    },
-    {
-      "id": "F-F134",
-      "name": "Astorga",
-      "type": "Town",
-      "position": { "latitude": 42.45642, "longitude": -6.05360, "elevation": 867 },
-      "region": "ES-CL",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [
-        {
-          "name": "Servas de Marína Pilgrims Hostel",
-          "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Prayer" ],
-          "sleeping": [ "Shared" ]
-        },
-        "PrivateAlbergue",
-        "House",
-        "GuestHouse",
-        "Hotel"
       ]
     },
     {

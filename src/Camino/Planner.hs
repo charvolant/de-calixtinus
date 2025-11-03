@@ -1155,14 +1155,17 @@ planCamino cc tprefs cprefs  = Solution {
       , solutionPilgrimage = either (const Nothing) Just pilgrimage
   }
   where
+    cprefs' = cprefs {
+      preferenceCamino = caminoWithRoutes (preferenceCamino cprefs) (preferenceRoutes cprefs)
+      }
     sprefs = preferenceStop tprefs
     stprefs = preferenceStockStop tprefs
     rprefs = preferenceRestStop tprefs
     pprefs = buildRestPressure tprefs
-    camino = preferenceCamino cprefs
-    start' = preferenceStart cprefs
-    finish' = preferenceFinish cprefs
-    allowed = allowedLocations cprefs
+    camino = preferenceCamino cprefs'
+    start' = preferenceStart cprefs'
+    finish' = preferenceFinish cprefs'
+    allowed = allowedLocations cprefs'
     select l = S.member l allowed
     stopAm = buildTripChoiceMap (accommodationChoice (const True) sprefs camino) tprefs camino start' finish' select
     stopLm = buildTripChoiceMap (locationChoice sprefs) tprefs camino start' finish' select
@@ -1182,25 +1185,25 @@ planCamino cc tprefs cprefs  = Solution {
     }
     journey = program
       camino
-      (caminoChoice tprefs cprefs)
-      (caminoAccept tprefs cprefs)
-      (caminoEvaluate tprefs cprefs)
-      (dayChoice tprefs cprefs)
-      (dayAccept tprefs cprefs choices)
-      (dayEvaluate tprefs cprefs choices)
+      (caminoChoice tprefs cprefs')
+      (caminoAccept tprefs cprefs')
+      (caminoEvaluate tprefs cprefs')
+      (dayChoice tprefs cprefs')
+      (dayAccept tprefs cprefs' choices)
+      (dayEvaluate tprefs cprefs' choices)
       select
-      (preferenceStart cprefs)
-      (preferenceFinish cprefs)
+      (preferenceStart cprefs')
+      (preferenceFinish cprefs')
     pilgrimage = either
       (\_f -> Left $ emptyFailure "Unable to build journey" Nothing)
       (\j -> program
         (fromChains (const mempty) (path j))
-        (pilgrimageChoice tprefs cprefs)
-        (pilgrimageAccept tprefs cprefs choices)
-        (pilgrimageEvaluate cc tprefs cprefs choices)
-        (stageChoice tprefs cprefs)
-        (stageAccept tprefs cprefs choices)
-        (stageEvaluate tprefs cprefs choices)
+        (pilgrimageChoice tprefs cprefs')
+        (pilgrimageAccept tprefs cprefs' choices)
+        (pilgrimageEvaluate cc tprefs cprefs' choices)
+        (stageChoice tprefs cprefs')
+        (stageAccept tprefs cprefs' choices)
+        (stageEvaluate tprefs cprefs' choices)
         select
         (start j)
         (finish j)

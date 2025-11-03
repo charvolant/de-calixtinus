@@ -22,6 +22,8 @@ import Yesod.Static
 data Server = Server {
     config :: FilePath
   , staticDir :: FilePath
+  , featureDir :: FilePath
+  , imageDir :: FilePath
   , devel :: Bool
   , root :: String
   , port :: Int
@@ -31,6 +33,8 @@ arguments :: Parser Server
 arguments = Server
     <$> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
     <*> strOption (long "static" <> short 's' <> value "./static" <> metavar "DIR" <> showDefault <> help "The directory holding static files")
+    <*> strOption (long "feature" <> short 'f' <> value "./features" <> metavar "DIR" <> showDefault <> help "The directory holding feature data")
+    <*> strOption (long "image" <> short 'i' <> value "./images" <> metavar "DIR" <> showDefault <> help "The directory holding images")
     <*> flag False True (long "devel" <> short 'd' <> help "True if in development mode")
     <*> strOption (long "root" <> short 'r' <> value "http://localhost:3000" <> metavar "URL" <> showDefault <> help "The root URL for links")
     <*> option auto (long "port" <> short 'p' <> value 3000 <> metavar "PORT" <> showDefault <> help "The port to listen on")
@@ -48,5 +52,19 @@ main = do
   caminos' <- mapM loadCamino (getCaminos config'')
   let cconfig' = createCaminoConfig (getCalendarConfig config'') (getRegionConfig config'') caminos'
   static' <- (if devel opts then staticDevel else static) (staticDir opts)
+  feature' <- (if devel opts then staticDevel else static) (featureDir opts)
+  putStrLn $ "Feature = " ++ (featureDir opts)
+  image' <- (if devel opts then staticDevel else static) (imageDir opts)
+  putStrLn $ "Image = " ++ (imageDir opts)
   cache' <- createCache config'' "plans"
-  runCaminoApp (CaminoApp (port opts) (devel opts) static' cache' config'' cconfig')
+  let app = CaminoApp {
+      caminoAppPort = port opts
+    , caminoAppDevel = devel opts
+    , caminoAppStatic = static'
+    , caminoAppFeature = feature'
+    , caminoAppImage = image'
+    , caminoAppPlans = cache'
+    , caminoAppConfig = config''
+    , caminoAppCaminoConfig = cconfig'
+  }
+  runCaminoApp app

@@ -6,6 +6,7 @@
     "Portuguese Way@en"
   ],
   "description": {
+    "summary": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto.",
     "text": "The Caminho Português (Camino Portuguese) covers the Camino routes starting in Portugal, usually Lisbon or Porto. Short pilgrimages usually start in Tui in Spain, It is the second-most popular route, after the French route. Variants include the side-pilgrimage to Fátima, the coastal route and the Spiritual Variant.",
     "image": {
       "title": "Flowers near Rabçal@en",
@@ -9041,7 +9042,11 @@
       "to": "P-P204",
       "distance": 2.76,
       "ascent": 35,
-      "descent": 40
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.03512, "longitude": -8.64528, "elevation": 14 },
+        { "latitude": 42.03735, "longitude": -8.64822, "elevation": 7 }
+      ]
     },
     {
       "from": "P-P204",
@@ -11466,7 +11471,8 @@
           "id": "P-RFT-F1",
           "name": "Fatima - Tomar",
           "condition": "P-F14",
-          "geometry": "P/P-RFT-F1.geojson"
+          "dummy": true,
+          "geometry": "P/P-RFT-TF1.geojson"
         }
       ]
     },
@@ -11507,7 +11513,8 @@
           "condition": {
             "and": [ "P-F11", "P-F35" ]
           },
-          "geometry": "P/P-RFA-F2.geojson"
+          "dummy": true,
+          "geometry": "P/P-RFA-TF2.geojson"
         },
         {
           "id": "P-RFA-F3",
@@ -11570,13 +11577,15 @@
           "id": "P-RFA-F10",
           "name": "Ourem - Rio de Couros",
           "condition": "P-F43",
-          "geometry": "P/P-RFA-F10.geojson"
+          "dummy": true,
+          "geometry": "P/P-RFA-TF10.geojson"
         },
         {
           "id": "P-RFA-F11",
           "name": "Rio de Couros - Venda do Negro",
           "condition": "P-F47",
-          "geometry": "P/P-RFA-F11.geojson"
+          "dummy": true,
+          "geometry": "P/P-RFA-TF11.geojson"
         },
         {
           "id": "P-RFA-F12",

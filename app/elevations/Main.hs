@@ -20,7 +20,7 @@ import Data.Default.Class
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Text (Text)
-import Data.Util (roundBy)
+import Data.Util (backupFilePath, roundBy)
 import Formatting
 import Graph.Graph
 import Network.Google.Elevation
@@ -30,18 +30,16 @@ import System.Directory
 import System.IO
 
 data Elevations = Elevations {
-    caminoOutput :: Maybe FilePath
-  , reportOutput :: Maybe FilePath
+    reportOutput :: Maybe FilePath
   , mapApiKey :: Text
-  , caminoInput :: FilePath
+  , caminoInput :: Maybe FilePath
 }
 
 arguments :: Parser Elevations
 arguments =  Elevations
-    <$> optional (strOption (long "output" <> short 'o' <> metavar "OUTPUT" <> help "Output file, if not specified then stdout is used"))
-    <*> optional (strOption (long "report" <> short 'r' <> metavar "REPORT" <> help "Create a CSV report of elevation information"))
+    <$> optional (strOption (long "report" <> short 'r' <> metavar "REPORT" <> help "Create a CSV report of elevation information"))
     <*> strOption (long "key" <> short 'k' <> value "API_KEY" <> metavar "API_KEY" <> help "Google elevations API key")
-    <*> strArgument (metavar "INPUT" <> value "--" <> help "Source camino definition, if not used than stdin is used")
+    <*> optional (strArgument (metavar "INPUT" <> help "Source camino definition, if not used than stdin is used"))
 
 lineFormat :: Format r (Text -> Text -> Text -> Text -> Text -> Text -> Double -> Double -> Maybe Double -> r)
 lineFormat = stext % "," % stext % "," % stext % "," % stext % "," % stext % "," % stext % "," % fixed 5 % "," % fixed 5 % "," % (maybed "--" (fixed 0))
@@ -132,10 +130,10 @@ addElevations api camino = do
   let elevations'' = M.fromList $ zip requests elevations'
   return $ mapCamino elevations'' camino
 
-elevations :: Elevations -> IO ()
-elevations opts = do
+elevations :: Elevations -> Maybe FilePath -> IO ()
+elevations opts Nothing = do
     let api = def { apiKey = mapApiKey opts }
-    bytes' <- if caminoInput opts == "--" then LB.hGetContents stdin else LB.readFile (caminoInput opts)
+    bytes' <- LB.hGetContents stdin
     let camino = readCamino bytes'
     camino' <- addElevations api camino
     let report' = reportOutput opts
@@ -144,15 +142,23 @@ elevations opts = do
         return ()
       (Just report'') -> do
         writeReport camino' report''
-    let output' = caminoOutput opts
-    case output' of
+    LB.putStr $ encodePretty caminoPrintOptions $ toJSON camino'
+elevations opts (Just file) = do
+    let api = def { apiKey = mapApiKey opts }
+    backup <- backupFilePath file
+    renameFile file backup
+    bytes' <- LB.readFile backup
+    let camino = readCamino bytes'
+    camino' <- addElevations api camino
+    let report' = reportOutput opts
+    case report' of
       Nothing -> do
-        LB.putStr $ encodePretty caminoPrintOptions $ toJSON camino'
-      (Just output'') -> do
-        createDirectoryIfMissing True (takeDirectory output'')
-        encodeFile output'' camino'
+        return ()
+      (Just report'') -> do
+        writeReport camino' report''
+    LB.writeFile file $ encodePretty caminoPrintOptions $ toJSON camino'
 
 main :: IO ()
 main = do
     opts <- execParser $ info (arguments <**> helper) (fullDesc <> progDesc "Get elevation data for a camino")
-    elevations opts
+    elevations opts (caminoInput opts)

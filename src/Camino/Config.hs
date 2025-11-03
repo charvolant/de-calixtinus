@@ -23,7 +23,6 @@ module Camino.Config (
   , WebConfig(..)
 
   , createCache
-  , defaultConfig
   , getAsset
   , getAssets
   , getCacheConfig
@@ -262,125 +261,125 @@ data Config = Config {
 } deriving (Show)
 
 -- | The default configuration
-defaultConfig :: Config
-defaultConfig = Config {
-  configParent = Nothing,
-  configWeb = Web {
-    webRoot = Just ".",
-    webAssets = [
-      Asset {
-        assetId = "jquery-js",
-        assetType = JavaScriptEarly,
-        assetPath = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "bootstrap-js",
-        assetType = JavaScriptEarly,
-        assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "leaflet-js",
-        assetType = JavaScriptEarly,
-        assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
-        assetIntegrity = Just "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=",
-        assetCrossOrigin = Anonymous
-      },
-      Asset {
-        assetId = "leaflet-js-easybutton",
-        assetType = JavaScriptEarly,
-        assetPath = "https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Anonymous
-      },
-      Asset {
-        assetId = "bootstrap-css",
-        assetType = Css,
-        assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "leaflet-css",
-        assetType = Css,
-        assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "leaflet-css-easybutton",
-        assetType = Css,
-        assetPath = "https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "camino-css",
-        assetType = Css,
-        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/css/camino.css",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "icons",
-        assetType = Directory,
-        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/icons",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "images",
-        assetType = Directory,
-        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/images",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "features",
-        assetType = Directory,
-        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/features",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
-      },
-      Asset {
-        assetId = "Camino Icons",
-        assetType = Font,
-        assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff",
-        assetIntegrity = Nothing,
-        assetCrossOrigin = Unused
+instance Default Config where
+  def = Config {
+    configParent = Nothing,
+    configWeb = Web {
+      webRoot = Just ".",
+      webAssets = [
+        Asset {
+          assetId = "jquery-js",
+          assetType = JavaScriptEarly,
+          assetPath = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "bootstrap-js",
+          assetType = JavaScriptEarly,
+          assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "leaflet-js",
+          assetType = JavaScriptEarly,
+          assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+          assetIntegrity = Just "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=",
+          assetCrossOrigin = Anonymous
+        },
+        Asset {
+          assetId = "leaflet-js-easybutton",
+          assetType = JavaScriptEarly,
+          assetPath = "https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Anonymous
+        },
+        Asset {
+          assetId = "bootstrap-css",
+          assetType = Css,
+          assetPath = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "leaflet-css",
+          assetType = Css,
+          assetPath = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "leaflet-css-easybutton",
+          assetType = Css,
+          assetPath = "https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "camino-css",
+          assetType = Css,
+          assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/css/camino.css",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "icons",
+          assetType = Directory,
+          assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/icons",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "images",
+          assetType = Directory,
+          assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/images",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "features",
+          assetType = Directory,
+          assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/features",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "Camino Icons",
+          assetType = Font,
+          assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        }
+      ],
+      webLinks = [
+      ],
+      webMaps = [
+        Map {
+          mapId = "openStreetMap",
+          mapTiles = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        },
+        Map {
+          mapId = "googleMaps",
+          mapTiles = "http://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
+        }
+      ]
+    },
+    configCaminos = [],
+    configCalendars = Just (createCalendarConfig []),
+    configRegions = Just (createRegionConfig []),
+    configCaches = [
+      CacheConfig {
+          cacheConfigID = "plans"
+        , cacheConfigMemSize = Just 10
+        , cacheConfigFileSize = Just 1000
+        , cacheConfigFileExpiry = Just 30.0
+        , cacheConfigFileStore = Just "$TMP/de-calixtinus/store"
       }
     ],
-    webLinks = [
-    ],
-    webMaps = [
-      Map {
-        mapId = "openStreetMap",
-        mapTiles = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      },
-      Map {
-        mapId = "googleMaps",
-        mapTiles = "http://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
-      }
-    ]
-  },
-  configCaminos = [],
-  configCalendars = Just (createCalendarConfig []),
-  configRegions = Just (createRegionConfig []),
-  configCaches = [
-    CacheConfig {
-        cacheConfigID = "plans"
-      , cacheConfigMemSize = Just 10
-      , cacheConfigFileSize = Just 1000
-      , cacheConfigFileExpiry = Just 30.0
-      , cacheConfigFileStore = Just "$TMP/de-calixtinus/store"
-    }
-  ],
-  configNotice = Nothing,
-  configDebug = Just False
-}
+    configNotice = Nothing,
+    configDebug = Just False
+  }
 
 instance HasCalendarConfig Config where
   getCalendarConfig config = maybe (maybe (error "No calendar configuration") getCalendarConfig (configParent config)) id (configCalendars config)
@@ -398,7 +397,7 @@ instance FromJSON Config where
     notice' <- v .:? "notice"
     debug' <- v .:? "debug"
     return $ Config {
-        configParent = (Just defaultConfig)
+        configParent = (Just def)
       , configWeb = web'
       , configCaminos = caminos'
       , configCalendars = calendar'
@@ -565,7 +564,7 @@ getCacheConfig :: Text -- ^ The cache identifier
 getCacheConfig ident config = getRecursive (Just ident) configCaches cacheConfigID config
 
 -- | Read a configuration from a YAML file
---   The resulting configuration will have @defaultConfig@ as a parent.
+--   The resulting configuration will have @def@ as a parent.
 readConfigFile :: String -> IO Config
 readConfigFile file = do
   cf <- B.readFile file

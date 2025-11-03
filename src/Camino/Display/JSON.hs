@@ -164,6 +164,8 @@ caminoPrintOptions = buildPrintOptions [
   , def & foPath .~ "colour"
   , def & foPath .~ "text-colour" & foRemove ?~ removeNull
   , def & foPath .~ "features" & foRemove ?~ removeNullEmpty
+  , def & foPath .~ "dummy" & foRemove ?~ removeNullFalse
+  , def & foPath .~ "geometry" & foRemove ?~ removeNull
   , def & foPath .~ "categories" & foRemove ?~ removeNull & foInline ?~ inlineAlways
   , def & foPath .~ "calendar" & foRemove ?~ removeNull
   , def & foPath .~ "months" & foRemove ?~ removeNull & foInline ?~ inlineAlways & foNumberFormat ?~ fieldIntFormat

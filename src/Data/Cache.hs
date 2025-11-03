@@ -29,6 +29,7 @@ module Data.Cache (
   , cacheLookup
   , cachePut
   , newCompositeCache
+  , newDummyCache
   , newFileCache
   , newMemCache
   , newMemCacheWithExpiry
@@ -149,6 +150,19 @@ toScanTime t = secondsToNominalDiffTime sc
 -- | Least recently used cache removal policy
 cacheRemovalLRU :: (Ord k) => CacheEntry k v -> CacheEntry k v -> Ordering
 cacheRemovalLRU ce1 ce2 = compare (ceAccessed ce1) (ceAccessed ce2)
+
+-- | Create a cache that doesn't cache anything
+newDummyCache :: (Ord k) => String -> Cache k v
+newDummyCache cid = Cache {
+    caID = cid
+  , caPolicy = CachePolicy Nothing Nothing Nothing
+  , caEntries = \_c -> return 0
+  , caLookup = \_c -> \_k -> return Nothing
+  , caPut = \_c -> \_k -> \_v -> return ()
+  , caDelete = \_c -> \_k -> return ()
+  , caExpire = \_c -> return ()
+  , caLog = nullLog
+  }
 
 -- | An in-memory cache.
 --   The cache policy provides rules for removing entries
@@ -411,6 +425,7 @@ newFileCache' ident mlogger root msize mexpiry = do
     , caLog = maybe nullLog id mlogger
     }
   createDirectoryIfMissing True root
+  putStrLn "Made directory"
   cacheLog cache ("File directory " ++ root)
   fileCacheExpire True fileCache cache
   return cache

@@ -7,7 +7,7 @@ import Data.Localised
 import Data.Maybe (fromJust, isJust)
 
 testConfig1 = Config {
-  configParent = Just defaultConfig,
+  configParent = Just def,
   configWeb = Web {
     webRoot = Just "https:/nowhere1.com",
     webAssets = [
@@ -75,7 +75,7 @@ testGetAssets1 = TestCase (assertEqual "getAssets 1" 0 (length $ getAssets JavaS
 
 testGetAssets2 = TestCase (assertEqual "getAssets 2" 5 (length $ getAssets Css testConfig1))
 
-testGetAssets3 = TestCase (assertEqual "getAssets 3" 4 (length $ getAssets Css defaultConfig))
+testGetAssets3 = TestCase (assertEqual "getAssets 3" 4 (length $ getAssets Css def))
 
   
 testGetAsset = TestList [

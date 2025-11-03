@@ -1734,22 +1734,26 @@ $forall camino <- caminos
     $forall routeFeature <- routeFeatures route
       $forall feature <- allFeatures routeFeature
         #{nl}    case "#{featureID feature}":
-        $case (usedFeature routeFeature, featureType feature)
-          $of (True, FerryLink)
+        $case (featureDummy feature, usedFeature routeFeature, featureType feature)
+          $of (True, True, _)
+            #{nl}      return { color: "#{routeColour route}", weight: 6, opacity: 1.0, dashArray: "6 6", lineCap: "round" };
+          $of (True, False, _)
+            #{nl}      return { color: "#{routeColour route}", weight: 4, opacity: 0.5, dashArray: "6 10 2 10", lineCap: "round" };
+          $of (False, True, FerryLink)
             #{nl}      return { color: "#{routeBlueColour route}", weight: 6, opacity: 1.0 };
-          $of (True, BoatLink)
+          $of (False, True, BoatLink)
             #{nl}      return { color: "#{routeBlueColour route}", weight: 6, opacity: 1.0 };
-          $of (True, TrainLink)
+          $of (False, True, TrainLink)
             #{nl}      return { color: "#{routeGreyColour route}", weight: 6, opacity: 1.0, dashArray: "4 4 2 4", lineCap: "butt" };
-          $of (True, _)
+          $of (False, True, _)
             #{nl}      return { color: "#{routeColour route}", weight: 6, opacity: 1.0 };
-          $of (False, FerryLink)
+          $of (False, False, FerryLink)
             #{nl}      return { color: "#{routeBlueColour route}", weight: 4, opacity: 1.0, dashArray: "6 10", lineCap: "round" };
-          $of (False, BoatLink)
+          $of (False, False, BoatLink)
             #{nl}      return { color: "#{routeBlueColour route}", weight: 4, opacity: 1.0, dashArray: "6 10", lineCap: "round" };
-          $of (False, TrainLink)
+          $of (False, False, TrainLink)
             #{nl}      return { color: "#{routeGreyColour route}", weight: 4, opacity: 1.0, dashArray: "4 6 2 6", lineCap: "butt" };
-          $of (_, _)
+          $of (_, _, _)
             #{nl}      return { color: "#{routeColour route}", weight: 4, opacity: 1.0, dashArray: "6 10", lineCap: "round" };
     #{nl}    case "#{routeID route}":
       $if usedRoute route
@@ -1862,7 +1866,7 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
   where
     camino = preferenceCamino cprefs
     locations = S.fromList $ caminoLocations camino
-    legs = S.fromList $ caminoLegs camino
+    legs = S.fromList $ caminoAllLegs camino (const True)
     routes = S.fromList $ caminoRoutes camino
     usedRoutes = maybe routes (preferenceRoutes . solutionCaminoPreferences) solution
     (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino solution
@@ -1892,9 +1896,9 @@ caminoAllMapScript config tl br caminos = [ihamlet|
   selectZoom();
  |]
   where
-    rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoLegs c)) caminos
+    rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoAllLegs c (const True))) caminos
     locations = S.unions $ map (S.fromList . caminoLocations) caminos
-    legs = S.unions $ map (S.fromList . caminoLegs) caminos
+    legs = S.unions $ map (\c -> S.fromList $ caminoAllLegs c (const True)) caminos
     routes = S.empty
     chooseLocationIcon loc = caminoLocationIconSimple loc
     choosePoiIcon poi = caminoPoiIconSimple poi
@@ -1902,7 +1906,8 @@ caminoAllMapScript config tl br caminos = [ihamlet|
     choosePoiTooltip poi = caminoPoiTooltipSimple poi
     legWithoutTrail _leg = True
     legStyleID leg = maybe "Unknown" routeID (M.lookup leg rmap)
-    features = orderFeatures (const True) (const True) caminos
+    -- features = orderFeatures (const True) (const True) caminos
+    features = []
 
 
 aboutHtml :: Config -> Bool -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

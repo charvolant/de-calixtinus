@@ -11,3 +11,5 @@
 /planXlsx/#Text PlanXlsxR GET
 /preferences PreferencesR GET POST
 /static StaticR Static caminoAppStatic
+/feature FeatureR Static caminoAppFeature
+/image ImageR Static caminoAppImage

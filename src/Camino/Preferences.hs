@@ -437,6 +437,7 @@ withStartFinish preferences st fin = let
   in
     CaminoPreferences camino' start' finish' routes' stops' excluded' rests' pois' startDate'
 
+
 -- | The list of routes selected, in camino order
 selectedRoutes :: CaminoPreferences -- ^ The preference set
   -> [Route] -- ^ The selected routes, including the default route in route order

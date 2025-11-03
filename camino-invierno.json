@@ -39,7 +39,7 @@
     "statements": [
       {
         "term": "dcterms:title",
-        "value": "Camino Ingles@es"
+        "value": "Camino Invierno@es"
       },
       {
         "term": "dcterms:title",
@@ -2781,7 +2781,7 @@
       "finishes": [ "ST-ST1@0" ],
       "suggested-pois": [ "W-W8-3", "W-W34-5", "ST-ST1-1" ],
       "palette": {
-        "colour": "#f4c86c"
+        "colour": "#fff080"
       },
       "features": [
         {
@@ -2827,7 +2827,7 @@
       },
       "locations": [ "W-F1", "W-F2", "W-F3" ],
       "palette": {
-        "colour": "#fe8d37"
+        "colour": "#e0b8a0"
       },
       "features": [
         {

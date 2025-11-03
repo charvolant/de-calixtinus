@@ -1,0 +1,4127 @@
+{
+  "id": "V",
+  "name": [
+    "Vía de la Plata@es",
+    "Silver Way@en"
+  ],
+  "description": {
+    "text": "The Vía de la Plata (Silver Way) is a Camino that runs from Seville and runs through the whole of Western Spain to Santiago de Compostella.@en",
+    "image": {
+      "title": [
+        "Hacia San Martín del Pedroso@es",
+        "Towards San Martín del Pedroso@en"
+      ],
+      "source": "V/V-Via-de-la-Plata.jpg",
+      "thumbnail": "V/V-Via-de-la-Plata-thumbnail.jpg",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "José Antonio Gil Martínez"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2011"
+          },
+          {
+            "term": "dcterms:license",
+            "value": " CC-BY 2.0 Generic  <https://creativecommons.org/licenses/by/2.0/deed.en>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Camino_Portugués_de_la_Vía_de_la_Plata_%286096764791%29.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Vía de la Plata@es"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Silver Way@en"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2025-10-16"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-10-16"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1.0"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "imports": [
+    "I-AT"
+  ],
+  "locations": [
+    {
+      "id": "V-V1",
+      "name": [
+        "Sevilla@es",
+        "Seville@en"
+      ],
+      "type": "City",
+      "description": {
+        "notes": [
+          "Credentials are best picked up at Association of the Friends of the Camino de Santiago of Seville. They can also be obtained at the Cathedral, the Triana Backpackers Hostel, Hotel Simón and the Diocesan Bookshop.@en"
+        ]
+      },
+      "position": { "latitude": 37.38609, "longitude": -5.99408, "elevation": 8 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        "PrivateAlbergue",
+        "GuestHouse",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "V-V1-1",
+          "name": "Catedral de Sevilla@es",
+          "type": "Cathedral",
+          "description": {
+            "about": "https://www.catedraldesevilla.es"
+          },
+          "position": { "latitude": 37.38587, "longitude": -5.99312, "elevation": 10 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1100-1800"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1430-1900"
+            }
+          ],
+          "time": 1.0,
+          "events": [
+            {
+              "name": "Mass@en",
+              "type": "Mass",
+              "hours": [
+                "0830-0930, 1200-1300, 1800-1900"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "V-V1-2",
+          "name": "Association of the Friends of the Camino de Santiago of Seville@en",
+          "type": "PilgrimResource",
+          "description": {
+            "text": "Outside business hours, go to the Hotel Simón, Calle García de Vinuesa ",
+            "about": "https://www.viaplata.org"
+          },
+          "position": { "latitude": 37.38821, "longitude": -6.00651, "elevation": 7 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "wednesday", "thursday" ]
+              },
+              "hours": "1900-2100"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday" ]
+              },
+              "hours": "1000-1200"
+            }
+          ]
+        },
+        {
+          "id": "V-V1-3",
+          "name": "Hotel Simón@es",
+          "type": "PilgrimResource",
+          "description": "Pilgrim resource outside the business hours of the Association of the Friends of the Camino de Santiago of Seville",
+          "position": { "latitude": 37.38644, "longitude": -5.99498, "elevation": 7 }
+        },
+        {
+          "id": "V-V1-4",
+          "name": "Municipal Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 37.38480, "longitude": -5.99885, "elevation": 8 }
+        },
+        {
+          "id": "V-V1-5",
+          "name": "Seville Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 37.38531, "longitude": -5.99179, "elevation": 12 }
+        }
+      ]
+    },
+    {
+      "id": "V-V2",
+      "name": "Río Guadalquivir",
+      "type": "Bridge",
+      "position": { "latitude": 37.39221, "longitude": -6.01647, "elevation": 0 },
+      "region": "ES-AN",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V3",
+      "name": "Camas",
+      "type": "Town",
+      "position": { "latitude": 37.40130, "longitude": -6.03450, "elevation": 12 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "El Cruce Hostel",
+          "type": "GuestHouse",
+          "services": [ "Restaurant" ],
+          "sleeping": [ "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V4",
+      "name": "Santiponce",
+      "type": "Town",
+      "position": { "latitude": 37.43742, "longitude": -6.03961, "elevation": 19 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Itálica Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hotel Anfiteatro Romano",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V4-1",
+          "name": "Archeological Site of Itálica@en",
+          "type": "Historical",
+          "description": {
+            "about": "https://www.italicasevilla.org"
+          },
+          "position": { "latitude": 37.44321, "longitude": -6.04588, "elevation": 18 },
+          "time": 1.0
+        },
+        {
+          "id": "V-V4-2",
+          "name": [
+            "Teatro Romano de Itálica@es",
+            "Ancient Roman theatre of Itálica@en"
+          ],
+          "type": "Historical",
+          "description": {
+            "about": "https://www.italicasevilla.org/teatro.html"
+          },
+          "position": { "latitude": 37.44012, "longitude": -6.03873, "elevation": 6 },
+          "time": 1.0
+        },
+        {
+          "id": "V-V4-3",
+          "name": "Santiponce Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 37.43809, "longitude": -6.04031, "elevation": 20 }
+        }
+      ]
+    },
+    {
+      "id": "V-V5",
+      "name": "Guillena",
+      "type": "Town",
+      "position": { "latitude": 37.53971, "longitude": -6.05235, "elevation": 21 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Luz del Camnino Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostel Bar Francis",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V6",
+      "name": "Vía pecuria y dehesa del la Sierra Norte",
+      "type": "Farmland",
+      "position": { "latitude": 37.59197, "longitude": -6.01934, "elevation": 136 },
+      "region": "ES-AN",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V7",
+      "name": "Castilblanco de los Arroyos",
+      "type": "Town",
+      "position": { "latitude": 37.67472, "longitude": -5.98886, "elevation": 326 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Castilblanco de los Arroyos Pilgrim's Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Posada de Escardiel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Pets", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Las Lilieras Country Lodge",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "Hotel Castillo Blanco",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V8",
+      "name": "Parque El Berrocal",
+      "type": "Natural",
+      "position": { "latitude": 37.78405, "longitude": -6.08635, "elevation": 510 },
+      "region": "ES-AN",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V9",
+      "name": "Cerro del Calvario",
+      "type": "Lookout",
+      "position": { "latitude": 37.86467, "longitude": -6.07906, "elevation": 551 },
+      "region": "ES-AN",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V10",
+      "name": "Almadén de la Plata",
+      "type": "Town",
+      "position": { "latitude": 37.87324, "longitude": -6.07928, "elevation": 452 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "Almadén de la Plata Pilgrim's Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Handwash", "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Albergue de Don Juan",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "La Casa del Reloj Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Clara Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Kitchen", "Breakfast", "Dinner" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Concha Hostal",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "El Romeral Rural Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Accessible" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V11",
+      "name": "Finca La Postura",
+      "type": "Farmland",
+      "position": { "latitude": 37.88716, "longitude": -6.08184, "elevation": 462 },
+      "region": "ES-AN",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V12",
+      "name": "Finca Arroyo Mateos",
+      "type": "Farmland",
+      "position": { "latitude": 37.89941, "longitude": -6.11313, "elevation": 459 },
+      "region": "ES-AN",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V13",
+      "name": "El Real de la Jara",
+      "type": "Town",
+      "position": { "latitude": 37.94943, "longitude": -6.15169, "elevation": 474 },
+      "region": "ES-AN",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "Albergue Municipal La Casa del Cura",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Alojamiento del Peregrino",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Alojamiento Molina",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Ecina Lodging House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Kitchen", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Mari Carmen Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V14",
+      "name": "Dehesa El Romeral",
+      "type": "Farmland",
+      "position": { "latitude": 37.99862, "longitude": -6.18524, "elevation": 525 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V15",
+      "name": "Ermita de San Isidro",
+      "type": "Church",
+      "position": { "latitude": 38.02774, "longitude": -6.21758, "elevation": 521 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Complejo Leo Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V16",
+      "name": "Cruz del Puerto",
+      "type": "Cross",
+      "position": { "latitude": 38.07845, "longitude": -6.25916, "elevation": 751 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V17",
+      "name": "Monesterio",
+      "type": "Town",
+      "position": { "latitude": 38.08699, "longitude": -6.27192, "elevation": 756 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Monesterio Pilgrim's Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Handwash", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Las Moreras Municipal Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        },
+        {
+          "name": "Hostal Extremadura",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Bedlinen" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "DP El Pilar Hostal",
+          "type": "GuestHouse",
+          "services": [ "WashingMachine", "Dryer", "Pets", "BicycleStorage" ],
+          "sleeping": [ "Shared", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Leo",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Moya",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V17-1",
+          "name": "General Interpretation Centre of the Vía de la Plata",
+          "type": "PilgrimResource",
+          "position": { "latitude": 38.08793, "longitude": -6.26999, "elevation": 754 }
+        },
+        {
+          "id": "V-V17-2",
+          "name": [
+            "Museo del Jamón Ibérico@es",
+            "Ham Museum and Tourist Office@en"
+          ],
+          "type": "Museum",
+          "description": {
+            "about": "http://www.museodeljamondemonesterio.com"
+          },
+          "position": { "latitude": 38.08285, "longitude": -6.26715, "elevation": 735 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1400, 1700-1900"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1400"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "V-V18",
+      "name": "Carretera de Calera de León@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.12299, "longitude": -6.29936, "elevation": 696 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V18-1",
+          "name": "Dolmen de la Cabra@es",
+          "type": "Historical",
+          "position": { "latitude": 38.12511, "longitude": -6.30031, "elevation": 700 }
+        }
+      ]
+    },
+    {
+      "id": "V-V19",
+      "name": "Arroyo del Bodión Chico@es",
+      "type": "Bridge",
+      "description": {
+        "text": "A ford, rather than a bridge",
+        "notes": [
+          {
+            "type": "Directions",
+            "text": "If the river is high, there is an alternative route available. (Check with the Buen Camino app.)"
+          }
+        ]
+      },
+      "position": { "latitude": 38.18243, "longitude": -6.30294, "elevation": 546 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V20",
+      "name": "Los Castillejos@es",
+      "type": "Farmland",
+      "position": { "latitude": 38.21886, "longitude": -6.30288, "elevation": 572 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V21",
+      "name": "Fuente de Cantos",
+      "type": "Town",
+      "position": { "latitude": 38.24704, "longitude": -6.30874, "elevation": 585 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "El Zaguán del la Plata Apartments",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Casa Vicenta Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double" ]
+        },
+        {
+          "name": "Hotel Rural La Fábrica",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V21-1",
+          "name": "Interpretation Centre of the Painter Zurbarán",
+          "type": "Museum",
+          "description": {
+            "about": "https://www.fuentedecantos.eu/2015/01/07/casa-de-francisco-de-zurbaran"
+          },
+          "position": { "latitude": 38.24836, "longitude": -6.31082, "elevation": 573 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "1030-1400, 1700-2100"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday", "sunday" ]
+              },
+              "hours": "1100-1400"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "V-V22",
+      "name": "Calzadilla de los Barros",
+      "type": "Town",
+      "position": { "latitude": 38.30054, "longitude": -6.31746, "elevation": 561 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Calzadilla de los Barros Hostel",
+          "type": "House",
+          "services": [ "WiFi", "WashingMachine", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Los Rodríguez Boarding House",
+          "type": "GuestHouse",
+          "services": [ "Restaurant" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V22-1",
+          "name": "Parish Church of San Salvador",
+          "type": "Church",
+          "description": "Noted for its 16-17th century altarpiece with 28 panels depicting the life of Jesus and the Virgin Mary",
+          "position": { "latitude": 38.30045, "longitude": -6.31575, "elevation": 558 },
+          "time": 0.5
+        }
+      ]
+    },
+    {
+      "id": "V-V23",
+      "name": "Carretera de Medina de las Torres@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.35348, "longitude": -6.35744, "elevation": 507 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V23-1",
+          "name": "Cañada Real Leonesa Occidental@es",
+          "type": "Historical",
+          "description": "Rest area localed on the Western Royal León Cattle Track, established in the 13th century.",
+          "position": { "latitude": 38.35690, "longitude": -6.36029, "elevation": 511 }
+        }
+      ]
+    },
+    {
+      "id": "V-V24",
+      "name": "Puebla de Sanchio Perez",
+      "type": "Town",
+      "position": { "latitude": 38.39674, "longitude": -6.40206, "elevation": 522 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "El Monte Lodging House",
+          "type": "GuestHouse",
+          "services": [ "Restaurant" ],
+          "sleeping": [ "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V25",
+      "name": "Zafra",
+      "type": "Town",
+      "position": { "latitude": 38.42325, "longitude": -6.41748, "elevation": 510 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Convento San Francisco Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Handwash", "Breakfast", "Dinner", "Lockers", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        },
+        {
+          "name": "Safra Pilgrim's Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Carmen Lodging House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Groceries", "Heating", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Hotel Los Cazadores",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "V-V25-1",
+          "name": "Alczar of the Dukes of Feria",
+          "type": "Historical",
+          "position": { "latitude": 38.42434, "longitude": -6.41701, "elevation": 514 }
+        },
+        {
+          "id": "V-V25-2",
+          "name": "Plaza Grande and Plaza Chica",
+          "type": "Municipal",
+          "position": { "latitude": 38.42531, "longitude": -6.41934, "elevation": 508 }
+        },
+        {
+          "id": "V-V25-3",
+          "name": "Jerez Arch",
+          "type": "Historical",
+          "position": { "latitude": 38.42518, "longitude": -6.42125, "elevation": 504 }
+        },
+        {
+          "id": "V-V25-4",
+          "name": "Arch of the Cube",
+          "type": "Historical",
+          "position": { "latitude": 38.42788, "longitude": -6.42147, "elevation": 507 }
+        }
+      ]
+    },
+    {
+      "id": "V-V26",
+      "name": "Los Santos de Maimona",
+      "type": "Town",
+      "position": { "latitude": 38.44870, "longitude": -6.38417, "elevation": 534 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train" ],
+      "accommodation": [
+        {
+          "name": "Santos de Maimona Pilgrim's Hostel",
+          "type": "PrivateAlbergue",
+          "description": "Keys available at the police station or tourist office. Pre-booking available.",
+          "services": [ "Heating", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Sanse - Il Michey Hostel",
+          "type": "GuestHouse",
+          "services": [ "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "Rosa Hostel",
+          "type": "GuestHouse",
+          "services": [ "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V26-1",
+          "name": "Tourist Office",
+          "type": "InformationPoint",
+          "position": { "latitude": 38.44847, "longitude": -6.38391, "elevation": 535 }
+        },
+        {
+          "id": "V-V26-2",
+          "name": "Sierra de los Olivos",
+          "type": "Natural",
+          "position": { "latitude": 38.44199, "longitude": -6.39156, "elevation": 613 }
+        },
+        {
+          "id": "V-V26-3",
+          "name": "Encomienda Palace",
+          "type": "Historical",
+          "position": { "latitude": 38.44965, "longitude": -6.38576, "elevation": 535 }
+        }
+      ]
+    },
+    {
+      "id": "V-V27",
+      "name": "Albergue La Almazara@es",
+      "type": "Farmland",
+      "position": { "latitude": 38.51539, "longitude": -6.36235, "elevation": 482 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V28",
+      "name": "Villafranca de los Barros",
+      "type": "Town",
+      "position": { "latitude": 38.56091, "longitude": -6.34016, "elevation": 412 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train" ],
+      "accommodation": [
+        {
+          "name": "El Carmen Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Perin Country Lodge",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Groceries", "Kitchen", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Alojamientos Extrenatura",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Diana Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V28-1",
+          "name": "Tourist Office",
+          "type": "InformationPoint",
+          "position": { "latitude": 38.56058, "longitude": -6.34026, "elevation": 411 }
+        },
+        {
+          "id": "V-V28-2",
+          "name": "MUVI Museum",
+          "type": "Museum",
+          "description": {
+            "about": "https://www.museovillafranca.es"
+          },
+          "position": { "latitude": 38.56095, "longitude": -6.33945, "elevation": 414 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1100-1400, 1800-2000"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1100-1400"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "V-V29",
+      "name": "Camino El Chaparral@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.60169, "longitude": -6.33944, "elevation": 389 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V30",
+      "name": "Arroyo de Bonhabel@es",
+      "type": "Farmland",
+      "position": { "latitude": 38.64106, "longitude": -6.35709, "elevation": 357 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V31",
+      "name": "Carretera hacia Almendralejo@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.67763, "longitude": -6.36287, "elevation": 375 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V32",
+      "name": "Camino de la Zarza@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.71708, "longitude": -6.36431, "elevation": 347 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V33",
+      "name": "Torremejia",
+      "type": "Town",
+      "position": { "latitude": 38.79070, "longitude": -6.37505, "elevation": 307 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Rojo Plata Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Handwash", "Breakfast", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Milenium Hostel Restaurant",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V33-1",
+          "name": "Mexía Palace House",
+          "type": "Historical",
+          "position": { "latitude": 38.79011, "longitude": -6.38120, "elevation": 296 }
+        }
+      ]
+    },
+    {
+      "id": "V-V34",
+      "name": "Carretera EX-105@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.81467, "longitude": -6.37104, "elevation": 300 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V35",
+      "name": "Carretera de accesso@es",
+      "type": "Intersection",
+      "position": { "latitude": 38.85322, "longitude": -6.36006, "elevation": 281 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V36",
+      "name": "Mérida",
+      "type": "City",
+      "position": { "latitude": 38.92527, "longitude": -6.34865, "elevation": 211 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Molina de Pancaliente Pilgrim's Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostal Emeritae",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ]
+        },
+        {
+          "name": "La Flor de Al-Ándalus Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "V-V36-1",
+          "name": "Mérida Tourist Office",
+          "type": "InformationPoint",
+          "position": { "latitude": 38.91767, "longitude": -6.34322, "elevation": 231 }
+        },
+        {
+          "id": "V-V36-2",
+          "name": "Puente Romano de Mérida",
+          "type": "Bridge",
+          "position": { "latitude": 38.91395, "longitude": -6.35012, "elevation": 206 }
+        },
+        {
+          "id": "V-V36-3",
+          "name": "Alcazaba de Mérida",
+          "type": "Historical",
+          "description": {
+            "about": "https://turismomerida.org/que-ver/alcazaba-arabe"
+          },
+          "position": { "latitude": 38.91529, "longitude": -6.34787, "elevation": 210 },
+          "hours": [
+            "0900-2030"
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "V-V36-4",
+          "name": "National Museum of Roman Art",
+          "type": "Museum",
+          "description": {
+            "about": "https://www.cultura.gob.es/mnromano/home.html"
+          },
+          "position": { "latitude": 38.91708, "longitude": -6.33953, "elevation": 231 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "0930-2000"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1500"
+            }
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "V-V36-5",
+          "name": "Teatro Romano de Mérida, Anfiteatro Romano de Mérida",
+          "type": "Historical",
+          "description": {
+            "about": "https://www.consorciomerida.org/conjunto/monumentos/teatro"
+          },
+          "position": { "latitude": 38.91708, "longitude": -6.33953, "elevation": 231 },
+          "hours": [
+            "0900-1800"
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "V-V36-6",
+          "name": "Casa del Mitreo",
+          "type": "Historical",
+          "position": { "latitude": 38.91122, "longitude": -6.34151, "elevation": 225 },
+          "time": 0.5
+        },
+        {
+          "id": "V-V36-7",
+          "name": "Templío de Diana",
+          "type": "Historical",
+          "description": {
+            "about": "https://turismomerida.org/que-ver/templo-diana"
+          },
+          "position": { "latitude": 38.91674, "longitude": -6.34416, "elevation": 228 },
+          "hours": [
+            "1000-2030"
+          ],
+          "time": 0.5
+        },
+        {
+          "id": "V-V36-8",
+          "name": "Acueducto de los Milagros",
+          "type": "Historical",
+          "description": {
+            "about": "https://turismomerida.org/que-ver/acueducto-de-los-milagros"
+          },
+          "position": { "latitude": 38.92405, "longitude": -6.34797, "elevation": 208 },
+          "time": 0.5
+        }
+      ]
+    },
+    {
+      "id": "V-V37",
+      "name": "Embalse de Proserpina",
+      "type": "Village",
+      "position": { "latitude": 38.97410, "longitude": -6.36450, "elevation": 247 },
+      "region": "ES-EX",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V38",
+      "name": "El Carrascalejo",
+      "type": "Village",
+      "position": { "latitude": 39.02259, "longitude": -6.33709, "elevation": 298 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "El Carrascalejo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V39",
+      "name": "Aljucén",
+      "type": "Village",
+      "position": { "latitude": 39.04454, "longitude": -6.33086, "elevation": 265 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Albergue San Andrés",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Dinner", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V40",
+      "name": "Parque Natural de Cornalvo",
+      "type": "Intersection",
+      "position": { "latitude": 39.05556, "longitude": -6.32148, "elevation": 254 },
+      "region": "ES-EX",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V40-1",
+          "name": "Puente romano del Aljucén@es",
+          "type": "Bridge",
+          "position": { "latitude": 39.05900, "longitude": -6.30259, "elevation": 258 }
+        }
+      ]
+    },
+    {
+      "id": "V-V41",
+      "name": "Cruz de San Juan",
+      "type": "Cross",
+      "position": { "latitude": 39.14178, "longitude": -6.25318, "elevation": 440 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V42",
+      "name": "Alcuéscar",
+      "type": "Town",
+      "position": { "latitude": 39.18162, "longitude": -6.23702, "elevation": 450 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa de Acogida de los Esclavos de Maria y de los Pobres",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Dinner", "BicycleStorage" ],
+          "sleeping": [ "Single", "Double" ]
+        },
+        {
+          "name": "Albergue de Alcuéscar",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V43",
+      "name": "Casas de Don Antonio",
+      "type": "Village",
+      "position": { "latitude": 39.23449, "longitude": -6.29096, "elevation": 391 },
+      "region": "ES-EX",
+      "services": [ "Groceries", "Pharmacy" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V43-1",
+          "name": "Puente antiguo de Casas de Don Antonio@es",
+          "type": "Bridge",
+          "position": { "latitude": 39.23405, "longitude": -6.28979, "elevation": 391 }
+        },
+        {
+          "id": "V-V43-2",
+          "name": "Puente de Santiago de Bencáliz@es",
+          "type": "Bridge",
+          "position": { "latitude": 39.26459, "longitude": -6.31325, "elevation": 375 }
+        }
+      ]
+    },
+    {
+      "id": "V-V44",
+      "name": "Aldea del Cano",
+      "type": "Town",
+      "description": {
+        "notes": [
+          {
+            "type": "Directions",
+            "text": "To access the town, turn off at Cjón Barrero and go past the Pista Deportiva Municipal@en"
+          }
+        ]
+      },
+      "position": { "latitude": 39.28796, "longitude": -6.31892, "elevation": 394 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Miliario del Verdinal Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V45",
+      "name": "Valdesalor",
+      "type": "Village",
+      "position": { "latitude": 39.37798, "longitude": -6.34653, "elevation": 389 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos de Valdesalor",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Dryer", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V46",
+      "name": "Puerto de las Camelias",
+      "type": "Intersection",
+      "position": { "latitude": 39.41708, "longitude": -6.35575, "elevation": 475 },
+      "region": "ES-EX",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V47",
+      "name": "Cáceres",
+      "type": "City",
+      "position": { "latitude": 39.47194, "longitude": -6.37156, "elevation": 453 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Vargas-Figuerosa Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Las Veletas Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Pensión Carretero",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "La Bohème Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Castilla Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Kubik Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V47-1",
+          "name": "Plaza Mayor de Cáceres@es",
+          "type": "Municipal",
+          "position": { "latitude": 39.47528, "longitude": -6.37134, "elevation": 440 }
+        },
+        {
+          "id": "V-V47-2",
+          "name": "Torre de Bujaco@es",
+          "type": "Historical",
+          "position": { "latitude": 39.47528, "longitude": -6.37101, "elevation": 440 }
+        },
+        {
+          "id": "V-V47-3",
+          "name": "Palacio Toledo-Moctezuma@es",
+          "type": "Historical",
+          "position": { "latitude": 39.47539, "longitude": -6.37043, "elevation": 441 }
+        },
+        {
+          "id": "V-V47-4",
+          "name": "Palace los Golfines de Abajo@es",
+          "type": "Museum",
+          "description": {
+            "about": "https://palaciogolfinesdeabajo.com"
+          },
+          "position": { "latitude": 39.47420, "longitude": -6.37012, "elevation": 452 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1400, 1630-1930"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1400"
+            }
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "V-V47-5",
+          "name": "Igliesia de Santiago el Mayor@es",
+          "type": "Church",
+          "description": {
+            "about": "https://turismo.caceres.es/es/recurso-poi/iglesia-de-santiago"
+          },
+          "position": { "latitude": 39.47627, "longitude": -6.36905, "elevation": 428 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1200, 1830-2030"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "0930-1300"
+            }
+          ],
+          "time": 0.5
+        },
+        {
+          "id": "V-V47-6",
+          "name": "Iglesia de San Francisco Javier@es",
+          "type": "Church",
+          "description": {
+            "about": "https://www.turismoextremadura.com/es/explora/Iglesia-de-San-Francisco-Javier/"
+          },
+          "position": { "latitude": 39.47358, "longitude": -6.37043, "elevation": 459 },
+          "time": 0.5
+        }
+      ]
+    },
+    {
+      "id": "V-V48",
+      "name": "La Sierrilla",
+      "type": "Peak",
+      "position": { "latitude": 39.49048, "longitude": -6.40005, "elevation": 477 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V48-1",
+          "name": "Llanos de Cáceres and Sierra de Fuentes Protected Area@en",
+          "type": "Natural",
+          "position": { "latitude": 39.48905, "longitude": -6.39958, "elevation": 483 }
+        }
+      ]
+    },
+    {
+      "id": "V-V49",
+      "name": "Casar de Cáceres",
+      "type": "Town",
+      "position": { "latitude": 39.56156, "longitude": -6.41705, "elevation": 367 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair" ],
+      "accommodation": [
+        {
+          "name": "Albergue Rural Vía de la Plata",
+          "type": "PrivateAlbergue",
+          "services": [ "Restaurant", "Heating", "Kitchen", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Albergue de Casar de Cáceres",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V50",
+      "name": "Finca Berrueto",
+      "type": "Farmland",
+      "position": { "latitude": 39.64775, "longitude": -6.45503, "elevation": 370 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V51",
+      "name": "Embalse de Alcántara",
+      "type": "Park",
+      "position": { "latitude": 39.72757, "longitude": -6.44888, "elevation": 262 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Albergue de Embalse de Alcántara",
+          "type": "PrivateAlbergue",
+          "services": [ "Restaurant", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Accessible", "Pets", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V52",
+      "name": "Area de descanso (Cañaveral)",
+      "type": "Park",
+      "position": { "latitude": 39.77403, "longitude": -6.39683, "elevation": 316 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V53",
+      "name": "Cañaveral",
+      "type": "Town",
+      "position": { "latitude": 39.79257, "longitude": -6.39076, "elevation": 368 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hostel Cañaveral",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Posada La Campana",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V54",
+      "name": "Cerro de las Centeras",
+      "type": "Peak",
+      "position": { "latitude": 39.81629, "longitude": -6.37161, "elevation": 503 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V54-1",
+          "name": "Alcornocal",
+          "type": "Natural",
+          "position": { "latitude": 39.82350, "longitude": -6.36544, "elevation": 476 }
+        }
+      ]
+    },
+    {
+      "id": "V-V55",
+      "name": "Grimaldo",
+      "type": "Village",
+      "position": { "latitude": 39.83940, "longitude": -6.34943, "elevation": 471 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Grimaldo",
+          "type": "PilgrimAlbergue",
+          "services": [ "Restaurant", "Heating", "WashingMachine", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Posada de Crimaldo",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V56",
+      "name": "Bifurcación a Riolobos",
+      "type": "Junction",
+      "position": { "latitude": 39.88678, "longitude": -6.29048, "elevation": 426 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V57",
+      "name": "Finca Larios",
+      "type": "Farmland",
+      "position": { "latitude": 39.92267, "longitude": -6.26688, "elevation": 308 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V58",
+      "name": "Riolobos",
+      "type": "Town",
+      "position": { "latitude": 39.91909, "longitude": -6.30431, "elevation": 272 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Camping Las Catalinas",
+          "type": "CampGround",
+          "services": [ "WiFi", "Restaurant", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "CampSite", "Pool" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V59",
+      "name": "Galisteo",
+      "type": "Town",
+      "position": { "latitude": 39.97652, "longitude": -6.26970, "elevation": 281 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Turístico Galisteo",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Handwash", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Pensión del Parador",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V59-1",
+          "name": "Murallas de Galisteo",
+          "type": "Historical",
+          "position": { "latitude": 39.97518, "longitude": -6.26888, "elevation": 294 }
+        },
+        {
+          "id": "V-V59-2",
+          "name": "La Picota",
+          "type": "Historical",
+          "position": { "latitude": 39.97810, "longitude": -6.26742, "elevation": 297 }
+        },
+        {
+          "id": "V-V59-3",
+          "name": "Puente Medieval",
+          "type": "Bridge",
+          "position": { "latitude": 39.98178, "longitude": -6.27148, "elevation": 249 }
+        }
+      ]
+    },
+    {
+      "id": "V-V60",
+      "name": "Aldehuela del Jerte",
+      "type": "Village",
+      "position": { "latitude": 40.01112, "longitude": -6.23906, "elevation": 267 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V61",
+      "name": "Carcaboso",
+      "type": "Town",
+      "position": { "latitude": 40.04943, "longitude": -6.21320, "elevation": 274 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Los Miliarios",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Albergue Señora Elena",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Casina de Carcaboso Apartment",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hostal Ciudad de Cáparra",
+          "type": "House",
+          "services": [ "WiFi", "Restaurant", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V61-1",
+          "name": [
+            "Parque de los Miliarios@es",
+            "Park of the Milestones@en"
+          ],
+          "type": "Historical",
+          "position": { "latitude": 40.04851, "longitude": -6.21168, "elevation": 268 }
+        }
+      ]
+    },
+    {
+      "id": "V-V62",
+      "name": "Ventlaquemada",
+      "type": "Farmland",
+      "position": { "latitude": 40.13209, "longitude": -6.15627, "elevation": 419 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "San Blas Tourist Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V63",
+      "name": "Cáparra",
+      "type": "Historical",
+      "position": { "latitude": 40.16706, "longitude": -6.10013, "elevation": 398 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V63-1",
+          "name": "Arco de Cáparra@es",
+          "type": "Historical",
+          "position": { "latitude": 40.16679, "longitude": -6.10091, "elevation": 400 }
+        },
+        {
+          "id": "V-V63-2",
+          "name": "Ciudad Romana de Cáparra@es",
+          "type": "Museum",
+          "description": {
+            "about": "https://www.turismoextremadura.com/es/explora/Centro-de-Interpretacion-de-la-Ciudad-Romana-de-Caparra/"
+          },
+          "position": { "latitude": 40.16434, "longitude": -6.09898, "elevation": 401 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "0930-1630"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1400"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V-V64",
+      "name": "Carretera de servicio",
+      "type": "Intersection",
+      "position": { "latitude": 40.18756, "longitude": -6.04580, "elevation": 385 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V65",
+      "name": "Jarilla",
+      "type": "Intersection",
+      "position": { "latitude": 40.18747, "longitude": -6.00666, "elevation": 400 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Asturias",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Handwash", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Jarilla",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V66",
+      "name": "Carretera de Casas del Monte",
+      "type": "Intersection",
+      "position": { "latitude": 40.20839, "longitude": -6.00643, "elevation": 386 },
+      "region": "ES-EX",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V67",
+      "name": "Aldeanueva del Camino",
+      "type": "Town",
+      "position": { "latitude": 40.25912, "longitude": -5.92922, "elevation": 528 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Aldeanueva del Camino",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Lockers", "BicycleStorage", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Casa de mi Abuela Albergue Turístico",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Hostal Montesol",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Rural Tresmentiras",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V68",
+      "name": "Baños de Montemayor",
+      "type": "Town",
+      "position": { "latitude": 40.31777, "longitude": -5.85787, "elevation": 711 },
+      "region": "ES-EX",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Vía de la Plata",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Guest House El Sendero",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "La Glorieta Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Alegria Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V68-1",
+          "name": "Balneario Termas Romanas@es",
+          "type": "Museum",
+          "description": {
+            "about": "http://www.balneariomontemayor.com/"
+          },
+          "position": { "latitude": 40.31974, "longitude": -5.85743, "elevation": 713 },
+          "hours": [
+            "0900-1400, 1730-2100"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V-V69",
+      "name": "Puerto de Béjar",
+      "type": "Village",
+      "position": { "latitude": 40.34298, "longitude": -5.84740, "elevation": 892 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos de Puerto de Béjar",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V70",
+      "name": "Puente de la Malena",
+      "type": "Bridge",
+      "position": { "latitude": 40.37046, "longitude": -5.84830, "elevation": 666 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V71",
+      "name": "Navarredonda",
+      "type": "Farmland",
+      "position": { "latitude": 40.39622, "longitude": -5.82638, "elevation": 707 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V72",
+      "name": "La Calzada de Béjar",
+      "type": "Village",
+      "position": { "latitude": 40.41153, "longitude": -5.81558, "elevation": 794 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Alba Soraya Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        },
+        {
+          "name": "Jorge Country Lodge",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Breakfast", "Lockers", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Alba Soraya Country Lodge",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Calzada Romana Country Lodge",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V72-1",
+          "name": "Fortín medieval@es",
+          "type": "Historical",
+          "description": {
+            "about": "https://listarojapatrimonio.org/ficha/fortin-romano/"
+          },
+          "position": { "latitude": 40.40829, "longitude": -5.81269, "elevation": 846 }
+        }
+      ]
+    },
+    {
+      "id": "V-V73",
+      "name": "Valverde de Valdelacasa",
+      "type": "Village",
+      "position": { "latitude": 40.48064, "longitude": -5.78170, "elevation": 800 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Santiago Apóstol Pilgrim's Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V74",
+      "name": "Valdelacasa",
+      "type": "Village",
+      "position": { "latitude": 40.50592, "longitude": -5.76482, "elevation": 950 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V75",
+      "name": "Fuenterroble de Salvatierra",
+      "type": "Village",
+      "position": { "latitude": 40.56511, "longitude": -5.73231, "elevation": 951 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Albergue parroquial Santa María",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "BicycleStorage", "Prayer" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Rural Arrieros familia Carcia",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V76",
+      "name": "Alternativa para bicis",
+      "type": "Junction",
+      "position": { "latitude": 40.66504, "longitude": -5.73645, "elevation": 978 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V77",
+      "name": "Pico de la Dueña",
+      "type": "Lookout",
+      "position": { "latitude": 40.68414, "longitude": -5.76431, "elevation": 1141 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V77-1",
+          "name": "Cruz de Santiago Pico de las Dueñas",
+          "type": "Cross",
+          "position": { "latitude": 40.68347, "longitude": -5.76447, "elevation": 1152 }
+        }
+      ]
+    },
+    {
+      "id": "V-V78",
+      "name": "Calzadilla de Mendigos",
+      "type": "Farmland",
+      "position": { "latitude": 40.73549, "longitude": -5.75945, "elevation": 947 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V79",
+      "name": "San Pedro de Rozados",
+      "type": "Village",
+      "position": { "latitude": 40.78996, "longitude": -5.73638, "elevation": 976 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Albergue Mari Carmen",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hotel Rural VII Carreras",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V80",
+      "name": "Pedrosillo de los Aires",
+      "type": "Village",
+      "position": { "latitude": 40.71481, "longitude": -5.70463, "elevation": 956 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Pedrosillo de los Aires",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Restaurant", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V81",
+      "name": "Monterrubio del la Sierra",
+      "type": "Village",
+      "position": { "latitude": 40.75644, "longitude": -5.69327, "elevation": 962 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Pedrosillo de los Aires",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Restaurant", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V82",
+      "name": "Morille",
+      "type": "Village",
+      "position": { "latitude": 40.80636, "longitude": -5.69868, "elevation": 932 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Albergue municipal de Morille",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V83",
+      "name": "Aldeanueva",
+      "type": "Farmland",
+      "position": { "latitude": 40.85866, "longitude": -5.68484, "elevation": 886 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V84",
+      "name": "Miranda de Azán",
+      "type": "Village",
+      "description": {
+        "notes": [
+          {
+            "type": "Directions",
+            "text": "The village is 300m East of the trail, along the C. Aldeagallega"
+          }
+        ]
+      },
+      "position": { "latitude": 40.88665, "longitude": -5.68358, "elevation": 821 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V85",
+      "name": "Cruz Camino de Santiago en Cerro de San Miguel",
+      "type": "Cross",
+      "position": { "latitude": 40.91790, "longitude": -5.68071, "elevation": 838 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V86",
+      "name": "Salamanca",
+      "type": "City",
+      "position": { "latitude": 40.96265, "longitude": -5.66595, "elevation": 801 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Casa la Calera",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        "GuestHouse",
+        "House",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "V-V86-1",
+          "name": "Puente Romano de Salamanca@es",
+          "type": "Bridge",
+          "position": { "latitude": 40.95791, "longitude": -5.67013, "elevation": 769 }
+        },
+        {
+          "id": "V-V86-2",
+          "name": "Catedral Vieja de Santa María de la Sede de Salamanca@es",
+          "type": "Cathedral",
+          "position": { "latitude": 40.96044, "longitude": -5.66669, "elevation": 801 }
+        },
+        {
+          "id": "V-V86-3",
+          "name": "Catedral Nueva de la Asunción de la Virgen@es",
+          "type": "Cathedral",
+          "position": { "latitude": 40.96067, "longitude": -5.66591, "elevation": 800 }
+        },
+        {
+          "id": "V-V86-4",
+          "name": "House of Shells@en",
+          "type": "Historical",
+          "position": { "latitude": 40.96276, "longitude": -5.66572, "elevation": 800 }
+        },
+        {
+          "id": "V-V86-5",
+          "name": "Universidad de Salamanca@es",
+          "type": "Museum",
+          "position": { "latitude": 40.96158, "longitude": -5.66755, "elevation": 804 }
+        },
+        {
+          "id": "V-V86-6",
+          "name": "Plaza Mayor@es",
+          "type": "Museum",
+          "position": { "latitude": 40.96502, "longitude": -5.66406, "elevation": 797 }
+        }
+      ]
+    },
+    {
+      "id": "V-V87",
+      "name": "Aldeaseca de Armuña",
+      "type": "Village",
+      "position": { "latitude": 41.02024, "longitude": -5.67108, "elevation": 815 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V88",
+      "name": "Castellanos de Viliquera",
+      "type": "Village",
+      "position": { "latitude": 41.05156, "longitude": -5.69613, "elevation": 821 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V89",
+      "name": "Calzada de Valdunciel",
+      "type": "Village",
+      "position": { "latitude": 41.08648, "longitude": -5.70327, "elevation": 800 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue del Peregrino de Calzada de Valdunciel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V89-1",
+          "name": "Fuente Romana@es",
+          "type": "Fountain",
+          "position": { "latitude": 41.08716, "longitude": -5.69654, "elevation": 801 }
+        }
+      ]
+    },
+    {
+      "id": "V-V90",
+      "name": "Carretera a Huelmos de San Joaquín",
+      "type": "Intersection",
+      "position": { "latitude": 41.13788, "longitude": -5.69744, "elevation": 810 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V91",
+      "name": "Finca La Tierrita",
+      "type": "Farmland",
+      "position": { "latitude": 41.17047, "longitude": -5.69744, "elevation": 842 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V92",
+      "name": "El Cubo del la Tierra del Vino",
+      "type": "Village",
+      "position": { "latitude": 41.25493, "longitude": -5.71028, "elevation": 840 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Turístico Torre De Sabre",
+          "type": "PrivateAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage" ],
+          "sleeping": [ "Shared", "Single", "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V93",
+      "name": "Villanueva de Campeán",
+      "type": "Village",
+      "position": { "latitude": 41.35404, "longitude": -5.77041, "elevation": 761 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Albergue privado Villanueva de Campeán",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Breakfast", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single" ]
+        },
+        {
+          "name": "La Posada Real del Buen Camino",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V94",
+      "name": "San Marcial",
+      "type": "Village",
+      "description": {
+        "notes": [
+          {
+            "type": "Directions",
+            "text": "The village of San Marcial is 1.1km off the main route."
+          }
+        ]
+      },
+      "position": { "latitude": 41.38873, "longitude": -5.77584, "elevation": 720 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V95",
+      "name": "El Brocal de las Promesas",
+      "type": "Intersection",
+      "position": { "latitude": 41.45215, "longitude": -5.77043, "elevation": 670 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V95-1",
+          "name": [
+            "Tres Monolitos de las Tres Calzadas@es",
+            "Three Monoliths of the Three Caminos@en"
+          ],
+          "type": "Artwork",
+          "position": { "latitude": 41.45259, "longitude": -5.77067, "elevation": 672 }
+        }
+      ]
+    },
+    {
+      "id": "V-V96",
+      "name": "Zamora",
+      "type": "City",
+      "position": { "latitude": 41.50314, "longitude": -5.74681, "elevation": 652 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Peregrinos de Zamora",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        "GuestHouse",
+        "House",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "V-V96-1",
+          "name": "Oficina Municipal de Turismo de Zamora@es",
+          "type": "InformationPoint",
+          "position": { "latitude": 41.49925, "longitude": -5.75255, "elevation": 645 }
+        },
+        {
+          "id": "V-V96-2",
+          "name": "Puente de Piedra@es",
+          "type": "Bridge",
+          "position": { "latitude": 41.49951, "longitude": -5.74808, "elevation": 621 }
+        },
+        {
+          "id": "V-V96-3",
+          "name": "Catedral del Salvador de Zamora@es",
+          "type": "Cathedral",
+          "position": { "latitude": 41.49923, "longitude": -5.75450, "elevation": 650 }
+        },
+        {
+          "id": "V-V96-4",
+          "name": "Castillo de Zamora@es",
+          "type": "Historical",
+          "position": { "latitude": 41.49994, "longitude": -5.75611, "elevation": 643 }
+        },
+        {
+          "id": "V-V96-5",
+          "name": "Puerta y Palacio de Doña Urraca@es",
+          "type": "Historical",
+          "position": { "latitude": 41.50448, "longitude": -5.74873, "elevation": 644 }
+        },
+        {
+          "id": "V-V96-6",
+          "name": "Plaza Mayor@es",
+          "type": "Municipal",
+          "position": { "latitude": 41.50351, "longitude": -5.74665, "elevation": 651 }
+        }
+      ]
+    },
+    {
+      "id": "V-V97",
+      "name": "Roales del Pan",
+      "type": "Village",
+      "position": { "latitude": 41.55167, "longitude": -5.77303, "elevation": 697 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V98",
+      "name": "Montamarta",
+      "type": "Town",
+      "position": { "latitude": 41.64885, "longitude": -5.80550, "elevation": 692 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Peregrinos de Montamarta",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Rural El Tío Bartolo",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ]
+        },
+        {
+          "name": "Casa Rural El Molino de Castilla",
+          "type": "CasaRural",
+          "services": [ "Heating", "WashingMachine", "Kitchen", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V99",
+      "name": "Fontanillas de Castro",
+      "type": "Village",
+      "position": { "latitude": 41.73351, "longitude": -5.78027, "elevation": 718 },
+      "region": "ES-CL",
+      "services": [ "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Castrotorafe",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V99-1",
+          "name": "Castillo de Castrotorafe@es",
+          "type": "Historical",
+          "position": { "latitude": 41.72383, "longitude": -5.79699, "elevation": 691 }
+        },
+        {
+          "id": "V-V99-2",
+          "name": "Vending Machines@en",
+          "type": "PilgrimResource",
+          "position": { "latitude": 41.73431, "longitude": -5.78079, "elevation": 714 }
+        }
+      ]
+    },
+    {
+      "id": "V-V100",
+      "name": "Riego del Camino",
+      "type": "Village",
+      "position": { "latitude": 41.76104, "longitude": -5.76746, "elevation": 703 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Riego del Camino",
+          "type": "PilgrimAlbergue",
+          "services": [ "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V101",
+      "name": "Granja de Moreuela",
+      "type": "Village",
+      "position": { "latitude": 41.80937, "longitude": -5.73909, "elevation": 708 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Granja de Moreuela",
+          "type": "PilgrimAlbergue",
+          "services": [ "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Casa del Tio Quico",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa Rural Donde Victor Luna",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa de la Abuela Ángela",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V99-1",
+          "name": "Camino Sanabrés@es",
+          "type": "Junction",
+          "position": { "latitude": 41.80968, "longitude": -5.73943 }
+        },
+        {
+          "id": "V-V99-2",
+          "name": "Centro de interpretación CIETER@es",
+          "type": "Park",
+          "position": { "latitude": 41.80700, "longitude": -5.73956 }
+        },
+        {
+          "id": "V-V99-3",
+          "name": "Monasterio de Santa María de Moreruela@es",
+          "type": "Monastery",
+          "description": {
+            "about": "https://www.turismocastillayleon.com/es/arte-cultura-patrimonio/monasterios/santa-maria-moreruela"
+          },
+          "position": { "latitude": 41.81307, "longitude": -5.77731, "elevation": 694 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1400, 1600-2000"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    },
+    {
+      "id": "V-V102",
+      "name": "Santovenia de Esla",
+      "type": "Village",
+      "position": { "latitude": 41.87899, "longitude": -5.70896, "elevation": 713 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V102-1",
+          "name": "Charil Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 41.88088, "longitude": -5.70909, "elevation": 702 }
+        }
+      ]
+    },
+    {
+      "id": "V-V103",
+      "name": "Villaveza del Agua",
+      "type": "Village",
+      "position": { "latitude": 41.91980, "longitude": -5.67964, "elevation": 701 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V104",
+      "name": "Barcial del Barco",
+      "type": "Village",
+      "position": { "latitude": 41.93448, "longitude": -5.66366, "elevation": 715 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Turistico Las Eras",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Pets", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V104-1",
+          "name": "Camino Natural Via de la Plata@es",
+          "type": "Junction",
+          "position": { "latitude": 41.93915, "longitude": -5.65744, "elevation": 716 }
+        },
+        {
+          "id": "V-V104-2",
+          "name": "Puente de Hierro@es",
+          "type": "Bridge",
+          "position": { "latitude": 41.96553, "longitude": -5.66232, "elevation": 701 }
+        }
+      ]
+    },
+    {
+      "id": "V-V105",
+      "name": "Villanueva de Azoague",
+      "type": "Village",
+      "position": { "latitude": 41.97566, "longitude": -5.66365, "elevation": 703 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V105-1",
+          "name": "Camino Natural Via de la Plata@es",
+          "type": "Junction",
+          "position": { "latitude": 41.97267, "longitude": -5.66725, "elevation": 703 }
+        }
+      ]
+    },
+    {
+      "id": "V-V106",
+      "name": "Benavente",
+      "type": "Town",
+      "position": { "latitude": 42.00396, "longitude": -5.67800, "elevation": 750 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Benavente",
+          "type": "PilgrimAlbergue",
+          "description": "Keys can be collected from the tourist information office (morning) or the police headquarters (afternoon)@en",
+          "services": [ "Kitchen", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Trucha",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hostal Paraiso",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Santiago",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Tudanca Benvente",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V106-1",
+          "name": "Caracol Tower@en",
+          "type": "Historical",
+          "position": { "latitude": 41.99820, "longitude": -5.68131, "elevation": 728 }
+        },
+        {
+          "id": "V-V106-2",
+          "name": "Hospital de La Piedad@es",
+          "type": "Historical",
+          "position": { "latitude": 42.00309, "longitude": -5.67564, "elevation": 729 }
+        }
+      ]
+    },
+    {
+      "id": "V-V107",
+      "name": "Villabrázaro",
+      "type": "Village",
+      "position": { "latitude": 42.05384, "longitude": -5.72940, "elevation": 718 },
+      "region": "ES-CL",
+      "services": [ "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Villabrázaro",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V108",
+      "name": "Maire de Castroponce",
+      "type": "Village",
+      "position": { "latitude": 42.11360, "longitude": -5.78339, "elevation": 741 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V108-1",
+          "name": "Traditional Wineries",
+          "type": "Winery",
+          "description": "These are traditional wine cellars dug out from the earth. It is unlikely that there will be anything for sale.",
+          "position": { "latitude": 42.10996, "longitude": -5.77732, "elevation": 735 }
+        }
+      ]
+    },
+    {
+      "id": "V-V109",
+      "name": "Puente de la Vizana",
+      "type": "Bridge",
+      "position": { "latitude": 42.13074, "longitude": -5.80590, "elevation": 732 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V110",
+      "name": "Alija del Infantado",
+      "type": "Village",
+      "position": { "latitude": 42.13840, "longitude": -5.83484, "elevation": 738 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Alija del Infantado",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Breakfast" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Hotelito",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V111",
+      "name": "La Nora del Río",
+      "type": "Village",
+      "position": { "latitude": 42.16613, "longitude": -5.82589, "elevation": 742 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "V-V112",
+      "name": "Quintana del Marco",
+      "type": "Village",
+      "position": { "latitude": 42.20634, "longitude": -5.85091, "elevation": 747 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V112-1",
+          "name": "Castillo de Quintana del Marco@es",
+          "type": "Historical",
+          "position": { "latitude": 42.20823, "longitude": -5.84881, "elevation": 748 }
+        }
+      ]
+    },
+    {
+      "id": "V-V113",
+      "name": "Villanueva de Jamuz",
+      "type": "Village",
+      "position": { "latitude": 42.23361, "longitude": -5.85755, "elevation": 761 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V113-1",
+          "name": "Castillo de Villanueva de Jamuz@es",
+          "type": "Historical",
+          "position": { "latitude": 42.23296, "longitude": -5.85867, "elevation": 765 }
+        }
+      ]
+    },
+    {
+      "id": "V-V114",
+      "name": "Santa Elena de Jamuz",
+      "type": "Village",
+      "position": { "latitude": 42.25966, "longitude": -5.88653, "elevation": 766 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V114-1",
+          "name": [
+            "Parque de los sistemas de riego@es",
+            "Park of Irrigation Systems@es"
+          ],
+          "type": "Park",
+          "position": { "latitude": 42.26164, "longitude": -5.88793, "elevation": 764 }
+        }
+      ]
+    },
+    {
+      "id": "V-V115",
+      "name": "La Bañeza",
+      "type": "Town",
+      "position": { "latitude": 42.29976, "longitude": -5.89765, "elevation": 776 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Monte Urba",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        "GuestHouse",
+        "Hotel"
+      ]
+    },
+    {
+      "id": "V-V116",
+      "name": "Palacios del Valduerna",
+      "type": "Village",
+      "position": { "latitude": 42.32789, "longitude": -5.93936, "elevation": 796 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "V-V116-1",
+          "name": "Castillo de Palacios de la Valduerna@es",
+          "type": "Historical",
+          "position": { "latitude": 42.32655, "longitude": -5.94074, "elevation": 794 }
+        }
+      ]
+    },
+    {
+      "id": "V-V117",
+      "name": "Estación de Valderrey",
+      "type": "Intersection",
+      "position": { "latitude": 42.40606, "longitude": -6.00793, "elevation": 832 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Albergue Municipal Amigos Leopoldo Panero",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Kitchen", "Pets", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "V-V118",
+      "name": "Celada de la Vega",
+      "type": "Village",
+      "position": { "latitude": 42.42756, "longitude": -6.03080, "elevation": 847 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Medical" ],
+      "accommodation": [ ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "V-V1",
+      "to": "V-V2",
+      "distance": 3.04,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "from": "V-V2",
+      "to": "V-V3",
+      "distance": 1.97,
+      "ascent": 5,
+      "descent": 5
+    },
+    {
+      "from": "V-V2",
+      "to": "V-V4",
+      "distance": 6.29,
+      "ascent": 15,
+      "descent": 10
+    },
+    {
+      "from": "V-V3",
+      "to": "V-V4",
+      "distance": 4.06,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "V-V4",
+      "to": "V-V5",
+      "distance": 12.33,
+      "ascent": 30,
+      "descent": 25
+    },
+    {
+      "from": "V-V5",
+      "to": "V-V6",
+      "distance": 7.83,
+      "ascent": 140,
+      "descent": 25
+    },
+    {
+      "from": "V-V6",
+      "to": "V-V7",
+      "distance": 10.90,
+      "ascent": 210,
+      "descent": 25
+    },
+    {
+      "from": "V-V7",
+      "to": "V-V8",
+      "distance": 16.10,
+      "ascent": 275,
+      "descent": 90
+    },
+    {
+      "from": "V-V8",
+      "to": "V-V9",
+      "distance": 11.04,
+      "ascent": 220,
+      "descent": 170,
+      "waypoints": [
+        { "latitude": 37.84589, "longitude": -6.07336, "elevation": 416 }
+      ]
+    },
+    {
+      "from": "V-V9",
+      "to": "V-V10",
+      "distance": 1.25,
+      "ascent": 0,
+      "descent": 105
+    },
+    {
+      "from": "V-V10",
+      "to": "V-V11",
+      "distance": 2.05,
+      "ascent": 35,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 37.87684, "longitude": -6.08189, "elevation": 480 }
+      ]
+    },
+    {
+      "from": "V-V11",
+      "to": "V-V12",
+      "distance": 3.85,
+      "ascent": 40,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 37.89360, "longitude": -6.07974, "elevation": 471 },
+        { "latitude": 37.89879, "longitude": -6.09781, "elevation": 499 }
+      ]
+    },
+    {
+      "type": "CyclePath",
+      "from": "V-V11",
+      "to": "V-V13",
+      "distance": 12.41,
+      "ascent": 105,
+      "descent": 101,
+      "waypoints": [
+        { "latitude": 37.92009, "longitude": -6.07051, "elevation": 524 },
+        { "latitude": 37.93322, "longitude": -6.09986, "elevation": 556 }
+      ]
+    },
+    {
+      "type": "Trail",
+      "from": "V-V12",
+      "to": "V-V13",
+      "distance": 7.64,
+      "ascent": 185,
+      "descent": 170,
+      "waypoints": [
+        { "latitude": 37.90220, "longitude": -6.12187, "elevation": 394 },
+        { "latitude": 37.91459, "longitude": -6.12419, "elevation": 527 },
+        { "latitude": 37.92061, "longitude": -6.12608, "elevation": 463 },
+        { "latitude": 37.93321, "longitude": -6.14050, "elevation": 441 },
+        { "latitude": 37.94431, "longitude": -6.14694, "elevation": 490 }
+      ]
+    },
+    {
+      "from": "V-V13",
+      "to": "V-V14",
+      "distance": 6.73,
+      "ascent": 85,
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 37.95656, "longitude": -6.15962, "elevation": 451 }
+      ]
+    },
+    {
+      "from": "V-V14",
+      "to": "V-V15",
+      "distance": 4.54,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "V-V15",
+      "to": "V-V16",
+      "distance": 7.21,
+      "ascent": 240,
+      "descent": 10
+    },
+    {
+      "from": "V-V16",
+      "to": "V-V17",
+      "distance": 1.64,
+      "ascent": 20,
+      "descent": 20
+    },
+    {
+      "from": "V-V17",
+      "to": "V-V18",
+      "distance": 5.35,
+      "ascent": 30,
+      "descent": 90,
+      "waypoints": [
+        { "latitude": 38.10306, "longitude": -6.29039, "elevation": 681 }
+      ]
+    },
+    {
+      "from": "V-V18",
+      "to": "V-V19",
+      "distance": 7.64,
+      "ascent": 25,
+      "descent": 175
+    },
+    {
+      "from": "V-V19",
+      "to": "V-V20",
+      "distance": 4.05,
+      "ascent": 70,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 38.20425, "longitude": -6.30107, "elevation": 616 }
+      ]
+    },
+    {
+      "from": "V-V20",
+      "to": "V-V21",
+      "distance": 3.59,
+      "ascent": 40,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 38.22551, "longitude": -6.30160, "elevation": 556 }
+      ]
+    },
+    {
+      "from": "V-V21",
+      "to": "V-V22",
+      "distance": 6.25,
+      "ascent": 40,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 38.25628, "longitude": -6.31098, "elevation": 595 },
+        { "latitude": 38.27442, "longitude": -6.31489, "elevation": 569 },
+        { "latitude": 38.28601, "longitude": -6.31960, "elevation": 592 }
+      ]
+    },
+    {
+      "from": "V-V22",
+      "to": "V-V23",
+      "distance": 7.82,
+      "ascent": 25,
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 38.32956, "longitude": -6.32055, "elevation": 514 }
+      ]
+    },
+    {
+      "from": "V-V23",
+      "to": "V-V24",
+      "distance": 6.36,
+      "ascent": 35,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 38.37297, "longitude": -6.38244, "elevation": 540 }
+      ]
+    },
+    {
+      "from": "V-V24",
+      "to": "V-V25",
+      "distance": 3.47,
+      "ascent": 10,
+      "descent": 20
+    },
+    {
+      "from": "V-V25",
+      "to": "V-V26",
+      "distance": 4.71,
+      "ascent": 100,
+      "descent": 80,
+      "waypoints": [
+        { "latitude": 38.44135, "longitude": -6.39284, "elevation": 610 }
+      ]
+    },
+    {
+      "from": "V-V26",
+      "to": "V-V27",
+      "distance": 8.32,
+      "ascent": 65,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 38.45537, "longitude": -6.38022, "elevation": 491 },
+        { "latitude": 38.46596, "longitude": -6.37172, "elevation": 533 },
+        { "latitude": 38.48775, "longitude": -6.37131, "elevation": 513 }
+      ]
+    },
+    {
+      "from": "V-V27",
+      "to": "V-V28",
+      "distance": 7.09,
+      "ascent": 10,
+      "descent": 80
+    },
+    {
+      "from": "V-V28",
+      "to": "V-V29",
+      "distance": 4.87,
+      "ascent": 20,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 38.56472, "longitude": -6.33681, "elevation": 429 }
+      ]
+    },
+    {
+      "from": "V-V29",
+      "to": "V-V30",
+      "distance": 4.99,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "V-V30",
+      "to": "V-V31",
+      "distance": 4.34,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "V-V31",
+      "to": "V-V32",
+      "distance": 6.83,
+      "ascent": 0,
+      "descent": 30
+    },
+    {
+      "from": "V-V32",
+      "to": "V-V33",
+      "distance": 5.79,
+      "ascent": 15,
+      "descent": 55
+    },
+    {
+      "from": "V-V33",
+      "to": "V-V34",
+      "distance": 2.98,
+      "ascent": 15,
+      "descent": 20
+    },
+    {
+      "from": "V-V34",
+      "to": "V-V35",
+      "distance": 4.46,
+      "ascent": 10,
+      "descent": 25
+    },
+    {
+      "from": "V-V35",
+      "to": "V-V36",
+      "distance": 8.26,
+      "ascent": 30,
+      "descent": 105
+    },
+    {
+      "from": "V-V36",
+      "to": "V-V37",
+      "distance": 6.32,
+      "ascent": 90,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 38.95451, "longitude": -6.35720, "elevation": 299 }
+      ]
+    },
+    {
+      "from": "V-V37",
+      "to": "V-V38",
+      "distance": 7.18,
+      "ascent": 65,
+      "descent": 10
+    },
+    {
+      "from": "V-V38",
+      "to": "V-V39",
+      "distance": 2.63,
+      "ascent": 30,
+      "descent": 65
+    },
+    {
+      "from": "V-V39",
+      "to": "V-V40",
+      "distance": 1.98,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "V-V40",
+      "to": "V-V41",
+      "distance": 12.19,
+      "ascent": 185,
+      "descent": 0
+    },
+    {
+      "from": "V-V41",
+      "to": "V-V42",
+      "distance": 5.02,
+      "ascent": 50,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 39.16012, "longitude": -6.25143, "elevation": 488 }
+      ]
+    },
+    {
+      "from": "V-V42",
+      "to": "V-V43",
+      "distance": 7.83,
+      "ascent": 0,
+      "descent": 65
+    },
+    {
+      "from": "V-V43",
+      "to": "V-V44",
+      "distance": 6.07,
+      "ascent": 15,
+      "descent": 10
+    },
+    {
+      "from": "V-V44",
+      "to": "V-V45",
+      "distance": 11.16,
+      "ascent": 40,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 39.31584, "longitude": -6.32567, "elevation": 419 },
+        { "latitude": 39.36472, "longitude": -6.34136, "elevation": 375 }
+      ]
+    },
+    {
+      "from": "V-V45",
+      "to": "V-V46",
+      "distance": 4.82,
+      "ascent": 85,
+      "descent": 10
+    },
+    {
+      "from": "V-V46",
+      "to": "V-V47",
+      "distance": 6.81,
+      "ascent": 40,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 39.43433, "longitude": -6.36247, "elevation": 472 },
+        { "latitude": 39.46969, "longitude": -6.36998, "elevation": 427 }
+      ]
+    },
+    {
+      "from": "V-V47",
+      "to": "V-V48",
+      "distance": 3.37,
+      "ascent": 80,
+      "descent": 60,
+      "waypoints": [
+        { "latitude": 39.48137, "longitude": -6.38025, "elevation": 407 }
+      ]
+    },
+    {
+      "from": "V-V48",
+      "to": "V-V49",
+      "distance": 8.84,
+      "ascent": 20,
+      "descent": 130,
+      "waypoints": [
+        { "latitude": 39.50750, "longitude": -6.39192, "elevation": 357 }
+      ]
+    },
+    {
+      "from": "V-V49",
+      "to": "V-V50",
+      "distance": 10.42,
+      "ascent": 45,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 39.57489, "longitude": -6.42881, "elevation": 391 }
+      ]
+    },
+    {
+      "from": "V-V50",
+      "to": "V-V51",
+      "distance": 11.71,
+      "ascent": 55,
+      "descent": 165,
+      "waypoints": [
+        { "latitude": 39.69130, "longitude": -6.46510, "elevation": 207 }
+      ]
+    },
+    {
+      "from": "V-V51",
+      "to": "V-V52",
+      "distance": 8.82,
+      "ascent": 120,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 39.72692, "longitude": -6.44046, "elevation": 327 }
+      ]
+    },
+    {
+      "from": "V-V52",
+      "to": "V-V53",
+      "distance": 2.28,
+      "ascent": 75,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 39.78001, "longitude": -6.39532, "elevation": 302 }
+      ]
+    },
+    {
+      "from": "V-V53",
+      "to": "V-V54",
+      "distance": 4.27,
+      "ascent": 155,
+      "descent": 15
+    },
+    {
+      "from": "V-V54",
+      "to": "V-V55",
+      "distance": 2.28,
+      "ascent": 35,
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 39.82175, "longitude": -6.36834, "elevation": 475 }
+      ]
+    },
+    {
+      "from": "V-V55",
+      "to": "V-V56",
+      "distance": 7.70,
+      "ascent": 80,
+      "descent": 120,
+      "waypoints": [
+        { "latitude": 39.87790, "longitude": -6.30536, "elevation": 429 }
+      ]
+    },
+    {
+      "from": "V-V56",
+      "to": "V-V57",
+      "distance": 5.13,
+      "ascent": 25,
+      "descent": 145,
+      "waypoints": [
+        { "latitude": 39.89131, "longitude": -6.28556, "elevation": 423 },
+        { "latitude": 39.90588, "longitude": -6.27560, "elevation": 368 },
+        { "latitude": 39.91790, "longitude": -6.27119, "elevation": 283 }
+      ]
+    },
+    {
+      "from": "V-V57",
+      "to": "V-V59",
+      "distance": 6.27,
+      "ascent": 85,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 39.92774, "longitude": -6.26646, "elevation": 338 },
+        { "latitude": 39.95682, "longitude": -6.26041, "elevation": 256 },
+        { "latitude": 39.96596, "longitude": -6.26313, "elevation": 292 }
+      ]
+    },
+    {
+      "from": "V-V56",
+      "to": "V-V58",
+      "distance": 4.08,
+      "ascent": 0,
+      "descent": 155
+    },
+    {
+      "from": "V-V58",
+      "to": "V-V59",
+      "distance": 9.00,
+      "ascent": 65,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 39.95926, "longitude": -6.28501, "elevation": 244 }
+      ]
+    },
+    {
+      "from": "V-V59",
+      "to": "V-V60",
+      "distance": 5.40,
+      "ascent": 10,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 39.97890, "longitude": -6.26976, "elevation": 261 }
+      ]
+    },
+    {
+      "from": "V-V60",
+      "to": "V-V61",
+      "distance": 5.09,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "V-V61",
+      "to": "V-V62",
+      "distance": 11.80,
+      "ascent": 160,
+      "descent": 10
+    },
+    {
+      "from": "V-V62",
+      "to": "V-V63",
+      "distance": 6.14,
+      "ascent": 10,
+      "descent": 35
+    },
+    {
+      "from": "V-V63",
+      "to": "V-V64",
+      "distance": 5.45,
+      "ascent": 30,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 40.17574, "longitude": -6.06760, "elevation": 380 }
+      ]
+    },
+    {
+      "from": "V-V63",
+      "to": "V-V65",
+      "distance": 12.90,
+      "ascent": 50,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 40.15744, "longitude": -6.08090, "elevation": 377 },
+        { "latitude": 40.14538, "longitude": -6.04976, "elevation": 427 }
+      ]
+    },
+    {
+      "from": "V-V64",
+      "to": "V-V66",
+      "distance": 4.25,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "V-V66",
+      "to": "V-V67",
+      "distance": 10.18,
+      "ascent": 140,
+      "descent": 5
+    },
+    {
+      "description": "Vía Verde de la Plata",
+      "from": "V-V65",
+      "to": "V-V67",
+      "distance": 11.00,
+      "ascent": 145,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 40.21816, "longitude": -5.96519, "elevation": 464 },
+        { "latitude": 40.25187, "longitude": -5.93646, "elevation": 543 }
+      ]
+    },
+    {
+      "from": "V-V67",
+      "to": "V-V68",
+      "distance": 9.59,
+      "ascent": 185,
+      "descent": 5
+    },
+    {
+      "from": "V-V68",
+      "to": "V-V69",
+      "distance": 3.05,
+      "ascent": 185,
+      "descent": 5
+    },
+    {
+      "from": "V-V69",
+      "to": "V-V70",
+      "distance": 3.85,
+      "ascent": 0,
+      "descent": 225
+    },
+    {
+      "from": "V-V70",
+      "to": "V-V71",
+      "distance": 3.57,
+      "ascent": 40,
+      "descent": 0
+    },
+    {
+      "from": "V-V71",
+      "to": "V-V72",
+      "distance": 1.91,
+      "ascent": 95,
+      "descent": 0
+    },
+    {
+      "from": "V-V72",
+      "to": "V-V73",
+      "distance": 8.69,
+      "ascent": 25,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 40.46586, "longitude": -5.79475, "elevation": 778 }
+      ]
+    },
+    {
+      "from": "V-V73",
+      "to": "V-V74",
+      "distance": 3.42,
+      "ascent": 150,
+      "descent": 0
+    },
+    {
+      "from": "V-V74",
+      "to": "V-V75",
+      "distance": 8.24,
+      "ascent": 75,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 40.53956, "longitude": -5.74745, "elevation": 1010 }
+      ]
+    },
+    {
+      "from": "V-V75",
+      "to": "V-V76",
+      "distance": 11.47,
+      "ascent": 95,
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 40.62311, "longitude": -5.73764, "elevation": 907 }
+      ]
+    },
+    {
+      "type": "Trail",
+      "from": "V-V76",
+      "to": "V-V77",
+      "distance": 3.19,
+      "ascent": 140,
+      "descent": 0
+    },
+    {
+      "type": "Trail",
+      "from": "V-V77",
+      "to": "V-V78",
+      "distance": 6.30,
+      "ascent": 20,
+      "descent": 195,
+      "waypoints": [
+        { "latitude": 40.68966, "longitude": -5.76944, "elevation": 1049 },
+        { "latitude": 40.70803, "longitude": -5.76529, "elevation": 981 }
+      ]
+    },
+    {
+      "from": "V-V78",
+      "to": "V-V79",
+      "distance": 6.72,
+      "ascent": 75,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 40.75505, "longitude": -5.75020, "elevation": 1002 },
+        { "latitude": 40.77957, "longitude": -5.72858, "elevation": 1007 }
+      ]
+    },
+    {
+      "from": "V-V79",
+      "to": "V-V82",
+      "distance": 4.12,
+      "ascent": 0,
+      "descent": 45
+    },
+    {
+      "from": "V-V76",
+      "to": "V-V80",
+      "distance": 6.33,
+      "ascent": 110,
+      "descent": 130,
+      "waypoints": [
+        { "latitude": 40.67458, "longitude": -5.73200, "elevation": 961 },
+        { "latitude": 40.68116, "longitude": -5.72679, "elevation": 905 },
+        { "latitude": 40.69981, "longitude": -5.71818, "elevation": 974 },
+        { "latitude": 40.70776, "longitude": -5.71150, "elevation": 920 }
+      ]
+    },
+    {
+      "from": "V-V80",
+      "to": "V-V81",
+      "distance": 5.22,
+      "ascent": 85,
+      "descent": 80,
+      "waypoints": [
+        { "latitude": 40.71997, "longitude": -5.70533, "elevation": 901 },
+        { "latitude": 40.74001, "longitude": -5.69783, "elevation": 975 },
+        { "latitude": 40.75190, "longitude": -5.69545, "elevation": 953 }
+      ]
+    },
+    {
+      "from": "V-V81",
+      "to": "V-V82",
+      "distance": 5.45,
+      "ascent": 70,
+      "descent": 100,
+      "waypoints": [
+        { "latitude": 40.75997, "longitude": -5.69034, "elevation": 982 },
+        { "latitude": 40.76725, "longitude": -5.68425, "elevation": 951 },
+        { "latitude": 40.78510, "longitude": -5.69622, "elevation": 999 }
+      ]
+    },
+    {
+      "from": "V-V82",
+      "to": "V-V83",
+      "distance": 6.65,
+      "ascent": 10,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 40.84034, "longitude": -5.67827, "elevation": 898 },
+        { "latitude": 40.85156, "longitude": -5.67939, "elevation": 904 }
+      ]
+    },
+    {
+      "from": "V-V83",
+      "to": "V-V84",
+      "distance": 3.16,
+      "ascent": 0,
+      "descent": 65
+    },
+    {
+      "from": "V-V84",
+      "to": "V-V85",
+      "distance": 3.62,
+      "ascent": 35,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 40.91064, "longitude": -5.68074, "elevation": 805 }
+      ]
+    },
+    {
+      "from": "V-V85",
+      "to": "V-V86",
+      "distance": 6.19,
+      "ascent": 50,
+      "descent": 90,
+      "waypoints": [
+        { "latitude": 40.94190, "longitude": -5.67470, "elevation": 785 },
+        { "latitude": 40.94483, "longitude": -5.66979, "elevation": 805 },
+        { "latitude": 40.95576, "longitude": -5.66633, "elevation": 772 }
+      ]
+    },
+    {
+      "from": "V-V86",
+      "to": "V-V87",
+      "distance": 6.33,
+      "ascent": 55,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 40.98451, "longitude": -5.66429, "elevation": 841 },
+        { "latitude": 40.99753, "longitude": -5.66668, "elevation": 805 }
+      ]
+    },
+    {
+      "from": "V-V87",
+      "to": "V-V88",
+      "distance": 5.31,
+      "ascent": 45,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 41.03031, "longitude": -5.69288, "elevation": 777 }
+      ]
+    },
+    {
+      "from": "V-V88",
+      "to": "V-V89",
+      "distance": 4.10,
+      "ascent": 5,
+      "descent": 25
+    },
+    {
+      "from": "V-V89",
+      "to": "V-V90",
+      "distance": 6.09,
+      "ascent": 30,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 41.10280, "longitude": -5.69920, "elevation": 821 }
+      ]
+    },
+    {
+      "from": "V-V90",
+      "to": "V-V91",
+      "distance": 3.69,
+      "ascent": 40,
+      "descent": 5
+    },
+    {
+      "from": "V-V91",
+      "to": "V-V92",
+      "distance": 10.16,
+      "ascent": 45,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 41.18113, "longitude": -5.70696, "elevation": 873 },
+        { "latitude": 41.21135, "longitude": -5.70325, "elevation": 835 },
+        { "latitude": 41.22483, "longitude": -5.70605, "elevation": 846 }
+      ]
+    },
+    {
+      "from": "V-V92",
+      "to": "V-V93",
+      "distance": 13.23,
+      "ascent": 40,
+      "descent": 120,
+      "waypoints": [
+        { "latitude": 41.30705, "longitude": -5.76243, "elevation": 879 }
+      ]
+    },
+    {
+      "from": "V-V93",
+      "to": "V-V94",
+      "distance": 3.92,
+      "ascent": 0,
+      "descent": 40
+    },
+    {
+      "from": "V-V94",
+      "to": "V-V95",
+      "distance": 7.93,
+      "ascent": 35,
+      "descent": 85,
+      "waypoints": [
+        { "latitude": 41.41278, "longitude": -5.77187, "elevation": 748 }
+      ]
+    },
+    {
+      "from": "V-V95",
+      "to": "V-V96",
+      "distance": 6.71,
+      "ascent": 30,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 41.49504, "longitude": -5.75329, "elevation": 625 }
+      ]
+    },
+    {
+      "from": "V-V96",
+      "to": "V-V97",
+      "distance": 7.07,
+      "ascent": 65,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 41.50505, "longitude": -5.74888, "elevation": 638 }
+      ]
+    },
+    {
+      "from": "V-V97",
+      "to": "V-V98",
+      "distance": 12.45,
+      "ascent": 25,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 41.56609, "longitude": -5.77460, "elevation": 721 }
+      ]
+    },
+    {
+      "from": "V-V98",
+      "to": "V-V99",
+      "distance": 11.95,
+      "ascent": 45,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 41.65749, "longitude": -5.80640, "elevation": 711 },
+        { "latitude": 41.69093, "longitude": -5.80139, "elevation": 713 }
+      ]
+    },
+    {
+      "from": "V-V99",
+      "to": "V-V100",
+      "distance": 3.81,
+      "ascent": 0,
+      "descent": 20
+    },
+    {
+      "from": "V-V100",
+      "to": "V-V101",
+      "distance": 6.55,
+      "ascent": 45,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 41.78891, "longitude": -5.76809, "elevation": 732 },
+        { "latitude": 41.79160, "longitude": -5.76148, "elevation": 718 },
+        { "latitude": 41.79275, "longitude": -5.75796, "elevation": 730 }
+      ]
+    },
+    {
+      "from": "V-V101",
+      "to": "V-V102",
+      "distance": 9.39,
+      "ascent": 30,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 41.82522, "longitude": -5.73102, "elevation": 736 }
+      ]
+    },
+    {
+      "from": "V-V102",
+      "to": "V-V103",
+      "distance": 6.08,
+      "ascent": 10,
+      "descent": 20
+    },
+    {
+      "from": "V-V103",
+      "to": "V-V104",
+      "distance": 2.27,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "V-V104",
+      "to": "V-V105",
+      "distance": 5.26,
+      "ascent": 5,
+      "descent": 15
+    },
+    {
+      "from": "V-V105",
+      "to": "V-V106",
+      "distance": 3.63,
+      "ascent": 50,
+      "descent": 0,
+      "waypoints": [
+        { "latitude": 41.99787, "longitude": -5.67750, "elevation": 717 }
+      ]
+    },
+    {
+      "from": "V-V106",
+      "to": "V-V107",
+      "distance": 7.61,
+      "ascent": 45,
+      "descent": 75,
+      "waypoints": [
+        { "latitude": 42.02633, "longitude": -5.70719, "elevation": 712 },
+        { "latitude": 42.03816, "longitude": -5.71940, "elevation": 738 }
+      ]
+    },
+    {
+      "from": "V-V107",
+      "to": "V-V108",
+      "distance": 8.16,
+      "ascent": 25,
+      "descent": 0
+    },
+    {
+      "from": "V-V108",
+      "to": "V-V109",
+      "distance": 2.72,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "V-V109",
+      "to": "V-V110",
+      "distance": 3.17,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "V-V110",
+      "to": "V-V111",
+      "distance": 3.00,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "V-V111",
+      "to": "V-V112",
+      "distance": 5.44,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "V-V112",
+      "to": "V-V113",
+      "distance": 3.46,
+      "ascent": 15,
+      "descent": 0
+    },
+    {
+      "from": "V-V113",
+      "to": "V-V114",
+      "distance": 3.79,
+      "ascent": 10,
+      "descent": 5
+    },
+    {
+      "from": "V-V114",
+      "to": "V-V115",
+      "distance": 6.28,
+      "ascent": 35,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 42.28057, "longitude": -5.89341, "elevation": 793 }
+      ]
+    },
+    {
+      "from": "V-V115",
+      "to": "V-V116",
+      "distance": 5.87,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "V-V116",
+      "to": "V-V117",
+      "distance": 11.50,
+      "ascent": 50,
+      "descent": 15
+    },
+    {
+      "from": "V-V117",
+      "to": "V-V118",
+      "distance": 3.32,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "V-V118",
+      "to": "F-F134",
+      "distance": 4.25,
+      "ascent": 60,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.43118, "longitude": -6.03876, "elevation": 863 },
+        { "latitude": 42.43321, "longitude": -6.04147, "elevation": 851 },
+        { "latitude": 42.43616, "longitude": -6.04311, "elevation": 859 },
+        { "latitude": 42.44409, "longitude": -6.04624, "elevation": 841 },
+        { "latitude": 42.45203, "longitude": -6.05490, "elevation": 846 }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "V-V",
+      "name": "Vía de la Plata",
+      "description": "The main Vía de la Plata route",
+      "legs": null,
+      "major": true,
+      "starts": [ "V-V1" ],
+      "finishes": [ "F-F134" ],
+      "stops": [ "V-V36", "V-V47", "V-V86", "V-V96" ],
+      "rest-points": [ "V-V86" ],
+      "palette": {
+        "colour": "#fec953"
+      },
+      "features": [
+        {
+          "id": "V-V-F1",
+          "name": "Seville to Finca la Postura",
+          "condition": "V-V10",
+          "geometry": "V/V-V-F1.geojson"
+        },
+        {
+          "id": "V-V-F2",
+          "name": "Finca la Postura to El Real de la Jara",
+          "condition": "V-V12",
+          "geometry": "V/V-V-F2.geojson"
+        },
+        {
+          "id": "V-V-F3",
+          "name": "Finca la Postura to El Real de la Jara (alternative)",
+          "condition": {
+            "and": [
+              "V-V13",
+              { "not": "V-V12" }
+            ]
+          },
+          "geometry": "V/V-V-F3.geojson"
+        },
+        {
+          "id": "V-V-F4",
+          "name": "Cáparra to Aldeanueva del Camino (main route)",
+          "condition": "V-V66",
+          "geometry": "V/V-V-F4.geojson"
+        },
+        {
+          "id": "V-V-F5",
+          "name": "El Real de la Jara to Mérida",
+          "condition": "V-V35",
+          "geometry": "V/V-V-F5.geojson"
+        },
+        {
+          "id": "V-V-F6",
+          "name": "Mérida to Cáceres",
+          "condition": "V-V46",
+          "geometry": "V/V-V-F6.geojson"
+        },
+        {
+          "id": "V-V-F7",
+          "name": "Cáceres to Cáppara",
+          "condition": "V-V62",
+          "geometry": "V/V-V-F7.geojson"
+        },
+        {
+          "id": "V-V-F8",
+          "name": "Morille to Salamanca",
+          "condition": "V-V85",
+          "geometry": "V/V-V-F8.geojson"
+        },
+        {
+          "id": "V-V-F9",
+          "name": "Zamora to Granja de Moreuela",
+          "condition": "V-V100",
+          "geometry": "V/V-V-F9.geojson"
+        },
+        {
+          "id": "V-V-F10",
+          "name": "Salamanca to Zamora",
+          "condition": "V-V95",
+          "geometry": "V/V-V-F10.geojson"
+        },
+        {
+          "id": "V-V-F11",
+          "name": "Granja de Moreuela to Barcial de Barco",
+          "condition": "V-V103",
+          "geometry": "V/V-V-F11.geojson"
+        },
+        {
+          "id": "V-V-F12",
+          "name": "Barcial de Barco to Puente de la Vizana",
+          "condition": "V-V108",
+          "geometry": "V/V-V-F12.geojson"
+        },
+        {
+          "id": "V-V-F13",
+          "name": "Puente de la Vizana to Astorga",
+          "condition": "V-V118",
+          "geometry": "V/V-V-F13.geojson"
+        },
+        {
+          "id": "V-V-F14",
+          "name": "Bicycle route to Morille",
+          "type": "CyclePath",
+          "condition": "V-V81",
+          "geometry": "V/V-V-F14.geojson"
+        },
+        {
+          "id": "V-V-F15",
+          "name": "Aldeneueve del Camino to Alternativa para bicis",
+          "condition": "V-V75",
+          "geometry": "V/V-V-F15.geojson"
+        },
+        {
+          "id": "V-V-F16",
+          "name": "Walking route to Morille",
+          "type": "Trail",
+          "condition": "V-V77",
+          "geometry": "V/V-V-F16.geojson"
+        }
+      ]
+    },
+    {
+      "id": "V-VV1",
+      "name": "Cáparra to Aldeanueva del Camino (Ruta Verde de la Plata)",
+      "description": "Cáparra to Aldeanueva del Camino via the the Ruta Verde de la Plata, a disused railway line converted into a cycle and walking track",
+      "locations": [ "V-V65" ],
+      "legs": null,
+      "palette": {
+        "colour": "#b4d404",
+        "text-colour": "#94b004"
+      },
+      "features": [
+        {
+          "id": "V-VV1-F1",
+          "name": "Cáparra to Aldeanueva del Camino",
+          "geometry": "V/V-VV1-F1.geojson"
+        }
+      ]
+    },
+    {
+      "id": "V-VV2",
+      "name": "Puente de Hierro to Puente de la Vizana (Ruta Verde de la Plata)",
+      "description": {
+        "text": "Puente de Hierro to Puente de la Vizana via the the Ruta Verde de la Plata, a disused railway line converted into a cycle and walking track",
+        "notes": [
+          {
+            "type": "Directions",
+            "text": "This route crosses the main route at several points. It is possible to switch between routes as you see fit."
+          }
+        ]
+      },
+      "legs": [
+        {
+          "from": "V-V104",
+          "to": "V-V106",
+          "distance": 7.40,
+          "ascent": 10,
+          "descent": 15
+        },
+        {
+          "from": "V-V107",
+          "to": "V-V109",
+          "distance": 13.53,
+          "ascent": 35,
+          "descent": 20,
+          "waypoints": [
+            { "latitude": 42.13559, "longitude": -5.76417, "elevation": 752 }
+          ]
+        }
+      ],
+      "palette": {
+        "colour": "#b4d404",
+        "text-colour": "#94b004"
+      },
+      "features": [
+        {
+          "id": "V-VV2-F1",
+          "name": "Puente de Hierro to Puente de la Vizana",
+          "geometry": "V/V-VV2-F1.geojson"
+        }
+      ]
+    }
+  ],
+  "route-logic": [
+    {
+      "description": "Changes for the Ruta Verde de la Plata 2",
+      "condition": "V-VV1",
+      "exclude": [ "V-V64", "V-V66" ]
+    },
+    {
+      "description": "Changes for the Ruta Verde de la Plata",
+      "condition": "V-VV2",
+      "exclude": [ "V-V105", "V-V108" ]
+    }
+  ],
+  "default-route": "V-V"
+}

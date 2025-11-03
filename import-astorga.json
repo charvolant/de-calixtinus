@@ -1,0 +1,252 @@
+{
+  "id": "I-AT",
+  "name": "Astorga",
+  "description": "Import for Astorga, used by both the Camino Frances and Via de la Plata",
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Astorga"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2025-10-25"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-10-15"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "fragment": true,
+  "locations": [
+    {
+      "id": "F-F134",
+      "name": "Astorga",
+      "type": "Town",
+      "position": { "latitude": 42.45642, "longitude": -6.05360, "elevation": 867 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Franciscano, Santa Maria del los Ángles",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Prayer" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC" ]
+        },
+        {
+          "name": "Servas de Marína Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "BicycleStorage", "Prayer" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "MyWay Pilgrims Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Só Por Hoje Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "San Javier Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Fauno Apartments",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Coruña Hostel",
+          "type": "GuestHouse",
+          "services": [ "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Posada Real Casa de Tepa",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Groceries", "Heating", "Breakfast", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "El Descanso de Wendy",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "F-F134-1",
+          "name": "Oficina de Turismo de Astorga@es",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.45719, "longitude": -6.05602, "elevation": 872 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1400, 1600-1830"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1400"
+            }
+          ]
+        },
+        {
+          "id": "F-F134-2",
+          "name": "Puente de la Molinera@es",
+          "type": "Bridge",
+          "position": { "latitude": 42.45589, "longitude": -6.04364, "elevation": 843 }
+        },
+        {
+          "id": "F-F134-3",
+          "name": [
+            "Ayuntamiento de Astorga@es",
+            "Town Hall@en"
+          ],
+          "type": "Municipal",
+          "position": { "latitude": 42.45425, "longitude": -6.05295, "elevation": 869 }
+        },
+        {
+          "id": "F-F134-4",
+          "name": "Plaza Mayor@es",
+          "type": "Municipal",
+          "position": { "latitude": 42.45463, "longitude": -6.05306, "elevation": 866 }
+        },
+        {
+          "id": "F-F134-5",
+          "name": "Muralla de Astorga@es",
+          "type": "Historical",
+          "position": { "latitude": 42.45793, "longitude": -6.05520, "elevation": 863 }
+        },
+        {
+          "id": "F-F134-6",
+          "name": "Catedral de Santa María de Astorga@es",
+          "type": "Cathedral",
+          "description": {
+            "about": "https://catedralastorga.com"
+          },
+          "position": { "latitude": 42.45799, "longitude": -6.05690, "elevation": 873 },
+          "hours": [
+            "1000-2030"
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "F-F134-7",
+          "name": "Museo Romano (La Ergástula)@es",
+          "type": "Museum",
+          "description": {
+            "about": "https://www.turismocastillayleon.com/es/arte-cultura-patrimonio/museos/museo-romano-astorga-ergastula"
+          },
+          "position": { "latitude": 42.45430, "longitude": -6.05248, "elevation": 868 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1400, 1630-1900"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1400"
+            }
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "F-F134-8",
+          "name": "Palacio de Gaudí Astorga@es",
+          "type": "Museum",
+          "description": {
+            "about": "https://www.palaciodegaudi.es/"
+          },
+          "position": { "latitude": 42.45430, "longitude": -6.05248, "elevation": 868 },
+          "hours": [
+            "1000-1400, 1600-2000"
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "F-F134-9",
+          "name": "Museo del Chocolate@es",
+          "type": "Museum",
+          "description": {
+            "about": "http://www.aytoastorga.es/turismo-y-ocio/MUCHA/index.html"
+          },
+          "position": { "latitude": 42.45878, "longitude": -6.04990, "elevation": 848 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1030-1400, 1630-1900"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1030-1400"
+            }
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "F-F134-10",
+          "name": "Meeting of the Camino Frances and Vía de la Plata@en",
+          "type": "Junction",
+          "position": { "latitude": 42.45271, "longitude": -6.05026, "elevation": 848 }
+        }
+      ]
+    }
+  ],
+  "legs": [ ],
+  "routes": [
+    {
+      "id": "AT-AT",
+      "name": "Default route",
+      "description": "The default route for importing",
+      "palette": {
+        "colour": "#fec953"
+      }
+    }
+  ],
+  "route-logic": [ ],
+  "default-route": "AT-AT"
+}

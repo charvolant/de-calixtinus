@@ -27,7 +27,7 @@ data RangeCheck = RangeCheck {
 arguments :: Parser RangeCheck
 arguments =  RangeCheck
     <$> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
-    <*> strArgument (metavar "CAMINO" <> value "--" <> help "Source camino identifier")
+    <*> strArgument (metavar "CAMINO" <> help "Source camino identifier")
 
 rangeCheckSegment :: Leg -> LegSegment -> IO ()
 rangeCheckSegment leg (LegSegment sf st distance ascent descent) = do

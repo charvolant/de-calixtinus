@@ -2,6 +2,7 @@
   "id": "BM",
   "name": "Bondi to Manly Walk@en",
   "description": {
+    "summary": "The Bondi to Manly walk is around around Sydney Harbour and over the bridge.",
     "text": "The Bondi to Manly walk is an 80km walk around Sydney Harbour. The walk follows the coast-line, crossing the Sydney Harbour Bridge.@en",
     "notes": [
       "There are various points on the trip where accommodation can be hard to come by. Walkers often use the ferry or bus links to access either a central point, usually Circular Quay, or nearby accommodation options. Cremorne and Mossman have been added to allow walkers on the North side of the harbour to access additional accommodation and services. To use this facility, check the 'Use Transport Links' option.",
@@ -2238,7 +2239,14 @@
       "palette": {
         "colour": "#fefb39",
         "text-colour": "#d0d000"
-      }
+      },
+      "features": [
+        {
+          "id": "BM-BM-F1",
+          "name": "Bondi to Manly Walk",
+          "geometry": "BM/BM-BM-F1.geojson"
+        }
+      ]
     }
   ],
   "route-logic": [ ],

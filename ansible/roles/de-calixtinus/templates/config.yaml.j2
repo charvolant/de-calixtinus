@@ -13,6 +13,12 @@ web:
     - id: "Camino Icons"
       type: Font
       path: https://{{ dcx_dist_bucket }}.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff
+    - id: features
+      type: Directory
+      path: https://{{ dcx_dist_bucket }}.s3.ap-southeast-2.amazonaws.com/features
+    - id: images
+      type: Directory
+      path: https://{{ dcx_dist_bucket }}.s3.ap-southeast-2.amazonaws.com/images
 {% else %}
     - id: bootstrap-css
       type: Css
@@ -40,6 +46,9 @@ caminos:
   - id: I-AS
     type: CaminoDefinition
     path: "file:{{ dcx_dir}}/lib/import-arzua-santiago.json"
+  - id: I-AT
+    type: CaminoDefinition
+    path: "file:{{ dcx_dir}}/lib/import-astorga.json"
   - id: I-MS
     type: CaminoDefinition
     path: "file:{{ dcx_dir}}/lib/import-melide-santiago.json"
@@ -58,6 +67,9 @@ caminos:
   - id: I
     type: CaminoDefinition
     path: "file:{{ dcx_dir}}/lib/camino-ingles.json"
+  - id: V
+    type: CaminoDefinition
+    path: "file:{{ dcx_dir}}/lib/camino-viadelaplata.json"
   - id: W
     type: CaminoDefinition
     path: "file:{{ dcx_dir}}/lib/camino-invierno.json"
@@ -84,6 +96,16 @@ calendar:
         - 2028-04-16
         - 2029-04-01
         - 2030-04-21
+  - key: ShroveTuesday
+    name:
+      - Shrove Tuesday@en
+      - Martes de Carnaval@es
+    calendar:
+      type: nth-day-after
+      nth: -47
+      calendar:
+        type: named
+        key: EasterSunday
   - key: MaundayThursday
     name:
       - Maundy Thursday@en
@@ -205,6 +227,14 @@ calendar:
       type: day-of-year
       days:
         - 01-26
+  - key: AndalusiaDay
+    name:
+      - Día de Andalusía@es
+      - Andalusia Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 02-28
   - key: FreedomDayPT
     name:
       - Freedom Day (Portugal)@en
@@ -311,6 +341,14 @@ calendar:
     name:
       - Day of Asturias@en
       - Día de Asturias@ast
+    calendar:
+      type: day-of-year
+      days:
+        - 09-08
+  - key: DayOfExtremadura
+    name:
+      - Day of Extremadura@en
+      - Día de Extremadura@es
     calendar:
       type: day-of-year
       days:
@@ -492,6 +530,20 @@ regions:
       - type: weekly
         days:
           - sunday
+  - id: "ES-AN"
+    name:
+      - Andalucía@es
+    description:
+      text:
+        - The Autonomous Community of Andalusia@en
+        - Comunidad Autonoma de Andalusía@es
+      about: http://www.juntadeandalucia.es
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: AndalusiaDay
   - id: "ES-AS"
     name:
       - Asturies@ast
@@ -527,6 +579,24 @@ regions:
         key: CantabriaInstitutionsDay
       - type: named
         key: BienAparecida
+  - id: "ES-EX"
+    name:
+      - Extremadura@es
+    description:
+      text:
+        - Autonomous Community of Extremadura@en
+        - Comunidad Autonoma de Cantrabria@es
+      about: https://www.juntaex.es
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: ShroveTuesday
+      - type: named
+        key: MaundayThursday
+      - type: named
+        key: DayOfExtremadura
   - id: "ES-GA"
     name:
       - Galicia@ga

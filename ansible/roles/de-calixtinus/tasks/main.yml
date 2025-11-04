@@ -38,6 +38,16 @@
     group: "{{ dcx_group }}"
     state: directory
 
+- name: Create the data directories
+  ansible.builtin.file:
+    path: "{{ dcx_dir }}/data/{{ item }}"
+    owner: "{{ dcx_user }}"
+    group: "{{ dcx_group }}"
+    state: directory
+  loop:
+    - features
+    - images
+
 - name: Install distribution
   ansible.builtin.unarchive:
     src: /tmp/de-calixtinus.tar.gz

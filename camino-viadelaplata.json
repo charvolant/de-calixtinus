@@ -5,7 +5,14 @@
     "Silver Way@en"
   ],
   "description": {
-    "text": "The Vía de la Plata (Silver Way) is a Camino that runs from Seville and runs through the whole of Western Spain to Santiago de Compostella.@en",
+    "summary": "The Vía de la Plata (Silver Way) is a Camino that starts in Seville and runs North through Western Spain.",
+    "text": "The Vía de la Plata (Silver Way) is a Camino that runs from Seville and runs through the whole of Western Spain to Santiago de Compostella. The camino itself runs from Seville and joins either the French Camino at Astorga on the Camino Sanabrés at Granja de Moreuela. The route has been used for commerce and pilgrimage since ancient times. Despite the name, \"Plata\" comes from the Arabic word al-balat or paved road and refers to the original Roman road.@en",
+    "notes": [
+      {
+        "type": "Warning",
+        "text": "There are often long stretches between towns where the only waypoints are intersections or estates. Proper levels of fitness and planning are needed.@en"
+      }
+    ],
     "image": {
       "title": [
         "Hacia San Martín del Pedroso@es",

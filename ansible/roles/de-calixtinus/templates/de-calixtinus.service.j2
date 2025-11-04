@@ -12,7 +12,7 @@ StandardOutput=append:{{ dcx_log_dir }}/access.log
 StandardError=append:{{ dcx_log_dir }}/error.log
 RuntimeDirectory={{ dcx_run_dir }}
 WorkingDirectory=/run/{{ dcx_run_dir }}
-ExecStart={{ dcx_dir}}/bin/camino-server-exe -c {{ dcx_dir}}/lib/config.yaml -s {{ dcx_dir}}/lib/static -r https://{{ server_name }} -p 3000 +RTS -M{{ dcx_maximum_heap_size }}
+ExecStart={{ dcx_dir}}/bin/camino-server-exe -c {{ dcx_dir}}/lib/config.yaml -s {{ dcx_dir}}/lib/static -f {{ dcx_dir }}/data/features -i {{ dcx_dir }}/data/images -r https://{{ server_name }} -p 3000 +RTS -M{{ dcx_maximum_heap_size }}
 Restart=no
 
 [Install]

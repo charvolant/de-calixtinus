@@ -1878,8 +1878,8 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
     choosePoiTooltip poi = caminoPoiTooltip tprefs cprefs poi
     legWithoutTrail leg = null $ routeFeatures $ caminoLegRoute camino leg
     legStyleID leg = routeID $ caminoLegRoute camino leg
-    usedRoute r = S.member r usedRoutes
-    usedFeature f = S.member f usedFeatures
+    usedRoute r = if isJust solution then S.member r usedRoutes else True
+    usedFeature f = if isJust solution then S.member f usedFeatures else True
     features = orderFeatures usedRoute usedFeature [camino]
 
 

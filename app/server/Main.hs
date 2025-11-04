@@ -33,8 +33,8 @@ arguments :: Parser Server
 arguments = Server
     <$> strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG-FILE" <> showDefault <> help "Configuration file")
     <*> strOption (long "static" <> short 's' <> value "./static" <> metavar "DIR" <> showDefault <> help "The directory holding static files")
-    <*> strOption (long "feature" <> short 'f' <> value "./features" <> metavar "DIR" <> showDefault <> help "The directory holding feature data")
-    <*> strOption (long "image" <> short 'i' <> value "./images" <> metavar "DIR" <> showDefault <> help "The directory holding images")
+    <*> strOption (long "feature" <> short 'f' <> value "./data/features" <> metavar "DIR" <> showDefault <> help "The directory holding feature data")
+    <*> strOption (long "image" <> short 'i' <> value "./data/images" <> metavar "DIR" <> showDefault <> help "The directory holding images")
     <*> flag False True (long "devel" <> short 'd' <> help "True if in development mode")
     <*> strOption (long "root" <> short 'r' <> value "http://localhost:3000" <> metavar "URL" <> showDefault <> help "The root URL for links")
     <*> option auto (long "port" <> short 'p' <> value 3000 <> metavar "PORT" <> showDefault <> help "The port to listen on")

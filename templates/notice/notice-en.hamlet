@@ -54,3 +54,12 @@
   or get filled up; roads get blocked; on Sunday <em>everything</em> shuts down and you need
   to plan accordingly.
 
+<h3>Licence
+
+<p>
+  De Calixtinus itself is open-source software, available under terms of the MIT licence.
+  The data used by De Calixtinus is generally available under the terms of the CC-BY licence.
+  Linked libraries and data may have individual licences, depending on the source of the library or data.
+  In particular, some data is made available under the terms of a CC-BY-NC licence.
+  The complete set of licences and attributions are available in
+  <a href="#{licence}">LICENSE

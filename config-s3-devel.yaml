@@ -19,6 +19,9 @@ web:
     - id: images
       type: Directory
       path: https://de-calixtinus-devel.s3.ap-southeast-2.amazonaws.com/images
+    - id: license
+      type: File
+      path: https://de-calixtinus-devel.s3.ap-southeast-2.amazonaws.com/LICENSE
 caminos:
   - id: I-ST
     type: CaminoDefinition

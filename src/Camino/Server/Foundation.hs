@@ -47,6 +47,7 @@ import Text.Hamlet (HtmlUrlI18n, ihamletFile)
 import Text.Read (readMaybe)
 import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
 import Data.Util (headWithDefault)
+import Camino.Config (AssetConfig(assetPath))
 
 -- | Generic placeholder date
 placeholderDate :: Day
@@ -472,12 +473,12 @@ instance Yesod CaminoApp where
             <script src="#{C.assetPath s}">
    |]
 
-noticePopupText :: [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
-noticePopupText [] = noticePopupText [rootLocale]
-noticePopupText (locale':rest)
+noticePopupText :: Text -> [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute
+noticePopupText licence [] = noticePopupText licence [rootLocale]
+noticePopupText licence (locale':rest)
  | localeLanguageTag locale' == "" = $(ihamletFile "templates/notice/notice-en.hamlet")
  | localeLanguageTag locale' == "en" = $(ihamletFile "templates/notice/notice-en.hamlet")
- | otherwise = noticePopupText rest
+ | otherwise = noticePopupText licence rest
 
 noticePopup :: Handler Widget
 noticePopup = do
@@ -486,7 +487,8 @@ noticePopup = do
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
   let messages = renderCaminoMsg config locales
-  let notice = (noticePopupText locales) messages router
+  let licence = maybe "LICENSE" assetPath $ C.getAsset "license" config
+  let notice = (noticePopupText licence locales) messages router
   return $(widgetFile "notice-popup")
 
 -- Ensure secure cookies

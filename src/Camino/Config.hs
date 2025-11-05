@@ -144,6 +144,7 @@ data AssetType = JavaScript
   | CaminoDefinition
   | Directory
   | GeoJSON
+  | File
   deriving (Eq, Ord, Show, Generic)
 
 instance FromJSON AssetType
@@ -348,6 +349,13 @@ instance Default Config where
           assetId = "Camino Icons",
           assetType = Font,
           assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/static/fonts/Camino-Icons.woff",
+          assetIntegrity = Nothing,
+          assetCrossOrigin = Unused
+        },
+        Asset {
+          assetId = "license",
+          assetType = File,
+          assetPath = "https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/LICENSE",
           assetIntegrity = Nothing,
           assetCrossOrigin = Unused
         }

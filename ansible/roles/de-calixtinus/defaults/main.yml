@@ -4,6 +4,7 @@ dcx_debug: false
 dcx_dir: /opt/de-calixtinus
 # S3 bucket to install distribution from
 dcx_dist_bucket: de-calixtinus
+dcx_dist_bucket_ap: ap-southeast-2
 dcx_group: dcx
 dcx_maximum_heap_size: 768m
 dcx_log_dir: /var/log/de-calixtinus

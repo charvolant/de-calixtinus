@@ -410,6 +410,7 @@ caminoServiceIcon Handwash = [ihamlet| <span .service .ca-handwash title="_{Hand
 caminoServiceIcon Kitchen = [ihamlet| <span .service .ca-kitchen title="_{KitchenTitle}"> |]
 caminoServiceIcon Breakfast = [ihamlet| <span .service .ca-breakfast title="_{BreakfastTitle}"> |]
 caminoServiceIcon Dinner = [ihamlet| <span .service .ca-dinner title="_{DinnerTitle}"> |]
+caminoServiceIcon HalfBoard = [ihamlet| <span .service .ca-halfboard title="_{HalfBoardTitle}"> |]
 caminoServiceIcon Lockers = [ihamlet| <span .service .ca-lockers title="_{LockersTitle}"> |]
 caminoServiceIcon Accessible = [ihamlet| <span .service .ca-accessible title="_{AccessibleTitle}"> |]
 caminoServiceIcon Stables = [ihamlet| <span .service .ca-stables title="_{StablesTitle}"> |]
@@ -439,6 +440,7 @@ caminoServiceMsg Handwash = HandwashTitle
 caminoServiceMsg Kitchen = KitchenTitle
 caminoServiceMsg Breakfast = BreakfastTitle
 caminoServiceMsg Dinner = DinnerTitle
+caminoServiceMsg HalfBoard = HalfBoardTitle
 caminoServiceMsg Lockers = LockersTitle
 caminoServiceMsg Accessible = AccessibleTitle
 caminoServiceMsg Stables = StablesTitle

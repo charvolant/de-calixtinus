@@ -136,7 +136,7 @@ caminoPrintOptions = buildPrintOptions [
   , def & foPath .~ "fragment" & foRemove ?~ removeNullFalse
   , def & foPath .~ "imports" & foRemove ?~ removeNullEmpty
   , def & foPath .~ "locations" & foRemove ?~ removeNullEmpty
-  , def & foPath .~ "legs" & foChildren .~ legFieldOptions
+  , def & foPath .~ "legs" & foRemove ?~ removeNullEmpty & foChildren .~ legFieldOptions
   , def & foPath .~ "links" & foRemove ?~ removeNullEmpty & foChildren .~ legFieldOptions
   , def & foPath .~ "routes" & foChildren .~ [
       def & foPath .~ "id"

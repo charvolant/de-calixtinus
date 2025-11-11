@@ -351,6 +351,7 @@ data Service = WiFi -- ^ Wireless internet available
   | Kitchen -- ^ Kitchen facilities
   | Breakfast -- ^ Breakfast available
   | Dinner -- ^ Dinner available
+  | HalfBoard -- ^ Half-board (breakfast/lunch or breakfast/dinner) available
   | Lockers -- ^ Lockers or cabinets
   | Accessible -- ^ Fitted for people with disabilities
   | Stables -- ^ Stabling for horses available
@@ -1689,7 +1690,7 @@ instance FromJSON Camino where
     fragment' <- v .:? "fragment" .!= False
     imports' <- v .:? "imports" .!= []
     locs' <- v .: "locations"
-    legs' <- v .: "legs"
+    legs' <- v .:? "legs" .!= []
     links' <- v .:? "links" .!= []
     routes' <- v .: "routes"
     routeLogic' <- v .: "route-logic"
@@ -1734,7 +1735,7 @@ instance ToJSON Camino where
       , "fragment" .= (if fragment' then Just fragment' else Nothing)
       , "imports" .= (if null imports' then Nothing else Just (map placeholderID imports'))
       , "locations" .= locations'
-      , "legs" .= legs'
+      , "legs" .= (if null legs' then Nothing else Just legs')
       , "links" .= (if null links' then Nothing else Just links')
       , "routes" .= map (\r -> if routeID r == routeID defaultRoute' then r { routeLocations = [], routeLocationSet = S.empty } else r) routes'
       , "route-logic" .= routeLogic'
@@ -1749,7 +1750,7 @@ instance ToJSON Camino where
       <> "fragment" .?= (if fragment' then Just fragment' else Nothing)
       <> "imports" .?= (if null imports' then Nothing else Just (map placeholderID imports'))
       <> "locations" .= locations'
-      <> "legs" .= legs'
+      <> "legs" .?= (if null legs' then Nothing else Just legs')
       <> "links" .?= (if null links' then Nothing else Just links')
       <> "routes" .= routes'
       <> "route-logic" .= routeLogic'

@@ -159,6 +159,7 @@ iconList = [
     ("ca-gite", '\xe01a'),
     ("ca-groceries", '\xe041'),
     ("ca-guesthouse", '\xe012'),
+    ("ca-halfboard", '\xe074'),
     ("ca-handwash", '\xe063'),
     ("ca-hazard", '\xe093'),
     ("ca-heating", '\xe070'),

@@ -286,6 +286,9 @@
           <td>^{caminoServiceIcon Dinner}
           <td>Dinner available
         <tr>
+          <td>^{caminoServiceIcon HalfBoard}
+          <td>Half board (buffet-style breakfast/lunch or breakfast/dinner) available
+        <tr>
           <td>^{caminoServiceIcon Lockers}
           <td>Lockers or cabinets
         <tr>

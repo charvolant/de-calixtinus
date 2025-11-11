@@ -135,6 +135,7 @@ data CaminoMsg =
   | GiteTitle
   | GroceriesTitle
   | GuestHouseTitle
+  | HalfBoardTitle
   | HandwashTitle
   | HazardTitle
   | HeatingTitle
@@ -437,6 +438,7 @@ renderCaminoMsgDefault _ FrugalTitle = "Frugal"
 renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
 renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
+renderCaminoMsgDefault _ HalfBoardTitle = "Half-Board"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
 renderCaminoMsgDefault _ HazardTitle = "Hazard"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"

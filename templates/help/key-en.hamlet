@@ -232,6 +232,12 @@
         <tr>
           <td>
             <span .location-type-sample>
+              ^{caminoLocationTypeIcon Industry}
+          <td>Industry
+          <td>An industrial area
+        <tr>
+          <td>
+            <span .location-type-sample>
               ^{caminoLocationTypeIcon Poi}
           <td>Locality
           <td>An unspecified waypoint or point of interest

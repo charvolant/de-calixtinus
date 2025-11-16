@@ -273,6 +273,7 @@ caminoLocationTypeIcon Wharf = [ihamlet| <span .location-type .ca-wharf title="_
 caminoLocationTypeIcon Station = [ihamlet| <span .location-type .ca-station title="_{StationTitle}"> |]
 caminoLocationTypeIcon Airport = [ihamlet| <span .location-type .ca-airport title="_{AirportTitle}"> |]
 caminoLocationTypeIcon Farmland = [ihamlet| <span .location-type .ca-farmland title="_{FarmlandTitle}"> |]
+caminoLocationTypeIcon Industry = [ihamlet| <span .location-type .ca-industry title="_{IndustryTitle}"> |]
 caminoLocationTypeIcon PlaceholderLocation = [ihamlet| <span .text-warning .location-type .ca-poi title="_{PlaceholderLabel}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
@@ -309,6 +310,7 @@ caminoLocationTypeLabel Wharf = WharfTitle
 caminoLocationTypeLabel Station = StationTitle
 caminoLocationTypeLabel Airport = AirportTitle
 caminoLocationTypeLabel Farmland = FarmlandTitle
+caminoLocationTypeLabel Industry = IndustryTitle
 caminoLocationTypeLabel Poi = PoiTitle
 caminoLocationTypeLabel PlaceholderLocation = PlaceholderLabel
 
@@ -1704,6 +1706,7 @@ $forall (lt, location, poi) <- icons
       , (Station, (24, 24), (24, 12))
       , (Airport, (24, 24), (24, 12))
       , (Farmland, (24, 24), (24, 24))
+      , (Industry, (24, 24), (24, 24))
       , (Poi, (16, 24), (16, 24))
       ] :: [(LocationType, (Int, Int), (Int, Int))]
 

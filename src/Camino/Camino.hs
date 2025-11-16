@@ -637,6 +637,7 @@ data LocationType =
    | Wharf -- ^ A boat/ferry transfer point
    | Airport -- ^ An airport, airfield, aerodrome etc.
    | Farmland -- ^ Field, greenhouses, pasture etc.
+   | Industry -- ^ An industiral area
    | Poi -- ^ A generic point of interest
    | PlaceholderLocation -- ^ A placeholder location
    deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)

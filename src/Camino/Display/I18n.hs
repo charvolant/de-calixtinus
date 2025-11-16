@@ -150,6 +150,7 @@ data CaminoMsg =
   | HoursTitle
   | HouseTitle
   | IdentifierLabel
+  | IndustryTitle
   | InformationLabel
   | InformationTitle
   | InformationDescription
@@ -453,6 +454,7 @@ renderCaminoMsgDefault _ HotelTitle = "Hotel"
 renderCaminoMsgDefault _ HoursTitle = "Hours"
 renderCaminoMsgDefault _ HouseTitle = "House"
 renderCaminoMsgDefault _ IdentifierLabel = "ID"
+renderCaminoMsgDefault _ IndustryTitle = "Industrial"
 renderCaminoMsgDefault _ InformationLabel = "Information"
 renderCaminoMsgDefault _ InformationTitle = "Information"
 renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."

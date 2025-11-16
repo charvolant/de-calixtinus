@@ -171,6 +171,7 @@ iconList = [
     ("ca-hotel", '\xe013'),
     ("ca-house", '\xe011'),
     ("ca-house-small", '\xe098'),
+    ("ca-industry", '\xe058'),
     ("ca-information", '\xe091'),
     ("ca-information-point", '\xe053'),
     ("ca-intersection", '\xe005'),

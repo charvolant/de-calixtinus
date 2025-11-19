@@ -323,7 +323,7 @@ Example image JSON, for an image drawn from Wikipedia, is shown below
 
 Notes represent additional information that can be drawn away from the more
 general descriptive text.
-There are four types of notes: `Information`, `Warning`, `Address`, `Directions`
+There are four types of notes: `Information`, `Warning`, `Address`, `Directions`, `Access`
 with each note type providing a visual indication of the sort of thing the note
 is about.
 

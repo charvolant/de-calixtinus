@@ -690,12 +690,14 @@ descriptionNoteTypeMsg Information = InformationTitle
 descriptionNoteTypeMsg Warning = WarningTitle
 descriptionNoteTypeMsg Address = AddressTitle
 descriptionNoteTypeMsg Directions = DirectionsTitle
+descriptionNoteTypeMsg Access = AccessTitle
 
 descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
 descriptionNoteTypeIcon Warning = [ihamlet| <span .note-type .ca-warning title="_{WarningTitle}">|]
 descriptionNoteTypeIcon Address = [ihamlet| <span .note-type .ca-map title="_{AddressTitle}">|]
 descriptionNoteTypeIcon Directions = [ihamlet| <span .note-type .ca-map title="_{DirectionsTitle}">|]
+descriptionNoteTypeIcon Access = [ihamlet| <span .note-type .ca-key title="_{AccessTitle}">|]
 
 descriptionNote :: Note -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNote note = [ihamlet|

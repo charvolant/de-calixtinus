@@ -79,6 +79,7 @@
     ]
   },
   "imports": [
+    "I-GM",
     "I-AT"
   ],
   "locations": [
@@ -805,7 +806,14 @@
         {
           "name": "Santos de Maimona Pilgrim's Hostel",
           "type": "PrivateAlbergue",
-          "description": "Keys available at the police station or tourist office. Pre-booking available.",
+          "description": {
+            "notes":[
+              {
+                "type": "Access",
+                "text": "Keys available at the police station or tourist office. Pre-booking available."
+              }
+            ]
+          },
           "services": [ "Heating", "Handwash", "Kitchen", "BicycleStorage" ],
           "sleeping": [ "Shared" ]
         },
@@ -2461,73 +2469,6 @@
       ]
     },
     {
-      "id": "V-V101",
-      "name": "Granja de Moreuela",
-      "type": "Village",
-      "position": { "latitude": 41.80937, "longitude": -5.73909, "elevation": 708 },
-      "region": "ES-CL",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
-      "accommodation": [
-        {
-          "name": "Albergue de peregrinos Granja de Moreuela",
-          "type": "PilgrimAlbergue",
-          "services": [ "BicycleStorage", "Bedlinen" ],
-          "sleeping": [ "Shared" ]
-        },
-        {
-          "name": "La Casa del Tio Quico",
-          "type": "CasaRural",
-          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple" ]
-        },
-        {
-          "name": "Casa Rural Donde Victor Luna",
-          "type": "CasaRural",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple" ]
-        },
-        {
-          "name": "Casa de la Abuela Ángela",
-          "type": "CasaRural",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
-          "sleeping": [ "Single", "DoubleWC" ]
-        }
-      ],
-      "pois": [
-        {
-          "id": "V-V99-1",
-          "name": "Camino Sanabrés@es",
-          "type": "Junction",
-          "position": { "latitude": 41.80968, "longitude": -5.73943 }
-        },
-        {
-          "id": "V-V99-2",
-          "name": "Centro de interpretación CIETER@es",
-          "type": "Park",
-          "position": { "latitude": 41.80700, "longitude": -5.73956 }
-        },
-        {
-          "id": "V-V99-3",
-          "name": "Monasterio de Santa María de Moreruela@es",
-          "type": "Monastery",
-          "description": {
-            "about": "https://www.turismocastillayleon.com/es/arte-cultura-patrimonio/monasterios/santa-maria-moreruela"
-          },
-          "position": { "latitude": 41.81307, "longitude": -5.77731, "elevation": 694 },
-          "hours": [
-            {
-              "calendar": {
-                "type": "weekly",
-                "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
-              },
-              "hours": "1000-1400, 1600-2000"
-            }
-          ],
-          "time": 1.0
-        }
-      ]
-    },
-    {
       "id": "V-V102",
       "name": "Santovenia de Esla",
       "type": "Village",
@@ -2611,7 +2552,14 @@
         {
           "name": "Albergue de peregrinos Benavente",
           "type": "PilgrimAlbergue",
-          "description": "Keys can be collected from the tourist information office (morning) or the police headquarters (afternoon)@en",
+          "description": {
+            "notes":[
+              {
+                "type": "Access",
+                "text": "Keys can be collected from the tourist information office (morning) or the police headquarters (afternoon)@en"
+              }
+            ]
+          },
           "services": [ "Kitchen", "BicycleStorage", "Bedlinen" ],
           "sleeping": [ "Shared" ]
         },

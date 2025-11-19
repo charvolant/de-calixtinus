@@ -1400,7 +1400,8 @@
   <span .description-icon .ca-information>
   <span .description-icon .ca-warning>
   <span .description-icon .ca-map>
-  indicating additional information, a warning of some sort or directions.
+  <span .description-icon .ca-key>
+  indicating additional information, a warning of some sort, directions or how to access something.
 
 <h3 #event-help>Events
 

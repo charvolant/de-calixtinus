@@ -176,6 +176,7 @@ iconList = [
     ("ca-information-point", '\xe053'),
     ("ca-intersection", '\xe005'),
     ("ca-junction", '\xe01e'),
+    ("ca-key", '\xe09f'),
     ("ca-kitchen", '\xe06b'),
     ("ca-label", '\xe09c'),
     ("ca-link", '\xe096'),

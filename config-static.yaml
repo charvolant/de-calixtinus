@@ -19,12 +19,18 @@ web:
       type: Directory
       path: /image
 caminos:
+  - id: I-ST
+    type: CaminoDefinition
+    path: "file:import-santiago.json"
   - id: I-AS
     type: CaminoDefinition
     path: "file:import-arzua-santiago.json"
   - id: I-AT
     type: CaminoDefinition
     path: "file:import-astorga.json"
+  - id: I-BS
+    type: CaminoDefinition
+    path: "file:import-bergazos-santiago.json"
   - id: I-GM
     type: CaminoDefinition
     path: "file:import-granja-de-moreuela.json"
@@ -34,9 +40,6 @@ caminos:
   - id: I-PF
     type: CaminoDefinition
     path: "file:import-ponferrada.json"
-  - id: I-ST
-    type: CaminoDefinition
-    path: "file:import-santiago.json"
   - id: I-VV
     type: CaminoDefinition
     path: "file:import-villaviciosa.json"

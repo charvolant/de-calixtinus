@@ -41,6 +41,7 @@ data NoteType =
   | Warning -- ^ A warning about the thing being described
   | Address -- ^ An address
   | Directions -- ^ How to get there etc.
+  | Access -- ^ How to access something
   deriving (Generic, Show, Read, Eq, Ord, Enum, Bounded)
 
 instance FromJSON NoteType

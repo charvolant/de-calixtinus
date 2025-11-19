@@ -44,6 +44,7 @@ import Text.Hamlet
 -- | Message placeholders for the camino
 data CaminoMsg =
     AboutLabel
+  | AccessTitle
   | AccessibleTitle
   | AccommodationLabel
   | AccommodationPenanceLabel
@@ -354,6 +355,7 @@ formatHeight h = H.span H.! HA.class_ "height" $ text $  sformat  (fixed 0) h <>
 -- | Default English translation
 renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
 renderCaminoMsgDefault _ AboutLabel = "About"
+renderCaminoMsgDefault _ AccessTitle = "Access"
 renderCaminoMsgDefault _ AccessibleTitle = "Accessible"
 renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ AccommodationPenanceLabel = "Accommodation"

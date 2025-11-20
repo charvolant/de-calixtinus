@@ -33,7 +33,7 @@ caminos:
     path: "file:import-bergazos-santiago.json"
   - id: I-GM
     type: CaminoDefinition
-    path: "file:import-granja-de-moreuela.json"
+    path: "file:import-granja-de-moreruela.json"
   - id: I-MS
     type: CaminoDefinition
     path: "file:import-melide-santiago.json"

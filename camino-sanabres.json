@@ -1,0 +1,3624 @@
+{
+  "id": "SN",
+  "name": "Camino Sanabrés@es",
+  "description": {
+    "summary": "The Camino Sanabrés starts in Granja de Moreruela and runs to Santiago de Compostella.@en",
+    "text": "The Camino Sanabrés starts in Granja de Moreruela and follows the royal road between Meseta and Galacia, reaching Santiago de Compostella from the South. It is often used by pilgrims on the Vía de la Plata as a final stage to Santiago de Compostella. The route is less tavelled than the major caminos and has a reputation for being peaceful and gentle.@en",
+    "notes": [
+      {
+        "type": "Warning",
+        "text": "The Camino Sanabrés is an uncrowded route and does not offer the same level of pilgrim services as the more popular routes. Accommodation and services can be sparse and pilgrims will need careful planning and an ability to adapt to circumstances.@en"
+      }
+    ],
+    "image": {
+      "title": [
+        "Cea, en la provincia de Orense, Galicia, España@es",
+        "Cea, Ourense province, Galicia, Spain@en"
+      ],
+      "source": "SN/SN-Camino-Sanabres.jpg",
+      "thumbnail": "SN/SN-Camino-Sanabres-thumbnail.jpg",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Simon Burchell"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2018"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Cea,_Camino_Sanabrés,_Galicia_19.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Camino Sanabrés@es"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2025-11-09"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-11-09"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1.0"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "imports": [
+    "I-GM",
+    "I-BS"
+  ],
+  "locations": [
+    {
+      "id": "SN-SN2",
+      "name": "Puente Quintos",
+      "type": "Bridge",
+      "position": { "latitude": 41.84571, "longitude": -5.78382, "elevation": 685 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN2-1",
+          "name": "View over the river Esla@en",
+          "type": "Lookout",
+          "position": { "latitude": 41.83806, "longitude": -5.79126, "elevation": 720 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN3",
+      "name": "Faramontanos de Tábara",
+      "type": "Village",
+      "position": { "latitude": 41.83456, "longitude": -5.88872, "elevation": 711 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "La Casa Azul y Amarilla",
+          "type": "PilgrimAlbergue",
+          "services": [ "Breakfast" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Bodega de Antonio",
+          "type": "CasaRural",
+          "services": [ "Breakfast" ],
+          "sleeping": [ "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN3-1",
+          "name": "Traditional Wine Storage@en",
+          "type": "Winery",
+          "position": { "latitude": 41.83599, "longitude": -5.88591, "elevation": 722 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN4",
+      "name": "Tábara",
+      "type": "Town",
+      "position": { "latitude": 41.82502, "longitude": -5.96012, "elevation": 752 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Public Hostel Los Beatos de Tabara",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Stables", "BicycleStorage", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Villa Apartment",
+          "type": "House",
+          "services": [ ],
+          "sleeping": [ "Single" ]
+        },
+        {
+          "name": "Hotel El Roble",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN4-1",
+          "name": "Los Beatos Information Centre@en",
+          "type": "Museum",
+          "position": { "latitude": 41.82667, "longitude": -5.95824, "elevation": 744 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "sunday" ]
+              },
+              "hours": "0900-1400, 1630-2100"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "1130-1400, 1600-1700"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday" ]
+              },
+              "hours": "1030-1400, 1600-1900"
+            }
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "SN-SN4-2",
+          "name": "Monumento a León Felipe@es",
+          "type": "Statue",
+          "position": { "latitude": 41.82601, "longitude": -5.95941, "elevation": 749 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN5",
+      "name": "Bercanos de Valverde",
+      "type": "Village",
+      "position": { "latitude": 41.93144, "longitude": -5.95160, "elevation": 738 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN6",
+      "name": "Villanueva de las Peras",
+      "type": "Village",
+      "position": { "latitude": 41.93503, "longitude": -5.97953, "elevation": 745 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "La Alameda Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN7",
+      "name": "Santa Croya de Tera",
+      "type": "Village",
+      "position": { "latitude": 41.98475, "longitude": -5.97600, "elevation": 726 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN8",
+      "name": "Santa Marta de Tera",
+      "type": "Village",
+      "position": { "latitude": 41.99471, "longitude": -5.97146, "elevation": 735 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Santa Marta de Tera Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "description": {
+            "notes": [
+              {
+                "type": "Access",
+                "text": "The keys are in the church, which closes at 1400 and reopens after 1600."
+              }
+            ]
+          },
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN8-1",
+          "name": "Carving of Saint James the pilgrim",
+          "type": "Statue",
+          "position": { "latitude": 41.99457, "longitude": -5.97128, "elevation": 734 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN9",
+      "name": "Playa fluvial La Barca",
+      "type": "Beach",
+      "position": { "latitude": 41.98185, "longitude": -6.02940, "elevation": 731 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN10",
+      "name": "Camarzana de Tera",
+      "type": "Village",
+      "position": { "latitude": 41.99564, "longitude": -6.02695, "elevation": 735 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Juan Manuel Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "HalfBoard", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN11",
+      "name": "Calzadilla de Tera",
+      "type": "Village",
+      "position": { "latitude": 41.97948, "longitude": -6.08250, "elevation": 755 },
+      "region": "ES-CL",
+      "services": [ "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Calzadilla de Tera Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN12",
+      "name": "Olleros de Tera",
+      "type": "Village",
+      "position": { "latitude": 41.98475, "longitude": -6.10260, "elevation": 750 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Albergue La Trucha",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Jula Vut",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Breakfast", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN13",
+      "name": "Embalse de Nuestra Señora de Agavanzal",
+      "type": "Natural",
+      "position": { "latitude": 41.97804, "longitude": -6.14131, "elevation": 773 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN14",
+      "name": "Villar de Farfón",
+      "type": "Village",
+      "position": { "latitude": 41.97883, "longitude": -6.17018, "elevation": 805 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Rehoboth Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN15",
+      "name": "Rionegro del Puente",
+      "type": "Village",
+      "position": { "latitude": 42.00648, "longitude": -6.22742, "elevation": 800 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Virgen de la Carballeda",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Dryer", "Kitchen", "Accessible", "Stables", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN16",
+      "name": "El Empalme",
+      "type": "Intersection",
+      "position": { "latitude": 42.01289, "longitude": -6.26587, "elevation": 862 },
+      "region": "ES-CL",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN17",
+      "name": "Mombuey",
+      "type": "Village",
+      "position": { "latitude": 42.02340, "longitude": -6.33040, "elevation": 891 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Mombuey",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Pajar de Trampas",
+          "type": "CasaRural",
+          "services": [ "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single" ]
+        },
+        {
+          "name": "Hotel Restaurante la Ruta",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN18",
+      "name": "Valdemerilla",
+      "type": "Village",
+      "position": { "latitude": 42.01494, "longitude": -6.37826, "elevation": 896 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN19",
+      "name": "Cernadilla",
+      "type": "Village",
+      "position": { "latitude": 42.02057, "longitude": -6.41750, "elevation": 903 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN20",
+      "name": "San Salvador de Pzlazuelo",
+      "type": "Village",
+      "position": { "latitude": 42.02203, "longitude": -6.43805, "elevation": 918 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN21",
+      "name": "Entrepeñas",
+      "type": "Village",
+      "position": { "latitude": 42.03225, "longitude": -6.47425, "elevation": 911 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "El Cuco",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ ]
+        },
+        {
+          "name": "Casa Azul Sanabria",
+          "type": "CasaRural",
+          "services": [ "Restaurant", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa Las Peñas del Corredor",
+          "type": "CasaRural",
+          "services": [ "Restaurant", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Stables", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN22",
+      "name": "Asturianos",
+      "type": "Village",
+      "position": { "latitude": 42.05139, "longitude": -6.49036, "elevation": 969 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Peregrinos Asturianos",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN23",
+      "name": "Palacios de Sanabria",
+      "type": "Village",
+      "position": { "latitude": 42.05966, "longitude": -6.52307, "elevation": 984 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [
+        {
+          "name": "Alojamientos Carrero",
+          "type": "House",
+          "description": {
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "May be permanently closed@en"
+              }
+            ]
+          },
+          "services": [ "Kitchen" ],
+          "sleeping": [ "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN24",
+      "name": "Remesal",
+      "type": "Village",
+      "position": { "latitude": 42.05777, "longitude": -6.54844, "elevation": 1010 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN24-1",
+          "name": "Meeting between Ferdinand the Catholic and Philip the Handsome@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.05750, "longitude": -6.54790, "elevation": 1009 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN25",
+      "name": "Otero de Sanabria",
+      "type": "Village",
+      "position": { "latitude": 42.04963, "longitude": -6.57365, "elevation": 959 },
+      "region": "ES-CL",
+      "services": [ "Train" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN25-1",
+          "name": "Fountains@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.04986, "longitude": -6.57083, "elevation": 960 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN26",
+      "name": "Triufé",
+      "type": "Village",
+      "position": { "latitude": 42.06011, "longitude": -6.59655, "elevation": 949 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casa Rural El Refugio del Poeta",
+          "type": "CasaRural",
+          "services": [ ],
+          "sleeping": [ ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN27",
+      "name": "Puebla de Sanabria",
+      "type": "Town",
+      "position": { "latitude": 42.05458, "longitude": -6.63401, "elevation": 938 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Casa Luz",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostal Carlos V",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Hostal Raíces",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hostal Tribal",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Hotel Victoria",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Los Perales",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Enrimany",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Tierra de Lobos",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Treixas",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN27-1",
+          "name": "Oficina de Turismo de Puebla de Sanabria@es",
+          "type": "InformationPoint",
+          "description": {
+            "about": "http://www.pueblasanabria.com/"
+          },
+          "position": { "latitude": 42.05535, "longitude": -6.63396, "elevation": 931 },
+          "hours": [
+            "1100-1330, 1600-1930"
+          ]
+        },
+        {
+          "id": "SN-SN27-3",
+          "name": "Castillo de los Condes de Benavente@es",
+          "type": "Historical",
+          "description": {
+            "about": "http://www.pueblasanabria.com/"
+          },
+          "position": { "latitude": 42.05524, "longitude": -6.63389, "elevation": 932 },
+          "hours": [
+            "1100-1330, 1600-1930"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN28",
+      "name": "Terroso",
+      "type": "Village",
+      "position": { "latitude": 42.03534, "longitude": -6.72554, "elevation": 974 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN28-1",
+          "name": "Cross@en",
+          "type": "Cross",
+          "position": { "latitude": 42.03645, "longitude": -6.72145, "elevation": 973 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN29",
+      "name": "Requejo",
+      "type": "Village",
+      "position": { "latitude": 42.03073, "longitude": -6.74236, "elevation": 991 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos de Requejo",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Albergue Casa Cerviño",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostal Tu Casa",
+          "type": "GuestHouse",
+          "services": [ ],
+          "sleeping": [ ]
+        },
+        {
+          "name": "Hotel Maite",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN29-1",
+          "name": "Botas Peregrinas@es",
+          "type": "Statue",
+          "position": { "latitude": 42.02976, "longitude": -6.74854, "elevation": 990 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN30",
+      "name": "Padornelo",
+      "type": "Village",
+      "position": { "latitude": 42.03287, "longitude": -6.83631, "elevation": 1304 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Hotel Padornelo",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN30-1",
+          "name": "Cruz da Portela@es",
+          "type": "Cross",
+          "position": { "latitude": 42.03329, "longitude": -6.83579, "elevation": 1315 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN31",
+      "name": "Aciberos",
+      "type": "Village",
+      "position": { "latitude": 42.04026, "longitude": -6.87594, "elevation": 1124 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Hotel Padornelo",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN31-1",
+          "name": "Mill@en",
+          "type": "Historical",
+          "position": { "latitude": 42.03964, "longitude": -6.87440, "elevation": 1129 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN32",
+      "name": "Lubián",
+      "type": "Village",
+      "position": { "latitude": 42.03513, "longitude": -6.90566, "elevation": 1027 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos de Lubián",
+          "type": "PilgrimAlbergue",
+          "services": [ "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Rural Val dos Pigarros (Bar Javi)",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Restaurant", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Rural La Casa de Irene",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Kitchen", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN32-1",
+          "name": "Lavadero de Lubián@es",
+          "type": "Fountain",
+          "position": { "latitude": 42.03460, "longitude": -6.90653, "elevation": 1030 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN33",
+      "name": "Santuario de la Tuiza",
+      "type": "Church",
+      "position": { "latitude": 42.03115, "longitude": -6.92531, "elevation": 954 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN34",
+      "name": "Portela da Canda",
+      "type": "Peak",
+      "position": { "latitude": 42.03402, "longitude": -6.96487, "elevation": 1251 },
+      "region": "ES-CL",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN34-1",
+          "name": "Sculpture by Nicanor Carbello@en",
+          "type": "Artwork",
+          "position": { "latitude": 42.03345, "longitude": -6.96486, "elevation": 1255 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN35",
+      "name": "A Canda",
+      "type": "Village",
+      "position": { "latitude": 42.03506, "longitude": -6.98016, "elevation": 1160 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN36",
+      "name": "A Vilavella",
+      "type": "Village",
+      "position": { "latitude": 42.03670, "longitude": -7.01462, "elevation": 1042 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Porta Galega",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ ]
+        },
+        {
+          "name": "Hotel Spa Vilavella",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN37",
+      "name": "O Pereiro",
+      "type": "Village",
+      "position": { "latitude": 42.03093, "longitude": -7.05243, "elevation": 952 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Restaurant Don Pepe",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "Dryer", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Cazador Hotel-Restaurant",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN38",
+      "name": "O Canizo",
+      "type": "Village",
+      "position": { "latitude": 42.05099, "longitude": -7.10198, "elevation": 1056 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN39",
+      "name": "A Gudina",
+      "type": "Town",
+      "position": { "latitude": 42.06104, "longitude": -7.14105, "elevation": 979 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Casa da Viúva",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostel Restaurant Oscar",
+          "type": "PrivateAlbergue",
+          "services": [ ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "Hostal La Madrileña",
+          "type": "GuestHouse",
+          "services": [ ],
+          "sleeping": [ "Single" ]
+        },
+        {
+          "name": "Hotel Bruma II",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Hotel Suzio",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Relojero",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN40",
+      "name": "A Venda do Espiño",
+      "type": "Village",
+      "position": { "latitude": 42.07360, "longitude": -7.18365, "elevation": 1078 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN40-1",
+          "name": "Alto do Espiño@es",
+          "type": "Peak",
+          "position": { "latitude": 42.07338, "longitude": -7.17821, "elevation": 1084 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN41",
+      "name": "A Venda da Teresa",
+      "type": "Village",
+      "position": { "latitude": 42.07676, "longitude": -7.21252, "elevation": 1053 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN40-1",
+          "name": "Monte da Pereisada",
+          "type": "Peak",
+          "position": { "latitude": 42.12776, "longitude": -7.25142 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN42",
+      "name": "A Venda da Capela",
+      "type": "Village",
+      "position": { "latitude": 42.07037, "longitude": -7.23125, "elevation": 1010 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN43",
+      "name": "Venda do Bolaño",
+      "type": "Village",
+      "position": { "latitude": 42.06614, "longitude": -7.26658, "elevation": 1079 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN44",
+      "name": "Campobecerros",
+      "type": "Village",
+      "position": { "latitude": 42.06700, "longitude": -7.33092, "elevation": 893 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "O Albergue da Rosario",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Stables", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Núñez",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Restaurant", "Heating", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN45",
+      "name": "Portocamba",
+      "type": "Village",
+      "position": { "latitude": 42.06950, "longitude": -7.36382, "elevation": 940 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN45-1",
+          "name": "Cruz do Milladorio@es",
+          "type": "Cross",
+          "position": { "latitude": 42.06844, "longitude": -7.37338, "elevation": 991 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN46",
+      "name": "Eiras",
+      "type": "Village",
+      "position": { "latitude": 42.06200, "longitude": -7.40816, "elevation": 763 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa Terra Alma",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN46-1",
+          "name": "Ultreia Support Point@en",
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.06193, "longitude": -7.40760, "elevation": 763 }
+        },
+        {
+          "id": "SN-SN46-2",
+          "name": "Rest Area@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.06174, "longitude": -7.40889, "elevation": 762 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN47",
+      "name": "Laza",
+      "type": "Village",
+      "position": { "latitude": 42.06090, "longitude": -7.46012, "elevation": 473 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos de Laza",
+          "type": "PilgrimAlbergue",
+          "description": {
+            "notes": [
+              {
+                "type": "Access",
+                "text": "Key obtainable from Proteccion Civil@en"
+              }
+            ]
+          },
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostal Blanco Conde",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN47-1",
+          "name": "Laza Tourist Information Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.06112, "longitude": -7.45994, "elevation": 473 }
+        }
+      ],
+      "events": [
+        {
+          "name": "Entrodio de Laza",
+          "type": "Festival",
+          "hours": [
+            {
+              "calendar": {
+                "type": "yearly",
+                "months": [ 1, 2 ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN48",
+      "name": "Soutelo Verde",
+      "type": "Village",
+      "position": { "latitude": 42.07640, "longitude": -7.49704, "elevation": 496 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN49",
+      "name": "Tamicelas",
+      "type": "Village",
+      "position": { "latitude": 42.09853, "longitude": -7.50671, "elevation": 536 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN49-1",
+          "name": "Praia fluvial de Tamicelas@en",
+          "type": "Park",
+          "position": { "latitude": 42.09877, "longitude": -7.50516, "elevation": 528 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN50",
+      "name": "A Alberguería",
+      "type": "Village",
+      "position": { "latitude": 42.12199, "longitude": -7.55144, "elevation": 899 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Rincón do Peregrino",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN50-1",
+          "name": "Cruz do Alto do Talariño@es",
+          "type": "Cross",
+          "position": { "latitude": 42.13729, "longitude": -7.57790, "elevation": 964 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN51",
+      "name": "Vilar de Barrio",
+      "type": "Town",
+      "position": { "latitude": 42.16052, "longitude": -7.61057, "elevation": 666 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Peregrinos Vilar de Barrio",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "A Casa do Adelino",
+          "type": "CasaRural",
+          "services": [ "Accessible" ],
+          "sleeping": [ "Single" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN52",
+      "name": "Bóveda",
+      "type": "Village",
+      "position": { "latitude": 42.16346, "longitude": -7.63597, "elevation": 647 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN53",
+      "name": "Vilar de Gomareite",
+      "type": "Village",
+      "position": { "latitude": 42.16472, "longitude": -7.64515, "elevation": 645 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN54",
+      "name": "Bobadela a Pinta",
+      "type": "Village",
+      "position": { "latitude": 42.17886, "longitude": -7.69113, "elevation": 665 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN55",
+      "name": "Padroso",
+      "type": "Village",
+      "position": { "latitude": 42.18194, "longitude": -7.70328, "elevation": 688 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN56",
+      "name": "Cima de Vila",
+      "type": "Village",
+      "position": { "latitude": 42.18555, "longitude": -7.71850, "elevation": 678 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN57",
+      "name": "Quntela",
+      "type": "Village",
+      "position": { "latitude": 42.19528, "longitude": -7.72844, "elevation": 599 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN58",
+      "name": "Xunqueira de Ambía",
+      "type": "Town",
+      "position": { "latitude": 42.20475, "longitude": -7.73544, "elevation": 542 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de Peregrinos Xunqueira",
+          "type": "PilgrimAlbergue",
+          "services": [ "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Rural do Souto",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "BicycleStorage" ],
+          "sleeping": [ "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa Miraval",
+          "type": "CasaRural",
+          "services": [ ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Pensión Casa Tomás",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Stables", "Pets", "BicycleStorage" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN58-1",
+          "name": "Xunqueira de Ambía Tourist Information Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.20447, "longitude": -7.73481, "elevation": 539 },
+          "hours": [
+            "1000-1400, 1630-1930"
+          ]
+        },
+        {
+          "id": "SN-SN58-2",
+          "name": "Colexiata de Santa María@es",
+          "type": "Church",
+          "description": {
+            "about": "http://xunqueiradeambia.org/"
+          },
+          "position": { "latitude": 42.20437, "longitude": -7.73510, "elevation": 540 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN59",
+      "name": "San Xillao",
+      "type": "Village",
+      "position": { "latitude": 42.21551, "longitude": -7.73908, "elevation": 505 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN60",
+      "name": "Outorelo",
+      "type": "Village",
+      "position": { "latitude": 42.22360, "longitude": -7.74749, "elevation": 542 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN61",
+      "name": "A Pousa",
+      "type": "Village",
+      "position": { "latitude": 42.22605, "longitude": -7.75035, "elevation": 552 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN62",
+      "name": "Salgueiros",
+      "type": "Village",
+      "position": { "latitude": 42.23886, "longitude": -7.74513, "elevation": 513 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN63",
+      "name": "Gaspar",
+      "type": "Village",
+      "position": { "latitude": 42.24576, "longitude": -7.74774, "elevation": 483 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN64",
+      "name": "A Beirada",
+      "type": "Village",
+      "position": { "latitude": 42.25086, "longitude": -7.75293, "elevation": 467 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN65",
+      "name": "Ousende",
+      "type": "Village",
+      "position": { "latitude": 42.25341, "longitude": -7.76190, "elevation": 413 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN66",
+      "name": "Penelas",
+      "type": "Village",
+      "position": { "latitude": 42.25650, "longitude": -7.77073, "elevation": 389 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN67",
+      "name": "A Venda do Río",
+      "type": "Village",
+      "position": { "latitude": 42.26504, "longitude": -7.79379, "elevation": 345 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN68",
+      "name": "Pereiras",
+      "type": "Village",
+      "position": { "latitude": 42.26501, "longitude": -7.79924, "elevation": 350 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN69",
+      "name": "A Castellana",
+      "type": "Village",
+      "position": { "latitude": 42.27740, "longitude": -7.81583, "elevation": 313 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN70",
+      "name": "Polígono industrial de San Cibrao Das Viñas",
+      "type": "Industry",
+      "position": { "latitude": 42.28482, "longitude": -7.82296, "elevation": 290 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN71",
+      "name": "Reboredo",
+      "type": "Village",
+      "position": { "latitude": 42.29013, "longitude": -7.83417, "elevation": 274 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN72",
+      "name": "Alto do Cumial",
+      "type": "Village",
+      "position": { "latitude": 42.29424, "longitude": -7.84064, "elevation": 307 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN72-1",
+          "name": "Cruceiro Alto do Cumial@es",
+          "type": "Cross",
+          "position": { "latitude": 42.29433, "longitude": -7.84107, "elevation": 308 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN73",
+      "name": "Seixalbo",
+      "type": "Village",
+      "position": { "latitude": 42.30569, "longitude": -7.85588, "elevation": 195 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN73-1",
+          "name": "A Fontenova@es",
+          "type": "Fountain",
+          "position": { "latitude": 42.30829, "longitude": -7.85570, "elevation": 182 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN74",
+      "name": "Ourense",
+      "description": {
+        "notes": [
+          {
+            "type": "Information",
+            "text": "Oursense is a popular start point for those wanting to do the last 100km. Passports are available at either Ourense Cathedral or The Association of Friends of the Way.@en"
+          }
+        ]
+      },
+      "type": "City",
+      "position": { "latitude": 42.33598, "longitude": -7.86432, "elevation": 135 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Municipal de Peregrinos Eligio Rivas Quintas",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Albergue AugasQuentes",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Grelo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "SN-SN74-1",
+          "name": "Claustro de San Francisco@es",
+          "type": "Monastery",
+          "description": {
+            "about": "http://turismodeourense.gal/recurso/claustro-de-san-francisco/"
+          },
+          "position": { "latitude": 42.33724, "longitude": -7.86048, "elevation": 180 }
+        },
+        {
+          "id": "SN-SN74-2",
+          "name": "Catedral de San Martiño de Ourense@es",
+          "type": "Cathedral",
+          "description": {
+            "about": "http://catedralourense.com/"
+          },
+          "position": { "latitude": 42.33682, "longitude": -7.86304, "elevation": 148 }
+        },
+        {
+          "id": "SN-SN74-3",
+          "name": "Igrexa da Santa Eufemia@es",
+          "type": "Church",
+          "description": {
+            "about": "http://www.obispadodeourense.com/"
+          },
+          "position": { "latitude": 42.33667, "longitude": -7.86487, "elevation": 135 }
+        },
+        {
+          "id": "SN-SN74-4",
+          "name": "Plaza Mayor@es",
+          "type": "Municipal",
+          "position": { "latitude": 42.33573, "longitude": -7.86390, "elevation": 135 }
+        },
+        {
+          "id": "SN-SN74-5",
+          "name": "As Burgas@es",
+          "type": "Fountain",
+          "description": {
+            "about": "http://turismodeourense.gal/agrupacion/paseo-por-la-escultura-urbana/"
+          },
+          "position": { "latitude": 42.33474, "longitude": -7.86529, "elevation": 120 }
+        },
+        {
+          "id": "SN-SN74-6",
+          "name": "Ponte Vella@es",
+          "type": "Bridge",
+          "position": { "latitude": 42.34580, "longitude": -7.86884, "elevation": 97 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN75",
+      "name": "Soutelo",
+      "type": "Village",
+      "position": { "latitude": 42.36577, "longitude": -7.86191, "elevation": 194 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN75-1",
+          "name": "Pazo de Ribadeneira@es",
+          "type": "Historical",
+          "position": { "latitude": 42.36568, "longitude": -7.86199, "elevation": 192 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN76",
+      "name": "Cudeiro",
+      "type": "Village",
+      "position": { "latitude": 42.36822, "longitude": -7.86067, "elevation": 230 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN77",
+      "name": "A Costa",
+      "type": "Village",
+      "position": { "latitude": 42.37184, "longitude": -7.86021, "elevation": 305 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN77-1",
+          "name": "View over Ourense",
+          "type": "Lookout",
+          "position": { "latitude": 42.37134, "longitude": -7.85977, "elevation": 302 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN78",
+      "name": "Povoadura",
+      "type": "Village",
+      "position": { "latitude": 42.37800, "longitude": -7.86292, "elevation": 380 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN79",
+      "name": "Sartédigos",
+      "type": "Village",
+      "position": { "latitude": 42.38733, "longitude": -7.87026, "elevation": 424 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN79-1",
+          "name": "Fonte do Santo",
+          "type": "Fountain",
+          "position": { "latitude": 42.39251, "longitude": -7.87269, "elevation": 428 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN80",
+      "name": "Venda Nova",
+      "type": "Village",
+      "position": { "latitude": 42.39779, "longitude": -7.87413, "elevation": 474 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN80-1",
+          "name": "Natural@es",
+          "type": "Historical",
+          "position": { "latitude": 42.39816, "longitude": -7.87367, "elevation": 482 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN81",
+      "name": "Bóveda",
+      "type": "Village",
+      "position": { "latitude": 42.41036, "longitude": -7.88200, "elevation": 480 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN82",
+      "name": "Tamallancos",
+      "type": "Village",
+      "position": { "latitude": 42.42670, "longitude": -7.90143, "elevation": 442 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Via Stellae",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN82-1",
+          "name": "Pazo de Tamallancos@es",
+          "type": "Historical",
+          "position": { "latitude": 42.42735, "longitude": -7.90040, "elevation": 442 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN83",
+      "name": "Bouzas",
+      "type": "Village",
+      "position": { "latitude": 42.43184, "longitude": -7.90738, "elevation": 451 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN83-1",
+          "name": "Lavoir@es",
+          "type": "Fountain",
+          "position": { "latitude": 42.43304, "longitude": -7.90882, "elevation": 447 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN84",
+      "name": "Sobreira",
+      "type": "Village",
+      "position": { "latitude": 42.44382, "longitude": -7.92654, "elevation": 420 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN84-1",
+          "name": "Wayside Shrine@en",
+          "type": "Church",
+          "position": { "latitude": 42.44408, "longitude": -7.92673, "elevation": 419 }
+        },
+        {
+          "id": "SN-SN84-2",
+          "name": "Ponte medieval da Sobreira@es",
+          "type": "Bridge",
+          "position": { "latitude": 42.44902, "longitude": -7.93387, "elevation": 375 }
+        },
+        {
+          "id": "SN-SN84-3",
+          "name": "Hórreo@es",
+          "type": "Historical",
+          "position": { "latitude": 42.44942, "longitude": -7.93358, "elevation": 375 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN85",
+      "name": "Faramontaos",
+      "type": "Village",
+      "position": { "latitude": 42.45439, "longitude": -7.93393, "elevation": 402 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN86",
+      "name": "A Ermida",
+      "type": "Village",
+      "position": { "latitude": 42.45672, "longitude": -7.94052, "elevation": 452 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN87",
+      "name": "Viduedo",
+      "type": "Village",
+      "position": { "latitude": 42.45698, "longitude": -7.95018, "elevation": 476 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN87-1",
+          "name": "Palace@en",
+          "type": "Historical",
+          "position": { "latitude": 42.45611, "longitude": -7.94905, "elevation": 471 }
+        },
+        {
+          "id": "SN-SN87-2",
+          "name": "Wayside Shrine@en",
+          "type": "Church",
+          "position": { "latitude": 42.45735, "longitude": -7.95079, "elevation": 478 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN88",
+      "name": "Casa Novas",
+      "type": "Village",
+      "position": { "latitude": 42.46408, "longitude": -7.97331, "elevation": 497 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN89",
+      "name": "Cea",
+      "type": "Town",
+      "position": { "latitude": 42.47357, "longitude": -7.98661, "elevation": 514 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos de Cea",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Mañoso",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Handwash", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ ]
+        },
+        {
+          "name": "A Quinta de Cea",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN89-1",
+          "name": "Cross of Paramios@en",
+          "type": "Cross",
+          "position": { "latitude": 42.46899, "longitude": -7.98089, "elevation": 513 }
+        },
+        {
+          "id": "SN-SN89-2",
+          "name": "Torre do Reloxo@es",
+          "type": "Historical",
+          "position": { "latitude": 42.47507, "longitude": -7.98490, "elevation": 528 }
+        }
+      ],
+      "events": [
+        {
+          "name": [
+            "Pan de Cea@es",
+            "Cea Bread@en"
+          ],
+          "type": "Food",
+          "description": "Cea is famous for a bread made according to a 700 year old receipe. It is one of the four Spanish breads with a protected geographical indication.@en"
+        }
+      ]
+    },
+    {
+      "id": "SN-SN90",
+      "name": "Porto do Souto",
+      "type": "Village",
+      "position": { "latitude": 42.48235, "longitude": -7.98996, "elevation": 512 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN91",
+      "name": "Cotelas",
+      "type": "Village",
+      "position": { "latitude": 42.48951, "longitude": -7.99412, "elevation": 540 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN92",
+      "name": "Mirela",
+      "type": "Village",
+      "position": { "latitude": 42.49127, "longitude": -7.99767, "elevation": 516 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN93",
+      "name": "Piñor",
+      "type": "Village",
+      "position": { "latitude": 42.49978, "longitude": -8.00748, "elevation": 569 },
+      "region": "ES-GA",
+      "services": [ "Pharmacy", "Medical" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN94",
+      "name": "Albarona",
+      "type": "Village",
+      "position": { "latitude": 42.50073, "longitude": -8.00860, "elevation": 572 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN95",
+      "name": "Fontelo",
+      "type": "Village",
+      "position": { "latitude": 42.50316, "longitude": -8.00915, "elevation": 577 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN96",
+      "name": "Arenteiro",
+      "type": "Village",
+      "position": { "latitude": 42.51035, "longitude": -8.00796, "elevation": 579 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Albergue público de Arenteiro",
+          "type": "PilgrimAlbergue",
+          "services": [ "Heating", "WashingMachine", "Handwash", "Accessible", "Stables", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN97",
+      "name": "A Ponte",
+      "type": "Village",
+      "position": { "latitude": 42.51744, "longitude": -8.00912, "elevation": 539 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN98",
+      "name": "O Reino",
+      "type": "Village",
+      "position": { "latitude": 42.51956, "longitude": -8.01130, "elevation": 587 },
+      "region": "ES-GA",
+      "services": [ "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Restaurante Hostal Ateneo",
+          "type": "PrivateAlbergue",
+          "description": {
+            "notes": [
+              {
+                "type": "Directions",
+                "text": "This hostel is approximately 1km from O Reino on the N-525."
+              }
+            ]
+          },
+          "services": [ "Restaurant" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN99",
+      "name": "Carballeda",
+      "type": "Village",
+      "position": { "latitude": 42.52837, "longitude": -8.01102, "elevation": 635 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN99-1",
+          "name": "Wayside Shrine@en",
+          "type": "Church",
+          "position": { "latitude": 42.52965, "longitude": -8.01010, "elevation": 639 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN100",
+      "name": "O Castro",
+      "type": "Village",
+      "position": { "latitude": 42.56814, "longitude": -8.04769, "elevation": 736 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Bubela",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN100-1",
+          "name": "Cross@en",
+          "type": "Cross",
+          "position": { "latitude": 42.57054, "longitude": -8.04831, "elevation": 743 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN101",
+      "name": "Santo Domingo",
+      "type": "Village",
+      "position": { "latitude": 42.58893, "longitude": -8.06799, "elevation": 687 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN102",
+      "name": "Puxallos",
+      "type": "Village",
+      "position": { "latitude": 42.60575, "longitude": -8.08358, "elevation": 658 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN103",
+      "name": "Pontenoufe",
+      "type": "Village",
+      "position": { "latitude": 42.61128, "longitude": -8.10485, "elevation": 501 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN103-1",
+          "name": "Ponte histórica de Pontenoufe@es",
+          "type": "Bridge",
+          "position": { "latitude": 42.61253, "longitude": -8.10595, "elevation": 484 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN104",
+      "name": "A Xesta",
+      "type": "Village",
+      "position": { "latitude": 42.61725, "longitude": -8.11524, "elevation": 573 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN104-1",
+          "name": "Fonte do peregrino@es",
+          "type": "Fountain",
+          "position": { "latitude": 42.61749, "longitude": -8.11551, "elevation": 575 }
+        },
+        {
+          "id": "SN-SN104-2",
+          "name": "Cross@en",
+          "type": "Cross",
+          "position": { "latitude": 42.61757, "longitude": -8.11588, "elevation": 577 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN105",
+      "name": "Medelo",
+      "type": "Village",
+      "position": { "latitude": 42.62435, "longitude": -8.12558, "elevation": 549 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN106",
+      "name": "Estación de Lalin",
+      "type": "Village",
+      "position": { "latitude": 42.63349, "longitude": -8.13898, "elevation": 483 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Train" ],
+      "accommodation": [
+        {
+          "name": "Restaurante Hostal A Taberna De Vento",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN107",
+      "name": "Baxán",
+      "type": "Village",
+      "position": { "latitude": 42.63739, "longitude": -8.14174, "elevation": 485 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN108",
+      "name": "Botos",
+      "type": "Village",
+      "position": { "latitude": 42.64501, "longitude": -8.14510, "elevation": 527 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN109",
+      "name": "A Eirexe",
+      "type": "Village",
+      "position": { "latitude": 42.66081, "longitude": -8.15272, "elevation": 526 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN109-1",
+          "name": "Cross@en",
+          "type": "Cross",
+          "position": { "latitude": 42.66043, "longitude": -8.15329, "elevation": 527 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN110",
+      "name": "O Campo",
+      "type": "Village",
+      "position": { "latitude": 42.66386, "longitude": -8.15319, "elevation": 511 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN110-1",
+          "name": "Carballeira@es",
+          "type": "Natural",
+          "position": { "latitude": 42.66582, "longitude": -8.15447, "elevation": 500 }
+        }
+      ]
+    },
+    {
+      "id": "SN-RQ1",
+      "name": "Quintela",
+      "type": "Village",
+      "position": { "latitude": 42.35579, "longitude": -7.90621, "elevation": 127 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RQ2",
+      "name": "Cachaxuas",
+      "type": "Village",
+      "position": { "latitude": 42.36338, "longitude": -7.91395, "elevation": 149 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-RQ2-1",
+          "name": "Costiña de Canedo@es",
+          "type": "Hazard",
+          "description": "Steep ascent@en",
+          "position": { "latitude": 42.36559, "longitude": -7.91325, "elevation": 181 }
+        }
+      ]
+    },
+    {
+      "id": "SN-RQ3",
+      "name": "Cima da Costra",
+      "type": "Village",
+      "position": { "latitude": 42.38040, "longitude": -7.91203, "elevation": 402 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-RQ3-1",
+          "name": "Commemorative Plaque",
+          "type": "Statue",
+          "position": { "latitude": 42.38059, "longitude": -7.91221, "elevation": 403 }
+        }
+      ]
+    },
+    {
+      "id": "SN-RQ4",
+      "name": "Liñares",
+      "type": "Village",
+      "position": { "latitude": 42.39658, "longitude": -7.92178, "elevation": 401 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RQ5",
+      "name": "O Reguengo",
+      "type": "Village",
+      "position": { "latitude": 42.40845, "longitude": -7.92927, "elevation": 398 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RQ6",
+      "name": "Ponte Mandrás",
+      "type": "Village",
+      "position": { "latitude": 42.43326, "longitude": -7.95130, "elevation": 357 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-RQ6-1",
+          "name": "Ponte Mandrás@es",
+          "type": "Bridge",
+          "position": { "latitude": 42.43277, "longitude": -7.95018, "elevation": 349 }
+        },
+        {
+          "id": "SN-RQ6-2",
+          "name": "Rocky Surface@en",
+          "type": "Hazard",
+          "position": { "latitude": 42.42581, "longitude": -7.94261, "elevation": 392 }
+        }
+      ]
+    },
+    {
+      "id": "SN-RQ7",
+      "name": "Mandrás",
+      "type": "Village",
+      "position": { "latitude": 42.43461, "longitude": -7.95458, "elevation": 386 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RQ8",
+      "name": "Pulledo",
+      "type": "Village",
+      "position": { "latitude": 42.45319, "longitude": -7.96843, "elevation": 447 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO1",
+      "name": "Silvaboa",
+      "type": "Village",
+      "position": { "latitude": 42.50604, "longitude": -7.96486, "elevation": 631 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO2",
+      "name": "Pielas",
+      "type": "Village",
+      "position": { "latitude": 42.51887, "longitude": -7.96286, "elevation": 674 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO3",
+      "name": "A Ventela",
+      "type": "Village",
+      "position": { "latitude": 42.52944, "longitude": -7.95752, "elevation": 669 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO4",
+      "name": "Oseira",
+      "type": "Village",
+      "position": { "latitude": 42.53933, "longitude": -7.95186, "elevation": 666 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Monasterio de Oseira",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-RO4-1",
+          "name": "Mosteiro de Oseira@es",
+          "type": "Monastery",
+          "description": {
+            "about": "http://www.mosteirodeoseira.org/"
+          },
+          "position": { "latitude": 42.53901, "longitude": -7.95080, "elevation": 656 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "1000-1930"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1230-1930"
+            }
+          ],
+          "time": 1.0
+        },
+        {
+          "id": "SN-RO4-2",
+          "name": "Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.53244, "longitude": -7.95517, "elevation": 671 }
+        },
+        {
+          "id": "SN-RO4-3",
+          "name": "Miradoiro Val de Oseira@es",
+          "type": "Lookout",
+          "position": { "latitude": 42.54053, "longitude": -7.95236, "elevation": 691 }
+        }
+      ]
+    },
+    {
+      "id": "SN-RO5",
+      "name": "Vilarello",
+      "type": "Village",
+      "position": { "latitude": 42.54567, "longitude": -7.96911, "elevation": 771 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO6",
+      "name": "Carballediña",
+      "type": "Village",
+      "position": { "latitude": 42.54871, "longitude": -7.98202, "elevation": 684 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-RO6-1",
+          "name": "Asociación de ayuda al peregrino en el camino@es",
+          "type": "PilgrimResource",
+          "position": { "latitude": 42.54828, "longitude": -7.98172, "elevation": 683 },
+          "hours": [
+            "0700-1630"
+          ]
+        },
+        {
+          "id": "SN-RO6-2",
+          "name": "Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.54838, "longitude": -7.98178, "elevation": 683 }
+        }
+      ]
+    },
+    {
+      "id": "SN-RO7",
+      "name": "Outeiro de Coras",
+      "type": "Village",
+      "position": { "latitude": 42.54825, "longitude": -7.99157, "elevation": 688 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO8",
+      "name": "A Gouxa",
+      "type": "Village",
+      "position": { "latitude": 42.55748, "longitude": -8.00899, "elevation": 776 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-RO9",
+      "name": "Bidueiros",
+      "type": "Village",
+      "position": { "latitude": 42.55971, "longitude": -8.02002, "elevation": 767 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "V-V101",
+      "to": "SN-SN2",
+      "distance": 6.77,
+      "ascent": 40,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 41.83355, "longitude": -5.75813, "elevation": 732 }
+      ]
+    },
+    {
+      "from": "SN-SN2",
+      "to": "SN-SN3",
+      "distance": 11.36,
+      "ascent": 110,
+      "descent": 85,
+      "waypoints": [
+        { "latitude": 41.83830, "longitude": -5.79201, "elevation": 736 },
+        { "latitude": 41.84176, "longitude": -5.79817, "elevation": 742 },
+        { "latitude": 41.83612, "longitude": -5.80733, "elevation": 707 },
+        { "latitude": 41.82834, "longitude": -5.81613, "elevation": 732 },
+        { "latitude": 41.83961, "longitude": -5.83621, "elevation": 745 },
+        { "latitude": 41.83216, "longitude": -5.85949, "elevation": 698 }
+      ]
+    },
+    {
+      "from": "SN-SN3",
+      "to": "SN-SN4",
+      "distance": 6.83,
+      "ascent": 45,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN4",
+      "to": "SN-SN5",
+      "distance": 14.44,
+      "ascent": 105,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 41.87093, "longitude": -5.96186, "elevation": 807 },
+        { "latitude": 41.89125, "longitude": -5.96340, "elevation": 758 },
+        { "latitude": 41.90045, "longitude": -5.96838, "elevation": 795 }
+      ]
+    },
+    {
+      "from": "SN-SN5",
+      "to": "SN-SN7",
+      "distance": 6.81,
+      "ascent": 50,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 41.94207, "longitude": -5.96639, "elevation": 787 },
+        { "latitude": 41.97328, "longitude": -5.97386, "elevation": 727 }
+      ]
+    },
+    {
+      "from": "SN-SN4",
+      "to": "SN-SN6",
+      "distance": 13.77,
+      "ascent": 95,
+      "descent": 100,
+      "waypoints": [
+        { "latitude": 41.87093, "longitude": -5.96186, "elevation": 807 },
+        { "latitude": 41.89125, "longitude": -5.96340, "elevation": 758 },
+        { "latitude": 41.90045, "longitude": -5.96838, "elevation": 795 }
+      ]
+    },
+    {
+      "from": "SN-SN6",
+      "to": "SN-SN7",
+      "distance": 7.14,
+      "ascent": 50,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 41.93881, "longitude": -5.96170, "elevation": 741 },
+        { "latitude": 41.94207, "longitude": -5.96639, "elevation": 787 },
+        { "latitude": 41.97328, "longitude": -5.97386, "elevation": 727 }
+      ]
+    },
+    {
+      "from": "SN-SN7",
+      "to": "SN-SN8",
+      "distance": 1.53,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN8",
+      "to": "SN-SN9",
+      "distance": 5.71,
+      "ascent": 10,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN9",
+      "to": "SN-SN10",
+      "distance": 1.87,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN9",
+      "to": "SN-SN11",
+      "distance": 5.18,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN10",
+      "to": "SN-SN11",
+      "distance": 5.35,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN11",
+      "to": "SN-SN12",
+      "distance": 1.97,
+      "ascent": 5,
+      "descent": 10
+    },
+    {
+      "from": "SN-SN12",
+      "to": "SN-SN13",
+      "distance": 4.11,
+      "ascent": 55,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN13",
+      "to": "SN-SN14",
+      "distance": 3.66,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN14",
+      "to": "SN-SN15",
+      "distance": 5.99,
+      "ascent": 45,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 41.99265, "longitude": -6.19889, "elevation": 837 }
+      ]
+    },
+    {
+      "from": "SN-SN15",
+      "to": "SN-SN16",
+      "distance": 3.41,
+      "ascent": 65,
+      "descent": 0,
+      "waypoints": [
+        { "latitude": 42.01063, "longitude": -6.23378, "elevation": 825 }
+      ]
+    },
+    {
+      "from": "SN-SN16",
+      "to": "SN-SN17",
+      "distance": 6.02,
+      "ascent": 40,
+      "descent": 10
+    },
+    {
+      "from": "SN-SN17",
+      "to": "SN-SN18",
+      "distance": 4.55,
+      "ascent": 55,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 42.01992, "longitude": -6.36267, "elevation": 942 }
+      ]
+    },
+    {
+      "from": "SN-SN18",
+      "to": "SN-SN19",
+      "distance": 3.54,
+      "ascent": 25,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 42.01395, "longitude": -6.38543, "elevation": 904 },
+        { "latitude": 42.01543, "longitude": -6.39737, "elevation": 894 }
+      ]
+    },
+    {
+      "from": "SN-SN19",
+      "to": "SN-SN20",
+      "distance": 1.79,
+      "ascent": 25,
+      "descent": 10,
+      "waypoints": [
+        { "latitude": 42.02176, "longitude": -6.42782, "elevation": 922 }
+      ]
+    },
+    {
+      "from": "SN-SN20",
+      "to": "SN-SN21",
+      "distance": 3.45,
+      "ascent": 60,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 42.02210, "longitude": -6.44999, "elevation": 855 },
+        { "latitude": 42.02513, "longitude": -6.45739, "elevation": 905 }
+      ]
+    },
+    {
+      "from": "SN-SN21",
+      "to": "SN-SN22",
+      "distance": 2.95,
+      "ascent": 60,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN22",
+      "to": "SN-SN23",
+      "distance": 3.46,
+      "ascent": 40,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 42.05793, "longitude": -6.50549, "elevation": 961 }
+      ]
+    },
+    {
+      "from": "SN-SN23",
+      "to": "SN-SN24",
+      "distance": 2.25,
+      "ascent": 25,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN24",
+      "to": "SN-SN25",
+      "distance": 2.25,
+      "ascent": 0,
+      "descent": 50
+    },
+    {
+      "from": "SN-SN25",
+      "to": "SN-SN26",
+      "distance": 2.81,
+      "ascent": 45,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.04932, "longitude": -6.57824, "elevation": 948 },
+        { "latitude": 42.05157, "longitude": -6.57880, "elevation": 961 },
+        { "latitude": 42.05687, "longitude": -6.58642, "elevation": 931 },
+        { "latitude": 42.06072, "longitude": -6.59330, "elevation": 959 }
+      ]
+    },
+    {
+      "from": "SN-SN26",
+      "to": "SN-SN27",
+      "distance": 3.48,
+      "ascent": 45,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.05823, "longitude": -6.60650, "elevation": 962 },
+        { "latitude": 42.05529, "longitude": -6.63288, "elevation": 909 }
+      ]
+    },
+    {
+      "from": "SN-SN27",
+      "to": "SN-SN28",
+      "distance": 10.41,
+      "ascent": 80,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.05650, "longitude": -6.63587, "elevation": 898 },
+        { "latitude": 42.05902, "longitude": -6.65755, "elevation": 898 },
+        { "latitude": 42.05105, "longitude": -6.67500, "elevation": 915 }
+      ]
+    },
+    {
+      "from": "SN-SN28",
+      "to": "SN-SN29",
+      "distance": 2.14,
+      "ascent": 70,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.03587, "longitude": -6.73661, "elevation": 1023 }
+      ]
+    },
+    {
+      "from": "SN-SN29",
+      "to": "SN-SN30",
+      "distance": 10.83,
+      "ascent": 370,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 42.02884, "longitude": -6.75502, "elevation": 995 },
+        { "latitude": 42.03429, "longitude": -6.77677, "elevation": 1027 },
+        { "latitude": 42.03318, "longitude": -6.80049, "elevation": 1113 },
+        { "latitude": 42.03533, "longitude": -6.79062, "elevation": 1148 },
+        { "latitude": 42.04156, "longitude": -6.81252, "elevation": 1296 },
+        { "latitude": 42.03524, "longitude": -6.81424, "elevation": 1339 }
+      ]
+    },
+    {
+      "from": "SN-SN30",
+      "to": "SN-SN31",
+      "distance": 3.81,
+      "ascent": 10,
+      "descent": 190
+    },
+    {
+      "from": "SN-SN31",
+      "to": "SN-SN32",
+      "distance": 3.75,
+      "ascent": 100,
+      "descent": 100,
+      "waypoints": [
+        { "latitude": 42.03886, "longitude": -6.88714, "elevation": 1054 }
+      ]
+    },
+    {
+      "from": "SN-SN32",
+      "to": "SN-SN33",
+      "distance": 1.96,
+      "ascent": 15,
+      "descent": 90,
+      "waypoints": [
+        { "latitude": 42.03208, "longitude": -6.92132, "elevation": 940 }
+      ]
+    },
+    {
+      "from": "SN-SN33",
+      "to": "SN-SN34",
+      "distance": 4.24,
+      "ascent": 300,
+      "descent": 0,
+      "waypoints": [
+        { "latitude": 42.03220, "longitude": -6.93107, "elevation": 957 },
+        { "latitude": 42.03252, "longitude": -6.95193, "elevation": 1106 }
+      ]
+    },
+    {
+      "from": "SN-SN34",
+      "to": "SN-SN35",
+      "distance": 1.08,
+      "ascent": 0,
+      "descent": 105
+    },
+    {
+      "from": "SN-SN35",
+      "to": "SN-SN36",
+      "distance": 3.58,
+      "ascent": 0,
+      "descent": 120,
+      "waypoints": [
+        { "latitude": 42.03617, "longitude": -6.99474, "elevation": 1094 }
+      ]
+    },
+    {
+      "from": "SN-SN36",
+      "to": "SN-SN37",
+      "distance": 3.71,
+      "ascent": 15,
+      "descent": 105
+    },
+    {
+      "from": "SN-SN37",
+      "to": "SN-SN38",
+      "distance": 5.39,
+      "ascent": 145,
+      "descent": 40
+    },
+    {
+      "from": "SN-SN38",
+      "to": "SN-SN39",
+      "distance": 3.78,
+      "ascent": 25,
+      "descent": 95
+    },
+    {
+      "from": "SN-SN39",
+      "to": "SN-SN40",
+      "distance": 4.15,
+      "ascent": 105,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN40",
+      "to": "SN-SN41",
+      "distance": 3.19,
+      "ascent": 5,
+      "descent": 30
+    },
+    {
+      "from": "SN-SN41",
+      "to": "SN-SN42",
+      "distance": 2.39,
+      "ascent": 15,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.07950, "longitude": -7.22047, "elevation": 1063 }
+      ]
+    },
+    {
+      "from": "SN-SN42",
+      "to": "SN-SN43",
+      "distance": 3.12,
+      "ascent": 85,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 42.06692, "longitude": -7.25759, "elevation": 1094 }
+      ]
+    },
+    {
+      "from": "SN-SN43",
+      "to": "SN-SN44",
+      "distance": 7.57,
+      "ascent": 20,
+      "descent": 215
+    },
+    {
+      "from": "SN-SN44",
+      "to": "SN-SN45",
+      "distance": 3.21,
+      "ascent": 105,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.07160, "longitude": -7.34444, "elevation": 990 }
+      ]
+    },
+    {
+      "from": "SN-SN45",
+      "to": "SN-SN46",
+      "distance": 4.99,
+      "ascent": 70,
+      "descent": 245,
+      "waypoints": [
+        { "latitude": 42.06740, "longitude": -7.38054, "elevation": 1006 }
+      ]
+    },
+    {
+      "from": "SN-SN46",
+      "to": "SN-SN47",
+      "distance": 6.09,
+      "ascent": 20,
+      "descent": 320
+    },
+    {
+      "from": "SN-SN47",
+      "to": "SN-SN48",
+      "distance": 3.83,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN48",
+      "to": "SN-SN49",
+      "distance": 2.78,
+      "ascent": 40,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN49",
+      "to": "SN-SN50",
+      "distance": 5.24,
+      "ascent": 380,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 42.11444, "longitude": -7.54273, "elevation": 914 }
+      ]
+    },
+    {
+      "from": "SN-SN50",
+      "to": "SN-SN51",
+      "distance": 7.34,
+      "ascent": 75,
+      "descent": 310,
+      "waypoints": [
+        { "latitude": 42.13704, "longitude": -7.57816, "elevation": 963 }
+      ]
+    },
+    {
+      "from": "SN-SN51",
+      "to": "SN-SN52",
+      "distance": 2.11,
+      "ascent": 5,
+      "descent": 25
+    },
+    {
+      "from": "SN-SN52",
+      "to": "SN-SN53",
+      "distance": 1.01,
+      "ascent": 20,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.16299, "longitude": -7.64150, "elevation": 666 }
+      ]
+    },
+    {
+      "from": "SN-SN53",
+      "to": "SN-SN54",
+      "distance": 5.32,
+      "ascent": 45,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.17049, "longitude": -7.68181, "elevation": 624 }
+      ]
+    },
+    {
+      "from": "SN-SN54",
+      "to": "SN-SN55",
+      "distance": 1.27,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN55",
+      "to": "SN-SN56",
+      "distance": 1.52,
+      "ascent": 5,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN56",
+      "to": "SN-SN57",
+      "distance": 1.39,
+      "ascent": 0,
+      "descent": 75
+    },
+    {
+      "from": "SN-SN57",
+      "to": "SN-SN58",
+      "distance": 1.38,
+      "ascent": 5,
+      "descent": 70
+    },
+    {
+      "from": "SN-SN58",
+      "to": "SN-SN59",
+      "distance": 1.49,
+      "ascent": 45,
+      "descent": 85,
+      "waypoints": [
+        { "latitude": 42.21131, "longitude": -7.73908, "elevation": 461 }
+      ]
+    },
+    {
+      "from": "SN-SN59",
+      "to": "SN-SN60",
+      "distance": 1.32,
+      "ascent": 35,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN60",
+      "to": "SN-SN61",
+      "distance": 0.42,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN61",
+      "to": "SN-SN62",
+      "distance": 1.58,
+      "ascent": 0,
+      "descent": 40
+    },
+    {
+      "from": "SN-SN62",
+      "to": "SN-SN63",
+      "distance": 0.99,
+      "ascent": 0,
+      "descent": 30
+    },
+    {
+      "from": "SN-SN63",
+      "to": "SN-SN64",
+      "distance": 0.65,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN64",
+      "to": "SN-SN65",
+      "distance": 0.92,
+      "ascent": 0,
+      "descent": 55
+    },
+    {
+      "from": "SN-SN65",
+      "to": "SN-SN66",
+      "distance": 0.32,
+      "ascent": 0,
+      "descent": 25
+    },
+    {
+      "from": "SN-SN66",
+      "to": "SN-SN67",
+      "distance": 2.18,
+      "ascent": 0,
+      "descent": 45
+    },
+    {
+      "from": "SN-SN67",
+      "to": "SN-SN68",
+      "distance": 0.41,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN68",
+      "to": "SN-SN69",
+      "distance": 2.08,
+      "ascent": 0,
+      "descent": 40
+    },
+    {
+      "from": "SN-SN69",
+      "to": "SN-SN70",
+      "distance": 0.92,
+      "ascent": 0,
+      "descent": 20
+    },
+    {
+      "from": "SN-SN70",
+      "to": "SN-SN71",
+      "distance": 1.52,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN71",
+      "to": "SN-SN72",
+      "distance": 0.74,
+      "ascent": 30,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN72",
+      "to": "SN-SN73",
+      "distance": 2.11,
+      "ascent": 0,
+      "descent": 115
+    },
+    {
+      "from": "SN-SN73",
+      "to": "SN-SN74",
+      "distance": 3.81,
+      "ascent": 5,
+      "descent": 65
+    },
+    {
+      "from": "SN-SN74",
+      "to": "SN-SN75",
+      "distance": 3.86,
+      "ascent": 100,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 42.34527, "longitude": -7.86879, "elevation": 94 },
+        { "latitude": 42.34977, "longitude": -7.86664, "elevation": 134 }
+      ]
+    },
+    {
+      "from": "SN-SN75",
+      "to": "SN-SN76",
+      "distance": 0.33,
+      "ascent": 35,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN76",
+      "to": "SN-SN77",
+      "distance": 0.61,
+      "ascent": 75,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN77",
+      "to": "SN-SN78",
+      "distance": 0.69,
+      "ascent": 75,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN78",
+      "to": "SN-SN79",
+      "distance": 1.31,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN79",
+      "to": "SN-SN80",
+      "distance": 1.37,
+      "ascent": 50,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN80",
+      "to": "SN-SN81",
+      "distance": 1.59,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN81",
+      "to": "SN-SN82",
+      "distance": 2.65,
+      "ascent": 30,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 42.41951, "longitude": -7.88923, "elevation": 421 },
+        { "latitude": 42.42445, "longitude": -7.89524, "elevation": 418 }
+      ]
+    },
+    {
+      "from": "SN-SN82",
+      "to": "SN-SN83",
+      "distance": 0.78,
+      "ascent": 10,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN83",
+      "to": "SN-SN84",
+      "distance": 2.20,
+      "ascent": 15,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 42.43581, "longitude": -7.91286, "elevation": 427 },
+        { "latitude": 42.44113, "longitude": -7.91947, "elevation": 438 }
+      ]
+    },
+    {
+      "from": "SN-SN84",
+      "to": "SN-SN85",
+      "distance": 1.49,
+      "ascent": 20,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.44654, "longitude": -7.93147, "elevation": 385 },
+        { "latitude": 42.45208, "longitude": -7.93498, "elevation": 383 }
+      ]
+    },
+    {
+      "from": "SN-SN85",
+      "to": "SN-SN86",
+      "distance": 0.64,
+      "ascent": 55,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN86",
+      "to": "SN-SN87",
+      "distance": 0.84,
+      "ascent": 30,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN87",
+      "to": "SN-SN88",
+      "distance": 2.21,
+      "ascent": 35,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 42.45965, "longitude": -7.95829, "elevation": 462 },
+        { "latitude": 42.46200, "longitude": -7.96143, "elevation": 467 }
+      ]
+    },
+    {
+      "from": "SN-SN88",
+      "to": "SN-SN89",
+      "distance": 1.73,
+      "ascent": 20,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN89",
+      "to": "SN-SN90",
+      "distance": 1.18,
+      "ascent": 10,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 42.47576, "longitude": -7.98718, "elevation": 524 }
+      ]
+    },
+    {
+      "from": "SN-SN90",
+      "to": "SN-SN91",
+      "distance": 0.99,
+      "ascent": 25,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN91",
+      "to": "SN-SN92",
+      "distance": 0.35,
+      "ascent": 0,
+      "descent": 25
+    },
+    {
+      "from": "SN-SN92",
+      "to": "SN-SN93",
+      "distance": 1.36,
+      "ascent": 80,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.49287, "longitude": -7.99779, "elevation": 492 }
+      ]
+    },
+    {
+      "from": "SN-SN93",
+      "to": "SN-SN94",
+      "distance": 0.17,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN94",
+      "to": "SN-SN95",
+      "distance": 0.29,
+      "ascent": 5,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN95",
+      "to": "SN-SN96",
+      "distance": 0.80,
+      "ascent": 0,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN96",
+      "to": "SN-SN97",
+      "distance": 0.90,
+      "ascent": 0,
+      "descent": 35
+    },
+    {
+      "from": "SN-SN97",
+      "to": "SN-SN98",
+      "distance": 0.46,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN98",
+      "to": "SN-SN99",
+      "distance": 1.12,
+      "ascent": 60,
+      "descent": 8
+    },
+    {
+      "from": "SN-SN99",
+      "to": "SN-SN100",
+      "distance": 7.08,
+      "ascent": 215,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 42.53884, "longitude": -8.01643, "elevation": 688 },
+        { "latitude": 42.54439, "longitude": -8.02463, "elevation": 736 },
+        { "latitude": 42.54794, "longitude": -8.03444, "elevation": 813 },
+        { "latitude": 42.56023, "longitude": -8.04329, "elevation": 846 }
+      ]
+    },
+    {
+      "from": "SN-SN100",
+      "to": "SN-SN101",
+      "distance": 3.45,
+      "ascent": 20,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 42.57573, "longitude": -8.06037, "elevation": 698 },
+        { "latitude": 42.58228, "longitude": -8.06132, "elevation": 712 }
+      ]
+    },
+    {
+      "from": "SN-SN101",
+      "to": "SN-SN102",
+      "distance": 2.50,
+      "ascent": 30,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 42.59483, "longitude": -8.07365, "elevation": 679 },
+        { "latitude": 42.59966, "longitude": -8.07785, "elevation": 708 }
+      ]
+    },
+    {
+      "from": "SN-SN102",
+      "to": "SN-SN103",
+      "distance": 2.34,
+      "ascent": 0,
+      "descent": 160,
+      "waypoints": [
+        { "latitude": 42.60745, "longitude": -8.10028, "elevation": 555 }
+      ]
+    },
+    {
+      "from": "SN-SN103",
+      "to": "SN-SN104",
+      "distance": 1.45,
+      "ascent": 85,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN104",
+      "to": "SN-SN105",
+      "distance": 1.18,
+      "ascent": 5,
+      "descent": 25
+    },
+    {
+      "from": "SN-SN105",
+      "to": "SN-SN106",
+      "distance": 1.64,
+      "ascent": 0,
+      "descent": 70
+    },
+    {
+      "from": "SN-SN106",
+      "to": "SN-SN107",
+      "distance": 0.59,
+      "ascent": 15,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 42.63385, "longitude": -8.14050, "elevation": 470 }
+      ]
+    },
+    {
+      "from": "SN-SN107",
+      "to": "SN-SN108",
+      "distance": 1.11,
+      "ascent": 50,
+      "descent": 10,
+      "waypoints": [
+        { "latitude": 42.64193, "longitude": -8.14249, "elevation": 534 }
+      ]
+    },
+    {
+      "from": "SN-SN108",
+      "to": "SN-SN109",
+      "distance": 2.05,
+      "ascent": 40,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 42.65227, "longitude": -8.14679, "elevation": 565 }
+      ]
+    },
+    {
+      "from": "SN-SN109",
+      "to": "SN-SN110",
+      "distance": 0.42,
+      "ascent": 0,
+      "descent": 15
+    },
+    {
+      "from": "SN-SN110",
+      "to": "SN-SN111",
+      "distance": 1.82,
+      "ascent": 25,
+      "descent": 70,
+      "waypoints": [
+        { "latitude": 42.66972, "longitude": -8.15722, "elevation": 455 },
+        { "latitude": 42.67218, "longitude": -8.15897, "elevation": 476 }
+      ]
+    },
+    {
+      "from": "SN-SN74",
+      "to": "SN-RQ1",
+      "distance": 5.06,
+      "ascent": 50,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.34411, "longitude": -7.86889, "elevation": 107 },
+        { "latitude": 42.34963, "longitude": -7.87211, "elevation": 133 },
+        { "latitude": 42.35551, "longitude": -7.88160, "elevation": 130 },
+        { "latitude": 42.35580, "longitude": -7.89180, "elevation": 110 }
+      ]
+    },
+    {
+      "from": "SN-RQ1",
+      "to": "SN-RQ2",
+      "distance": 1.12,
+      "ascent": 50,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 42.35749, "longitude": -7.91090, "elevation": 147 },
+        { "latitude": 42.36154, "longitude": -7.91340, "elevation": 123 }
+      ]
+    },
+    {
+      "from": "SN-RQ2",
+      "to": "SN-RQ3",
+      "distance": 2.01,
+      "ascent": 255,
+      "descent": 0
+    },
+    {
+      "from": "SN-RQ3",
+      "to": "SN-RQ4",
+      "distance": 1.95,
+      "ascent": 10,
+      "descent": 15
+    },
+    {
+      "from": "SN-RQ4",
+      "to": "SN-RQ5",
+      "distance": 1.48,
+      "ascent": 20,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.40279, "longitude": -7.92557, "elevation": 379 }
+      ]
+    },
+    {
+      "from": "SN-RQ5",
+      "to": "SN-RQ6",
+      "distance": 3.52,
+      "ascent": 45,
+      "descent": 90,
+      "waypoints": [
+        { "latitude": 42.41438, "longitude": -7.93347, "elevation": 430 },
+        { "latitude": 42.42660, "longitude": -7.94160, "elevation": 391 }
+      ]
+    },
+    {
+      "from": "SN-RQ6",
+      "to": "SN-RQ7",
+      "distance": 0.38,
+      "ascent": 30,
+      "descent": 0
+    },
+    {
+      "from": "SN-RQ7",
+      "to": "SN-RQ8",
+      "distance": 2.40,
+      "ascent": 65,
+      "descent": 0,
+      "waypoints": [
+        { "latitude": 42.44569, "longitude": -7.95961, "elevation": 395 },
+        { "latitude": 42.44890, "longitude": -7.96021, "elevation": 417 },
+        { "latitude": 42.45207, "longitude": -7.96641, "elevation": 442 }
+      ]
+    },
+    {
+      "from": "SN-RQ8",
+      "to": "SN-SN88",
+      "distance": 1.46,
+      "ascent": 45,
+      "descent": 0
+    },
+    {
+      "from": "SN-SN89",
+      "to": "SN-RO1",
+      "distance": 4.63,
+      "ascent": 120,
+      "descent": 0,
+      "waypoints": [
+        { "latitude": 42.48388, "longitude": -7.97772, "elevation": 570 },
+        { "latitude": 42.48897, "longitude": -7.97402, "elevation": 583 },
+        { "latitude": 42.49566, "longitude": -7.96686, "elevation": 608 },
+        { "latitude": 42.50351, "longitude": -7.96438, "elevation": 622 }
+      ]
+    },
+    {
+      "from": "SN-RO1",
+      "to": "SN-RO2",
+      "distance": 1.69,
+      "ascent": 70,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.51300, "longitude": -7.96134, "elevation": 695 }
+      ]
+    },
+    {
+      "from": "SN-RO2",
+      "to": "SN-RO3",
+      "distance": 1.50,
+      "ascent": 0,
+      "descent": 5
+    },
+    {
+      "from": "SN-RO3",
+      "to": "SN-RO4",
+      "distance": 1.66,
+      "ascent": 25,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.53661, "longitude": -7.95065, "elevation": 647 }
+      ]
+    },
+    {
+      "from": "SN-RO4",
+      "to": "SN-RO5",
+      "distance": 1.88,
+      "ascent": 155,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 42.54283, "longitude": -7.96281, "elevation": 818 }
+      ]
+    },
+    {
+      "from": "SN-RO5",
+      "to": "SN-RO6",
+      "distance": 1.50,
+      "ascent": 25,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 42.54474, "longitude": -7.97370, "elevation": 732 },
+        { "latitude": 42.54591, "longitude": -7.97566, "elevation": 701 },
+        { "latitude": 42.54715, "longitude": -7.97715, "elevation": 724 }
+      ]
+    },
+    {
+      "from": "SN-RO6",
+      "to": "SN-RO7",
+      "distance": 1.03,
+      "ascent": 30,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.54940, "longitude": -7.98342, "elevation": 670 },
+        { "latitude": 42.54947, "longitude": -7.99033, "elevation": 698 }
+      ]
+    },
+    {
+      "from": "SN-RO7",
+      "to": "SN-RO8",
+      "distance": 1.95,
+      "ascent": 95,
+      "descent": 10
+    },
+    {
+      "from": "SN-RO8",
+      "to": "SN-RO9",
+      "distance": 1.07,
+      "ascent": 15,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.55909, "longitude": -8.01194, "elevation": 755 }
+      ]
+    },
+    {
+      "from": "SN-RO9",
+      "to": "SN-SN100",
+      "distance": 4.19,
+      "ascent": 70,
+      "descent": 105,
+      "waypoints": [
+        { "latitude": 42.55850, "longitude": -8.03630, "elevation": 834 }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "SN-SN",
+      "name": "Camino Sanabres",
+      "description": "The main Camino Sanabres route",
+      "major": true,
+      "stops": [ "SN-SN39", "SN-SN74", "SN-SN89" ],
+      "rest-points": [ "SN-SN74" ],
+      "starts": [ "V-V101", "SN-SN74@100" ],
+      "finishes": [ "ST-ST1" ],
+      "palette": {
+        "colour": "#fec953"
+      },
+      "features": [
+        {
+          "id": "SN-SN-F1",
+          "name": "Granja de Moreruela to Tabara Intersections",
+          "condition": "SN-SN4",
+          "geometry": "SN/SN-SN-F1.geojson"
+        },
+        {
+          "id": "SN-SN-F2",
+          "name": "Tabara Intersections to Santa Croya de Tera via Bercarios de Valverde",
+          "condition": "SN-SN5",
+          "geometry": "SN/SN-SN-F2.geojson"
+        },
+        {
+          "id": "SN-SN-F3",
+          "name": "Tabara Intersections to Santa Croya de Tera via Villaneuva de las Peras",
+          "condition": "SN-SN6",
+          "geometry": "SN/SN-SN-F3.geojson"
+        },
+        {
+          "id": "SN-SN-F4",
+          "name": "Santa Croya de Tera to Playa fluvial La Barca",
+          "condition": "SN-SN8",
+          "geometry": "SN/SN-SN-F4.geojson"
+        },
+        {
+          "id": "SN-SN-F4",
+          "name": "Santa Croya de Tera to Playa fluvial La Barca",
+          "condition": "SN-SN8",
+          "geometry": "SN/SN-SN-F4.geojson"
+        },
+        {
+          "id": "SN-SN-F5",
+          "name": "Playa fluvial La Barca to Calzadilla de Tera direct",
+          "condition": {
+            "and": [
+              "SN-SN9",
+              { "not": "SN-SN10" },
+              "SN-SN11"
+            ]
+          },
+          "geometry": "SN/SN-SN-F5.geojson"
+        },
+        {
+          "id": "SN-SN-F6",
+          "name": "Playa fluvial La Barca to Calzadilla de Tera via Camarzana de Tera",
+          "condition": {
+            "and": [ "SN-SN9", "SN-SN10", "SN-SN11" ]
+          },
+          "geometry": "SN/SN-SN-F6.geojson"
+        },
+        {
+          "id": "SN-SN-F7",
+          "name": "Calzadilla de Tera to Puebla de Sanabria",
+          "condition": "SN-SN26",
+          "geometry": "SN/SN-SN-F7.geojson"
+        },
+        {
+          "id": "SN-SN-F7",
+          "name": "Calzadilla de Tera to Puebla de Sanabria",
+          "condition": "SN-SN26",
+          "geometry": "SN/SN-SN-F7.geojson"
+        },
+        {
+          "id": "SN-SN-F8",
+          "name": "Puebla de Sanabria to A Gudina",
+          "condition": "SN-SN38",
+          "geometry": "SN/SN-SN-F8.geojson"
+        },
+        {
+          "id": "SN-SN-F9",
+          "name": "A Gudina to Vilar de Barrio",
+          "condition": "SN-SN50",
+          "geometry": "SN/SN-SN-F9.geojson"
+        },
+        {
+          "id": "SN-SN-F10",
+          "name": "Vilar de Barrio to Ourense",
+          "condition": "SN-SN73",
+          "geometry": "SN/SN-SN-F10.geojson"
+        },
+        {
+          "id": "SN-SN-F11",
+          "name": "Ourense Exit",
+          "condition": "SN-SN74",
+          "geometry": "SN/SN-SN-F11.geojson"
+        },
+        {
+          "id": "SN-SN-F12",
+          "name": "Ourense to Casa Novas via Soutelo",
+          "condition": "SN-SN75",
+          "geometry": "SN/SN-SN-F12.geojson"
+        },
+        {
+          "id": "SN-SN-F14",
+          "name": "Casa Novas to Cea",
+          "condition": "SN-SN89",
+          "geometry": "SN/SN-SN-F14.geojson"
+        },
+        {
+          "id": "SN-SN-F15",
+          "name": "Cea to O Castro",
+          "condition": "SN-SN99",
+          "geometry": "SN/SN-SN-F15.geojson"
+        },
+        {
+          "id": "SN-SN-F16",
+          "name": "O Castro to Bergazo",
+          "condition": "SN-SN110",
+          "geometry": "SN/SN-SN-F16.geojson"
+        },
+        {
+          "id": "X-BS-F1",
+          "name": "Camino Sanabres Bergazo to SdC",
+          "condition": "ST-ST1",
+          "geometry": "X/X-BS-F1.geojson"
+        }
+      ]
+    },
+    {
+      "id": "SN-RQ",
+      "name": "Casas Novas via Quintela",
+      "description": "An alternative route leaving Ourense, running West of the traditional route.",
+      "locations": [ "SN-RQ1", "SN-RQ2", "SN-RQ3", "SN-RQ4", "SN-RQ5", "SN-RQ6", "SN-RQ7", "SN-RQ8" ],
+      "palette": {
+        "colour": "#fe8d37"
+      },
+      "features": [
+        {
+          "id": "SN-RQ-F1",
+          "name": "Qurense to Casa Novas via Quintela",
+          "geometry": "SN/SN-RQ-F1.geojson"
+        }
+      ]
+    },
+    {
+      "id": "SN-RO",
+      "name": "Oseira Monastery",
+      "description": "An side-pilgrimage to the monatery at Oseira, leaving Cea and returning to the main route at O Castro.",
+      "locations": [ "SN-RO1", "SN-RO2", "SN-RO3", "SN-RO4", "SN-RO5", "SN-RO6", "SN-RO7", "SN-RO8", "SN-RO9" ],
+      "palette": {
+        "colour": "#fe8d37"
+      },
+      "features": [
+        {
+          "id": "SN-RO-F1",
+          "name": "Cea to O Castro via Oseira",
+          "geometry": "SN/SN-RO-F1.geojson"
+        }
+      ]
+    }
+  ],
+  "route-logic": [
+    {
+      "description": "Changes for the Quintela route",
+      "condition": "SN-RQ",
+      "exclude": [
+        "SN-SN75", "SN-SN76", "SN-SN77", "SN-SN78", "SN-SN79", "SN-SN80", "SN-SN81", "SN-SN82", "SN-SN83", "SN-SN84",
+        "SN-SN85", "SN-SN86", "SN-SN87"
+      ]
+    },
+    {
+      "description": "Changes for the Oseira route",
+      "condition": "SN-RO",
+      "exclude": [ "SN-SN90", "SN-SN91", "SN-SN92", "SN-SN93", "SN-SN94", "SN-SN95", "SN-SN96", "SN-SN97", "SN-SN98", "SN-SN99" ]
+    }
+  ],
+  "default-route": "SN-SN"
+}

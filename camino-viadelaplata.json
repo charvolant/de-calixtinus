@@ -6,8 +6,12 @@
   ],
   "description": {
     "summary": "The Vía de la Plata (Silver Way) is a Camino that starts in Seville and runs North through Western Spain.",
-    "text": "The Vía de la Plata (Silver Way) is a Camino that runs from Seville and runs through the whole of Western Spain to Santiago de Compostella. The camino itself runs from Seville and joins either the French Camino at Astorga on the Camino Sanabrés at Granja de Moreuela. The route has been used for commerce and pilgrimage since ancient times. Despite the name, \"Plata\" comes from the Arabic word al-balat or paved road and refers to the original Roman road.@en",
+    "text": "The Vía de la Plata (Silver Way) is a Camino that runs from Seville and runs through the whole of Western Spain to Santiago de Compostella. The camino itself runs from Seville and joins either the French Camino at Astorga on the Camino Sanabrés at Granja de la Moreruela. The route has been used for commerce and pilgrimage since ancient times. Despite the name, \"Plata\" comes from the Arabic word al-balat or paved road and refers to the original Roman road.@en",
     "notes": [
+      {
+        "type": "Directions",
+        "text": "The full Via de la Plata joins the Camino Frances at Azorga or the Camino Sanabrés at Granja de Moureuela. To reach Santiago de Compostela, choose the camino that you wish to join and then switch to that camino for further planning.@en"
+      },
       {
         "type": "Warning",
         "text": "There are often long stretches between towns where the only waypoints are intersections or estates. Proper levels of fitness and planning are needed.@en"
@@ -51,6 +55,10 @@
       {
         "term": "dcterms:title",
         "value": "Silver Way@en"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Mozarabic Way@en"
       },
       {
         "term": "dcterms:creator",
@@ -3892,7 +3900,7 @@
       "legs": null,
       "major": true,
       "starts": [ "V-V1" ],
-      "finishes": [ "F-F134" ],
+      "finishes": [ "F-F134", "V-V101@100" ],
       "stops": [ "V-V36", "V-V47", "V-V86", "V-V96" ],
       "rest-points": [ "V-V86" ],
       "palette": {
@@ -3954,7 +3962,7 @@
         },
         {
           "id": "V-V-F9",
-          "name": "Zamora to Granja de Moreuela",
+          "name": "Zamora to Granja de la Moreruela",
           "condition": "V-V100",
           "geometry": "V/V-V-F9.geojson"
         },
@@ -3966,7 +3974,7 @@
         },
         {
           "id": "V-V-F11",
-          "name": "Granja de Moreuela to Barcial de Barco",
+          "name": "Granja de la Moreruela to Barcial de Barco",
           "condition": "V-V103",
           "geometry": "V/V-V-F11.geojson"
         },

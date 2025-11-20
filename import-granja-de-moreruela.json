@@ -1,0 +1,125 @@
+{
+  "id": "I-GM",
+  "name": "Granja de la Moreruela",
+  "description": "Import for Granja de la Moreruela, used by both the Via de la Plata and Camino Sanabrés",
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Granja de la Moreruela"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2025-11-09"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-11-09"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1.0"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "fragment": true,
+  "locations": [
+    {
+      "id": "V-V101",
+      "name": "Granja de la Moreruela",
+      "description": {
+        "notes": [
+          "If you are starting the Camino Sanabrés, credentials are best picked up before starting from either major centres or from your country's St James society.@en"
+        ]
+      },
+      "type": "Village",
+      "position": { "latitude": 41.80937, "longitude": -5.73909, "elevation": 708 },
+      "region": "ES-CL",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue de peregrinos Granja de la Moreruela",
+          "type": "PilgrimAlbergue",
+          "services": [ "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "La Casa del Tio Quico",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa Rural Donde Victor Luna",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "Stables", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa de la Abuela Ángela",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "V-V101-1",
+          "name": "Junction of the Vía de la Plata and Camino Sanabrés@en",
+          "type": "Junction",
+          "position": { "latitude": 41.80968, "longitude": -5.73943 }
+        },
+        {
+          "id": "V-V101-2",
+          "name": "Centro de interpretación CIETER@es",
+          "type": "Park",
+          "position": { "latitude": 41.80700, "longitude": -5.73956 }
+        },
+        {
+          "id": "V-V101-3",
+          "name": "Monasterio de Santa María de Moreruela@es",
+          "type": "Monastery",
+          "description": {
+            "about": "https://www.turismocastillayleon.com/es/arte-cultura-patrimonio/monasterios/santa-maria-moreruela"
+          },
+          "position": { "latitude": 41.81307, "longitude": -5.77731, "elevation": 694 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1400, 1600-2000"
+            }
+          ],
+          "time": 1.0
+        }
+      ]
+    }
+  ],
+  "legs": [ ],
+  "routes": [
+    {
+      "id": "GM-GM",
+      "name": "Default route",
+      "description": "The default route for importing",
+      "palette": {
+        "colour": "#fec953"
+      }
+    }
+  ],
+  "route-logic": [ ],
+  "default-route": "GM-GM"
+}

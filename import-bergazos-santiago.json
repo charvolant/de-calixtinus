@@ -1,0 +1,618 @@
+{
+  "id": "I-BS",
+  "name": "Bergazos/A Laxe to Santiago@en",
+  "description": "Import for Bergazos to Santiago, used by both Invierno and Sanabres",
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Bergazos/A Laxe to Santiago@en"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2025-11-17"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2025-11-17"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1.0"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "fragment": true,
+  "imports": [
+    "I-ST"
+  ],
+  "locations": [
+    {
+      "id": "SN-SN111",
+      "name": "Bergazos (A Laxe)",
+      "type": "Village",
+      "position": { "latitude": 42.67622, "longitude": -8.16341, "elevation": 469 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Laxe Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hotel and Spa Torre do Deza",
+          "type": "Hotel",
+          "services": [ "Breakfast", "Dinner", "Pets", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN111-1",
+          "name": "Merging of the Camino Invierno and the Camino Sanabres@en",
+          "type": "Junction",
+          "position": { "latitude": 42.67533, "longitude": -8.16306, "elevation": 471 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN112",
+      "name": "Prado",
+      "type": "Village",
+      "position": { "latitude": 42.68315, "longitude": -8.18398, "elevation": 448 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN113",
+      "name": "Taboada",
+      "type": "Village",
+      "position": { "latitude": 42.68080, "longitude": -8.21062, "elevation": 373 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN113-1",
+          "name": "Ponte Taboada@es",
+          "type": "Bridge",
+          "description": {
+            "text": "Built in 912, part of the royal roadway connecting Santiago and Ourense",
+            "about": "https://www.guiarepsol.com/es/viajar/vamos-de-excursion/naturaleza-o-deza-pontevedra/"
+          },
+          "position": { "latitude": 42.67959, "longitude": -8.20991, "elevation": 357 }
+        },
+        {
+          "id": "SN-SN113-2",
+          "name": "Roman Road@en",
+          "type": "Historical",
+          "position": { "latitude": 42.67979, "longitude": -8.21021, "elevation": 364 }
+        },
+        {
+          "id": "SN-SN113-3",
+          "name": "Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.68543, "longitude": -8.21729, "elevation": 436 }
+        },
+        {
+          "id": "SN-SN113-4",
+          "name": "Church of Santiago@en",
+          "type": "Church",
+          "description": "Legend has it that any pilgrim passing this church must tap the door with their head.@en",
+          "position": { "latitude": 42.68695, "longitude": -8.21794, "elevation": 444 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN114",
+      "name": "Transfontao",
+      "type": "Village",
+      "position": { "latitude": 42.68723, "longitude": -8.23414, "elevation": 466 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Remanso de Transfontao Casa do Compo",
+          "type": "GuestHouse",
+          "services": [ "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN115",
+      "name": "Silleda",
+      "type": "Town",
+      "position": { "latitude": 42.69745, "longitude": -8.24705, "elevation": 489 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "The Gran Albergue Silleda",
+          "type": "PrivateAlbergue",
+          "services": [ "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Trabazo Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Santa Olaia Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Silleda Tourist Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Double" ]
+        },
+        {
+          "name": "Casa Novas Hostal",
+          "type": "House",
+          "services": [ "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Quadruple" ]
+        },
+        {
+          "name": "Toxa Hostal",
+          "type": "GuestHouse",
+          "services": [ "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        },
+        {
+          "name": "Ramos Hotel",
+          "type": "Hotel",
+          "services": [ "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel Vía Argentum",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Groceries", "Heating", "Accessible", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN115-1",
+          "name": "Tourist Office of Silleda@en",
+          "type": "InformationPoint",
+          "description": {
+            "about": "https://turismosilleda.es"
+          },
+          "position": { "latitude": 42.69978, "longitude": -8.24666, "elevation": 491 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "0800-1400"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN116",
+      "name": "Foxo de Deza",
+      "type": "Village",
+      "position": { "latitude": 42.70124, "longitude": -8.25699, "elevation": 450 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN116-1",
+          "name": "Ethnographical House@en",
+          "type": "Historical",
+          "position": { "latitude": 42.70121, "longitude": -8.25684, "elevation": 451 }
+        },
+        {
+          "id": "SN-SN115-2",
+          "name": "Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.70136, "longitude": -8.25800, "elevation": 447 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN117",
+      "name": "Bandeira",
+      "type": "Town",
+      "position": { "latitude": 42.72897, "longitude": -8.30268, "elevation": 352 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Bandeira Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa de Cacheiro",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Conde Rey Lodging House",
+          "type": "GuestHouse",
+          "services": [ "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Hotel Victorino",
+          "type": "Hotel",
+          "services": [ "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN118",
+      "name": "Dornelas",
+      "type": "Village",
+      "position": { "latitude": 42.75577, "longitude": -8.33814, "elevation": 289 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa Leiras Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN118-1",
+          "name": "Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.75668, "longitude": -8.33868, "elevation": 288 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN119",
+      "name": "O Seixo",
+      "type": "Village",
+      "position": { "latitude": 42.77343, "longitude": -8.38463, "elevation": 262 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN120",
+      "name": "Aldea de O Castro",
+      "type": "Village",
+      "position": { "latitude": 42.77900, "longitude": -8.38669, "elevation": 223 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN120-1",
+          "name": "A Fonde dos Carballiños@es",
+          "type": "Fountain",
+          "position": { "latitude": 42.77757, "longitude": -8.38638, "elevation": 240 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN121",
+      "name": "Ponte Ulla",
+      "type": "Town",
+      "position": { "latitude": 42.77780, "longitude": -8.40374, "elevation": 69 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [
+        {
+          "name": "O Cruceiro da Ulla Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "A Taberna de Gundián Hostel",
+          "type": "GuestHouse",
+          "services": [ "Breakfast" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "SN-SN121-1",
+          "name": [
+            "Oficina de Turismo@es",
+            "Tourist Office of Ponte Ulla@en"
+          ],
+          "type": "InformationPoint",
+          "position": { "latitude": 42.77865, "longitude": -8.40260, "elevation": 65 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN122",
+      "name": "Outeiro (Vedra)",
+      "type": "Village",
+      "position": { "latitude": 42.79087, "longitude": -8.43217, "elevation": 282 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [
+        {
+          "name": "Outeiro Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Residencial Victoria Hostel",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Kitchen", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN123",
+      "name": "Rubial",
+      "type": "Village",
+      "position": { "latitude": 42.81025, "longitude": -8.46458, "elevation": 244 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN124",
+      "name": "Deseiro (Sergude)",
+      "type": "Village",
+      "position": { "latitude": 42.81934, "longitude": -8.48068, "elevation": 195 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Reina Lupa Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "SN-SN125",
+      "name": "Susana",
+      "type": "Village",
+      "position": { "latitude": 42.82692, "longitude": -8.48883, "elevation": 214 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Pharmacy", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN125-1",
+          "name": "Rest Area@en",
+          "type": "Park",
+          "position": { "latitude": 42.82912, "longitude": -8.49106, "elevation": 198 }
+        }
+      ]
+    },
+    {
+      "id": "SN-SN126",
+      "name": "Aldrei",
+      "type": "Village",
+      "position": { "latitude": 42.83586, "longitude": -8.50478, "elevation": 214 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN127",
+      "name": "Piñeiro",
+      "type": "Village",
+      "position": { "latitude": 42.84833, "longitude": -8.52298, "elevation": 148 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "SN-SN128",
+      "name": "Angrois",
+      "type": "Village",
+      "position": { "latitude": 42.85977, "longitude": -8.52889, "elevation": 226 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "SN-SN128-1",
+          "name": "Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 42.85909, "longitude": -8.52847, "elevation": 227 }
+        }
+      ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "SN-SN111",
+      "to": "SN-SN112",
+      "distance": 2.32,
+      "ascent": 25,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 42.67903, "longitude": -8.16618, "elevation": 489 },
+        { "latitude": 42.68096, "longitude": -8.17030, "elevation": 462 },
+        { "latitude": 42.68102, "longitude": -8.17697, "elevation": 467 }
+      ]
+    },
+    {
+      "from": "SN-SN112",
+      "to": "SN-SN113",
+      "distance": 2.54,
+      "ascent": 20,
+      "descent": 95,
+      "waypoints": [
+        { "latitude": 42.68235, "longitude": -8.19202, "elevation": 428 },
+        { "latitude": 42.68170, "longitude": -8.19555, "elevation": 429 },
+        { "latitude": 42.68324, "longitude": -8.19623, "elevation": 419 },
+        { "latitude": 42.67974, "longitude": -8.20993, "elevation": 358 }
+      ]
+    },
+    {
+      "from": "SN-SN113",
+      "to": "SN-SN114",
+      "distance": 2.64,
+      "ascent": 105,
+      "descent": 10,
+      "waypoints": [
+        { "latitude": 42.68687, "longitude": -8.21913, "elevation": 446 },
+        { "latitude": 42.69004, "longitude": -8.22548, "elevation": 473 }
+      ]
+    },
+    {
+      "from": "SN-SN114",
+      "to": "SN-SN115",
+      "distance": 1.66,
+      "ascent": 50,
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 42.68951, "longitude": -8.23573, "elevation": 445 },
+        { "latitude": 42.69224, "longitude": -8.24365, "elevation": 492 }
+      ]
+    },
+    {
+      "from": "SN-SN115",
+      "to": "SN-SN116",
+      "distance": 1.01,
+      "ascent": 0,
+      "descent": 40
+    },
+    {
+      "from": "SN-SN116",
+      "to": "SN-SN117",
+      "distance": 5.94,
+      "ascent": 25,
+      "descent": 125
+    },
+    {
+      "from": "SN-SN117",
+      "to": "SN-SN118",
+      "distance": 5.13,
+      "ascent": 50,
+      "descent": 115
+    },
+    {
+      "from": "SN-SN118",
+      "to": "SN-SN119",
+      "distance": 4.88,
+      "ascent": 60,
+      "descent": 85
+    },
+    {
+      "from": "SN-SN119",
+      "to": "SN-SN120",
+      "distance": 0.85,
+      "ascent": 0,
+      "descent": 45
+    },
+    {
+      "from": "SN-SN120",
+      "to": "SN-SN121",
+      "distance": 1.98,
+      "ascent": 10,
+      "descent": 160
+    },
+    {
+      "from": "SN-SN121",
+      "to": "SN-SN122",
+      "distance": 4.06,
+      "ascent": 215,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN122",
+      "to": "SN-SN123",
+      "distance": 4.48,
+      "ascent": 50,
+      "descent": 90
+    },
+    {
+      "from": "SN-SN123",
+      "to": "SN-SN124",
+      "distance": 1.92,
+      "ascent": 15,
+      "descent": 65
+    },
+    {
+      "from": "SN-SN124",
+      "to": "SN-SN125",
+      "distance": 1.52,
+      "ascent": 30,
+      "descent": 10
+    },
+    {
+      "from": "SN-SN125",
+      "to": "SN-SN126",
+      "distance": 2.12,
+      "ascent": 55,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.83069, "longitude": -8.49090, "elevation": 189 },
+        { "latitude": 42.83420, "longitude": -8.49448, "elevation": 230 }
+      ]
+    },
+    {
+      "from": "SN-SN126",
+      "to": "SN-SN127",
+      "distance": 2.39,
+      "ascent": 20,
+      "descent": 85
+    },
+    {
+      "from": "SN-SN127",
+      "to": "SN-SN128",
+      "distance": 1.43,
+      "ascent": 85,
+      "descent": 5
+    },
+    {
+      "from": "SN-SN128",
+      "to": "ST-ST1",
+      "distance": 3.07,
+      "ascent": 70,
+      "descent": 40
+    }
+  ],
+  "routes": [
+    {
+      "id": "SS-SS",
+      "name": "Default route",
+      "description": "The default route for importing",
+      "palette": {
+        "colour": "#fec953"
+      }
+    }
+  ],
+  "route-logic": [ ],
+  "default-route": "SS-SS"
+}

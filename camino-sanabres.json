@@ -1980,7 +1980,7 @@
     {
       "id": "SN-SN106",
       "name": "Estación de Lalin",
-      "type": "Village",
+      "type": "Station",
       "position": { "latitude": 42.63349, "longitude": -8.13898, "elevation": 483 },
       "region": "ES-GA",
       "services": [ "Restaurant", "Train" ],

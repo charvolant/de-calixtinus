@@ -84,9 +84,10 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is source data for seven caminos:
+  Currently, there is source data for nine caminos:
   the Camino Portuguese, the one we walked; the Camino Frances; the Camino del Norte; the Camino Ingles;
-  the Camino Primitivo; the Camino Invierno (the winter camino); and the Camino Fisterra.
+  the Camino Primitivo; the Camino Invierno (the winter camino);
+  the Vía de la Plata (silver way) joining either the Frances or Sanabrés; the Camino Sanabrés; and the Camino Fisterra.
   I've also added in the Bondi-Manly walk, about as far away from the Camino Santiago as you can get, both
   figuratively and physically, for funsies.
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
@@ -100,6 +101,13 @@
   This is an open-source project.
   The code is available on GitHub <a href="https://github.com/charvolant/de-calixtinus">here</a> under the
   permissive <a href="https://opensource.org/license/mit">MIT licence</a>.
+<p>
+  Data is generally licensed under a <a href="https://creativecommons.org/">Creative Commons licence</a>,
+  either <a href="https://creativecommons.org/licenses/by/4.0">CC-BY</a> or
+  <a href="https://creativecommons.org/licenses/by-nc/4.0">CC-BY-NC</a>, depending on the original source.
+  A reference to the license for each piece of data is generally embedded in the data itself.
+  For full licence information, see the <a href="https://github.com/charvolant/de-calixtinus/blob/master/LICENSE">LICENSE</a> file.
+  You are generally free to take and adapt both the code and the data, but you'll need to pay close attention to the terms.
 
 <h2>Sources of Data
 
@@ -130,6 +138,15 @@
 <p>
   The <a href="https://www.bonditomanly.com/">Bondi to Manly Walk</a> website provides detailed information
   \ on that walk.
+
+<p>
+  Detailed trail information comes from the <a href="https://www.santiago.nl">Het Nederlands Genootschap van Sint Jacob</a>,
+  traces of the Buen Camino trails and the
+  <a href="https://www.caminosantiago.org">Federación Española de Asociaciones de Amigos del Camino de Santiago (FEAACS)</a>,
+  via the <a href="https://centrodedescargas.cnig.es">Centro Nacional de Información Geográfica (CNIG)</a>.
+
+<p>
+  Map tiles come from the excellent <a href="https://www.openstreetmap.org">Open Street Map</a>.
 
 <p>
   And, of course, we did our own stuff.

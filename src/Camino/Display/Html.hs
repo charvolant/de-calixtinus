@@ -53,6 +53,10 @@ import Language.Haskell.TH.Quote (QuasiQuoter)
 endash :: Char
 endash = '\x2013'
 
+-- Another useful separator
+emdash :: Char
+emdash = '\x2014'
+
 -- A different useful separator
 nl :: Char
 nl = '\n'
@@ -313,6 +317,43 @@ caminoLocationTypeLabel Farmland = FarmlandTitle
 caminoLocationTypeLabel Industry = IndustryTitle
 caminoLocationTypeLabel Poi = PoiTitle
 caminoLocationTypeLabel PlaceholderLocation = PlaceholderLabel
+
+caminoLocationTypeDescription :: LocationType -> CaminoMsg
+caminoLocationTypeDescription Village = VillageDescription
+caminoLocationTypeDescription Town = TownDescription
+caminoLocationTypeDescription City = CityDescription
+caminoLocationTypeDescription Bridge = BridgeDescription
+caminoLocationTypeDescription Intersection = IntersectionDescription
+caminoLocationTypeDescription Monastery = MonasteryDescription
+caminoLocationTypeDescription Peak = PeakDescription
+caminoLocationTypeDescription Lookout = LookoutDescription
+caminoLocationTypeDescription Promontory = PromontoryDescription
+caminoLocationTypeDescription Church = ChurchDescription
+caminoLocationTypeDescription Cathedral = CathedralDescription
+caminoLocationTypeDescription Cross = CrossDescription
+caminoLocationTypeDescription Fountain = FountainDescription
+caminoLocationTypeDescription Statue = StatueDescription
+caminoLocationTypeDescription Artwork = ArtworkDescription
+caminoLocationTypeDescription Municipal = MunicipalDescription
+caminoLocationTypeDescription InformationPoint = InformationPointDescription
+caminoLocationTypeDescription PilgrimResource = PilgrimResourceDescription
+caminoLocationTypeDescription Junction = JunctionDescription
+caminoLocationTypeDescription Shop = ShopDescription
+caminoLocationTypeDescription Winery = WineryDescription
+caminoLocationTypeDescription Museum = MuseumDescription
+caminoLocationTypeDescription Theatre = TheatreDescription
+caminoLocationTypeDescription Historical = HistoricalDescription
+caminoLocationTypeDescription Park = ParkDescription
+caminoLocationTypeDescription Beach = BeachDescription
+caminoLocationTypeDescription Natural = NaturalDescription
+caminoLocationTypeDescription Hazard = HazardDescription
+caminoLocationTypeDescription Wharf = WharfDescription
+caminoLocationTypeDescription Station = StationDescription
+caminoLocationTypeDescription Airport = AirportDescription
+caminoLocationTypeDescription Farmland = FarmlandDescription
+caminoLocationTypeDescription Industry = IndustryDescription
+caminoLocationTypeDescription Poi = PoiDescription
+caminoLocationTypeDescription _ = PlaceholderLabel
 
 caminoPoiCategoryLabel :: PoiCategory -> CaminoMsg
 caminoPoiCategoryLabel ReligiousPoi  = ReligiousPoiTitle
@@ -1461,10 +1502,7 @@ caminoCaminoKeyHtml :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoCaminoKeyHtml camino = [ihamlet|
 $forall r <- caminoRoutes camino
   <tr>
-    <td>
-    <td .border .border-light style="min-width: 1ex; background-color: #{toCssColour $ paletteColour $ routePalette r}">
-    <td>
-    <td>
+    <td .border .border-light .col-1 style="min-width: 1ex; background-color: #{toCssColour $ paletteColour $ routePalette r}">
     $if r == caminoDefaultRoute camino
       <td .fw-normal>
         _{Txt (caminoName camino)}
@@ -1487,8 +1525,15 @@ $forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
         <img src="@{caminoLocationTypeMapIcon lt False False}" title="_{UnusedLabel}">
     <td .map-key-icon>
       <img src="@{caminoPoiTypeMapIcon lt}" title="_{PoiLabel}">
+    $if full
+      <td>
+        <span .location-type-sample>
+          ^{caminoLocationTypeIcon lt}
     <td>
       _{caminoLocationTypeLabel lt}
+    $if full
+      <td>
+        _{caminoLocationTypeDescription lt}
 |]
 
 

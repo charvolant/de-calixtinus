@@ -6,9 +6,9 @@
     <div .collapse .navbar-collapse #help-menu">
       <ul .navbar-nav>
         <li .nav-item>
-          <a .nav-link .active href="#map-key">Map
+          <a .nav-link .active href="#route-key">Routes
         <li .nav-item>
-          <a .nav-link .active href="#location-help">Locations
+          <a .nav-link .active href="#symbol-key">Symbols
         <li .nav-item>
           <a .nav-link .active href="#services-help">Services
         <li .nav-item>
@@ -20,227 +20,33 @@
         <li .nav-item>
           <a .nav-link .active href="#other-help">Other
 
-<div #map-key .card>
+<div #route-key .card>
   <div .card-body>
-    <h2 .card-title>Map
+    <h2 .card-title>Routes
     <table .table .table-striped>
-      ^{caminoCaminoKeyHtml (preferenceCamino camino)}
-      ^{caminoMapKeyHtml True}
-
-<div #location-help .card>
-  <div .card-body>
-    <h2 .card-title>Locations and Points of Interest
-    <table .table .table-striped>
-      <caption>Location Types
       <thead>
         <tr>
-           <th scope="col">Icon
+           <th scope="col">Colour
+           <th scope="col">Route
+      <tbody>
+        ^{caminoCaminoKeyHtml (preferenceCamino camino)}
+
+<div #symbol-key .card>
+  <div .card-body>
+    <h2 .card-title>Symbols
+    <table .table .table-striped>
+      <thead>
+        <tr>
+           <th scope="col">Stop
+           <th scope="col">Waypoint
+           <th scope="col">Unused
+           <th scope="col">Poi
+           <th scope="col">Label
            <th scope="col">Location Type
            <th scope="col">Comments
       <tbody>
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Village}
-          <td>Village
-          <td>A smaller locality with limited services and accommodation
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Town}
-          <td>Town
-          <td>A larger locality with most services and a variety of accommodation usually available
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon City}
-          <td>City
-          <td>A large urban area with multiple options for services and accommodation
-        <tr>
-          <td>
-            <span .location-type-sample>^{caminoLocationTypeIcon Bridge}
-          <td>Bridge
-          <td>A bridge acting as a waypoint
-        <tr>
-          <td>
-             <span .location-type-sample>
-               ^{caminoLocationTypeIcon Intersection}
-          <td>Intersection
-          <td>A road intersection
-        <tr>
-          <td>
-             <span .location-type-sample>
-               ^{caminoLocationTypeIcon Monastery}
-          <td>Monastery
-          <td>A monastery, often with a hospice attached
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Peak}
-          <td>Peak
-          <td>A peak or mountain pass
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Lookout}
-          <td>Lookout
-          <td>A lookout or scenic view
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Promontory}
-          <td>Promontory
-          <td>A promontory, cliff or headland
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Church}
-          <td>Church
-          <td>A church or chapel
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Cathedral}
-          <td>Cathedral
-          <td>A cathedral, basillica, shrine or other large religious building
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Cross}
-          <td>Cross
-          <td>A roadside crucifix
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Fountain}
-          <td>Fountain
-          <td>A fountain or spring
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Statue}
-          <td>Statue
-          <td>A statue or
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Artwork}
-          <td>Artwork
-          <td>A piece of art
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Municipal}
-          <td>Municipal
-          <td>A town square, market place, town hall or other municipal building
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon InformationPoint}
-          <td>Information Point
-          <td>A local tourist office, guide, etc. not specifically geared towards pilgrims
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon PilgrimResource}
-          <td>Pilgrim Resource
-          <td>A pilgrim's office, rest point, etc. specifically geared towards pilgrims
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Junction}
-          <td>Junction
-          <td>A point where alternative routes diverge or the route is joined by another route
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Shop}
-          <td>Shop
-          <td>A shop of note or usefulness
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Winery}
-          <td>Winery
-          <td>A winery or port warehouse
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Museum}
-          <td>Museum
-          <td>A museum or gallery
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Theatre}
-          <td>Theatre
-          <td>A theatre or opera house
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Historical}
-          <td>Historical
-          <td>A historical site, archaeological site, ruin or other historical point of interest
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Park}
-          <td>Park
-          <td>A park or garden
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Beach}
-          <td>Beach
-          <td>A beach (sea or river)
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Natural}
-          <td>Natural
-          <td>A nature park, area of natural beauty etc.
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Hazard}
-          <td>Hazard
-          <td>A road crossing, bridge etc. that needs to be treated with caution
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Wharf}
-          <td>Wharf
-          <td>A wharf, quay or pier connecting to a boat
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Station}
-          <td>Station
-          <td>A train or bus station
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Airport}
-          <td>Airport
-          <td>An airport, airfield or aerodrome
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Farmland}
-          <td>Farmland
-          <td>Farmland, greenhouses, pasture etc.
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Industry}
-          <td>Industry
-          <td>An industrial area
-        <tr>
-          <td>
-            <span .location-type-sample>
-              ^{caminoLocationTypeIcon Poi}
-          <td>Locality
-          <td>An unspecified waypoint or point of interest
+       ^{caminoMapKeyHtml True}
+
 
 <div #services-help .card>
   <div .card-body>
@@ -556,7 +362,7 @@
         <tr>
           <td>^{caminoEventTypeIcon Food}
           <td>Food
-          <td>A food or wine festival
+          <td>A food or wine festival, or a regional speciality
         <tr>
           <td>^{caminoEventTypeIcon Music}
           <td>Music
@@ -612,3 +418,33 @@
             Rest Point.
             This is a point where a rest day is scheduled, so that you can recover, replenish supplies, repair or replace
             equipment, wash clothes and whatever else you need to do.
+        <tr>
+          <td>
+            <span title="_{InformationTitle}" .note-type .ca-information>
+          <td>
+            Note.
+            Additional information about something.
+        <tr>
+          <td>
+            <span title="_{WarningTitle}" .note-type .ca-warning>
+          <td>
+            Warning.
+            A warning about a hazard or difficulty.
+        <tr>
+          <td>
+            <span title="_{AddressTitle}" .note-type .ca-map>
+          <td>
+            Address.
+            The address of a point of interest, accommodation or other location.
+        <tr>
+          <td>
+            <span title="_{DirectionsTitle}" .note-type .ca-map>
+          <td>
+            Directions.
+            How to get to a location.
+        <tr>
+          <td>
+            <span title="_{AccessTitle}" .note-type .ca-key>
+          <td>
+            Access.
+            How to get entry to accommodation or a point of interest, when there isn't someone on-site.

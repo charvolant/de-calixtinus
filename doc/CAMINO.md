@@ -906,7 +906,25 @@ An example route is:
   ],
   "palette": {
     "colour": "F00810"
-  }
+  },
+  "features": [
+    {
+      "id": "P-RS-F1",
+      "name": "Main Spiritual Variant",
+      "geometry": "P/P-RS-F1.geojson"
+    },
+    {
+      "id": "P-RS-F2",
+      "type": "FerryLink",
+      "name": "Vilanova de Arousa - Pontecesures (ferry link)",
+      "geometry": "P/P-RS-F2.geojson"
+    },
+    {
+      "id": "P-RS-F3",
+      "name": "Pontecesures, wharf to main camino",
+      "geometry": "P/P-RS-F3.geojson"
+    }
+  ]
 }
 ```
 
@@ -927,6 +945,15 @@ An example route is:
   Only suggested PoIs with a significan `time` need to be listed.
 * `palette` The colour denoting the route.
   The `text-colour` field can be added to provide a more contrasting text colour, if needed.
+* The `features` field contains a list of detailed geospatial features that trace the route.
+  Each feature has an identifier, a name, an optional type (based on leg type), an optional
+  condition, based on location ids (see the [route logic](#route-logic) section below)
+  and an optional relative link to a [GeoJson](https://geojson.org) file containing the feature 
+  collection that makes up the feature.
+  The link resolution is based on the location given in the server arguments or
+  the entry in the [configuration file](CONFIG.md).
+  Features within the GeoJson file can be listed as sub-features, giving an opportunity
+  to change the link type for something like a road-ferry-road combination.
 
 Locations not explicitly listed in other routes are assigned to the specified
 default route.

@@ -51,13 +51,16 @@ data CaminoMsg =
   | AccommodationPreferencesLabel
   | AddressTitle
   | AfterText
+  | AirportDescription
   | AirportTitle
   | AlwaysOpenLabel
+  | ArtworkDescription
   | ArtworkTitle
   | AscentLabel
   | AscentMsg Float
   | AustereTitle
   | BankTitle
+  | BeachDescription
   | BeachTitle
   | BedlinenTitle
   | BeforeText
@@ -65,6 +68,7 @@ data CaminoMsg =
   | BicycleStorageTitle
   | BoatTitle
   | BreakfastTitle
+  | BridgeDescription
   | BridgeTitle
   | BusTitle
   | CalendarTitle
@@ -74,14 +78,18 @@ data CaminoMsg =
   | CampSiteTitle
   | CasaRuralTitle
   | CasualTitle
+  | CathedralDescription
   | CathedralTitle
+  | ChurchDescription
   | ChurchTitle
+  | CityDescription
   | CityTitle
   | ClosedDayLabel Text
   | ClosedDayText
   | ClosedText
   | ComfortableTitle
   | CopyLinkTitle
+  | CrossDescription
   | CrossTitle
   | ComfortLabel
   | CulturalPoiTitle
@@ -121,6 +129,7 @@ data CaminoMsg =
   | ExceptText
   | ExcludedStopsLabel
   | FailureLabel
+  | FarmlandDescription
   | FarmlandTitle
   | FatiguePenanceLabel
   | FerryTitle
@@ -132,15 +141,18 @@ data CaminoMsg =
   | FoodEventTitle
   | FromLabel
   | FrugalTitle
+  | FountainDescription
   | FountainTitle
   | GiteTitle
   | GroceriesTitle
   | GuestHouseTitle
   | HalfBoardTitle
   | HandwashTitle
+  | HazardDescription
   | HazardTitle
   | HeatingTitle
   | HelpLabel
+  | HistoricalDescription
   | HistoricalTitle
   | HistoricalPoiTitle
   | HolidayEventTitle
@@ -151,14 +163,18 @@ data CaminoMsg =
   | HoursTitle
   | HouseTitle
   | IdentifierLabel
+  | IndustryDescription
   | IndustryTitle
   | InformationLabel
   | InformationTitle
   | InformationDescription
+  | InformationPointDescription
   | InformationPointTitle
+  | IntersectionDescription
   | IntersectionTitle
   | JourneyLabel
   | JourneySummaryMsg Journey
+  | JunctionDescription
   | JunctionTitle
   | KeyLabel
   | KitchenTitle
@@ -173,6 +189,7 @@ data CaminoMsg =
   | LocationsLabel
   | LockersTitle
   | LongitudeLabel
+  | LookoutDescription
   | LookoutTitle
   | LuxuriousTitle
   | MapLabel
@@ -180,13 +197,17 @@ data CaminoMsg =
   | MattressTitle
   | MedicalTitle
   | MiscPenanceLabel
+  | MonasteryDescription
   | MonasteryTitle
   | MonthOfYearName MonthOfYear
+  | MunicipalDescription
   | MunicipalTitle
+  | MuseumDescription
   | MuseumTitle
   | MusicEventTitle
   | NamedCalendarLabel Text
   | NaturalPoiTitle
+  | NaturalDescription
   | NaturalTitle
   | NormalTitle
   | NotesLabel
@@ -196,8 +217,10 @@ data CaminoMsg =
   | OrdinalAfterWeekday Int DayOfWeek
   | OrdinalBeforeAfter Int CaminoMsg
   | OtherLabel
+  | ParkDescription
   | ParkTitle
   | PathLabel
+  | PeakDescription
   | PeakTitle
   | PenanceFormatted Bool Penance
   | PenanceFormattedPlain Bool Penance
@@ -213,10 +236,12 @@ data CaminoMsg =
   | PilgrimAlbergueTitle
   | PilgrimMassEventTitle
   | PilgrimPoiTitle
+  | PilgrimResourceDescription
   | PilgrimResourceTitle
   | PilgrimTitle
   | PlaceholderLabel
   | PlanLabel
+  | PoiDescription
   | PoiLabel
   | PoisLabel
   | PoiTime (Maybe Float)
@@ -226,6 +251,7 @@ data CaminoMsg =
   | PreferencesLabel
   | PrivateAlbergueTitle
   | ProgramLabel
+  | PromontoryDescription
   | PromontoryTitle
   | PublicHolidayLabel Text
   | PublicHolidayText
@@ -255,6 +281,7 @@ data CaminoMsg =
   | ServicesLabel
   | ServicesPreferencesLabel
   | SharedTitle
+  | ShopDescription
   | ShopTitle
   | ShowLabelsTitle
   | ShowOnMapTitle
@@ -265,7 +292,9 @@ data CaminoMsg =
   | StagesMsg Int
   | StartDateLabel
   | StartLocationLabel
+  | StationDescription
   | StationTitle
+  | StatueDescription
   | StatueTitle
   | StockpointLabel
   | StopLabel
@@ -274,6 +303,7 @@ data CaminoMsg =
   | StopServicesPenanceLabel
   | SuperFitTitle
   | TableLabel
+  | TheatreDescription
   | TheatreTitle
   | Time TimeOfDay
   | TimeAdjustLabel
@@ -285,6 +315,7 @@ data CaminoMsg =
   | ToggleDetailTitle
   | ToLabel
   | TowelsTitle
+  | TownDescription
   | TownTitle
   | TrailTitle
   | TrainTitle
@@ -301,14 +332,17 @@ data CaminoMsg =
   | UnusedLabel
   | VeryFitTitle
   | VeryUnfitTitle
+  | VillageDescription
   | VillageTitle
   | WalkingNaismithTitle
   | WalkingTitle
   | WarningTitle
   | WashingMachineTitle
   | WaypointLabel
+  | WharfDescription
   | WharfTitle
   | WiFiTitle
+  | WineryDescription
   | WineryTitle
   deriving (Show)
 
@@ -361,14 +395,17 @@ renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
 renderCaminoMsgDefault _ AccommodationPenanceLabel = "Accommodation"
 renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
 renderCaminoMsgDefault _ AddressTitle = "Address"
+renderCaminoMsgDefault _ AirportDescription = "An airport, airfield or aerodrome"
 renderCaminoMsgDefault _ AirportTitle = "Airport"
 renderCaminoMsgDefault _ AlwaysOpenLabel = "Always Open"
 renderCaminoMsgDefault _ AfterText = "after"
+renderCaminoMsgDefault _ ArtworkDescription = "A piece of art"
 renderCaminoMsgDefault _ ArtworkTitle = "Art"
 renderCaminoMsgDefault _ AscentLabel = "Ascent"
 renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
 renderCaminoMsgDefault _ AustereTitle = "Austere"
 renderCaminoMsgDefault _ BankTitle = "Bank"
+renderCaminoMsgDefault _ BeachDescription = "A beach (sea or river)"
 renderCaminoMsgDefault _ BeachTitle = "Beach"
 renderCaminoMsgDefault _ BedlinenTitle = "Bedlinen"
 renderCaminoMsgDefault _ BeforeText = "before"
@@ -376,6 +413,7 @@ renderCaminoMsgDefault _ BicycleRepairTitle = "Bicycle Repair"
 renderCaminoMsgDefault _ BicycleStorageTitle = "Bicycle Storage"
 renderCaminoMsgDefault _ BoatTitle = "Boat/Canoe (paddled)"
 renderCaminoMsgDefault _ BreakfastTitle = "Breakfast"
+renderCaminoMsgDefault _ BridgeDescription = "A bridge acting as a waypoint or point of interest"
 renderCaminoMsgDefault _ BridgeTitle = "Bridge"
 renderCaminoMsgDefault _ BusTitle = "Bus"
 renderCaminoMsgDefault _ CalendarTitle = "Calendar"
@@ -385,14 +423,18 @@ renderCaminoMsgDefault _ CampingTitle = "Camping"
 renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
 renderCaminoMsgDefault _ CasaRuralTitle = "Casa Rural/Quinta"
 renderCaminoMsgDefault _ CasualTitle = "Casual"
+renderCaminoMsgDefault _ CathedralDescription = "A cathedral, basillica, shrine or other large religious building"
 renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
+renderCaminoMsgDefault _ ChurchDescription = "A church or chapel"
 renderCaminoMsgDefault _ ChurchTitle = "Church"
+renderCaminoMsgDefault _ CityDescription = "A large urban area with multiple options for services and accommodation"
 renderCaminoMsgDefault _ CityTitle = "City"
 renderCaminoMsgDefault _ ClosedDayText = "Closed Day"
 renderCaminoMsgDefault _ ClosedText = "closed"
 renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
 renderCaminoMsgDefault _ ComfortLabel = "Comfort"
 renderCaminoMsgDefault _ CopyLinkTitle = "Copy Link"
+renderCaminoMsgDefault _ CrossDescription = "A roadside crucifix"
 renderCaminoMsgDefault _ CrossTitle = "Cross"
 renderCaminoMsgDefault _ CulturalPoiTitle = "Cultural"
 renderCaminoMsgDefault _ CyclingTitle = "Cycling"
@@ -426,6 +468,7 @@ renderCaminoMsgDefault _ EventsLabel = "Events"
 renderCaminoMsgDefault _ ExceptText = "except"
 renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
 renderCaminoMsgDefault _ FailureLabel = "Failure"
+renderCaminoMsgDefault _ FarmlandDescription = "Farmland, greenhouses, pasture etc."
 renderCaminoMsgDefault _ FarmlandTitle = "Farmland"
 renderCaminoMsgDefault _ FatiguePenanceLabel = "Fatigue"
 renderCaminoMsgDefault _ FerryTitle = "Ferry"
@@ -435,6 +478,7 @@ renderCaminoMsgDefault _ FinishLocationLabel = "Finish Location"
 renderCaminoMsgDefault _ FitnessLabel = "Fitness"
 renderCaminoMsgDefault _ FitTitle = "Fit"
 renderCaminoMsgDefault _ FoodEventTitle = "Food"
+renderCaminoMsgDefault _ FountainDescription = "A fountain or spring, either a large decorative fountain or a source of water"
 renderCaminoMsgDefault _ FountainTitle = "Fountain"
 renderCaminoMsgDefault _ FromLabel = "From"
 renderCaminoMsgDefault _ FrugalTitle = "Frugal"
@@ -443,11 +487,13 @@ renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
 renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
 renderCaminoMsgDefault _ HalfBoardTitle = "Half-Board"
 renderCaminoMsgDefault _ HandwashTitle = "Handwash"
+renderCaminoMsgDefault _ HazardDescription = "A road crossing, bridge, slope etc. that needs to be treated with caution"
 renderCaminoMsgDefault _ HazardTitle = "Hazard"
 renderCaminoMsgDefault _ HeatingTitle = "Heating"
 renderCaminoMsgDefault _ HelpLabel = "Help"
 renderCaminoMsgDefault _ HistoricalPoiTitle = "Historical"
-renderCaminoMsgDefault _ HistoricalTitle = "Historical site, archaeological site or ruin"
+renderCaminoMsgDefault _ HistoricalDescription = "A historical site, archaeological site, ruin or other historical point of interest"
+renderCaminoMsgDefault _ HistoricalTitle = "Historical site"
 renderCaminoMsgDefault _ HolidayEventTitle = "Holiday"
 renderCaminoMsgDefault _ HolidaysLabel = "Holidays"
 renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
@@ -460,7 +506,9 @@ renderCaminoMsgDefault _ IndustryTitle = "Industrial"
 renderCaminoMsgDefault _ InformationLabel = "Information"
 renderCaminoMsgDefault _ InformationTitle = "Information"
 renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
+renderCaminoMsgDefault _ InformationPointDescription = "A local tourist office, guide, etc. not specifically geared towards pilgrims"
 renderCaminoMsgDefault _ InformationPointTitle = "Information Point"
+renderCaminoMsgDefault _ IntersectionDescription = "A road or path intersection"
 renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
 renderCaminoMsgDefault _ JourneyLabel = "Journey"
 renderCaminoMsgDefault _ JunctionTitle = "Junction"
@@ -475,6 +523,7 @@ renderCaminoMsgDefault _ LocationPreferencesLabel = "Location Preferences"
 renderCaminoMsgDefault _ LocationsLabel = "Locations"
 renderCaminoMsgDefault _ LockersTitle = "Lockers"
 renderCaminoMsgDefault _ LongitudeLabel = "Longitude"
+renderCaminoMsgDefault _ LookoutDescription = "A lookout or scenic view"
 renderCaminoMsgDefault _ LookoutTitle = "Lookout"
 renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"
 renderCaminoMsgDefault _ MapLabel = "Map"
@@ -482,19 +531,25 @@ renderCaminoMsgDefault _ MassEventTitle = "Mass"
 renderCaminoMsgDefault _ MattressTitle = "Mattress"
 renderCaminoMsgDefault _ MedicalTitle = "Medical"
 renderCaminoMsgDefault _ MiscPenanceLabel = "Other"
+renderCaminoMsgDefault _ MonasteryDescription = "A monastery or cloister, often with a hospice attached"
 renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
-renderCaminoMsgDefault _ MunicipalTitle = "Town square, market, etc."
-renderCaminoMsgDefault _ MuseumTitle = "Museum or gallery"
+renderCaminoMsgDefault _ MunicipalDescription = "A town square, market place, town hall or other municipal building"
+renderCaminoMsgDefault _ MunicipalTitle = "Municipal"
+renderCaminoMsgDefault _ MuseumDescription = "A museum or gallery"
+renderCaminoMsgDefault _ MuseumTitle = "Museum/gallery"
 renderCaminoMsgDefault _ MusicEventTitle = "Music"
 renderCaminoMsgDefault _ NaturalPoiTitle = "Natural"
-renderCaminoMsgDefault _ NaturalTitle = "Nature park, site of natural beauty, etc."
+renderCaminoMsgDefault _ NaturalDescription = "A nature park or area of natural beauty, as well as large landscape features such as reservoirs or dams"
+renderCaminoMsgDefault _ NaturalTitle = "Nature park"
 renderCaminoMsgDefault _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ NotesLabel = "Notes"
 renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
 renderCaminoMsgDefault _ OpenText = "open"
-renderCaminoMsgDefault _ ParkTitle = "Park or garden"
+renderCaminoMsgDefault _ ParkDescription = "A park or garden"
+renderCaminoMsgDefault _ ParkTitle = "Park"
 renderCaminoMsgDefault _ PathLabel = "Path"
-renderCaminoMsgDefault _ PeakTitle = "Peak, pass or lookout"
+renderCaminoMsgDefault _ PeakDescription = "A peak or mountain pass"
+renderCaminoMsgDefault _ PeakTitle = "Peak/pass"
 renderCaminoMsgDefault _ (PenanceFormatted showZero penance') = formatPenance showZero penance'
 renderCaminoMsgDefault _ (PenanceFormattedPlain showZero penance') = formatPenancePlain showZero penance'
 renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance True penance'}|]
@@ -509,10 +564,12 @@ renderCaminoMsgDefault _ PilgrimageLabel = "Pilgrimage"
 renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
 renderCaminoMsgDefault _ PilgrimMassEventTitle = "Pilgrim's Mass"
 renderCaminoMsgDefault _ PilgrimPoiTitle = "Pilgrim"
+renderCaminoMsgDefault _ PilgrimResourceDescription = "A pilgrim's office, rest point, etc. specifically geared towards pilgrims"
 renderCaminoMsgDefault _ PilgrimResourceTitle = "Pilgrim Resource"
 renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
 renderCaminoMsgDefault _ PlaceholderLabel = "Placeholder"
 renderCaminoMsgDefault _ PlanLabel = "Plan"
+renderCaminoMsgDefault _ PoiDescription = "A generic waypoint or point of interest"
 renderCaminoMsgDefault _ PoiLabel = "Point of Interest"
 renderCaminoMsgDefault _ PoisLabel = "Points of Interest"
 renderCaminoMsgDefault _ (PoiTime Nothing) = ""
@@ -523,7 +580,8 @@ renderCaminoMsgDefault _ PrayerTitle = "Prayer"
 renderCaminoMsgDefault _ PreferencesLabel = "Preferences"
 renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
 renderCaminoMsgDefault _ ProgramLabel = "Program"
-renderCaminoMsgDefault _ PromontoryTitle = "Promontory or Headland"
+renderCaminoMsgDefault _ PromontoryDescription = "A promontory, cliff or headland"
+renderCaminoMsgDefault _ PromontoryTitle = "Promontory/Headland"
 renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
 renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
 renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
@@ -551,6 +609,7 @@ renderCaminoMsgDefault _ RoutesLabel = "Routes"
 renderCaminoMsgDefault _ ServicesLabel = "Services"
 renderCaminoMsgDefault _ ServicesPreferencesLabel = "Missing Services"
 renderCaminoMsgDefault _ SharedTitle = "Shared"
+renderCaminoMsgDefault _ ShopDescription = "A shop of note or usefulness"
 renderCaminoMsgDefault _ ShopTitle = "Shop"
 renderCaminoMsgDefault _ ShowLabelsTitle = "Show camino and route labels on map"
 renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
@@ -561,7 +620,9 @@ renderCaminoMsgDefault _ StageLabel = "Stage"
 renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
 renderCaminoMsgDefault _ StartDateLabel = "Start Date"
 renderCaminoMsgDefault _ StartLocationLabel = "Start Location"
+renderCaminoMsgDefault _ StationDescription = "A train or bus station"
 renderCaminoMsgDefault _ StationTitle = "Station"
+renderCaminoMsgDefault _ StatueDescription = "A statue, bas-relief, etc."
 renderCaminoMsgDefault _ StatueTitle = "Statue"
 renderCaminoMsgDefault _ StockpointLabel = "Stocking Point"
 renderCaminoMsgDefault _ StopLabel = "Stop"
@@ -570,6 +631,7 @@ renderCaminoMsgDefault _ StopServicesPenanceLabel = "Missing Services (Stop)"
 renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
 renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
 renderCaminoMsgDefault _ TableLabel = "Table"
+renderCaminoMsgDefault _ TheatreDescription = "A theatre, opera house or concert hall"
 renderCaminoMsgDefault _ TheatreTitle = "Theatre"
 renderCaminoMsgDefault _ TimeAdjustLabel = "Time Adjustment"
 renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
@@ -580,6 +642,7 @@ renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
 renderCaminoMsgDefault _ ToggleDetailTitle = "Show/hide additional detail"
 renderCaminoMsgDefault _ ToLabel = "To"
 renderCaminoMsgDefault _ TowelsTitle = "Towels"
+renderCaminoMsgDefault _ TownDescription = "A larger locality with most services and a variety of accommodation usually available"
 renderCaminoMsgDefault _ TownTitle = "Town"
 renderCaminoMsgDefault _ TrailTitle = "Trail (walkers only)"
 renderCaminoMsgDefault _ TrainTitle = "Train"
@@ -594,14 +657,17 @@ renderCaminoMsgDefault _ UnfitTitle = "Unfit"
 renderCaminoMsgDefault _ UnusedLabel = "Unused"
 renderCaminoMsgDefault _ VeryFitTitle = "Very fit"
 renderCaminoMsgDefault _ VeryUnfitTitle = "Very unfit"
+renderCaminoMsgDefault _ VillageDescription = "A smaller locality with limited, or no, services and accommodation"
 renderCaminoMsgDefault _ VillageTitle = "Village"
 renderCaminoMsgDefault _ WalkingTitle = "Walking"
 renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
 renderCaminoMsgDefault _ WarningTitle= "Warning"
 renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
 renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
+renderCaminoMsgDefault _ WharfDescription = "A wharf, quay or pier connecting to a boat"
 renderCaminoMsgDefault _ WharfTitle = "Wharf"
 renderCaminoMsgDefault _ WiFiTitle = "WiFi"
+renderCaminoMsgDefault _ WineryDescription = "A winery or port warehouse"
 renderCaminoMsgDefault _ WineryTitle = "Winery"
 renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
 

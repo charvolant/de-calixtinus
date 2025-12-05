@@ -42,14 +42,15 @@ To run the web server, use
 camino-server-exe [-c CONFIG] [-s STATIC] [-d] [-r ROOT] [-p PORT]
 ```
 
-| Argument  | Description                                                                             | Example/default        |
-|-----------|-----------------------------------------------------------------------------------------|------------------------|
-| CAMINO    | A list of camino descriptions in JSON form                                              | camino-portuguese.json |
-| -c CONFIG | An optional configuration file for generating the appropriate HTML output, in YAML form | ./config.yaml          |
-| -s STATIC | The location of static (asset) files, such as CSS, fonts and icons                      | ./static               |                                                                     
-| -r ROOT   | The root URL for links.                                                                 | http://localhost:3000  |                                                                     
-| -p PORT   | The port to listen on                                                                   | 3000                   |                                                                     
-| -d        | Use debug mode                                                                          |                        |                                                                     
+| Argument    | Description                                                                             | Example/default        |
+|-------------|-----------------------------------------------------------------------------------------|------------------------|
+| CAMINO      | A list of camino descriptions in JSON form                                              | camino-portuguese.json |
+| -c CONFIG   | An optional configuration file for generating the appropriate HTML output, in YAML form | ./config.yaml          |
+| -s STATIC   | The location of static (asset) files, such as CSS, fonts and icons                      | ./static               |                                                                     
+| -f FEATURES | The location of feature files, GeoJson files that give detailed trail information.      | ./data/features        |                                                                     
+| -i IMAGES   | The location of image files.        | ./data/images          |                                                                     
+| -r ROOT     | The root URL for links.                                                                 | http://localhost:3000  |                                                                     | -p PORT   | The port to listen on                                                                   | 3000                   |                                                                     
+| -d          | Use debug mode                                                                          |                        |                                                                     
 
 If you are using something like nginx as a front-end, you will need to set the root so that links are correctly generated.
 
@@ -94,6 +95,10 @@ Most of these we used when walking the Camino ourselves.
   It also updates dynamically and can be used to load multiple Camino routes.
   You can get more information about this at the Apple Store, Google Play or at the
   [app website](https://www.editorialbuencamino.com/) (Information used with permission.)
+* Detailed trail information comes from [Het Nederlands Genootschap van Sint Jacob](https://www.santiago.nl),
+  traces of the Buen Camino trails and the
+  [Federación Española de Asociaciones de Amigos del Camino de Santiago (FEAACS)](https://www.caminosantiago.org),
+  via the [Centro Nacional de Información Geográfica (CNIG)](https://centrodedescargas.cnig.es).
 * A secondary source is *The Camino Portugués* by Kat Davis (Cicerone, 2019), which we
   used as a planning book.
 * *The Camino del Norte and Camino Primitivo* by Dave Whitson and Laura Perazzoli (Cicerone, 2019) for
@@ -125,12 +130,6 @@ to plan accordingly.
 This output from this program is no substitute for either careful planning or
 casual resilience in the face of adversity.
 
-## A Work in Progress
-
-The eventual aim is to have this with a nice front-end that allows users to
-enter preferences and get a nicely formatted plan with all the considerations a
-prospective pilgrim would normally consider.
-There's *still* a bit of a way to go for that.
 
 ### The TODO List
 

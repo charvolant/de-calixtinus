@@ -42,7 +42,7 @@
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
     See the Bondi-Manly walk for an example.
-    We have the data for seven actual Caminos at the moment, along with all the various
+    We have the data for nine actual Caminos at the moment, along with various
     alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
@@ -61,8 +61,8 @@
   possible options to sift through.
   The planner can develop a plan from any start point to any end point, as long as you are travelling onwards, towards
   Santiago de Compostella in most cases but whatever the end-point is for other walks.
-  This means that, if your plans change mid-pilgrimage - perhaps you want to walk a little faster or find that
-  you're not quite up to very long days - you can re-generate a plan, based on where you currently are.
+  This means that, if your plans change mid-pilgrimage #{emdash} perhaps you want to walk a little faster or find that
+  you're not quite up to very long days #{emdash} you can re-generate a plan, based on where you currently are.
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
@@ -526,20 +526,20 @@
   Points of interest are shown as blue icons.
 
 <p>
+  <div .aside .col-2 .m-1 .p-1 .float-end>
+    The trails give you an idea of where the camino leads.
+    You will still need to use a proper map or navigation app to navigate properly.
   The level of detail shown depends on the zoom level.
   Zoomed out, only the routes are shown.
   As you zoom in, location icons appear.
   As you zoom in further, points of interest are displayed.
+  Similarly, zoomed out, the camino route will just be lines between places.
+  As you zoom in, a more accurate trail will be shown.
 
 <p>
-  <div .aside .col-2 .m-1 .p-1 .float-end>
-    The links are shown as straight lines.
-    The actual route may be considerably more wriggly.
-    You will need to use a proper map or navigation app to work out where the path is actually taking you.
-
-  The links between waypoints are shown as line between waypoints.
-  Links are coloured to show which route variant is being used, with Camino yellow for the main Camino route.
-  Links used in the plan are thicker than the unused links.
+  The links between waypoints are shown as a line between the waypoints.
+  Links are coloured to show which route variant is being used, normally with Camino yellow for the main Camino route.
+  Links used in the plan are thicker than the unused links, or solid as opposed to dashed.
 
 <p>
   If you mouse over one of the location icons, you will see a summary of the location.
@@ -588,7 +588,7 @@
   Below the first line are <a href="#travel-help">links</a> to the next waypoint.
   The first line says that the next leg of the route is to Padrón, 3.1 kilometers away with a total ascent of 5 metres
   and a total descent of 30 metres.
-  The second line shows an unused leg to Herbón; the planner has chosen to prefer the Padrón over Herbón.
+  The second line shows an unused leg to Herbón; the planner has chosen to prefer going via Padrón over Herbón.
 
 <p>
   If you click on the location, you will be scrolled to a more detailed location description
@@ -703,7 +703,7 @@
   The top line shows the start and end points for the day and the total distance travelled.
   Clicking on either of the locations will take you to a more detailed description of the location in
   the <a hre="#location-help">locations</a> tab.
-  The <span .ca-stockpoint title="Stocking Point"></span> symbol shows that this is a stock-up day.
+  The <span class="ca-stockpoint" title="Stocking Point"></span> symbol shows that this is a stock-up day.
   See <a href="#location-help">below</a> for more information on this and other symbols.
   <span .date-range>Wed 2025-04-30</span> is the expected date for this day.
 
@@ -725,8 +725,8 @@
 
 <p>
   <div .aside .col-2 .m-1 .p-1 .float-end>
-    We aware that the elevation/distance profile is exagerrated for display purposes.
-    Real life is not that steep.
+    Be aware that the elevation/distance profile is exagerrated for display purposes.
+    Real life is not that steep, although it may feel like it.
 
   Beneath the time and distance is an elevation summary, showing the various waypoints and a
   (rough) profile showing climbs and descents.

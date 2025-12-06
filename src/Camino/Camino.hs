@@ -82,6 +82,7 @@ module Camino.Camino (
   , getCamino
   , haversineDistance
   , isGenericAccommodation
+  , legTypeEnumeration
   , locationAccommodationTypes
   , locationAdditionalAccommodationTypes
   , locationAdditionalPoiTypes
@@ -102,6 +103,7 @@ module Camino.Camino (
   , poiNameLabel
   , readCamino
   , routeCentralLocation
+  , routeLegTypes
   , serviceEnumeration
   , subtractFloor
   , townServiceEnumeration
@@ -1041,7 +1043,11 @@ data LegType = Road -- ^ Walk or cycle on a road or suitable path
    | BusLink -- ^ Bus transfer (not normally considered suitable for a Camino)
    | TrainLink -- ^ Train transfer (not normally considered suitable for a Camino)
    deriving (Show, Generic, Eq, Ord, Enum, Bounded)
- 
+
+-- | Provide an enumeration of all services
+legTypeEnumeration :: [LegType]
+legTypeEnumeration = [minBound .. maxBound]
+
 instance FromJSON LegType
 instance ToJSON LegType
 instance NFData LegType
@@ -1545,6 +1551,12 @@ routeCentralLocation route = let
         closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (locationPosition l1)) (euclidianDistance2 centre (locationPosition l2))) locations
       in
         closest
+
+routeLegTypes' :: Feature -> S.Set LegType
+routeLegTypes' feature = S.unions $ (S.singleton $ featureType feature):(map routeLegTypes' (featureFeatures feature))
+
+routeLegTypes :: Route -> S.Set LegType
+routeLegTypes route = if null fs then (S.singleton Road) else S.unions (map routeLegTypes' fs) where fs = routeFeatures route
 
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and

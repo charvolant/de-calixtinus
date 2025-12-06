@@ -15,6 +15,9 @@ module Camino.Display.Css (
   , caminoCss
   , caminoLightGrey
   , caminoYellow
+  , featureLineStyle
+  , featureRouteColour
+  , featureRouteDesaturatedColour
   , informationBlue
   , mutedBlue
   , recreationGreen
@@ -30,10 +33,11 @@ import Camino.Config
 import Camino.Display.Routes
 import Data.Char (ord)
 import Data.Colour
+import Data.Colour.Names (antiquewhite, grey, mediumaquamarine)
 import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Localised (rootLocale)
-import Data.Text (Text, pack)
+import Data.Text (Text, intercalate, pack)
 import Data.Util (tailOrEmpty)
 import Numeric
 import Text.Cassius
@@ -247,6 +251,41 @@ caminoBaseCss = $(cassiusFile "templates/css/base.cassius")
 staticCss :: Config -- ^ The base configuration
   -> [Render CaminoRoute -> Css] -- ^ A list of CSS fragments for static CSS
 staticCss config = [caminoBaseCss, paletteCss "location-default" def] ++ (map caminoFontCss (getAssets Font config)) ++ caminoIconCss
+
+
+featureRouteColour :: Route -> Colour Double
+featureRouteColour route = paletteColour $ routePalette route
+
+featureRouteDesaturatedColour :: Route -> Colour Double
+featureRouteDesaturatedColour route = (blend 0.3 antiquewhite) $ paletteColour $ routePalette route
+
+featureRouteBlueColour :: Route -> Colour Double
+featureRouteBlueColour _route = mediumaquamarine
+
+featureRouteGreyColour :: Route -> Colour Double
+featureRouteGreyColour _route = grey
+
+
+-- | Generate information about a feature's type
+--   This can be used as a start point for generating SVG line styles, colours and the like
+featureLineStyle :: Route -- ^ The associated route 
+  -> Bool -- ^ Is this a large-scale line (showing rough point-to-point)
+  -> Bool -- ^ Is this a dummy feature (one intended as a placholder for a more sophisticated entry later)
+  -> Bool -- ^ Is this a used feature (one which the pilgrim will travel along)
+  -> LegType -- ^ The type of feature 
+  -> (String, Int, Float, Maybe [Int], Maybe String) -- ^ (Feature RGBhex colour, line width, line opacity, optional dah array, optional cap type)
+featureLineStyle route True _ True _ = (toCssColour $ featureRouteColour route, 6, 1.0, Nothing, Nothing)
+featureLineStyle route True _ False _ = (toCssColour $ featureRouteDesaturatedColour route, 4, 1.0, Nothing, Nothing)
+featureLineStyle route False True True _ = (toCssColour $ featureRouteColour route, 6, 1.0, Just [6, 6], Just "round")
+featureLineStyle route False True False _ = (toCssColour $ featureRouteColour route, 4, 0.5, Just [6, 10, 2, 10], Just "round")
+featureLineStyle route False False True FerryLink = (toCssColour $ featureRouteBlueColour route, 6, 1.0, Nothing, Nothing)
+featureLineStyle route False False True BoatLink = (toCssColour $ featureRouteBlueColour route, 6, 1.0, Nothing, Nothing)
+featureLineStyle route False False True TrainLink = (toCssColour $ featureRouteGreyColour route, 6, 1.0, Just [4, 4, 2, 4], Just "butt")
+featureLineStyle route False False True _ = (toCssColour $ featureRouteColour route, 6, 1.0, Nothing, Nothing)
+featureLineStyle route False False False FerryLink = (toCssColour $ featureRouteBlueColour route, 4, 1.0, Just [6, 10], Just "round")
+featureLineStyle route False False False BoatLink = (toCssColour $ featureRouteBlueColour route, 4, 1.0, Just [6, 10], Just "round")
+featureLineStyle route False False False TrainLink = (toCssColour $ featureRouteGreyColour route, 4, 1.0, Just [4, 6, 2, 6], Just "butt")
+featureLineStyle route False _ _ _ = (toCssColour $ featureRouteColour route, 4, 1.0, Just [6, 10], Just "round")
 
 -- | Generate CSS for a camino.
 --   This is intended to be embedded in a camino plan and contains things like specific route palettes

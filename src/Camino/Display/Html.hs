@@ -21,13 +21,12 @@ import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
 import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, dayLegs, journeyLegs, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
-import Camino.Display.Css (caminoCss, toCssColour, warningRed)
+import Camino.Display.Css (caminoCss, featureLineStyle, featureRouteColour, featureRouteDesaturatedColour, toCssColour, warningRed)
 import Camino.Display.I18n
 import Camino.Display.Ophelia
 import Camino.Display.Routes
 import Camino.Display.SVG
 import Data.Colour (blend)
-import Data.Colour.Names (antiquewhite, grey, mediumaquamarine)
 import Data.Description
 import Data.Event
 import Data.Event.Date
@@ -1498,18 +1497,42 @@ caminoMapHtml _preferences _camino _solution = [ihamlet|
         <div #map>
   |]
 
+featureKeyLine :: Route -> LegType -> Bool -> Bool -> Text -> HtmlUrlI18n CaminoMsg CaminoRoute
+featureKeyLine route legType large used pos = [ihamlet|<line x1="%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
+  where
+    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large False used legType
+    dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
+    cap = maybe "" id mcap
+
 caminoCaminoKeyHtml :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoCaminoKeyHtml camino = [ihamlet|
-$forall r <- caminoRoutes camino
-  <tr>
-    <td .border .border-light .col-1 style="min-width: 1ex; background-color: #{toCssColour $ paletteColour $ routePalette r}">
-    $if r == caminoDefaultRoute camino
-      <td .fw-normal>
-        _{Txt (caminoName camino)}
-    $else
-      <td .fw-lighter .ps-2>
-        _{Txt (routeName r)}
+<table .table .table-striped>
+  <thead>
+    <tr>
+      $forall lt <- allLegTypes
+        <th scope="col">^{caminoLegTypeIcon lt}
+      <th scope="col">Route
+  <tbody>
+    $forall r <- caminoRoutes camino
+      $with rlts <- routeLegTypes r
+        <tr>
+          $forall lt <- allLegTypes
+            <td>
+              $if S.member lt rlts
+                <svg width="60" height="30" preserveAspectRatio="xMaxYMax">
+                  ^{featureKeyLine r lt False True "5"}
+                  $if lt == Road
+                    ^{featureKeyLine r lt True False "15"}/>
+                  ^{featureKeyLine r lt False False "25"}/>
+          $if r == caminoDefaultRoute camino
+            <td .fw-normal>
+              _{Txt (caminoName camino)}
+          $else
+            <td .fw-lighter .ps-2>
+              _{Txt (routeName r)}
 |]
+  where
+    allLegTypes = S.unions $ map routeLegTypes $ caminoRoutes camino
 
 caminoMapKeyHtml :: Bool -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapKeyHtml full = [ihamlet|
@@ -1777,6 +1800,13 @@ function showLocationDescription(id) {
 
 |]
 
+caminoMapScriptStyle :: Route -> Bool -> Bool -> Bool -> LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScriptStyle route large dummy used legType = [ihamlet|{ color: "#{colour}", weight: #{weight}, "opacity": #{opacity}, dashArray: "#{dashes}", lineCap: "#{cap}" }|]
+  where
+    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large dummy used legType
+    dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
+    cap = maybe "" id mcap
+
 caminoMapScriptStyles :: (Route -> Bool) -> (Feature -> Bool) -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptStyles usedRoute usedFeature caminos = [iophelia|
 function chooseFeatureStyle1(id) {
@@ -1786,35 +1816,15 @@ $forall camino <- caminos
     $forall routeFeature <- routeFeatures route
       $forall feature <- allFeatures routeFeature
         #{nl}    case "#{featureID feature}":
-        $case (featureDummy feature, usedFeature routeFeature, featureType feature)
-          $of (True, True, _)
-            #{nl}      return { color: "#{routeColour route}", weight: 6, opacity: 1.0, dashArray: "6 6", lineCap: "round" };
-          $of (True, False, _)
-            #{nl}      return { color: "#{routeColour route}", weight: 4, opacity: 0.5, dashArray: "6 10 2 10", lineCap: "round" };
-          $of (False, True, FerryLink)
-            #{nl}      return { color: "#{routeBlueColour route}", weight: 6, opacity: 1.0 };
-          $of (False, True, BoatLink)
-            #{nl}      return { color: "#{routeBlueColour route}", weight: 6, opacity: 1.0 };
-          $of (False, True, TrainLink)
-            #{nl}      return { color: "#{routeGreyColour route}", weight: 6, opacity: 1.0, dashArray: "4 4 2 4", lineCap: "butt" };
-          $of (False, True, _)
-            #{nl}      return { color: "#{routeColour route}", weight: 6, opacity: 1.0 };
-          $of (False, False, FerryLink)
-            #{nl}      return { color: "#{routeBlueColour route}", weight: 4, opacity: 1.0, dashArray: "6 10", lineCap: "round" };
-          $of (False, False, BoatLink)
-            #{nl}      return { color: "#{routeBlueColour route}", weight: 4, opacity: 1.0, dashArray: "6 10", lineCap: "round" };
-          $of (False, False, TrainLink)
-            #{nl}      return { color: "#{routeGreyColour route}", weight: 4, opacity: 1.0, dashArray: "4 6 2 6", lineCap: "butt" };
-          $of (_, _, _)
-            #{nl}      return { color: "#{routeColour route}", weight: 4, opacity: 1.0, dashArray: "6 10", lineCap: "round" };
-    #{nl}    case "#{routeID route}":
+        #{nl}      return ^{caminoMapScriptStyle route False (featureDummy feature) (usedFeature feature) (featureType feature)};
+      #{nl}    case "#{routeID route}":
       $if usedRoute route
-        #{nl}      return { color: "#{routeColour route}", weight: 6, opacity: 1.0 };
+        #{nl}      return ^{caminoMapScriptStyle route True False True Road};
       $else
-        #{nl}      return { color: "#{routeDesaturatedColour route}", weight: 4, opacity: 1.0 };
+        #{nl}      return ^{caminoMapScriptStyle route True False False Road};
   $with route <- caminoDefaultRoute camino
     #{nl}    case "#{caminoId camino}":
-    #{nl}      return { color: "#{routeColour route}", weight: 6, opacity: 1.0 };
+    #{nl}      return { color: "#{toCssColour (featureRouteColour route)}", weight: 6, opacity: 1.0 };
 \  }
 \  return null;
 }
@@ -1834,11 +1844,6 @@ function chooseFeatureStyle(sfid, fid, rid, cid) {
 \  return style;
 }
 |]
-  where
-    routeColour = toCssColour . paletteColour . routePalette
-    routeDesaturatedColour = toCssColour . (blend 0.3 antiquewhite) . paletteColour . routePalette
-    routeBlueColour = toCssColour . (const mediumaquamarine)
-    routeGreyColour = toCssColour . (const grey)
 
 
 orderRoutes :: (Route -> Bool) -> [Camino] -> [(Camino, Route)]

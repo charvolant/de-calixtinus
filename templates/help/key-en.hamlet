@@ -23,13 +23,7 @@
 <div #route-key .card>
   <div .card-body>
     <h2 .card-title>Routes
-    <table .table .table-striped>
-      <thead>
-        <tr>
-           <th scope="col">Colour
-           <th scope="col">Route
-      <tbody>
-        ^{caminoCaminoKeyHtml (preferenceCamino camino)}
+    ^{caminoCaminoKeyHtml (preferenceCamino camino)}
 
 <div #symbol-key .card>
   <div .card-body>

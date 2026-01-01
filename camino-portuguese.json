@@ -9041,8 +9041,8 @@
       "from": "P-P203",
       "to": "P-P204",
       "distance": 2.76,
-      "ascent": 35,
-      "descent": 40,
+      "ascent": 45,
+      "descent": 60,
       "waypoints": [
         { "latitude": 42.03512, "longitude": -8.64528, "elevation": 14 },
         { "latitude": 42.03735, "longitude": -8.64822, "elevation": 7 }

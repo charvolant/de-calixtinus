@@ -6,8 +6,22 @@
       <table .w-100>
         <tbody>
           $forall camino <- caminos
-            ^{caminoCaminoKeyHtml camino}
-    <div .col-md-1 .pt-1 .ps-1 .map-key-small>
+            $forall r <- caminoRoutes camino
+              $if r == caminoDefaultRoute camino
+                <tr>
+                  <td>
+                      <svg width="20" height="10" preserveAspectRatio="xMaxYMax">
+                        ^{featureKeyLine r Road True True "4"}
+                  <td .fw-normal>
+                    _{Txt (caminoName camino)}
+              $else
+                <tr>
+                  <td .ps-1>
+                    <svg width="15" height="10" preserveAspectRatio="xMaxYMax">
+                        ^{featureKeyLine r Road False True "4"}
+                  <td .fw-lighter .ps-2>
+                    _{Txt (routeName r)}
+    <div .col-md-2 .pt-1 .ps-1 .map-key-small>
       <table .w-100>
         <tbody>
           ^{caminoMapKeyHtml False}

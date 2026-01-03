@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.9 - 2026-01-03
+
+### Added
+
+* Vía de la Plata
+* Camino Sanabres
+* Support for detailed trails via GeoJSON (major change)
+* Airport location type
+* Farm location type
+* Station location type
+* Industrial location type
+* Access note type
+* Half-board service type
+
+### Changed
+
+* More detailed software and data licence information
+* Link to licences in about screen
+* Key shows different trail types
+
 ## 0.8 - 2025-09-12
 
 ### Added

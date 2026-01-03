@@ -23,7 +23,7 @@ To create a docker image, make sure that you have the
 static files up to date and then use
 
 ```shell
-docker build . -t yourname/de-calixtinus:0.9-SNAPSHOT
+docker build . -t yourname/de-calixtinus:0.9
 ```
 
 substituing your docker username for `yourname`.

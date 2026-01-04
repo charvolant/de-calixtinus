@@ -499,7 +499,7 @@ defaultCookieSecure = do
 
 -- | Update this as terms change
 noticeVersion :: Text
-noticeVersion = "Accept 0.9"
+noticeVersion = "Accept 1.0"
 
 noticeCookie :: Text
 noticeCookie = "de-calixtinus-notice"

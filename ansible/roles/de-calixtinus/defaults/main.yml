@@ -24,7 +24,7 @@ dcx_use_s3: true
 # File for caches and the like
 dcx_var_dir: /var/lib/de-calixtinus
 # Version to install
-dcx_version: 0.9
+dcx_version: 1.0-SNAPSHOT
 # Install the international components for unicode (ICU) library
 # This is generally not needed but may be required if the text-icu library returns to use
 install_icu: false

@@ -3,25 +3,25 @@ web:
 {% if dcx_use_s3 %}
     - id: bootstrap-css
       type: Css
-      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/static/css/bootstrap-dc.css
+      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/static/css/bootstrap-dc.css
     - id: camino-css
       type: Css
-      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/static/css/camino.css
+      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/static/css/camino.css
     - id: icons
       type: Directory
-      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/static/icons
+      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/static/icons
     - id: "Camino Icons"
       type: Font
-      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/static/fonts/Camino-Icons.woff
+      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/static/fonts/Camino-Icons.woff
     - id: features
       type: Directory
-      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/features
+      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/features
     - id: images
       type: Directory
-      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/images
+      path: https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/images
     - id: "license"
       type: File
-      path: "https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/LICENSE"
+      path: "https://{{ dcx_dist_bucket }}.s3.{{ dcx_dist_bucket_ap }}.amazonaws.com/{{ dcx_version }}/LICENSE"
 {% else %}
     - id: bootstrap-css
       type: Css

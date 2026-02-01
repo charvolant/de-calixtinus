@@ -26,6 +26,7 @@ import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
+import qualified Camino.Units as U
 import Camino.Display.Css
 import Camino.Display.Html
 import Camino.Display.I18n
@@ -54,6 +55,12 @@ import Data.Xlsx
 
 -- What most of the sheets work in
 type Cslab = Slab (Cell CaminoMsg)
+
+convertKm :: (RealFrac a) => U.SystemOfUnits -> a -> Double
+convertKm sou v = realToFrac $ U.convertAmount U.Kilometre unit v where unit = U.preferredUnit sou U.Distance
+
+convertM :: (RealFrac a) => U.SystemOfUnits -> a -> Double
+convertM sou v = realToFrac $ U.convertAmount U.Metre unit v where unit = U.preferredUnit sou U.Elevation
 
 titleFont :: Font
 titleFont = baseFont
@@ -192,12 +199,12 @@ maybeBooleanCell Nothing = emptyCell
 maybeBooleanCell (Just bool) = booleanCell bool
 
 -- Convert zero into nothing and another value into a double cell
-doubleCell :: (Real a) => NumberFormat -> a -> Cell CaminoMsg
+doubleCell :: (RealFrac a) => NumberFormat -> a -> Cell CaminoMsg
 doubleCell f v = case (realToFrac v) of
   0.0 -> emptyCell
   d -> def & cellStyle ?~ (def & styleNumberFormat ?~ f) & cellValue ?~ CellDouble d
 
-maybeDoubleCell :: (Real a) => NumberFormat -> Maybe a -> Cell CaminoMsg
+maybeDoubleCell :: (RealFrac a) => NumberFormat -> Maybe a -> Cell CaminoMsg
 maybeDoubleCell _f Nothing = emptyCell
 maybeDoubleCell f (Just v) = doubleCell f v
 
@@ -208,7 +215,7 @@ integerStyle :: Style
 integerStyle = def & styleNumberFormat ?~ integerFormat
 
 integerCell :: Int -> Cell CaminoMsg
-integerCell = doubleCell integerFormat
+integerCell v = doubleCell integerFormat $ fromIntegral v
 
 distanceFormat :: NumberFormat
 distanceFormat = UserNumberFormat "0.0"
@@ -217,11 +224,11 @@ distanceStyle :: Style
 distanceStyle = def & styleNumberFormat ?~ distanceFormat
 
 -- A double formatted as a distance
-distanceCell :: (Real a) => a -> Cell CaminoMsg
-distanceCell = doubleCell distanceFormat
+distanceCell :: (RealFrac b) => (a -> b) -> a -> Cell CaminoMsg
+distanceCell convert v = doubleCell distanceFormat $ convert v
 
-maybeDistanceCell :: (Real a) => Maybe a -> Cell CaminoMsg
-maybeDistanceCell = maybeDoubleCell distanceFormat
+maybeDistanceCell :: (RealFrac b) => (a -> b) -> Maybe a -> Cell CaminoMsg
+maybeDistanceCell convert v = maybeDoubleCell distanceFormat v' where v' = convert <$> v
 
 timeFormat :: NumberFormat
 timeFormat = UserNumberFormat "0.0"
@@ -230,10 +237,10 @@ timeStyle :: Style
 timeStyle = def & styleNumberFormat ?~ timeFormat
 
 -- A double formatted as a time
-timeCell :: (Real a) => a -> Cell CaminoMsg
+timeCell :: (RealFrac a) => a -> Cell CaminoMsg
 timeCell = doubleCell timeFormat
 
-maybeTimeCell :: (Real a) => Maybe a -> Cell CaminoMsg
+maybeTimeCell :: (RealFrac a) => Maybe a -> Cell CaminoMsg
 maybeTimeCell = maybeDoubleCell timeFormat
 
 heightFormat :: NumberFormat
@@ -243,21 +250,21 @@ heightStyle :: Style
 heightStyle = def & styleNumberFormat ?~ heightFormat
 
 -- A double formatted as a height
-heightCell :: (Real a) => a -> Cell CaminoMsg
-heightCell = doubleCell heightFormat
+heightCell :: (RealFrac b) => (a -> b) -> a -> Cell CaminoMsg
+heightCell convert v = doubleCell heightFormat $ convert v
 
-maybeHeightCell :: (Real a) => Maybe a -> Cell CaminoMsg
-maybeHeightCell = maybeDoubleCell heightFormat
+maybeHeightCell :: (RealFrac b) => (a -> b) -> Maybe a -> Cell CaminoMsg
+maybeHeightCell convert v = maybeDoubleCell heightFormat v' where v' = convert <$> v
 
 latLngFormat :: NumberFormat
 latLngFormat = UserNumberFormat "0.00000"
 
 -- Show a penance value as a double if possible or a symbol if not
-penanceCell :: Bool -> Maybe Penance -> Cell CaminoMsg
-penanceCell _show Nothing = emptyCell
-penanceCell False (Just (Penance 0.0)) = emptyCell
-penanceCell _show (Just (Penance p)) = def & cellStyle ?~ (def & styleNumberFormat ?~ distanceFormat) & cellValue ?~ CellDouble (realToFrac p)
-penanceCell _show (Just Reject) = def & cellStyle ?~ rejectStyle & cellValue ?~ CellText rejectSymbol
+penanceCell :: U.SystemOfUnits -> Bool -> Maybe Penance -> Cell CaminoMsg
+penanceCell _sou _show Nothing = emptyCell
+penanceCell _sou False (Just (Penance 0.0)) = emptyCell
+penanceCell sou _show (Just (Penance p)) = def & cellStyle ?~ (def & styleNumberFormat ?~ distanceFormat) & cellValue ?~ CellDouble (convertKm sou p)
+penanceCell _sou _show (Just Reject) = def & cellStyle ?~ rejectStyle & cellValue ?~ CellText rejectSymbol
 
 localisedStyle :: Style
 localisedStyle = def
@@ -300,12 +307,13 @@ descriptionMsgs (Just d) = let
 
 addStopList :: (Ord a) => CaminoMsg -> Bool -> (StopPreferences -> M.Map a Penance) -> (a -> CaminoMsg) -> [a] -> TravelPreferences -> Cslab
 addStopList title showAll sub label list tprefs = let
+    sou = preferenceUnits tprefs
     labels = rowSlab [headingLabel title]
     stop = foldl (\ss -> \s -> ss >>! rowSlab [
         def & cellText ?~ label s
-      , penanceCell showAll (M.lookup s $ sub $ preferenceStop tprefs)
-      , penanceCell showAll (M.lookup s $ sub $ preferenceStockStop tprefs)
-      , penanceCell showAll (M.lookup s $ sub $ preferenceRestStop tprefs)
+      , penanceCell sou showAll (M.lookup s $ sub $ preferenceStop tprefs)
+      , penanceCell sou showAll (M.lookup s $ sub $ preferenceStockStop tprefs)
+      , penanceCell sou showAll (M.lookup s $ sub $ preferenceRestStop tprefs)
       ]) SEmpty list
   in
     labels >>! stop
@@ -352,6 +360,8 @@ addTravelPreferences tprefs = let
       , def & cellText ?~ (caminoFitnessMsg $ preferenceFitness tprefs)
       , head3Label ComfortLabel & cellPos .~ (2, 0)
       , def & cellText ?~ (caminoComfortMsg $ preferenceComfort tprefs)
+      , head3Label UnitsLabel & cellPos .~ (3, 0)
+      , def & cellText ?~ (caminoUnitsMsg $ preferenceUnits tprefs)
       ]
     distance = addPreferenceRange realToFrac DistancePreferencesLabel (preferenceDistance tprefs)
     time = addPreferenceRange realToFrac TimePreferencesLabel (preferenceTime tprefs)
@@ -404,8 +414,8 @@ headers labeler title list = let
   in
     category >>! values
 
-createLocationSlab :: S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> Location -> Cslab
-createLocationSlab rests stocks stops waypoints location = let
+createLocationSlab :: U.SystemOfUnits -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> Location -> Cslab
+createLocationSlab sou rests stocks stops waypoints location = let
     isRest = S.member location rests
     isStockpoint = not isRest && S.member location stocks
     isStop = not isRest && not isStockpoint && S.member location stops
@@ -425,13 +435,14 @@ createLocationSlab rests stocks stops waypoints location = let
     services = rowSlab $ map (\s -> booleanCell (S.member s servs)) townServiceEnumeration
     poiTypes = locationPoiTypes location
     pois = rowSlab $ map (\s -> booleanCell (S.member s poiTypes)) locationTypeEnumeration
+    convertElevation mv = convertM sou <$> mv
     additional = rowSlab [
         booleanCell (not $ null $ locationEvents location)
       , booleanCell (locationCamping location)
       , booleanCell (locationAlwaysOpen location)
       , doubleCell latLngFormat (latitude $ locationPosition location)
       , doubleCell latLngFormat (longitude $ locationPosition location)
-      , maybeDoubleCell latLngFormat (elevation $ locationPosition location)
+      , maybeDoubleCell heightFormat (convertElevation $ elevation $ locationPosition location)
       , def & cellValue ?~ CellText (locationID location)
       ]
   in
@@ -463,7 +474,8 @@ locationAdditionalHeaders = rowSlab
 
 
 createLocationsSheet :: TravelPreferences -> CaminoPreferences -> Solution -> CellIDStream (Worksheet CaminoMsg)
-createLocationsSheet _tprefs cprefs solution = let
+createLocationsSheet tprefs cprefs solution = let
+    sou = preferenceUnits tprefs
     camino = preferenceCamino cprefs
     locationOrder a b = compare (canonicalise $ locationNameLabel a) (canonicalise $ locationNameLabel b)
     locationsSorted = L.sortBy locationOrder (caminoLocations camino)
@@ -475,7 +487,7 @@ createLocationsSheet _tprefs cprefs solution = let
       >>- headers caminoLocationTypeLabel PoisLabel locationTypeEnumeration
       >>- locationAdditionalHeaders
       )
-    locations = foldl (\s -> \l -> s >>! createLocationSlab rests stocks stops waypoints l) headings locationsSorted
+    locations = foldl (\s -> \l -> s >>! createLocationSlab sou rests stocks stops waypoints l) headings locationsSorted
   in do
     return $ Worksheet LocationsLabel locations
 
@@ -488,8 +500,8 @@ legDescriptionCell leg = let
   in
     if null msgs then emptyCell else def & cellText ?~ ListMsg msgs
 
-createLegSlab :: Leg -> CellIDStream (Cslab, CellID, CellID, CellID)
-createLegSlab leg = do
+createLegSlab :: U.SystemOfUnits -> Leg -> CellIDStream (Cslab, CellID, CellID, CellID)
+createLegSlab sou leg = do
     disid <- nextCellID "leg distance"
     asid <- nextCellID "leg ascent"
     deid <- nextCellID "leg descent"
@@ -498,12 +510,12 @@ createLegSlab leg = do
       , emptyCell
       , emptyCell
       , def & cellText ?~ Txt (locationName $ legTo leg)
-      , (distanceCell $ legDistance leg) & cellID ?~ disid
+      , (distanceCell (convertKm sou) $ legDistance leg) & cellID ?~ disid
       , (maybeTimeCell $ legTime leg)
       , emptyCell
-      , (penanceCell False $ legPenance leg)
-      , (heightCell $ legAscent leg) & cellID ?~ asid
-      , (heightCell $ legDescent leg) & cellID ?~ deid
+      , (penanceCell sou False $ legPenance leg)
+      , (heightCell (convertM sou) $ legAscent leg) & cellID ?~ asid
+      , (heightCell (convertM sou) $ legDescent leg) & cellID ?~ deid
       , emptyCell
       , emptyCell
       , emptyCell
@@ -531,10 +543,10 @@ sumOver cellids = let
   in
     FApply "SUM" [FRef $ CellRangeID fromid toid]
 
-createDaySlab :: S.Set Location -> CellID -> M.Map Region Int -> CellID -> Maybe CellID -> Int -> Day -> CellIDStream (Cslab, CellID, CellID)
-createDaySlab  stocks htable rtable sid mrdid add day = do
+createDaySlab :: U.SystemOfUnits -> S.Set Location -> CellID -> M.Map Region Int -> CellID -> Maybe CellID -> Int -> Day -> CellIDStream (Cslab, CellID, CellID)
+createDaySlab sou stocks htable rtable sid mrdid add day = do
   (legs, disids, asids, deids) <- foldrM (\l -> \(s, dsids', asids', deids') -> do
-      (ls, disid, asid, deid) <- createLegSlab l
+      (ls, disid, asid, deid) <- createLegSlab sou l
       return (ls >>! s, disid:dsids', asid:asids', deid:deids')
     ) (SEmpty, [], [], []) (path day)
   let metrics = score day
@@ -554,8 +566,8 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
           & cellStyle ?~ (def & styleNumberFormat ?~ distanceFormat)
           & cellFormula ?~ sumOver disids
       , maybeTimeCell (metricsTime metrics)
-      , maybeDistanceCell (metricsPerceivedDistance metrics)
-      , penanceCell True $ Just $ metricsPenance metrics
+      , maybeDistanceCell (convertKm sou) (metricsPerceivedDistance metrics)
+      , penanceCell sou True $ Just $ metricsPenance metrics
       , def
           & cellStyle ?~ (def & styleNumberFormat ?~ heightFormat)
           & cellFormula ?~ sumOver asids
@@ -603,11 +615,11 @@ createDaySlab  stocks htable rtable sid mrdid add day = do
       ]
   return (legs >>! final, dayid, rdid')
 
-createStageSlab :: S.Set Location -> CellID -> M.Map Region Int -> CellID -> Int -> Journey -> CellIDStream (Cslab, CellID)
-createStageSlab stocks htable rtable ssid nd stage = do
+createStageSlab :: U.SystemOfUnits -> S.Set Location -> CellID -> M.Map Region Int -> CellID -> Int -> Journey -> CellIDStream (Cslab, CellID)
+createStageSlab sou stocks htable rtable ssid nd stage = do
   fsid <- nextCellID "stage final"
   (ss, fdid', _, mrdid', dids) <- foldlM (\(s, did, add, mrdid, dids') -> \d -> do
-       (ds, did', rdid') <- createDaySlab stocks htable rtable did mrdid add d
+       (ds, did', rdid') <- createDaySlab sou stocks htable rtable did mrdid add d
        return $ (s >>! ds, did', 1, Just rdid', dids' ++ [did'])
     ) (SEmpty, ssid, nd, Nothing, []) (path stage)
   let
@@ -632,9 +644,9 @@ createStageSlab stocks htable rtable ssid nd stage = do
       ]
   return $ (ss >>! final, CellOffsetID 0 1 fsid)
 
-createPilgrimageSlab :: S.Set Location -> CellID -> M.Map Region Int -> Maybe Pilgrimage -> CellIDStream Cslab
-createPilgrimageSlab _ _ _ Nothing = return $ SEmpty
-createPilgrimageSlab stocks htable rtable (Just pilgrimage) = do
+createPilgrimageSlab :: U.SystemOfUnits -> S.Set Location -> CellID -> M.Map Region Int -> Maybe Pilgrimage -> CellIDStream Cslab
+createPilgrimageSlab _ _ _ _ Nothing = return $ SEmpty
+createPilgrimageSlab sou stocks htable rtable (Just pilgrimage) = do
   sdid <- nextCellID "stage"
   let
     header = SRow stageStyle $ rowSlab [
@@ -644,7 +656,7 @@ createPilgrimageSlab stocks htable rtable (Just pilgrimage) = do
      , localisedCell (locationName $ start pilgrimage)
      ]
   (ps, fsid, _, sids) <- foldlM (\(s, did, ndid, sids) -> \st -> do
-      (ss, sid') <- createStageSlab stocks htable rtable did ndid st
+      (ss, sid') <- createStageSlab sou stocks htable rtable did ndid st
       return $ (s >>! ss, sid', 1, sids ++ [sid'])
     ) (header, sdid, 0, []) (path pilgrimage)
   let
@@ -665,7 +677,12 @@ createPilgrimageSlab stocks htable rtable (Just pilgrimage) = do
   return (ps >>! footer)
 
 createPlanSheet :: CellID -> M.Map Region Int -> TravelPreferences -> CaminoPreferences -> Solution -> CellIDStream (Worksheet CaminoMsg)
-createPlanSheet htable rtable _tprefs cprefs solution = let
+createPlanSheet htable rtable tprefs cprefs solution = let
+    sou = preferenceUnits tprefs
+    dunit = pack $ U.unitSymbol $ U.preferredUnit sou U.Distance
+    eunit = pack $ U.unitSymbol $ U.preferredUnit sou U.Elevation
+    tunit = pack $ U.unitSymbol $ U.preferredUnit sou U.Time
+    cunit = pack $ U.unitSymbol $ U.preferredUnit sou U.Calendar
     camino = preferenceCamino cprefs
     (trip, _jerrors, _perrors, _rests, stocks, _stops, _waypoints, _usedLegs) = solutionElements camino (Just solution)
     headings = rowSlab [
@@ -692,17 +709,17 @@ createPlanSheet htable rtable _tprefs cprefs solution = let
       , emptyCell
       , emptyCell
       , emptyCell
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "km"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "hrs"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "km"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "km"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "m"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "m"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "hrs"
-      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText "days"
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText dunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText tunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText dunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText dunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText eunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText eunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText tunit
+      , def & cellStyle ?~ headingStyle & cellValue ?~ CellText cunit
       ]
   in do
-    pilgrimage <- createPilgrimageSlab stocks htable rtable trip
+    pilgrimage <- createPilgrimageSlab sou stocks htable rtable trip
     return $ Worksheet PlanLabel (headings >>! pilgrimage)
 
 createHolidayMatrixSlab :: Config -> CaminoPreferences -> CellIDStream (Cslab, CellID, M.Map Region Int)

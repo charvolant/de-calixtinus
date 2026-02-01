@@ -18,6 +18,7 @@ import MetadataSpec
 import PropositionalSpec
 import LocalisedSpec
 import SplineSpec
+import UnitsSpec
 import UtilSpec
 import XlsxSpec
 import qualified Data.ByteString.Lazy as B
@@ -28,6 +29,7 @@ import Data.Placeholder
 import Camino.Camino
 import Camino.Config
 import Camino.Preferences
+import qualified Camino.Units as U
 import Data.Description (wildcardDescription)
 import Data.Either (fromRight, isLeft)
 import Data.Localised (wildcardText)
@@ -45,7 +47,7 @@ main = do
     pf <- B.readFile "test-preferences.json"
     let ep = eitherDecode pf :: Either String TravelPreferences
     when (isLeft ep) $ putStrLn (show ep)
-    let shortPreferences = fromRight (defaultTravelPreferences Walking Normal Pilgrim Nothing) ep
+    let shortPreferences = fromRight (defaultTravelPreferences U.SIUnits Walking Normal Pilgrim Nothing) ep
     results <- runTestTT (testList cconf shortPreferences (head $ caminoConfigCaminos cconf))
     putStrLn $ show results
 
@@ -65,6 +67,7 @@ testList config prefs camino = TestList [
    TestLabel "Xlsx" testXlsx,
    TestLabel "Config" testConfig,
    TestLabel "Camino" testCamino,
+   TestLabel "Units" testUnits,
    TestLabel "Walking" testWalking,
    TestLabel "Graph" testGraph,
    TestLabel "Programming" testProgramming,

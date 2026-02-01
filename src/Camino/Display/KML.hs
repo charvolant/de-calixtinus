@@ -26,6 +26,7 @@ import Camino.Camino
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
+import qualified Camino.Units as U
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
@@ -63,11 +64,11 @@ toARGB alpha colour = pack $ (showHex2 a' . showHex2 b' . showHex2 g' . showHex2
     a' = floor (alpha * 255)
     RGB r' g' b' = toSRGB24 colour
 
-htmlToNodes :: Config -> [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute -> [Node]
-htmlToNodes config locales html =
+htmlToNodes :: U.SystemOfUnits -> Config -> [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute -> [Node]
+htmlToNodes sou config locales html =
   singleton $ NodeContent $ toStrict $ renderHtml $ html message route
     where
-      message = renderCaminoMsg config locales
+      message = renderCaminoMsg sou config locales
       route = renderCaminoRoute config locales
 
 kmlRouteStyle :: Text -> Double -> Double -> Colour Double -> [Node]
@@ -81,8 +82,8 @@ kmlRouteStyle identifier width alpha color = [xml|
   |]
 
 
-kmlLocationStyle :: Config -> [Locale] -> Text -> Text -> [Node]
-kmlLocationStyle config locales identifier icon = [xml|
+kmlLocationStyle :: U.SystemOfUnits -> Config -> [Locale] -> Text -> Text -> [Node]
+kmlLocationStyle sou config locales identifier icon = [xml|
     <Style id="#{identifier}">
       <BalloonStyle>
         <text>
@@ -91,7 +92,7 @@ kmlLocationStyle config locales identifier icon = [xml|
         <Icon>#{icon}
   |]
   where
-    layout = htmlToNodes config locales [ihamlet|
+    layout = htmlToNodes sou config locales [ihamlet|
           <html>
             <head>
               <link rel="stylesheet" href="@{AssetRoute "bootstrap-css"}">
@@ -101,17 +102,17 @@ kmlLocationStyle config locales identifier icon = [xml|
               \$[description]    
     |]
 
-locationStyles :: Config -> [Locale] -> LocationType -> Text -> [Node]
-locationStyles config locales locType iconBase = let
+locationStyles :: U.SystemOfUnits -> Config -> [Locale] -> LocationType -> Text -> [Node]
+locationStyles sou config locales locType iconBase = let
     name = toLower $ pack $ show locType
   in
-    kmlLocationStyle config locales (name <> "-stop") (iconBase <> "/location-" <> name <> "-stop.png") ++
-    kmlLocationStyle config locales (name <> "-used") (iconBase <> "/location-" <> name <> "-used.png") ++
-    kmlLocationStyle config locales (name <> "-unused") (iconBase <> "/location-" <> name <> "-unused.png")
+    kmlLocationStyle sou config locales (name <> "-stop") (iconBase <> "/location-" <> name <> "-stop.png") ++
+    kmlLocationStyle sou config locales (name <> "-used") (iconBase <> "/location-" <> name <> "-used.png") ++
+    kmlLocationStyle sou config locales (name <> "-unused") (iconBase <> "/location-" <> name <> "-unused.png")
 
-caminoStyles :: Config -> [Locale] -> CaminoPreferences -> [Node]
-caminoStyles config locales camino =
-    foldr (\t -> \k -> k ++ locationStyles config locales t iconBase) [] locationTypeEnumeration ++
+caminoStyles :: U.SystemOfUnits -> Config -> [Locale] -> CaminoPreferences -> [Node]
+caminoStyles sou config locales camino =
+    foldr (\t -> \k -> k ++ locationStyles sou config locales t iconBase) [] locationTypeEnumeration ++
     foldr (\r -> \k -> k ++ kmlRouteStyle (routeID r <> "-used") 8 1 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
     foldr (\r -> \k -> k ++ kmlRouteStyle (routeID r <> "-unused") 4 0.5 (paletteColour $ routePalette r)) [] (caminoRoutes camino') ++
     kmlRouteStyle "default-used" 8 1 (paletteColour $ routePalette $ caminoDefaultRoute camino') ++
@@ -143,8 +144,8 @@ caminoLocationStyle _camino stops waypoints location
   | otherwise = "#" <> (toLower $ pack $ show $ locationType location) <> "-unused"
 
 
-caminoLocationHtmlForPlacemark :: Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationHtmlForPlacemark config locales tprefs cprefs pilgrimage _stops waypoints location = htmlToNodes config locales $ [ihamlet|
+caminoLocationHtmlForPlacemark :: U.SystemOfUnits -> Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationHtmlForPlacemark sou config locales tprefs cprefs pilgrimage _stops waypoints location = htmlToNodes sou config locales $ [ihamlet|
   <div .container-fluid .p-3>
     <div .row>
       <h3>^{locationLineSimple config location}
@@ -174,10 +175,10 @@ caminoLocationHtmlForPlacemark config locales tprefs cprefs pilgrimage _stops wa
     legs = outgoing camino location
     usedLegs = S.fromList $ filter (\l -> S.member (legTo l) waypoints) legs
 
-caminoTextForSolution :: Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Text
-caminoTextForSolution config locales _tprefs cprefs msolution =  traceShowId $ intercalate "\n" $ catMaybes (heading ++ notes ++ caminoMd ++ solutionMd)
+caminoTextForSolution :: U.SystemOfUnits -> Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Text
+caminoTextForSolution sou config locales _tprefs cprefs msolution =  traceShowId $ intercalate "\n" $ catMaybes (heading ++ notes ++ caminoMd ++ solutionMd)
   where
-    message = renderCaminoMsgText config locales
+    message = renderCaminoMsgText sou config locales
     camino = preferenceCamino cprefs
     mpilgrimage = maybe Nothing solutionPilgrimage msolution
     msid = maybe Nothing solutionID msolution
@@ -195,11 +196,11 @@ caminoTextForSolution config locales _tprefs cprefs msolution =  traceShowId $ i
     solutionMd = maybe [] (mapMetadata PlanLabel) msMetadata
 
 
-caminoLocationKml :: Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> S.Set Location -> S.Set Location -> Location -> [Node]
-caminoLocationKml config locales preferences camino pilgrimage stops waypoints location = [xml|
+caminoLocationKml :: U.SystemOfUnits -> Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> S.Set Location -> S.Set Location -> Location -> [Node]
+caminoLocationKml sou config locales preferences camino pilgrimage stops waypoints location = [xml|
     <Placemark id="#{locationID location}">
       <name>#{name}
-      <description>^{caminoLocationHtmlForPlacemark config locales preferences camino pilgrimage stops waypoints location}
+      <description>^{caminoLocationHtmlForPlacemark sou config locales preferences camino pilgrimage stops waypoints location}
       <styleUrl>#{caminoLocationStyle camino stops waypoints location}
       ^{pointKml $ locationPosition location}
   |]
@@ -251,6 +252,7 @@ createCaminoTitle locales camino (Just pilgrimage) =
 createCaminoDoc :: Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Document
 createCaminoDoc config locales tprefs cprefs msolution = Document (Prologue [] Nothing []) kml []
   where
+    sou = preferenceUnits tprefs
     camino = preferenceCamino cprefs
     mpilgrimage = maybe Nothing solutionPilgrimage msolution
     stops = maybe S.empty (S.fromList . pilgrimageStops) mpilgrimage
@@ -260,10 +262,10 @@ createCaminoDoc config locales tprefs cprefs msolution = Document (Prologue [] N
       [xml|
         <Document>
           <name>#{createCaminoTitle locales camino mpilgrimage}
-          <description>#{caminoTextForSolution config locales tprefs cprefs msolution}
-          ^{caminoStyles config locales cprefs}
+          <description>#{caminoTextForSolution sou config locales tprefs cprefs msolution}
+          ^{caminoStyles sou config locales cprefs}
           $forall location <- caminoLocations camino
-            ^{caminoLocationKml config locales tprefs cprefs mpilgrimage stops waypoints location}
+            ^{caminoLocationKml sou config locales tprefs cprefs mpilgrimage stops waypoints location}
           $forall leg <- caminoLegs camino
             ^{caminoLegKml cprefs stops waypoints leg}
           <ExtendedData>

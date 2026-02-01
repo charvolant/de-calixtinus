@@ -33,6 +33,7 @@ module Camino.Preferences (
   , recommendedPois
   , recommendedRestPoints
   , recommendedStops
+  , scaleRange
   , selectedPois
   , selectedRoutes
   , suggestedAccommodation
@@ -60,6 +61,7 @@ import Data.Aeson
 import Data.Placeholder
 import Data.Text (Text)
 import Camino.Camino
+import qualified Camino.Units as U
 import Data.Util
 import Camino.Walking
 import Data.Time.Calendar (Day)
@@ -191,7 +193,18 @@ rangeDistanceInt (PreferenceRange _derived targ lower upper _mini _maxi) value =
     else
       max 0 ((vf - tf) / (uf  - tf) - 1)
 
--- | Convert a normal distance range into a perceived distance range      
+-- | Scale a range, with the output range being scaled by the scale factor
+scaleRange :: (Num a) => a -> PreferenceRange a -> PreferenceRange a
+scaleRange scale (PreferenceRange derived targ lower upper mini maxi) =
+  PreferenceRange
+    derived
+    (targ * scale)
+    (lower * scale)
+    (upper * scale)
+    ((* scale) <$> mini)
+    ((* scale) <$> maxi)
+
+-- | Convert a normal distance range into a perceived distance range
 perceivedDistanceRange :: Travel -> Fitness -> PreferenceRange Float -> PreferenceRange Float
 perceivedDistanceRange travel fitness range = let
     mini' = fmap (\v -> perceivedDistance travel fitness v False) (rangeMinimum range)
@@ -243,7 +256,8 @@ instance NFData StopPreferences
 -- | Preferences for hwo far, how long and what sort of comforts one might expect.
 --   These can be reasonably expected to remain constant across different caminos   
 data TravelPreferences = TravelPreferences {
-    preferenceTravel :: Travel -- ^ The name of the base walking function
+    preferenceUnits :: U.SystemOfUnits -- ^ The preferred system of units
+  , preferenceTravel :: Travel -- ^ The name of the base walking function
   , preferenceFitness :: Fitness -- ^ The base fitness level
   , preferenceComfort :: Comfort -- ^ The base comfort level
   , preferenceDistance :: PreferenceRange Float -- ^ The preferred distance range
@@ -258,6 +272,7 @@ data TravelPreferences = TravelPreferences {
 
 instance FromJSON TravelPreferences where
   parseJSON (Object v) = do
+    units' <- v .:? "units" .!= U.SIUnits
     travel' <- v .: "travel"
     fitness' <- v .: "fitness"
     comfort' <- v .: "comfort"
@@ -270,7 +285,8 @@ instance FromJSON TravelPreferences where
     pois' <- v .: "poi-categories"
     restpressure' <- v .:? "rest-pressure"
     return TravelPreferences {
-          preferenceTravel = travel'
+          preferenceUnits = units'
+        , preferenceTravel = travel'
         , preferenceFitness = fitness'
         , preferenceComfort = comfort'
         , preferenceDistance = distance'
@@ -285,9 +301,10 @@ instance FromJSON TravelPreferences where
   parseJSON v = error ("Unable to parse preferences object " ++ show v)
 
 instance ToJSON TravelPreferences where
-  toJSON (TravelPreferences travel' fitness' comfort' distance' time' rest' stop' stock' rests' pois' restpressure') =
-    object [ 
-        "travel" .= travel'
+  toJSON (TravelPreferences units' travel' fitness' comfort' distance' time' rest' stop' stock' rests' pois' restpressure') =
+    object [
+        "units" .= units'
+      , "travel" .= travel'
       , "fitness" .= fitness'
       , "comfort" .= comfort'
       , "distance-range" .= distance'
@@ -1090,13 +1107,15 @@ suggestedFinishes = suggested routeFinishes
 
 -- | The default travel preference set for a travel style and fitness level
 -- | This provides an overridable skeleton containing values that cover the suggested legs for a pilgrim of the nominated fitness
-defaultTravelPreferences :: Travel -- ^ The travel style of the pilgrim
+defaultTravelPreferences :: U.SystemOfUnits -- ^ Thje system of units to use
+ -> Travel -- ^ The travel style of the pilgrim
  -> Fitness -- ^ The fitness level of the pilgrim, see the notes on @suggestedDistanceRange@
  -> Comfort -- ^ The desired comfort level
  -> Maybe (S.Set PoiCategory)
  -> TravelPreferences -- ^ The resulting preferences skeleton
-defaultTravelPreferences travel fitness comfort poics = TravelPreferences {
-      preferenceTravel = travel
+defaultTravelPreferences units travel fitness comfort poics = TravelPreferences {
+      preferenceUnits = units
+    , preferenceTravel = travel
     , preferenceFitness = fitness
     , preferenceComfort = comfort
     , preferenceDistance = suggestedDistanceRange travel fitness

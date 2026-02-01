@@ -26,6 +26,7 @@ module Camino.Display.I18n (
 import Camino.Camino
 import Camino.Config
 import Camino.Planner
+import qualified Camino.Units as U
 import Data.Localised
 import Data.Region
 import Data.Text
@@ -102,10 +103,11 @@ data CaminoMsg =
   | DayLabel
   | DayOfMonthName DayOfMonth
   | DayOfWeekName DayOfWeek
+  | DaysElapsedMsg Int
   | DayServicesPenanceLabel
   | DayServicesPreferencesLabel
-  | DaysMsg Int
   | DaySummaryMsg Camino.Planner.Day
+  | DaysWalkingMsg Int
   | DayText
   | DescentLabel
   | DescentMsg Float
@@ -123,7 +125,7 @@ data CaminoMsg =
   | DownloadKmlTitle
   | DownloadSpreadsheetTitle
   | DryerTitle
-  | ElevationFormatted Double
+  | ElevationFormatted Float
   | ElevationLabel
   | EventsLabel
   | ExceptText
@@ -286,6 +288,7 @@ data CaminoMsg =
   | ShowLabelsTitle
   | ShowOnMapTitle
   | SingleTitle
+  | SIUnitsTitle
   | SleepingBagTitle
   | StablesTitle
   | StageLabel
@@ -307,9 +310,9 @@ data CaminoMsg =
   | TheatreTitle
   | Time TimeOfDay
   | TimeAdjustLabel
+  | TimeFormatted Float
   | TimeLabel
   | TimeMsg (Maybe Float)
-  | TimeMsgPlain Float
   | TimePenaltyLabel
   | TimePreferencesLabel
   | ToggleDetailTitle
@@ -329,7 +332,9 @@ data CaminoMsg =
   | TxtPlain Bool Bool (Localised TaggedText)
   | TypeLabel
   | UnfitTitle
+  | UnitsLabel
   | UnusedLabel
+  | USUnitsTitle
   | VeryFitTitle
   | VeryUnfitTitle
   | VillageDescription
@@ -352,324 +357,375 @@ rejectSymbol = "\x25c6"
 thinSpace :: Text
 thinSpace = "\x2009"
 
+halfSymbol :: Text
+halfSymbol = "\x00bd"
+
+quarterSymbol :: Text
+quarterSymbol = "\x00bc"
+
+threeQuarterSymbol :: Text
+threeQuarterSymbol = "\x00be"
+
+formatForSystemOfUnits U.SIUnits v = sformat (fixed 1) v
+formatForSystemOfUnits U.USUnits v = whole <> part where
+  (n, f) = properFraction v
+  (n', f') = if f > 0.875 then (n + 1, 0.0) else (n, f)
+  whole = if n' == 0 then if f' < 0.25 then "0" else "" else sformat int n'
+  part = if f' < 0.125 then ""
+    else if f' < 0.365 then quarterSymbol
+    else if f' < 0.625 then halfSymbol
+    else threeQuarterSymbol
+
 -- Note the use of direct blaze scans in the following code, rather than shamlet.
 -- Hamlet seems to generate tags as chunks of content, rather than proper blaze HTML,
 -- so the direct formatting allows renderCaminoMsgText to strip tags properly.
-formatPenance :: Bool -> Penance -> Html
-formatPenance _ Reject = H.span H.! HA.class_ "penance rejected" H.! HA.title "Rejected" $ text rejectSymbol
-formatPenance showZero (Penance p) = if showZero || p /= 0.0 then H.span H.! HA.class_ "penance" $ text $ sformat  (fixed 1) p <> thinSpace <> "km" else text ""
+formatPenance :: U.SystemOfUnits -> Bool -> Penance -> Html
+formatPenance _ _ Reject = H.span H.! HA.class_ "penance rejected" H.! HA.title "Rejected" $ text rejectSymbol
+formatPenance sou showZero (Penance p) = if showZero || p /= 0.0 then H.span H.! HA.class_ "penance" $ text $ p'' <> thinSpace <> symbol else text ""
+  where
+    unit = U.preferredUnit sou U.Distance
+    p' = U.convertAmount U.Kilometre unit p
+    p'' = formatForSystemOfUnits sou p'
+    symbol = pack $ U.unitSymbol unit
 
-formatPenancePlain :: Bool -> Penance -> Html
-formatPenancePlain _ Reject = "Rejected"
-formatPenancePlain showZero (Penance p) = if showZero || p /= 0.0 then text $ sformat  (fixed 1) p <> "km" else text ""
+formatPenancePlain :: U.SystemOfUnits -> Bool -> Penance -> Html
+formatPenancePlain _ _ Reject = "Rejected"
+formatPenancePlain sou showZero (Penance p) = if showZero || p /= 0.0 then text $ p'' <> symbol else text ""
+  where
+    unit = U.preferredUnit sou U.Distance
+    p' = U.convertAmount U.Kilometre unit p
+    p'' = formatForSystemOfUnits sou p'
+    symbol = pack $ U.unitSymbol unit
 
-formatDistance :: (Real a) => a -> Html
-formatDistance d = H.span H.! HA.class_ "distance" $ text $ sformat (fixed 1) d <> thinSpace <> "km"
+formatDistance :: (RealFrac a) => U.SystemOfUnits -> a -> Html
+formatDistance sou d = H.span H.! HA.class_ "distance" $ text $ d'' <> thinSpace <> symbol
+  where
+    unit = U.preferredUnit sou U.Distance
+    d' = U.convertAmount U.Kilometre unit d
+    d'' = formatForSystemOfUnits sou d'
+    symbol = pack $ U.unitSymbol unit
 
-formatMaybeDistance :: (Real a) => Maybe a -> Html
-formatMaybeDistance Nothing = formatPenance True Reject
-formatMaybeDistance (Just d) = formatDistance d
 
-formatHours :: (Real a) => a -> Html
-formatHours t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t <> thinSpace <> "hrs"
+formatMaybeDistance :: (RealFrac a) => U.SystemOfUnits -> Maybe a -> Html
+formatMaybeDistance sou Nothing = formatPenance sou True Reject
+formatMaybeDistance sou (Just d) = formatDistance sou d
 
-formatDays :: Int -> Html
-formatDays d = H.span H.! HA.class_ "days" $ text $  sformat  int d <> thinSpace <> "days"
+formatHours :: (RealFrac a) => U.SystemOfUnits -> a -> Html
+formatHours sou t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t <> thinSpace <> symbol
+  where
+    unit = U.preferredUnit sou U.Time
+    t' = U.convertAmount U.Hour unit t
+    symbol = pack $ U.unitSymbol unit
+
+formatDays :: U.SystemOfUnits -> Int -> Html
+formatDays sou d = H.span H.! HA.class_ "days" $ text $  sformat int d' <> thinSpace <> symbol
+  where
+    unit = U.preferredUnit sou U.Calendar
+    d' = round $ U.convertAmount U.Day unit (fromIntegral d :: Float)
+    symbol = pack $ U.unitSymbol unit
 
 formatStages :: Int -> Html
 formatStages s = H.span H.! HA.class_ "stages" $ text $  sformat  int s <> thinSpace <> "stages"
 
-formatMaybeHours :: (Real a) => Maybe a -> Html
-formatMaybeHours Nothing = formatPenance True Reject
-formatMaybeHours (Just t) = formatHours t
+formatMaybeHours :: (RealFrac a) => U.SystemOfUnits -> Maybe a -> Html
+formatMaybeHours sou Nothing = formatPenance sou True Reject
+formatMaybeHours sou (Just t) = formatHours sou t
 
-formatHeight :: (Real a) => a -> Html
-formatHeight h = H.span H.! HA.class_ "height" $ text $  sformat  (fixed 0) h <> thinSpace <> "m"
+formatHeight :: (RealFrac a) => U.SystemOfUnits -> a -> Html
+formatHeight sou h = H.span H.! HA.class_ "height" $ text $  sformat  (fixed 0) h' <> thinSpace <> symbol
+  where
+    unit = U.preferredUnit sou U.Elevation
+    h' = U.convertAmount U.Metre unit h
+    symbol = pack $ U.unitSymbol unit
 
 -- | Default English translation
-renderCaminoMsgDefault :: Config -> CaminoMsg -> Html
-renderCaminoMsgDefault _ AboutLabel = "About"
-renderCaminoMsgDefault _ AccessTitle = "Access"
-renderCaminoMsgDefault _ AccessibleTitle = "Accessible"
-renderCaminoMsgDefault _ AccommodationLabel = "Accommodation"
-renderCaminoMsgDefault _ AccommodationPenanceLabel = "Accommodation"
-renderCaminoMsgDefault _ AccommodationPreferencesLabel = "Accommodation Preferences"
-renderCaminoMsgDefault _ AddressTitle = "Address"
-renderCaminoMsgDefault _ AirportDescription = "An airport, airfield or aerodrome"
-renderCaminoMsgDefault _ AirportTitle = "Airport"
-renderCaminoMsgDefault _ AlwaysOpenLabel = "Always Open"
-renderCaminoMsgDefault _ AfterText = "after"
-renderCaminoMsgDefault _ ArtworkDescription = "A piece of art"
-renderCaminoMsgDefault _ ArtworkTitle = "Art"
-renderCaminoMsgDefault _ AscentLabel = "Ascent"
-renderCaminoMsgDefault _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight ascent}|]
-renderCaminoMsgDefault _ AustereTitle = "Austere"
-renderCaminoMsgDefault _ BankTitle = "Bank"
-renderCaminoMsgDefault _ BeachDescription = "A beach (sea or river)"
-renderCaminoMsgDefault _ BeachTitle = "Beach"
-renderCaminoMsgDefault _ BedlinenTitle = "Bedlinen"
-renderCaminoMsgDefault _ BeforeText = "before"
-renderCaminoMsgDefault _ BicycleRepairTitle = "Bicycle Repair"
-renderCaminoMsgDefault _ BicycleStorageTitle = "Bicycle Storage"
-renderCaminoMsgDefault _ BoatTitle = "Boat/Canoe (paddled)"
-renderCaminoMsgDefault _ BreakfastTitle = "Breakfast"
-renderCaminoMsgDefault _ BridgeDescription = "A bridge acting as a waypoint or point of interest"
-renderCaminoMsgDefault _ BridgeTitle = "Bridge"
-renderCaminoMsgDefault _ BusTitle = "Bus"
-renderCaminoMsgDefault _ CalendarTitle = "Calendar"
-renderCaminoMsgDefault _ CampGroundTitle = "Camping Ground"
-renderCaminoMsgDefault _ CaminoLabel = "Camino"
-renderCaminoMsgDefault _ CampingTitle = "Camping"
-renderCaminoMsgDefault _ CampSiteTitle = "Camp-site"
-renderCaminoMsgDefault _ CasaRuralTitle = "Casa Rural/Quinta"
-renderCaminoMsgDefault _ CasualTitle = "Casual"
-renderCaminoMsgDefault _ CathedralDescription = "A cathedral, basillica, shrine or other large religious building"
-renderCaminoMsgDefault _ CathedralTitle = "Cathedral"
-renderCaminoMsgDefault _ ChurchDescription = "A church or chapel"
-renderCaminoMsgDefault _ ChurchTitle = "Church"
-renderCaminoMsgDefault _ CityDescription = "A large urban area with multiple options for services and accommodation"
-renderCaminoMsgDefault _ CityTitle = "City"
-renderCaminoMsgDefault _ ClosedDayText = "Closed Day"
-renderCaminoMsgDefault _ ClosedText = "closed"
-renderCaminoMsgDefault _ ComfortableTitle = "Comfortable"
-renderCaminoMsgDefault _ ComfortLabel = "Comfort"
-renderCaminoMsgDefault _ CopyLinkTitle = "Copy Link"
-renderCaminoMsgDefault _ CrossDescription = "A roadside crucifix"
-renderCaminoMsgDefault _ CrossTitle = "Cross"
-renderCaminoMsgDefault _ CulturalPoiTitle = "Cultural"
-renderCaminoMsgDefault _ CyclingTitle = "Cycling"
-renderCaminoMsgDefault _ CyclePathTitle = "Cycle Path (bicycles only)"
-renderCaminoMsgDefault _ DailyLabel = "Daily"
-renderCaminoMsgDefault _ DateLabel = "Date"
-renderCaminoMsgDefault _ DayLabel = "Day"
-renderCaminoMsgDefault _ DayServicesPenanceLabel = "Missing Services (Day)"
-renderCaminoMsgDefault _ DayServicesPreferencesLabel = "Missing Day Services"
-renderCaminoMsgDefault _ (DaysMsg d) = formatDays d
-renderCaminoMsgDefault _ DayText = "day"
-renderCaminoMsgDefault _ DescentLabel = "Descent"
-renderCaminoMsgDefault _ (DescentMsg ascent) = [shamlet|Descent ^{formatHeight ascent}|]
-renderCaminoMsgDefault _ DirectionsTitle = "Directions"
-renderCaminoMsgDefault _ DinnerTitle = "Dinner"
-renderCaminoMsgDefault _ DistanceAdjustLabel = "Distance Adjustment"
-renderCaminoMsgDefault _ (DistanceMsg actual perceived) = [shamlet|Distance ^{formatDistance actual} (feels like ^{formatMaybeDistance perceived})|]
-renderCaminoMsgDefault _ (DistanceFormatted distance) = formatDistance distance
-renderCaminoMsgDefault _ DistanceLabel = "Distance"
-renderCaminoMsgDefault _ DistancePenanceLabel = "Distance"
-renderCaminoMsgDefault _ DistancePreferencesLabel = "Distance Preferences (km)"
-renderCaminoMsgDefault _ DistancePreferencesPerceivedLabel = "Perceived Distance Preferences (km)"
-renderCaminoMsgDefault _ DoubleTitle = "Double"
-renderCaminoMsgDefault _ DoubleWcTitle = "Double with WC"
-renderCaminoMsgDefault _ DownloadKmlTitle = "Download KML"
-renderCaminoMsgDefault _ DownloadSpreadsheetTitle = "Download Spreadhseet"
-renderCaminoMsgDefault _ DryerTitle = "Dryer"
-renderCaminoMsgDefault _ (ElevationFormatted elev) = formatHeight elev
-renderCaminoMsgDefault _ ElevationLabel = "Elevation"
-renderCaminoMsgDefault _ EventsLabel = "Events"
-renderCaminoMsgDefault _ ExceptText = "except"
-renderCaminoMsgDefault _ ExcludedStopsLabel = "Excluded Stops"
-renderCaminoMsgDefault _ FailureLabel = "Failure"
-renderCaminoMsgDefault _ FarmlandDescription = "Farmland, greenhouses, pasture etc."
-renderCaminoMsgDefault _ FarmlandTitle = "Farmland"
-renderCaminoMsgDefault _ FatiguePenanceLabel = "Fatigue"
-renderCaminoMsgDefault _ FerryTitle = "Ferry"
-renderCaminoMsgDefault _ FestivalEventTitle = "Festival"
-renderCaminoMsgDefault _ FinishDateLabel = "Finish Date"
-renderCaminoMsgDefault _ FinishLocationLabel = "Finish Location"
-renderCaminoMsgDefault _ FitnessLabel = "Fitness"
-renderCaminoMsgDefault _ FitTitle = "Fit"
-renderCaminoMsgDefault _ FoodEventTitle = "Food"
-renderCaminoMsgDefault _ FountainDescription = "A fountain or spring, either a large decorative fountain or a source of water"
-renderCaminoMsgDefault _ FountainTitle = "Fountain"
-renderCaminoMsgDefault _ FromLabel = "From"
-renderCaminoMsgDefault _ FrugalTitle = "Frugal"
-renderCaminoMsgDefault _ GiteTitle = "Gîtes d'Étape"
-renderCaminoMsgDefault _ GroceriesTitle = "Groceries"
-renderCaminoMsgDefault _ GuestHouseTitle = "Guesthouse"
-renderCaminoMsgDefault _ HalfBoardTitle = "Half-Board"
-renderCaminoMsgDefault _ HandwashTitle = "Handwash"
-renderCaminoMsgDefault _ HazardDescription = "A road crossing, bridge, slope etc. that needs to be treated with caution"
-renderCaminoMsgDefault _ HazardTitle = "Hazard"
-renderCaminoMsgDefault _ HeatingTitle = "Heating"
-renderCaminoMsgDefault _ HelpLabel = "Help"
-renderCaminoMsgDefault _ HistoricalPoiTitle = "Historical"
-renderCaminoMsgDefault _ HistoricalDescription = "A historical site, archaeological site, ruin or other historical point of interest"
-renderCaminoMsgDefault _ HistoricalTitle = "Historical site"
-renderCaminoMsgDefault _ HolidayEventTitle = "Holiday"
-renderCaminoMsgDefault _ HolidaysLabel = "Holidays"
-renderCaminoMsgDefault _ HomeStayTitle = "Home Stay"
-renderCaminoMsgDefault _ HostelTitle = "Hostel"
-renderCaminoMsgDefault _ HotelTitle = "Hotel"
-renderCaminoMsgDefault _ HoursTitle = "Hours"
-renderCaminoMsgDefault _ HouseTitle = "House"
-renderCaminoMsgDefault _ IdentifierLabel = "ID"
-renderCaminoMsgDefault _ IndustryTitle = "Industrial"
-renderCaminoMsgDefault _ InformationLabel = "Information"
-renderCaminoMsgDefault _ InformationTitle = "Information"
-renderCaminoMsgDefault _ InformationDescription = "Information on the source data used when generating this plan."
-renderCaminoMsgDefault _ InformationPointDescription = "A local tourist office, guide, etc. not specifically geared towards pilgrims"
-renderCaminoMsgDefault _ InformationPointTitle = "Information Point"
-renderCaminoMsgDefault _ IntersectionDescription = "A road or path intersection"
-renderCaminoMsgDefault _ IntersectionTitle = "Intersection"
-renderCaminoMsgDefault _ JourneyLabel = "Journey"
-renderCaminoMsgDefault _ JunctionTitle = "Junction"
-renderCaminoMsgDefault _ KeyLabel = "Key"
-renderCaminoMsgDefault _ KitchenTitle = "Kitchen"
-renderCaminoMsgDefault _ LatitudeLabel = "Latitude"
-renderCaminoMsgDefault _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance True penance'}|]
-renderCaminoMsgDefault _ LinkOut = [shamlet|More information|]
-renderCaminoMsgDefault _ LocationLabel = "Location"
-renderCaminoMsgDefault _ LocationPenanceLabel = "Location"
-renderCaminoMsgDefault _ LocationPreferencesLabel = "Location Preferences"
-renderCaminoMsgDefault _ LocationsLabel = "Locations"
-renderCaminoMsgDefault _ LockersTitle = "Lockers"
-renderCaminoMsgDefault _ LongitudeLabel = "Longitude"
-renderCaminoMsgDefault _ LookoutDescription = "A lookout or scenic view"
-renderCaminoMsgDefault _ LookoutTitle = "Lookout"
-renderCaminoMsgDefault _ LuxuriousTitle = "Luxurious"
-renderCaminoMsgDefault _ MapLabel = "Map"
-renderCaminoMsgDefault _ MassEventTitle = "Mass"
-renderCaminoMsgDefault _ MattressTitle = "Mattress"
-renderCaminoMsgDefault _ MedicalTitle = "Medical"
-renderCaminoMsgDefault _ MiscPenanceLabel = "Other"
-renderCaminoMsgDefault _ MonasteryDescription = "A monastery or cloister, often with a hospice attached"
-renderCaminoMsgDefault _ MonasteryTitle = "Monastery"
-renderCaminoMsgDefault _ MunicipalDescription = "A town square, market place, town hall or other municipal building"
-renderCaminoMsgDefault _ MunicipalTitle = "Municipal"
-renderCaminoMsgDefault _ MuseumDescription = "A museum or gallery"
-renderCaminoMsgDefault _ MuseumTitle = "Museum/gallery"
-renderCaminoMsgDefault _ MusicEventTitle = "Music"
-renderCaminoMsgDefault _ NaturalPoiTitle = "Natural"
-renderCaminoMsgDefault _ NaturalDescription = "A nature park or area of natural beauty, as well as large landscape features such as reservoirs or dams"
-renderCaminoMsgDefault _ NaturalTitle = "Nature park"
-renderCaminoMsgDefault _ NormalTitle = "Normal"
-renderCaminoMsgDefault _ NotesLabel = "Notes"
-renderCaminoMsgDefault _ OpenHoursTitle = "Open Hours"
-renderCaminoMsgDefault _ OpenText = "open"
-renderCaminoMsgDefault _ ParkDescription = "A park or garden"
-renderCaminoMsgDefault _ ParkTitle = "Park"
-renderCaminoMsgDefault _ PathLabel = "Path"
-renderCaminoMsgDefault _ PeakDescription = "A peak or mountain pass"
-renderCaminoMsgDefault _ PeakTitle = "Peak/pass"
-renderCaminoMsgDefault _ (PenanceFormatted showZero penance') = formatPenance showZero penance'
-renderCaminoMsgDefault _ (PenanceFormattedPlain showZero penance') = formatPenancePlain showZero penance'
-renderCaminoMsgDefault _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance True penance'}|]
-renderCaminoMsgDefault _ PenanceReject = "Rejected"
-renderCaminoMsgDefault _ PenanceSummaryLabel = "Penance"
-renderCaminoMsgDefault _ PerceivedDistanceLabel = "Perceived Distance"
-renderCaminoMsgDefault _ PerformanceEventTitle = "Performance"
-renderCaminoMsgDefault _ PersistentLinkTitle = "Persistent Link"
-renderCaminoMsgDefault _ PetsTitle = "Pets"
-renderCaminoMsgDefault _ PharmacyTitle = "Pharmacy"
-renderCaminoMsgDefault _ PilgrimageLabel = "Pilgrimage"
-renderCaminoMsgDefault _ PilgrimAlbergueTitle = "Pilgrim Albergue"
-renderCaminoMsgDefault _ PilgrimMassEventTitle = "Pilgrim's Mass"
-renderCaminoMsgDefault _ PilgrimPoiTitle = "Pilgrim"
-renderCaminoMsgDefault _ PilgrimResourceDescription = "A pilgrim's office, rest point, etc. specifically geared towards pilgrims"
-renderCaminoMsgDefault _ PilgrimResourceTitle = "Pilgrim Resource"
-renderCaminoMsgDefault _ PilgrimTitle = "Pilgrim"
-renderCaminoMsgDefault _ PlaceholderLabel = "Placeholder"
-renderCaminoMsgDefault _ PlanLabel = "Plan"
-renderCaminoMsgDefault _ PoiDescription = "A generic waypoint or point of interest"
-renderCaminoMsgDefault _ PoiLabel = "Point of Interest"
-renderCaminoMsgDefault _ PoisLabel = "Points of Interest"
-renderCaminoMsgDefault _ (PoiTime Nothing) = ""
-renderCaminoMsgDefault _ (PoiTime (Just time)) = [shamlet|(^{formatHours time} stops)|]
-renderCaminoMsgDefault _ PoiTitle = "Locality"
-renderCaminoMsgDefault _ PoolTitle = "Pool"
-renderCaminoMsgDefault _ PrayerTitle = "Prayer"
-renderCaminoMsgDefault _ PreferencesLabel = "Preferences"
-renderCaminoMsgDefault _ PrivateAlbergueTitle = "Private Albergue"
-renderCaminoMsgDefault _ ProgramLabel = "Program"
-renderCaminoMsgDefault _ PromontoryDescription = "A promontory, cliff or headland"
-renderCaminoMsgDefault _ PromontoryTitle = "Promontory/Headland"
-renderCaminoMsgDefault _ PublicHolidayText = "Public Holiday"
-renderCaminoMsgDefault _ QuadrupleTitle = "Quadruple"
-renderCaminoMsgDefault _ QuadrupleWcTitle = "Quadruple with WC"
-renderCaminoMsgDefault _ RefugeTitle = "Refuge"
-renderCaminoMsgDefault _ RegionLabel = "Region"
-renderCaminoMsgDefault _ RegionsLabel = "Regions"
-renderCaminoMsgDefault _ RecreationPoiTitle = "Recreation"
-renderCaminoMsgDefault _ ReligiousEventTitle = "Religious Ceremony"
-renderCaminoMsgDefault _ ReligiousPoiTitle = "Religious"
-renderCaminoMsgDefault _ RequiredStopsLabel = "Required Stops"
-renderCaminoMsgDefault _ RestaurantTitle = "Restaurant"
-renderCaminoMsgDefault _ RestDaysLabel = "Rest Days"
-renderCaminoMsgDefault _ RestLocationPreferencesLabel = "Rest Location Preferences"
-renderCaminoMsgDefault _ RestPressureLabel = "Rest Pressure"
-renderCaminoMsgDefault _ RestPenanceLabel = "Rest"
-renderCaminoMsgDefault _ RestpointLabel = "Rest Point"
-renderCaminoMsgDefault _ RestpointsLabel = "Rest Points"
-renderCaminoMsgDefault _ RestPointsPenanceLabel = "Rest Points"
-renderCaminoMsgDefault _ RestPreferencesLabel = "Rest Preferences (days travelling)"
-renderCaminoMsgDefault _ RestPressurePenanceLabel = "Rest Pressure"
-renderCaminoMsgDefault _ RoadTitle = "Road/path"
-renderCaminoMsgDefault _ RouteLabel = "Route"
-renderCaminoMsgDefault _ RouteServicesPreferencesLabel = "Missing Services on Route"
-renderCaminoMsgDefault _ RoutesLabel = "Routes"
-renderCaminoMsgDefault _ ServicesLabel = "Services"
-renderCaminoMsgDefault _ ServicesPreferencesLabel = "Missing Services"
-renderCaminoMsgDefault _ SharedTitle = "Shared"
-renderCaminoMsgDefault _ ShopDescription = "A shop of note or usefulness"
-renderCaminoMsgDefault _ ShopTitle = "Shop"
-renderCaminoMsgDefault _ ShowLabelsTitle = "Show camino and route labels on map"
-renderCaminoMsgDefault _ ShowOnMapTitle = "Show on map"
-renderCaminoMsgDefault _ SingleTitle = "Single"
-renderCaminoMsgDefault _ SleepingBagTitle = "Sleeping Bag"
-renderCaminoMsgDefault _ StablesTitle = "Stables"
-renderCaminoMsgDefault _ StageLabel = "Stage"
-renderCaminoMsgDefault _ (StagesMsg d) = formatStages d
-renderCaminoMsgDefault _ StartDateLabel = "Start Date"
-renderCaminoMsgDefault _ StartLocationLabel = "Start Location"
-renderCaminoMsgDefault _ StationDescription = "A train or bus station"
-renderCaminoMsgDefault _ StationTitle = "Station"
-renderCaminoMsgDefault _ StatueDescription = "A statue, bas-relief, etc."
-renderCaminoMsgDefault _ StatueTitle = "Statue"
-renderCaminoMsgDefault _ StockpointLabel = "Stocking Point"
-renderCaminoMsgDefault _ StopLabel = "Stop"
-renderCaminoMsgDefault _ StopPenanceLabel = "Stop"
-renderCaminoMsgDefault _ StopServicesPenanceLabel = "Missing Services (Stop)"
-renderCaminoMsgDefault _ StopPreferencesLabel = "Stop Cost"
-renderCaminoMsgDefault _ SuperFitTitle = "Super-fit"
-renderCaminoMsgDefault _ TableLabel = "Table"
-renderCaminoMsgDefault _ TheatreDescription = "A theatre, opera house or concert hall"
-renderCaminoMsgDefault _ TheatreTitle = "Theatre"
-renderCaminoMsgDefault _ TimeAdjustLabel = "Time Adjustment"
-renderCaminoMsgDefault _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours time}|]
-renderCaminoMsgDefault _ TimeLabel = "Time"
-renderCaminoMsgDefault _ (TimeMsgPlain time) = formatHours time
-renderCaminoMsgDefault _ TimePenaltyLabel = "Time Penalty"
-renderCaminoMsgDefault _ TimePreferencesLabel = "Time Preferences (hours)"
-renderCaminoMsgDefault _ ToggleDetailTitle = "Show/hide additional detail"
-renderCaminoMsgDefault _ ToLabel = "To"
-renderCaminoMsgDefault _ TowelsTitle = "Towels"
-renderCaminoMsgDefault _ TownDescription = "A larger locality with most services and a variety of accommodation usually available"
-renderCaminoMsgDefault _ TownTitle = "Town"
-renderCaminoMsgDefault _ TrailTitle = "Trail (walkers only)"
-renderCaminoMsgDefault _ TrainTitle = "Train"
-renderCaminoMsgDefault _ TransportLinksLabel = "Transport Links"
-renderCaminoMsgDefault _ TravelLabel = "Travel Estimation"
-renderCaminoMsgDefault _ TripFinishLabel = "Trip Finish"
-renderCaminoMsgDefault _ TripStartLabel = "Trip Start"
-renderCaminoMsgDefault _ TripleTitle = "Triple"
-renderCaminoMsgDefault _ TripleWcTitle = "Triple with WC"
-renderCaminoMsgDefault _ TypeLabel = "Type"
-renderCaminoMsgDefault _ UnfitTitle = "Unfit"
-renderCaminoMsgDefault _ UnusedLabel = "Unused"
-renderCaminoMsgDefault _ VeryFitTitle = "Very fit"
-renderCaminoMsgDefault _ VeryUnfitTitle = "Very unfit"
-renderCaminoMsgDefault _ VillageDescription = "A smaller locality with limited, or no, services and accommodation"
-renderCaminoMsgDefault _ VillageTitle = "Village"
-renderCaminoMsgDefault _ WalkingTitle = "Walking"
-renderCaminoMsgDefault _ WalkingNaismithTitle = "Walking (strong walkers)"
-renderCaminoMsgDefault _ WarningTitle= "Warning"
-renderCaminoMsgDefault _ WashingMachineTitle = "Washing Machine"
-renderCaminoMsgDefault _ WaypointLabel = "Waypoint"
-renderCaminoMsgDefault _ WharfDescription = "A wharf, quay or pier connecting to a boat"
-renderCaminoMsgDefault _ WharfTitle = "Wharf"
-renderCaminoMsgDefault _ WiFiTitle = "WiFi"
-renderCaminoMsgDefault _ WineryDescription = "A winery or port warehouse"
-renderCaminoMsgDefault _ WineryTitle = "Winery"
-renderCaminoMsgDefault _ msg = [shamlet|Unknown message #{show msg}|]
+renderCaminoMsgDefault :: U.SystemOfUnits -> Config -> CaminoMsg -> Html
+renderCaminoMsgDefault _ _ AboutLabel = "About"
+renderCaminoMsgDefault _ _ AccessTitle = "Access"
+renderCaminoMsgDefault _ _ AccessibleTitle = "Accessible"
+renderCaminoMsgDefault _ _ AccommodationLabel = "Accommodation"
+renderCaminoMsgDefault _ _ AccommodationPenanceLabel = "Accommodation"
+renderCaminoMsgDefault _ _ AccommodationPreferencesLabel = "Accommodation Preferences"
+renderCaminoMsgDefault _ _ AddressTitle = "Address"
+renderCaminoMsgDefault _ _ AirportDescription = "An airport, airfield or aerodrome"
+renderCaminoMsgDefault _ _ AirportTitle = "Airport"
+renderCaminoMsgDefault _ _ AlwaysOpenLabel = "Always Open"
+renderCaminoMsgDefault _ _ AfterText = "after"
+renderCaminoMsgDefault _ _ ArtworkDescription = "A piece of art"
+renderCaminoMsgDefault _ _ ArtworkTitle = "Art"
+renderCaminoMsgDefault _ _ AscentLabel = "Ascent"
+renderCaminoMsgDefault sou _ (AscentMsg ascent) = [shamlet|Ascent ^{formatHeight sou ascent}|]
+renderCaminoMsgDefault _ _ AustereTitle = "Austere"
+renderCaminoMsgDefault _ _ BankTitle = "Bank"
+renderCaminoMsgDefault _ _ BeachDescription = "A beach (sea or river)"
+renderCaminoMsgDefault _ _ BeachTitle = "Beach"
+renderCaminoMsgDefault _ _ BedlinenTitle = "Bedlinen"
+renderCaminoMsgDefault _ _ BeforeText = "before"
+renderCaminoMsgDefault _ _ BicycleRepairTitle = "Bicycle Repair"
+renderCaminoMsgDefault _ _ BicycleStorageTitle = "Bicycle Storage"
+renderCaminoMsgDefault _ _ BoatTitle = "Boat/Canoe (paddled)"
+renderCaminoMsgDefault _ _ BreakfastTitle = "Breakfast"
+renderCaminoMsgDefault _ _ BridgeDescription = "A bridge acting as a waypoint or point of interest"
+renderCaminoMsgDefault _ _ BridgeTitle = "Bridge"
+renderCaminoMsgDefault _ _ BusTitle = "Bus"
+renderCaminoMsgDefault _ _ CalendarTitle = "Calendar"
+renderCaminoMsgDefault _ _ CampGroundTitle = "Camping Ground"
+renderCaminoMsgDefault _ _ CaminoLabel = "Camino"
+renderCaminoMsgDefault _ _ CampingTitle = "Camping"
+renderCaminoMsgDefault _ _ CampSiteTitle = "Camp-site"
+renderCaminoMsgDefault _ _ CasaRuralTitle = "Casa Rural/Quinta"
+renderCaminoMsgDefault _ _ CasualTitle = "Casual"
+renderCaminoMsgDefault _ _ CathedralDescription = "A cathedral, basillica, shrine or other large religious building"
+renderCaminoMsgDefault _ _ CathedralTitle = "Cathedral"
+renderCaminoMsgDefault _ _ ChurchDescription = "A church or chapel"
+renderCaminoMsgDefault _ _ ChurchTitle = "Church"
+renderCaminoMsgDefault _ _ CityDescription = "A large urban area with multiple options for services and accommodation"
+renderCaminoMsgDefault _ _ CityTitle = "City"
+renderCaminoMsgDefault _ _ ClosedDayText = "Closed Day"
+renderCaminoMsgDefault _ _ ClosedText = "closed"
+renderCaminoMsgDefault _ _ ComfortableTitle = "Comfortable"
+renderCaminoMsgDefault _ _ ComfortLabel = "Comfort"
+renderCaminoMsgDefault _ _ CopyLinkTitle = "Copy Link"
+renderCaminoMsgDefault _ _ CrossDescription = "A roadside crucifix"
+renderCaminoMsgDefault _ _ CrossTitle = "Cross"
+renderCaminoMsgDefault _ _ CulturalPoiTitle = "Cultural"
+renderCaminoMsgDefault _ _ CyclingTitle = "Cycling"
+renderCaminoMsgDefault _ _ CyclePathTitle = "Cycle Path (bicycles only)"
+renderCaminoMsgDefault _ _ DailyLabel = "Daily"
+renderCaminoMsgDefault _ _ DateLabel = "Date"
+renderCaminoMsgDefault _ _ DayLabel = "Day"
+renderCaminoMsgDefault sou _ (DaysElapsedMsg d) = toHtml $ (sformat int d) <> " days total"
+renderCaminoMsgDefault _ _ DayServicesPenanceLabel = "Missing Services (Day)"
+renderCaminoMsgDefault _ _ DayServicesPreferencesLabel = "Missing Day Services"
+renderCaminoMsgDefault sou _ (DaysWalkingMsg d) = toHtml $ (sformat int d) <> " days walking"
+renderCaminoMsgDefault _ _ DayText = "day"
+renderCaminoMsgDefault _ _ DescentLabel = "Descent"
+renderCaminoMsgDefault sou _ (DescentMsg ascent) = [shamlet|Descent ^{formatHeight sou ascent}|]
+renderCaminoMsgDefault _ _ DirectionsTitle = "Directions"
+renderCaminoMsgDefault _ _ DinnerTitle = "Dinner"
+renderCaminoMsgDefault _ _ DistanceAdjustLabel = "Distance Adjustment"
+renderCaminoMsgDefault sou _ (DistanceMsg actual perceived) = [shamlet|Distance ^{formatDistance sou actual} (feels like ^{formatMaybeDistance sou perceived})|]
+renderCaminoMsgDefault sou _ (DistanceFormatted distance) = formatDistance sou distance
+renderCaminoMsgDefault _ _ DistanceLabel = "Distance"
+renderCaminoMsgDefault _ _ DistancePenanceLabel = "Distance"
+renderCaminoMsgDefault sou _ DistancePreferencesLabel = [shamlet|Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})|]
+renderCaminoMsgDefault sou _ DistancePreferencesPerceivedLabel = [shamlet|Perceived Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})|]
+renderCaminoMsgDefault _ _ DoubleTitle = "Double"
+renderCaminoMsgDefault _ _ DoubleWcTitle = "Double with WC"
+renderCaminoMsgDefault _ _ DownloadKmlTitle = "Download KML"
+renderCaminoMsgDefault _ _ DownloadSpreadsheetTitle = "Download Spreadhseet"
+renderCaminoMsgDefault _ _ DryerTitle = "Dryer"
+renderCaminoMsgDefault sou _ (ElevationFormatted elev) = formatHeight sou elev
+renderCaminoMsgDefault _ _ ElevationLabel = "Elevation"
+renderCaminoMsgDefault _ _ EventsLabel = "Events"
+renderCaminoMsgDefault _ _ ExceptText = "except"
+renderCaminoMsgDefault _ _ ExcludedStopsLabel = "Excluded Stops"
+renderCaminoMsgDefault _ _ FailureLabel = "Failure"
+renderCaminoMsgDefault _ _ FarmlandDescription = "Farmland, greenhouses, pasture etc."
+renderCaminoMsgDefault _ _ FarmlandTitle = "Farmland"
+renderCaminoMsgDefault _ _ FatiguePenanceLabel = "Fatigue"
+renderCaminoMsgDefault _ _ FerryTitle = "Ferry"
+renderCaminoMsgDefault _ _ FestivalEventTitle = "Festival"
+renderCaminoMsgDefault _ _ FinishDateLabel = "Finish Date"
+renderCaminoMsgDefault _ _ FinishLocationLabel = "Finish Location"
+renderCaminoMsgDefault _ _ FitnessLabel = "Fitness"
+renderCaminoMsgDefault _ _ FitTitle = "Fit"
+renderCaminoMsgDefault _ _ FoodEventTitle = "Food"
+renderCaminoMsgDefault _ _ FountainDescription = "A fountain or spring, either a large decorative fountain or a source of water"
+renderCaminoMsgDefault _ _ FountainTitle = "Fountain"
+renderCaminoMsgDefault _ _ FromLabel = "From"
+renderCaminoMsgDefault _ _ FrugalTitle = "Frugal"
+renderCaminoMsgDefault _ _ GiteTitle = "Gîtes d'Étape"
+renderCaminoMsgDefault _ _ GroceriesTitle = "Groceries"
+renderCaminoMsgDefault _ _ GuestHouseTitle = "Guesthouse"
+renderCaminoMsgDefault _ _ HalfBoardTitle = "Half-Board"
+renderCaminoMsgDefault _ _ HandwashTitle = "Handwash"
+renderCaminoMsgDefault _ _ HazardDescription = "A road crossing, bridge, slope etc. that needs to be treated with caution"
+renderCaminoMsgDefault _ _ HazardTitle = "Hazard"
+renderCaminoMsgDefault _ _ HeatingTitle = "Heating"
+renderCaminoMsgDefault _ _ HelpLabel = "Help"
+renderCaminoMsgDefault _ _ HistoricalPoiTitle = "Historical"
+renderCaminoMsgDefault _ _ HistoricalDescription = "A historical site, archaeological site, ruin or other historical point of interest"
+renderCaminoMsgDefault _ _ HistoricalTitle = "Historical site"
+renderCaminoMsgDefault _ _ HolidayEventTitle = "Holiday"
+renderCaminoMsgDefault _ _ HolidaysLabel = "Holidays"
+renderCaminoMsgDefault _ _ HomeStayTitle = "Home Stay"
+renderCaminoMsgDefault _ _ HostelTitle = "Hostel"
+renderCaminoMsgDefault _ _ HotelTitle = "Hotel"
+renderCaminoMsgDefault _ _ HoursTitle = "Hours"
+renderCaminoMsgDefault _ _ HouseTitle = "House"
+renderCaminoMsgDefault _ _ IdentifierLabel = "ID"
+renderCaminoMsgDefault _ _ IndustryTitle = "Industrial"
+renderCaminoMsgDefault _ _ InformationLabel = "Information"
+renderCaminoMsgDefault _ _ InformationTitle = "Information"
+renderCaminoMsgDefault _ _ InformationDescription = "Information on the source data used when generating this plan."
+renderCaminoMsgDefault _ _ InformationPointDescription = "A local tourist office, guide, etc. not specifically geared towards pilgrims"
+renderCaminoMsgDefault _ _ InformationPointTitle = "Information Point"
+renderCaminoMsgDefault _ _ IntersectionDescription = "A road or path intersection"
+renderCaminoMsgDefault _ _ IntersectionTitle = "Intersection"
+renderCaminoMsgDefault _ _ JourneyLabel = "Journey"
+renderCaminoMsgDefault _ _ JunctionTitle = "Junction"
+renderCaminoMsgDefault _ _ KeyLabel = "Key"
+renderCaminoMsgDefault _ _ KitchenTitle = "Kitchen"
+renderCaminoMsgDefault _ _ LatitudeLabel = "Latitude"
+renderCaminoMsgDefault sou _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance sou True penance'}|]
+renderCaminoMsgDefault _ _ LinkOut = [shamlet|More information|]
+renderCaminoMsgDefault _ _ LocationLabel = "Location"
+renderCaminoMsgDefault _ _ LocationPenanceLabel = "Location"
+renderCaminoMsgDefault _ _ LocationPreferencesLabel = "Location Preferences"
+renderCaminoMsgDefault _ _ LocationsLabel = "Locations"
+renderCaminoMsgDefault _ _ LockersTitle = "Lockers"
+renderCaminoMsgDefault _ _ LongitudeLabel = "Longitude"
+renderCaminoMsgDefault _ _ LookoutDescription = "A lookout or scenic view"
+renderCaminoMsgDefault _ _ LookoutTitle = "Lookout"
+renderCaminoMsgDefault _ _ LuxuriousTitle = "Luxurious"
+renderCaminoMsgDefault _ _ MapLabel = "Map"
+renderCaminoMsgDefault _ _ MassEventTitle = "Mass"
+renderCaminoMsgDefault _ _ MattressTitle = "Mattress"
+renderCaminoMsgDefault _ _ MedicalTitle = "Medical"
+renderCaminoMsgDefault _ _ MiscPenanceLabel = "Other"
+renderCaminoMsgDefault _ _ MonasteryDescription = "A monastery or cloister, often with a hospice attached"
+renderCaminoMsgDefault _ _ MonasteryTitle = "Monastery"
+renderCaminoMsgDefault _ _ MunicipalDescription = "A town square, market place, town hall or other municipal building"
+renderCaminoMsgDefault _ _ MunicipalTitle = "Municipal"
+renderCaminoMsgDefault _ _ MuseumDescription = "A museum or gallery"
+renderCaminoMsgDefault _ _ MuseumTitle = "Museum/gallery"
+renderCaminoMsgDefault _ _ MusicEventTitle = "Music"
+renderCaminoMsgDefault _ _ NaturalPoiTitle = "Natural"
+renderCaminoMsgDefault _ _ NaturalDescription = "A nature park or area of natural beauty, as well as large landscape features such as reservoirs or dams"
+renderCaminoMsgDefault _ _ NaturalTitle = "Nature park"
+renderCaminoMsgDefault _ _ NormalTitle = "Normal"
+renderCaminoMsgDefault _ _ NotesLabel = "Notes"
+renderCaminoMsgDefault _ _ OpenHoursTitle = "Open Hours"
+renderCaminoMsgDefault _ _ OpenText = "open"
+renderCaminoMsgDefault _ _ ParkDescription = "A park or garden"
+renderCaminoMsgDefault _ _ ParkTitle = "Park"
+renderCaminoMsgDefault _ _ PathLabel = "Path"
+renderCaminoMsgDefault _ _ PeakDescription = "A peak or mountain pass"
+renderCaminoMsgDefault _ _ PeakTitle = "Peak/pass"
+renderCaminoMsgDefault sou _ (PenanceFormatted showZero penance') = formatPenance sou showZero penance'
+renderCaminoMsgDefault sou _ (PenanceFormattedPlain showZero penance') = formatPenancePlain sou showZero penance'
+renderCaminoMsgDefault sou _ (PenanceMsg penance') = [shamlet|Penance ^{formatPenance sou True penance'}|]
+renderCaminoMsgDefault _ _ PenanceReject = "Rejected"
+renderCaminoMsgDefault _ _ PenanceSummaryLabel = "Penance"
+renderCaminoMsgDefault _ _ PerceivedDistanceLabel = "Perceived Distance"
+renderCaminoMsgDefault _ _ PerformanceEventTitle = "Performance"
+renderCaminoMsgDefault _ _ PersistentLinkTitle = "Persistent Link"
+renderCaminoMsgDefault _ _ PetsTitle = "Pets"
+renderCaminoMsgDefault _ _ PharmacyTitle = "Pharmacy"
+renderCaminoMsgDefault _ _ PilgrimageLabel = "Pilgrimage"
+renderCaminoMsgDefault _ _ PilgrimAlbergueTitle = "Pilgrim Albergue"
+renderCaminoMsgDefault _ _ PilgrimMassEventTitle = "Pilgrim's Mass"
+renderCaminoMsgDefault _ _ PilgrimPoiTitle = "Pilgrim"
+renderCaminoMsgDefault _ _ PilgrimResourceDescription = "A pilgrim's office, rest point, etc. specifically geared towards pilgrims"
+renderCaminoMsgDefault _ _ PilgrimResourceTitle = "Pilgrim Resource"
+renderCaminoMsgDefault _ _ PilgrimTitle = "Pilgrim"
+renderCaminoMsgDefault _ _ PlaceholderLabel = "Placeholder"
+renderCaminoMsgDefault _ _ PlanLabel = "Plan"
+renderCaminoMsgDefault _ _ PoiDescription = "A generic waypoint or point of interest"
+renderCaminoMsgDefault _ _ PoiLabel = "Point of Interest"
+renderCaminoMsgDefault _ _ PoisLabel = "Points of Interest"
+renderCaminoMsgDefault _ _ (PoiTime Nothing) = ""
+renderCaminoMsgDefault sou _ (PoiTime (Just time)) = [shamlet|(^{formatHours sou time} stops)|]
+renderCaminoMsgDefault _ _ PoiTitle = "Locality"
+renderCaminoMsgDefault _ _ PoolTitle = "Pool"
+renderCaminoMsgDefault _ _ PrayerTitle = "Prayer"
+renderCaminoMsgDefault _ _ PreferencesLabel = "Preferences"
+renderCaminoMsgDefault _ _ PrivateAlbergueTitle = "Private Albergue"
+renderCaminoMsgDefault _ _ ProgramLabel = "Program"
+renderCaminoMsgDefault _ _ PromontoryDescription = "A promontory, cliff or headland"
+renderCaminoMsgDefault _ _ PromontoryTitle = "Promontory/Headland"
+renderCaminoMsgDefault _ _ PublicHolidayText = "Public Holiday"
+renderCaminoMsgDefault _ _ QuadrupleTitle = "Quadruple"
+renderCaminoMsgDefault _ _ QuadrupleWcTitle = "Quadruple with WC"
+renderCaminoMsgDefault _ _ RefugeTitle = "Refuge"
+renderCaminoMsgDefault _ _ RegionLabel = "Region"
+renderCaminoMsgDefault _ _ RegionsLabel = "Regions"
+renderCaminoMsgDefault _ _ RecreationPoiTitle = "Recreation"
+renderCaminoMsgDefault _ _ ReligiousEventTitle = "Religious Ceremony"
+renderCaminoMsgDefault _ _ ReligiousPoiTitle = "Religious"
+renderCaminoMsgDefault _ _ RequiredStopsLabel = "Required Stops"
+renderCaminoMsgDefault _ _ RestaurantTitle = "Restaurant"
+renderCaminoMsgDefault _ _ RestDaysLabel = "Rest Days"
+renderCaminoMsgDefault _ _ RestLocationPreferencesLabel = "Rest Location Preferences"
+renderCaminoMsgDefault _ _ RestPressureLabel = "Rest Pressure"
+renderCaminoMsgDefault _ _ RestPenanceLabel = "Rest"
+renderCaminoMsgDefault _ _ RestpointLabel = "Rest Point"
+renderCaminoMsgDefault _ _ RestpointsLabel = "Rest Points"
+renderCaminoMsgDefault _ _ RestPointsPenanceLabel = "Rest Points"
+renderCaminoMsgDefault _ _ RestPreferencesLabel = "Rest Preferences (days travelling)"
+renderCaminoMsgDefault _ _ RestPressurePenanceLabel = "Rest Pressure"
+renderCaminoMsgDefault _ _ RoadTitle = "Road/path"
+renderCaminoMsgDefault _ _ RouteLabel = "Route"
+renderCaminoMsgDefault _ _ RouteServicesPreferencesLabel = "Missing Services on Route"
+renderCaminoMsgDefault _ _ RoutesLabel = "Routes"
+renderCaminoMsgDefault _ _ ServicesLabel = "Services"
+renderCaminoMsgDefault _ _ ServicesPreferencesLabel = "Missing Services"
+renderCaminoMsgDefault _ _ SharedTitle = "Shared"
+renderCaminoMsgDefault _ _ ShopDescription = "A shop of note or usefulness"
+renderCaminoMsgDefault _ _ ShopTitle = "Shop"
+renderCaminoMsgDefault _ _ ShowLabelsTitle = "Show camino and route labels on map"
+renderCaminoMsgDefault _ _ ShowOnMapTitle = "Show on map"
+renderCaminoMsgDefault _ _ SingleTitle = "Single"
+renderCaminoMsgDefault _ _ SIUnitsTitle = "Kilometres, metres, hours"
+renderCaminoMsgDefault _ _ SleepingBagTitle = "Sleeping Bag"
+renderCaminoMsgDefault _ _ StablesTitle = "Stables"
+renderCaminoMsgDefault _ _ StageLabel = "Stage"
+renderCaminoMsgDefault _ _ (StagesMsg d) = formatStages d
+renderCaminoMsgDefault _ _ StartDateLabel = "Start Date"
+renderCaminoMsgDefault _ _ StartLocationLabel = "Start Location"
+renderCaminoMsgDefault _ _ StationDescription = "A train or bus station"
+renderCaminoMsgDefault _ _ StationTitle = "Station"
+renderCaminoMsgDefault _ _ StatueDescription = "A statue, bas-relief, etc."
+renderCaminoMsgDefault _ _ StatueTitle = "Statue"
+renderCaminoMsgDefault _ _ StockpointLabel = "Stocking Point"
+renderCaminoMsgDefault _ _ StopLabel = "Stop"
+renderCaminoMsgDefault _ _ StopPenanceLabel = "Stop"
+renderCaminoMsgDefault _ _ StopServicesPenanceLabel = "Missing Services (Stop)"
+renderCaminoMsgDefault _ _ StopPreferencesLabel = "Stop Cost"
+renderCaminoMsgDefault _ _ SuperFitTitle = "Super-fit"
+renderCaminoMsgDefault _ _ TableLabel = "Table"
+renderCaminoMsgDefault _ _ TheatreDescription = "A theatre, opera house or concert hall"
+renderCaminoMsgDefault _ _ TheatreTitle = "Theatre"
+renderCaminoMsgDefault _ _ TimeAdjustLabel = "Time Adjustment"
+renderCaminoMsgDefault sou _ (TimeFormatted time) = formatHours sou time
+renderCaminoMsgDefault sou _ (TimeMsg time) = [shamlet|over ^{formatMaybeHours sou time}|]
+renderCaminoMsgDefault _ _ TimeLabel = "Time"
+renderCaminoMsgDefault _ _ TimePenaltyLabel = "Time Penalty"
+renderCaminoMsgDefault sou _ TimePreferencesLabel = [shamlet|Time Preferences (#{U.unitSymbol (U.preferredUnit sou U.Time)})|]
+renderCaminoMsgDefault _ _ ToggleDetailTitle = "Show/hide additional detail"
+renderCaminoMsgDefault _ _ ToLabel = "To"
+renderCaminoMsgDefault _ _ TowelsTitle = "Towels"
+renderCaminoMsgDefault _ _ TownDescription = "A larger locality with most services and a variety of accommodation usually available"
+renderCaminoMsgDefault _ _ TownTitle = "Town"
+renderCaminoMsgDefault _ _ TrailTitle = "Trail (walkers only)"
+renderCaminoMsgDefault _ _ TrainTitle = "Train"
+renderCaminoMsgDefault _ _ TransportLinksLabel = "Transport Links"
+renderCaminoMsgDefault _ _ TravelLabel = "Travel Estimation"
+renderCaminoMsgDefault _ _ TripFinishLabel = "Trip Finish"
+renderCaminoMsgDefault _ _ TripStartLabel = "Trip Start"
+renderCaminoMsgDefault _ _ TripleTitle = "Triple"
+renderCaminoMsgDefault _ _ TripleWcTitle = "Triple with WC"
+renderCaminoMsgDefault _ _ TypeLabel = "Type"
+renderCaminoMsgDefault _ _ UnfitTitle = "Unfit"
+renderCaminoMsgDefault _ _ UnitsLabel = "Units"
+renderCaminoMsgDefault _ _ UnusedLabel = "Unused"
+renderCaminoMsgDefault _ _ USUnitsTitle = "Miles, feet, hours"
+renderCaminoMsgDefault _ _ VeryFitTitle = "Very fit"
+renderCaminoMsgDefault _ _ VeryUnfitTitle = "Very unfit"
+renderCaminoMsgDefault _ _ VillageDescription = "A smaller locality with limited, or no, services and accommodation"
+renderCaminoMsgDefault _ _ VillageTitle = "Village"
+renderCaminoMsgDefault _ _ WalkingTitle = "Walking"
+renderCaminoMsgDefault _ _ WalkingNaismithTitle = "Walking (strong walkers)"
+renderCaminoMsgDefault _ _ WarningTitle= "Warning"
+renderCaminoMsgDefault _ _ WashingMachineTitle = "Washing Machine"
+renderCaminoMsgDefault _ _ WaypointLabel = "Waypoint"
+renderCaminoMsgDefault _ _ WharfDescription = "A wharf, quay or pier connecting to a boat"
+renderCaminoMsgDefault _ _ WharfTitle = "Wharf"
+renderCaminoMsgDefault _ _ WiFiTitle = "WiFi"
+renderCaminoMsgDefault _ _ WineryDescription = "A winery or port warehouse"
+renderCaminoMsgDefault _ _ WineryTitle = "Winery"
+renderCaminoMsgDefault _ _ msg = [shamlet|Unknown message #{show msg}|]
 
 hasLocalisedText :: (Tagged a) => [Locale] -> Localised a -> Bool
 hasLocalisedText locales locd = maybe False (\t -> plainText t /= "") $ localise locales locd
@@ -688,117 +744,118 @@ renderLocalisedText locales plain attr js locd = let
     else
       H.span H.! HA.lang (toValue lng) $ Text.Blaze.Html.text txt''
 
-renderLocalisedDate :: (FormatTime t) => Bool -> [Locale] -> t -> Html
-renderLocalisedDate weekDay [] day = renderLocalisedDate weekDay [rootLocale] day
-renderLocalisedDate weekDay (loc:_) day = toHtml $ if weekDay then dwf ++ df else df
+renderLocalisedDate :: (FormatTime t) => U.SystemOfUnits -> Bool -> [Locale] -> t -> Html
+renderLocalisedDate sou weekDay [] day = renderLocalisedDate sou weekDay [rootLocale] day
+renderLocalisedDate _sou weekDay (loc:_) day = toHtml $ if weekDay then dwf ++ df else df
   where
     tl = localeTimeLocale loc
     df = formatTime tl (dateFmt tl) day
     dwf = formatTime tl "%a " day
 
-renderLocalisedTime :: (FormatTime t) => [Locale] -> String -> t -> Html
-renderLocalisedTime [] fmt t = renderLocalisedTime [rootLocale] fmt t
-renderLocalisedTime (loc:_) fmt t = toHtml $ formatTime (localeTimeLocale loc) fmt t
+renderLocalisedTime :: (FormatTime t) => U.SystemOfUnits -> [Locale] -> String -> t -> Html
+renderLocalisedTime sou [] fmt t = renderLocalisedTime sou [rootLocale] fmt t
+renderLocalisedTime _sou (loc:_) fmt t = toHtml $ formatTime (localeTimeLocale loc) fmt t
 
-renderLocalisedMonth :: [Locale] -> MonthOfYear -> Html
-renderLocalisedMonth [] t = renderLocalisedMonth [rootLocale] t
-renderLocalisedMonth (loc:_) t = toHtml $ snd $ (months $ localeTimeLocale loc) !! t
+renderLocalisedMonth :: U.SystemOfUnits -> [Locale] -> MonthOfYear -> Html
+renderLocalisedMonth sou [] t = renderLocalisedMonth sou [rootLocale] t
+renderLocalisedMonth _sou (loc:_) t = toHtml $ snd $ (months $ localeTimeLocale loc) !! t
 
-renderLocalisedOrdinal :: [Locale] -> Int -> Html
-renderLocalisedOrdinal [] o = renderLocalisedOrdinal [rootLocale] o
-renderLocalisedOrdinal (loc:_) o = toHtml $ (localeOrdinalRender loc) o
+renderLocalisedOrdinal :: U.SystemOfUnits -> [Locale] -> Int -> Html
+renderLocalisedOrdinal sou [] o = renderLocalisedOrdinal sou [rootLocale] o
+renderLocalisedOrdinal _sou (loc:_) o = toHtml $ (localeOrdinalRender loc) o
 
-renderLocalisedBeforeAfter :: Config -> [Locale] -> Int -> Html
-renderLocalisedBeforeAfter config [] n = renderLocalisedBeforeAfter config [rootLocale] n
-renderLocalisedBeforeAfter config locales n = renderCaminoMsg config locales $ if n < 0 then BeforeText else AfterText
+renderLocalisedBeforeAfter :: U.SystemOfUnits -> Config -> [Locale] -> Int -> Html
+renderLocalisedBeforeAfter sou config [] n = renderLocalisedBeforeAfter sou config [rootLocale] n
+renderLocalisedBeforeAfter sou config locales n = renderCaminoMsg sou config locales $ if n < 0 then BeforeText else AfterText
 
-renderLocalisedWeekOfMonth :: [Locale] -> WeekOfMonth -> Html
-renderLocalisedWeekOfMonth [] wom = renderLocalisedWeekOfMonth [rootLocale] wom
-renderLocalisedWeekOfMonth (loc:_) wom = toHtml $ (localeWeekOfMonthRender loc) wom
+renderLocalisedWeekOfMonth :: U.SystemOfUnits -> [Locale] -> WeekOfMonth -> Html
+renderLocalisedWeekOfMonth sou [] wom = renderLocalisedWeekOfMonth sou [rootLocale] wom
+renderLocalisedWeekOfMonth _sou (loc:_) wom = toHtml $ (localeWeekOfMonthRender loc) wom
 
-renderLocalisedDayOfWeek :: [Locale] -> DayOfWeek -> Html
-renderLocalisedDayOfWeek [] dow = renderLocalisedDayOfWeek [rootLocale] dow
-renderLocalisedDayOfWeek (loc:_) dow = let
+renderLocalisedDayOfWeek :: U.SystemOfUnits -> [Locale] -> DayOfWeek -> Html
+renderLocalisedDayOfWeek sou [] dow = renderLocalisedDayOfWeek sou [rootLocale] dow
+renderLocalisedDayOfWeek _sou (loc:_) dow = let
     idx = (fromEnum dow) - 1
     names = wDays $ localeTimeLocale loc
     name = names !! idx
   in
     toHtml $ snd name
 
-renderLocalisedPublicHoliday :: Config -> [Locale] -> Text -> Html
-renderLocalisedPublicHoliday config locs rid = [shamlet|^{renderCaminoMsg config locs PublicHolidayText} (^{name})|]
+renderLocalisedPublicHoliday :: U.SystemOfUnits -> Config -> [Locale] -> Text -> Html
+renderLocalisedPublicHoliday sou config locs rid = [shamlet|^{renderCaminoMsg sou config locs PublicHolidayText} (^{name})|]
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
     name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False False (regionName r)) region
 
-renderLocalisedClosedDay :: Config -> [Locale] -> Text -> Html
-renderLocalisedClosedDay config locs rid = [shamlet|^{renderCaminoMsg config locs ClosedDayText} (^{name})|]
+renderLocalisedClosedDay :: U.SystemOfUnits -> Config -> [Locale] -> Text -> Html
+renderLocalisedClosedDay sou config locs rid = [shamlet|^{renderCaminoMsg sou config locs ClosedDayText} (^{name})|]
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
     name = maybe (toHtml rid) (\r -> renderLocalisedText locs False False False (regionName r)) region
 
 -- | Convert a message placeholder into actual HTML
-renderCaminoMsg :: Config -- ^ The configuration
+renderCaminoMsg :: U.SystemOfUnits -- ^ The system of units to use for distances, times etc
+  -> Config -- ^ The configuration
   -> [Locale] -- ^ The locale list
   -> CaminoMsg -- ^ The message
   -> Html -- ^ The resulting Html to interpolate
-renderCaminoMsg config locales (ClosedDayLabel region) = renderLocalisedClosedDay config locales region
-renderCaminoMsg _config locales (DateMsg day) = H.span H.! HA.class_ "date" $ renderLocalisedDate True locales day
-renderCaminoMsg _config locales (DateRangeMsg day1 day2) = H.span H.! HA.class_ "date-range" $
+renderCaminoMsg sou config locales (ClosedDayLabel region) = renderLocalisedClosedDay sou config locales region
+renderCaminoMsg sou _config locales (DateMsg day) = H.span H.! HA.class_ "date" $ renderLocalisedDate sou True locales day
+renderCaminoMsg sou _config locales (DateRangeMsg day1 day2) = H.span H.! HA.class_ "date-range" $
   if day1 == day2 then
-    renderLocalisedDate True locales day1
+    renderLocalisedDate sou True locales day1
   else do
-    renderLocalisedDate True locales day1
+    renderLocalisedDate sou True locales day1
     " - "
-    renderLocalisedDate True locales day2
-renderCaminoMsg _config locales (DayOfWeekName dow) = renderLocalisedTime locales "%a" dow
-renderCaminoMsg _config _locales (DayOfMonthName dom) = toHtml dom
-renderCaminoMsg _config locales (DaySummaryMsg day) = [shamlet|
+    renderLocalisedDate sou True locales day2
+renderCaminoMsg sou _config locales (DayOfWeekName dow) = renderLocalisedTime sou locales "%a" dow
+renderCaminoMsg _sou _config _locales (DayOfMonthName dom) = toHtml dom
+renderCaminoMsg sou _config locales (DaySummaryMsg day) = [shamlet|
   #{start'} to #{finish'}
-  ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
-  over ^{formatMaybeHours $ metricsTime metrics}
-  Ascent ^{formatHeight $ metricsAscent metrics} Descent ^{formatHeight $ metricsDescent metrics}
-  Penance ^{formatPenance True $ metricsPenance metrics}
+  ^{formatDistance sou $ metricsDistance metrics} (feels like ^{formatMaybeDistance sou $ metricsPerceivedDistance metrics})
+  over ^{formatMaybeHours sou $ metricsTime metrics}
+  Ascent ^{formatHeight sou $ metricsAscent metrics} Descent ^{formatHeight sou $ metricsDescent metrics}
+  Penance ^{formatPenance sou True $ metricsPenance metrics}
   |]
   where
    metrics = score day
    start' = renderLocalisedText locales False False False (locationName $ start day)
    finish' = renderLocalisedText locales False False False (locationName $ finish day)
-renderCaminoMsg _config locales (JourneySummaryMsg journey) = [shamlet|
+renderCaminoMsg sou _config locales (JourneySummaryMsg journey) = [shamlet|
   #{start'} to #{finish'}
-  Total distance ^{formatDistance $ metricsDistance metrics} (feels like ^{formatMaybeDistance $ metricsPerceivedDistance metrics})
-  over ^{formatDays $ Prelude.length $ path journey}
-  Total ascent ^{formatHeight $ metricsAscent metrics} Total descent ^{formatHeight $ metricsDescent metrics}
-  Penance ^{formatPenance True $ metricsPenance metrics}
+  Total distance ^{formatDistance sou $ metricsDistance metrics} (feels like ^{formatMaybeDistance sou $ metricsPerceivedDistance metrics})
+  over ^{formatDays sou $ Prelude.length $ path journey}
+  Total ascent ^{formatHeight sou $ metricsAscent metrics} Total descent ^{formatHeight sou $ metricsDescent metrics}
+  Penance ^{formatPenance sou True $ metricsPenance metrics}
   |]
   where
    metrics = score journey
    start' = renderLocalisedText locales False False False (locationName $ start journey)
    finish' = renderLocalisedText locales False False False (locationName $ finish journey)
-renderCaminoMsg _config locales (LinkTitle locd defd) = if hasLocalisedText locales locd then
+renderCaminoMsg _sou _config locales (LinkTitle locd defd) = if hasLocalisedText locales locd then
     renderLocalisedText locales True True False locd
   else
     renderLocalisedText locales True True False defd
-renderCaminoMsg config locales (ListMsg msgs) = [shamlet|
+renderCaminoMsg sou config locales (ListMsg msgs) = [shamlet|
   <ul .comma-separated-list>
     $forall m <- msgs
-      <li>^{renderCaminoMsg config locales m}
+      <li>^{renderCaminoMsg sou config locales m}
   |]
-renderCaminoMsg _config locales (MonthOfYearName moy) = renderLocalisedMonth locales moy
-renderCaminoMsg config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderLocalisedDayOfWeek locales dow} ^{renderLocalisedBeforeAfter config locales nth}|]
-renderCaminoMsg config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal locales (abs nth)} ^{renderCaminoMsg config locales unit} ^{renderLocalisedBeforeAfter config locales nth}|]
-renderCaminoMsg config locales (NamedCalendarLabel key) = renderLocalisedText locales False False False $ getCalendarName config key
-renderCaminoMsg _config locales (NthWeekdayText nth dow) = [shamlet|^{renderLocalisedWeekOfMonth locales nth} ^{renderLocalisedDayOfWeek locales dow}|]
-renderCaminoMsg config locales (PublicHolidayLabel region) = renderLocalisedPublicHoliday config locales region
-renderCaminoMsg _config locales (Time time) = renderLocalisedTime locales "%H%M" time
-renderCaminoMsg _config locales (Txt locd) = renderLocalisedText locales False False False locd
-renderCaminoMsg _config locales (TxtPlain attr js locd) = renderLocalisedText locales True attr js locd
-renderCaminoMsg config _ msg = renderCaminoMsgDefault config msg
+renderCaminoMsg sou _config locales (MonthOfYearName moy) = renderLocalisedMonth sou locales moy
+renderCaminoMsg sou config locales (OrdinalAfterWeekday nth dow) = [shamlet|^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderLocalisedDayOfWeek sou locales dow} ^{renderLocalisedBeforeAfter sou config locales nth}|]
+renderCaminoMsg sou config locales (OrdinalBeforeAfter nth unit) = [shamlet|^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderCaminoMsg sou config locales unit} ^{renderLocalisedBeforeAfter sou config locales nth}|]
+renderCaminoMsg _sou config locales (NamedCalendarLabel key) = renderLocalisedText locales False False False $ getCalendarName config key
+renderCaminoMsg sou _config locales (NthWeekdayText nth dow) = [shamlet|^{renderLocalisedWeekOfMonth sou locales nth} ^{renderLocalisedDayOfWeek sou locales dow}|]
+renderCaminoMsg sou config locales (PublicHolidayLabel region) = renderLocalisedPublicHoliday sou config locales region
+renderCaminoMsg sou _config locales (Time time) = renderLocalisedTime sou locales "%H%M" time
+renderCaminoMsg _sou _config locales (Txt locd) = renderLocalisedText locales False False False locd
+renderCaminoMsg _sou _config locales (TxtPlain attr js locd) = renderLocalisedText locales True attr js locd
+renderCaminoMsg sou config _ msg = renderCaminoMsgDefault sou config msg
 
--- | Render a camino message as un-markup text
-renderCaminoMsgText :: Config -> [Locale] -> CaminoMsg -> Text
-renderCaminoMsgText config locales (ListMsg msgs) = commaJoin $ Prelude.map (renderCaminoMsgText config locales) msgs
-renderCaminoMsgText config locales msg = renderMarkupToText $ renderCaminoMsg config locales msg
+-- | Render a camino message as un-markuped text
+renderCaminoMsgText :: U.SystemOfUnits -> Config -> [Locale] -> CaminoMsg -> Text
+renderCaminoMsgText sou config locales (ListMsg msgs) = commaJoin $ Prelude.map (renderCaminoMsgText sou config locales) msgs
+renderCaminoMsgText sou config locales msg = renderMarkupToText $ renderCaminoMsg sou config locales msg
 
 renderMarkupToText :: TB.MarkupM a -> Text
 renderMarkupToText (TB.Parent _ _ _ c)           = renderMarkupToText c

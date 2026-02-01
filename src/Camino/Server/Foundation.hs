@@ -25,6 +25,7 @@ import Camino.Planner (Solution)
 import Camino.Preferences
 import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
+import qualified Camino.Units as U
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
 import Data.Cache (Cache(..), newDummyCache)
@@ -79,6 +80,10 @@ instance PathPiece PoiCategory where
   toPathPiece = writeValue
 
 instance PathPiece Service where
+  fromPathPiece = readValue
+  toPathPiece = writeValue
+
+instance PathPiece U.SystemOfUnits where
   fromPathPiece = readValue
   toPathPiece = writeValue
 
@@ -189,6 +194,7 @@ caminoAppCaminos app = filter (not . caminoFragment) $ caminoConfigCaminos $ cam
 
 data PreferenceData = PreferenceData {
     prefEasyMode :: Bool -- ^ Use easy preferences
+  , prefUnits :: U.SystemOfUnits -- ^ The system of units
   , prefTravel :: Travel -- ^ The travel mode
   , prefFitness :: Fitness -- ^ The fitness level
   , prefComfort :: Comfort -- ^ The comfort level
@@ -214,6 +220,7 @@ data PreferenceData = PreferenceData {
 instance FromJSON PreferenceData where
    parseJSON (Object v) = do
       easy' <- v .:? "easy" .!= True
+      units' <- v .:? "units" .!= U.SIUnits
       travel' <- v .: "travel"
       fitness' <- v .: "fitness"
       comfort' <- v .: "comfort"
@@ -244,6 +251,7 @@ instance FromJSON PreferenceData where
       let pois'' = S.map placeholder pois'
       return PreferenceData {
           prefEasyMode = easy'
+        , prefUnits = units'
         , prefTravel = travel'
         , prefFitness = fitness'
         , prefComfort = comfort'
@@ -271,6 +279,7 @@ instance ToJSON PreferenceData where
     toJSON prefs =
       object [
           "easy" .= prefEasyMode prefs
+        , "units" .= prefUnits prefs
         , "travel" .= prefTravel prefs
         , "fitness" .= prefFitness prefs
         , "comfort" .= prefComfort prefs
@@ -295,15 +304,17 @@ instance ToJSON PreferenceData where
 
 defaultPreferenceData :: CaminoApp -> Day -> PreferenceData
 defaultPreferenceData master current = let
+    units' = U.SIUnits
     travel' = Walking
     fitness' = Unfit
     comfort' = Pilgrim
-    dtp = defaultTravelPreferences travel' fitness' comfort' Nothing
+    dtp = defaultTravelPreferences units' travel' fitness' comfort' Nothing
     camino' = headWithDefault (error "At least one Camino required") $ caminoAppCaminos master
     dcp = defaultCaminoPreferences camino'
   in
     PreferenceData {
         prefEasyMode = True
+      , prefUnits = units'
       , prefTravel = travel'
       , prefFitness = fitness'
       , prefComfort = comfort'
@@ -328,7 +339,8 @@ defaultPreferenceData master current = let
 
 travelPreferencesFrom :: PreferenceData -> TravelPreferences
 travelPreferencesFrom prefs = TravelPreferences {
-    preferenceTravel = prefTravel prefs
+    preferenceUnits = prefUnits prefs
+  , preferenceTravel = prefTravel prefs
   , preferenceFitness = prefFitness prefs
   , preferenceComfort = prefComfort prefs
   , preferenceDistance = prefDistance prefs
@@ -386,7 +398,7 @@ instance RenderMessage CaminoApp FormMessage where
     renderMessage _ _ = defaultFormMessage
 
 instance RenderMessage CaminoApp CaminoMsg where
-    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) (catMaybes $ map localeFromID langs) msg
+    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg U.SIUnits (caminoAppConfig master) (catMaybes $ map localeFromID langs) msg
 
 instance Yesod CaminoApp where
   approot = ApprootMaster (C.getWebRoot . caminoAppConfig)
@@ -406,7 +418,7 @@ instance Yesod CaminoApp where
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render MsgHelpLabel
-    let caminoTitle c = renderCaminoMsg config locales (Txt (caminoName c))
+    let caminoTitle c = renderCaminoMsg U.SIUnits config locales (Txt (caminoName c))
     pc <- widgetToPageContent widget
     np <- noticePopup
     nc <- widgetToPageContent np
@@ -486,7 +498,7 @@ noticePopup = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   let licence = maybe "LICENSE" assetPath $ C.getAsset "license" config
   let notice = (noticePopupText licence locales) messages router
   return $(widgetFile "notice-popup")

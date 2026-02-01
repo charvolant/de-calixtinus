@@ -19,6 +19,7 @@ module Camino.Display.Static (
 
 import Camino.Camino
 import Camino.Config
+import qualified Camino.Units as U
 import Camino.Display.Css
 import Camino.Display.Html
 import Camino.Display.I18n
@@ -46,7 +47,7 @@ createHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRo
 createHelpFile config loc file html = do
   let locales = [loc, rootLocale]
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   LB.writeFile file $ renderHtml $ html messages router
   
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()

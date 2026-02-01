@@ -11,7 +11,7 @@ CaminoText: Select the Camino you wish to walk from the following options. Many 
 CaminoTitle: Select Camino
 CloseLabel: Close
 DayServicePreferencesLabel: Preferred Services during Day
-DistancePreferencesLabel: Distance Preferences (km)
+DistancePreferencesLabel sou@U.SystemOfUnits: Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 EasyMode: Easy Mode
 EasyModeText: Easy mode reduces the number of choices that you have to make and chooses sensible defaults for most things.
 ExcludedLabel: Locations not to stop at
@@ -47,8 +47,8 @@ RangeTitle: Distance and Time Preferences
 RangeText: Select the ranges that you will accept for both distance travelled over a day (in km) and time taken (in hours) for each day. Also select the range for how many days you wish to travel before resting. The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RequiredStopsLabel: Required Stops
 RestLocationPreferencesLabel: Rest Location Preferences
-RestPreferencesLabel: Rest Preferences (days travelled)
-RestPressureLabel: Rest Pressure
+RestPreferencesLabel sou@U.SystemOfUnits: Rest Preferences (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
+RestPressureLabel sou@U.SystemOfUnits: Rest Pressure (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 RestServicePreferencesLabel: Rest Services
 RoutePreferencesLabel: Routes
 RoutesText: Select the route variants that you wish to walk. The standard route is always selected. Some routes require other routes or cannot be done in conjunction with other routes.
@@ -58,6 +58,7 @@ SelectComfort: Select a comfort level
 SelectFitness: Select a fitness level
 SelectPoiCategories: Select points of interest that you might visit
 SelectTravel: Select a travel type
+SelectUnits: Select units
 ServicesRestText: Select the location, accomodation and services preferences for a rest stop. Rest stops are places where you can take a day off to recover, replenish, see the sights and generally get ready for the next stage of the walk.
 ServicesRestTitle: Select Rest Stop Preferences
 ServicesStockText: Select the location, accomodation and services preferences for a "stock-up" day". Stock-up days are where you expect to not have many facilities over the next day, because many of the services you would want will be closed. For example, if the next day is a Sunday or a public holiday, you will need to ensure that you have food pre-bought.
@@ -80,7 +81,7 @@ StopsText: Select locations where you must stop at the end of a day and location
 StopsTitle: Required and Excluded Stops
 SuggestedLabel: Suggested
 TestMessage: Currently under testing, see the About page
-TimePreferencesLabel: Time Preferences (hours)
+TimePreferencesLabel sou@U.SystemOfUnits: Time Preferences (#{U.unitSymbol (U.preferredUnit sou U.Time)})
 TransportLinks: Use Transport Links
 TransportLinksText: Allow the use of public transport to nearby accommodation and services
 TravelText1: To begin with, choose the way you intend to travel. Then choose the level of fitness that you have.

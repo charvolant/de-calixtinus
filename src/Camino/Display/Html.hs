@@ -19,14 +19,14 @@ module Camino.Display.Html where
 import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
-import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, dayLegs, journeyLegs, pilgrimageLegs, pilgrimageRests, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
+import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, dayLegs, journeyDays, journeyLegs, metricsDays, pilgrimageDays, pilgrimageLegs, pilgrimageRests, pilgrimageStages, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
-import Camino.Display.Css (caminoCss, featureLineStyle, featureRouteColour, featureRouteDesaturatedColour, toCssColour, warningRed)
+import qualified Camino.Units as U
+import Camino.Display.Css (caminoCss, featureLineStyle, featureRouteColour, toCssColour, warningRed)
 import Camino.Display.I18n
 import Camino.Display.Ophelia
 import Camino.Display.Routes
 import Camino.Display.SVG
-import Data.Colour (blend)
 import Data.Description
 import Data.Event
 import Data.Event.Date
@@ -45,8 +45,6 @@ import Text.Hamlet
 import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, take, toLower, toUpper)
 import Formatting
 import Data.Text (Text)
-import Camino.Preferences (CaminoPreferences(preferenceRoutes))
-import Language.Haskell.TH.Quote (QuasiQuoter)
 
 -- A useful separator
 endash :: Char
@@ -84,12 +82,12 @@ conditionalLabel label values = [ihamlet|
   |]
 
 penanceTable :: TravelPreferences -> CaminoPreferences -> Bool -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-penanceTable _preferences _camino accommodationDetail serviceDetail metrics = [ihamlet|
+penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ihamlet|
   <div .detail .border .border-info-subtle .rounded .penance-table .float-end .ms-1 .p-1>
    <table .table .table-sm>
      <tr>
       <td>_{DistancePenanceLabel}
-      <td .text-end>#{maybe "-" formatDistance (metricsPerceivedDistance metrics)}
+      <td .text-end>#{maybe "-" (formatDistance sou) (metricsPerceivedDistance metrics)}
       <td>
      $if metricsDistanceAdjust metrics /= mempty
       <tr>
@@ -162,17 +160,20 @@ penanceTable _preferences _camino accommodationDetail serviceDetail metrics = [i
         <td>
    |]
   where
+    sou = preferenceUnits preferences
     acServices = maybe S.empty (tripChoiceFeatures . fst) (L.uncons $ metricsAccommodationChoice metrics)
     hasAccommodationServices = accommodationDetail && not (S.null acServices)
     showAccommodation = metricsLocation metrics /= mempty || hasAccommodationServices
 
-metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
-metricsSummary _preferences _camino metrics days stages = [ihamlet|
+metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> Maybe Int -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
+metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
     _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
     _{TimeMsg (metricsTime metrics)}
     _{PoiTime (metricsPoiTime metrics)} #
-    $maybe d <- days
-      \ _{DaysMsg d} #
+    $maybe d <- elapsed
+      \ _{DaysElapsedMsg d} #
+    $maybe d <- walking
+      \ (_{DaysWalkingMsg d}) #
     $maybe s <- stages
       \ _{StagesMsg s} #
     _{AscentMsg (metricsAscent metrics)}
@@ -528,6 +529,10 @@ caminoComfortMsg Luxurious = LuxuriousTitle
 caminoComfortLabel :: Comfort -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoComfortLabel comfort = [ihamlet| <span .comfort>_{caminoComfortMsg comfort} |]
 
+caminoUnitsMsg :: U.SystemOfUnits -> CaminoMsg
+caminoUnitsMsg U.SIUnits = SIUnitsTitle
+caminoUnitsMsg U.USUnits = USUnitsTitle
+
 caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
     ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
@@ -815,13 +820,13 @@ legLineSimple leg = [ihamlet|
     <div .d-inline-block>
       ^{caminoLegTypeIcon (legType leg)}
       $if legDistance leg > 0
-        <span .leg-distance>#{format (fixed 1 % "km") (legDistance leg)}
+        <span .leg-distance>_{DistanceFormatted (legDistance leg)}
       $if legAscent leg > 0
-        <span .leg-ascent>#{format (fixed 0 % "m") (legAscent leg)}
+        <span .leg-ascent>_{ElevationFormatted (legAscent leg)}
       $if legDescent leg > 0
-        <span .leg-descent>#{format (fixed 0 % "m") (legDescent leg)}
+        <span .leg-descent>_{ElevationFormatted (legDescent leg)}
       $if isJust $ legTime leg
-        <span .leg-time>#{format (fixed 1 % "hrs") (fromJust $ legTime leg)}
+        <span .leg-time>_{TimeFormatted (fromJust $ legTime leg)}
       $if isJust $ legPenance leg
         <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
       $if isJust $ legDescription leg
@@ -1127,20 +1132,24 @@ caminoLocationsHtml config preferences camino solution = [ihamlet|
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationNameLabel l) locationsSorted
     (_trip, _jerrors, _perrors, rests, stocks, stops, waypoints, usedLegs) = solutionElements camino' solution
 
-preferenceRangeHtml :: (Real a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
-preferenceRangeHtml range = [ihamlet|
-    <span .text-danger>#{maybe "." (format (fixed 1)) (rangeMinimum range)}
+preferenceRangeHtml :: (RealFrac a) => U.SystemOfUnits -> U.Quantity -> PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
+preferenceRangeHtml sou quantity range = [ihamlet|
+    <span .text-danger>#{maybe "." cu (rangeMinimum range)}
     <span>#{endash}
-    <span>#{format (fixed 1) (rangeLower range)}
+    <span>#{cu (rangeLower range)}
     <span>#{endash}
-    <span .text-success .fw-bolder>#{format (fixed 1) (rangeTarget range)}
+    <span .text-success .fw-bolder>#{cu (rangeTarget range)}
     <span>#{endash}
-    <span>#{format (fixed 1) (rangeUpper range)}
+    <span>#{cu (rangeUpper range)}
     <span>#{endash}
-    <span .text-danger>#{maybe "." (format (fixed 1)) (rangeMaximum range)}
+    <span .text-danger>#{maybe "." cu (rangeMaximum range)}
     $maybe d <- rangeDerived range
       <p .text-body-tertiary .smaller>#{d}
   |]
+  where
+    fu = U.preferredUnit U.SIUnits quantity
+    tu = U.preferredUnit sou quantity
+    cu v = format (fixed 1) $ U.convertAmount fu tu v
 
 preferenceRangeIntHtml :: (Integral a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeIntHtml range = [ihamlet|
@@ -1236,17 +1245,24 @@ preferencesHtml showLink preferences camino = [ihamlet|
       <div .col-4>_{ComfortLabel}
       <div .col>^{caminoComfortLabel $ preferenceComfort preferences}
     <div .row>
+      <div .col-4>_{UnitsLabel}
+      <div .col>_{caminoUnitsMsg $ preferenceUnits preferences}
+    <div .row>
       <div .col-4>_{DistancePreferencesLabel}
-      <div .col>^{preferenceRangeHtml $ preferenceDistance preferences}
+      <div .col>^{preferenceRangeHtml sou U.Distance (preferenceDistance preferences)}
     <div .row>
       <div .col-4>_{TimePreferencesLabel}
-      <div .col>^{preferenceRangeHtml $ preferenceTime preferences}
+      <div .col>^{preferenceRangeHtml sou U.Time (preferenceTime preferences)}
     <div .row>
       <div .col-4>_{RestPreferencesLabel}
-      <div .col>^{preferenceRangeIntHtml $ preferenceRest preferences}
+      <div .col>^{preferenceRangeIntHtml (preferenceRest preferences)}
     <div .row>
       <div .col-4>_{RestPressureLabel}
-      <div .col>#{maybe "-" (format (fixed 1)) (preferenceRestPressure preferences)}
+      <div .col>
+        $maybe rp <- preferenceRestPressure preferences
+          #{formatDistance sou rp}
+        $nothing
+          -
     <div .row>
       <div .col>
         <table .table .table-striped>
@@ -1379,6 +1395,7 @@ preferencesHtml showLink preferences camino = [ihamlet|
                  _{Txt (poiName p)}
   |]
   where
+    sou = preferenceUnits preferences
     locationTypes = locationStopTypeEnumeration
     accommodationTypes = accommodationTypeEnumeration
     usedServiceTypes s = S.toList $ S.unions $ map (\p -> M.keysSet $ s $ p preferences) [preferenceStop, preferenceStockStop, preferenceRestStop]
@@ -1406,82 +1423,87 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                 <a href="#leg-#{locationID l}">
                   _{Txt (locationName l)}
         <p>
-          ^{metricsSummary preferences camino (score pilgrimage) (Just $ sum $ map (length . path) (path pilgrimage)) (Just $ length $ path pilgrimage)}
+          ^{metricsSummary preferences camino (score pilgrimage) daysElapsed daysWalking stages}
           <div .container-fluid>
             <div .row>
               <div .col>
                 ^{svgElevationProfile config maxelev (pilgrimageLabel pilgrimage) (pilgrimageImportant pilgrimage) (pilgrimageLegs pilgrimage)}
     $forall stage <- path pilgrimage
-      <div .card .stage .border-primary .mt-2>
-        <div .card-body>
-          ^{penanceTable preferences camino False False $ score stage}
-          <h3 id="stage-#{locationID (start stage)}" .card-title>
-            <a href="@{LocationRoute (start stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start stage)}
-            \ -
-            <a href="@{LocationRoute (finish stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish stage)}
-            $maybe dates <- metricsDate (score stage)
-              _{DateRangeMsg (fst dates) (snd dates)}
-          <p .card-text>
-            ^{metricsSummary preferences camino (score stage) (Just $ length $ path stage) Nothing}
-          <div .container-fluid>
-            <div .row>
-              <div .col-xs-12 .col-lg-8>
-                ^{svgElevationProfile config maxelev (stageLabel stage) (stageImportant stage) (journeyLegs stage)}
-      $forall day <- path stage
-        <div .card .day .ms-1>
-          <div .card-header>
-            <h4 id="leg-#{locationID (finish day)}">
-              <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
-              \ -
-              <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
-              $if metricsRestpoint (score day)
-                <span title="_{RestpointLabel}" .ca-restpoint>
-              $if metricsStockpoint (score day)
-                <span title="_{StockpointLabel}" .ca-stockpoint>
-              $maybe (day1, day2) <- metricsDate (score day)
-                _{DateRangeMsg day1 day2}
-                $maybe region <- locationRegion $ finish day
-                  $forall (d, cal) <- runReader (namedDates region day1 day2) config
-                    <span .holiday title="_{HolidayEventTitle}">
-                      _{Txt (ceName cal)}
-                      $if day1 /= day2
-                        \ #{endash} _{DateMsg d}
-              _{DistanceFormatted (metricsDistance $ score day)}
+      $with sscore <- score stage
+        <div .card .stage .border-primary .mt-2>
           <div .card-body>
-            ^{penanceTable preferences camino False True $ score day}
+            ^{penanceTable preferences camino False False $ score stage}
+            <h3 id="stage-#{locationID (start stage)}" .card-title>
+              <a href="@{LocationRoute (start stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start stage)}
+              \ -
+              <a href="@{LocationRoute (finish stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish stage)}
+              $maybe (day1, day2) <- metricsDate sscore
+                _{DateRangeMsg day1 day2}
             <p .card-text>
-              ^{metricsSummary preferences camino (score day) Nothing Nothing}
+              ^{metricsSummary preferences camino sscore (metricsDays sscore) (Just $ journeyDays stage) Nothing}
             <div .container-fluid>
               <div .row>
-                <div .col-xs-12 .col-md-6 .col-lg-4>
-                  ^{svgElevationProfile config maxelev (const True) (const False) (dayLegs day)}
-            <ul .card-text .list-unstyled>
-              <li .ms-3>
-                <div .location-summary .plan-leg>
-                  ^{caminoLocationTypeIcon (locationType (start day))}
-                  ^{locationLine config preferences camino (start day)}
-              $forall leg <- path day
-                $with loc <- legTo leg
+                <div .col-xs-12 .col-lg-8>
+                  ^{svgElevationProfile config maxelev (stageLabel stage) (stageImportant stage) (journeyLegs stage)}
+        $forall day <- path stage
+          $with dscore <- score day
+            <div .card .day .ms-1>
+              <div .card-header>
+                <h4 id="leg-#{locationID (finish day)}">
+                  <a href="@{LocationRoute (start day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ start day)}
+                  \ -
+                  <a href="@{LocationRoute (finish day)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish day)}
+                  $if metricsRestpoint dscore
+                    <span title="_{RestpointLabel}" .ca-restpoint>
+                  $if metricsStockpoint dscore
+                    <span title="_{StockpointLabel}" .ca-stockpoint>
+                  $maybe (day1, day2) <- metricsDate dscore
+                    _{DateRangeMsg day1 day2}
+                    $maybe region <- locationRegion $ finish day
+                      $forall (d, cal) <- runReader (namedDates region day1 day2) config
+                        <span .holiday title="_{HolidayEventTitle}">
+                          _{Txt (ceName cal)}
+                          $if day1 /= day2
+                            \ #{endash} _{DateMsg d}
+                  _{DistanceFormatted (metricsDistance $ score day)}
+              <div .card-body>
+                ^{penanceTable preferences camino False True dscore}
+                <p .card-text>
+                  ^{metricsSummary preferences camino (score day) Nothing Nothing Nothing}
+                <div .container-fluid>
+                  <div .row>
+                    <div .col-xs-12 .col-md-6 .col-lg-4>
+                      ^{svgElevationProfile config maxelev (const True) (const False) (dayLegs day)}
+                <ul .card-text .list-unstyled>
                   <li .ms-3>
                     <div .location-summary .plan-leg>
-                      ^{caminoLocationTypeIcon (locationType loc)}
-                      ^{locationLine config preferences camino loc}
-                    <div .leg-summary .leg-line>
-                      ^{legLine preferences camino leg}
-                    $if loc /= finish stage
-                      <div .poi-summary .bar-separated-list>
-                        <ul>
-                          $forall poi <- selectedPois camino loc
-                            <li>
-                              ^{caminoLocationTypeIcon (poiType poi)}
-                              _{Txt (poiName poi)}
-                              $maybe time <- poiTime poi
-                                \ _{TimeMsgPlain time}
-            $forall accom <- metricsAccommodationChoice $ score day
-              <p .card-text>
-                ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
+                      ^{caminoLocationTypeIcon (locationType (start day))}
+                      ^{locationLine config preferences camino (start day)}
+                  $forall leg <- path day
+                    $with loc <- legTo leg
+                      <li .ms-3>
+                        <div .location-summary .plan-leg>
+                          ^{caminoLocationTypeIcon (locationType loc)}
+                          ^{locationLine config preferences camino loc}
+                        <div .leg-summary .leg-line>
+                          ^{legLine preferences camino leg}
+                        $if loc /= finish stage
+                          <div .poi-summary .bar-separated-list>
+                            <ul>
+                              $forall poi <- selectedPois camino loc
+                                <li>
+                                  ^{caminoLocationTypeIcon (poiType poi)}
+                                  _{Txt (poiName poi)}
+                                  $maybe time <- poiTime poi
+                                    \ _{TimeFormatted time}
+                $forall accom <- metricsAccommodationChoice $ score day
+                  <p .card-text>
+                    ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
  |]
  where
+  daysElapsed = metricsDays $ score pilgrimage
+  daysWalking = Just $ pilgrimageDays pilgrimage
+  stages = Just $ pilgrimageStages pilgrimage
   stageLabel stage loc = loc == start stage || elem loc (map finish (path stage))
   stageImportant stage loc = loc == start stage || loc == finish stage
   pilgrimageLabel pilg loc = loc == start pilg || elem loc (map finish (path pilg)) || (S.member loc $ preferenceStops camino) || (S.member loc $ preferenceRestPoints camino)
@@ -1498,9 +1520,9 @@ caminoMapHtml _preferences _camino _solution = [ihamlet|
   |]
 
 featureKeyLine :: Route -> LegType -> Bool -> Bool -> Text -> HtmlUrlI18n CaminoMsg CaminoRoute
-featureKeyLine route legType large used pos = [ihamlet|<line x1="%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
+featureKeyLine route lt large used pos = [ihamlet|<line x1="%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
   where
-    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large False used legType
+    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large False used lt
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
     cap = maybe "" id mcap
 
@@ -1801,9 +1823,9 @@ function showLocationDescription(id) {
 |]
 
 caminoMapScriptStyle :: Route -> Bool -> Bool -> Bool -> LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapScriptStyle route large dummy used legType = [ihamlet|{ color: "#{colour}", weight: #{weight}, "opacity": #{opacity}, dashArray: "#{dashes}", lineCap: "#{cap}" }|]
+caminoMapScriptStyle route large dummy used lt = [ihamlet|{ color: "#{colour}", weight: #{weight}, "opacity": #{opacity}, dashArray: "#{dashes}", lineCap: "#{cap}" }|]
   where
-    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large dummy used legType
+    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large dummy used lt
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
     cap = maybe "" id mcap
 
@@ -1956,7 +1978,6 @@ caminoAllMapScript config tl br caminos = [ihamlet|
     rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoAllLegs c (const True))) caminos
     locations = S.unions $ map (S.fromList . caminoLocations) caminos
     legs = S.unions $ map (\c -> S.fromList $ caminoAllLegs c (const True)) caminos
-    routes = S.empty
     chooseLocationIcon loc = caminoLocationIconSimple loc
     choosePoiIcon poi = caminoPoiIconSimple poi
     chooseLocationTooltip loc = caminoLocationTooltipSimple config loc
@@ -2226,7 +2247,7 @@ caminoHtmlSimple config camino =
   |]
   where
     camino' = preferenceCamino camino
-    preferences = defaultTravelPreferences Walking Normal Pilgrim Nothing
+    preferences = defaultTravelPreferences U.SIUnits Walking Normal Pilgrim Nothing
 
 
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

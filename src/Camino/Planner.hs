@@ -32,13 +32,17 @@ module Camino.Planner (
   , locationChoice
   , hasNonTravel
   , isStockUpDay
+  , journeyDays
   , journeyLegs
+  , metricsDays
   , nonTravelHours
   , normaliseSolution
   , penance
   , openSleeping
+  , pilgrimageDays
   , pilgrimageLegs
   , pilgrimageRests
+  , pilgrimageStages
   , pilgrimageStockpoints
   , pilgrimageStops
   , pilgrimageWaypoints
@@ -382,6 +386,10 @@ combineDates Nothing r2 = r2
 combineDates r1 Nothing = r1
 combineDates (Just (min1, max1)) (Just (min2, max2)) = Just (min min1 min2, max max1 max2)
 
+-- | The number of days spent on this bit
+metricsDays :: Metrics -> Maybe Int
+metricsDays metrics = fmap (\(f, t) -> fromInteger $ C.diffDays t f + 1) (metricsDate metrics)
+
 instance Monoid Metrics where
   mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
 
@@ -446,6 +454,10 @@ normaliseJourney config journey =
       , score = normaliseMetrics config (score journey)
     }
 
+-- | The number of walking days spent on a stage
+journeyDays :: Journey -> Int
+journeyDays journey = length $ path journey
+
 -- | A full pilgrimage, broken into stages
 type Pilgrimage = Chain Location Journey Metrics
 
@@ -458,6 +470,14 @@ normalisePilgrimage config pilgrimage =
       , path = map (normaliseJourney config) (path pilgrimage)
       , score = normaliseMetrics config (score pilgrimage)
     }
+
+-- | The number of walking days spent on a pilgrimage
+pilgrimageDays :: Pilgrimage -> Int
+pilgrimageDays pilgrimage = sum $ map journeyDays $ path pilgrimage
+
+-- | The number of stages on the pilgrimage
+pilgrimageStages :: Pilgrimage -> Int
+pilgrimageStages pilgrimage = length $ path pilgrimage
 
 -- | A complete solution, including accommodation and location metrics
 data Solution = Solution {

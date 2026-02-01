@@ -45,6 +45,7 @@ library
       Camino.Server.Forms
       Camino.Server.Foundation
       Camino.Server.Settings
+      Camino.Units
       Camino.Walking
       Data.Aeson.Formatting
       Data.Cache
@@ -509,6 +510,7 @@ test-suite de-calixtinus-test
       RegionSpec
       SplineSpec
       TestUtils
+      UnitsSpec
       UtilSpec
       WalkingSpec
       XlsxSpec

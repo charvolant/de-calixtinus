@@ -23,15 +23,18 @@ module Camino.Server.Fields (
   , extendedSelectionField
   , fieldSettingsLabelTooltip
   , floatField
+  , floatFieldQuantity
   , implyingCheckListField
   , parsingHiddenField
   , penanceField
   , penanceMapField
-  , rangeField
+  , rangeFieldNumber
+  , rangeFieldQuantity
 ) where
 
 import Camino.Camino (Penance(..))
 import Camino.Preferences (PreferenceRange(..), validRange)
+import qualified Camino.Units as U
 import Camino.Display.I18n (formatPenance)
 import Data.Either (fromRight, isLeft, rights)
 import Data.List (find)
@@ -40,19 +43,22 @@ import Data.Propositional
 import qualified Data.Set as S
 import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
 import Data.Time.Calendar (Day)
+import Data.Util (roundBy)
+import Text.Read (readEither)
 import Yesod.Core
 import Yesod.Form.Fields (parseDate)
 import Yesod.Form.Types
 import Yesod.Form.Functions
 import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
+import Debug.Trace
 
-parseVal :: (Read a) => Text -> Either FormMessage a
-parseVal s = case (reads $ unpack s) of
-        [(v, "")] -> Right v
+parseVal :: (Read a) => (a -> a) -> Text -> Either FormMessage a
+parseVal tr s = case (reads $ unpack s) of
+        [(v, "")] -> Right (tr v)
         _ -> Left $ MsgInvalidNumber s
 
-parseMaybeVal :: (Read a) => Text -> Either FormMessage (Maybe a)
-parseMaybeVal s = if (s  == (""::Text) || s == ("--"::Text)) then Right Nothing else (Just <$> parseVal s)
+parseMaybeVal :: (Read a) => (a -> a) -> Text -> Either FormMessage (Maybe a)
+parseMaybeVal tr s = if (s  == (""::Text) || s == ("--"::Text)) then Right Nothing else (Just <$> parseVal tr s)
 
 -- | Generate a 'FieldSettings' from the given label and tooltip message.
 fieldSettingsLabelTooltip :: RenderMessage site msg => msg -- ^ The label message
@@ -175,101 +181,187 @@ extendedCheckboxFieldList :: (Ord a, RenderMessage site FormMessage) =>
   -> Field (HandlerFor site) (S.Set a) -- ^ The resulting field
 extendedCheckboxFieldList render options = extendedCheckboxFieldList' (renderOptions render options)
 
--- | Create a field that handles preference ranges
-rangeField :: (RenderMessage site FormMessage, Read a, Show a, Ord a, ToMarkup a) => a -> a -> a -> Field (HandlerFor site) (PreferenceRange a)
-rangeField minv maxv stepv = Field
+-- | Create a field that handles preference ranges for things with units
+rangeFieldQuantity :: (RenderMessage site FormMessage, RealFrac a, Read a, Show a, Ord a, ToMarkup a) => U.SystemOfUnits -> U.Quantity -> a -> a -> a -> Field (HandlerFor site) (PreferenceRange a)
+rangeFieldQuantity sou quantity minv maxv stepv = Field
     { fieldParse = \rawVals -> \_fileVals -> case rawVals of
-      [min', lower', target', upper', max'] -> let
+      [sou', min', lower', target', upper', max'] -> let
+            sou'' = read $ unpack sou'
+            storeUnit = U.preferredUnit U.SIUnits quantity
+            displayUnit = U.preferredUnit sou'' quantity
+            parseVal' =  parseVal (U.convertAmount displayUnit storeUnit)
+            parseMaybeVal' =  parseMaybeVal (U.convertAmount displayUnit storeUnit)
             range = PreferenceRange
              <$> pure Nothing
-             <*> parseVal target'
-             <*> parseVal lower'
-             <*> parseVal upper'
-             <*> parseMaybeVal min'
-             <*> parseMaybeVal max'
+             <*> (parseVal' target')
+             <*> (parseVal' lower')
+             <*> (parseVal' upper')
+             <*> (parseMaybeVal' min')
+             <*> (parseMaybeVal' max')
           in
             return $ either (Left . SomeMessage) (Right . Just) (validate range)
       [] -> return $ Right Nothing
       _ -> return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
-    , fieldView = \theId name attrs val isReq ->  [whamlet|
-      <div .row .g-3>
-        <div .col-auto>
-          <input .form-control .text-danger id="#{theId}-min" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showMaybeFloat rangeMinimum val} *{attrs}>
-        <div .col-auto>#{dash}
-        <div .col-auto>
-          <input .form-control id="#{theId}-lower" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat rangeLower val} *{attrs} :isReq:required>
-        <div .col-auto>#{dash}
-        <div .col-auto>
-          <input .form-control .text-success id="#{theId}-target" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat rangeTarget val} *{attrs} :isReq:required>
-        <div .col-auto>#{dash}
-        <div .col-auto>
-          <input .form-control id="#{theId}-upper" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat rangeUpper val} *{attrs} :isReq:required>
-        <div .col-auto>#{dash}
-        <div .col-auto>
-          <input .form-control .text-danger id="#{theId}-max" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showMaybeFloat rangeMaximum val} *{attrs}>
-      |]
+    , fieldView = \theId name attrs val isReq -> let
+          storeUnit = U.preferredUnit U.SIUnits quantity
+          displayUnit = U.preferredUnit sou quantity
+          minv' = roundBy stepv $ U.convertAmount storeUnit displayUnit minv
+          maxv' = roundBy stepv $ U.convertAmount storeUnit displayUnit maxv
+          showFloat f v = either id (pack . show . (roundBy stepv) . (U.convertAmount storeUnit displayUnit) . f) v
+          showMaybeFloat f v = either id (\x -> maybe "--" (pack . show . (roundBy stepv) . (U.convertAmount storeUnit displayUnit)) (f x)) v
+        in
+          [whamlet|
+            <div .row .g-3>
+              <input  id="#{theId}-units" name=#{name} type=hidden value="#{show sou}">
+              <div .col-auto>
+                <input .form-control .text-danger id="#{theId}-min" name=#{name} type=number min=#{minv'} max=#{maxv'} step=#{stepv} value=#{showMaybeFloat rangeMinimum val} *{attrs}>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control id="#{theId}-lower" name=#{name} type=number min=#{minv'} max=#{maxv'} step=#{stepv} value=#{showFloat rangeLower val} *{attrs} :isReq:required>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control .text-success id="#{theId}-target" name=#{name} type=number min=#{minv'} max=#{maxv'} step=#{stepv} value=#{showFloat rangeTarget val} *{attrs} :isReq:required>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control id="#{theId}-upper" name=#{name} type=number min=#{minv'} max=#{maxv'} step=#{stepv} value=#{showFloat rangeUpper val} *{attrs} :isReq:required>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control .text-danger id="#{theId}-max" name=#{name} type=number min=#{minv'} max=#{maxv'} step=#{stepv} value=#{showMaybeFloat rangeMaximum val} *{attrs}>
+            |]
     , fieldEnctype = UrlEncoded
     }
     where
-      showFloat f v = either id (pack . show . f) v
-      showMaybeFloat f v = either id (\x -> maybe "--" (pack . show) (f x)) v
       validate e@(Left _msg) = e
       validate v@(Right r) = if validRange r then v else Left (MsgInvalidEntry "Range not valid")
       dash = '\x2014'
 
 
--- | The standard list of penance options for services
-penanceServiceOptions :: [(Text, Penance, Bool, Html)]
-penanceServiceOptions =
-    map (\(idx, p) -> (pack $ show idx, p, p == mempty, label p)) (zip [1::Int ..] range)
-  where
-    label p = if p == mempty then "--" else formatPenance True p
-    range = [mempty, Penance 0.5, Penance 1.0, Penance 1.5, Penance 2.0, Penance 2.5, Penance 3.0, Penance 4.0, Penance 5.0, Penance 8.0, Penance 10.0, Reject]
+-- | Create a field that handles simple numeric preference ranges
+rangeFieldNumber :: (RenderMessage site FormMessage, Read a, Show a, Ord a, ToMarkup a) => a -> a -> a -> (a -> a) -> (a -> a) -> Field (HandlerFor site) (PreferenceRange a)
+rangeFieldNumber minv maxv stepv toDisplay toStore = Field
+    { fieldParse = \rawVals -> \_fileVals -> case rawVals of
+      [min', lower', target', upper', max'] -> let
+             range = PreferenceRange
+               <$> pure Nothing
+               <*> (parseVal toStore target')
+               <*> (parseVal toStore lower')
+               <*> (parseVal toStore upper')
+               <*> (parseMaybeVal toStore min')
+               <*> (parseMaybeVal toStore max')
+          in
+            return $ either (Left . SomeMessage) (Right . Just) (validate range)
+      [] -> return $ Right Nothing
+      _ -> return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
+    , fieldView = \theId name attrs val isReq -> let
+          showFloat f v = either id (pack . show . toDisplay . f) v
+          showMaybeFloat f v = either id (\x -> maybe "--" (pack . show . toDisplay) (f x)) v
+        in
+          [whamlet|
+            <div .row .g-3>
+              <div .col-auto>
+                <input .form-control .text-danger id="#{theId}-min" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showMaybeFloat rangeMinimum val} *{attrs}>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control id="#{theId}-lower" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat rangeLower val} *{attrs} :isReq:required>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control .text-success id="#{theId}-target" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat rangeTarget val} *{attrs} :isReq:required>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control id="#{theId}-upper" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat rangeUpper val} *{attrs} :isReq:required>
+              <div .col-auto>#{dash}
+              <div .col-auto>
+                <input .form-control .text-danger id="#{theId}-max" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showMaybeFloat rangeMaximum val} *{attrs}>
+            |]
+    , fieldEnctype = UrlEncoded
+    }
+    where
+      validate e@(Left _msg) = e
+      validate v@(Right r) = if validRange r then v else Left (MsgInvalidEntry "Range not valid")
+      dash = '\x2014'
 
+
+milePenance v = Penance $ U.convertAmount U.Mile U.Kilometre v
+
+penanceServiceOptions' :: U.SystemOfUnits -> [Penance]
+penanceServiceOptions' U.SIUnits = [mempty, Penance 0.5, Penance 1.0, Penance 1.5, Penance 2.0, Penance 2.5, Penance 3.0, Penance 4.0, Penance 5.0, Penance 8.0, Penance 10.0, Reject]
+penanceServiceOptions' U.USUnits = [mempty, milePenance 0.25, milePenance 0.5, milePenance 0.75, milePenance 1.0, milePenance 1.5, milePenance 2.0, milePenance 2.5, milePenance 3.0, milePenance 3.5, milePenance 4.0, milePenance 5.0, milePenance 6.0, Reject]
+
+-- | The standard list of penance options for services
+penanceServiceOptions :: U.SystemOfUnits -> [(Text, Penance, Bool, Html)]
+penanceServiceOptions sou =
+    map (\p -> (penanceOption p, p, p == mempty, label p)) range
+  where
+    label p = if p == mempty then "--" else formatPenance sou True p
+    range = penanceServiceOptions' sou
+
+
+penanceAccommodationOptions' :: U.SystemOfUnits -> [Penance]
+penanceAccommodationOptions' U.SIUnits = [mempty, Penance 1.0, Penance 2.0, Penance 3.0, Penance 4.0, Penance 5.0, Penance 6.0, Penance 7.0, Penance 8.0, Penance 10.0, Penance 12.0, Penance 15.0, Reject]
+penanceAccommodationOptions' U.USUnits = [mempty, milePenance 0.5, milePenance 1.0, milePenance 1.5, milePenance 2.0, milePenance 3.0, milePenance 4.0, milePenance 5.0, milePenance 6.0, milePenance 7.0, milePenance 8.0, Reject]
 
 -- | The standard list of penance options for accommodation
-penanceAccommodationOptions :: [(Text, Penance, Bool, Html)]
-penanceAccommodationOptions =
-    map (\(idx, p) -> (pack $ show idx, p, p == mempty, formatPenance True p)) (zip [1::Int ..] range)
+penanceAccommodationOptions :: U.SystemOfUnits -> [(Text, Penance, Bool, Html)]
+penanceAccommodationOptions sou =
+    map (\p -> (penanceOption p, p, p == mempty, formatPenance sou True p)) range
   where
-    range = [mempty, Penance 1.0, Penance 2.0, Penance 3.0, Penance 4.0, Penance 5.0, Penance 6.0, Penance 7.0, Penance 8.0, Penance 10.0, Penance 12.0, Penance 15.0, Reject]
+    range = penanceAccommodationOptions' sou
+
+-- | Make a penance value for an option
+penanceOption :: Penance -> Text
+penanceOption Reject = "reject"
+penanceOption (Penance p) = pack $ show p
 
 -- | Parse a penance value
-parsePenance options s = case find (\(key, _, _, _) -> key == s) options of
-    Just (_, v, _, _) -> Right $ v
-    _ -> Left $ MsgInvalidEntry s
+parsePenance :: Text -> Either FormMessage Penance
+parsePenance "" = Right mempty
+parsePenance "--" = Right mempty
+parsePenance "reject" = Right Reject
+parsePenance v = either (Left . MsgInvalidNumber . pack) (Right . Penance) $ readEither $ unpack v
+
+-- Pick the closest value from a list
+closestPenance _ Reject = Reject
+closestPenance options (Penance p) = closestPenance' options Reject p
+
+closestPenance' [] current _ = current
+closestPenance' ((_, Reject, _, _):rest) current p = closestPenance' rest current p
+closestPenance' ((_, candidate, _, _):rest) Reject p = closestPenance' rest candidate p
+closestPenance' ((_, candidate@(Penance p'), _, _):rest) current@(Penance p'') p = closestPenance' rest current' p
+  where
+    current' = if abs (p - p') < abs (p - p'') then candidate else current
 
 -- | A penance selection field
 penanceSelect :: [(Text, Penance, Bool, Html)] -> Text -> Text -> [(Text, Text)] -> Either Text Penance -> WidgetFor site ()
 penanceSelect options theId name attrs val = [whamlet|
      <select .form-select ##{theId} name=#{name} *{attrs}>
        $forall (key, opt, dflt, label) <- options
-         <option value=#{key} :isSelected dflt opt val:selected>^{label}
+         <option value="#{key}" :isSelected dflt opt val':selected>^{label}
   |]
   where
+    val' = closestPenance options <$> val
     isSelected dflt opt v = either (const dflt) (== opt) v
 
 
 -- | Create a field that handles penances
-penanceField :: (RenderMessage site FormMessage) => Bool -> Field (HandlerFor site) (Penance)
-penanceField accom = Field
-    { fieldParse = parseHelper (parsePenance options)
+penanceField :: (RenderMessage site FormMessage) => U.SystemOfUnits -> Bool -> Field (HandlerFor site) (Penance)
+penanceField sou accom = Field
+    { fieldParse = parseHelper parsePenance
     , fieldView = \theId name attrs val _isReq -> penanceSelect options theId name attrs val
     , fieldEnctype = UrlEncoded
     }
   where
-    options = if accom then penanceAccommodationOptions else penanceServiceOptions
+    options = if accom then penanceAccommodationOptions sou else penanceServiceOptions sou
 
 
 -- | Create a field that handles preference ranges
-penanceMapField :: (RenderMessage site FormMessage, Ord a) => Bool -> Bool -> [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
-penanceMapField accom allVals values = Field
+penanceMapField :: (RenderMessage site FormMessage, Ord a) => U.SystemOfUnits -> Bool -> Bool -> [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
+penanceMapField sou accom allVals values = Field
     { fieldParse = \rawVals -> \_fileVals -> if null rawVals then
           return $ Right Nothing
         else if length values /= length rawVals then
           return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
         else let
-            pvals = map (parsePenance options) rawVals
+            pvals = map parsePenance rawVals
           in
             if any isLeft pvals then
               return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
@@ -289,7 +381,7 @@ penanceMapField accom allVals values = Field
     , fieldEnctype = UrlEncoded
     }
     where
-      options = if accom then penanceAccommodationOptions else penanceServiceOptions
+      options = if accom then penanceAccommodationOptions sou else penanceServiceOptions sou
       makeSub base idx = pack (unpack base ++ "-" ++ show idx)
 
 createCheckFieldCondition' :: (Ord a) =>  M.Map a Int -> Formula a -> Text
@@ -535,11 +627,40 @@ $newline never
     }
   where showVal = either id (pack . show)
 
+
+-- | Enter a float number based on a system of measurements
+floatFieldQuantity :: Monad m => RenderMessage (HandlerSite m) FormMessage => U.SystemOfUnits -> U.Quantity -> Float -> Float -> Float -> Field m Float
+floatFieldQuantity sou quantity minv maxv stepv = Field
+    {
+      fieldParse = \rawVals -> \_fileVals -> case rawVals of
+        [sou', val'] -> let
+              sou'' = read $ unpack sou'
+              storeUnit = U.preferredUnit U.SIUnits quantity
+              displayUnit = U.preferredUnit sou'' quantity
+              val'' =  parseVal (U.convertAmount displayUnit storeUnit) val'
+            in
+              return $ either (Left . SomeMessage) (Right . Just) val''
+        [] -> return $ Right Nothing
+        _ -> return $ Left $ SomeMessage $ MsgInvalidEntry (pack $ show rawVals)
+      , fieldView = \theId name attrs val _isReq -> let
+            storeUnit = U.preferredUnit U.SIUnits quantity
+            displayUnit = U.preferredUnit sou quantity
+            showFloat v = either id (pack . show . roundBy stepv . (U.convertAmount storeUnit displayUnit)) v
+          in
+           toWidget [hamlet|
+$newline never
+    <input .form-control id="#{theId}-units" name=#{name} type=hidden value=#{show sou}>
+    <input .form-control id="#{theId}" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat val} *{attrs}>
+|]
+      , fieldEnctype = UrlEncoded
+    }
+    where
+
 -- | Enter a float number
 floatField :: Monad m => RenderMessage (HandlerSite m) FormMessage => Float -> Float -> Float -> Field m Float
 floatField minv maxv stepv = Field
     {
-        fieldParse = parseHelper $ parseVal
+        fieldParse = parseHelper $ parseVal id
       , fieldView = \theId name attrs val _isReq -> toWidget [hamlet|
 $newline never
     <input .form-control id="#{theId}" name=#{name} type=number min=#{minv} max=#{maxv} step=#{stepv} value=#{showFloat val} *{attrs}>

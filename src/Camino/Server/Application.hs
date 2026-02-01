@@ -25,6 +25,7 @@ import Camino.Camino
 import Camino.Config (AssetConfig(..), Config(..), getAsset, getNotice, getWebRoot)
 import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution, planCamino)
 import Camino.Preferences
+import qualified Camino.Units as U
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.KML
@@ -93,7 +94,7 @@ getHelpR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   defaultLayout $ do
     setTitleI MsgHelpTitle
     toWidget ((helpWidget locales) messages router)
@@ -127,7 +128,7 @@ caminoPage camino = do
     let cprefs = (defaultCaminoPreferences camino) { preferenceStartDate = Just current }
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let messages = renderCaminoMsg config locales
+    let messages = renderCaminoMsg U.SIUnits config locales
     let html = (caminoHtmlSimple config cprefs) messages router
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ caminoName (preferenceCamino cprefs)}|]
@@ -140,7 +141,7 @@ getMapR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   defaultLayout $ do
     setTitleI MsgMapTitle
     toWidget ((mapWidget (caminoAppConfig master) (caminoAppCaminos master)) messages router)
@@ -155,7 +156,7 @@ getMetricR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   defaultLayout $ do
     setTitleI MsgMetricTitle
     toWidget ((metricWidget locales) messages router)
@@ -174,7 +175,7 @@ getAboutR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   defaultLayout $ do
     setTitleI MsgAboutTitle
     toWidget ((aboutWidget locales) messages router)
@@ -377,8 +378,8 @@ stepPage ShowPreferencesStep nextp (Just prefs) help widget enctype = do
     locales <- getLocales
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let messages = renderCaminoMsg config locales
     let preferences = travelPreferencesFrom prefs
+    let messages = renderCaminoMsg (preferenceUnits preferences) config locales
     let camino = caminoPreferencesFrom prefs
     let display = toWidget $ (preferencesHtml False preferences camino) messages router
     stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing Nothing ShowPreferencesStep nextp (Just display) help widget enctype
@@ -396,7 +397,7 @@ helpPopup help' = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config locales
+  let messages = renderCaminoMsg U.SIUnits config locales
   let help'' = (\h -> h messages router) <$> help'
   return $ case help'' of
     Nothing -> (
@@ -489,9 +490,9 @@ showPage solution = do
     locales <- getLocales
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let messages = renderCaminoMsg config locales
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
+    let messages = renderCaminoMsg (preferenceUnits tprefs) config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionJourneyFailure solution)
     addError (solutionPilgrimageFailure solution)
@@ -538,9 +539,10 @@ showXlsx solution = do
     locales <- getLocales
     ct <- liftIO getPOSIXTime
     let config = caminoAppConfig master
-    let messages = renderCaminoMsgText config locales
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
+    let sou = preferenceUnits tprefs
+    let messages = renderCaminoMsgText sou config locales
     let pilgrimage = solutionPilgrimage solution
     let xlsx = createCaminoXlsx config messages tprefs cprefs solution
     let result = fromXlsx ct xlsx

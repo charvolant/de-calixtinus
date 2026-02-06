@@ -2174,21 +2174,22 @@ caminoHtmlBase config preferences camino msolution =
           <a #about-toggle .nav-link role="tab" data-bs-toggle="tab" href="#about-tab">_{AboutLabel}
         <li .nav-item role="presentation">
           <a #key-toggle .nav-link role="tab" data-bs-toggle="tab" href="#key-tab">_{KeyLabel}
-      $maybe solution <- msolution
-        $maybe sid <- solutionID solution
-          <div .btn-group-vertical .float-end .me-1 .mt-2 .ms-3 .mb-2>
-            <a .btn .btn-primary .btn-sm href="#" onclick="toggleDetail()" title="_{ToggleDetailTitle}">
-              <span .ca-detail>
-            <a .btn .btn-secondary .btn-sm href="@{PlanRoute sid}" title="_{PersistentLinkTitle}">
-              <span .ca-link>
-            <a .btn .btn-secondary .btn-sm href="#" onclick="navigator.clipboard.writeText('@{PlanRoute sid}')" title="_{CopyLinkTitle}">
-              <span .ca-copy>
-            <a .btn .btn-secondary .btn-sm href="@{PlanSpreadsheetRoute sid}" title="_{DownloadSpreadsheetTitle}">
-              <span .ca-document-spreadsheet>
-            <a .btn .btn-secondary .btn-sm href="@{PlanKmlRoute sid}" title="_{DownloadKmlTitle}">
-              <span .ca-document-kml>
-      <div .tab-content>
-        <div .tab-pane .active role="tabpanel" id="map-tab">
+        $maybe solution <- msolution
+          $maybe sid <- solutionID solution
+            <div .me-1 .ms-auto>
+              <div .btn-group role="group" aria-label="Actions">
+                <a .btn .btn-primary href="#" onclick="toggleDetail()" title="_{ToggleDetailTitle}">
+                  <span .ca-detail>
+                <a .btn .btn-secondary href="@{PlanRoute sid}" title="_{PersistentLinkTitle}">
+                  <span .ca-link>
+                <a .btn .btn-secondary  href="#" onclick="navigator.clipboard.writeText('@{PlanRoute sid}')" title="_{CopyLinkTitle}">
+                  <span .ca-copy>
+                <a .btn .btn-secondary href="@{PlanSpreadsheetRoute sid}" title="_{DownloadSpreadsheetTitle}">
+                  <span .ca-document-spreadsheet>
+                <a .btn .btn-secondary href="@{PlanKmlRoute sid}" title="_{DownloadKmlTitle}">
+                  <span .ca-document-kml>
+     <div .tab-content>
+         <div .tab-pane .active role="tabpanel" id="map-tab">
           ^{caminoMapHtml preferences camino msolution}
         $maybe p <- pilgrimage
           <div .tab-pane role="tabpanel" id="plan-tab">

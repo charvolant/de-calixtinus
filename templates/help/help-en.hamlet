@@ -459,23 +459,23 @@
 
 <p .clearfix>
   <div .aside .m-1 .p-1 .float-end>
-    <div .btn-group-vertical>
-      <button .btn .btn-primary .btn-sm title="Show/hide detail">
-        <span .ca-detail>
-      <button .btn .btn-secondary .btn-sm title="Persistent Link">
-        <span .ca-link>
-      <button .btn .btn-secondary .btn-sm title="Copy Link">
-        <span .ca-copy>
-      <button .btn .btn-secondary .btn-sm title="Download Spreadhseet">
-        <span .ca-document-spreadsheet>
-      <button .btn .btn-secondary .btn-sm title="Download KML">
-        <span .ca-document-kml>
+    <div .btn-group role="group" aria-label="Actions">
+      <a .btn .btn-primary href="#" title="Show/hide additional detail">
+        <span class="ca-detail">
+      <a .btn .btn-secondary href="#" title="Persistent Link">
+        <span class="ca-link">
+      <a .btn .btn-secondary href="#" title="Copy Link">
+        <span class="ca-copy">
+      <a .btn .btn-secondary hef="#" title="Download Spreadsheet">
+        <span class="ca-document-spreadsheet">
+      <a .btn .btn-secondary href="#" title="Download KML">
+        <span class="ca-document-kml">
   On each tab of the plan is a small menu on the right.
   This menu allows you to link to and download the plan in various ways:
 
 <dl .row .clearfix>
   <dt .col-1>
-    <button .btn .btn-primary .btn-sm>
+    <button .btn .btn-primary>
       <span .ca-detail>
   <dd .col-11>
     Show or hide detail.
@@ -484,7 +484,7 @@
     At the start, the detail is hidden; you can show it when you want to dive into whether some location is a good
     choice or not.
   <dt .col-1>
-    <button .btn .btn-secondary .btn-sm>
+    <button .btn .btn-secondary>
       <span .ca-link>
   <dd .col-11>
     A link to a persistent version of the plan.
@@ -495,12 +495,12 @@
       The plan identifier is randomly generated and there is nothing in the plan that personally identifies you.
       However, share the plan with caution.
   <dt .col-1>
-    <button .btn .btn-secondary .btn-sm>
+    <button .btn .btn-secondary>
       <span .ca-copy>
   <dd .col-11>
     Copy the persistent link to the clipboard, so that you can share it via email, etc.
   <dt .col-1>
-    <button .btn .btn-secondary .btn-sm>
+    <button .btn .btn-secondary>
       <span .ca-document-spreadsheet>
   <dd .col-11>
     Download the plan in the form of a spreadsheet, openable by Microsoft Office or LibreOffice.
@@ -511,7 +511,7 @@
       Recalculating values like penance and fatigue is beyond the abilities of the spreadsheet,
       so estimates of time, distance and effort will gradually diverge from reality as you modify things.
   <dt .col-1>
-    <button .btn .btn-secondary .btn-sm>
+    <button .btn .btn-secondary>
       <span .ca-document-kml>
   <dd .col-11>
     Download the plan in the form of a KML file, openable by Google Earth or Maps.

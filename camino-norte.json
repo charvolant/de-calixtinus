@@ -9759,8 +9759,8 @@
     },
     {
       "id": "N-NF",
-      "name": "Meet the Camino Frances at Lavacolla@en",
-      "description": "An alternative route from Boimorto to Lavacolla. The route avoids Arzúa and the more busy Camino Frances for some distance.@en",
+      "name": "Meet the Camino Frances at San Paio@en",
+      "description": "An alternative route from Boimorto to San Paio/Lavacolla. The route avoids Arzúa and the more busy Camino Frances for some distance.@en",
       "locations": [ "N-FR1", "N-FR2", "N-FR3", "N-FR4", "N-FR5", "N-FR6", "N-FR7", "N-FR8", "N-FR9", "N-FR10" ],
       "palette": {
         "colour": "#fe5537"
@@ -9783,7 +9783,7 @@
     {
       "id": "N-NO",
       "name": "Meet the Camino Frances at A Brea (O Pino)@en",
-      "description": "An variation on the route from Boimorto to Lavacolla, meeting the Camino Frances earlier, at A Brea.@en",
+      "description": "An variation on the route from Boimorto to San Paio, meeting the Camino Frances earlier, at A Brea.@en",
       "locations": [ "N-FR11", "N-FR12", "N-FR13" ],
       "palette": {
         "colour": "#fe3e1c"
@@ -9845,19 +9845,19 @@
       "exclude": [ "N-N241", "N-N242", "N-N2433", "N-N244", "N-N245" ]
     },
     {
-      "description": "Changes for the route from Boimorto to Lavacolla",
+      "description": "Changes for the route from Boimorto to San Paio",
       "condition": "N-NF",
       "allows": [ "N-NO" ],
       "exclude": [
         "N-N248", "N-N249", "F-F235", "F-F236", "F-F237", "F-F238", "F-F239", "F-F240", "F-F241", "F-F242",
-        "F-F243", "F-F244", "F-F245", "F-F246", "F-F247"
+        "F-F243", "F-F244", "F-F245", "F-F246"
       ]
     },
     {
       "description": "Changes for the route from Boimorto to A Brea variant",
       "condition": "N-NO",
       "requires": [ "N-NF" ],
-      "include": [ "F-F242", "F-F243", "F-F244", "F-F245", "F-F246", "F-F247" ],
+      "include": [ "F-F242", "F-F243", "F-F244", "F-F245", "F-F246" ],
       "exclude": [ "N-FR4", "N-FR5", "N-FR6", "N-FR7", "N-FR8", "N-FR9", "N-FR10" ]
     }
   ],

@@ -10,7 +10,7 @@ and this project adheres to the
 
 ### Fixed
 
-* Invalid meeting point for Camino del Norte French route bypass ([#11]](https://github.com/charvolant/de-calixtinus/issues/11)
+* Invalid meeting point for Camino del Norte French route bypass ([#11](https://github.com/charvolant/de-calixtinus/issues/11))
 
 ## 0.9 - 2026-01-03
 

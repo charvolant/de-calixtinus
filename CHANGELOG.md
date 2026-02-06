@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.9.1 - 2026-02-06
+
+### Fixed
+
+* Invalid meeting point for Camino del Norte French route bypass ([#11]](https://github.com/charvolant/de-calixtinus/issues/11)
+
 ## 0.9 - 2026-01-03
 
 ### Added

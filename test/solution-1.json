@@ -414,6 +414,7 @@
       "target": 6,
       "upper": 8
     },
-    "travel": "Walking"
+    "travel": "Walking",
+    "units": "SIUnits"
   }
 }

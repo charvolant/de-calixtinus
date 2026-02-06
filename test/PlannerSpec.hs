@@ -6,6 +6,7 @@ import Test.HUnit(Test(..), assertEqual, assertBool, Assertion)
 import Camino.Planner
 import Camino.Camino
 import Camino.Preferences
+import qualified Camino.Units as U
 import TestUtils
 import Data.Aeson
 import Data.Description
@@ -112,6 +113,7 @@ stopPrefs3 = StopPreferences {
 }
 
 preferences1 = TravelPreferences {
+    preferenceUnits = U.SIUnits,
     preferenceTravel = Walking,
     preferenceFitness = Normal,
     preferenceComfort = Pilgrim,
@@ -127,6 +129,7 @@ preferences1 = TravelPreferences {
 
 
 preferences2 = TravelPreferences {
+    preferenceUnits = U.SIUnits,
     preferenceTravel = Cycling,
     preferenceFitness = Normal,
     preferenceComfort = Pilgrim,

@@ -42,7 +42,7 @@ instance Graph TestGraph TestEdge TestVertex where
   outgoing (TestGraph edges) a = filter (\e -> a == source e) edges
   edge (TestGraph edges) a b = L.find (\e -> source e == a && target e == b) edges
   mirror (TestGraph edges) = TestGraph (map (\(Edge a b) -> Edge b a) edges)
-  subgraph (TestGraph edges) vt et = TestGraph (filter (\e -> et e && vt (source e) vs && vt (target e)) edges)
+  subgraph (TestGraph edges) vt et = TestGraph (filter (\e -> et e && vt (source e) && vt (target e)) edges)
   
   
 graph1 = TestGraph [

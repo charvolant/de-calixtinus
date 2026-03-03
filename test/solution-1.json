@@ -1,151 +1,129 @@
 {
-  "camino-preferences": {
-    "camino": "Test",
-    "excluded": [],
-    "finish": "C",
-    "pois": [],
-    "rest-points": [],
-    "routes": [
-      "R1"
-    ],
-    "start": "A",
-    "start-date": "2025-01-16",
-    "stops": []
-  },
-  "choices": {
-    "rest-accommodation": {
-      "A": {
-        "choice": "Camping",
-        "features": null,
-        "penance": "reject"
-      },
-      "B": {
-        "choice": "B#2",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C#1",
-        "features": [
-          "Restaurant"
-        ],
-        "penance": null
-      }
-    },
-    "rest-location": {
-      "A": {
-        "choice": "A",
-        "features": null,
-        "penance": null
-      },
-      "B": {
-        "choice": "B",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C",
-        "features": null,
-        "penance": null
-      }
-    },
-    "rest-pressure": {
-      "A": {
-        "choice": "A",
-        "features": null,
-        "penance": null
-      },
-      "B": {
-        "choice": "B",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C",
-        "features": null,
-        "penance": null
-      }
-    },
-    "stock-accommodation": {
-      "A": {
-        "choice": "Camping",
-        "features": null,
-        "penance": "reject"
-      },
-      "B": {
-        "choice": "PilgrimAlbergue",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C#1",
-        "features": [
-          "Restaurant"
-        ],
-        "penance": null
-      }
-    },
-    "stock-location": {
-      "A": {
-        "choice": "A",
-        "features": null,
-        "penance": null
-      },
-      "B": {
-        "choice": "B",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C",
-        "features": null,
-        "penance": null
-      }
-    },
-    "stop-accommodation": {
-      "A": {
-        "choice": "Camping",
-        "features": null,
-        "penance": "reject"
-      },
-      "B": {
-        "choice": "PilgrimAlbergue",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C#1",
-        "features": [
-          "Restaurant"
-        ],
-        "penance": null
-      }
-    },
-    "stop-location": {
-      "A": {
-        "choice": "A",
-        "features": null,
-        "penance": null
-      },
-      "B": {
-        "choice": "B",
-        "features": null,
-        "penance": null
-      },
-      "C": {
-        "choice": "C",
-        "features": null,
-        "penance": null
-      }
-    }
-  },
   "id": "S-1",
   "locations": [
     "A",
     "B",
     "C"
   ],
-  "metadata": null,
+  "camino-preferences": {
+    "routes": [
+      "R1"
+    ],
+    "camino": "Test",
+    "excluded": [ ],
+    "finish": "C",
+    "start": "A",
+    "start-date": "2025-01-16"
+  },
+  "choices": {
+    "rest-accommodation": {
+      "A": {
+        "choice": "Camping",
+        "penance": "reject"
+      },
+      "B": {
+        "choice": "B#2",
+        "penance": null
+      },
+      "C": {
+        "features": [
+          "Restaurant"
+        ],
+        "choice": "C#1",
+        "penance": null
+      }
+    },
+    "rest-location": {
+      "A": {
+        "choice": "A",
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "penance": null
+      }
+    },
+    "rest-pressure": {
+      "A": {
+        "choice": "A",
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "penance": null
+      }
+    },
+    "stock-accommodation": {
+      "A": {
+        "choice": "Camping",
+        "penance": "reject"
+      },
+      "B": {
+        "choice": "PilgrimAlbergue",
+        "penance": null
+      },
+      "C": {
+        "features": [
+          "Restaurant"
+        ],
+        "choice": "C#1",
+        "penance": null
+      }
+    },
+    "stock-location": {
+      "A": {
+        "choice": "A",
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "penance": null
+      }
+    },
+    "stop-accommodation": {
+      "A": {
+        "choice": "Camping",
+        "penance": "reject"
+      },
+      "B": {
+        "choice": "PilgrimAlbergue",
+        "penance": null
+      },
+      "C": {
+        "features": [
+          "Restaurant"
+        ],
+        "choice": "C#1",
+        "penance": null
+      }
+    },
+    "stop-location": {
+      "A": {
+        "choice": "A",
+        "penance": null
+      },
+      "B": {
+        "choice": "B",
+        "penance": null
+      },
+      "C": {
+        "choice": "C",
+        "penance": null
+      }
+    }
+  },
   "pilgrimage": {
     "finish": "C",
     "path": [
@@ -156,53 +134,49 @@
             "finish": "C",
             "path": [
               {
-                "ascent": 100,
-                "descent": 50,
-                "description": null,
-                "distance": 2,
+                "ascent": 100.0,
+                "descent": 50.0,
+                "distance": 2.0,
                 "from": "A",
                 "penance": null,
-                "time": null,
                 "to": "B",
-                "type": null,
                 "waypoints": null
               },
               {
-                "ascent": 0,
-                "descent": 350,
-                "description": null,
+                "ascent": null,
+                "descent": 350.0,
                 "distance": 3.5,
                 "from": "B",
                 "penance": null,
-                "time": null,
                 "to": "C",
-                "type": null,
                 "waypoints": null
               }
             ],
             "score": {
-              "accommodation": 0,
+              "rest-points": 0.0,
+              "time": 1.1603495,
+              "accommodation": 0.0,
               "accommodation-choice": [
                 {
-                  "choice": "C#1",
                   "features": [
                     "Restaurant"
                   ],
+                  "choice": "C#1",
                   "penance": null
                 }
               ],
-              "ascent": 100,
+              "ascent": 100.0,
               "date": [
                 "2025-01-16",
                 "2025-01-16"
               ],
-              "day-services": 0,
-              "descent": 400,
+              "day-services": 0.0,
+              "descent": 400.0,
               "distance": 5.5,
-              "distance-adjust": 0,
-              "fatigue": 0,
-              "location": 0,
-              "misc": 0,
+              "distance-adjust": 0.0,
+              "fatigue": 0.0,
+              "location": 0.0,
+              "misc": 0.0,
               "missing-day-services": [
                 "Pharmacy",
                 "Bank"
@@ -213,43 +187,43 @@
               "penance": 6.9413977,
               "perceived-distance": 4.641398,
               "poi-time": null,
-              "rest": 0,
-              "rest-days": 0,
+              "rest": 0.0,
+              "rest-days": 0.0,
               "rest-point": true,
-              "rest-points": 0,
-              "rest-pressure": 0,
+              "rest-pressure": 0.0,
               "stock-point": false,
-              "stop": 2,
+              "stop": 2.0,
               "stop-services": 0.3,
-              "time": 1.1603495,
-              "time-adjust": 0
+              "time-adjust": 0.0
             },
             "start": "A"
           }
         ],
         "score": {
-          "accommodation": 0,
+          "rest-points": 0.0,
+          "time": 1.1603495,
+          "accommodation": 0.0,
           "accommodation-choice": [
             {
-              "choice": "C#1",
               "features": [
                 "Restaurant"
               ],
+              "choice": "C#1",
               "penance": null
             }
           ],
-          "ascent": 100,
+          "ascent": 100.0,
           "date": [
             "2025-01-16",
             "2025-01-16"
           ],
-          "day-services": 0,
-          "descent": 400,
+          "day-services": 0.0,
+          "descent": 400.0,
           "distance": 5.5,
-          "distance-adjust": 0,
-          "fatigue": 16,
-          "location": 0,
-          "misc": 0,
+          "distance-adjust": 0.0,
+          "fatigue": 16.0,
+          "location": 0.0,
+          "misc": 0.0,
           "missing-day-services": [
             "Pharmacy",
             "Bank"
@@ -260,43 +234,43 @@
           "penance": 22.941399,
           "perceived-distance": 4.641398,
           "poi-time": null,
-          "rest": 0,
-          "rest-days": 0,
+          "rest": 0.0,
+          "rest-days": 0.0,
           "rest-point": true,
-          "rest-points": 0,
-          "rest-pressure": 0,
+          "rest-pressure": 0.0,
           "stock-point": false,
-          "stop": 2,
+          "stop": 2.0,
           "stop-services": 0.3,
-          "time": 1.1603495,
-          "time-adjust": 0
+          "time-adjust": 0.0
         },
         "start": "A"
       }
     ],
     "score": {
-      "accommodation": 0,
+      "rest-points": 0.0,
+      "time": 1.1603495,
+      "accommodation": 0.0,
       "accommodation-choice": [
         {
-          "choice": "C#1",
           "features": [
             "Restaurant"
           ],
+          "choice": "C#1",
           "penance": null
         }
       ],
-      "ascent": 100,
+      "ascent": 100.0,
       "date": [
         "2025-01-16",
         "2025-01-16"
       ],
-      "day-services": 0,
-      "descent": 400,
+      "day-services": 0.0,
+      "descent": 400.0,
       "distance": 5.5,
-      "distance-adjust": 0,
-      "fatigue": 16,
-      "location": 0,
-      "misc": 0,
+      "distance-adjust": 0.0,
+      "fatigue": 16.0,
+      "location": 0.0,
+      "misc": 0.0,
       "missing-day-services": [
         "Pharmacy",
         "Bank"
@@ -307,16 +281,14 @@
       "penance": 22.941399,
       "perceived-distance": 4.641398,
       "poi-time": null,
-      "rest": 0,
-      "rest-days": 0,
+      "rest": 0.0,
+      "rest-days": 0.0,
       "rest-point": true,
-      "rest-points": 0,
-      "rest-pressure": 0,
+      "rest-pressure": 0.0,
       "stock-point": false,
-      "stop": 2,
+      "stop": 2.0,
       "stop-services": 0.3,
-      "time": 1.1603495,
-      "time-adjust": 0
+      "time-adjust": 0.0
     },
     "start": "A"
   },
@@ -324,26 +296,27 @@
     "comfort": "Pilgrim",
     "distance-range": {
       "derived": null,
-      "lower": 2,
-      "max": 10,
+      "lower": 2.0,
+      "max": 10.0,
       "min": null,
-      "target": 4,
-      "upper": 8
+      "target": 4.0,
+      "upper": 8.0
     },
     "fitness": "Normal",
     "poi-categories": [
       "ReligiousPoi"
     ],
-    "rest-pressure": 10,
+    "rest-pressure": 10.0,
     "rest-range": {
       "derived": null,
-      "lower": 5,
-      "max": 8,
+      "lower": 5.0,
+      "max": 8.0,
       "min": null,
-      "target": 6,
-      "upper": 7
+      "target": 6.0,
+      "upper": 7.0
     },
     "rest-stop": {
+      "services": { "Groceries": 0.3, "Restaurant": 0.2 },
       "accommodation": {
         "Hotel": 0.5,
         "PilgrimAlbergue": 1.5,
@@ -353,10 +326,6 @@
         "City": 0.5,
         "Town": 0.9,
         "Village": 1.5
-      },
-      "services": {
-        "Groceries": 0.3,
-        "Restaurant": 0.2
       },
       "services-route": {
         "Bank": 0.1,
@@ -365,6 +334,7 @@
       "transport-links": true
     },
     "stock-stop": {
+      "services": { "Groceries": 0.3, "Restaurant": 0.2 },
       "accommodation": {
         "Hotel": 0.5,
         "PilgrimAlbergue": 1.5,
@@ -374,10 +344,6 @@
         "City": 0.5,
         "Town": 0.9,
         "Village": 1.5
-      },
-      "services": {
-        "Groceries": 0.3,
-        "Restaurant": 0.2
       },
       "services-route": {
         "Bank": 0.1,
@@ -386,6 +352,7 @@
       "transport-links": true
     },
     "stop": {
+      "services": { "Groceries": 0.3, "Restaurant": 0.2 },
       "accommodation": {
         "Hotel": 0.5,
         "PilgrimAlbergue": 1.5,
@@ -395,10 +362,6 @@
         "City": 0.5,
         "Town": 0.9,
         "Village": 1.5
-      },
-      "services": {
-        "Groceries": 0.3,
-        "Restaurant": 0.2
       },
       "services-route": {
         "Bank": 0.1,
@@ -408,11 +371,11 @@
     },
     "time-range": {
       "derived": null,
-      "lower": 0,
-      "max": 10,
+      "lower": 0.0,
+      "max": 10.0,
       "min": null,
-      "target": 6,
-      "upper": 8
+      "target": 6.0,
+      "upper": 8.0
     },
     "travel": "Walking",
     "units": "SIUnits"

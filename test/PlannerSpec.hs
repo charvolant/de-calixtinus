@@ -5,10 +5,13 @@ module PlannerSpec(testPlanner) where
 import Test.HUnit(Test(..), assertEqual, assertBool, Assertion)
 import Camino.Planner
 import Camino.Camino
+import Camino.Display.JSON
 import Camino.Preferences
 import qualified Camino.Units as U
 import TestUtils
 import Data.Aeson
+import Data.Aeson.Formatting (encodePretty)
+import qualified Data.ByteString.Lazy as LB
 import Data.Description
 import Data.Localised
 import qualified Data.Map as M
@@ -292,9 +295,9 @@ cpreferences1 = CaminoPreferences {
   preferenceStartDate = Just $ fromGregorian 2025 January 16
 }
 
-accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) stopPrefs1 camino1) preferences1 camino1 location1 location3 (const True)
+accommodationMap1 = buildTripChoiceMap (accommodationChoice (const True) stopPrefs1 camino1) preferences1 camino1 location1 location3 (const True) (const True)
 
-locationMap1 = buildTripChoiceMap (locationChoice stopPrefs1) preferences1 camino1 location1 location3 (const True)
+locationMap1 = buildTripChoiceMap (locationChoice stopPrefs1) preferences1 camino1 location1 location3 (const True) (const True)
 
 rpMap1 = Nothing
 
@@ -472,7 +475,8 @@ testSolution1 config = TestCase (do
     let solution = planCamino config preferences1 cpreferences1
     let solution' = solution { solutionID = Just "S-1" }
     let file = testdir </> "solution-1" <.> "json"
-    encodeFile file solution'
+    let encoded = encodePretty caminoPrintOptions $ toJSON solution'
+    LB.writeFile file encoded
     exists <- doesFileExist file
     assertBool "Solution 1 1" exists
     actual <- readFile file

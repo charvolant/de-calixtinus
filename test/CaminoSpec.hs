@@ -103,7 +103,7 @@ route4 = Route "R4" (wildcardText "Route 4") (wildcardDescription "Route 4") Tru
 
 condition1 = And [Variable route1, Not $ Variable route2]
 
-logic1 = RouteLogic (Just "Route Logic 1") condition1 (S.singleton route3) S.empty (S.singleton route4) [locationI1, locationI2] [locationE1]
+logic1 = RouteLogic (Just "Route Logic 1") condition1 (S.singleton route3) S.empty (S.singleton route4) [locationI1, locationI2] [locationE1] []
 
 camino1 :: Camino
 camino1 = Camino {

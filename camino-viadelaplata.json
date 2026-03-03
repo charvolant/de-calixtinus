@@ -1485,7 +1485,7 @@
     {
       "id": "V-V51",
       "name": "Embalse de Alcántara",
-      "type": "Park",
+      "type": "WaterBody",
       "position": { "latitude": 39.72757, "longitude": -6.44888, "elevation": 262 },
       "region": "ES-EX",
       "services": [ ],

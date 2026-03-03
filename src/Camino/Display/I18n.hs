@@ -343,6 +343,8 @@ data CaminoMsg =
   | WalkingTitle
   | WarningTitle
   | WashingMachineTitle
+  | WaterBodyDescription
+  | WaterBodyTitle
   | WaypointLabel
   | WharfDescription
   | WharfTitle
@@ -719,6 +721,8 @@ renderCaminoMsgDefault _ _ WalkingTitle = "Walking"
 renderCaminoMsgDefault _ _ WalkingNaismithTitle = "Walking (strong walkers)"
 renderCaminoMsgDefault _ _ WarningTitle= "Warning"
 renderCaminoMsgDefault _ _ WashingMachineTitle = "Washing Machine"
+renderCaminoMsgDefault _ _ WaterBodyDescription = "Lake, reservoir, river, canal, etc."
+renderCaminoMsgDefault _ _ WaterBodyTitle = "Water"
 renderCaminoMsgDefault _ _ WaypointLabel = "Waypoint"
 renderCaminoMsgDefault _ _ WharfDescription = "A wharf, quay or pier connecting to a boat"
 renderCaminoMsgDefault _ _ WharfTitle = "Wharf"

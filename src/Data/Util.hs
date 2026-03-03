@@ -30,6 +30,9 @@ module Data.Util (
   , maybeMax
   , maybeMin
   , maybeSum
+  , nothingIfDef
+  , nothingIfNull
+  , nothingIfZero
   , partition
   , roundBy
   , scanDirectory
@@ -41,6 +44,7 @@ module Data.Util (
 
 import Control.Monad
 import Data.Char (isLetter, isPunctuation)
+import Data.Default.Class
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Set as S
 import qualified Data.Text as T
@@ -476,3 +480,15 @@ floorBy b v = b * fromInteger (floor $ v / b)
 -- 50
 roundBy :: (RealFrac a) => a -> a -> a
 roundBy b v = b * fromInteger (round $ v / b)
+
+-- | Convert an element with a default value into a Nothing
+nothingIfDef :: (Default a, Eq a) => a -> Maybe a
+nothingIfDef v = if v == def then Nothing else Just v
+
+-- | Convert a possibly empty collection into a Nothing
+nothingIfNull :: (Foldable m) => m a -> Maybe (m a)
+nothingIfNull v = if null v then Nothing else Just v
+
+-- | Convert a possibily zero value into a Nothing
+nothingIfZero :: (Num a, Eq a) => a -> Maybe a
+nothingIfZero v = if v == 0 then Nothing else Just v

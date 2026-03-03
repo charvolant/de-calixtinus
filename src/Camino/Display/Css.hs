@@ -225,6 +225,7 @@ iconList = [
     ("ca-walking", '\xe080'),
     ("ca-warning", '\xe093'),
     ("ca-washing-machine", '\xe061'),
+    ("ca-waterbody", '\xe059'),
     ("ca-wharf", '\xe054'),
     ("ca-wifi", '\xe060'),
     ("ca-winery", '\xe01c')
@@ -278,10 +279,14 @@ featureLineStyle route True _ True _ = (toCssColour $ featureRouteColour route, 
 featureLineStyle route True _ False _ = (toCssColour $ featureRouteDesaturatedColour route, 4, 1.0, Nothing, Nothing)
 featureLineStyle route False True True _ = (toCssColour $ featureRouteColour route, 6, 1.0, Just [6, 6], Just "round")
 featureLineStyle route False True False _ = (toCssColour $ featureRouteColour route, 4, 0.5, Just [6, 10, 2, 10], Just "round")
+featureLineStyle route False False True Trail = (toCssColour $ featureRouteColour route, 6, 1.0, Just [6, 6], Just "round")
+featureLineStyle route False False True CyclePath = (toCssColour $ featureRouteColour route, 6, 1.0, Just [20, 6, 4, 6], Just "round")
 featureLineStyle route False False True FerryLink = (toCssColour $ featureRouteBlueColour route, 6, 1.0, Nothing, Nothing)
 featureLineStyle route False False True BoatLink = (toCssColour $ featureRouteBlueColour route, 6, 1.0, Nothing, Nothing)
 featureLineStyle route False False True TrainLink = (toCssColour $ featureRouteGreyColour route, 6, 1.0, Just [4, 4, 2, 4], Just "butt")
 featureLineStyle route False False True _ = (toCssColour $ featureRouteColour route, 6, 1.0, Nothing, Nothing)
+featureLineStyle route False False False Trail = (toCssColour $ featureRouteColour route, 4, 1.0, Just [6, 10], Just "round")
+featureLineStyle route False False False CyclePath = (toCssColour $ featureRouteColour route, 4, 1.0, Just [16, 10, 2, 10], Just "round")
 featureLineStyle route False False False FerryLink = (toCssColour $ featureRouteBlueColour route, 4, 1.0, Just [6, 10], Just "round")
 featureLineStyle route False False False BoatLink = (toCssColour $ featureRouteBlueColour route, 4, 1.0, Just [6, 10], Just "round")
 featureLineStyle route False False False TrainLink = (toCssColour $ featureRouteGreyColour route, 4, 1.0, Just [4, 6, 2, 6], Just "butt")

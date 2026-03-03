@@ -63,6 +63,7 @@ module Camino.Camino (
   , caminoAllLegs
   , caminoBbox
   , caminoDump
+  , caminoExcludedLegs
   , caminoFeatureMap
   , caminoLegRoute
   , caminoNameLabel
@@ -135,12 +136,13 @@ import Data.Scientific (fromFloatDigits, toRealFloat)
 import Data.Summary
 import Data.Text (Text, isPrefixOf, pack, unpack)
 import qualified Data.Text as T
-import Data.Util (headWithError, lastWithError)
+import Data.Util (headWithError, lastWithError, nothingIfDef, nothingIfNull, nothingIfZero)
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
 import Text.Read (readMaybe)
+import Debug.Trace
 
 -- For debugging
 -- _traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v
@@ -253,14 +255,14 @@ instance ToJSON LatLong where
         "latitude" .= latitude'
       , "longitude" .= longitude'
       , "elevation" .= elevation'
-      , "srs" .= (if srs' == def then Nothing else Just srs')
+      , "srs" .= nothingIfDef srs'
     ]
   toEncoding (LatLong latitude' longitude' elevation' srs') =
     pairs $
          "latitude" .= latitude'
       <> "longitude" .= longitude'
       <> "elevation" .?= elevation'
-      <> "srs" .?= (if srs' == def then Nothing else Just srs')
+      <> "srs" .?= nothingIfDef srs'
 
 instance NFData LatLong
 
@@ -639,6 +641,7 @@ data LocationType =
    | Wharf -- ^ A boat/ferry transfer point
    | Airport -- ^ An airport, airfield, aerodrome etc.
    | Farmland -- ^ Field, greenhouses, pasture etc.
+   | WaterBody -- ^ Lake, reservoir, river, canal etc.
    | Industry -- ^ An industiral area
    | Poi -- ^ A generic point of interest
    | PlaceholderLocation -- ^ A placeholder location
@@ -795,7 +798,7 @@ instance ToJSON PointOfInterest where
         <> "position" .?= position'
         <> "hours" .?= hours'
         <> "time" .?= time'
-        <> "events" .?= (if null events' then Nothing else Just events')
+        <> "events" .?= nothingIfNull events'
 
 instance NFData PointOfInterest
 
@@ -910,8 +913,8 @@ instance ToJSON Location where
         , "region" .= (placeholderID <$> region')
         , "services" .= services'
         , "accommodation" .= accommodation'
-        , "pois" .= (if null pois' then Nothing else Just pois')
-        , "events" .= (if null events' then Nothing else Just events')
+        , "pois" .= nothingIfNull pois'
+        , "events" .= nothingIfNull events'
         , "camping" .= (if camping' == locationCampingDefault type' then Nothing else Just camping')
         , "always-open" .= (if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen')
         ]
@@ -926,8 +929,8 @@ instance ToJSON Location where
         <> "region" .?= (placeholderID <$> region')
         <> "services" .= services'
         <> "accommodation" .= accommodation'
-        <> "pois" .?= (if null pois' then Nothing else Just pois')
-        <> "events" .?= (if null events' then Nothing else Just events')
+        <> "pois" .?= nothingIfNull pois'
+        <> "events" .?= nothingIfNull events'
         <> "camping" .?= (if camping' == locationCampingDefault type' then Nothing else Just camping')
         <> "always-open" .?= (if alwaysOpen' == locationAlwaysOpenDefault type' then Nothing else Just alwaysOpen')
 
@@ -1095,11 +1098,10 @@ instance FromJSON Leg where
       description' <- v .:? "description" .!= Nothing
       distance' <- v .: "distance"
       time' <- v .:? "time" .!= Nothing
-      ascent' <- v .: "ascent"
-      descent' <- v .: "descent"
+      ascent' <- v .:? "ascent" .!= 0.0
+      descent' <- v .:? "descent" .!= 0.0
       penance' <- v .:? "penance" .!= Nothing
       waypoints' <- v .:? "waypoints" .!= []
-
       return Leg {
           legType = type'
         , legFrom = from'
@@ -1118,29 +1120,29 @@ instance FromJSON Leg where
 instance ToJSON Leg where
   toJSON (Leg type' from' to' description' distance' time' ascent' descent' penance' waypoints' _segments') =
       object [
-          "type" .= (if type' == def then Nothing else Just type')
+          "type" .= nothingIfDef type'
         , "from" .= locationID from'
         , "to" .= locationID to'
         , "description" .= description'
         , "distance" .= distance'
         , "time" .= time'
-        , "ascent" .= ascent'
-        , "descent" .= descent'
+        , "ascent" .= nothingIfZero ascent'
+        , "descent" .= nothingIfZero descent'
         , "penance" .= penance'
-        , "waypoints" .= if null waypoints' then Nothing else Just waypoints'
+        , "waypoints" .= nothingIfNull waypoints'
         ]
   toEncoding (Leg type' from' to' description' distance' time' ascent' descent' penance' waypoints' _segments') =
       pairs $
-          "type" .?= (if type' == def then Nothing else Just type')
-        <> "from" .= locationID from'
-        <> "to" .= locationID to'
-        <> "description" .?= description'
-        <> "distance" .= distance'
-        <> "time" .?= time'
-        <> "ascent" .= ascent'
-        <> "descent" .= descent'
-        <> "penance" .?= penance'
-        <> "waypoints" .?= if null waypoints' then Nothing else Just waypoints'
+        "type" .?= nothingIfDef type'
+          <> "from" .= locationID from'
+          <> "to" .= locationID to'
+          <> "description" .?= description'
+          <> "distance" .= distance'
+          <> "time" .?= time'
+          <> "ascent" .?= nothingIfZero ascent'
+          <> "descent" .?= nothingIfZero descent'
+          <> "penance" .?= penance'
+          <> "waypoints" .?= nothingIfNull waypoints'
 
 instance NFData Leg
 
@@ -1335,24 +1337,24 @@ instance ToJSON Feature where
   toJSON (Feature id' type' name' description' condition' dummy' geometry' features') =
     object [
         "id" .= id'
-      , "type" .= (if type' == Road then Nothing else Just type')
+      , "type" .= nothingIfDef type'
       , "name" .= name'
       , "description" .= description'
       , "condition" .= (if condition' == T then Nothing else Just condition')
       , "dummy" .= (if dummy' == False then Nothing else Just dummy')
       , "geometry" .= geometry'
-      , "features" .= (if null features' then Nothing else Just features')
+      , "features" .= nothingIfNull features'
       ]
   toEncoding (Feature id' type' name' description' condition' dummy' geometry' features') =
     pairs $
          "id" .= id'
-      <> "type" .?= (if type' == Road then Nothing else Just type')
+      <> "type" .?= nothingIfDef type'
       <> "name" .= name'
       <> "description" .?= description'
       <> "condition" .?= (if condition' == T then Nothing else Just condition')
       <> "dummy" .= (if dummy' == False then Nothing else Just dummy')
       <> "geometry" .?= geometry'
-      <> "features" .?= (if null features' then Nothing else Just features')
+      <> "features" .?= nothingIfNull features'
 
 instance NFData Feature
 
@@ -1454,15 +1456,15 @@ instance ToJSON Route where
         , "name" .= name'
         , "description" .= description'
         , "major" .= (if major' then Just major' else Nothing)
-        , "locations" .= (if null locations' then Nothing else Just $ map locationID locations')
-        , "legs" .= (if null legs' then Nothing else Just legs')
-        , "stops" .= (if null stops' then Nothing else Just $ map locationID stops')
-        , "rest-points" .= (if null rests' then Nothing else Just $ map locationID rests')
-        , "starts" .= (if null starts' then Nothing else Just starts')
-        , "finishes" .= (if null finishes' then Nothing else Just finishes')
-        , "suggested-pois" .= (if null pois' then Nothing else Just $ map poiID pois')
+        , "locations" .= nothingIfNull (map locationID locations')
+        , "legs" .= nothingIfNull legs'
+        , "stops" .= nothingIfNull (map locationID stops')
+        , "rest-points" .= nothingIfNull (map locationID rests')
+        , "starts" .= nothingIfNull starts'
+        , "finishes" .= nothingIfNull finishes'
+        , "suggested-pois" .= nothingIfNull (map poiID pois')
         , "palette" .= palette'
-        , "features" .= (if null features' then Nothing else Just features')
+        , "features" .= nothingIfNull features'
         ]
     toEncoding (Route id' name' description' major' locations' _locationSet' legs' stops' rests' starts' finishes' pois' palette' features') =
       pairs $ 
@@ -1470,15 +1472,15 @@ instance ToJSON Route where
         <> "name" .= name'
         <> "description" .= description'
         <> "major" .?= (if major' then Just major' else Nothing)
-        <> "locations" .?= (if null locations' then Nothing else Just $ map locationID locations')
-        <> "legs" .?= (if null legs' then Nothing else Just legs')
-        <> "stops" .?= (if null stops' then Nothing else Just $ map locationID stops')
-        <> "rest-points" .?= (if null rests' then Nothing else Just $ map locationID rests')
-        <> "starts" .?= (if null starts' then Nothing else Just starts')
-        <> "finishes" .?= (if null finishes' then Nothing else Just finishes')
-        <> "suggested-pois" .?= (if null pois' then Nothing else Just $ map poiID pois')
+        <> "locations" .?= nothingIfNull (map locationID locations')
+        <> "legs" .?= nothingIfNull legs'
+        <> "stops" .?= nothingIfNull (map locationID stops')
+        <> "rest-points" .?= nothingIfNull (map locationID rests')
+        <> "starts" .?= nothingIfNull starts'
+        <> "finishes" .?= nothingIfNull finishes'
+        <> "suggested-pois" .?= nothingIfNull (map poiID pois')
         <> "palette" .= palette'
-        <> "features" .?= (if null features' then Nothing else Just features')
+        <> "features" .?= nothingIfNull features'
 
 
 instance NFData Route
@@ -1561,7 +1563,7 @@ routeLegTypes route = if null fs then (S.singleton Road) else S.unions (map rout
 -- | Statements about how routes weave together
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
 --   can't have these. You'll also need to include these locations and remove those.
---   The formula construction allows to to make arbitrary 
+--   The condition allows arbitrary propositional logic about other routes.
 data RouteLogic = RouteLogic {
     routeLogicDescription :: Maybe Text -- ^ Explain what is happening
   , routeLogicCondition :: Formula Route -- ^ What triggers this bit of logic
@@ -1570,6 +1572,7 @@ data RouteLogic = RouteLogic {
   , routeLogicProhibits :: S.Set Route -- ^ Routes that this implies should be excluded
   , routeLogicInclude :: [Location] -- ^ Stuff to add to the allowed locations
   , routeLogicExclude :: [Location] -- ^ Stuff to remove from the allowed locations
+  , routeLogicExcludeLegs :: [Leg] -- ^ Stuff to remove from the allowed legs
 } deriving (Show, Generic)
 
 instance FromJSON RouteLogic where
@@ -1581,6 +1584,7 @@ instance FromJSON RouteLogic where
     prohibits' <- v .:? "prohibits" .!= S.empty
     include' <- v .:? "include" .!= []
     exclude' <- v .:? "exclude" .!= []
+    excludeLegs' <- v .:? "exclude-legs" .!= []
     return RouteLogic {
         routeLogicDescription = description'
       , routeLogicCondition = condition'
@@ -1589,36 +1593,32 @@ instance FromJSON RouteLogic where
       , routeLogicProhibits = prohibits'
       , routeLogicInclude = include'
       , routeLogicExclude = exclude'
+      , routeLogicExcludeLegs = excludeLegs'
     }
   parseJSON v = error ("Unable to parse route object " ++ show v)
 
 instance ToJSON RouteLogic where
-  toJSON (RouteLogic description' condition' requires' allows' prohibits' include' exclude') =
+  toJSON (RouteLogic description' condition' requires' allows' prohibits' include' exclude' excludeLegs') =
     object [
         "description" .= description'
       , "condition" .= condition'
-      , "requires" .= nonEmptyS (S.map placeholderID requires')
-      , "allows" .= nonEmptyS (S.map placeholderID allows')
-      , "prohibits" .= nonEmptyS (S.map placeholderID prohibits')
-      , "include" .= nonEmptyL (map placeholderID include')
-      , "exclude" .= nonEmptyL (map placeholderID exclude')
+      , "requires" .= nothingIfNull (S.map placeholderID requires')
+      , "allows" .= nothingIfNull (S.map placeholderID allows')
+      , "prohibits" .= nothingIfNull (S.map placeholderID prohibits')
+      , "include" .= nothingIfNull (map placeholderID include')
+      , "exclude" .= nothingIfNull (map placeholderID exclude')
+      , "exclude-legs" .= nothingIfNull excludeLegs'
       ]
-    where
-      nonEmptyL v = if null v then Nothing else Just v
-      nonEmptyS v = if S.null v then Nothing else Just v
-      
-  toEncoding (RouteLogic description' condition' requires' allows' prohibits' include' exclude') =
+  toEncoding (RouteLogic description' condition' requires' allows' prohibits' include' exclude' excludeLegs') =
     pairs $
-        "description" .?= description'
-      <> "condition" .= condition'
-      <> "requires" .?= nonEmptyS requires'
-      <> "allows" .?= nonEmptyS allows'
-      <> "prohibits" .?= nonEmptyS prohibits'
-      <> "include" .?= nonEmptyL (map placeholderID include')
-      <> "exclude" .?= nonEmptyL (map placeholderID exclude')
-    where
-      nonEmptyL v = if null v then Nothing else Just v
-      nonEmptyS v = if S.null v then Nothing else Just v
+      "description" .?= description'
+        <> "condition" .= condition'
+        <> "requires" .?= nothingIfNull requires'
+        <> "allows" .?= nothingIfNull allows'
+        <> "prohibits" .?= nothingIfNull prohibits'
+        <> "include" .?= nothingIfNull (map placeholderID include')
+        <> "exclude" .?= nothingIfNull (map placeholderID exclude')
+        <> "exclude-legs" .?= nothingIfNull excludeLegs'
 
 instance NFData RouteLogic
 
@@ -1630,6 +1630,7 @@ normaliseRouteLogic camino logic = logic {
     , routeLogicProhibits = S.map (dereference camino) (routeLogicProhibits logic)
     , routeLogicInclude = map (dereference camino) (routeLogicInclude logic)
     , routeLogicExclude = map (dereference camino) (routeLogicExclude logic)
+    , routeLogicExcludeLegs = map (normaliseLeg camino) (routeLogicExcludeLegs logic)
   }
 
 createLogicClauses' :: RouteLogic -> S.Set Route -> [Formula Route]
@@ -1746,10 +1747,10 @@ instance ToJSON Camino where
       , "description" .= description'
       , "metadata" .= (if null (metadataStatements metadata') then Nothing else Just metadata')
       , "fragment" .= (if fragment' then Just fragment' else Nothing)
-      , "imports" .= (if null imports' then Nothing else Just (map placeholderID imports'))
+      , "imports" .= nothingIfNull (map placeholderID imports')
       , "locations" .= locations'
-      , "legs" .= (if null legs' then Nothing else Just legs')
-      , "links" .= (if null links' then Nothing else Just links')
+      , "legs" .= nothingIfNull legs'
+      , "links" .= nothingIfNull links'
       , "routes" .= map (\r -> if routeID r == routeID defaultRoute' then r { routeLocations = [], routeLocationSet = S.empty } else r) routes'
       , "route-logic" .= routeLogic'
       , "default-route" .= routeID defaultRoute'
@@ -1761,10 +1762,10 @@ instance ToJSON Camino where
       <> "description" .= description'
       <> "metadata" .?= (if null (metadataStatements metadata') then Nothing else Just metadata')
       <> "fragment" .?= (if fragment' then Just fragment' else Nothing)
-      <> "imports" .?= (if null imports' then Nothing else Just (map placeholderID imports'))
+      <> "imports" .?= nothingIfNull (map placeholderID imports')
       <> "locations" .= locations'
-      <> "legs" .?= (if null legs' then Nothing else Just legs')
-      <> "links" .?= (if null links' then Nothing else Just links')
+      <> "legs" .?= nothingIfNull legs'
+      <> "links" .?= nothingIfNull links'
       <> "routes" .= routes'
       <> "route-logic" .= routeLogic'
       <> "default-route" .= routeID defaultRoute'
@@ -1776,13 +1777,13 @@ instance Graph Camino Leg Location where
   edge camino loc1 loc2 = L.find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation' _pois') allowed  =
+  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation' _pois') locFilter legFilter  =
     let
-      isAllowed l = S.member l allowed
-      isAllowedLeg l = isAllowed (legFrom l) && isAllowed (legTo l)
+      isAllowed = locFilter
+      isAllowedLeg l = legFilter l && isAllowed (source l) && isAllowed (target l)
       id'' = id' <> "'"
       name'' = name' `appendText` " subgraph"
-      locations'' = filter isAllowed locations'
+      locations'' = filter locFilter locations'
       legs'' = filter isAllowedLeg legs'
       links'' = filter isAllowedLeg links'
       routes'' = map (\r -> r {
@@ -1794,6 +1795,7 @@ instance Graph Camino Leg Location where
       routeLogic'' = map (\l -> l {
           routeLogicInclude = filter isAllowed (routeLogicInclude l)
         , routeLogicExclude = filter isAllowed (routeLogicExclude l)
+        , routeLogicExcludeLegs = filter isAllowedLeg (routeLogicExcludeLegs l)
         }) routeLogic'
       defaultRoute'' = fromJust $ L.find (\r -> routeID r == routeID defaultRoute') routes'
       locMap'' = buildLocationMap locations''
@@ -1819,11 +1821,18 @@ instance Graph Camino Leg Location where
       }
   mirror camino =
     let
-      id'' = caminoId camino <> "'"
-      name'' = caminoName camino `appendText` " mirrored"
-      legs'' = map (\l -> l { legFrom = legTo l, legTo = legFrom l, legAscent = legDescent l, legDescent = legAscent l}) (caminoLegs camino)
+      id' = caminoId camino <> "'"
+      name' = caminoName camino `appendText` " mirrored"
+      mirrorLeg l =  l { legFrom = legTo l, legTo = legFrom l, legAscent = legDescent l, legDescent = legAscent l}
+      legs' = map mirrorLeg (caminoLegs camino)
+      logics' = map (\l -> l { routeLogicExcludeLegs = map mirrorLeg (routeLogicExcludeLegs l) }) (caminoRouteLogic camino)
     in
-      camino { caminoId = id'', caminoName = name'', caminoLegs = legs'' }
+      camino {
+          caminoId = id'
+        , caminoName = name'
+        , caminoLegs = legs'
+        , caminoRouteLogic = logics'
+        }
       
 instance Placeholder Text Camino where
   placeholderID = caminoId
@@ -1992,7 +2001,7 @@ caminoRouteLocations camino used =
   in
     foldl (\allowed -> \logic -> (allowed `S.union` (S.fromList $ routeLogicInclude logic) `S.difference` (S.fromList $ routeLogicExclude logic))) baseLocations logics
 
--- | Work out which route featurees are being used by this set of routes and locations
+-- | Work out which route features are being used by this set of routes and locations
 caminoUsedFeatures :: Camino -- ^ The base camino definition
   -> S.Set Route -- ^ The base routes that are being used
   -> S.Set Location -- ^ The locations that are being used
@@ -2032,15 +2041,38 @@ caminoPartialOrder' caminos result imports = let
     caminoPartialOrder' caminos (result `S.union` imports') imports''
 
 -- | A camino with all legs based on selected routes
-caminoAllLegs :: Camino -> (Route -> Bool) -> [Leg]
-caminoAllLegs camino select = L.concat $ (map routeLegs $ filter select $ caminoRoutes camino) ++ [caminoLegs camino]
+caminoAllLegs :: Camino -- ^ The camino to collect legs from
+  -> Bool -- ^ Exclude route-selected legs
+  -> (Route -> Bool) -- ^ Which routes to include
+  -> [Leg] -- ^ The legs in the camino
+caminoAllLegs camino exclude select = let
+    routes' = filter select $ caminoRoutes camino
+    (_routes'', membership') = completeRoutes camino (S.fromList routes')
+    logics' = filter (\l -> evaluate membership' (routeLogicCondition l) == T) (caminoRouteLogic camino)
+    excludes' = if exclude then S.fromList $ L.concat $ map routeLogicExcludeLegs logics' else S.empty
+    legs' = L.concat $ (map routeLegs $ filter select $ caminoRoutes camino) ++ [caminoLegs camino]
+    legs'' = filter (\l -> not $ S.member l excludes') legs'
+  in
+    legs''
+
+-- | Legs to be excluded from a camino based on selected routes
+caminoExcludedLegs :: Camino -- ^ The camino to collect legs from
+  -> (Route -> Bool) -- ^ Which routes to include
+  -> S.Set Leg -- ^ The legs in the camino
+caminoExcludedLegs camino select = let
+    routes' = filter select $ caminoRoutes camino
+    (_routes'', membership') = completeRoutes camino (S.fromList routes')
+    logics' = filter (\l -> evaluate membership' (routeLogicCondition l) == T) (caminoRouteLogic camino)
+    excludes' = S.fromList $ L.concat $ map routeLogicExcludeLegs logics'
+  in
+    excludes'
 
 -- | A camino including legs from selected routes
 caminoWithRoutes :: Camino -> S.Set Route -> Camino
 caminoWithRoutes camino routes = camino {
     caminoId = (caminoId camino) <> "'"
   , caminoName = appendText (caminoName camino) " all routes"
-  , caminoLegs = caminoAllLegs camino (\r -> S.member r routes)
+  , caminoLegs = caminoAllLegs camino True (\r -> S.member r routes)
   }
 
 

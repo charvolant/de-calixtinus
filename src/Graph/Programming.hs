@@ -92,9 +92,9 @@ instance (Edge e v, Score s) => Graph (ChainGraph v e s) (Chain v e s) v where
     out <- M.lookup begin (forwards graph)
     M.lookup end out
   mirror (ChainGraph forwards' reverses') = ChainGraph reverses' forwards'
-  subgraph graph vs = 
+  subgraph graph vt _et =
     let
-      sub accessor = M.fromList $ map (\v -> (v, M.filterWithKey (\k -> \_c -> S.member k vs) (accessor graph M.! v))) (filter (\k -> S.member k vs) (M.keys $ accessor graph))
+      sub accessor = M.fromList $ map (\v -> (v, M.filterWithKey (\k -> \_c -> vt k) (accessor graph M.! v))) (filter vt (M.keys $ accessor graph))
       forwards' = sub forwards
       reverses' = sub reverses
     in
@@ -224,7 +224,7 @@ constructTable graph choice accept eval select begin end =
   let
     origin = [Chain begin begin [] mempty]
     reachable' = reachable graph begin end select
-    sg = subgraph graph reachable'
+    sg = subgraph graph (\v -> S.member v reachable') (const True)
     table = constructTable' sg choice accept eval reachable' origin
     result = fromChains eval table
   in

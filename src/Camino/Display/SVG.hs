@@ -24,11 +24,13 @@ import Data.List (partition, uncons, unsnoc)
 import Data.Localised
 import Data.Maybe (fromJust, isJust)
 import Data.Spline
+import Data.Summary
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Util (ceilingBy, floorBy, headWithError, tailOrEmpty)
 import Formatting (fixed, format)
 import Text.Hamlet
+import Debug.Trace
 
 buildCoordinates'' :: Double -> Double -> Maybe Leg -> Location -> [LegSegment] -> Double ->  [(Double, Maybe Double, Maybe Leg, Maybe Location)]
 buildCoordinates'' _scalex _scaley _leg _lt [] _d = []
@@ -155,13 +157,19 @@ lineBezier move makeX makeY (Bezier (x0, y0) (_x1, _y1) (_x2, _y2) (x3, y3)) =
   (show $ makeX x3) ++ " " ++ (show $ makeY y3)
 
 makePath :: (RealFrac a) => (a -> Int) -> (a -> Int) -> [Bezier a] -> [(a, Maybe a, Maybe Leg, Maybe Location)] -> String
-makePath _makeX _makeY [] [] = ""
-makePath _makeX _makeY [] _ = error "Mismatching curves and coordinates"
-makePath _makeX _makeY _ [] = error "Mismatching curves and coordinates"
-makePath makeX makeY (bezier:restb) (coord:restc) = " " ++ makePath' makeX makeY bezier coord ++ makePath makeX makeY restb restc
+makePath makeX makeY beziers coords = if length beziers /= length coords then
+    error $ "Mismatching curves (length " ++ show (length beziers) ++ ") and coordinates (length " ++ show (length coords) ++ ")"
+  else
+    makePath' makeX makeY beziers coords
 
-makePath' :: (RealFrac a) => (a -> Int) -> (a -> Int) -> Bezier a -> (a, Maybe a, Maybe Leg, Maybe Location) -> String
-makePath' makeX makeY bezier (_, _, mleg, _) =
+makePath' :: (RealFrac a) => (a -> Int) -> (a -> Int) -> [Bezier a] -> [(a, Maybe a, Maybe Leg, Maybe Location)] -> String
+makePath' _makeX _makeY [] [] = ""
+makePath' _makeX _makeY [] _ = error "Mismatching curves and coordinates"
+makePath' _makeX _makeY _ [] = error "Mismatching curves and coordinates"
+makePath' makeX makeY (bezier:restb) (coord:restc) = " " ++ makePath'' makeX makeY bezier coord ++ makePath' makeX makeY restb restc
+
+makePath'' :: (RealFrac a) => (a -> Int) -> (a -> Int) -> Bezier a -> (a, Maybe a, Maybe Leg, Maybe Location) -> String
+makePath'' makeX makeY bezier (_, _, mleg, _) =
   if maybe False (straightLine . legType) mleg then
     lineBezier False makeX makeY bezier
   else
@@ -192,7 +200,7 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
       <path d="#{elevationPath}" vector-effect="non-scaling-stroke" fill="#{toCssColour caminoLightGrey}" stroke="#{toCssColour caminoYellow}" stroke-width="1">
       $if showPathLayout
         <path d="#{elevationLines}" vector-effect="non-scaling-stroke" fill="none" stroke="#{toCssColour caminoBlue}" stroke-width="1">
-        $forall (d, e) <- coordinates'
+        $forall (d, e) <- coordinates''
           <line x1="#{makeX d - 2}" x2="#{makeX d + 2}" y1="#{makeY e - 2}" y2="#{makeY e + 2}" vector-effect="non-scaling-stroke" stroke="red" stroke-width="1">
           <line x1="#{makeX d - 2}" x2="#{makeX d + 2}" y1="#{makeY e + 2}" y2="#{makeY e - 2}" vector-effect="non-scaling-stroke" stroke="red" stroke-width="1">
       $forall (x, y1, y2, _a, _b, _l) <- labelPos
@@ -213,8 +221,9 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     viewx = 1200 :: Int
     viewy = 200 :: Int
     coordinates = buildCoordinates 1.0 1.0 legs
-    coordinates' = map (\(d, me, _, _) -> (d, maybe 0.0 id me)) $ filter (\(_, me, _, _) -> isJust me) coordinates
-    maxx = max 1.0 (maximum $ map (\(d, _) -> d) coordinates')
+    coordinates' = filter (\(_, me, _, _) -> isJust me) coordinates
+    coordinates'' = map (\(d, me, _, _) -> (d, maybe 0.0 id me)) coordinates'
+    maxx = max 1.0 (maximum $ map (\(d, _) -> d) coordinates'')
     offsetx = 10.0
     scalex = (fromIntegral viewx - offsetx) / maxx
     offsety = 50.0
@@ -225,11 +234,11 @@ svgElevationProfile _config maxy label important legs = [ihamlet|
     makeYP y = 100.0 * fromIntegral y / fromIntegral viewy :: Double
     anchor d = if d < maxx / 5.0 then "start" else if d > maxx * 4.0 / 5.0 then "end" else "middle" :: Text
     fontWeight l = if important l then "bold" else "normal" :: Text
-    splines = makeSpline NaturalBoundary NaturalBoundary coordinates'
+    splines = makeSpline NaturalBoundary NaturalBoundary coordinates''
     beziers = map toBezier splines
-    (_, es) = headWithError coordinates'
-    elevationPath = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ makePath makeX makeY beziers (tailOrEmpty coordinates) ++ " L " ++ (show $ makeX maxx) ++ " " ++ (show $ makeY 0.0) ++ " Z"
-    elevationLines = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ (concat $ map (\(d, e) -> " L " ++ (show $ makeX d) ++ " " ++ (show $ makeY e)) coordinates')
+    (_, es) = headWithError coordinates''
+    elevationPath = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ makePath makeX makeY beziers (tailOrEmpty coordinates') ++ " L " ++ (show $ makeX maxx) ++ " " ++ (show $ makeY 0.0) ++ " Z"
+    elevationLines = "M " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY 0.0) ++ " L " ++ (show $ makeX 0.0) ++ " " ++ (show $ makeY es) ++ (concat $ map (\(d, e) -> " L " ++ (show $ makeX d) ++ " " ++ (show $ makeY e)) coordinates'')
     labelPos = positionLabels label important anchor makeX makeY offsety coordinates
     ticLabels = [0.0, step' .. (floorBy step' maxy)] where step' = if maxy < 200.0 then 100.0 else 500.0
     tics = filter (\t -> not $ elem t ticLabels) [0.0, step'  .. (ceilingBy step' maxy)] where step' = if maxy < 200.0 then 10.0 else 100.0

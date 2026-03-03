@@ -456,7 +456,7 @@
             "Embalse de Beche@ga",
             "Beche Dam@en"
           ],
-          "type": "Park",
+          "type": "WaterBody",
           "position": { "latitude": 43.18235, "longitude": -8.30711, "elevation": 289 }
         }
       ]

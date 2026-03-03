@@ -321,7 +321,7 @@
     {
       "id": "SN-SN13",
       "name": "Embalse de Nuestra Señora de Agavanzal",
-      "type": "Natural",
+      "type": "WaterBody",
       "position": { "latitude": 41.97804, "longitude": -6.14131, "elevation": 773 },
       "region": "ES-CL",
       "services": [ ],

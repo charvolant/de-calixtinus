@@ -1,0 +1,1681 @@
+{
+  "id": "AR",
+  "name": [
+    "Camino Aragonés@es",
+    "Aragonese Way@en",
+    "Aragoiko bidea@eu"
+  ],
+  "description": {
+    "text": "The Camino Aragonés begins at the Spanish-French border and joins the Camino Francés in Navarre.@en",
+    "image": {
+      "title": "Monasterio de Santa María de Iguacel@es",
+      "source": "AR/AR-Camino-Aragones.jpg",
+      "thumbnail": "AR/AR-Camino-Aragones-thumbnail.jpg",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Dirocris"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2010"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Santa_María_de_Iguacel_nevada.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Camino Aragonés@es"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Aragonese Way@en"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Aragoiko bidea@eu"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2026-02-10"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2026-02-10"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "imports": [
+    "I-OP"
+  ],
+  "locations": [
+    {
+      "id": "AR-AR1",
+      "name": "Puerto de Somport",
+      "type": "Peak",
+      "position": { "latitude": 42.79572, "longitude": -0.52511, "elevation": 1632 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Aysa Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "Handwash", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-AR2",
+      "name": "Candanchú",
+      "type": "Village",
+      "position": { "latitude": 42.78945, "longitude": -0.52455, "elevation": 1514 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "AR-AR2-1",
+          "name": "Hospital of Santa Cristina@en",
+          "type": "Historical",
+          "position": { "latitude": 42.78984, "longitude": -0.52498, "elevation": 1534 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR3",
+      "name": "Canfranc-Estacion",
+      "type": "Village",
+      "position": { "latitude": 42.75154, "longitude": -0.51526, "elevation": 1197 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Rio Aragón Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Canfranc Youth Hostel",
+          "type": "Hostel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Real Villa Anayet Hotel & Spa",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR3-1",
+          "name": [
+            "Fuerte de Coll de Ladrones@es",
+            "Fortress of Coll de Landrones@en"
+          ],
+          "type": "Historical",
+          "position": { "latitude": 42.76432, "longitude": -0.50931, "elevation": 1330 }
+        },
+        {
+          "id": "AR-AR3-2",
+          "name": "International Station@en",
+          "type": "Historical",
+          "position": { "latitude": 42.75173, "longitude": -0.51424, "elevation": 1197 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR4",
+      "name": "Canfranc",
+      "type": "Village",
+      "position": { "latitude": 42.71976, "longitude": -0.52525, "elevation": 1051 },
+      "region": "ES-AR",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Elías Valiña Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "description": {
+            "notes": [
+              {
+                "type": "Warning",
+                "text": "Does not accept pilgrims on bicycles or rucksacks transported by vehicle."
+              }
+            ]
+          },
+          "services": [ "WiFi", "Heating", "Kitchen", "Lockers", "Accessible" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR4-1",
+          "name": [
+            "Cascada de anfranc@es",
+            "Canfranc Waterfall@en"
+          ],
+          "type": "Natural",
+          "position": { "latitude": 42.72565, "longitude": -0.52224, "elevation": 1106 }
+        },
+        {
+          "id": "AR-AR4-2",
+          "name": "Castillo de Canfranc@es",
+          "type": "Historical",
+          "position": { "latitude": 42.71840, "longitude": -0.52533, "elevation": 1051 }
+        },
+        {
+          "id": "AR-AR4-3",
+          "name": "Fountain",
+          "type": "Fountain",
+          "position": { "latitude": 42.71838, "longitude": -0.52490, "elevation": 1043 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR5",
+      "name": "Villanúa",
+      "type": "Town",
+      "position": { "latitude": 42.68140, "longitude": -0.53606, "elevation": 956 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Tritón Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "Handwash", "Breakfast", "Dinner", "HalfBoard", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Alto Aragón Guesthouse",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "Double", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR5-1",
+          "name": "Villanúa Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.68283, "longitude": -0.53227, "elevation": 956 }
+        },
+        {
+          "id": "AR-AR5-2",
+          "name": [
+            "Cueva de las Güixas@es",
+            "Caves of Güixas@en"
+          ],
+          "type": "Natural",
+          "position": { "latitude": 42.68455, "longitude": -0.53011, "elevation": 984 }
+        },
+        {
+          "id": "AR-AR5-3",
+          "name": "Mediaeval Bridge@en",
+          "type": "Bridge",
+          "position": { "latitude": 42.68256, "longitude": -0.53284, "elevation": 956 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR6",
+      "name": "Aratorés",
+      "type": "Village",
+      "position": { "latitude": 42.65644, "longitude": -0.56178, "elevation": 960 },
+      "region": "ES-AR",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "AR-AR6-1",
+          "name": "Fountain",
+          "type": "Fountain",
+          "position": { "latitude": 42.64977, "longitude": -0.55863, "elevation": 930 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR7",
+      "name": "Castiello de Jaca",
+      "type": "Village",
+      "position": { "latitude": 42.63057, "longitude": -0.54969, "elevation": 894 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hostel A'Noguera",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Breakfast", "Dinner", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "El Meson Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR7-1",
+          "name": "Pilgrim Monument and Fountain@en",
+          "type": "Statue",
+          "position": { "latitude": 42.62859, "longitude": -0.54845, "elevation": 864 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR8",
+      "name": "Ermita de San Cristóbal",
+      "type": "Church",
+      "position": { "latitude": 42.58455, "longitude": -0.54528, "elevation": 790 },
+      "region": "ES-AR",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR9",
+      "name": "Jaca",
+      "type": "City",
+      "position": { "latitude": 42.57192, "longitude": -0.54972, "elevation": 823 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Municipal Pilgrim's Hostel of Jaca",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Kitchen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Escuelas Pías Youth Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Heating", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
+        },
+        {
+          "name": "Casa Mamré Hostel",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "París Hostal",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "Double" ]
+        },
+        {
+          "name": "Conde Aznar Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Las Nieves Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Dinner", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR9-1",
+          "name": "Jaca Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.57105, "longitude": -0.54965, "elevation": 823 }
+        },
+        {
+          "id": "AR-AR9-2",
+          "name": "Cathedral of St Peter@en",
+          "type": "Cathedral",
+          "position": { "latitude": 42.57090, "longitude": -0.54949, "elevation": 823 }
+        },
+        {
+          "id": "AR-AR9-3",
+          "name": "Citadel of St Peter@en",
+          "type": "Historical",
+          "position": { "latitude": 42.57198, "longitude": -0.55162, "elevation": 818 }
+        },
+        {
+          "id": "AR-AR9-4",
+          "name": "Clock Tower@en",
+          "type": "Historical",
+          "position": { "latitude": 42.56869, "longitude": -0.54933, "elevation": 819 }
+        },
+        {
+          "id": "AR-AR9-5",
+          "name": "Mural of the Camino@en",
+          "type": "Artwork",
+          "position": { "latitude": 42.57885, "longitude": -0.54796, "elevation": 823 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR10",
+      "name": "Rio Gas",
+      "type": "Bridge",
+      "position": { "latitude": 42.55665, "longitude": -0.60216, "elevation": 726 },
+      "region": "ES-AR",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR11",
+      "name": "Santa Cilla de Jaca",
+      "type": "Village",
+      "position": { "latitude": 42.55988, "longitude": -0.71486, "elevation": 648 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Santa Cilia de Jaca Pilgrim's Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Handwash", "Breakfast", "Dinner" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR11-1",
+          "name": "Pilgrim Monument and Fountain@en",
+          "type": "Statue",
+          "position": { "latitude": 42.55993, "longitude": -0.71435, "elevation": 649 }
+        },
+        {
+          "id": "AR-AR11-2",
+          "name": "Mirador Canal de Berdún",
+          "type": "Lookout",
+          "position": { "latitude": 42.55423, "longitude": -0.67067, "elevation": 732 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR12",
+      "name": "Puente la Reina de Jaca",
+      "type": "Village",
+      "position": { "latitude": 42.55411, "longitude": -0.78599, "elevation": 608 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "AR-AR12-1",
+          "name": "Puente la Reina de Jaca Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.55791, "longitude": -0.78680, "elevation": 604 }
+        },
+        {
+          "id": "AR-AR12-2",
+          "name": "Heaps of Stones left by Pilgrims@en",
+          "type": "Historical",
+          "position": { "latitude": 42.55480, "longitude": -0.78190, "elevation": 602 }
+        },
+        {
+          "id": "AR-AR12-3",
+          "name": "Mesón de la Reina@es",
+          "type": "Historical",
+          "position": { "latitude": 42.55677, "longitude": -0.78601, "elevation": 601 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "0700-2000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-AR13",
+      "name": "Arrés",
+      "type": "Village",
+      "position": { "latitude": 42.55555, "longitude": -0.82697, "elevation": 703 },
+      "region": "ES-AR",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Hospital de peregrinos de Arrés",
+          "type": "PilgrimAlbergue",
+          "services": [ "Handwash", "Kitchen", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Granero del Conde",
+          "type": "GuestHouse",
+          "services": [ "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR13-1",
+          "name": "Limited Food and Water@en",
+          "type": "Hazard",
+          "description": "Sources of food and water between here and Sangüesa are limited.",
+          "position": { "latitude": 42.55622, "longitude": -0.82685, "elevation": 716 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR14",
+      "name": "La Pardina del Solano",
+      "type": "Farmland",
+      "position": { "latitude": 42.56940, "longitude": -0.85463, "elevation": 577 },
+      "region": "ES-AR",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR15",
+      "name": "Artieda",
+      "type": "Village",
+      "position": { "latitude": 42.58669, "longitude": -0.98336, "elevation": 614 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Hospital de peregrinos de Artieda",
+          "type": "PilgrimAlbergue",
+          "services": [ "Restaurant", "Heating", "Dryer", "Handwash", "Breakfast", "Dinner", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single" ]
+        },
+        {
+          "name": "Casa Blasco",
+          "type": "CasaRural",
+          "services": [ "Restaurant", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Pets", "BicycleStorage" ],
+          "sleeping": [ "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-AR16",
+      "name": "Ruesta",
+      "type": "Village",
+      "position": { "latitude": 42.58901, "longitude": -1.07566, "elevation": 553 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Groceries" ],
+      "accommodation": [
+        {
+          "name": "Hospital de peregrinos de Ruesta",
+          "type": "PilgrimAlbergue",
+          "services": [ "Restaurant", "Heating", "Handwash", "Breakfast", "Dinner", "Stables", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Prayer" ],
+          "sleeping": [ "Shared", "Single" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR16-1",
+          "name": "Castillo de Ruesta@es",
+          "type": "Historical",
+          "description": {
+            "about": "http://www.romanicoaragones.com/fortificaciones/11-Ruesta.htm"
+          },
+          "position": { "latitude": 42.59002, "longitude": -1.07780, "elevation": 539 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR17",
+      "name": "Undués de Lerda",
+      "type": "Village",
+      "position": { "latitude": 42.56590, "longitude": -1.16974, "elevation": 621 },
+      "region": "ES-AR",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Youth Hostel of Undués de Lerda",
+          "type": "PrivateAlbergue",
+          "services": [ "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Quadruple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR17-1",
+          "name": "Detour to Castillo de Javier@en",
+          "type": "Junction",
+          "description": {
+            "about": "http://www.romanicoaragones.com/fortificaciones/11-Ruesta.htm"
+          },
+          "position": { "latitude": 42.57410, "longitude": -1.19154, "elevation": 512 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR18",
+      "name": "Sangüesa",
+      "type": "Town",
+      "position": { "latitude": 42.57668, "longitude": -1.28434, "elevation": 405 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Municipal Pilgrim's Hostel of Sangüesa",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "El Peregrino Boarding House",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Breakfast", "Lockers", "BicycleStorage" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        },
+        {
+          "name": "Yamaguchi Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR18-1",
+          "name": "Sangüesa Tourist Office@en",
+          "type": "InformationPoint",
+          "position": { "latitude": 42.57684, "longitude": -1.28524, "elevation": 401 }
+        },
+        {
+          "id": "AR-AR18-2",
+          "name": "Church of Santa María la Real@en",
+          "type": "Church",
+          "position": { "latitude": 42.57708, "longitude": -1.28514, "elevation": 401 }
+        },
+        {
+          "id": "AR-AR18-3",
+          "name": "Palace of the Kings of Navarre@en",
+          "type": "Historical",
+          "position": { "latitude": 42.57741, "longitude": -1.28360, "elevation": 405 }
+        },
+        {
+          "id": "AR-AR18-4",
+          "name": [
+            "Convento San Francisco de Asís@es",
+            "Convent of St Francis Assisi@en"
+          ],
+          "type": "Monastery",
+          "position": { "latitude": 42.57741, "longitude": -1.28360, "elevation": 405 }
+        },
+        {
+          "id": "AR-AR18-5",
+          "name": "Detour to Liédena and Lumbier@en",
+          "type": "Junction",
+          "position": { "latitude": 42.57798, "longitude": -1.28697, "elevation": 403 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR19",
+      "name": "Rocaforte",
+      "type": "Village",
+      "position": { "latitude": 42.59238, "longitude": -1.28888, "elevation": 454 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR20",
+      "name": "Aibar Pass",
+      "type": "Peak",
+      "position": { "latitude": 42.62182, "longitude": -1.35049, "elevation": 698 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR21",
+      "name": "Izco",
+      "type": "Village",
+      "position": { "latitude": 42.65707, "longitude": -1.42903, "elevation": 714 },
+      "region": "ES-NA",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR22",
+      "name": "Abinzano",
+      "type": "Village",
+      "position": { "latitude": 42.66385, "longitude": -1.45135, "elevation": 701 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR23",
+      "name": "Salinas de Ibargoti",
+      "type": "Village",
+      "position": { "latitude": 42.69246, "longitude": -1.48731, "elevation": 561 },
+      "region": "ES-NA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "AR-AR23-1",
+          "name": "Puente medieval@es",
+          "type": "Bridge",
+          "position": { "latitude": 42.69058, "longitude": -1.48685, "elevation": 560 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR24",
+      "name": "Monreal",
+      "type": "Village",
+      "position": { "latitude": 42.70503, "longitude": -1.50778, "elevation": 547 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Pilgrim's Hostel of Monreal",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Handwash", "Kitchen", "Lockers", "Accessible", "BicycleStorage", "Bedlinen" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Etxartenea Rural House",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-AR25",
+      "name": "Yámoz",
+      "type": "Village",
+      "position": { "latitude": 42.71162, "longitude": -1.54934, "elevation": 551 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "AR-AR25-1",
+          "name": "Canal de Navarra@es",
+          "type": "WaterBody",
+          "position": { "latitude": 42.71451, "longitude": -1.55005, "elevation": 512 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR26",
+      "name": "Otano",
+      "type": "Village",
+      "position": { "latitude": 42.71222, "longitude": -1.56786, "elevation": 545 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR27",
+      "name": "Ezperun",
+      "type": "Village",
+      "position": { "latitude": 42.71243, "longitude": -1.58787, "elevation": 545 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR28",
+      "name": "Guerendián",
+      "type": "Village",
+      "position": { "latitude": 42.70598, "longitude": -1.60299, "elevation": 589 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR29",
+      "name": "Tiebas",
+      "type": "Village",
+      "position": { "latitude": 42.69314, "longitude": -1.64045, "elevation": 577 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Municipal Pilgrim's Shelter of Tebasi",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Kitchen", "Lockers", "Stables" ],
+          "sleeping": [ "Shared" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR29-1",
+          "name": "Castillo de Tiebas@es",
+          "type": "Historical",
+          "position": { "latitude": 42.69705, "longitude": -1.63776, "elevation": 558 }
+        }
+      ]
+    },
+    {
+      "id": "AR-AR30",
+      "name": "Muruarte de Reta",
+      "type": "Village",
+      "position": { "latitude": 42.66729, "longitude": -1.66469, "elevation": 562 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-AR31",
+      "name": "Olcoz",
+      "type": "Village",
+      "position": { "latitude": 42.66615, "longitude": -1.68075, "elevation": 583 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hostal El Arriero",
+          "type": "GuestHouse",
+          "services": [ "Heating", "Breakfast", "Lockers" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-AR31-1",
+          "name": [
+            "Olkozko dorrea@eu",
+            "Torre de Olcoz@es"
+          ],
+          "type": "Historical",
+          "position": { "latitude": 42.66574, "longitude": -1.68170, "elevation": 585 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1200-1400"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-AR32",
+      "name": "Enériz",
+      "type": "Village",
+      "position": { "latitude": 42.67067, "longitude": -1.72885, "elevation": 427 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Mesón del Camino",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Breakfast", "Dinner", "Lockers", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-AR33",
+      "name": "Iglesia de Santa María de Eunate",
+      "type": "Church",
+      "position": { "latitude": 42.67237, "longitude": -1.76145, "elevation": 392 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-SP1",
+      "name": "Atarés",
+      "type": "Village",
+      "position": { "latitude": 42.53291, "longitude": -0.62390, "elevation": 801 },
+      "region": "ES-AR",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-SP2",
+      "name": "Monasterio Nuevo de San Juan de Péna",
+      "type": "Monastery",
+      "description": {
+        "text": "The New Monastery was built in the 17th to 19th centuries.",
+        "about": "https://www.monasteriosanjuan.com/"
+      },
+      "position": { "latitude": 42.50793, "longitude": -0.66536, "elevation": 1214 },
+      "region": "ES-AR",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hospedería San Juan de la Peña",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-SP3",
+      "name": "Monasterio Viejo de San Juan de Péna",
+      "type": "Monastery",
+      "description": {
+        "text": "The Old Monastery was built in the 10th century.",
+        "about": "https://www.monasteriosanjuan.com/"
+      },
+      "position": { "latitude": 42.50791, "longitude": -0.67277, "elevation": 1177 },
+      "region": "ES-AR",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-SP4",
+      "name": "Santa Cruz de la Serós",
+      "type": "Village",
+      "position": { "latitude": 42.52312, "longitude": -0.67392, "elevation": 784 },
+      "region": "ES-AR",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Hosteria Santa Cruz de la Serós",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-SP5",
+      "name": "Binacua",
+      "type": "Village",
+      "position": { "latitude": 42.54663, "longitude": -0.69839, "elevation": 760 },
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-J1",
+      "name": "Javier",
+      "type": "Village",
+      "position": { "latitude": 42.59097, "longitude": -1.20911, "elevation": 453 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Xabier",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "TripleWC", "QuadrupleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-J1-1",
+          "name": "Castillo de Javier",
+          "type": "Historical",
+          "description": {
+            "text": "The birthplace of St Frances Xavier@en",
+            "about": "http://www.castillodejavier.es/"
+          },
+          "position": { "latitude": 42.59419, "longitude": -1.21577, "elevation": 471 },
+          "hours": [
+            "1000-1600"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-L1",
+      "name": "Liédena",
+      "type": "Village",
+      "position": { "latitude": 42.61680, "longitude": -1.27698, "elevation": 412 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "La Torre Hostal",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers" ],
+          "sleeping": [ "Double" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "AR-L1-1",
+          "name": "Via verde del Irati",
+          "type": "Historical",
+          "description": {
+            "text": "A disused railway track repurposed into a walking an cycling track.@en",
+            "about": "https://viasverdes.com/en/itineraries/fc-del-irati/"
+          },
+          "position": { "latitude": 42.61716, "longitude": -1.27878, "elevation": 412 }
+        }
+      ]
+    },
+    {
+      "id": "AR-L2",
+      "name": "Lumbier Gorge",
+      "type": "Natural",
+      "position": { "latitude": 42.62843, "longitude": -1.30142, "elevation": 464 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-L3",
+      "name": "Lumbier",
+      "type": "Village",
+      "position": { "latitude": 42.65013, "longitude": -1.31096, "elevation": 431 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hotel Irubide",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Lockers", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "AR-L4",
+      "name": "Aldunate",
+      "type": "Village",
+      "position": { "latitude": 42.65467, "longitude": -1.37233, "elevation": 562 },
+      "region": "ES-NA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "AR-Y1",
+      "name": "Yesa",
+      "type": "Village",
+      "position": { "latitude": 42.62022, "longitude": -1.20329, "elevation": 495 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Albergue Sierra de Leyre",
+          "type": "PrivateAlbergue",
+          "services": [ "WiFi", "WashingMachine", "Kitchen", "Breakfast", "Pets", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Hostal Restaurante Arangoiti",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "AR-AR1",
+      "to": "AR-AR2",
+      "distance": 0.70,
+      "descent": 65
+    },
+    {
+      "from": "AR-AR2",
+      "to": "AR-AR3",
+      "distance": 6.22,
+      "descent": 325
+    },
+    {
+      "from": "AR-AR3",
+      "to": "AR-AR4",
+      "distance": 4.33,
+      "descent": 150
+    },
+    {
+      "from": "AR-AR4",
+      "to": "AR-AR5",
+      "distance": 4.73,
+      "ascent": 10,
+      "descent": 105
+    },
+    {
+      "from": "AR-AR5",
+      "to": "AR-AR6",
+      "distance": 3.70,
+      "ascent": 40,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.66256, "longitude": -0.55416, "elevation": 920 },
+        { "latitude": 42.65970, "longitude": -0.56067, "elevation": 957 }
+      ]
+    },
+    {
+      "from": "AR-AR6",
+      "to": "AR-AR7",
+      "distance": 3.57,
+      "ascent": 15,
+      "descent": 80
+    },
+    {
+      "from": "AR-AR7",
+      "to": "AR-AR8",
+      "distance": 5.60,
+      "descent": 105
+    },
+    {
+      "from": "AR-AR8",
+      "to": "AR-AR9",
+      "distance": 1.64,
+      "ascent": 35,
+      "descent": 5,
+      "waypoints": [
+        { "latitude": 42.57896, "longitude": -0.54722, "elevation": 825 }
+      ]
+    },
+    {
+      "from": "AR-AR9",
+      "to": "AR-AR10",
+      "distance": 5.60,
+      "descent": 95
+    },
+    {
+      "from": "AR-AR10",
+      "to": "AR-AR11",
+      "distance": 10.06,
+      "descent": 75
+    },
+    {
+      "from": "AR-AR11",
+      "to": "AR-AR12",
+      "distance": 6.28,
+      "ascent": 15,
+      "descent": 60
+    },
+    {
+      "from": "AR-AR12",
+      "to": "AR-AR13",
+      "distance": 3.57,
+      "ascent": 125,
+      "descent": 30
+    },
+    {
+      "from": "AR-AR13",
+      "to": "AR-AR14",
+      "distance": 4.00,
+      "descent": 135
+    },
+    {
+      "from": "AR-AR14",
+      "to": "AR-AR15",
+      "distance": 13.28,
+      "ascent": 195,
+      "descent": 110,
+      "waypoints": [
+        { "latitude": 42.58664, "longitude": -0.90861, "elevation": 596 },
+        { "latitude": 42.59033, "longitude": -0.94580, "elevation": 559 }
+      ]
+    },
+    {
+      "from": "AR-AR15",
+      "to": "AR-AR16",
+      "distance": 10.33,
+      "ascent": 25,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 42.58985, "longitude": -1.00926, "elevation": 544 }
+      ]
+    },
+    {
+      "from": "AR-AR16",
+      "to": "AR-AR17",
+      "distance": 11.33,
+      "ascent": 355,
+      "descent": 285,
+      "waypoints": [
+        { "latitude": 42.57545, "longitude": -1.08190, "elevation": 562 },
+        { "latitude": 42.58076, "longitude": -1.08787, "elevation": 588 },
+        { "latitude": 42.56347, "longitude": -1.13432, "elevation": 829 }
+      ]
+    },
+    {
+      "from": "AR-AR17",
+      "to": "AR-AR18",
+      "distance": 10.32,
+      "ascent": 10,
+      "descent": 230
+    },
+    {
+      "from": "AR-AR18",
+      "to": "AR-AR19",
+      "distance": 2.34,
+      "ascent": 60,
+      "descent": 5
+    },
+    {
+      "from": "AR-AR19",
+      "to": "AR-AR20",
+      "distance": 6.40,
+      "ascent": 250,
+      "descent": 15
+    },
+    {
+      "from": "AR-AR20",
+      "to": "AR-AR21",
+      "distance": 9.08,
+      "ascent": 250,
+      "descent": 240,
+      "waypoints": [
+        { "latitude": 42.64477, "longitude": -1.36489, "elevation": 628 }
+      ]
+    },
+    {
+      "from": "AR-AR21",
+      "to": "AR-AR22",
+      "distance": 2.05,
+      "ascent": 25,
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 42.66002, "longitude": -1.43748, "elevation": 695 },
+        { "latitude": 42.66112, "longitude": -1.44383, "elevation": 716 }
+      ]
+    },
+    {
+      "from": "AR-AR22",
+      "to": "AR-AR23",
+      "distance": 4.76,
+      "ascent": 10,
+      "descent": 155,
+      "waypoints": [
+        { "latitude": 42.67567, "longitude": -1.47319, "elevation": 608 }
+      ]
+    },
+    {
+      "from": "AR-AR23",
+      "to": "AR-AR24",
+      "distance": 2.52,
+      "ascent": 5,
+      "descent": 20
+    },
+    {
+      "from": "AR-AR24",
+      "to": "AR-AR25",
+      "distance": 4.24,
+      "ascent": 60,
+      "descent": 50,
+      "waypoints": [
+        { "latitude": 42.70661, "longitude": -1.50995, "elevation": 555 },
+        { "latitude": 42.71719, "longitude": -1.53009, "elevation": 508 },
+        { "latitude": 42.71409, "longitude": -1.54936, "elevation": 512 }
+      ]
+    },
+    {
+      "type": "Trail",
+      "from": "AR-AR25",
+      "to": "AR-AR26",
+      "distance": 1.65,
+      "ascent": 35,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.71269, "longitude": -1.55449, "elevation": 528 },
+        { "latitude": 42.71257, "longitude": -1.55749, "elevation": 540 },
+        { "latitude": 42.71228, "longitude": -1.56359, "elevation": 523 }
+      ]
+    },
+    {
+      "type": "CyclePath",
+      "from": "AR-AR25",
+      "to": "AR-AR27",
+      "distance": 3.90,
+      "ascent": 45,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 42.71448, "longitude": -1.54953, "elevation": 513 },
+        { "latitude": 42.71408, "longitude": -1.56049, "elevation": 501 },
+        { "latitude": 42.71464, "longitude": -1.56979, "elevation": 511 }
+      ]
+    },
+    {
+      "type": "Trail",
+      "from": "AR-AR26",
+      "to": "AR-AR27",
+      "distance": 1.85,
+      "ascent": 10,
+      "descent": 10
+    },
+    {
+      "type": "Trail",
+      "from": "AR-AR27",
+      "to": "AR-AR28",
+      "distance": 1.66,
+      "ascent": 40
+    },
+    {
+      "type": "CyclePath",
+      "from": "AR-AR27",
+      "to": "AR-AR29",
+      "distance": 5.50,
+      "ascent": 70,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.71109, "longitude": -1.60980, "elevation": 501 },
+        { "latitude": 42.69680, "longitude": -1.63699, "elevation": 547 }
+      ]
+    },
+    {
+      "type": "Trail",
+      "from": "AR-AR28",
+      "to": "AR-AR29",
+      "distance": 3.99,
+      "ascent": 10,
+      "descent": 20
+    },
+    {
+      "from": "AR-AR29",
+      "to": "AR-AR30",
+      "distance": 4.00,
+      "ascent": 10,
+      "descent": 20
+    },
+    {
+      "from": "AR-AR30",
+      "to": "AR-AR31",
+      "distance": 1.30,
+      "ascent": 30
+    },
+    {
+      "from": "AR-AR31",
+      "to": "AR-AR32",
+      "distance": 4.54,
+      "descent": 160
+    },
+    {
+      "from": "AR-AR32",
+      "to": "AR-AR33",
+      "distance": 2.90,
+      "descent": 35
+    },
+    {
+      "from": "AR-AR33",
+      "to": "F-F34",
+      "distance": 2.47,
+      "ascent": 30,
+      "descent": 5,
+      "waypoints": [
+        { "latitude": 42.67817, "longitude": -1.77277, "elevation": 389 },
+        { "latitude": 42.67989, "longitude": -1.78041, "elevation": 389 }
+      ]
+    },
+    {
+      "from": "AR-AR10",
+      "to": "AR-SP1",
+      "distance": 5.25,
+      "ascent": 295,
+      "descent": 220,
+      "waypoints": [
+        { "latitude": 42.55110, "longitude": -0.59957, "elevation": 786 },
+        { "latitude": 42.54409, "longitude": -0.60373, "elevation": 960 },
+        { "latitude": 42.54353, "longitude": -0.60931, "elevation": 1017 },
+        { "latitude": 42.53366, "longitude": -0.61001, "elevation": 885 }
+      ]
+    },
+    {
+      "from": "AR-SP1",
+      "to": "AR-SP2",
+      "distance": 7.13,
+      "ascent": 415,
+      "waypoints": [
+        { "latitude": 42.50797, "longitude": -0.62885, "elevation": 1072 },
+        { "latitude": 42.50447, "longitude": -0.63966, "elevation": 1146 }
+      ]
+    },
+    {
+      "from": "AR-SP2",
+      "to": "AR-SP3",
+      "distance": 0.68,
+      "ascent": 20,
+      "descent": 20
+    },
+    {
+      "from": "AR-SP3",
+      "to": "AR-SP4",
+      "distance": 3.38,
+      "descent": 440,
+      "waypoints": [
+        { "latitude": 42.51480, "longitude": -0.67149, "elevation": 1128 },
+        { "latitude": 42.51525, "longitude": -0.66531, "elevation": 1090 },
+        { "latitude": 42.51906, "longitude": -0.66694, "elevation": 937 },
+        { "latitude": 42.52169, "longitude": -0.67469, "elevation": 790 }
+      ]
+    },
+    {
+      "from": "AR-SP4",
+      "to": "AR-SP5",
+      "distance": 4.21,
+      "ascent": 100,
+      "descent": 125,
+      "waypoints": [
+        { "latitude": 42.52827, "longitude": -0.67508, "elevation": 843 },
+        { "latitude": 42.53164, "longitude": -0.68724, "elevation": 878 },
+        { "latitude": 42.54199, "longitude": -0.69798, "elevation": 754 }
+      ]
+    },
+    {
+      "from": "AR-SP5",
+      "to": "AR-AR11",
+      "distance": 3.00,
+      "descent": 115,
+      "waypoints": [
+        { "latitude": 42.55506, "longitude": -0.70147, "elevation": 678 }
+      ]
+    },
+    {
+      "from": "AR-AR17",
+      "to": "AR-J1",
+      "distance": 5.75,
+      "descent": 175,
+      "waypoints": [
+        { "latitude": 42.58039, "longitude": -1.20920, "elevation": 500 }
+      ]
+    },
+    {
+      "from": "AR-J1",
+      "to": "AR-AR18",
+      "distance": 8.50,
+      "ascent": 130,
+      "descent": 180,
+      "waypoints": [
+        { "latitude": 42.59252, "longitude": -1.22117, "elevation": 490 },
+        { "latitude": 42.58494, "longitude": -1.22571, "elevation": 572 }
+      ]
+    },
+    {
+      "from": "AR-AR18",
+      "to": "AR-L1",
+      "distance": 5.66,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "AR-L1",
+      "to": "AR-L2",
+      "distance": 5.66,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "AR-L2",
+      "to": "AR-L3",
+      "distance": 3.00,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "AR-L3",
+      "to": "AR-L4",
+      "distance": 3.00,
+      "ascent": 15,
+      "descent": 5
+    },
+    {
+      "from": "AR-L4",
+      "to": "AR-AR21",
+      "distance": 7.75,
+      "ascent": 270,
+      "descent": 120,
+      "waypoints": [
+        { "latitude": 42.64898, "longitude": -1.37523, "elevation": 698 },
+        { "latitude": 42.65443, "longitude": -1.39605, "elevation": 787 },
+        { "latitude": 42.65954, "longitude": -1.42272, "elevation": 673 }
+      ]
+    },
+    {
+      "from": "AR-J1",
+      "to": "AR-Y1",
+      "distance": 5.20,
+      "ascent": 70,
+      "descent": 30,
+      "waypoints": [
+        { "latitude": 42.60016, "longitude": -1.21870, "elevation": 428 },
+        { "latitude": 42.61613, "longitude": -1.21129, "elevation": 427 }
+      ]
+    },
+    {
+      "from": "AR-Y1",
+      "to": "AR-L1",
+      "distance": 6.70,
+      "ascent": 105,
+      "descent": 185,
+      "waypoints": [
+        { "latitude": 42.62296, "longitude": -1.22159, "elevation": 462 },
+        { "latitude": 42.62458, "longitude": -1.24613, "elevation": 564 }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "AR-AR",
+      "name": "Camino Aragonés",
+      "description": "The main Camino route starting in Stomport.",
+      "major": true,
+      "stops": [ "AR-AR9", "AR-AR18" ],
+      "starts": [ "AR-AR1@100" ],
+      "finishes": [ "F-F35" ],
+      "palette": {
+        "colour": "#fec953"
+      },
+      "features": [
+        {
+          "id": "AR-AR-F1",
+          "name": "Main Camino Aragones Route, Puerto de Somport to Rio Gas",
+          "condition": "AR-AR1",
+          "geometry": "AR/AR-AR-F1.geojson"
+        },
+        {
+          "id": "AR-AR-F2",
+          "name": "Main Camino Aragones Route, Rio Gas to Santa Cilla de Jaca",
+          "condition": {
+            "not": "AR-SP1"
+          },
+          "geometry": "AR/AR-AR-F2.geojson"
+        },
+        {
+          "id": "AR-AR-F3",
+          "name": "Main Camino Aragones Route, Santa Cilla de Jaca to Undués de Lerda",
+          "condition": "AR-AR11",
+          "geometry": "AR/AR-AR-F3.geojson"
+        },
+        {
+          "id": "AR-AR-F4",
+          "name": "Main Camino Aragones Route, Undués de Lerda to Sangüesa",
+          "condition": {
+            "not": "AR-J1"
+          },
+          "geometry": "AR/AR-AR-F4.geojson"
+        },
+        {
+          "id": "AR-AR-F5",
+          "name": "Main Camino Aragones Route, Sangüesa to Puente la Reina",
+          "condition": "AR-AR18",
+          "geometry": "AR/AR-AR-F5.geojson"
+        },
+        {
+          "id": "AR-AR-F5",
+          "name": "Main Camino Aragones Route, Sangüesa to Puente la Reina",
+          "condition": "AR-AR18",
+          "geometry": "AR/AR-AR-F5.geojson"
+        },
+        {
+          "id": "AR-AR-F6",
+          "name": "Main Camino Aragones Route, Sangüesa to Izco",
+          "condition": "AR-AR20",
+          "geometry": "AR/AR-AR-F6.geojson"
+        },
+        {
+          "id": "AR-AR-F7",
+          "name": "Main Camino Aragones Route, Izco to Yámoz",
+          "condition": "AR-AR22",
+          "geometry": "AR/AR-AR-F7.geojson"
+        },
+        {
+          "id": "AR-AR-F8",
+          "name": "Main Camino Aragones Route, Yámoz to Ezperun via Hills",
+          "type": "Trail",
+          "condition": "AR-AR26",
+          "geometry": "AR/AR-AR-F8.geojson"
+        },
+        {
+          "id": "AR-AR-F9",
+          "name": "Main Camino Aragones Route, Yámoz to Ezperun via Canal",
+          "type": "CyclePath",
+          "condition": "AR-AR26",
+          "geometry": "AR/AR-AR-F9.geojson"
+        },
+        {
+          "id": "AR-AR-F10",
+          "name": "Main Camino Aragones Route, Ezperun to Puente la Reina",
+          "condition": "AR-AR30",
+          "geometry": "AR/AR-AR-F10.geojson"
+        }
+      ]
+    },
+    {
+      "id": "AR-SP",
+      "name": "San Juan de la Peña",
+      "description": {
+        "text": "A detour just past Jaca to the old and new monasteries of San Juan de la Peña.@en",
+        "notes": [
+          {
+            "type": "Warning",
+            "text": "The walking route is only recommended for pilgrims used to mountaineering. An alternative is to spend an extra day at Jaca and use public transport."
+          }
+        ]
+      },
+      "locations": [ "AR-SP1", "AR-SP2", "AR-SP3", "AR-SP4", "AR-SP5" ],
+      "palette": {
+        "colour": "#fe8d37"
+      },
+      "features": [
+        {
+          "id": "AR-SP-F1",
+          "name": "Main Camino Aragones Route, Santa Cilla de Jaca to ",
+          "condition": "AR-SP1",
+          "geometry": "AR/AR-SP-F1.geojson"
+        }
+      ]
+    },
+    {
+      "id": "AR-JS",
+      "name": "Detour to Javier",
+      "description": "A detour to Javier, birthplace of St Frances Xavier, returning to Sangüesa.@en",
+      "locations": [ "AR-J1" ],
+      "palette": {
+        "colour": "#fe8d37"
+      },
+      "features": [
+        {
+          "id": "AR-JS-F1",
+          "name": "Undués de Lerda - Javier",
+          "condition": "AR-J1",
+          "geometry": "AR/AR-JS-F1.geojson"
+        },
+        {
+          "id": "AR-JS-F2",
+          "name": "Javier - Sangüesa",
+          "condition": { "and": [ "AR-J1", "AR-AR18" ] },
+          "geometry": "AR/AR-JS-F2.geojson"
+        }
+      ]
+    },
+    {
+      "id": "AR-SL",
+      "name": "Detour to Lumbier",
+      "description": "A detour to Lumbier, via Liédena. The route follows the Via verde del Irati through the Gorge of Lumbier@en",
+      "locations": [ "AR-L1", "AR-L2", "AR-L3", "AR-L4" ],
+      "palette": {
+        "colour": "#b4d404",
+        "text-colour": "#94b004"
+      },
+      "features": [
+        {
+          "id": "AR-SL-F1",
+          "name": "Sangüesa - Liédena - Lumbier - Izco",
+          "condition": "AR-L1",
+          "geometry": "AR/AR-SL-F1.geojson"
+        }
+      ]
+    },
+    {
+      "id": "AR-Y",
+      "name": "Bypass Sangüesa from Javier to Liédena",
+      "description": "For those doing both the Javier and Lumbier detours, bypass Sangüesa and go to Liédena via Yesa@en",
+      "locations": [ "AR-Y1" ],
+      "palette": {
+        "colour": "#fe8d37"
+      },
+      "features": [
+        {
+          "id": "AR-Y-F1",
+          "name": "Javier - Yesa - Liédena ",
+          "condition": "AR-Y1",
+          "geometry": "AR/AR-Y-F1.geojson"
+        }
+      ]
+    }
+  ],
+  "route-logic": [
+    {
+      "description": "Changes for the San Juan de la Peña route",
+      "condition": "AR-SP",
+      "exclude-legs": [
+        {
+          "from": "AR-AR10",
+          "to": "AR-AR11",
+          "distance": 10.06
+        }
+      ]
+    },
+    {
+      "description": "Changes for the Javier - Sangüesa route",
+      "condition": "AR-JS",
+      "exclude-legs": [
+        {
+          "from": "AR-AR17",
+          "to": "AR-AR18",
+          "distance": 10.32
+        }
+      ]
+    },
+    {
+      "description": "Changes for the Lumbier route",
+      "condition": "AR-SL",
+      "exclude": [ "AR-AR19", "AR-AR20" ]
+    },
+    {
+      "description": "Changes for the Yesa route",
+      "condition": "AR-Y",
+      "requires": [ "AR-JS", "AR-SL" ],
+      "exclude": [ "AR-AR18" ]
+    }
+  ],
+  "default-route": "AR-AR"
+}

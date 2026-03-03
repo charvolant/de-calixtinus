@@ -552,7 +552,7 @@
       <span .accommodation-types>
         <span .accommodation .municipal-albergue .ca-albergue>
         <span .accommodation .hotel .ca-hotel>
-      <span .services">
+      <span .services>
         <span .service .ca-restaurant>
         <span .service .ca-pharmacy>
         <span .service .ca-bank>
@@ -567,13 +567,13 @@
       <span .leg-distance>3.1km
       <span .leg-ascent>5m
       <span .leg-descent>30m
-    <div .row>
-      <div .col .leg-to .leg-line .leg-unused .offset-1>
-        Herbón
-        <span .leg-type>
-        <span .leg-distance>3.6km
-        <span .leg-ascent>30m
-        <span .leg-descent>60m
+  <div .row>
+    <div .col .leg-to .leg-line .leg-unused .offset-1>
+      Herbón
+      <span .leg-type>
+      <span .leg-distance>3.6km
+      <span .leg-ascent>30m
+      <span .leg-descent>60m
 
 <p>
   The first line is a summary of the location.

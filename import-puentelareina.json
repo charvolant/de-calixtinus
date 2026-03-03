@@ -1,0 +1,148 @@
+{
+  "id": "I-OP",
+  "name": "Obanos and Puente la Reina",
+  "description": "Import for Obanos and Puente la Reina, used by both the Camino Frances and Camino Aragones",
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Obanos and Puente la Reina"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2026-02-14"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2026-02-14"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "fragment": true,
+  "locations": [
+    {
+      "id": "F-F34",
+      "name": "Obanos",
+      "type": "Town",
+      "position": { "latitude": 42.67947, "longitude": -1.78481, "elevation": 416 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Usda Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WashingMachine", "Dryer", "Kitchen", "Accessible", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Casa Villazón II",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "Single", "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Casa Raichu",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Breakfast", "Lockers", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Double", "DoubleWC", "Triple" ]
+        },
+        {
+          "name": "Estudio Villazón",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Mamerto Hostal Rural",
+          "type": "House",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Kitchen", "Lockers", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC", "Triple" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "F-F34-1",
+          "name": "Meeting of the Camino Frances and Camino Aaragones@en",
+          "type": "Junction",
+          "position": { "latitude": 42.67938, "longitude": -1.78611, "elevation": 413 }
+        }
+      ],
+      "events": [
+        {
+          "name": [
+            "Misterio de Obanos@es",
+            "The Mystery of Obanos@en"
+          ],
+          "type": "Performance",
+          "description": {
+            "text": "The \"Mystery of Obanos\" is a play staged occasionally in the main square with over 400 performers. The play is based on the life of St Felicia and her brother.@en",
+            "about": "https://misteriodeobanos.org/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "F-F35",
+      "name": "Puente la Reina",
+      "type": "Town",
+      "position": { "latitude": 42.67373, "longitude": -1.81045, "elevation": 355 },
+      "region": "ES-NA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Padres Reparadores Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "BicycleStorage", "CampSite", "Bedlinen", "Prayer" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Santiago Apósol Pilgrims Hostel",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Dryer", "Handwash", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "CampSite" ],
+          "sleeping": [ "Shared" ]
+        },
+        "PrivateAlbergue",
+        "House",
+        "GuestHouse",
+        "Hotel"
+      ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "F-F34",
+      "to": "F-F35",
+      "distance": 2.43,
+      "ascent": null,
+      "descent": 60
+    }
+  ],
+  "routes": [
+    {
+      "id": "OP-OP",
+      "name": "Default route",
+      "description": "The default route for importing",
+      "palette": {
+        "colour": "#fec953"
+      }
+    }
+  ],
+  "route-logic": [ ],
+  "default-route": "OP-OP"
+}

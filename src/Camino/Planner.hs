@@ -1131,10 +1131,12 @@ buildTripChoiceMap' chooser preferences camino reachable' visited next current =
 
 -- Build a forward map of accommodation choices and a backward map of choices and then choose the
 -- entry with the highest penance (meaning that there's a better option either before or after this spot)
-buildTripChoiceMap :: (Ord f) => (Location -> TripChoice v f) -> TravelPreferences -> Camino -> Location -> Location -> (Location -> Bool) -> TripChoiceMap v f
-buildTripChoiceMap chooser preferences camino begin end select = let
-    reachable' = reachable camino begin end select
-    sgf = subgraph camino reachable'
+buildTripChoiceMap :: (Ord f) => (Location -> TripChoice v f) -> TravelPreferences -> Camino -> Location -> Location -> (Location -> Bool) -> (Leg -> Bool) -> TripChoiceMap v f
+buildTripChoiceMap chooser preferences camino begin end selectLocation selectLeg = let
+    reachable' = reachable camino begin end selectLocation
+    allowedLocation l = S.member l reachable'
+    allowedLeg = selectLeg
+    sgf = subgraph camino allowedLocation allowedLeg
     sgb = mirror sgf
     acf = buildTripChoiceMap' chooser preferences sgf reachable' S.empty (S.singleton begin) M.empty
     acb = buildTripChoiceMap' chooser preferences sgb reachable' S.empty (S.singleton end) M.empty
@@ -1187,13 +1189,13 @@ planCamino cc tprefs cprefs  = Solution {
     finish' = preferenceFinish cprefs'
     allowed = allowedLocations cprefs'
     select l = S.member l allowed
-    stopAm = buildTripChoiceMap (accommodationChoice (const True) sprefs camino) tprefs camino start' finish' select
-    stopLm = buildTripChoiceMap (locationChoice sprefs) tprefs camino start' finish' select
-    stockAm = buildTripChoiceMap (accommodationChoice (const True) stprefs camino) tprefs camino start' finish' select
-    stockLm = buildTripChoiceMap (locationChoice stprefs) tprefs camino start' finish' select
-    restAm = buildTripChoiceMap (accommodationChoice accommodationMulti rprefs camino) tprefs camino start' finish' select
-    restLm = buildTripChoiceMap (locationChoice rprefs) tprefs camino start' finish' select
-    restPm = buildTripChoiceMap (locationChoice pprefs) tprefs camino start' finish' select
+    stopAm = buildTripChoiceMap (accommodationChoice (const True) sprefs camino) tprefs camino start' finish' select (const True)
+    stopLm = buildTripChoiceMap (locationChoice sprefs) tprefs camino start' finish' select (const True)
+    stockAm = buildTripChoiceMap (accommodationChoice (const True) stprefs camino) tprefs camino start' finish' select (const True)
+    stockLm = buildTripChoiceMap (locationChoice stprefs) tprefs camino start' finish' select (const True)
+    restAm = buildTripChoiceMap (accommodationChoice accommodationMulti rprefs camino) tprefs camino start' finish' select (const True)
+    restLm = buildTripChoiceMap (locationChoice rprefs) tprefs camino start' finish' select (const True)
+    restPm = buildTripChoiceMap (locationChoice pprefs) tprefs camino start' finish' select (const True)
     choices = TripChoices {
         tcStopAccommodation = stopAm
       , tcStopLocation = stopLm

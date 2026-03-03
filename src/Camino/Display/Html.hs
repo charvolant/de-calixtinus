@@ -277,6 +277,7 @@ caminoLocationTypeIcon Wharf = [ihamlet| <span .location-type .ca-wharf title="_
 caminoLocationTypeIcon Station = [ihamlet| <span .location-type .ca-station title="_{StationTitle}"> |]
 caminoLocationTypeIcon Airport = [ihamlet| <span .location-type .ca-airport title="_{AirportTitle}"> |]
 caminoLocationTypeIcon Farmland = [ihamlet| <span .location-type .ca-farmland title="_{FarmlandTitle}"> |]
+caminoLocationTypeIcon WaterBody = [ihamlet| <span .location-type .ca-waterbody title="_{WaterBodyTitle}"> |]
 caminoLocationTypeIcon Industry = [ihamlet| <span .location-type .ca-industry title="_{IndustryTitle}"> |]
 caminoLocationTypeIcon PlaceholderLocation = [ihamlet| <span .text-warning .location-type .ca-poi title="_{PlaceholderLabel}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
@@ -314,6 +315,7 @@ caminoLocationTypeLabel Wharf = WharfTitle
 caminoLocationTypeLabel Station = StationTitle
 caminoLocationTypeLabel Airport = AirportTitle
 caminoLocationTypeLabel Farmland = FarmlandTitle
+caminoLocationTypeLabel WaterBody = WaterBodyTitle
 caminoLocationTypeLabel Industry = IndustryTitle
 caminoLocationTypeLabel Poi = PoiTitle
 caminoLocationTypeLabel PlaceholderLocation = PlaceholderLabel
@@ -351,6 +353,7 @@ caminoLocationTypeDescription Wharf = WharfDescription
 caminoLocationTypeDescription Station = StationDescription
 caminoLocationTypeDescription Airport = AirportDescription
 caminoLocationTypeDescription Farmland = FarmlandDescription
+caminoLocationTypeDescription WaterBody = WaterBodyDescription
 caminoLocationTypeDescription Industry = IndustryDescription
 caminoLocationTypeDescription Poi = PoiDescription
 caminoLocationTypeDescription _ = PlaceholderLabel
@@ -1520,7 +1523,7 @@ caminoMapHtml _preferences _camino _solution = [ihamlet|
   |]
 
 featureKeyLine :: Route -> LegType -> Bool -> Bool -> Text -> HtmlUrlI18n CaminoMsg CaminoRoute
-featureKeyLine route lt large used pos = [ihamlet|<line x1="%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
+featureKeyLine route lt large used pos = [ihamlet|<line x1="0%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
   where
     (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large False used lt
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
@@ -1719,8 +1722,8 @@ L.easyButton('<span class="ca-label fs-5" title="_{ShowLabelsTitle}"></span>', f
 \    selectZoom();
 }).addTo(map);
 
-function addLeg(latlngs, rid, legLayer, trailLayer) {
-\  const style = chooseFeatureStyle(null, null, rid, null);
+function addLeg(latlngs, rid, used, legLayer, trailLayer) {
+\  const style = chooseFeatureStyle(null, null, rid, null, used);
 \  var line;
 \  if (legLayer) {
 \    line = L.polyline(latlngs, style);
@@ -1737,7 +1740,7 @@ async function addTrail(url, fid, rid, cid) {
 \  const geojson = await response.json();
 \  const layer = L.geoJson(geojson, {
 \    style: function (feature) {
-\        return chooseFeatureStyle(feature?.properties?.identifier, fid, rid, cid);
+\        return chooseFeatureStyle(feature?.properties?.identifier, fid, rid, cid, true);
 \      }
 \    }
 \  );
@@ -1798,6 +1801,7 @@ $forall (lt, location, poi) <- icons
       , (Station, (24, 24), (24, 12))
       , (Airport, (24, 24), (24, 12))
       , (Farmland, (24, 24), (24, 24))
+      , (WaterBody, (24, 24), (24, 13))
       , (Industry, (24, 24), (24, 24))
       , (Poi, (16, 24), (16, 24))
       ] :: [(LocationType, (Int, Int), (Int, Int))]
@@ -1838,7 +1842,7 @@ $forall camino <- caminos
     $forall routeFeature <- routeFeatures route
       $forall feature <- allFeatures routeFeature
         #{nl}    case "#{featureID feature}":
-        #{nl}      return ^{caminoMapScriptStyle route False (featureDummy feature) (usedFeature feature) (featureType feature)};
+        #{nl}      return ^{caminoMapScriptStyle route False (featureDummy feature) (usedFeature feature) (featureType feature)}; // #{usedFeature feature} #{show (featureType feature)}
       #{nl}    case "#{routeID route}":
       $if usedRoute route
         #{nl}      return ^{caminoMapScriptStyle route True False True Road};
@@ -1851,8 +1855,24 @@ $forall camino <- caminos
 \  return null;
 }
 
-function chooseFeatureStyle(sfid, fid, rid, cid) {
+function chooseFeatureStyle2(id) {
+\  switch (id) {
+$forall camino <- caminos
+  $forall route <- caminoRoutes camino
+    #{nl}    case "#{routeID route}":
+    #{nl}      return ^{caminoMapScriptStyle route True False False Road};
+  $with route <- caminoDefaultRoute camino
+    #{nl}    case "#{caminoId camino}":
+    #{nl}      return { color: "#{toCssColour (featureRouteColour route)}", weight: 6, opacity: 1.0 };
+\  }
+\  return null;
+}
+
+
+function chooseFeatureStyle(sfid, fid, rid, cid, used) {
 \  var style = null;
+\  if (!used && rid)
+\    style = chooseFeatureStyle2(rid);
 \  if (style == null && sfid)
 \    style = chooseFeatureStyle1(sfid);
 \  if (style == null && fid)
@@ -1881,8 +1901,8 @@ orderFeatures usedRoute usedFeature caminos = let
     map snd $ L.sortOn (\(i, (_, r, f)) -> (usedFeature f, usedRoute r, i)) indexedFeatures
 
 
-caminoMapScriptCamino :: Bool -> (Location -> String) -> (PointOfInterest -> String) -> (Location -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (Leg -> Bool) -> (Leg -> Text) -> S.Set Location -> S.Set Leg -> [(Camino, Route, Feature)] -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapScriptCamino tlink chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail chooseStyleID locations legs features = [iophelia|
+caminoMapScriptCamino :: Bool -> (Location -> String) -> (PointOfInterest -> String) -> (Location -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (Leg -> Bool) -> (Leg -> Bool) -> (Leg -> Text) -> S.Set Location -> S.Set Leg -> [(Camino, Route, Feature)] -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoMapScriptCamino tlink chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail usedLeg chooseStyleID locations legs features = [iophelia|
 $forall location <- locations
   $with position <- locationPosition location
     #{nl}marker = L.marker([#{latitude position}, #{longitude position}], { icon: #{chooseLocationIcon location} } );
@@ -1899,17 +1919,26 @@ $forall location <- locations
       $if tlink
         marker.on('click', function(e) { showLocationDescription("#{locationID location}"); } );
 
-$forall leg <- legs
+$forall leg <- usedLegs
   #{nl}addLeg([[#{latitude (locationPosition $ legFrom leg)}, #{longitude (locationPosition $ legFrom leg)}]
     $forall seg <- legSegments leg
       , [#{latitude (lsTo seg)}, #{longitude (lsTo seg)}]
-    ], "#{chooseStyleID leg}", true, #{javascriptBoolean (legWithoutTrail leg)});
+    ], "#{chooseStyleID leg}", true, true, #{javascriptBoolean (legWithoutTrail leg)});
+
+$forall leg <- unusedLegs
+  #{nl}addLeg([[#{latitude (locationPosition $ legFrom leg)}, #{longitude (locationPosition $ legFrom leg)}]
+    $forall seg <- legSegments leg
+      , [#{latitude (lsTo seg)}, #{longitude (lsTo seg)}]
+    ], "#{chooseStyleID leg}", false, true, #{javascriptBoolean (legWithoutTrail leg)});
 
 $forall (camino, route, feature) <- features
   $maybe geometry <- featureGeometry feature
     #{nl}addTrail("@{FeatureRoute geometry}", "#{featureID feature}", "#{routeID route}", "#{caminoId camino}");
 
 |]
+  where
+    usedLegs = S.filter usedLeg legs
+    unusedLegs = S.filter (not . usedLeg) legs
 
 caminoMapScriptLabels :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptLabels camino = [iophelia|
@@ -1938,14 +1967,14 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
   ^{caminoMapScriptStyles usedRoute usedFeature [camino]}
   ^{caminoMapScriptTabs}
   map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
-  ^{caminoMapScriptCamino True chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail legStyleID locations legs features}
+  ^{caminoMapScriptCamino True chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail usedLeg legStyleID locations legs features}
   ^{caminoMapScriptLabels camino}
   selectZoom();
 |]
   where
     camino = preferenceCamino cprefs
     locations = S.fromList $ caminoLocations camino
-    legs = S.fromList $ caminoAllLegs camino (const True)
+    legs = S.fromList $ caminoAllLegs camino False (const True)
     routes = S.fromList $ caminoRoutes camino
     usedRoutes = maybe routes (preferenceRoutes . solutionCaminoPreferences) solution
     (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino solution
@@ -1957,6 +1986,7 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
     choosePoiTooltip poi = caminoPoiTooltip tprefs cprefs poi
     legWithoutTrail leg = null $ routeFeatures $ caminoLegRoute camino leg
     legStyleID leg = routeID $ caminoLegRoute camino leg
+    usedLeg l = if isJust solution then (S.member l usedLegs) else True
     usedRoute r = if isJust solution then S.member r usedRoutes else True
     usedFeature f = if isJust solution then S.member f usedFeatures else True
     features = orderFeatures usedRoute usedFeature [camino]
@@ -1968,20 +1998,21 @@ caminoAllMapScript config tl br caminos = [ihamlet|
 <script>
   ^{caminoMapScriptBase}
   ^{caminoMapScriptStyles (const True) (const True) caminos}
-  ^{caminoMapScriptCamino False chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail legStyleID locations legs features}
+  ^{caminoMapScriptCamino False chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail usedLeg legStyleID locations legs features}
   $forall camino <- caminos
     ^{caminoMapScriptLabels camino}
   map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
   selectZoom();
  |]
   where
-    rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoAllLegs c (const True))) caminos
+    rmap = M.unions $ map (\c -> M.fromList $ map (\l -> (l, caminoLegRoute c l)) (caminoAllLegs c False (const True))) caminos
     locations = S.unions $ map (S.fromList . caminoLocations) caminos
-    legs = S.unions $ map (\c -> S.fromList $ caminoAllLegs c (const True)) caminos
+    legs = S.unions $ map (\c -> S.fromList $ caminoAllLegs c False (const True)) caminos
     chooseLocationIcon loc = caminoLocationIconSimple loc
     choosePoiIcon poi = caminoPoiIconSimple poi
     chooseLocationTooltip loc = caminoLocationTooltipSimple config loc
     choosePoiTooltip poi = caminoPoiTooltipSimple poi
+    usedLeg _leg = True
     legWithoutTrail _leg = True
     legStyleID leg = maybe "Unknown" routeID (M.lookup leg rmap)
     -- features = orderFeatures (const True) (const True) caminos

@@ -28,6 +28,9 @@ caminos:
   - id: I-AT
     type: CaminoDefinition
     path: "file:import-astorga.json"
+  - id: I-OP
+    type: CaminoDefinition
+    path: "file:import-puentelareina.json"
   - id: I-BS
     type: CaminoDefinition
     path: "file:import-bergazos-santiago.json"
@@ -70,6 +73,9 @@ caminos:
   - id: W
     type: CaminoDefinition
     path: "file:camino-invierno.json"
+  - id: AR
+    type: CaminoDefinition
+    path: "file:camino-aragones.json"
   - id: BM
     type: CaminoDefinition
     path: "file:bondi-manly.json"
@@ -229,6 +235,14 @@ calendar:
       type: day-of-year
       days:
         - 02-28
+  - key: AragonDay
+    name:
+      - Día de San Jorge o Diya Nazional d’Aragón@es
+      - National Day of Aragon@en
+    calendar:
+      type: day-of-year
+      days:
+        - 04-23
   - key: FreedomDayPT
     name:
       - Freedom Day (Portugal)@en
@@ -432,6 +446,14 @@ calendar:
       type: day-of-year
       days:
         - 12-08
+  - key: AragonJusticeDay
+    name:
+      - Día del Justicia de Aragón@es
+      - Aragon Justice Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 12-20
   - key: Christmas
     name:
       - Christmas Day@en
@@ -538,6 +560,22 @@ regions:
     holidays:
       - type: named
         key: AndalusiaDay
+  - id: "ES-AR"
+    name:
+      - Aragón@es
+    description:
+      text:
+        - The Autonomous Community of Aragón@en
+        - Comunidad Autonoma de Aragón@es
+      about: https://www.aragon.es
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: AragonDay
+      - type: named
+        key: AragonJusticeDay
   - id: "ES-AS"
     name:
       - Asturies@ast

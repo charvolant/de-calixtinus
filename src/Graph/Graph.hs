@@ -47,8 +47,8 @@ class Edge e v => Graph g e v | g -> e, g -> v where
   -- | Get the single edge, if it exists, between two vertices
   --   If multiple edges exist, a consistent single edge is returned
   edge :: g -> v -> v -> Maybe e
-  -- | Construct a subgraph containing only the given vertices
-  subgraph :: g -> S.Set v -> g
+  -- | Construct a subgraph containing only selected vertices and edges
+  subgraph :: g -> (v -> Bool) -> (e -> Bool) -> g
   -- | Mirror (reverse) the graph so that all edges are reversed
   mirror :: g -> g
   -- | Get the preceding vertices in a graph

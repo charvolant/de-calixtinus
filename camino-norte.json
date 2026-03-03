@@ -1665,13 +1665,13 @@
         },
         {
           "id": "N-N57-2",
-          "name": "Transfer between inland and and coastal routes (to Noja)@en",
+          "name": "Transfer between inland and coastal routes (to Noja)@en",
           "type": "Junction",
           "position": { "latitude": 43.46381, "longitude": -3.47824, "elevation": 15 }
         },
         {
           "id": "N-N57-3",
-          "name": "Transfer between inland and and coastal routes (to Noja)@en",
+          "name": "Transfer between inland and coastal routes (to Noja)@en",
           "type": "Junction",
           "position": { "latitude": 43.45822, "longitude": -3.50543, "elevation": 33 }
         }

@@ -100,8 +100,8 @@ legFieldOptions = [
   , def & foPath .~ "to"
   , def & foPath .~ "distance" & foNumberFormat ?~ fieldFixedFormat 2
   , def & foPath .~ "time"  & foRemove ?~ removeNull & foNumberFormat ?~ fieldFixedFormat 1
-  , def & foPath .~ "ascent" & foNumberFormat ?~ fieldIntFormat
-  , def & foPath .~ "descent" & foNumberFormat ?~ fieldIntFormat
+  , def & foPath .~ "ascent" & foRemove ?~ removeNull & foNumberFormat ?~ fieldIntFormat
+  , def & foPath .~ "descent" & foRemove ?~ removeNull & foNumberFormat ?~ fieldIntFormat
   , def & foPath .~ "penance"  & foRemove ?~ removeNull
   , def & foPath .~ "waypoints"  & foRemove ?~ removeNullEmpty & foChildren .~ [
       def & foPath .~ "[]" & foInline ?~ inlineAlways & foChildren .~ latLongFieldOptions
@@ -156,6 +156,7 @@ caminoPrintOptions = buildPrintOptions [
   , def & foPath .~ "prohibits" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10
   , def & foPath .~ "include" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10
   , def & foPath .~ "exclude" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10
+  , def & foPath .~ "exclude-legs" & foRemove ?~ removeNullEmpty & foChildren .~ legFieldOptions
   , def & foPath .~ "rest-points" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10
   , def & foPath .~ "starts" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10
   , def & foPath .~ "finishes" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10

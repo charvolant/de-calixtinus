@@ -1601,7 +1601,9 @@
         {
           "id": "AR-JS-F2",
           "name": "Javier - Sangüesa",
-          "condition": { "and": [ "AR-J1", "AR-AR18" ] },
+          "condition": {
+            "and": [ "AR-J1", "AR-AR18" ]
+          },
           "geometry": "AR/AR-JS-F2.geojson"
         }
       ]

@@ -16,8 +16,10 @@ module Camino.Display.I18n (
   , formatMaybeDistance
   , formatMaybeHours
   , formatPenance
+  , formatPenancePlain
   , formatHeight
   , formatHours
+  , formatStages
   , rejectSymbol
   , renderCaminoMsg
   , renderCaminoMsgText
@@ -181,6 +183,7 @@ data CaminoMsg =
   | KeyLabel
   | KitchenTitle
   | LatitudeLabel
+  | LegendLabel
   | LegPenanceMsg Penance
   | LinkTitle (Localised TaggedURL) (Localised TaggedText)
   | LinkOut
@@ -570,6 +573,7 @@ renderCaminoMsgDefault _ _ JunctionTitle = "Junction"
 renderCaminoMsgDefault _ _ KeyLabel = "Key"
 renderCaminoMsgDefault _ _ KitchenTitle = "Kitchen"
 renderCaminoMsgDefault _ _ LatitudeLabel = "Latitude"
+renderCaminoMsgDefault _ _ LegendLabel = "Legend"
 renderCaminoMsgDefault sou _ (LegPenanceMsg penance') = [shamlet|+^{formatPenance sou True penance'}|]
 renderCaminoMsgDefault _ _ LinkOut = [shamlet|More information|]
 renderCaminoMsgDefault _ _ LocationLabel = "Location"
@@ -594,7 +598,7 @@ renderCaminoMsgDefault _ _ MuseumDescription = "A museum or gallery"
 renderCaminoMsgDefault _ _ MuseumTitle = "Museum/gallery"
 renderCaminoMsgDefault _ _ MusicEventTitle = "Music"
 renderCaminoMsgDefault _ _ NaturalPoiTitle = "Natural"
-renderCaminoMsgDefault _ _ NaturalDescription = "A nature park or area of natural beauty, as well as large landscape features such as reservoirs or dams"
+renderCaminoMsgDefault _ _ NaturalDescription = "A nature park or area of natural beauty, as well as large landscape features such as mountains"
 renderCaminoMsgDefault _ _ NaturalTitle = "Nature park"
 renderCaminoMsgDefault _ _ NormalTitle = "Normal"
 renderCaminoMsgDefault _ _ NotesLabel = "Notes"

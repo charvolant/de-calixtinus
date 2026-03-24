@@ -392,6 +392,7 @@ permittedRestPoints prefs locs = let
 
 mkYesodData "CaminoApp" $(parseRoutesFile "config/routes.yesodroutes")
 
+-- Current message caltalogues: en, es
 mkMessage "CaminoApp" "messages" "en"
 
 instance RenderMessage CaminoApp FormMessage where

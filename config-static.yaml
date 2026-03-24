@@ -43,6 +43,9 @@ caminos:
   - id: I-PF
     type: CaminoDefinition
     path: "file:import-ponferrada.json"
+  - id: I-SG
+    type: CaminoDefinition
+    path: "file:import-sahagun.json"
   - id: I-VV
     type: CaminoDefinition
     path: "file:import-villaviciosa.json"
@@ -76,6 +79,9 @@ caminos:
   - id: AR
     type: CaminoDefinition
     path: "file:camino-aragones.json"
+  - id: MD
+    type: CaminoDefinition
+    path: "file:camino-madrid.json"
   - id: BM
     type: CaminoDefinition
     path: "file:bondi-manly.json"
@@ -235,6 +241,14 @@ calendar:
       type: day-of-year
       days:
         - 02-28
+  - key: StJosephsDay
+    name:
+      - San José@es
+      - Saint Joseph's Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 03-19
   - key: AragonDay
     name:
       - Día de San Jorge o Diya Nazional d’Aragón@es
@@ -276,6 +290,14 @@ calendar:
       type: day-of-year
       days:
         - 05-01
+  - key: MadridDay
+    name:
+      - Fiesta de la Comunidad de Madrid@es
+      - Madrid Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 05-02
   - key: GalicianLiteratureDay
     name:
       - Galician Literature Day@en
@@ -658,6 +680,22 @@ regions:
       about: http://www.jcyl.es/
     type: Province
     parent: ES
+  - id: "ES-MD"
+    name:
+      - Madrid@es
+    description:
+      text:
+        - Community of Madrid@en
+        - Comunidad de Madrid@es
+      about: https://www.comunidad.madrid
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: StJosephsDay
+      - type: named
+        key: MadridDay
   - id: "ES-NA"
     name:
       - Navarre@es

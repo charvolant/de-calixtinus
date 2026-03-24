@@ -8,7 +8,10 @@
     "Frantses bidea@eu"
   ],
   "description": {
-    "text": "The Camino Frances is the most popular Camino route, running from Saint-Jean-Pied-de-Port in France to Santiago de Compostella.",
+    "text": [
+      "The Camino Frances is the most popular Camino route, running from Saint-Jean-Pied-de-Port in France to Santiago de Compostella.@en",
+      "El Camino Francês es la ruta mas popular, viniendo de Saint-Jean-Pied-de-Port France a Santiago de Compostella.@es"
+    ],
     "image": {
       "title": "Alto del Perdon@es",
       "source": "F/F-Alto-del-Perdon.jpg",
@@ -87,6 +90,7 @@
     "I-MS",
     "I-PF",
     "I-AT",
+    "I-SG",
     "I-OP"
   ],
   "locations": [
@@ -3021,102 +3025,6 @@
       "region": "ES-CL",
       "services": [ "Restaurant", "Bank", "Train" ],
       "accommodation": [ ]
-    },
-    {
-      "id": "F-F106",
-      "name": "Sahagún",
-      "type": "Town",
-      "description": {
-        "notes": [
-          "This is halfway. You can get a Carta Peregrina (pilgrim's certificate that shows you have reached the halfway point) at the Santuario de la Virgen Peregrina@en"
-        ]
-      },
-      "position": { "latitude": 42.37075, "longitude": -5.02954, "elevation": 828 },
-      "region": "ES-CL",
-      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "BicycleRepair", "Train", "Bus" ],
-      "accommodation": [
-        {
-          "name": "Santa Cruz Pilgrims Hostel",
-          "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Handwash", "Kitchen", "Breakfast", "Dinner", "Accessible", "BicycleStorage", "Prayer" ],
-          "sleeping": [ "Shared", "DoubleWC" ]
-        },
-        {
-          "name": "Cluny Pilgrims Hostel",
-          "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
-          "sleeping": [ "Shared" ]
-        },
-        {
-          "name": "Viatoris Hostel",
-          "type": "PilgrimAlbergue",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Dryer", "Handwash", "Kitchen", "Lockers", "BicycleStorage" ],
-          "sleeping": [ "Single", "Double", "DoubleWC", "Triple", "Quadruple" ]
-        },
-        {
-          "name": "Los Balcones de Camino",
-          "type": "CasaRural",
-          "services": [ "WiFi", "Heating", "WashingMachine", "Breakfast", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
-        },
-        {
-          "name": "Sahagún Hostel",
-          "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Shared", "Single", "DoubleWC", "Triple" ]
-        },
-        {
-          "name": "Escarcha Hostel",
-          "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "Stables", "Pets", "BicycleStorage" ],
-          "sleeping": [ "Single", "DoubleWC", "TripleWC" ]
-        },
-        {
-          "name": "Alfonso VI Hostal",
-          "type": "GuestHouse",
-          "services": [ "WiFi", "Heating", "Handwash", "Breakfast", "BicycleStorage" ],
-          "sleeping": [ "DoubleWC" ]
-        },
-        {
-          "name": "La Codorniz Hostal",
-          "type": "GuestHouse",
-          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple" ]
-        },
-        {
-          "name": "Puerta de Sahagún Hotel",
-          "type": "Hotel",
-          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Breakfast", "Dinner", "Accessible", "Pets", "BicycleStorage", "CampSite", "Bedlinen", "Towels" ],
-          "sleeping": [ "Single", "DoubleWC", "Triple", "Quadruple" ]
-        },
-        {
-          "name": "Pedro Ponce Camping",
-          "type": "CampGround",
-          "services": [ "WiFi", "Restaurant", "WashingMachine", "Handwash", "Accessible", "Pets", "BicycleStorage", "CampSite" ],
-          "sleeping": [ "SleepingBag" ]
-        }
-      ],
-      "pois": [
-        {
-          "id": "F-F106-1",
-          "name": "Santuario de la Virgen Peregrina@en",
-          "type": "Monastery",
-          "description": {
-            "about": "https://www.turismosahagun.com/santuario-de-la-peregrina/"
-          },
-          "position": { "latitude": 42.36796, "longitude": -5.03256, "elevation": 826 },
-          "hours": [
-            "0900-1400, 1630-1900"
-          ],
-          "time": 1.0
-        },
-        {
-          "id": "F-F106-2",
-          "name": "Midpoint of the Camino Frances@en",
-          "type": "Statue",
-          "position": { "latitude": 42.37046, "longitude": -5.00035, "elevation": 812 }
-        }
-      ]
     },
     {
       "id": "F-F107",

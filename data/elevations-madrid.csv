@@ -1,0 +1,158 @@
+﻿ID,Name,PoI ID,PoI Name,To ID,To Name,Latitude,Longitude,Elevation
+MD-MD1,Madrid,,,,,40.41660,-3.71092,647
+,,MD-MD1-1,Palacio Real,,,40.41811,-3.71429,639
+,,MD-MD1-2,Catedral de Santa Maria de la Almudena,,,40.41581,-3.71452,635
+,,MD-MD1-3,Parroquia de Santiago y San Juan Bautista,,,40.41680,-3.71105,644
+,,MD-MD1-4,Convento de Comendadoras de Santiago,,,40.42765,-3.70895,663
+,,,,MD-MD2,El Goloso,40.56047,-3.71396,750
+MD-MD2,El Goloso,,,,,40.56047,-3.71396,750
+,,,,MD-MD3,Tres Cantos,40.59865,-3.71143,736
+MD-MD3,Tres Cantos,,,,,40.59865,-3.71143,736
+,,,,.,,40.60156,-3.73596,662
+,,,,MD-MD4,Colmenar Viejo,40.65818,-3.76616,879
+MD-MD4,Colmenar Viejo,,,,,40.65818,-3.76616,879
+,,,,.,,40.68637,-3.82362,845
+,,,,.,,40.69928,-3.87124,1001
+,,,,MD-MD5,Manzanares el Real,40.72707,-3.86490,915
+MD-MD5,Manzanares el Real,,,,,40.72707,-3.86490,915
+,,,,MD-MD6,Mataelpino,40.73629,-3.94523,1081
+MD-MD6,Mataelpino,,,,,40.73629,-3.94523,1081
+,,,,MD-MD7,Navacerrada,40.73127,-4.01367,1208
+MD-MD7,Navacerrada,,,,,40.73127,-4.01367,1208
+,,,,.,,40.73686,-4.02243,1308
+,,,,.,,40.74223,-4.04042,1196
+,,,,MD-MD8,Cercedilla,40.74069,-4.05698,1191
+MD-MD8,Cercedilla,,,,,40.74069,-4.05698,1191
+,,MD-MD8-1,Museo del Esquí Paquito Fernández Ochoa,,,40.74158,-4.05557,1191
+,,,,.,,40.76571,-4.06862,1344
+,,,,.,,40.78803,-4.05919,1766
+,,,,.,,40.81504,-4.05343,1634
+,,,,.,,40.89329,-4.07367,1142
+,,,,MD-MD9,Segovia,40.95017,-4.12375,1005
+,,,,.,,40.76571,-4.06862,1344
+,,,,.,,40.78803,-4.05919,1766
+,,,,.,,40.81504,-4.05343,1634
+,,,,MD-V1,Valsaín,40.87868,-4.02677,1193
+MD-MD9,Segovia,,,,,40.95017,-4.12375,1005
+,,MD-MD9-1,Acueducto de Segovia,,,40.94844,-4.11792,991
+,,MD-MD9-2,Alcázar de Segovia,,,40.95313,-4.13259,930
+,,,,.,,40.95427,-4.13142,917
+,,,,MD-MD10,Zamarramala,40.96591,-4.13484,1006
+MD-MD10,Zamarramala,,,,,40.96591,-4.13484,1006
+,,,,MD-MD11,Valseca,40.99938,-4.17437,947
+MD-MD11,Valseca,,,,,40.99938,-4.17437,947
+,,,,.,,41.00044,-4.19759,949
+,,,,MD-MD12,Los Huertos,41.00959,-4.21978,876
+MD-MD12,Los Huertos,,,,,41.00959,-4.21978,876
+,,,,.,,41.00044,-4.19759,949
+,,,,MD-MD13,Añe,41.03770,-4.29574,877
+MD-MD13,Añe,,,,,41.03770,-4.29574,877
+,,,,.,,41.04175,-4.31588,866
+,,,,MD-MD14,Pinilla Ambroz,41.05240,-4.35430,957
+MD-MD14,Pinilla Ambroz,,,,,41.05240,-4.35430,957
+,,,,.,,41.07040,-4.37443,919
+,,,,.,,41.07025,-4.39367,901
+,,,,MD-MD15,Santa María la Real de Nieva,41.07029,-4.40673,904
+MD-MD15,Santa María la Real de Nieva,,,,,41.07029,-4.40673,904
+,,MD-MD15-1,Monasterio de Nuestra Señora de la Soterraña,,,41.06989,-4.40721,901
+,,,,MD-MD16,Nieva,41.08103,-4.42676,841
+MD-MD16,Nieva,,,,,41.08103,-4.42676,841
+,,,,.,,41.10624,-4.43274,828
+,,,,MD-MD17,Nava de la Asunción,41.15421,-4.48846,803
+MD-MD17,Nava de la Asunción,,,,,41.15421,-4.48846,803
+,,MD-MD17-1,Fuente y Caño del Obispo,,,41.15566,-4.48816,805
+,,MD-MD17-2,Casa del Caño,,,41.15620,-4.48846,805
+,,,,MD-MD18,Coca,41.21625,-4.52140,786
+MD-MD18,Coca,,,,,41.21625,-4.52140,786
+,,MD-MD18-1,Murallas,,,41.21628,-4.52224,787
+,,MD-MD18-2,Castillo de Coca,,,41.21554,-4.52545,775
+,,,,.,,41.21997,-4.53155,745
+,,,,MD-MD19,Villeguillo,41.25199,-4.57871,770
+MD-MD19,Villeguillo,,,,,41.25199,-4.57871,770
+,,MD-MD19-1,Pósito de trigo,,,41.25416,-4.57923,768
+,,,,.,,41.32440,-4.61973,729
+,,,,MD-MD20,Alcazarén,41.36980,-4.67208,740
+MD-MD20,Alcazarén,,,,,41.36980,-4.67208,740
+,,MD-MD20-1,Alcazarén Tourist Office,,,41.37044,-4.67136,738
+,,,,MD-MD21,Valdestillas,41.47652,-4.77114,701
+MD-MD21,Valdestillas,,,,,41.47652,-4.77114,701
+,,,,.,,41.48992,-4.76947,690
+,,,,.,,41.52418,-4.78284,724
+,,,,MD-MD22,Puente Duero,41.55317,-4.79171,684
+MD-MD22,Puente Duero,,,,,41.55317,-4.79171,684
+,,MD-MD22-1,Puente sobre el Duero,,,41.55258,-4.79189,683
+,,,,MD-MD23,Simancas,41.59080,-4.82657,713
+,,,,MD-VD1,Valladolid,41.65367,-4.72367,692
+MD-MD23,Simancas,,,,,41.59080,-4.82657,713
+,,MD-MD23-1,Archivo de Simancas,,,41.59219,-4.82865,725
+,,,,MD-MD24,Ciguñuela,41.64010,-4.85550,812
+MD-MD24,Ciguñuela,,,,,41.64010,-4.85550,812
+,,,,.,,41.64236,-4.86268,842
+,,,,.,,41.64455,-4.88518,844
+,,,,.,,41.66922,-4.90380,840
+,,,,MD-MD25,Wamba,41.67467,-4.91719,788
+MD-MD25,Wamba,,,,,41.67467,-4.91719,788
+,,MD-MD25-1,Oficina de Turismo de Wamba,,,41.67660,-4.91749,790
+,,MD-MD25-2,Osario de Wamba,,,41.67637,-4.91793,789
+,,,,.,,41.67588,-4.92684,841
+,,,,.,,41.70216,-4.97388,840
+,,,,.,,41.70988,-4.97860,798
+,,,,MD-MD26,Peñaflor de Hornija,41.71148,-4.98287,842
+MD-MD26,Peñaflor de Hornija,,,,,41.71148,-4.98287,842
+,,,,.,,41.71684,-4.98631,773
+,,,,.,,41.72301,-4.99353,838
+,,,,MD-MD27,Castromonte,41.77236,-5.03843,843
+,,,,.,,41.71680,-4.98644,772
+,,,,.,,41.72275,-4.99330,838
+,,,,.,,41.74590,-5.01771,844
+,,,,.,,41.72991,-5.09549,830
+,,,,MD-SE1,Monasterio de la Santa Espina,41.73171,-5.09996,794
+MD-MD27,Castromonte,,,,,41.77236,-5.03843,843
+,,,,MD-MD28,Valverde de Campos,41.83442,-5.03764,771
+MD-MD28,Valverde de Campos,,,,,41.83442,-5.03764,771
+,,,,.,,41.87553,-5.04881,731
+,,,,MD-MD29,Medina de Rioseco,41.88370,-5.04178,745
+MD-MD29,Medina de Rioseco,,,,,41.88370,-5.04178,745
+,,MD-MD29-1,Fábrica de harinas San Antonio,,,41.88668,-5.04634,742
+,,,,.,,41.91998,-5.03793,740
+,,,,.,,41.93802,-5.01984,741
+,,,,MD-MD30,Tamariz de Campos,41.97657,-5.02470,751
+,,,,MD-BM1,Berrueces,41.94575,-5.09664,770
+MD-MD30,Tamariz de Campos,,,,,41.97657,-5.02470,751
+,,,,MD-MD31,Cuenca de Campos,42.05929,-5.05571,775
+MD-MD31,Cuenca de Campos,,,,,42.05929,-5.05571,775
+,,,,MD-MD32,Villalón de Campos,42.09900,-5.03487,787
+MD-MD32,Villalón de Campos,,,,,42.09900,-5.03487,787
+,,MD-MD32-1,Rollo Jurisdiccional,,,42.09849,-5.03467,790
+,,,,.,,42.14091,-5.05894,830
+,,,,MD-MD33,Fontihoyuelo,42.16220,-5.05933,811
+MD-MD33,Fontihoyuelo,,,,,42.16220,-5.05933,811
+,,,,MD-MD34,Santervás de Campos,42.21787,-5.10147,765
+MD-MD34,Santervás de Campos,,,,,42.21787,-5.10147,765
+,,,,MD-MD35,Arenillas de Valderaduey,42.27957,-5.05957,773
+MD-MD35,Arenillas de Valderaduey,,,,,42.27957,-5.05957,773
+,,,,MD-MD36,Grajal de Campos,42.32106,-5.02034,805
+MD-MD36,Grajal de Campos,,,,,42.32106,-5.02034,805
+,,MD-MD36-1,Castillo de Grajal de Campos,,,42.32209,-5.02092,800
+,,MD-MD36-2,Palacio de los Condes de Grajal,,,42.32145,-5.01963,805
+,,,,.,,42.36217,-5.03146,839
+,,,,F-F106,Placeholder for F-F106,0.00000,0.00000,--
+MD-V1,Valsaín,,,,,40.87868,-4.02677,1193
+,,,,MD-V2,La Granja de San Ildefonso,40.90062,-4.00980,1164
+MD-V2,La Granja de San Ildefonso,,,,,40.90062,-4.00980,1164
+,,MD-V2-1,Palacia Real de La Granja de San Ildenfonso,,,40.89789,-4.00476,1192
+,,MD-V2-2,Real Fábrica de Cristales de La Granja,,,40.90285,-4.00716,1154
+,,,,MD-MD9,Segovia,40.95017,-4.12375,1005
+MD-VD1,Valladolid,,,,,41.65367,-4.72367,692
+,,MD-V2-1,Catedral de Nuestra Señora de la Asunción,,,41.65328,-4.72349,--
+,,,,MD-MD23,Simancas,41.59080,-4.82657,713
+MD-SE1,Monasterio de la Santa Espina,,,,,41.73171,-5.09996,794
+,,MD-SE1-1,Monasterio de la Santa Espina,,,41.73269,-5.09920,794
+,,,,.,,41.73583,-5.09393,830
+,,,,.,,41.73852,-5.09084,838
+,,,,.,,41.74512,-5.06355,842
+,,,,MD-MD27,Castromonte,41.77236,-5.03843,843
+MD-BM1,Berrueces,,,,,41.94575,-5.09664,770
+,,,,MD-BM2,Moral de la Reina,41.98556,-5.07127,765
+MD-BM2,Moral de la Reina,,,,,41.98556,-5.07127,765
+,,,,MD-MD31,Cuenca de Campos,42.05929,-5.05571,775

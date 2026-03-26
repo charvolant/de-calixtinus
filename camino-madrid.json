@@ -660,8 +660,8 @@
         {
           "id": "MD-MD18-1",
           "name": "Murallas@es",
-          "type": "Artwork",
-          "position": { "latitude": 41.15566, "longitude": -4.48816, "elevation": 805 }
+          "type": "Historical",
+          "position": { "latitude": 41.21628, "longitude": -4.52224, "elevation": 787 }
         },
         {
           "id": "MD-MD18-2",
@@ -1785,62 +1785,114 @@
       "features": [
         {
           "id": "MD-MD-F1",
-          "name": "Main Camino, Madrid to Cercedilla",
-          "condition": { "or": [ "MD-MD2", "MD-MD3", "MD-MD4", "MD-MD5", "MD-MD6", "MD-MD7", "MD-MD8" ] },
+          "name": "Camino Madrid, Madrid to Cercedilla",
+          "condition": {
+            "or": [ "MD-MD2", "MD-MD3", "MD-MD4", "MD-MD5", "MD-MD6", "MD-MD7", "MD-MD8" ]
+          },
           "geometry": "MD/MD-MD-F1.geojson"
         },
         {
           "id": "MD-MD-F2",
-          "name": "Main Camino, Cercedilla to Segovia",
-          "condition": { "and": [ "MD-MD8", "MD-MD9" , { "not": { "or": [ "MD-MV1", "MD-MV2" ] } } ] },
+          "name": "Camino Madrid, Cercedilla to Segovia",
+          "condition": {
+            "and": [
+              "MD-MD8",
+              "MD-MD9",
+              {
+                "not": {
+                  "or": [ "MD-MV1", "MD-MV2" ]
+                }
+              }
+            ]
+          },
           "geometry": "MD/MD-MD-F2.geojson"
         },
         {
           "id": "MD-MD-F3",
-          "name": "Main Camino, entry to Segovia",
-          "condition": { "and": [ "MD-MD9", { "or": [ "MD-MD8", "MD-V1", "MD-V2"] } ] },
+          "name": "Camino Madrid, entry to Segovia",
+          "condition": {
+            "and": [
+              "MD-MD9",
+              {
+                "or": [ "MD-MD8", "MD-V1", "MD-V2" ]
+              }
+            ]
+          },
           "geometry": "MD/MD-MD-F3.geojson"
         },
         {
           "id": "MD-MD-F4",
-          "name": "Main Camino, Segovia to Puente Duero",
-          "condition": { "or": [ "MD-MD19", "MD-MD11", "MD-MD12", "MD-MD13", "MD-MD14", "MD-MD15", "MD-MD16", "MD-MD17", "MD-MD18", "MD-MD19", "MD-MD20", "MD-MD21", "MD-MD22" ] },
+          "name": "Camino Madrid, Segovia to Puente Duero",
+          "condition": {
+            "or": [
+              "MD-MD19", "MD-MD11", "MD-MD12", "MD-MD13", "MD-MD14", "MD-MD15", "MD-MD16", "MD-MD17", "MD-MD18", "MD-MD19",
+              "MD-MD20", "MD-MD21", "MD-MD22"
+            ]
+          },
           "geometry": "MD/MD-MD-F4.geojson"
         },
         {
           "id": "MD-MD-F5",
-          "name": "Main Camino, Puente Duero to Simancas direct",
-          "condition": { "and": [ "MD-MD23", "MD-MD24", { "not": "MD-VD1" } ] },
+          "name": "Camino Madrid, Puente Duero to Simancas direct",
+          "condition": {
+            "and": [
+              "MD-MD23",
+              "MD-MD24",
+              { "not": "MD-VD1" }
+            ]
+          },
           "geometry": "MD/MD-MD-F5.geojson"
         },
         {
           "id": "MD-MD-F6",
-          "name": "Main Camino, Siomancas to Peñaflor de Hornija",
-          "condition": { "or": [ "MD-MD24", "MD-MD25", "MD-MD26" ] },
+          "name": "Camino Madrid, Simancas to Peñaflor de Hornija",
+          "condition": {
+            "or": [ "MD-MD24", "MD-MD25", "MD-MD26" ]
+          },
           "geometry": "MD/MD-MD-F6.geojson"
         },
         {
           "id": "MD-MD-F7",
-          "name": "Main Camino, Peñaflor de Hornija to Castromonte direct",
-          "condition": { "and": [ "MD-MD26", "MD-MD27", { "not": "MD-SE1" } ] },
+          "name": "Camino Madrid, Peñaflor de Hornija to Castromonte direct",
+          "condition": {
+            "and": [
+              "MD-MD26",
+              "MD-MD27",
+              { "not": "MD-SE1" }
+            ]
+          },
           "geometry": "MD/MD-MD-F7.geojson"
         },
         {
           "id": "MD-MD-F8",
-          "name": "Main Camino, Castromonte to Medina de Rioseco",
-          "condition": { "or": [ "MD-MD28", "MD-MD29" ] },
+          "name": "Camino Madrid, Castromonte to Medina de Rioseco",
+          "condition": {
+            "or": [ "MD-MD28", "MD-MD29" ]
+          },
           "geometry": "MD/MD-MD-F8.geojson"
         },
         {
           "id": "MD-MD-F9",
-          "name": "Main Camino, Medina de Rioseco to Cuenca de Campos direct",
-          "condition": { "and": [ "MD-MD30", "MD-MD31", { "not": { "or": ["MD-BM1", "MD-BM2"] } } ] },
+          "name": "Camino Madrid, Medina de Rioseco to Cuenca de Campos direct",
+          "condition": {
+            "and": [
+              "MD-MD30",
+              "MD-MD31",
+              {
+                "not": {
+                  "or": [ "MD-BM1", "MD-BM2" ]
+                }
+              }
+            ]
+          },
           "geometry": "MD/MD-MD-F9.geojson"
         },
         {
           "id": "MD-MD-F10",
-          "name": "Main Camino, Cuenca de Campos to Sahagún",
-          "condition": { "or": [ "MD-MD32", "MD-MD33", "MD-MD34", "MD-MD35", "MD-MD36", "F-F109" ] },
+          "name": "Camino Madrid, Cuenca de Campos to Sahagún",
+          "condition": {
+            "or": [ "MD-MD32", "MD-MD33", "MD-MD34", "MD-MD35", "MD-MD36", "F-F109" ]
+          },
           "geometry": "MD/MD-MD-F10.geojson"
         }
       ]
@@ -1858,7 +1910,9 @@
         {
           "id": "MD-V-F1",
           "name": "Detour Cercedilla - Valsaín - La Granja de San Ildefonso - Segovia",
-          "condition": { "or": [ "MD-V1", "MD-V2" ] },
+          "condition": {
+            "or": [ "MD-V1", "MD-V2" ]
+          },
           "geometry": "MD/MD-V-F1.geojson"
         }
       ]
@@ -1913,7 +1967,9 @@
         {
           "id": "MD-BM-F1",
           "name": "Medina de Rioseco - Berrueces - Moral de la Reina - Cuenca de Campos",
-          "condition": { "or": ["MD-BM1", "MD-BM2" ] },
+          "condition": {
+            "or": [ "MD-BM1", "MD-BM2" ]
+          },
           "geometry": "MD/MD-BM-F1.geojson"
         }
       ]

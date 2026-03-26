@@ -1514,13 +1514,7 @@
         },
         {
           "id": "AR-AR-F5",
-          "name": "Main Camino Aragones Route, Sangüesa to Puente la Reina",
-          "condition": "AR-AR18",
-          "geometry": "AR/AR-AR-F5.geojson"
-        },
-        {
-          "id": "AR-AR-F5",
-          "name": "Main Camino Aragones Route, Sangüesa to Puente la Reina",
+          "name": "Main Camino Aragones Route, Intersection to Sangüesa",
           "condition": "AR-AR18",
           "geometry": "AR/AR-AR-F5.geojson"
         },
@@ -1577,7 +1571,7 @@
       "features": [
         {
           "id": "AR-SP-F1",
-          "name": "Main Camino Aragones Route, Santa Cilla de Jaca to ",
+          "name": "Rio Gas - San Juan de la Peña - Santa Cilla de Jaca",
           "condition": "AR-SP1",
           "geometry": "AR/AR-SP-F1.geojson"
         }

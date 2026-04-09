@@ -91,7 +91,7 @@ plan opts = do
     let langs = ["en", ""]
     let locales = map localeFromIDOrError langs
     let router = renderCaminoRoute config' locales
-    let messages = renderCaminoMsg U.SIUnits config' locales
+    let messages1 = renderCaminoMsg U.SIUnits config' locales
     let solution = planCamino cconf preferences' caminoPrefs'''
     createDirectoryIfMissing True output'
     let kml = createCaminoDoc config' locales preferences' caminoPrefs''' (Just solution)
@@ -99,7 +99,7 @@ plan opts = do
     B.writeFile kmlFile (renderLBS (def { rsUseCDATA = useCDATA }) kml)
     let html = caminoHtml config' preferences' caminoPrefs''' solution
     let indexFile = output' </> "index.html"
-    B.writeFile indexFile (renderHtml (html messages router))
+    B.writeFile indexFile (renderHtml (html messages1 router))
 
 main :: IO ()
 main = do

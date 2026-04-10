@@ -1,0 +1,3 @@
+CloseLabel: Cerrar
+StartLabel: ¡Comenzar!
+

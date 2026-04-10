@@ -134,6 +134,9 @@ instance ToJSON Locale where
 
 instance NFData Locale
 
+instance IsString Locale where
+  fromString = localeFromIDOrError . pack
+
 localeLanguageTag :: Locale -> Text
 localeLanguageTag loc = case langs of
     [] -> maybe "" localeLanguageTag (localeParent loc)

@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Config
 Description : Configuration data for generating camino display
@@ -9,34 +10,41 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-The configuration can be read from a YAML file and overlay a default configuration.
+A configuration contains information on how to access web assets and locality information in a way that
+can be used to generate suitably localised web pages and plans that take account of regional events.
+
+A partial configuration can be read from a YAML file and overlay a default configuration.
 -}
 
 module Camino.Config (
-    AssetConfig(..)
-  , AssetType(..)
-  , Config(..)
-  , CrossOriginType(..)
-  , LinkConfig(..)
-  , LinkType(..)
-  , MapConfig(..)
+  -- * Basic configuration
+    Config(..)
   , WebConfig(..)
-
-  , createCache
-  , getAsset
-  , getAssets
-  , getCacheConfig
+  , MapConfig(..)
+  , getWebRoot
   , getCaminos
   , getCalendarName
   , getDebug
-  , getLink
-  , getLinks
   , getMap
   , getNotice
-  , getWebRoot
-  , readAsset
   , readConfigFile
   , withRoot
+  -- ** Assets
+  , AssetConfig(..)
+  , AssetType(..)
+  , CrossOriginType(..)
+  , getAsset
+  , getAssets
+  , readAsset
+  -- ** Links
+  , LinkConfig(..)
+  , LinkType(..)
+  , getLink
+  , getLinks
+  -- ** Caches
+  , CacheConfig(..)
+  , getCacheConfig
+  , createCache
 ) where
 
 import GHC.Generics (Generic)
@@ -135,7 +143,7 @@ instance ToJSON MapConfig where
   toJSON (Map id' tiles') =
     object [ "id" .= id', "tiles" .= tiles' ]
     
--- | The difference asset types
+-- | The different asset types
 data AssetType = JavaScript
   | JavaScriptEarly
   | Css
@@ -150,7 +158,7 @@ data AssetType = JavaScript
 instance FromJSON AssetType
 instance ToJSON AssetType
 
--- | The type of cross-origin support needed for the script
+-- | The type of cross-origin support needed for a script
 data CrossOriginType = Unused
   | Anonymous
   | UseCredentials
@@ -200,7 +208,7 @@ readAsset asset = let
     else
       error ("Unrecognised path: " ++ path')
 
--- | The functional type of link
+-- | The intended purpose of a link
 data LinkType = Header -- ^ The link is part of the heading menu
   | Footer -- ^ The link is part of the footer
   | Embedded -- ^ The link is embedded
@@ -429,6 +437,8 @@ instance ToJSON Config where
       ]
 
 -- | Create a configuration with a specific root
+--
+--   The parent contains any other configuration needed.
 withRoot :: Config -> Text -> Config
 withRoot parent root = Config {
     configParent = Just parent
@@ -501,6 +511,7 @@ getRecursive'' access config = let
       Just _ -> result
 
 -- | Get an asset based on identifier
+--
 --   If the configuration has a parent and the requisite asset is not present, then the parent is tried
 getAsset :: Text -- ^ The asset identifier
   -> Config -- ^ The configuration to query
@@ -515,6 +526,7 @@ getLink :: Text -- ^ The link identifier
 getLink ident locales config = maybe Nothing (localise locales . links) (getRecursive (Just ident) (webLinks . configWeb) linkId config)
 
 -- | Get links, based on a link type
+--
 --   The resulting links are in the order specifiedin the configuration, from parent to child
 getLinks :: LinkType -- ^ The link type
   -> Config -- ^ The configuration to query
@@ -531,6 +543,7 @@ getLinks lt config = let
     defaultsWithReplace ++ newLinks
 
 -- | Get a map, optionally based on an identifier
+--
 --   If the configuration has a parent and the requisite map is not present, then the parent is tried
 getMap :: Maybe Text -- ^ The map identifier, if Nothing then the first map is chosen
   -> Config -- ^ The configuration
@@ -549,12 +562,13 @@ getNotice :: Config -- ^ The configuration
 getNotice config = getRecursive'' configNotice config
 
 -- Get the debug state
+--
 -- This assumes that the value is set somewhere in the heirarchy, otherwise an error is shown
 getDebug :: Config -- ^ The configuration
   -> Bool -- ^ The debug flag
 getDebug config = getRecursive' configDebug config
 
--- Get all caminos
+-- Get all camino definitions
 getCaminos :: Config -- ^ The configuration
   -> [AssetConfig] -- ^ The list of caminos
 getCaminos config = maybe [] getCaminos (configParent config) ++ configCaminos config
@@ -564,7 +578,8 @@ getCalendarName :: Config -> Text -> Localised TaggedText
 getCalendarName config key = runReader (getNamedCalendarName key) config
 
 
--- | Get an asset based on identifier
+-- | Get an cache configuration based on identifier
+--
 --   If the configuration has a parent and the requisite configuration is not present, then the parent is tried
 getCacheConfig :: Text -- ^ The cache identifier
   -> Config -- ^ The configuration to query
@@ -572,7 +587,8 @@ getCacheConfig :: Text -- ^ The cache identifier
 getCacheConfig ident config = getRecursive (Just ident) configCaches cacheConfigID config
 
 -- | Read a configuration from a YAML file
---   The resulting configuration will have @def@ as a parent.
+--
+--   The resulting configuration will have `def` as a parent.
 readConfigFile :: String -> IO Config
 readConfigFile file = do
   cf <- B.readFile file

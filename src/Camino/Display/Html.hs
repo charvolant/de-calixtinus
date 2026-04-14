@@ -183,19 +183,33 @@ metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
 
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
 daySummary _preferences _camino _pilgrimage day = [ihamlet|
-    <p>_{DaySummaryMsg day}
+    <p>_{Txt (locationName (start day))} - _{Txt (locationName (finish day))}
+       _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
+       _{TimeMsg (metricsTime metrics)}
+       _{AscentMsg (metricsAscent metrics)}
+       _{DescentMsg (metricsDescent metrics)}
+       _{PenanceMsg (metricsPenance metrics)}
     <ol .bar-separated-list>
       $forall loc <- (map legFrom $ path day) ++ [finish day]
         <li>_{Txt (locationName loc)}
   |]
+  where
+    metrics = score day
 
 stageSummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Journey -> HtmlUrlI18n CaminoMsg CaminoRoute
 stageSummary _preferences _camino _pilgrimage stage = [ihamlet|
-    <p>_{JourneySummaryMsg stage}
+    <p>_{Txt (locationName (start stage))} - _{Txt (locationName (finish stage))}
+       _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
+       _{DaysElapsedMsg (Prelude.length (path stage))}
+       _{AscentMsg (metricsAscent metrics)}
+       _{DescentMsg (metricsDescent metrics)}
+       _{PenanceMsg (metricsPenance metrics)}
     <ol .bar-separated-list>
       $forall loc <- (map start $ path stage) ++ [finish stage]
         <li>_{Txt (locationName loc)}
   |]
+  where
+    metrics = score stage
 
 tripSummary :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripSummary _preferences _camino pilgrimage = [ihamlet|

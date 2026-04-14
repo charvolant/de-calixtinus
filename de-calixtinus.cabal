@@ -68,6 +68,8 @@ library
       Graph.Programming
       Network.Google.Elevation
       Network.Google.Maps
+      Text.MessageCatalogue
+      Text.MessageCatalogue.Internal
   other-modules:
       Paths_de_calixtinus
   hs-source-dirs:
@@ -87,6 +89,7 @@ library
     , data-default-class
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -140,6 +143,7 @@ executable camino-check-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -193,6 +197,7 @@ executable camino-map-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -246,6 +251,7 @@ executable camino-planner-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -299,6 +305,7 @@ executable camino-server-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -352,6 +359,7 @@ executable elevations-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -405,6 +413,7 @@ executable generate-static-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -458,6 +467,7 @@ executable pretty-json-exe
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting
@@ -502,6 +512,7 @@ test-suite de-calixtinus-test
       FormattingSpec
       GraphSpec
       LocalisedSpec
+      MessageCatalogueSpec
       MetadataSpec
       PartialSpec
       PlannerSpec
@@ -534,6 +545,7 @@ test-suite de-calixtinus-test
     , de-calixtinus
     , deepseq
     , directory
+    , exceptions
     , file-embed
     , filepath
     , formatting

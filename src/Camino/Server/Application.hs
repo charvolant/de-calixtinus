@@ -77,7 +77,7 @@ homeP = do
   let mapUrl = maybe "" assetPath (getAsset "images" (caminoAppConfig master)) <> "/Map.png"
   let mnotice = getNotice $ caminoAppConfig master
   defaultLayout $ do
-    setTitleI MsgAppName
+    setTitleI AppName
     toWidget helpPop
     $(widgetFile "homepage")
 
@@ -94,9 +94,9 @@ getHelpR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   defaultLayout $ do
-    setTitleI MsgHelpTitle
+    setTitleI HelpPageTitle
     toWidget ((helpWidget locales) messages router)
 
 -- | Help for the languages that we have
@@ -114,7 +114,7 @@ getCaminoR cid = do
   let camino = findCaminoById (caminoAppCaminoConfig master) cid
   case camino of
     Nothing -> do
-      setMessageI MsgInvalidCamino
+      setMessageI InvalidCamino
       getHomeR
     Just camino' ->
       caminoPage camino'
@@ -128,7 +128,7 @@ caminoPage camino = do
     let cprefs = (defaultCaminoPreferences camino) { preferenceStartDate = Just current }
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let messages = renderCaminoMsg U.SIUnits config locales
+    let messages = renderCaminoMsg config U.SIUnits locales
     let html = (caminoHtmlSimple config cprefs) messages router
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ caminoName (preferenceCamino cprefs)}|]
@@ -141,9 +141,9 @@ getMapR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   defaultLayout $ do
-    setTitleI MsgMapTitle
+    setTitleI MapTitle
     toWidget ((mapWidget (caminoAppConfig master) (caminoAppCaminos master)) messages router)
 
 -- | Map of all caminos
@@ -156,9 +156,9 @@ getMetricR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   defaultLayout $ do
-    setTitleI MsgMetricTitle
+    setTitleI MetricTitle
     toWidget ((metricWidget locales) messages router)
 
 -- | Help for the languages that we have
@@ -175,9 +175,9 @@ getAboutR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   defaultLayout $ do
-    setTitleI MsgAboutTitle
+    setTitleI AboutPageTitle
     toWidget ((aboutWidget locales) messages router)
 
 -- | About text for the languages that we have
@@ -354,7 +354,7 @@ stepBackward _ PoiStep = StopsStep
 stepBackward _ ShowPreferencesStep = PoiStep
 stepBackward _ PlanStep = ShowPreferencesStep
 
-stepPage' :: CaminoAppMessage -> CaminoAppMessage -> Maybe CaminoAppMessage -> Maybe CaminoAppMessage -> PreferenceStep -> PreferenceStep -> Maybe Widget -> Widget -> Widget -> Enctype -> Handler Html
+stepPage' :: CaminoMsg -> CaminoMsg -> Maybe CaminoMsg -> Maybe CaminoMsg -> PreferenceStep -> PreferenceStep -> Maybe Widget -> Widget -> Widget -> Enctype -> Handler Html
 stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
   defaultLayout $ do
     setTitleI title
@@ -363,27 +363,27 @@ stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
     imagePopup
 
 stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
-stepPage TravelStep nextp _ help widget enctype = stepPage' MsgTravelTitle MsgTravelText1 (Just MsgTravelText2) (Just MsgTravelBottom) TravelStep nextp Nothing help widget enctype
-stepPage RangeStep nextp _ help widget enctype = stepPage' MsgRangeTitle MsgRangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
-stepPage ServicesStopStep nextp _ help widget enctype = stepPage' MsgServicesStopTitle MsgServicesStopText (Just MsgServicesText2) Nothing ServicesStopStep nextp Nothing help widget enctype
-stepPage ServicesStockStep nextp _ help widget enctype = stepPage' MsgServicesStockTitle MsgServicesStockText (Just MsgServicesText2) Nothing ServicesStockStep nextp Nothing help widget enctype
-stepPage ServicesRestStep nextp _ help widget enctype = stepPage' MsgServicesRestTitle MsgServicesRestText (Just MsgServicesText2) Nothing ServicesRestStep nextp Nothing help widget enctype
-stepPage CaminoStep nextp _ help widget enctype = stepPage' MsgCaminoTitle MsgCaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
-stepPage RoutesStep nextp _ help widget enctype = stepPage' MsgRoutesTitle MsgRoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
-stepPage StartStep nextp _ help widget enctype = stepPage' MsgStartTitle MsgStartText Nothing Nothing StartStep nextp Nothing help widget enctype
-stepPage StopsStep nextp _ help widget enctype = stepPage' MsgStopsTitle MsgStopsText Nothing Nothing StopsStep nextp Nothing help widget enctype
-stepPage PoiStep nextp _ help widget enctype = stepPage' MsgPoiTitle MsgPoiText Nothing Nothing PoiStep nextp Nothing help widget enctype
+stepPage TravelStep nextp _ help widget enctype = stepPage' TravelTitle TravelText1 (Just TravelText2) (Just TravelBottom) TravelStep nextp Nothing help widget enctype
+stepPage RangeStep nextp _ help widget enctype = stepPage' RangeTitle RangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
+stepPage ServicesStopStep nextp _ help widget enctype = stepPage' ServicesStopTitle ServicesStopText (Just ServicesText2) Nothing ServicesStopStep nextp Nothing help widget enctype
+stepPage ServicesStockStep nextp _ help widget enctype = stepPage' ServicesStockTitle ServicesStockText (Just ServicesText2) Nothing ServicesStockStep nextp Nothing help widget enctype
+stepPage ServicesRestStep nextp _ help widget enctype = stepPage' ServicesRestTitle ServicesRestText (Just ServicesText2) Nothing ServicesRestStep nextp Nothing help widget enctype
+stepPage CaminoStep nextp _ help widget enctype = stepPage' CaminoSelectTitle CaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
+stepPage RoutesStep nextp _ help widget enctype = stepPage' RoutesTitle RoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
+stepPage StartStep nextp _ help widget enctype = stepPage' StartTitle StartText Nothing Nothing StartStep nextp Nothing help widget enctype
+stepPage StopsStep nextp _ help widget enctype = stepPage' StopsTitle StopsText Nothing Nothing StopsStep nextp Nothing help widget enctype
+stepPage PoiStep nextp _ help widget enctype = stepPage' PoiTitle PoiText Nothing Nothing PoiStep nextp Nothing help widget enctype
 stepPage ShowPreferencesStep nextp (Just prefs) help widget enctype = do
     master <- getYesod
     locales <- getLocales
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let preferences = travelPreferencesFrom prefs
-    let messages = renderCaminoMsg (preferenceUnits preferences) config locales
+    let messages = renderCaminoMsg config (preferenceUnits preferences) locales
     let camino = caminoPreferencesFrom prefs
     let display = toWidget $ (preferencesHtml False preferences camino) messages router
-    stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing Nothing ShowPreferencesStep nextp (Just display) help widget enctype
-stepPage ShowPreferencesStep nextp _ help widget enctype = stepPage' MsgShowPreferencesTitle MsgShowPreferencesText Nothing Nothing ShowPreferencesStep nextp Nothing help widget enctype
+    stepPage' ShowPreferencesTitle ShowPreferencesText Nothing Nothing ShowPreferencesStep nextp (Just display) help widget enctype
+stepPage ShowPreferencesStep nextp _ help widget enctype = stepPage' ShowPreferencesTitle ShowPreferencesText Nothing Nothing ShowPreferencesStep nextp Nothing help widget enctype
 stepPage PlanStep nextp prefs help widget enctype = stepPage ShowPreferencesStep nextp prefs help widget enctype
 
 
@@ -397,7 +397,7 @@ helpPopup help' = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   let help'' = (\h -> h messages router) <$> help'
   return $ case help'' of
     Nothing -> (
@@ -406,7 +406,7 @@ helpPopup help' = do
       )
     Just help -> (
            [whamlet|
-            <a .text-primary href="#" onclick="showHelpPopup()" title="_{MsgMoreInformation}">
+            <a .text-primary href="#" onclick="showHelpPopup()" title="_{MoreInformation}">
               <span .ca-help>
            |]
         , $(widgetFile "help-popup")
@@ -492,7 +492,7 @@ showPage solution = do
     let router = renderCaminoRoute config locales
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
-    let messages = renderCaminoMsg (preferenceUnits tprefs) config locales
+    let messages = renderCaminoMsg config (preferenceUnits tprefs) locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionJourneyFailure solution)
     addError (solutionPilgrimageFailure solution)
@@ -542,7 +542,7 @@ showXlsx solution = do
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
     let sou = preferenceUnits tprefs
-    let messages = renderCaminoMsgText sou config locales
+    let messages = renderCaminoMsgText config sou locales
     let pilgrimage = solutionPilgrimage solution
     let xlsx = createCaminoXlsx config messages tprefs cprefs solution
     let result = fromXlsx ct xlsx

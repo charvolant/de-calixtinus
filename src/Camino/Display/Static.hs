@@ -47,7 +47,7 @@ createHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRo
 createHelpFile config loc file html = do
   let locales = [loc, rootLocale]
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   LB.writeFile file $ renderHtml $ html messages router
   
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()

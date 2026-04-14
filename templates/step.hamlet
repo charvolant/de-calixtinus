@@ -17,14 +17,14 @@
         <input type=hidden name="_step" value="#{show stepp}">
         <div .btn-toolbar .justify-content-between>
           <div .btn-group>
-            <button type="submit" name="_next" value="back" .btn .btn-secondary>_{MsgBackLabel}
+            <button type="submit" name="_next" value="back" .btn .btn-secondary>_{BackLabel}
           <div .btn-group>
             $if nextp == PlanStep
-              <button type="submit" name="_generate" formaction="@{MakePlanR}" onclick="showWorking('plan-spinner');" .btn .btn-primary title="_{MsgPlanTitle}">
+              <button type="submit" name="_generate" formaction="@{MakePlanR}" onclick="showWorking('plan-spinner');" .btn .btn-primary title="_{PlanTitle}">
                 <span #plan-spinner .spinner-border .spinner-border-sm .visually-hidden aria-hidden="true">
-                _{MsgPlanLabel}
+                _{PlanLabel}
             $else
-              <button type="submit" name="_next" value="next" .btn .btn-primary>_{MsgNextLabel}
+              <button type="submit" name="_next" value="next" .btn .btn-primary>_{NextLabel}
   $maybe bot <- bottom
     <div .row .m-5>
       <div .col>

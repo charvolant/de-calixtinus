@@ -12,6 +12,7 @@ import WalkingSpec
 import PlannerSpec
 import RegionSpec
 import GraphSpec
+import MessageCatalogueSpec
 import PartialSpec
 import ProgrammingSpec
 import MetadataSpec
@@ -63,6 +64,7 @@ testList config prefs camino = TestList [
    TestLabel "Formatting" testFormatting,
    TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
+   TestLabel "MessageCatalogue" testMessageCatalogue,
    TestLabel "Cache" testCache,
    TestLabel "Xlsx" testXlsx,
    TestLabel "Config" testConfig,

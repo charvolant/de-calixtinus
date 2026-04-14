@@ -41,7 +41,7 @@ import Camino.Preferences
 import qualified Camino.Units as U
 import Data.Util
 import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg, caminoUnitsMsg, descriptionBlock)
-import Camino.Display.I18n (renderCaminoMsg)
+import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
 import Camino.Server.Foundation
@@ -510,19 +510,19 @@ chooseTravelForm help prefs extra = do
     locales <- getLocales
     mRender <- getMessageRender
     let sou = maybe U.SIUnits prefUnits prefs
-    let render = renderCaminoMsg sou (caminoAppConfig master) locales
-    let easyField =  extendedCheckboxField (toHtml . mRender) MsgEasyMode (Just MsgEasyModeText)
+    let render = renderCaminoMsg (caminoAppConfig master) sou locales
+    let easyField =  extendedCheckboxField (toHtml . mRender) EasyMode (Just EasyModeText)
     let unitsField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoUnitsMsg f, f, Nothing)) U.systemOfUnitsEnumeration)
     let travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
     let fitnessField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoFitnessMsg f, f, Nothing)) fitnessEnumeration)
     let comfortField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoComfortMsg f, f, Nothing)) comfortEnumeration)
     let poiField = extendedCheckboxFieldList render (map (\f -> (pack $ show f, caminoPoiCategoryLabel f, f, Nothing)) poiCategoryEnumeration)
     (emRes, emView) <- mreq easyField "" (prefEasyMode <$> prefs)
-    (unRes, unView) <- mreq unitsField (fieldSettingsLabelName MsgSelectUnits "units") (prefUnits <$> prefs)
-    (trRes, trView) <- mreq travelField (fieldSettingsLabelName MsgSelectTravel "travel") (prefTravel <$> prefs)
-    (fRes, fView) <- mreq fitnessField (fieldSettingsLabelName MsgSelectFitness "fitness") (prefFitness <$> prefs)
-    (cRes, cView) <- mreq comfortField (fieldSettingsLabelName MsgSelectComfort "comfort") (prefComfort <$> prefs)
-    (pcRes, pcView) <- mreq poiField (fieldSettingsLabelName MsgSelectPoiCategories "poiCategories") (prefPoiCategories <$> prefs)
+    (unRes, unView) <- mreq unitsField (fieldSettingsLabelName SelectUnits "units") (prefUnits <$> prefs)
+    (trRes, trView) <- mreq travelField (fieldSettingsLabelName SelectTravel "travel") (prefTravel <$> prefs)
+    (fRes, fView) <- mreq fitnessField (fieldSettingsLabelName SelectFitness "fitness") (prefFitness <$> prefs)
+    (cRes, cView) <- mreq comfortField (fieldSettingsLabelName SelectComfort "comfort") (prefComfort <$> prefs)
+    (pcRes, pcView) <- mreq poiField (fieldSettingsLabelName SelectPoiCategories "poiCategories") (prefPoiCategories <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resEasyMode = emRes
@@ -594,10 +594,10 @@ chooseRangeForm help prefs extra = do
     let timeRangeField = rangeFieldQuantity sou U.Time 0.0 16.0 0.1
     let restRangeField = rangeFieldNumber 0 10 1 id id
     let restPressureField = floatFieldQuantity sou U.Distance 0 20 1
-    (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabelName (MsgDistancePreferencesLabel sou) "distance") (prefDistance <$> prefs)
-    (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabelName (MsgTimePreferencesLabel sou) "time") (prefTime <$> prefs)
-    (reRes, reView) <- mreq restRangeField (fieldSettingsLabelName (MsgRestPreferencesLabel sou) "rest") (prefRest <$> prefs)
-    (rpRes, rpView) <- mopt restPressureField (fieldSettingsLabelName (MsgRestPressureLabel sou) "restPressure") (prefRestPressure <$> prefs)
+    (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabelName (DistancePreferencesLabel) "distance") (prefDistance <$> prefs)
+    (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabelName TimePreferencesLabel "time") (prefTime <$> prefs)
+    (reRes, reView) <- mreq restRangeField (fieldSettingsLabelName RestPreferencesLabel "rest") (prefRest <$> prefs)
+    (rpRes, rpView) <- mopt restPressureField (fieldSettingsLabelName RestPressureLabel "restPressure") (prefRestPressure <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resDistance = diRes
@@ -650,17 +650,17 @@ chooseStopServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg sou config locales
-    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
+    let messages = renderCaminoMsg config sou locales
+    let transportLinksField =  extendedCheckboxField (toHtml . mRender) TransportLinks (Just TransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
     let routeServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
     (tlRes, tlView) <- mreq transportLinksField (fieldSettingsName "stopTransportLinks") (stopTransportLinks <$> prefStop <$> prefs)
-    (loRes, loView) <- mreq (penanceMapField sou True True locationOptions) (fieldSettingsLabelName MsgLocationPreferencesLabel "stopLocation") (stopLocation <$> prefStop <$> prefs)
-    (acRes, acView) <- mreq (penanceMapField sou True True accommodationOptions) (fieldSettingsLabelName MsgAccommodationPreferencesLabel "stopAccommodation") (stopAccommodation <$> prefStop <$> prefs)
-    (ssRes, ssView) <- mreq (penanceMapField sou False False stopServiceOptions) (fieldSettingsLabelName MsgStopServicePreferencesLabel "stopServices") (stopServices <$> prefStop <$> prefs)
-    (rsRes, rsView) <- mreq (penanceMapField sou False False routeServiceOptions) (fieldSettingsLabelName MsgDayServicePreferencesLabel "stopRouteServices") (stopRouteServices <$> prefStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField sou True True locationOptions) (fieldSettingsLabelName LocationPreferencesLabel "stopLocation") (stopLocation <$> prefStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField sou True True accommodationOptions) (fieldSettingsLabelName AccommodationPreferencesLabel "stopAccommodation") (stopAccommodation <$> prefStop <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField sou False False stopServiceOptions) (fieldSettingsLabelName StopServicePreferencesLabel "stopServices") (stopServices <$> prefStop <$> prefs)
+    (rsRes, rsView) <- mreq (penanceMapField sou False False routeServiceOptions) (fieldSettingsLabelName DayServicePreferencesLabel "stopRouteServices") (stopRouteServices <$> prefStop <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStopTransportLinks = tlRes,
@@ -723,17 +723,17 @@ chooseStockServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg sou config locales
-    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
+    let messages = renderCaminoMsg config sou locales
+    let transportLinksField =  extendedCheckboxField (toHtml . mRender) TransportLinks (Just TransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
     let routeServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
     (tlRes, tlView) <- mreq transportLinksField (fieldSettingsName "stockTransportLinks") (stopTransportLinks <$> prefStockStop <$> prefs)
-    (loRes, loView) <- mreq (penanceMapField sou True True locationOptions) (fieldSettingsLabelName MsgLocationPreferencesLabel "stockLocation") (stopLocation <$> prefStockStop <$> prefs)
-    (acRes, acView) <- mreq (penanceMapField sou True True accommodationOptions) (fieldSettingsLabelName MsgAccommodationPreferencesLabel "stockAccommodation") (stopAccommodation <$> prefStockStop <$> prefs)
-    (ssRes, ssView) <- mreq (penanceMapField sou False False stopServiceOptions) (fieldSettingsLabelName MsgStopServicePreferencesLabel "stockServices") (stopServices <$> prefStockStop <$> prefs)
-    (rsRes, rsView) <- mreq (penanceMapField sou False False routeServiceOptions) (fieldSettingsLabelName MsgDayServicePreferencesLabel "stockRouteServices") (stopRouteServices <$> prefStockStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField sou True True locationOptions) (fieldSettingsLabelName LocationPreferencesLabel "stockLocation") (stopLocation <$> prefStockStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField sou True True accommodationOptions) (fieldSettingsLabelName AccommodationPreferencesLabel "stockAccommodation") (stopAccommodation <$> prefStockStop <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField sou False False stopServiceOptions) (fieldSettingsLabelName StopServicePreferencesLabel "stockServices") (stopServices <$> prefStockStop <$> prefs)
+    (rsRes, rsView) <- mreq (penanceMapField sou False False routeServiceOptions) (fieldSettingsLabelName DayServicePreferencesLabel "stockRouteServices") (stopRouteServices <$> prefStockStop <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStockTransportLinks = tlRes,
@@ -795,17 +795,17 @@ chooseRestServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg sou config locales
-    let transportLinksField =  extendedCheckboxField (toHtml . mRender) MsgTransportLinks (Just MsgTransportLinksText)
+    let messages = renderCaminoMsg config sou locales
+    let transportLinksField =  extendedCheckboxField (toHtml . mRender) TransportLinks (Just TransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
     let stopServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) serviceEnumeration
     let routeServiceOptions = map (\v -> (v, [ihamlet|^{caminoServiceIcon v}&nbsp;_{caminoServiceMsg v}|] messages router)) townServiceEnumeration
     (tlRes, tlView) <- mreq transportLinksField (fieldSettingsName "stockTransportLinks") (stopTransportLinks <$> prefRestStop <$> prefs)
-    (loRes, loView) <- mreq (penanceMapField sou True True locationOptions) (fieldSettingsLabelName MsgLocationPreferencesLabel "stockLocation") (stopLocation <$> prefRestStop <$> prefs)
-    (acRes, acView) <- mreq (penanceMapField sou True True accommodationOptions) (fieldSettingsLabelName MsgAccommodationPreferencesLabel "stockAccommodation") (stopAccommodation <$> prefRestStop <$> prefs)
-    (ssRes, ssView) <- mreq (penanceMapField sou False False stopServiceOptions) (fieldSettingsLabelName MsgStopServicePreferencesLabel "stockServices") (stopServices <$> prefRestStop <$> prefs)
-    (rsRes, rsView) <- mreq (penanceMapField sou False False routeServiceOptions) (fieldSettingsLabelName MsgDayServicePreferencesLabel "stockRouteServices") (stopRouteServices <$> prefRestStop <$> prefs)
+    (loRes, loView) <- mreq (penanceMapField sou True True locationOptions) (fieldSettingsLabelName LocationPreferencesLabel "stockLocation") (stopLocation <$> prefRestStop <$> prefs)
+    (acRes, acView) <- mreq (penanceMapField sou True True accommodationOptions) (fieldSettingsLabelName AccommodationPreferencesLabel "stockAccommodation") (stopAccommodation <$> prefRestStop <$> prefs)
+    (ssRes, ssView) <- mreq (penanceMapField sou False False stopServiceOptions) (fieldSettingsLabelName StopServicePreferencesLabel "stockServices") (stopServices <$> prefRestStop <$> prefs)
+    (rsRes, rsView) <- mreq (penanceMapField sou False False routeServiceOptions) (fieldSettingsLabelName DayServicePreferencesLabel "stockRouteServices") (stopRouteServices <$> prefRestStop <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resRestTransportLinks = tlRes,
@@ -866,11 +866,11 @@ chooseCaminoForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg sou config locales
+    let messages = renderCaminoMsg config sou locales
     let localised c = localiseText locales c
     let description d = Just $ (descriptionBlock False True d) messages router
     let  caminoField = extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, description $ caminoDescription c)) (caminoAppCaminos master))
-    (caRes, caView) <- mreq caminoField (fieldSettingsLabelName MsgSelectCamino "camino") (prefCamino <$> prefs)
+    (caRes, caView) <- mreq caminoField (fieldSettingsLabelName SelectCamino "camino") (prefCamino <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resCamino = caRes,
@@ -899,7 +899,7 @@ chooseRoutesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg sou config locales
+    let messages = renderCaminoMsg config sou locales
     let localised r = localiseText locales r
     let description d = Just $ (descriptionBlock False True d) messages router
     let camino = prefCamino <$> prefs
@@ -908,7 +908,7 @@ chooseRoutesForm help prefs extra = do
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
     let routeOptions = map (\r -> (routeID r, toHtml $ localised $ routeName r, r, description $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
-    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabelName MsgRoutePreferencesLabel "routes") (prefRoutes <$> prefs)
+    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabelName RoutePreferencesLabel "routes") (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resRoutes = roRes,
@@ -928,13 +928,13 @@ chooseRoutesForm help prefs extra = do
     |]
     return (res, widget)
 
-makeOptions :: (Ord a) => (CaminoAppMessage -> Text) -> (a -> Text) -> (a -> Text) -> [a] -> [a] -> [(Text, [(Text, Text, a)])]
+makeOptions :: (Ord a) => (CaminoMsg -> Text) -> (a -> Text) -> (a -> Text) -> [a] -> [a] -> [(Text, [(Text, Text, a)])]
 makeOptions render keyer labeler recommended options = let
     rset = S.fromList recommended
     other = filter (\v -> not $ S.member v rset) options
     mkOptions opts = map (\l -> (keyer l, labeler l, l)) opts
   in
-    (render MsgSuggestedLabel, mkOptions recommended) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . labeler) other))
+    (render SuggestedLabel, mkOptions recommended) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . labeler) other))
 
 -- | Form to allow start and finish to be chosen
 chooseStartForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
@@ -958,9 +958,9 @@ chooseStartForm help prefs extra = do
     let rfinishes = filter (\l -> maybe True (S.member l) possibleStops) $ maybe [] suggestedFinishes cprefs
     let startOptions = makeOptions render locationID ((localiseText locales) . locationName) rstarts stops
     let finishOptions = makeOptions render locationID ((localiseText locales) . locationName) rfinishes stops
-    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabelName MsgStartLocationLabel "start") start'
-    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabelName MsgFinishLocationLabel "finish") finish'
-    (sdRes, sdView) <- mreq (dateField) (fieldSettingsLabelName MsgStartDateLabel "startDate") startDate'
+    (stRes, stView) <- mreq (extendedSelectionField startOptions) (fieldSettingsLabelName StartLocationLabel "start") start'
+    (fiRes, fiView) <- mreq (extendedSelectionField finishOptions) (fieldSettingsLabelName FinishLocationLabel "finish") finish'
+    (sdRes, sdView) <- mreq (dateField) (fieldSettingsLabelName StartDateLabel "startDate") startDate'
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resStart = stRes,
@@ -1022,15 +1022,15 @@ chooseStopsForm help prefs extra = do
     let recommendedRests = maybe S.empty recommendedRestPoints cprefs'
     let (suggestedRests, otherRests) = Data.List.partition (\l -> S.member l recommendedRests) restpoints
     let mkOptions locs = map (\l -> (locationID l, localised l, l)) locs
-    let stopOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
-    let exclOptions = (render MsgSuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . localised) stops))
-    let restOptions = (render MsgSuggestedLabel, mkOptions suggestedRests) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) otherRests))
+    let stopOptions = (render SuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
+    let exclOptions = (render SuggestedLabel, []) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . localised) stops))
+    let restOptions = (render SuggestedLabel, mkOptions suggestedRests) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) otherRests))
     let chosenStops = S.intersection <$> allowedStops <*> (prefStops <$> prefs)
     let chosenExcluded = S.intersection <$> allowedStops <*> (prefExcluded <$> prefs)
     let chosenRestPoints = S.intersection <$> allowedRests <*> (prefRestPoints <$> prefs)
-    (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabelName MsgStopsLabel "stops") chosenStops
-    (exRes, exView) <- mreq (clickSelectionField exclOptions) (fieldSettingsLabelName MsgExcludedLabel "excluded") chosenExcluded
-    (rspRes, rspView) <- mreq (clickSelectionField restOptions) (fieldSettingsLabelName MsgPreferredRestPointsLabel "restPoints") chosenRestPoints
+    (stRes, stView) <- mreq (clickSelectionField stopOptions) (fieldSettingsLabelName StopsLabel "stops") chosenStops
+    (exRes, exView) <- mreq (clickSelectionField exclOptions) (fieldSettingsLabelName ExcludedLabel "excluded") chosenExcluded
+    (rspRes, rspView) <- mreq (clickSelectionField restOptions) (fieldSettingsLabelName PreferredRestPointsLabel "restPoints") chosenRestPoints
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resStops = stRes
@@ -1102,9 +1102,9 @@ choosePoiForm help prefs extra = do
     let recommended = maybe S.empty id $ recommendedPois <$> tprefs <*> cprefs'
     let (suggested, other) = Data.List.partition (\p -> S.member p recommended) pois
     let mkOptions ps = map (\p -> (poiID p, poiLabel locales (findLocationByPoi camino p) p, p)) ps
-    let poiOptions = (render MsgSuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
+    let poiOptions = (render SuggestedLabel, mkOptions suggested) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise .localised) other))
     let chosenPois = S.intersection possiblePois <$> (prefPois <$> prefs)
-    (poRes, poView) <- mreq (clickSelectionField poiOptions) (fieldSettingsLabelName MsgPoisLabel "pois") chosenPois
+    (poRes, poView) <- mreq (clickSelectionField poiOptions) (fieldSettingsLabelName PoisLabel "pois") chosenPois
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resPois = poRes,

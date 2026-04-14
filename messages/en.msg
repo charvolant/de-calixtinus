@@ -74,8 +74,8 @@ DayLabel: Day
 DayOfMonthName dom@C.DayOfMonth: #{dom}
 DayOfWeekName dow@C.DayOfWeek: ^{renderLocalisedTime sou langs "%a" dow}
 DaysElapsedMsg days@Int: #{sformat int days} days total
-DayServicesPenanceLabel: Missing Services (Day)
 DayServicePreferencesLabel: Preferred Services during Day
+DayServicesPenanceLabel: Missing Services (Day)
 DaysWalkingMsg days@Int: #{sformat int days} days walking
 DayText: day
 DescentLabel: Descent

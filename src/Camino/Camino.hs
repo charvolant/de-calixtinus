@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Camino
 Description : Data models for travelling the Camino
@@ -19,36 +20,26 @@ The legs run between two locations, each with possible accommodation and service
 Generally, it is expected that these models will be read from JSON files.
 -}
 module Camino.Camino (
-    Accommodation(..)
-  , AccommodationType(..)
-  , Camino(..)
-  , CaminoConfig(..)
-  , Comfort(..)
-  , Event(..)
-  , EventType(..)
-  , Feature(..)
+  -- * Basic Preferences
+    Travel(..)
+  , travelEnumeration
   , Fitness(..)
-  , HasCaminoConfig(..)
-  , LatLong(..)
-  , Leg(..)
-  , LegSegment(..)
-  , LegType(..)
-  , Location(..)
-  , LocationType(..)
-  , Palette(..)
-  , Penance(..)
+  , fitnessEnumeration
+  , Comfort(..)
+  , comfortEnumeration
   , PoiCategory(..)
-  , PointOfInterest(..)
-  , Prioritised(..)
-  , Route(..)
-  , RouteLogic(..)
+  , poiCategoryEnumeration
+  -- * Penance
+  , Penance(..)
+  , subtractFloor
+  -- * Services
   , Service(..)
+  , serviceEnumeration
+  , townServiceEnumeration
+  -- * Accommodation
+  , Accommodation(..)
+  , AccommodationType(..)
   , Sleeping(..)
-  , SRS(..)
-  , Travel(..)
-
-  , module Graph.Programming
-
   , accommodationDescription
   , accommodationID
   , accommodationMulti
@@ -58,32 +49,15 @@ module Camino.Camino (
   , accommodationTypeEnumeration
   , accommodationServices
   , accommodationSleeping
-  , allFeatures
-  , buildLegSegments -- For testing only
-  , caminoAllLegs
-  , caminoBbox
-  , caminoDump
-  , caminoExcludedLegs
-  , caminoFeatureMap
-  , caminoLegRoute
-  , caminoNameLabel
-  , caminoRegions
-  , caminoRoute
-  , caminoRouteLocations
-  , caminoUsedFeatures
-  , caminoWithRoutes
-  , centroid
-  , comfortEnumeration
-  , completeRoutes
-  , createAllowsClauses
-  , createCaminoConfig
-  , createRequiresClauses
-  , createProhibitsClauses
-  , fitnessEnumeration
-  , getCamino
-  , haversineDistance
   , isGenericAccommodation
-  , legTypeEnumeration
+  -- * Point of Interest
+  , PointOfInterest(..)
+  , Event(..)
+  , EventType(..)
+  , poiNameLabel
+  -- * Location
+  , Location(..)
+  , LocationType(..)
   , locationAccommodationTypes
   , locationAdditionalAccommodationTypes
   , locationAdditionalPoiTypes
@@ -98,17 +72,55 @@ module Camino.Camino (
   , locationStopTypeEnumeration
   , locationTransportLinks
   , locationTypeEnumeration
-  , normaliseLeg
-  , normaliseLeg'
-  , poiCategoryEnumeration
-  , poiNameLabel
-  , readCamino
+  -- * Leg
+  , Leg(..)
+  , LegSegment(..)
+  , LegType(..)
+  , legTypeEnumeration
+  -- * Routes
+  , Route(..)
+  , RouteLogic(..)
+  , Feature(..)
+  , createAllowsClauses
+  , createRequiresClauses
+  , createProhibitsClauses
   , routeCentralLocation
   , routeLegTypes
-  , serviceEnumeration
-  , subtractFloor
-  , townServiceEnumeration
-  , travelEnumeration
+  , allFeatures
+  -- * Camino
+  , Camino(..)
+  , caminoAllLegs
+  , caminoBbox
+  , caminoDump
+  , caminoExcludedLegs
+  , caminoFeatureMap
+  , caminoLegRoute
+  , caminoNameLabel
+  , caminoRegions
+  , caminoRoute
+  , caminoRouteLocations
+  , caminoUsedFeatures
+  , caminoWithRoutes
+  , completeRoutes
+  -- * Utilities
+  , LatLong(..)
+  , Palette(..)
+  , Prioritised(..)
+  , SRS(..)
+  , centroid
+  , haversineDistance
+  -- * Configuration
+  , CaminoConfig(..)
+  , HasCaminoConfig(..)
+  , createCaminoConfig
+  , getCamino
+  , readCamino
+
+  , module Graph.Programming
+  -- * Internal
+  , buildLegSegments -- For testing only
+  , normaliseLeg
+  , normaliseLeg'
 ) where
 
 import GHC.Generics (Generic)
@@ -154,8 +166,8 @@ isPlaceholderName (Localised [TaggedText locale text]) = locale == rootLocale &&
 isPlaceholderName _ = False
 
 -- | The measure of penance.
--- |
--- | Currently, based a simple float that can be thought of as equivalent to kilometres spent walking.
+--
+-- Currently, a simple float that can be thought of as equivalent to kilometres spent walking.
 data Penance = Reject -- ^ Unsustainable penance
  | Penance Float -- ^ Simple penance
  deriving (Show, Generic)
@@ -355,7 +367,7 @@ data Service = WiFi -- ^ Wireless internet available
   | Kitchen -- ^ Kitchen facilities
   | Breakfast -- ^ Breakfast available
   | Dinner -- ^ Dinner available
-  | HalfBoard -- ^ Half-board (breakfast/lunch or breakfast/dinner) available
+  | HalfBoard -- ^ Half-board (breakfast-lunch or breakfast-dinner) available
   | Lockers -- ^ Lockers or cabinets
   | Accessible -- ^ Fitted for people with disabilities
   | Stables -- ^ Stabling for horses available
@@ -365,7 +377,7 @@ data Service = WiFi -- ^ Wireless internet available
   | Bedlinen -- ^ Bedlinen provided
   | Towels -- ^ Towels provided
   | Pool -- ^ Swimming pool available
-  | Prayer -- ^ Community prayer/liturgy
+  | Prayer -- ^ Community prayer or liturgy
   deriving (Show, Read, Generic, Eq, Ord, Enum, Bounded)
 
 instance FromJSON Service
@@ -384,7 +396,7 @@ instance Summary Service where
 serviceEnumeration :: [Service]
 serviceEnumeration = [minBound .. maxBound]
 
--- | Provide an enumeration of the services that might be available in a village/town/city
+-- | Provide an enumeration of the services that might be available in a village, town or city
 townServiceEnumeration :: [Service]
 townServiceEnumeration = [Restaurant, Groceries, Pharmacy, Medical, Bank, BicycleRepair, Train, Bus]
 
@@ -411,10 +423,13 @@ data Accommodation =
   | GenericAccommodation AccommodationType -- ^ Generic accommodation with default services, sleeping arrangements based on type
   deriving (Show, Generic)
 
+-- The identifier associated with this accommodation.
+-- Generated and used internally for saving options and plans
 accommodationID :: Accommodation -> Text
 accommodationID (Accommodation id' _name _description _type _services _sleeping _multi) = id'
 accommodationID (GenericAccommodation type') = pack $ show type'
 
+-- | Get a localisable version of the accommodation name
 accommodationName :: Accommodation -> (Localised TaggedText)
 accommodationName (Accommodation _id' name' _description _type _services _sleeping _multi) = name'
 accommodationName (GenericAccommodation type') = wildcardText $ pack ("Generic " ++ show type')
@@ -423,14 +438,19 @@ accommodationName (GenericAccommodation type') = wildcardText $ pack ("Generic "
 accommodationNameLabel :: Accommodation -> Text
 accommodationNameLabel accommodation = localiseDefault $ accommodationName accommodation
 
+-- | Any (optional) descriptive information about this accommodation option
 accommodationDescription :: Accommodation -> Maybe Description
 accommodationDescription (Accommodation _id' _name' description' _type _services _sleeping _multi) = description'
 accommodationDescription (GenericAccommodation _type') = Nothing
 
+-- | The broad type of accommodation
 accommodationType :: Accommodation -> AccommodationType
 accommodationType (Accommodation _id _name _description type' _services _sleeping _multi) = type'
 accommodationType (GenericAccommodation type') = type'
 
+-- | The services available within the accomodation.
+--   Full occomodation descriptions have explicit services.
+--   Generic accommodation has services based on the type of accommodation.
 accommodationServices :: Accommodation -> S.Set Service
 accommodationServices (Accommodation _id _name _description _type services' _sleeping _multi) = services'
 accommodationServices (GenericAccommodation PilgrimAlbergue) = S.fromList [ Handwash ]
@@ -447,7 +467,9 @@ accommodationServices (GenericAccommodation Refuge) = S.empty
 accommodationServices (GenericAccommodation Camping) = S.empty
 accommodationServices (GenericAccommodation PlaceholderAccommodation) = S.empty
 
-
+-- | The room options available.
+--   Full occomodation descriptions have explicit room options.
+--   Generic accommodation has options based on the type of accommodation.
 accommodationSleeping :: Accommodation -> S.Set Sleeping
 accommodationSleeping (Accommodation _id _name _description _type _services sleeping' _multi) = sleeping'
 accommodationSleeping (GenericAccommodation PilgrimAlbergue) = S.fromList [ Shared ]
@@ -815,9 +837,13 @@ instance Summary PointOfInterest where
 poiNameLabel :: PointOfInterest -> Text
 poiNameLabel poi = localiseDefault $ poiName poi
 
--- | A location, usually a city/town/village that marks the start and end points of a leg
+-- | A location, usually a city, town or village that marks the start and end points of a leg
 --   and which may have accommodation and other services available.
---   Locations form the vertexes on the travel graph
+--   Locations form the vertexes on the travel graph.
+--
+--  As well as locally available services, accommodation, events, etc., a location may also
+--  have facilities available via /transport link/.
+--  These facilities are available from somewhere nearby via a bus, train etc.
 data Location = Location {
     locationID :: Text
   , locationName :: Localised TaggedText
@@ -992,7 +1018,7 @@ locationAdditionalServices camino location = locationAdditional locationServices
 locationAdditionalPoiTypes :: Camino -> Location -> S.Set LocationType
 locationAdditionalPoiTypes camino location = locationAdditional locationPoiTypes camino location
 
--- | Get the resources available at a location locally or via transport links
+-- | Get the resources available at a location, locally or via transport links
 locationAllSet :: (Ord a) => (Location -> S.Set a) -> Camino -> Location -> S.Set a
 locationAllSet resource camino location = let
   locs = map legTo (locationTransportLinks camino location)
@@ -1000,11 +1026,11 @@ locationAllSet resource camino location = let
   in
     addn `S.union` resource location
 
--- | Get all services accessible from a location
+-- | Get all services accessible from a location, either locally or via transport links
 locationAllServices :: Camino -> Location -> S.Set Service
 locationAllServices camino location = locationAllSet locationServices camino location
 
--- | Get all possible resources available at a location locally or via transport links
+-- | Get all possible resources available at a location, locally or via transport links
 locationAll :: (Location -> [a]) -> Camino -> Location -> [a]
 locationAll resource camino location = let
   locs = map legTo (locationTransportLinks camino location)
@@ -1012,11 +1038,11 @@ locationAll resource camino location = let
   in
     resource location ++ addn
 
--- | Get all accommodation accessible from a location
+-- | Get all accommodation accessible from a location, either locally or via transport links
 locationAllAccommodation :: Camino -> Location -> [Accommodation]
 locationAllAccommodation camino location = locationAll locationAccommodation camino location
 
--- | Get all pois accessible from a location
+-- | Get all pois accessible from a location, either locally or via transport links
 locationAllPois :: Camino -> Location -> [PointOfInterest]
 locationAllPois camino location = locationAll locationPois camino location
 
@@ -1072,10 +1098,14 @@ instance NFData LegSegment
 
 -- | A leg from one location to another.
 --   Legs form the edges of a camino graph.
--- 
---   Legs have a total ascent and descent. 
+--
+--   Legs have a total ascent and descent separate from the elevation difference of the start and end points.
 --   These are usually assumed to be relatively lumpy and are grouped together for
---   time calculations
+--   time calculations.
+--
+--   Complicated legs, either twisty legs or ones that rise and fall a lot,
+--   can be broken into intermediate waypoints.
+--   Total ascent and descent is distributed amongst the `LegSegment`s between the waypoints.
 data Leg = Leg {
     legType :: LegType -- ^ The type of leg
   , legFrom :: Location -- ^ The start location
@@ -1224,7 +1254,7 @@ buildLegSegments fl tl waypoints distance ascent descent = let
 instance NFData (Colour a) where
   rnf _ = ()
 
--- | A palette, graphical styles to use for displaying information
+-- | A palette, graphical styles to use for displaying information.
 data Palette = Palette {
     paletteColour :: Colour Double -- ^ The basic colour of the element
   , paletteTextColour :: Colour Double -- ^ The text colour of the element
@@ -1297,7 +1327,9 @@ dereferenceFormula context (Implies p c) = Implies (dereferenceFormula context p
 dereferenceFormula _context f = f
 
 -- | A geographical feature, used to display things like route trails.
---   Features have conditions under which they
+--
+--   Features have conditions under which they show as used or unused by a plan, based on
+--   which locations are included in the plan.
 data Feature = Feature {
     featureID :: Text -- ^ The feature identifier
   , featureType :: LegType -- ^ The sort of route that this represents
@@ -1396,7 +1428,18 @@ instance Summary Feature where
 allFeatures :: Feature -> [Feature]
 allFeatures feature = feature:(concat $ map allFeatures $ featureFeatures feature)
 
--- | A route, a sub-section of the camino with graphical information
+-- | A route, a sub-section of the camino which the user may choose to include or exclude from their camino plan.
+--
+--   Routes are generally substantial segments of alternative travel allowing a pilgrim to visit something attractive
+--   or bypass something less so.
+--
+--   Routes are associated with graphical information that allow displays to differentiate between the viarious options.
+--
+--   The default route for a camino collects all locations and legs that are not part of a specific alternative route.
+--
+--   Routes can contain suggested start and end points, points of interest, end of day and end of stage stops and the like.
+--   These are used to create sensible suggestions and defaults when the user is building preferences.
+--   The default route holds the standard suggestions.
 data Route = Route {
     routeID :: Text -- ^ An identifier for the route
   , routeName :: Localised TaggedText -- ^ The route name
@@ -1560,7 +1603,8 @@ routeLegTypes' feature = S.unions $ (S.singleton $ featureType feature):(map rou
 routeLegTypes :: Route -> S.Set LegType
 routeLegTypes route = if null fs then (S.singleton Road) else S.unions (map routeLegTypes' fs) where fs = routeFeatures route
 
--- | Statements about how routes weave together
+-- | Statements about how routes weave together.
+--
 --   Route logic allows you to say, if you choose this combination of routes then you must also have these routes and
 --   can't have these. You'll also need to include these locations and remove those.
 --   The condition allows arbitrary propositional logic about other routes.
@@ -1654,8 +1698,10 @@ createProhibitsClauses :: RouteLogic -- ^ The piece of route logic
   -> [Formula Route] -- ^ A list of clauses that imply anything allowed is true and anything prohibited is false
 createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits logic)
 
--- | A way, consisting of a number of legs with a start and end
---   The purpose of the Camino Planner is to divide a camino into 
+-- | A way, consisting of a number of locations and legs between them.
+--
+--   The purpose of the Camino Planner is to divide the selected legs of a camino into suitable
+--   days and stages.
 data Camino = Camino {
     caminoId :: Text
   , caminoName :: Localised TaggedText

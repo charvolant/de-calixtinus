@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Planner
 Description : The camino planner

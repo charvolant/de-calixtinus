@@ -484,6 +484,6 @@ instance Text.Shakespeare.I18N.RenderMessage a TestMsg
     where {Text.Shakespeare.I18N.renderMessage _ langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMsg Data.Default.Class.def langs msg)}|]
 
 testMkMessageCatalogue2 = TestCase (do
-  dec <- runQ $ mkMessageCatalogue Nothing (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en"
+  dec <- runQ $ mkMessageCatalogue Nothing (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en" True
   assertEqual "Make MkMessageCatalogue 2 1" mk2 (pprint dec)
   )

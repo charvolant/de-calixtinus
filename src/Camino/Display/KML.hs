@@ -68,7 +68,7 @@ htmlToNodes :: U.SystemOfUnits -> Config -> [Locale] -> HtmlUrlI18n CaminoMsg Ca
 htmlToNodes sou config locales html =
   singleton $ NodeContent $ toStrict $ renderHtml $ html message route
     where
-      message = renderCaminoMsg sou config locales
+      message = renderCaminoMsg config sou locales
       route = renderCaminoRoute config locales
 
 kmlRouteStyle :: Text -> Double -> Double -> Colour Double -> [Node]
@@ -178,7 +178,7 @@ caminoLocationHtmlForPlacemark sou config locales tprefs cprefs pilgrimage _stop
 caminoTextForSolution :: U.SystemOfUnits -> Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Text
 caminoTextForSolution sou config locales _tprefs cprefs msolution =  traceShowId $ intercalate "\n" $ catMaybes (heading ++ notes ++ caminoMd ++ solutionMd)
   where
-    message = renderCaminoMsgText sou config locales
+    message = renderCaminoMsgText config sou locales
     camino = preferenceCamino cprefs
     mpilgrimage = maybe Nothing solutionPilgrimage msolution
     msid = maybe Nothing solutionID msolution

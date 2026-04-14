@@ -12,9 +12,9 @@ Portability : POSIX
 -}
 module Text.MessageCatalogue.Internal where
 
-import Control.Exception (Exception, throw)
+import qualified Control.Exception as CE
 import Control.Monad (void, when)
-import Control.Monad.Catch (throwM)
+import qualified Control.Monad.Catch as MC
 import qualified Data.ByteString as BS
 import Data.Char (isLetter)
 import Data.Default.Class (def)
@@ -36,6 +36,7 @@ import Text.Hamlet
 import Text.Parsec
 import Text.Parsec.String (Parser)
 import Text.Shakespeare.I18N (Lang, RenderMessage, renderMessage)
+import Debug.Trace
 
 -- | An message processing exception, usually the result of a parse error or incompatible message files
 data MessageException = MessageException {
@@ -45,18 +46,18 @@ data MessageException = MessageException {
     , meArg :: Maybe String -- ^ The message argument
   } deriving (Show)
 
-instance Exception MessageException
+instance CE.Exception MessageException
 
 data Param = Param {
     paName :: Name
   , paType :: Type
-}
+} deriving (Show)
 
 data Msg = Msg {
     msgConstructor :: String
   , msgParams :: [Param]
   , msgBody :: Text
-}
+} deriving (Show)
 
 data Catalogue = Catalogue {
     caLang :: Lang
@@ -124,27 +125,33 @@ collectMsg msg msgs = if null msg then msgs else (T.intercalate "\n" (reverse ms
 
 collectMessages [] msg = collectMsg msg []
 collectMessages (line:rest) msg = case T.uncons line of
-    Nothing -> collectMsg msg (collectMessages rest [])
-    Just ('#', _) -> collectMessages rest msg
+    Nothing -> collectMessages rest (line:msg)
+    Just ('#', line') -> case T.uncons line' of
+      Just ('{', _) -> collectMessages rest (line:msg) -- Start of expression
+      _ -> collectMsg msg (collectMessages rest []) -- Comment
     Just (' ', _) -> collectMessages rest (line:msg)
-    _ -> collectMsg msg (collectMessages rest [line])
+    Just ('$', _) -> collectMessages rest (line:msg)
+    Just ('<', _) -> collectMessages rest (line:msg)
+    Just ('^', _) -> collectMessages rest (line:msg)
+    Just ('_', _) -> collectMessages rest (line:msg)
+    _ -> collectMsg msg (collectMessages rest [line]) -- Start of a new message
 
 parseMessage :: Lang -> Text -> IO Msg
 parseMessage lang msg = do
   let (dec, body') = T.breakOn ":" msg
-  let body = if T.null body' then throw $ MessageException ("No message constructor for " ++ T.unpack msg) (Just lang) Nothing Nothing else (T.strip $ T.drop 1 body')
+  let body = if T.null body' then CE.throw $ MessageException ("No message constructor for " ++ T.unpack msg) (Just lang) Nothing Nothing else (T.strip $ T.drop 1 body')
   let (constructor, params) = parseConstructor lang (T.unpack dec)
   return $ Msg constructor params body
 
 parseConstructor :: Lang -> String -> (String, [Param])
 parseConstructor lang dec = either
-  (\e -> throw $ MessageException ("Can't parse constructor " <> dec) (Just lang) Nothing Nothing)
+  (\e -> CE.throw $ MessageException ("Can't parse constructor " <> dec) (Just lang) Nothing Nothing)
   id
   (parse constructorParser "" dec)
 
 parseType :: String -> Type
 parseType dec = either
-  (\e -> throw $ MessageException ("Can't parse type " <> dec) Nothing Nothing Nothing)
+  (\e -> CE.throw $ MessageException ("Can't parse type " <> dec) Nothing Nothing Nothing)
   id
   (parse typeDecParserTop "" dec)
 
@@ -266,14 +273,14 @@ checkLang'' lang msg (dparam:drest) (lparam:lrest) =
   in
     case merr of
       Nothing -> checkLang'' lang msg drest lrest
-      Just err -> throwM $ MessageException err (Just lang) (Just msg) (Just $ nameBase $ paName dparam)
+      Just err -> MC.throwM $ MessageException err (Just lang) (Just msg) (Just $ nameBase $ paName dparam)
 
 checkLang' lang ddefs ldef = do
   let lmsg = msgConstructor ldef
   let ddef = ddefs M.! lmsg
   let dargs = msgParams ddef
   let largs = msgParams ldef
-  when (length dargs /= length largs) (throwM $ MessageException "Mismatching parameter numbers" (Just lang) (Just lmsg) Nothing)
+  when (length dargs /= length largs) (MC.throwM $ MessageException "Mismatching parameter numbers" (Just lang) (Just lmsg) Nothing)
   checkLang'' lang lmsg dargs largs
 
 checkLang dcat lcat = do
@@ -283,7 +290,7 @@ checkLang dcat lcat = do
   let dcons = S.fromList $ map (T.pack . msgConstructor) ddefs
   let lcons = S.fromList $ map (T.pack . msgConstructor) ldefs
   let additional = S.difference lcons dcons
-  when (not $ S.null additional) (throwM $ MessageException ("Additional message: " ++ summaryString additional) (Just llang) Nothing Nothing)
+  when (not $ S.null additional) (MC.throwM $ MessageException ("Additional message: " ++ summaryString additional) (Just llang) Nothing Nothing)
   let ddefs' = M.fromList $ map (\m -> (msgConstructor m, m)) ddefs
   mapM_ (checkLang' llang ddefs') ldefs
 
@@ -299,7 +306,7 @@ makeConstructor :: Lang -> Msg -> Q Con
 makeConstructor lang msg = do
   let name = mkName $ msgConstructor msg
   let pts = map paType $ msgParams msg
-  when (any (== WildCardT) pts) (throw $ MessageException "Untyped parameter" (Just lang) (Just $ msgConstructor msg) Nothing)
+  when (any (== WildCardT) pts) (CE.throw $ MessageException "Untyped parameter" (Just lang) (Just $ msgConstructor msg) Nothing)
   let pts' = map (\argType -> bangType defaultBangQ (return argType)) pts
   normalC name pts'
 
@@ -313,7 +320,7 @@ makeCatalogueDec ctx catalogue = do
 
 findMsg :: Msg -> Catalogue -> Msg
 findMsg msg catalogue = maybe
-  (throw $ MessageException "Can't find base constructor" (Just $ caLang catalogue) (Just $ msgConstructor msg) Nothing)
+  (CE.throw $ MessageException "Can't find base constructor" (Just $ caLang catalogue) (Just $ msgConstructor msg) Nothing)
   id
   (L.find (\b -> msgConstructor b == msgConstructor msg) (caMsgs catalogue))
 
@@ -323,18 +330,20 @@ makeLangRenderName ctx lang = mkName (nameBase (mcRender ctx) ++ "_" ++ makeLang
 makeLangTag :: Lang -> String
 makeLangTag lang = T.unpack $ T.toUpper $ T.filter (\c -> isLetter c || c == '_') $ T.replace "-" "_" lang
 
+parseMsgBody :: Text -> Q Exp
+parseMsgBody body = hamletFromString htmlRules defaultHamletSettings (T.unpack body)
+
 makeMsgClause :: MessageContext -> Msg -> Msg -> Q Clause
 makeMsgClause ctx base msg = do
   let just = 'Just
-      context = map paName $ mcContext ctx
-      constructor = mkName $ msgConstructor msg
-      args = map (\a -> VarP $ paName a) $ msgParams msg
-      langs = paName $ mcLocales ctx
-      mpattern = ConP constructor [] args
-      cpattern = (map VarP context) ++ [VarP langs, mpattern]
-  msgExpr <- hamletFromString htmlRules defaultHamletSettings (T.unpack $ msgBody msg)
-  let expr = (ConE just) `AppE` msgExpr
-  return $ Clause cpattern (NormalB expr) []
+  let context = map paName $ mcContext ctx
+  let constructor = mkName $ msgConstructor msg
+  let args = map (\a -> VarP $ paName a) $ msgParams msg
+  let langs = paName $ mcLocales ctx
+  let mpattern = ConP constructor [] args
+  let cpattern = (map VarP context) ++ [VarP langs, mpattern]
+  expr <- parseMsgBody (msgBody msg)
+  return $ Clause cpattern (NormalB (ConE just `AppE` expr)) []
 
 makeNoMatchClause :: MessageContext -> Bool -> Catalogue -> Q Clause
 makeNoMatchClause ctx base catalogue = do
@@ -361,7 +370,7 @@ makeRenderDec ctx catalogues = do
       rtype' = mcRender'Sig ctx
   mainClause <- makeMsgRenderMain ctx rname rname'
   nullClause <- makeMsgRenderNullClause ctx
-  nfClause <- makeMsgRenderNotFoundClause ctx
+  nfClause <- makeMsgRenderNotFoundClause ctx rname'
   clauses <- mapM (makeMsgRenderClause ctx rname') catalogues
   return $ [SigD rname rtype, FunD rname [mainClause], SigD rname' rtype', FunD rname' ([nullClause] ++ clauses ++ [nfClause])]
 
@@ -398,17 +407,17 @@ makeMsgRenderNullClause ctx = do
       context = map paName $ mcContext ctx
       cpattern = (map VarP context) ++ [ListP [], VarP langs, VarP msg]
       expr = foldl1 AppE $ map VarE $ [rlname] ++ context ++ [langs, msg]
-  return $ Clause cpattern (NormalB expr) []
+      mexpr = (VarE 'maybe) `AppE` (LitE $ StringL "XXX") `AppE` (VarE 'id) `AppE` expr
+  return $ Clause cpattern (NormalB mexpr) []
 
-makeMsgRenderNotFoundClause :: MessageContext -> Q Clause
-makeMsgRenderNotFoundClause ctx = do
-  let rname = mcRender ctx
-      msg = paName $ mcMsg ctx
+makeMsgRenderNotFoundClause :: MessageContext -> Name -> Q Clause
+makeMsgRenderNotFoundClause ctx rname' = do
+  let msg = paName $ mcMsg ctx
       rest = mcLocaleRest ctx
       langs = paName $ mcLocales ctx
       context = map paName $ mcContext ctx
       cpattern = (map VarP context) ++ [InfixP WildP (mkName ":") (VarP rest), VarP langs, VarP msg]
-      rexpr = foldl1 AppE $ map VarE $ [rname] ++ context ++ [rest, langs, msg]
+      rexpr = foldl1 AppE $ map VarE $ [rname'] ++ context ++ [rest, langs, msg]
   return $ Clause cpattern(NormalB rexpr) []
 
 makeInstanceDec :: MessageContext -> Q [Dec]

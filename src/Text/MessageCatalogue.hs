@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell       #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Text.MessageCatalogue
 Description : Message catalogues that allow hamlet-stle expressions
@@ -47,18 +48,23 @@ Compound types, without type variables, can be declared.
 For example @(Maybe String)@, @(Int -> String)@, @(M.Map Int (String -> [T.Text]))@ are all acceptable.
 
 Messages use @#{...}@ interpolation and @^{...}@ interploation in the same manner as `shamlet`.
-Similarly @.class-name@ and @#ident@ also work.
+Similarly @.class-name@ and @#ident@ also work, as do structures like @$if@ or @$maybe@.
+Care needs to be taken to ensure indentation works properly, since the first line implicitly has no leading spaces.
 
-Since hamlet uses indentation to process HTML tags, spaces at the start of messages in the message file are
-significant and used to denote HTML.
+Since hamlet uses indentation to process HTML tags, spaces or other hamlet markup at the start of messages in the message file are
+significant and used to denote multi-line hamlet.
 An example multi-line message is
 
 @
-Ascent a@Float:<span .ascent .distance>
+Ascent a@Float:
+<span .ascent .distance>
   #{sformat int a}m
+$if a > 20.0 then
+  <span .problem>
+    Oh dear!
 @
 
-would produce @\<span class="ascent distance"\>45m\</span\>@ when given @Ascent 45.0@.
+would produce @\<span class="ascent distance"\>45m\</span\> <span class="problem">Oh dear!</span>@ when given @Ascent 45.0@.
 
 -}
 module Text.MessageCatalogue (
@@ -76,7 +82,7 @@ import Data.Maybe (catMaybes)
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
 import System.Directory (getDirectoryContents)
-import Text.Shakespeare.I18N (Lang, RenderMessage)
+import Text.Shakespeare.I18N (Lang)
 
 -- | Create a simple message catalogue.
 --   This follows the structure of the Yesod `Yesod.Message.mkMessage` with the following differences:
@@ -103,13 +109,13 @@ mkMessageCatalogueSimple dt folder lang = let
     mname = mkName $ dt ++ "Message"
     params = [("master", aname)]
   in
-    mkMessageCatalogue (Just aname) mname ''Lang params folder lang
+    mkMessageCatalogue (Just aname) mname ''Lang params folder lang True
 
 -- | Create a message catalogue.
 --
 --   This allows considerably more customisation than `mkMessageCatalogueSimple`.
 --
---   A typical invocation is @mkMessageCatalogue (Just ''MyApp) (mkName "MyAppMsg") ''Lang [("sub", ''MyApp), ("region", ''Region) "messages" "en"
+--   A typical invocation is @mkMessageCatalogue (Just ''MyApp) (mkName "MyAppMsg") ''Lang [("sub", ''MyApp), ("region", ''Region) "messages" "en" True
 --   In this case:
 --
 --   * @''MyApp@ is the master application data type. This is optional and, if Nothing, will result in q "masterless" message catalogue
@@ -120,7 +126,7 @@ mkMessageCatalogueSimple dt folder lang = let
 --   * @"messages"@ is the directory that holds the message catalogue files
 --   * @"en"@ is the base message catalogue
 --
---   This will produce a main render function @renderMyAppMsg :: MyApp -> Region -> [Lang] -> MyAppMsg -> Html@ and
+--   This will produce a main render function @renderMyAppMsg :: MyApp -> Region -> [Lang] -> MyAppMsg -> Html@ and,
 --   an instance of `Text.Shakespeare.I18N.RenderMessage` that uses `def` for the region.
 mkMessageCatalogue :: Maybe Name -- ^ The optional application data type
   -> Name -- ^ The message type
@@ -128,8 +134,9 @@ mkMessageCatalogue :: Maybe Name -- ^ The optional application data type
   -> [(String, Name)] -- ^ The names and types of additional context parameters (see above for information about the application data)
   -> FilePath -- ^ The folder containing the language-tagged message files
   -> Lang -- ^ The default language
+  -> Bool -- ^ Create a default RenderMessage instance
   -> Q [Dec]
-mkMessageCatalogue mdtype mtype ltype params folder lang = do
+mkMessageCatalogue mdtype mtype ltype params folder lang rm = do
   files <- qRunIO $ getDirectoryContents folder
   contents <- qRunIO $ fmap catMaybes $ mapM (loadLang folder) files
   let base = maybe (throw $ MessageException "Did not find main language file" (Just lang) Nothing Nothing) id $ L.find (\c -> caLang c == lang) contents
@@ -147,5 +154,6 @@ mkMessageCatalogue mdtype mtype ltype params folder lang = do
   datadec <- makeDataDec ctx
   msgdecs <- mapM (makeCatalogueDec ctx) contents
   renderdec <- makeRenderDec ctx contents
-  instancedec <- makeInstanceDec ctx
-  return $ datadec ++ concat msgdecs ++ renderdec ++ instancedec
+  instancedec <- if rm then makeInstanceDec ctx else return []
+  let decs = datadec ++ concat msgdecs ++ renderdec ++ instancedec
+  return decs

@@ -91,7 +91,7 @@ plan opts = do
     let langs = ["en", ""]
     let locales = map localeFromIDOrError langs
     let router = renderCaminoRoute config' locales
-    let messages1 = renderCaminoMsg U.SIUnits config' locales
+    let messages1 = renderCaminoMsg config' U.SIUnits locales
     let solution = planCamino cconf preferences' caminoPrefs'''
     createDirectoryIfMissing True output'
     let kml = createCaminoDoc config' locales preferences' caminoPrefs''' (Just solution)

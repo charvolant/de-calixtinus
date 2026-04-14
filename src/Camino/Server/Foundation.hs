@@ -393,14 +393,11 @@ permittedRestPoints prefs locs = let
 
 mkYesodData "CaminoApp" $(parseRoutesFile "config/routes.yesodroutes")
 
--- Current message caltalogues: en, es
-mkMessage "CaminoApp" "messages" "en"
-
 instance RenderMessage CaminoApp FormMessage where
     renderMessage _ _ = defaultFormMessage
 
 instance RenderMessage CaminoApp CaminoMsg where
-    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg U.SIUnits (caminoAppConfig master) (catMaybes $ map localeFromID langs) msg
+    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) U.SIUnits (catMaybes $ map localeFromID langs) msg
 
 instance Yesod CaminoApp where
   approot = ApprootMaster (C.getWebRoot . caminoAppConfig)
@@ -419,8 +416,8 @@ instance Yesod CaminoApp where
     let headLinks = catMaybes $ map (localise locales . C.links) (C.getLinks C.Header config)
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
-    let helpLabel = render MsgHelpLabel
-    let caminoTitle c = renderCaminoMsg U.SIUnits config locales (Txt (caminoName c))
+    let helpLabel = render HelpLabel
+    let caminoTitle c = renderCaminoMsg config U.SIUnits locales (Txt (caminoName c))
     pc <- widgetToPageContent widget
     np <- noticePopup
     nc <- widgetToPageContent np
@@ -446,27 +443,27 @@ instance Yesod CaminoApp where
               <div .container-fluid>
                 $maybe icons <- C.getAsset "icons" config
                  <a .navbar-brand .m-2 href="@{HomeR}">
-                   <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render MsgAppName}">
+                   <img width="64" height="64" src="#{C.assetPath icons}/tile-64.png" alt="#{render AppName}">
                 <h1>#{pageTitle pc}
                 <button .navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navcol-links" aria-controls="navcol-links" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
                 <div .collapse .navbar-collapse .justify-content-end #navcol-links">
                   <ul .navbar-nav>
                     <li .nav-item>
-                      <a .nav-link href=@{HomeR}>#{render MsgHomeLabel}
+                      <a .nav-link href=@{HomeR}>#{render HomePageLabel}
                     <li .nav-item>
-                      <a .nav-link href=@{MapR} title="#{render MsgMapTitle}">#{render MsgMapLabel}
+                      <a .nav-link href=@{MapR} title="#{render MapTitle}">#{render MapLabel}
                     $forall link <- headLinks
                       <li .nav-item>
                         <a target="_blank" .nav-link href="#{linkText link}">#{plainText link}
                     <li .nav-item .dropdown>
-                      <a .nav-link .dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">#{render MsgCaminosLabel}
+                      <a .nav-link .dropdown-toggle href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">#{render CaminosLabel}
                       <ul .dropdown-menu>
                         $forall camino <- caminoAppCaminos master
                           <li>
                             <a target="_blank" .nav-link .dropdown-item href="@{CaminoR (caminoId camino)}">#{caminoTitle camino}
                     <li .nav-item>
-                      <a target="_blank" .nav-link href=@{HelpR} title="#{render MsgHelpTitle}">#{helpLabel}
+                      <a target="_blank" .nav-link href=@{HelpR} title="#{render HelpPageTitle}">#{helpLabel}
             $maybe msg <- message
               <div>#{msg}
           <main .container-fluid .p-2>
@@ -475,12 +472,12 @@ instance Yesod CaminoApp where
             <div .row .row-cols-1 .row-cols-lg-3>
               <div .col>
                 <p .text-muted .my-2>
-                  <a target="_blank" href="@{AboutR}">#{render MsgAboutLabel}
+                  <a target="_blank" href="@{AboutR}">#{render AboutLabel}
               <div .col>
-                <p .text-muted .my-2>#{render MsgTestMessage}
+                <p .text-muted .my-2>#{render TestMessage}
               <div .col>
                 <p .text-muted .my-2>
-                  <a target="_blank" href="@{MetricR}" title="#{render MsgMetricTitle}">#{render MsgMetricLabel}
+                  <a target="_blank" href="@{MetricR}" title="#{render MetricTitle}">#{render MetricLabel}
           $if notice
             ^{pageBody nc}
           $forall s <- scriptsFooter
@@ -500,7 +497,7 @@ noticePopup = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg U.SIUnits config locales
+  let messages = renderCaminoMsg config U.SIUnits locales
   let licence = maybe "LICENSE" assetPath $ C.getAsset "license" config
   let notice = (noticePopupText licence locales) messages router
   return $(widgetFile "notice-popup")

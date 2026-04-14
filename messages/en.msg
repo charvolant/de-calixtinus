@@ -50,7 +50,7 @@ ChurchDescription: A church or chapel
 ChurchTitle: Church
 CityDescription: A large urban area with multiple options for services and accommodation
 CityTitle: City
-ClosedDayLabel region@Text: ^{renderLocalisedClosedDay sou config langs region}
+ClosedDayLabel region@Text: Closed Day (^{renderLocalisedRegion config sou langs region})
 ClosedDayText: Closed Day
 ClosedText: closed
 ComfortableTitle: Comfortable
@@ -63,34 +63,29 @@ CyclingTitle: Cycling
 CyclePathTitle: Cycle Path (bicycles only)
 DailyLabel: Daily
 DateLabel: Date
-DateMsg day@Data.Time.Calendar.Day: <span .date>^{renderLocalisedDate sou True langs day}
-DateRangeMsg day1@Data.Time.Calendar.Day day2@Data.Time.Calendar.Day: <span .date-range>
+DateMsg day@C.Day: <span .date>^{renderLocalisedDate sou True langs day}
+DateRangeMsg day1@C.Day day2@C.Day:
+<span .date-range>
   $if day1 == day2
     ^{renderLocalisedDate sou True langs day1}
   $else
     ^{renderLocalisedDate sou True langs day1} - ^{renderLocalisedDate sou True langs day2}
 DayLabel: Day
-DayOfMonthName dom@DayOfMonth: #{dom}
-DayOfWeekName dow@DayOfWeek: ^{renderLocalisedTime sou langs "%a" dow}
+DayOfMonthName dom@C.DayOfMonth: #{dom}
+DayOfWeekName dow@C.DayOfWeek: ^{renderLocalisedTime sou langs "%a" dow}
 DaysElapsedMsg days@Int: #{sformat int days} days total
 DayServicesPenanceLabel: Missing Services (Day)
 DayServicePreferencesLabel: Preferred Services during Day
-DaySummaryMsg day@Camino.Planner.Day:
-  ^{renderLocalisedText langs False False False (locationName (start day))} to ^{renderLocalisedText langs False False False (locationName (finish day))}
-  ^{formatDistance sou (metricsDistance (score day))} (feels like ^{formatMaybeDistance sou (metricsPerceivedDistance (score day))})
-  over ^{formatMaybeHours sou (metricsTime (score day))}
-  Ascent ^{formatHeight sou (metricsAscent (score day))} Descent ^{formatHeight sou (metricsDescent (score day))}
-  Penance ^{formatPenance sou True (metricsPenance (score day))}
 DaysWalkingMsg days@Int: #{sformat int days} days walking
 DayText: day
 DescentLabel: Descent
-DescentMsg descent@Float: ^{formatHeight sou descent}
+DescentMsg descent@Float: Descent ^{formatHeight sou descent}
 DinnerTitle: Dinner
 DirectionsTitle: Directions
 DistanceAdjustLabel: Distance Adjustment
 DistanceFormatted distance@Float: ^{formatDistance sou distance}
 DistanceLabel: Distance
-DistanceMsg actualFloat perceieved@(Maybe Float): Distance ^{formatDistance sou actual} (feels like ^{formatMaybeDistance sou perceived})
+DistanceMsg actual@Float perceived@(Maybe Float): Distance ^{formatDistance sou actual} (feels like ^{formatMaybeDistance sou perceived})
 DistancePenanceLabel: Distance
 DistancePreferencesLabel: Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 DistancePreferencesPerceivedLabel: Perceived Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
@@ -161,13 +156,6 @@ IntersectionTitle: Intersection
 InvalidCamino: Invalid camino
 InvalidStep: Invalid preferences step
 JourneyLabel: Journey
-JourneySummaryMsg journey@Journey:
-  ^{renderLocalisedText locales False False False (locationName (start journey))} to #{renderLocalisedText locales False False False (locationName (finish journey))}
-  Total distance ^{formatDistance sou (metricsDistance (score journey))} (feels like ^{formatMaybeDistance sou (metricsPerceivedDistance (score journey))})
-  over ^{formatDays sou (Prelude.length (path journey))}
-  Total ascent ^{formatHeight sou (metricsAscent (score journey))}
-  Total descent ^{formatHeight sou (metricsDescent (score journey))}
-  Penance ^{formatPenance sou True (metricsPenance (score journey))}
 JunctionDescription: The branch or join point for two routes or two caminos
 JunctionTitle: Junction
 KeyLabel: Key
@@ -176,13 +164,13 @@ LatitudeLabel: Latitude
 LegendLabel: Legend
 LegPenanceMsg pen@Penance: +^{formatPenance sou True pen}
 LinkTitle locd@(Localised TaggedURL) defd@(Localised TaggedText): $if hasLocalisedText langs locd
-    renderLocalisedText locales True True False locd
-  $else
-    renderLocalisedText locales True True False defd
+  ^{renderLocalisedText langs True True False locd}
+$else
+  ^{renderLocalisedText langs True True False defd}
 LinkOut: More information
-ListMsg [CaminoMsg]: <ul .comma-separated-list>
+ListMsg msgs@[CaminoMsg]: <ul .comma-separated-list>
   $forall m <- msgs
-    <li>^{renderCaminoMsg sou config langs m}
+    <li>^{renderCaminoMsg config sou langs m}
 LocationPenanceLabel: Location
 LocationPreferencesLabel: Location Preferences
 LocationLabel: Location
@@ -202,25 +190,25 @@ MetricTitle: Metric/Imperial Conversion
 MiscPenanceLabel: Other
 MonasteryDescription: A monastery or cloister, often with a hospice attached
 MonasteryTitle: Monastery
-MonthOfYearName moy@MonthOfYear: ^{renderLocalisedMonth sou langs moy}
+MonthOfYearName moy@C.MonthOfYear: ^{renderLocalisedMonth sou langs moy}
 MoreInformation: More Information
 MunicipalDescription: A town square, market place, town hall or other municipal building
 MunicipalTitle: Municipal
 MuseumDescription: A museum or art gallery
 MuseumTitle: Museum/gallery
 MusicEventTitle: Music
-NamedCalendarLabel Text:
+NamedCalendarLabel key@Text: ^{renderLocalisedText langs False False False (getCalendarName config key)}
 NaturalDescription: A nature park or area of natural beauty, as well as large landscape features such as mountains
 NaturalPoiTitle: Natural
 NaturalTitle: Nature park
 NextLabel: Next
 NormalTitle: Normal
 NotesLabel: Notes
-NthWeekdayText wom@WeekOfMonth dow@DayOfWeek: ^{renderLocalisedWeekOfMonth sou langs nth} ^{renderLocalisedDayOfWeek sou langs dow}
+NthWeekdayText wom@WeekOfMonth dow@C.DayOfWeek: ^{renderLocalisedWeekOfMonth sou langs wom} ^{renderLocalisedDayOfWeek sou langs dow}
 OpenHoursTitle: Open Hours
 OpenText: open
-OrdinalAfterWeekday nth@Int dow@DayOfWeek: ^{renderLocalisedOrdinal sou langs (abs nth)} ^{renderLocalisedDayOfWeek sou locales dow} ^{renderLocalisedBeforeAfter sou config langs nth}
-OrdinalBeforeAfter nth@Int unit@CaminoMsg: ^{renderLocalisedOrdinal sou langs (abs nth)} ^{renderCaminoMsg sou config langs unit} ^{renderLocalisedBeforeAfter sou config langs nth}
+OrdinalAfterWeekday nth@Int dow@C.DayOfWeek: ^{renderLocalisedOrdinal sou langs (abs nth)} ^{renderLocalisedDayOfWeek sou langs dow} #{renderLocalisedBeforeAfter nth "before" "after"}
+OrdinalBeforeAfter nth@Int unit@CaminoMsg: ^{renderLocalisedOrdinal sou langs (abs nth)} ^{renderCaminoMsg config sou langs unit} ^#renderLocalisedBeforeAfter nth  "before" "after"}
 OtherLabel: Other
 ParkDescription: A park or garden
 ParkTitle: Park
@@ -267,7 +255,7 @@ PrivateAlbergueTitle: Private Albergue
 ProgramLabel: Program
 PromontoryDescription: A promontory, cliff or headland
 PromontoryTitle: Promontory/Headland
-PublicHolidayLabel region@Text: ^{renderLocalisedPublicHoliday sou config langs region}
+PublicHolidayLabel region@Text: Public Holiday ^{renderLocalisedRegion config sou langs region}
 PublicHolidayText: Public Holiday
 QuadrupleTitle: Quadruple
 QuadrupleWcTitle: Quadruple with WC
@@ -287,10 +275,8 @@ RestPenanceLabel: Rest
 RestpointLabel: Rest Point
 RestpointsLabel: Rest Points
 RestPointsPenanceLabel: Rest Points
-RestPreferencesLabel sou@U.SystemOfUnits: Rest Preferences (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
-RestPreferencesLabel: Rest Preferences (days travelling)
-RestPressureLabel: Rest Pressure
-RestPressureLabel sou@U.SystemOfUnits: Rest Pressure (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+RestPreferencesLabel: Rest Preferences (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
+RestPressureLabel: Rest Pressure (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 RestPressurePenanceLabel: Rest Pressure
 RestServicePreferencesLabel: Rest Services
 RoadTitle: Road/path
@@ -341,7 +327,6 @@ StockpointLabel: Stocking Point
 StopLabel: Stop
 StopPenanceLabel: Stop
 StopPreferencesLabel: Missing Services (Stop)
-StopPreferencesLabel: Day's End
 StopPreferencesText: Day's end represents the business of stopping and settling down for the night.
 StopServicePreferencesLabel: Preferred Services at Day's End
 StopServicesPenanceLabel: Missing Services (Stop)

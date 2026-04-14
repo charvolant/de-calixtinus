@@ -4,13 +4,13 @@
       _{Txt n}
   <div .row>
     <div .col>
-      <p .lead>_{MsgHomeText1}
-      <p>_{MsgHomeText2}^{help}
-      <p>_{MsgHomeText3}
+      <p .lead>_{HomePageText1}
+      <p>_{HomePageText2}^{help}
+      <p>_{HomePageText3}
   <div .row .justify-content-center>
     <div .col-1>
-      <a .btn .btn-primary href="@{PreferencesR}">_{MsgStartLabel}
+      <a .btn .btn-primary href="@{PreferencesR}">_{StartLabel}
   <div .row .m-4 .justify-content-center>
     <div .col .p-1>
-      <a href="@{MapR}" title="_{MsgMapTitle}">
-        <img .rounded .mx-auto .d-block .img-fluid src="#{mapUrl}" alt="_{MsgMapTitle}" >
+      <a href="@{MapR}" title="_{MapTitle}">
+        <img .rounded .mx-auto .d-block .img-fluid src="#{mapUrl}" alt="_{MapTitle}" >

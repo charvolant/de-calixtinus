@@ -128,7 +128,7 @@ collectMessages (line:rest) msg = case T.uncons line of
     Nothing -> collectMessages rest (line:msg)
     Just ('#', line') -> case T.uncons line' of
       Just ('{', _) -> collectMessages rest (line:msg) -- Start of expression
-      _ -> collectMsg msg (collectMessages rest []) -- Comment
+      _ -> collectMessages rest msg -- Comment
     Just (' ', _) -> collectMessages rest (line:msg)
     Just ('$', _) -> collectMessages rest (line:msg)
     Just ('<', _) -> collectMessages rest (line:msg)

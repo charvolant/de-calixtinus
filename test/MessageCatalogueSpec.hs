@@ -55,7 +55,6 @@ testCollectMessage2 = TestCase (do
 testCollectMessage3 = TestCase (do
   let msgs = ["# Comment", "Tag1: Message1", " more message 1"]
   let collected = collectMessages msgs []
-  putStrLn (show collected)
   assertEqual "Collect Message 2 1" 1 (length collected)
   assertEqual "Collect Message 2 2" "Tag1: Message1\n more message 1" (collected !! 0)
   )
@@ -63,7 +62,6 @@ testCollectMessage3 = TestCase (do
 testCollectMessage4 = TestCase (do
   let msgs = ["Tag1: Message1", " more message 1", "# Comment", " yet more message 1"]
   let collected = collectMessages msgs []
-  putStrLn (show collected)
   assertEqual "Collect Message 4 1" 1 (length collected)
   assertEqual "Collect Message 4 2" "Tag1: Message1\n more message 1\n yet more message 1" (collected !! 0)
   )
@@ -394,10 +392,10 @@ renderTestMessage master langs msg = renderTestMessage' master langs langs msg
 renderTestMessage' :: Test ->
                       [Text.Shakespeare.I18N.Lang] ->
                       [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
-renderTestMessage' master [] langs msg = renderTestMessage_EN master langs msg
+renderTestMessage' master [] langs msg = Data.Maybe.maybe "XXX" GHC.Base.id (renderTestMessage_EN master langs msg)
 renderTestMessage' master ("en" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_EN master langs msg)
 renderTestMessage' master ("fr" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_FR master langs msg)
-renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage master lang_r langs msg|]
+renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage' master lang_r langs msg|]
 
 testMakeRenderDec1 = TestCase (do
   dec <- runQ $ makeRenderDec (defaultMessageContext lang11) [lang11, lang12]
@@ -410,11 +408,11 @@ renderTestMessage master langs msg = renderTestMessage' master langs langs msg
 renderTestMessage' :: Test ->
                       [Text.Shakespeare.I18N.Lang] ->
                       [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
-renderTestMessage' master [] langs msg = renderTestMessage_EN master langs msg
+renderTestMessage' master [] langs msg = Data.Maybe.maybe "XXX" GHC.Base.id (renderTestMessage_EN master langs msg)
 renderTestMessage' master ("en" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_EN master langs msg)
 renderTestMessage' master ("fr" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_FR master langs msg)
 renderTestMessage' master ("es" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_ES master langs msg)
-renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage master lang_r langs msg|]
+renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage' master lang_r langs msg|]
 
 testMakeRenderDec2 = TestCase (do
   dec <- runQ $ makeRenderDec (defaultMessageContext lang21) [lang21, lang22, lang23]
@@ -442,10 +440,10 @@ renderTestMessage master langs msg = renderTestMessage' master langs langs msg
 renderTestMessage' :: Test ->
                       [Text.Shakespeare.I18N.Lang] ->
                       [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
-renderTestMessage' master [] langs msg = renderTestMessage_EN master langs msg
+renderTestMessage' master [] langs msg = Data.Maybe.maybe "XXX" GHC.Base.id (renderTestMessage_EN master langs msg)
 renderTestMessage' master ("en" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_EN master langs msg)
 renderTestMessage' master ("fr" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_FR master langs msg)
-renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage master lang_r langs msg
+renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage' master lang_r langs msg
 instance Text.Shakespeare.I18N.RenderMessage Test TestMessage
     where {Text.Shakespeare.I18N.renderMessage master langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMessage master langs msg)}|]
 
@@ -476,10 +474,10 @@ renderTestMsg :: SystemOfUnits ->
 renderTestMsg sou langs msg = renderTestMsg' sou langs langs msg
 renderTestMsg' :: SystemOfUnits ->
                   [Locale] -> [Locale] -> TestMsg -> Text.Blaze.Html.Html
-renderTestMsg' sou [] langs msg = renderTestMsg_EN sou langs msg
+renderTestMsg' sou [] langs msg = Data.Maybe.maybe "XXX" GHC.Base.id (renderTestMsg_EN sou langs msg)
 renderTestMsg' sou ("en" : lang_r) langs msg = Data.Maybe.maybe (renderTestMsg' sou lang_r langs msg) GHC.Base.id (renderTestMsg_EN sou langs msg)
 renderTestMsg' sou ("pt" : lang_r) langs msg = Data.Maybe.maybe (renderTestMsg' sou lang_r langs msg) GHC.Base.id (renderTestMsg_PT sou langs msg)
-renderTestMsg' sou (_ : lang_r) langs msg = renderTestMsg sou lang_r langs msg
+renderTestMsg' sou (_ : lang_r) langs msg = renderTestMsg' sou lang_r langs msg
 instance Text.Shakespeare.I18N.RenderMessage a TestMsg
     where {Text.Shakespeare.I18N.renderMessage _ langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMsg Data.Default.Class.def langs msg)}|]
 

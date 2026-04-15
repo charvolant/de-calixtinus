@@ -114,15 +114,17 @@ HoursTitle: Horas
 HouseTitle: Casa
 IdentifierLabel: ID
 IndustryTitle: Industrial
+IndustryDescription: Un área industrial o una gran fábrica
 InformationLabel: Información
 InformationTitle: Información
 InformationDescription: Información sobre los datos de origen utilizados para generar este plan
 InformationPointDescription: Una oficina de turismo local, guía, etc., no específicamente orientada a peregrinos
 InformationPointTitle: Punto de información
-IntersectionDescription: Una intersección de caminos o senderos
+IntersectionDescription: Un punto donde se cruzan caminos o senderos
 IntersectionTitle: Intersección
 JourneyLabel: Viaje
 JunctionTitle: Unión
+JunctionDescription: Un punto de unión o bifurcación entre dos rutas o caminos
 KeyLabel: Llave
 KitchenTitle: Cocina
 LatitudeLabel: Latitud
@@ -256,8 +258,8 @@ TimePreferencesLabel: Preferencias de tiempo (#{U.unitSymbol (U.preferredUnit so
 ToggleDetailTitle: Mostrar/ocultar detalles adicionales
 ToLabel: A
 TowelsTitle: Toallas
-TownDescription: Una localidad más grande con la mayoría de los servicios y varios alojamientos disponibles
-TownTitle: Ciudad
+TownDescription: Localidad mediana con la mayoría de los servicios y diversas opciones de alojamiento
+TownTitle: Pueblo
 TrailTitle: Sendero (sólo para senderistas)
 TrainTitle: Tren
 TransportLinksLabel: Conexiones de transporte
@@ -273,8 +275,8 @@ UnusedLabel: No usado
 USUnitsTitle: Millas, pies, horas
 VeryFitTitle: Muy en format
 VeryUnfitTitle: Poco en forma
-VillageDescription: Un pueblo pequeño con pocos o ningún servicio y alojamiento
-VillageTitle: Pueblo
+VillageDescription: Pequeña localidad rural con servicios y alojamientos limitados
+VillageTitle: Aldea
 WalkingTitle: Caminata
 WalkingNaismithTitle: Caminando (resistencia alta)
 WarningTitle: Peligro

@@ -1,21 +1,22 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : XLSX
-Description : Produce an excel spreadsheet showing the stages of the camino route.
+Description : Produce an excel spreadsheet showing the stages of a camino route.
 Copyright   : (c) Doug Palmer, 2025
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-A camino consists of a graph of legs that can be assembled in various ways.
-The legs run between two locations, each with possible accommodation and service options.
+Produce an excel spreadsheet showing the stages and locations of a camino and plan.
 
-Generally, it is expected that these models will be read from JSON files.
+Generate pages summarising a trip and locations.
 
-Note that XML-Hamlet remvoes path interpolation, so routes are not a thing here.
+Some formulas are used to allow adjustments; however, time and fatigue calculations are not made, so the result
+will gradually diverge from a freshly computed plan.
 -}
 
 module Camino.Display.XLSX (
@@ -793,7 +794,7 @@ createHolidaySheet config cprefs = do
     (holidays, htable, rtable) <- createHolidayMatrixSlab config cprefs
     return $ (Worksheet HolidaysLabel holidays, htable, rtable)
 
---  Create an excel spreadsheet with the planned camino
+--  | Create an excel spreadsheet with the planned camino
 createCaminoXlsx :: Config -- ^ The dislay configuration
   -> Renderer CaminoMsg -- ^ The message renderer
   -> TravelPreferences -- ^ The selected travel preferences

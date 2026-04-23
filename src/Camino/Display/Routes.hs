@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Routes
 Description : Common URL routes for Html, Css and KML
@@ -8,6 +9,10 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Common URL routes for Html, Css and KML
+
+Routes, in this case refer to the hamlet-style route placeholders.
+See <https://www.yesodweb.com/book/routing-and-handlers>
 -}
 module Camino.Display.Routes (
     CaminoRoute(..)
@@ -36,10 +41,16 @@ data CaminoRoute = AssetRoute Text -- ^ An identified font or asset
 
 findAssetPath ident config = maybe ("invalid/" <> ident) assetPath (getAsset ident config)
 
+-- | Add the web root location from a configuration to a relative URL
+--
+--   This function is used to allow an application hiding behind a webserver like nginx produce publically visible URLs.
+--   Otherwise the route will, most likely, return @http://localhost:3000@
 appendRoot :: Config -> Text -> Text
 appendRoot config p = if isPrefixOf "http:" p || isPrefixOf "https:" p then p else getWebRoot config <> "/" <> p
 
 -- | The rendering function for the routes
+--
+--   The resulting routes are (usually) absolte URLs with `appendRoot` added.
 renderCaminoRoute :: Config -> [Locale] -> CaminoRoute -> [(Text, Text)] -> Text
 renderCaminoRoute config _locales (AssetRoute ident) _ = appendRoot config $ findAssetPath ident config
 renderCaminoRoute config _locales (IconRoute ident) _ = appendRoot config $ (findAssetPath "icons" config) <> "/" <> ident

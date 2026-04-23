@@ -2,14 +2,14 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-|
 Module      : Static
-Description : Generate static assests
+Description : Generate static assets
 Copyright   : (c) Doug Palmer, 2023
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Create static HTML, CSS etc that can be placed a server somewhere
+Create static HTML, CSS etc that can be placed on a server somewhere
 -}
 
 module Camino.Display.Static (
@@ -35,6 +35,9 @@ import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import Text.Cassius
 import Text.Hamlet
 
+-- | Create a static @camino.css@ file containing common CSS for the application
+--
+--   See `staticCss`
 createCssFiles :: Config -> FilePath -> IO ()
 createCssFiles config output = do
   let router = renderCaminoRoute config [rootLocale]
@@ -53,6 +56,9 @@ createHelpFile config loc file html = do
 createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()
 createStandAloneHelpFile config loc file html title = createHelpFile config loc file (layoutHtml config (wildcardText title) Nothing html Nothing)
 
+-- | Create static help files.
+--
+--  Currently not used, with help file being dynamically served
 createHelpFiles :: Config -> FilePath -> IO ()
 createHelpFiles config output = do
   let loc = localeFromIDOrError "en"

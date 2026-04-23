@@ -8,6 +8,11 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+The base Google Maps API.
+
+The user of the API will need to get an [API Key](https://docs.cloud.google.com/docs/authentication/api-keys) from Google.
+This key allows excessive use of the API to be charged to the user.
 -}
 module Network.Google.Maps (
     ApiResponse(..)
@@ -30,6 +35,7 @@ import Web.PathPieces
 import Network.HTTP.Simple (getResponseBody, httpJSON, parseRequest, setRequestQueryString)
 
 -- | A latitude and longitude pair
+--
 --   These lat/longs are used by the Google Map API and are assumed to use the [WGS84 SRS](https://en.wikipedia.org/wiki/World_Geodetic_System)
 data LatLng = LatLng {
     lat :: Double
@@ -44,6 +50,9 @@ instance PathPiece LatLng where
     where ll = breakOn "," v
   toPathPiece ll = (pack $ show $ lat ll) <> "," <> (pack $ show $ lng ll)
 
+-- | A response from the API.
+--
+--   The response will be returned as JSON and interpreted
 data ApiResponse a = ApiResponse {
     responseStatus :: Text
   , responseResults :: a
@@ -66,6 +75,7 @@ instance (ToJSON a) => ToJSON (ApiResponse a) where
       , "results" .= results'
     ]
 
+-- | The Google Maps API base information
 data MapApi = MapApi {
     apiBase :: Text -- ^ The base map API Url
   , apiKey :: Text -- ^ The API key to use when making requests
@@ -75,13 +85,15 @@ instance Default MapApi where
   def = MapApi "https://maps.googleapis.com/maps/api" "API_KEY"
 
 
--- | An domain exception arising from the map API
+-- | A domain exception arising from the map API
 data MapException = MapException Text
   deriving (Show)
 
 instance Exception MapException
 
--- | Make an GET API call
+-- | Make a GET API call
+--
+--   This is a simple request that returns a single response.
 callGet :: (FromJSON a, MonadIO m, MonadThrow m) => MapApi -- ^ The map API context
   -> Text -- ^ The API call
   -> [(Text, Text)]-- ^ The arguments

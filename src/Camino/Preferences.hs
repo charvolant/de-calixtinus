@@ -1,58 +1,65 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Camino
-Description : Preference models for deciding where the limits lie
+Description : Preference models for deciding where a pilgrim's limits lie
 Copyright   : (c) Doug Palmer, 2023
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Preference models for deciding where a pilgrim's limits lie
+
 Preferences contain the ranges of acceptable distance, time etc. for someone walking the camino.
 -}
 module Camino.Preferences (
-    CaminoPreferences(..)
-  , PreferenceRange(..)
-  , StopPreferences(..)
-  , TravelPreferences(..)
-
-  , allowedLocations
-  , boundsDistance
-  , defaultCaminoPreferences
-  , defaultTravelPreferences
+  -- * Preference Ranges
+    PreferenceRange(..)
   , isInsideMaximum
   , isOutOfBounds
   , isOutOfRange
-  , normalisePreferences
-  , perceivedDistanceRange
+  , boundsDistance
   , rangeDistance
   , rangeDistanceInt
+  , scaleRange
+  , validRange
+  , withoutLower
+  , withoutMaximum
+  , withoutMinimum
+  -- * Travel Preferences
+  , TravelPreferences(..)
+  , StopPreferences(..)
+  , defaultTravelPreferences
+  , perceivedDistanceRange
+  -- ** Suggested Preferences
+  , suggestedAccommodation
+  , suggestedRouteServices
+  , suggestedDistanceRange
+  , suggestedRestServices
+  , suggestedStopServices
+  , suggestedTimeRange
+  -- * Camino Preferences
+  , CaminoPreferences(..)
+  , defaultCaminoPreferences
+  , allowedLocations
   , reachableLocations
   , reachablePois
   , recommendedPois
   , recommendedRestPoints
   , recommendedStops
-  , scaleRange
   , selectedPois
   , selectedRoutes
-  , suggestedAccommodation
-  , suggestedRouteServices
-  , suggestedDistanceRange
+  , withRoutes
+  , withStartFinish
+  , normalisePreferences
+  -- ** Suggested Preferences
   , suggestedFinishes
   , suggestedLocation
   , suggestedPoiCategories
   , suggestedRestLocation
-  , suggestedRestServices
   , suggestedStarts
-  , suggestedStopServices
-  , suggestedTimeRange
-  , validRange
-  , withoutLower
-  , withoutMaximum
-  , withoutMinimum
-  , withRoutes
-  , withStartFinish
 ) where
 
 import GHC.Generics
@@ -170,7 +177,7 @@ boundsDistance (PreferenceRange _derived targ lower upper _mini _maxi) value
 
 -- | Get the normalised distance to the outer range of a value for fractional values
 -- 
--- The scale of the range is from the target to the lower or upper bounds, with 0 being at the bound and 1 being a scale away
+--  The scale of the range is from the target to the lower or upper bounds, with 0 being at the bound and 1 being a scale away
 rangeDistance :: (Ord a, Fractional a) => PreferenceRange a -> a -> a
 rangeDistance (PreferenceRange _derived targ lower upper _mini _maxi) value =
   if value < targ then
@@ -216,6 +223,7 @@ perceivedDistanceRange travel fitness range = let
     PreferenceRange (Just "Normal fitness walking equivalent") target' lower' upper' mini' maxi'
 
 -- | Preferences for a stop.
+--
 --   Different types of stops have packages of location, accommodation and service preferences.
 data StopPreferences = StopPreferences {
     stopTransportLinks :: Bool -- ^ Allow transport links for accomodation and services
@@ -254,7 +262,8 @@ instance ToJSON StopPreferences where
 instance NFData StopPreferences
 
 -- | Preferences for hwo far, how long and what sort of comforts one might expect.
---   These can be reasonably expected to remain constant across different caminos   
+--
+--   These can be reasonably expected to remain constant across different caminos for an individual pilgrim.
 data TravelPreferences = TravelPreferences {
     preferenceUnits :: U.SystemOfUnits -- ^ The preferred system of units
   , preferenceTravel :: Travel -- ^ The name of the base walking function
@@ -319,7 +328,9 @@ instance ToJSON TravelPreferences where
 
 instance NFData TravelPreferences
 
--- | Preferences for where to go and where to stop on a camino  
+-- | Preferences for where to go and where to stop and visit on a camino
+--
+--   Unlike `TravelPreferences`, these praferences are camino-specific.
 data CaminoPreferences = CaminoPreferences {
     preferenceCamino :: Camino -- ^ The camino route to walk
   , preferenceStart :: Location -- ^ The start location
@@ -419,7 +430,7 @@ normalisePreferences config preferences =
       , preferencePois = dereferenceS camino (preferencePois preferences)
     }
 
--- | Update with a new set of routes and, if necessary, start/finish/stops etc normalised
+-- | Update with a new set of routes and, if necessary, start, finish and stops etc corrected
 withRoutes :: CaminoPreferences -> S.Set Route -> CaminoPreferences
 withRoutes preferences routes = let
     camino' = preferenceCamino preferences
@@ -437,7 +448,7 @@ withRoutes preferences routes = let
     CaminoPreferences camino' start' finish' routes' stops' excluded' rests' pois' startDate'
 
 
--- | Update with a new start and finish and, if necessary, stops etc normalised
+-- | Update with a new start and finish and, if necessary, stops etc corrected
 withStartFinish :: CaminoPreferences -> Location -> Location -> CaminoPreferences
 withStartFinish preferences st fin = let
     camino' = preferenceCamino preferences
@@ -510,7 +521,7 @@ reachablePois :: CaminoPreferences -- ^ The preferences
   -> S.Set PointOfInterest -- ^ The possible points of interest
 reachablePois preferences = S.fold (\l -> \s -> s `S.union` (S.fromList $ locationPois l)) S.empty $ reachableLocations preferences
 
--- | Show suggested points of interest at a particular location selected by the preferences
+-- | Generate suggested points of interest at a particular location based on preferences
 recommendedPois :: TravelPreferences -> CaminoPreferences -> S.Set PointOfInterest
 recommendedPois preferences camino = S.filter (\poi -> (S.member poi possible) && (not $ prefPois `S.disjoint` poiCategories poi)) suggestions
   where
@@ -520,8 +531,9 @@ recommendedPois preferences camino = S.filter (\poi -> (S.member poi possible) &
     prefPois = preferencePoiCategories preferences
 
 -- | Create a suggested range for distances, based on the travel mode and fitness level.
+--
 --   Derived from estimated time limits plus some sanity.
---   Note that "Normal" is a little rufty-tufty for many people and allows legs of up to 34km to cover some of the more challenging stages
+--   Note that `Normal` is a little rufty-tufty for many people and allows legs of up to 34km to cover some of the more challenging stages
 --   Cycling distances for the super-fit are vaguely based on Tour de France stages
 suggestedDistanceRange :: Travel -- ^ The method of travel
   -> Fitness -- ^ The fitness level
@@ -622,7 +634,7 @@ suggestedLocation' Luxurious = M.fromList [
     (Poi, Penance 1.0)
   ]
 
--- | Create a suggested penance map for location type, based on travel type and fitness level
+-- | Create a suggested penance map for location type, based on travel type, fitness level and comfort level
 suggestedLocation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -688,7 +700,7 @@ suggestedStockLocation' Luxurious = M.fromList [
     (Poi, Reject)
   ]
 
--- | Create a suggested penance map for location type, based on travel type and fitness level
+-- | Create a suggested penance map for location type, based on travel type, fitness level and comfort level
 suggestedStockLocation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -754,7 +766,7 @@ suggestedRestLocation' Luxurious = M.fromList [
     (Poi, Reject)
   ]
 
--- | Create a suggested penance map for location type, based on travel type and fitness level
+-- | Create a suggested penance map for rest location types, based on travel type, fitness level and comfort level
 suggestedRestLocation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -840,7 +852,7 @@ suggestedAccommodation' Luxurious = M.fromList [
     (Camping, Reject)
   ]
 
--- | Create a suggested penance map for accommodation type, based on travel type and fitness level
+-- | Create a suggested penance map for accommodation types, based on travel type, fitness level and comfort level
 suggestedAccommodation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -854,7 +866,7 @@ suggestedAccommodation t Casual comfort = suggestedAccommodation t Unfit comfort
 suggestedAccommodation t VeryUnfit comfort = suggestedAccommodation t Unfit comfort
 
 
--- | Create a suggested penance map for rest stop accommodation, generally, without any pilgrim albergues or camping options
+-- | Create a suggested penance map for rest accommodation types, based on travel type, fitness level and comfort level
 suggestedRestAccommodation :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -889,7 +901,7 @@ suggestedStopServices' Luxurious = M.fromList [
     , (Dinner, Penance 1.0)
   ]
 
--- | Create a suggested penance map for stop services, based on travel type and fitness level
+-- | Create a suggested penance map for stop services, based on travel type, fitness level and comfort level
 suggestedStopServices :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -900,7 +912,7 @@ suggestedStopServices Cycling fitness comfort = M.union
   (suggestedStopServices Walking fitness comfort)
 
 
--- | Create a suggested penance map for stock stops, the main thing is making sure that groceries and a pharmacy are available
+-- | Create a suggested penance map for stock point services, based on travel type, fitness level and comfort level
 suggestedStockServices :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -939,7 +951,7 @@ suggestedRouteServices' Luxurious = M.fromList [
     , (Bus, Penance 1.0)
   ]
 
--- | Create a suggested penance map for route services, based on travel type and fitness level
+-- | Create a suggested penance map for en-route services, based on travel type, fitness level and comfort level
 suggestedRouteServices :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -950,7 +962,7 @@ suggestedRouteServices Cycling fitness comfort = M.union
   (suggestedRouteServices Walking fitness comfort)
 
 
--- | Create a suggested penance map for stock-up route services, based on travel type and fitness level
+-- | Create a suggested penance map for stock-up en-route services, based on travel type, fitness level and comfort level
 suggestedStockRouteServices :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -1009,7 +1021,7 @@ suggestedRestServices' Luxurious = M.fromList [
     , (Dinner, Penance 2.0)
   ]
 
--- | Create a suggested penance map for stop services, based on travel type and fitness level
+-- | Create a suggested penance map for rest services, based on travel type, fitness level and comfort level
 suggestedRestServices :: Travel -- ^ The style of travel
   -> Fitness -- ^ The fitness level
   -> Comfort -- ^ The comfort level
@@ -1028,6 +1040,7 @@ suggestedPoiCategories _ _ Comfortable = S.fromList [HistoricalPoi, CulturalPoi,
 suggestedPoiCategories _ _ Luxurious = S.fromList [HistoricalPoi, CulturalPoi, RecreationPoi, PilgrimPoi]
 
 -- | Create a suggested range for times, based on the travel mode and fitness level.
+--
 --   Derived from estimated time limits plus some sanity
 suggestedTimeRange :: Travel -- ^ The method of travel
   -> Fitness -- ^ The fitness level
@@ -1040,7 +1053,10 @@ suggestedTimeRange _ Unfit = PreferenceRange Nothing 5.0 0.0 6.0 (Just 0.0) (Jus
 suggestedTimeRange _ Casual = PreferenceRange Nothing 4.0 0.0 6.0 (Just 0.0) (Just 8.0)
 suggestedTimeRange _ VeryUnfit = PreferenceRange Nothing 4.0 0.0 5.0 (Just 0.0) (Just 6.0)
 
--- | The default transport link choice. If it looks like you're going to be a bit slow, default to allow it
+-- | The default transport link choice.
+--
+--   If it looks like a walker going to be a bit slow or want comfort, then allow it.
+--   Otherwise, turned off by default.
 suggestedTransportLinks :: Travel -> Fitness -> Comfort -> Bool
 suggestedTransportLinks Cycling _ _ = False
 suggestedTransportLinks _ Casual _ = True
@@ -1106,7 +1122,8 @@ suggestedFinishes :: CaminoPreferences -- ^ The current set of preferences
 suggestedFinishes = suggested routeFinishes
 
 -- | The default travel preference set for a travel style and fitness level
--- | This provides an overridable skeleton containing values that cover the suggested legs for a pilgrim of the nominated fitness
+--
+--   This provides an overridable skeleton containing values that cover the suggested legs for a pilgrim of the nominated fitness
 defaultTravelPreferences :: U.SystemOfUnits -- ^ Thje system of units to use
  -> Travel -- ^ The travel style of the pilgrim
  -> Fitness -- ^ The fitness level of the pilgrim, see the notes on @suggestedDistanceRange@
@@ -1130,7 +1147,8 @@ defaultTravelPreferences units travel fitness comfort poics = TravelPreferences 
 
 
 -- | The default camino preference set for a particular camino
--- | This provides an overridable skeleton containing values that cover the suggested legs for a pilgrim of the nominated fitness
+--
+--   This provides an overridable skeleton containing values that cover the suggested legs for a pilgrim of the nominated fitness
 defaultCaminoPreferences :: Camino-- ^ The camino to default to
  -> CaminoPreferences -- ^ The resulting preferences skeleton
 defaultCaminoPreferences camino = let

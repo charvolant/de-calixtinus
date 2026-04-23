@@ -3,6 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Region
 Description : Modelling for geographical regions
@@ -12,22 +13,33 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Simple regional information, including locales and holidays
+Modelling for geographical regions
+
+Simple regional information, including locales, holidays, closed days and the like.
+Regions form a somewhat loose heirarchy, with multiple possible super-regions for things like
+the Schengen area.
+It is possible for a region to inherit elements such as holidays from parent regions.
+
+Region information usually comes from a configuration, which is read in at the start of the program
+and provided as reference data to computations.
+This is often embedded in a `MonadReader`.
 -}
 module Data.Region (
-    HasRegionConfig(..)
-  , Region(..)
-  , RegionConfig(..)
+  -- * Regions
+    Region(..)
   , RegionType(..)
-
-  , createRegionConfig
   , getClosedDays
   , getInheritedClosedDays
   , getInheritedRegionalHolidays
   , getRegionalHolidays
-  , getRegion
   , isHolidayRegion
   , regionClosure
+  -- * Configuration
+  , RegionConfig(..)
+  , HasRegionConfig(..)
+  , getRegion
+  , createCalendarRegionConfig
+  , createRegionConfig
 ) where
 
 import GHC.Generics
@@ -62,6 +74,7 @@ instance FromJSON RegionType
 instance ToJSON RegionType
 instance NFData RegionType
 
+-- | A region description
 data Region = Region {
     regionID :: Text -- ^ The region identifier
   , regionName :: Localised TaggedText -- ^ The region name, allowing language-specific variations
@@ -161,15 +174,19 @@ isHolidayRegion region = if null (regionHolidays region) && null (regionClosedDa
   else
     True
 
+-- | Get the holidays associated with a region, including parent regions
 getRegionalHolidays :: Region -> [EventCalendar]
 getRegionalHolidays region = regionHolidays region ++ (maybe [] getRegionalHolidays $ regionParent region)
 
+-- | Get the holidays associated the parent regions of a region (see `getRegionalHolidays`)
 getInheritedRegionalHolidays :: Region -> [EventCalendar]
 getInheritedRegionalHolidays region = maybe [] getRegionalHolidays $ regionParent region
 
+-- | Get the days shops etc. are generally closed (eg Sundays), including specifications from parent regions
 getClosedDays :: Region -> [EventCalendar]
 getClosedDays region = regionClosedDays region ++ (maybe [] getClosedDays $ regionParent region)
 
+-- | Get the closed days inherited from parent regions (see `getClosedDays`)
 getInheritedClosedDays :: Region -> [EventCalendar]
 getInheritedClosedDays region = maybe [] getClosedDays $ regionParent region
 
@@ -203,6 +220,7 @@ instance Dereferencer Text Region RegionConfig where
   dereference config region = maybe region id ((regionConfigLookup config) (placeholderID region))
     
 -- | Get a region from an environment.
+--
 --   Throws an error if the region id is not found
 getRegion :: (MonadReader env m, HasRegionConfig env) => Text -> m Region
 getRegion key = do
@@ -217,3 +235,13 @@ createRegionConfig regions = RegionConfig regions' regionLookup
   where
     regions' = normaliseReferences regions
     regionLookup key = M.lookup key (M.fromList $ map (\r -> (placeholderID r, r)) regions')
+
+-- | For testing, create a simple region/calendar config
+createCalendarRegionConfig :: [(Text, Localised TaggedText, EventCalendar)] -> [Region] -> (CalendarConfig, RegionConfig)
+createCalendarRegionConfig cals regs = (createCalendarConfig cals, createRegionConfig regs)
+
+instance HasRegionConfig (CalendarConfig, RegionConfig) where
+  getRegionConfig = snd
+
+instance HasCalendarConfig (CalendarConfig, RegionConfig) where
+  getCalendarConfig = fst

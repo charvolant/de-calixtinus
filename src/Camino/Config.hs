@@ -3,12 +3,14 @@
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Config
-Description : Configuration data for generating camino display
+Description : Configuration data for generating camino displays
 Copyright   : (c) Doug Palmer, 2023
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Configuration data for generating camino displays
 
 A configuration contains information on how to access web assets and locality information in a way that
 can be used to generate suitably localised web pages and plans that take account of regional events.

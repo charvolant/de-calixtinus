@@ -1,3 +1,4 @@
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Propositional
 Description : Simple propositional logic and formulas
@@ -6,6 +7,8 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Simple propositional logic and formulas
 
 Handling of propositional formulas, up to simple program clause implication
 -}
@@ -22,6 +25,7 @@ module Data.Propositional (
   , overlay
   , reduce
   , substitutionFromDomain
+  , substitutionFromList
   , substitutionFromMap
 ) where
 
@@ -30,7 +34,7 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Util
 
--- Propositional formulas over a set of variables @a@
+-- | Propositional formulas over a set of variables @a@
 data (Eq a) => Formula a =
     T -- ^ True
   | F -- ^ False
@@ -64,11 +68,12 @@ instance (Eq a, NFData a) => NFData (Formula a) where
    `deepseq` ()
 
 -- | A substitution is a partial mapping of variables onto other formulae
+--
 --   Generally, mappings on to @T@ or @F@ are expected; but other formulas could be used 
 type Substitution a = a -> Maybe (Formula a)
 
 -- | Map a formula from one variable type to another
-formulaMap :: (Eq a, Eq b) => (a -> b) -- ^ The mappign function
+formulaMap :: (Eq a, Eq b) => (a -> b) -- ^ The mapping function
  -> Formula a -- ^ The source formula
  -> Formula b -- ^ The mapped formula
 formulaMap _mapper T = T
@@ -80,6 +85,17 @@ formulaMap mapper (Not f) = Not (formulaMap mapper f)
 formulaMap mapper (Implies p c) = Implies (formulaMap mapper p) (formulaMap mapper c)
 
 -- | Reduce a formula
+--
+--   Any tautologies or contradictions are removed from the formula or replaced by simple values.
+--
+-- >>> reduce (And [T, (Variable "a"), T])
+-- "a"
+--
+-- >>> reduce (Or [T, (Variable "a"), T])
+-- true
+--
+-- >>> reduce (Or [F, (Variable "a"), (Variable "b")])
+-- ("a" ∨ "b")
 reduce :: (Eq a) => Formula a -- ^ The source formula
    -> Formula a -- ^ The reduced formula
 reduce (Or fs) = if null fs' then F else if any (== T) fs' then T else if length fs' == 1 then headWithError fs' else Or fs'
@@ -111,9 +127,22 @@ evaluate' mapping (Implies p c) = Implies (evaluate' mapping p) (evaluate' mappi
 evaluate' _mapping f = f
  
 -- | Evaluate a formula.
---   The evaluation can either retyrn a @T@ or @F@ if there is enough information or a reduced formula
-evaluate :: (Eq a) => Substitution a -> Formula a -> Formula a
+--
+--   The evaluation can either return a @T@ or @F@ if there is enough information or a reduced formula
+--
+-- >>> evaluate (substitutionFromList ["a"]) (And [(Variable "a"), T])
+-- T
+evaluate :: (Eq a) => Substitution a -- ^ The mapping of variables onto values/other formulae
+  -> Formula a -- ^ The un-substrituted formula
+  -> Formula a -- ^ The substituted formula
 evaluate mapping f = reduce $ evaluate' mapping f
+
+-- | Create a substrition from a list of values
+--
+--   Any variable in the list is assumed to be @T@, any not in the list is assumed to be @F@.
+substitutionFromList :: (Ord a) =>  [a]  -- ^ The map of variables
+  -> Substitution a -- ^ The resulting substitution
+substitutionFromList vars = (\v -> if S.member v svars then Just T else Just F) where svars = S.fromList vars
 
 -- | Create a substrition from a map of values
 substitutionFromMap :: (Ord a) =>  M.Map a (Formula a)  -- ^ The map of substitutions
@@ -159,6 +188,7 @@ implications' clauses mapping result = let
     if result == result' then result else implications' clauses mapping result'
     
 -- | Process implications in clause form
+--
 -- The input is a set of @T@/@F@ mappings for particular variables and a set of formula in program clause form,
 -- Basically @Implies f (Variable a)@.
 -- The result is a map of variables known to be true or false as consequence.
@@ -172,6 +202,7 @@ implications clauses mapping = let
 
    
 -- | Process first-level implications in clause form.
+--
 --   This is like @implications@ but does not keep calculating until a fixpoint is reached
 --   The result is a map of variables known to be true or false as consequence.
 implicationsSingle :: (Ord a) => [Formula a] -- The list of clauses
@@ -188,8 +219,9 @@ isClause :: (Eq a) => Formula a -> Bool
 isClause (Implies _p (Variable _v)) = True
 isClause _ = False
 
--- | Get the consequent of an implication
---   If p -> q then the consequent is q otherwise the antecedent is the formula  
+-- | Get the consequent of an implication if a formula is in clause form
+--
+--   If p -> q then the consequent is q, which will be a variable
 clauseConsequentVar :: (Eq a) => Formula a -> a
 clauseConsequentVar (Implies _ (Variable v)) = v
 clauseConsequentVar _ = error "Formula is not clause"

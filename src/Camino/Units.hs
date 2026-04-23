@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Units
 Description : Simple unit system for the camino
@@ -9,7 +10,10 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Simple unit system for the camino
+
 Enough handling of units and systems of units to allow the planner to do unit conversions.
+Don't look at this.
 This is the skeleton of a proper unit system.
 -}
 
@@ -45,7 +49,7 @@ instance FromJSON Quantity
 
 instance ToJSON Quantity
 
--- | The systems of units that we wish to deal with
+-- | The various units that we have modelled
 data Unit =
     Unit -- ^ A simple number
   | Metre -- ^ A metre (meter)
@@ -75,6 +79,9 @@ instance FromJSON Unit
 instance ToJSON Unit
 
 -- | The symbol for each unit
+--
+--   >>> unitSymbol Kilometre
+--   "km"
 unitSymbol :: Unit -> String
 unitSymbol Unit = ""
 unitSymbol Metre = "m"
@@ -84,6 +91,13 @@ unitSymbol Foot = "ft"
 unitSymbol Hour = "hr"
 unitSymbol Day = "day"
 
+-- | Interpret a unit from a unit sumbol
+--
+--   >>> symbolUnit "mi"
+--   Right Mile
+--
+--   >>> sumbolUnit "J"
+--   Left "J"
 symbolUnit :: String -> Either String Unit
 symbolUnit "" = Right Unit
 symbolUnit "m" = Right Metre
@@ -94,8 +108,14 @@ symbolUnit "hr" = Right Hour
 symbolUnit "day" = Right Day
 symbolUnit symbol = Left symbol
 
--- | Convert an amount between two units 
-convertAmount :: (RealFrac a) => Unit -> Unit -> a -> a
+-- | Convert an amount between two units
+--
+--   >>> convertAmount Kilomtre Mile 2.5
+--   1.55342798
+convertAmount :: (RealFrac a) => Unit -- ^ The unit the amount is expressed in
+  -> Unit -- The target unit
+  -> a -- ^ The amount
+  -> a -- ^ The converted amount
 convertAmount Unit Unit v = v 
 convertAmount Metre Metre v = v 
 convertAmount Metre Kilometre v = v / 1000.0 
@@ -119,7 +139,9 @@ convertAmount Day Day v = v
 convertAmount Day Hour v = v * 24.0
 convertAmount f t _v = error ("Unable to convert unit " ++ show f ++ " to " ++ show t)
 
--- | a system of units
+-- | A system of units
+--
+--   Consistent systems of units that reflect how people think about time, distance etc.
 data SystemOfUnits =
     SIUnits -- ^ International system of units
   | USUnits -- ^ US customary units
@@ -136,6 +158,9 @@ systemOfUnitsEnumeration :: [SystemOfUnits]
 systemOfUnitsEnumeration = [minBound .. maxBound]
 
 -- | Get the preferred unit for a specific system of units and quantity
+--
+--   >>> preferredUnit SIUnits Elevation
+--   Metre
 preferredUnit :: SystemOfUnits -> Quantity -> Unit
 preferredUnit SIUnits Dimensionless = Unit
 preferredUnit SIUnits Distance = Kilometre

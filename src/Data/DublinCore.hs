@@ -10,7 +10,11 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-URIs for dublin core metadata
+URIs for dublin core metadata.
+
+Simple Dublin Core elements have a @dc@ prefix.
+The extended DC Terms have a @dcterms@ prefix.
+See <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/>
 -}
 module Data.DublinCore (module Data.DublinCore) where
 
@@ -26,8 +30,8 @@ dcCoverage :: URI
 dcCoverage = textToUri "http://purl.org/dc/elements/1.1/coverage"
 dcCreator :: URI
 dcCreator = textToUri "http://purl.org/dc/elements/1.1/creator"
-dDdate :: URI
-dDdate = textToUri "http://purl.org/dc/elements/1.1/date"
+dcDate :: URI
+dcDate = textToUri "http://purl.org/dc/elements/1.1/date"
 dcDescription :: URI
 dcDescription = textToUri "http://purl.org/dc/elements/1.1/description"
 dcFormat :: URI

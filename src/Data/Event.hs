@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Event
 Description : Modelling for events that occur on particular days, months, etc
@@ -9,25 +10,28 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Modelling for events that occur on particular days, months, etc
+
 Allows the specification of an event calendar for events that occur on particular days,
 days of week, months, etc.
-
-Eventually, the modelling will improve
 -}
 module Data.Event (
-    CalendarConfig(..)
-  , CalendarConfigEntry(..)
-  , EventCalendar(..)
+  -- * Calendars
+    EventCalendar(..)
+  -- * Opening or Event Hours
   , EventHours(..)
   , EventTime(..)
-  , HasCalendarConfig(..)
   , OpenHours(..)
-  
-  , calendarKey
+  -- * Configuration
+  , CalendarConfig(..)
+  , CalendarConfigEntry(..)
+  , HasCalendarConfig(..)
   , createCalendarConfig
   , getHoliday
   , getNamedCalendar
   , getNamedCalendarName
+
+  , calendarKey
   , hasCalendar
   , hasHours
   , isAlwaysOpen
@@ -136,7 +140,10 @@ getNamedCalendarName key = do
   return name
 
 -- | A calendar for an event.
---   The calendar is intended to allow the building of 
+--
+--   The calendar is intended to allow the building of composite calendar specificaations.
+--   Since calendars may refer to regional public holidays or closed days, calendars are usually
+--   evaluated in a `CalendarConfig` environment.
 data EventCalendar =
     Daily -- ^ Occurs daily
   | Weekly (S.Set DayOfWeek)  -- ^ Occurs on certain days of the week

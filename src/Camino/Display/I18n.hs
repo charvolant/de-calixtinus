@@ -9,10 +9,16 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Common Internationalisation for Camino display
 -}
 module Camino.Display.I18n (
+  -- * Internationalisation
     CaminoMsg(..)
+  , renderCaminoMsg
+  , renderCaminoMsgText
 
+  -- Formatting
   , formatDistance
   , formatMaybeDistance
   , formatMaybeHours
@@ -22,8 +28,6 @@ module Camino.Display.I18n (
   , formatHours
   , formatStages
   , rejectSymbol
-  , renderCaminoMsg
-  , renderCaminoMsgText
 ) where
 
 import Camino.Camino
@@ -47,6 +51,7 @@ import qualified Text.Blaze.Internal as TB
 import Text.Hamlet
 import Text.MessageCatalogue
 
+-- | A symbol indicating something beyond a preference range or specifically rejected
 rejectSymbol :: Text
 rejectSymbol = "\x25c6"
 
@@ -62,6 +67,10 @@ quarterSymbol = "\x00bc"
 threeQuarterSymbol :: Text
 threeQuarterSymbol = "\x00be"
 
+-- | Format a value for a system of units.
+--
+--   SI units are simple @0.0@ decimal values.
+--   US units tend to split things into quarters.
 formatForSystemOfUnits U.SIUnits v = sformat (fixed 1) v
 formatForSystemOfUnits U.USUnits v = whole <> part where
   (n, f) = properFraction v
@@ -72,6 +81,8 @@ formatForSystemOfUnits U.USUnits v = whole <> part where
     else if f' < 0.625 then halfSymbol
     else threeQuarterSymbol
 
+-- | Format a penance value
+--
 -- Note the use of direct blaze scans in the following code, rather than shamlet.
 -- Hamlet seems to generate tags as chunks of content, rather than proper blaze HTML,
 -- so the direct formatting allows renderCaminoMsgText to strip tags properly.

@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Metadata
 Description : Dublin-core style metadata for data sources
@@ -9,8 +10,13 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Dublin-core style metadata for data sources
+
 A module that handles lists of metadata-style statements using URI-based terms.
-The expection is that this can be embedded in other data types that use JSON-style
+The expection is that this can be embedded in other data types that use JSON-style.
+
+Metadata follows the semantic web [RDF](https://www.w3.org/RDF/) style of a set of statements about the relationships between objects.
+In general, the subject of the triple is always the element this metadata is held by.
 -}
 module Data.Metadata (
   Metadata(..),
@@ -37,8 +43,14 @@ import qualified Data.Set as S
 import qualified Data.Text as T (Text, concat, isPrefixOf, null, split, stripPrefix, stripSuffix, unpack, pack)
 import Network.URI
 
+-- | A namespace useful for reducing the verbosity of statements.
+--
+--   For example, for the Dublin Core elements, @dc:@ is often used as a prefix, so @"dc:title"@ becomes @"http://purl.org/dc/elements/1.1/title"@
+--   with a namespace of @dc: -> http://purl.org/dc/elements/1.1/@
+--
+--   Note that the prefixes include the trailing colon. This makes things a little more flexible.
 data Namespace = Namespace {
-  namespacePrefix :: T.Text, -- ^ The prefix to use
+  namespacePrefix :: T.Text, -- ^ The prefix to use, including any trailing punctuation
   namespaceUri :: T.Text -- ^ The corresponding namespace URI
 } deriving (Eq, Ord, Show, Generic)
 
@@ -65,7 +77,11 @@ mergeNamespaces first second = let
     additions = filter (\ns -> not $ S.member (namespacePrefix ns) known) second
   in
     first ++ additions
-  
+
+-- Decode a potentially namespaced term into an explicit URI
+--
+-- >>> decodeTerm [Namespace "dc:" "http://purl.org/dc/elements/1.1/"] "dc:creator"
+-- Just http://purl.org/dc/elements/1.1/creator
 decodeTerm :: [Namespace] -> T.Text -> Maybe URI
 decodeTerm namespaces term =
   let
@@ -74,6 +90,10 @@ decodeTerm namespaces term =
   in
     parseURI $ T.unpack normalised -- Expecting an absolute URI at this point
 
+-- Decode an explicit URL into a potentially namespaced term
+--
+-- >>> encodeTerm [Namespace "dc:" "http://purl.org/dc/elements/1.1/"] (textToUri "http://purl.org/dc/elements/1.1/creator")
+-- "dc:creator"
 encodeTerm :: [Namespace] -> URI -> T.Text
 encodeTerm namespaces term =
   let
@@ -82,6 +102,9 @@ encodeTerm namespaces term =
   in
     maybe term' (\ns -> T.concat [(namespacePrefix ns), (fromJust $ T.stripPrefix (namespaceUri ns) term')]) namespace
 
+-- | A simple, literal metadata statement
+--
+--  Tagged text is used to allow for language-specific statements
 data Statement =
   Statement URI TaggedText -- ^ A proper statement
   | RawStatement T.Text TaggedText -- ^ A statement that needs to be decoded
@@ -107,17 +130,23 @@ toRawStatement :: [Namespace] -> Statement -> Statement
 toRawStatement _namespaces r@(RawStatement _ _) = r
 toRawStatement namespaces (Statement term value) = RawStatement (encodeTerm namespaces term) value
 
+-- | The term (verb) for the statement.
+--
+--   Eg. @dc:title@ for the statement containing the title
 statementTerm :: Statement -> URI
 statementTerm (RawStatement term _value) = textToUri term
 statementTerm (Statement term _value) = term
 
+-- | The value (object) of the statement.
 statementText :: Statement -> TaggedText
 statementText (RawStatement _term txt) = txt
 statementText (Statement _term txt) = txt
 
+-- | A plain-text value for the statement
 statementValue :: Statement -> T.Text
 statementValue statement = plainText $ statementText statement
 
+-- | The language tag associated with the statement, if one exists
 statementLang :: Statement -> Maybe T.Text
 statementLang (RawStatement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ locale value
 statementLang  (Statement _term value) = if T.null lang then Nothing else Just lang where lang = localeLanguageTag $ locale value
@@ -132,7 +161,8 @@ statementLabel statement =
   in
     if length broken == 0 then url else last broken
 
--- | A full metadata 
+-- | A full collection of metadata
+--
 --  The namespaces from `def` (dc, dcterms) are automatically included if not present
 data Metadata = Metadata {
   metadataNamespaces :: [Namespace], -- ^ The list of namespaces

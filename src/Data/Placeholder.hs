@@ -13,22 +13,28 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Use placeholders for objects in Aeson
+
 Allow objects to be converted from/to an identifier.
 
 This is useful for serialising data where there needs to be references to the data elsewhere and
 there isn't enough contextual information yet.
+The basic idea is that an identified placeholder element is created and slotted into the data structure.
+A second normalisation and dereferencing phase replaces these placeholders with the correct object.
 
 -}
 
 module Data.Placeholder (
-    Dereferencer(..)
-  , Normaliser(..)
-  , Placeholder(..)
-  , Prioritised(..)
-
-  , normalisePrioritised
-  , normaliseReferences
+  -- * Placeholders
+    Placeholder(..)
   , placeholderLabel
+  -- * Normalisation
+  , Dereferencer(..)
+  , Normaliser(..)
+  , normaliseReferences
+  -- * Prioritised elements
+  , Prioritised(..)
+  , normalisePrioritised
   , uniquePrioritised
 ) where
 
@@ -40,7 +46,8 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.Text as T
 
--- | Something that can be represented by a placeholder within a particular context
+-- | Something that can be represented by a placeholder within a particular context.
+--
 --   In this case, the placeholder has a key type of @k@
 class (Eq k, Ord k, Show k) => Placeholder k a | a -> k where
   -- | The placeholder identifier
@@ -57,13 +64,16 @@ class (Eq k, Ord k, Show k) => Placeholder k a | a -> k where
     -> S.Set a
   internalReferences _ = S.empty
 
+-- | Allow an object that can have a placeholder to be normalised
 class (Placeholder k a) => Normaliser k a ctx where
   -- | Normalise an item, with references normalised
+  --
   --   By default, this returns the original item, override this if you have an internal structure that needs resolving
   normalise :: ctx -- The context to rebuild in
     -> a -- ^ The source object
     -> a -- ^ The resulting
 
+-- Allow a sub-object to be dereferenced when building
 class (Placeholder k a) => Dereferencer k a ctx where
   -- | Dereference an item from a context.
   --   Look up the non-placeholder item in the context and return it or the original object if not found
@@ -82,21 +92,23 @@ class (Placeholder k a) => Dereferencer k a ctx where
   dereferenceS ctx items = S.map (dereference ctx) items
 
 
--- | We can always make a dereferecer out of a list
+-- | We can always make a dereferencer out of a list
 instance (Placeholder k a) => Dereferencer k a [a] where
   dereference ctx v = maybe v id (find (\x -> placeholderID x == vid) ctx) where vid = placeholderID v
 
 
--- | We can always make a dereferecer out of a map
+-- | We can always make a dereferencer out of a map
 instance (Placeholder k a) => Dereferencer k a (M.Map k a) where
   dereference ctx v = maybe v id (M.lookup (placeholderID v) ctx)
 
--- | We can always make a dereferecer out of a mapping function
+-- | We can always make a dereferencer out of a mapping function
 instance (Placeholder k a) => Dereferencer k a (k -> Maybe a) where
   dereference ctx v = maybe v id (ctx (placeholderID v))
 
 
--- A placeholder item with an attached priority
+-- | A placeholder item with an attached priority
+--
+--   Prioritised items can be used to sort out the list order in which a list of placholder items can be presented
 data (Placeholder k a) => Prioritised k a = Prioritised {
     prItem :: a -- The prioritised item
   , prPriority :: Int -- ^ The priority
@@ -122,6 +134,7 @@ instance (Placeholder T.Text a) => ToJSON (Prioritised T.Text a) where
 instance (NFData a, Placeholder k a) => NFData (Prioritised k a) where
   rnf (Prioritised item priority) = item `deepseq` priority `deepseq` ()
 
+-- | Order a list of prioritised items and then reduce them to a list of unique items
 uniquePrioritised :: (Ord a, Placeholder k a) => [Prioritised k a] -> [Prioritised k a]
 uniquePrioritised items = unique
   where
@@ -129,6 +142,7 @@ uniquePrioritised items = unique
     sorted = sortBy order items
     unique = fst $ foldl (\(is, seen) -> \item -> if S.member (prItem item) seen then (is, seen) else (is ++ [item], S.insert (prItem item) seen)) ([], S.empty) sorted
 
+-- | Normalise a prioritised item
 normalisePrioritised :: (Dereferencer k a ctx) => ctx -> Prioritised k a -> Prioritised k a
 normalisePrioritised ctx (Prioritised item priority) = Prioritised (dereference ctx item) priority
 

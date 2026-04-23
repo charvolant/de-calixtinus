@@ -1,3 +1,4 @@
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Xlsx
 Description : A model-based interface to the Xlsx codec
@@ -14,30 +15,23 @@ This uses shadow data structures for Style, Formula, Cell and Worksheet, allowin
 relative terms in `Slab`s.
 The slabs can then be positioned relative to each other to contstruct a layout.
 
-Since cell positions are not know during construction, formulas use `CellID`s to encode references  to other cells.
+Since cell positions are not known during construction, formulas use `CellID`s to encode references  to other cells.
 These are resolved during spreadsheet construction.
 -}
 
 module Data.Xlsx (
-    module Codec.Xlsx
-  , module Data.Xlsx.Internal
-) where
-
-import Codec.Xlsx hiding (Cell(..), Comment(..), Formula(..), Worksheet(..), cellStyle, cellValue, cellComment, cellFormula)
-import Data.Xlsx.Internal (
-    Cell(..)
-  , CellID(..)
-  , CellIDStream
-  , CellWidth(..)
-  , Comment(..)
-  , Formula(..)
-  , Positionable(..)
-  , Renderer
+  module Codec.Xlsx
+  -- * Slabs
   , Slab(..)
-  , Style(..)
-  , Worksheet(..)
-
-  , baseFont
+  , Positionable(..)
+  , (>>!)
+  , (>>-)
+  , columnSlab
+  , rowSlab
+  , slabAddStyle
+  -- * Cells
+  , Cell(..)
+  , CellWidth(..)
   , cellComment
   , cellFormula
   , cellID
@@ -45,11 +39,19 @@ import Data.Xlsx.Internal (
   , cellStyle
   , cellText
   , cellValue
-  , columnSlab
-  , createXlsx
+  -- ** Cell identifiers
+  , CellID(..)
+  , CellIDStream
   , nextCellID
-  , rowSlab
-  , slabAddStyle
+  , toAbsolute
+  , toOffset
+  -- ** Cell Elements
+  , Comment(..)
+  -- * Formulas
+  , Formula(..)
+  -- * Styling
+  , Style(..)
+  , baseFont
   , styleAlignment
   , styleBorder
   , styleFill
@@ -57,9 +59,11 @@ import Data.Xlsx.Internal (
   , styleNumberFormat
   , styleSheetFromMap
   , styleWidth
-  , toAbsolute
-  , toOffset
+  -- * Worksheets
+  , Renderer
+  , Worksheet(..)
+  , createXlsx
+) where
 
-  , (>>!)
-  , (>>-)
-  )
+import Codec.Xlsx hiding (Cell(..), Comment(..), Formula(..), Worksheet(..), cellStyle, cellValue, cellComment, cellFormula)
+import Data.Xlsx.Internal

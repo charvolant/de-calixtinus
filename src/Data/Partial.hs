@@ -23,11 +23,16 @@ import Data.List (partition)
 
 
 -- | A partial order over a.
+--
 --   If the partial order evaluates to true, then the first argument is less than or equal to the second argument.
 --   It does not follow that if false, the second argument is less than or equal to the first argument
 type PartialOrder a = a -> a -> Bool
 
 -- | Topological sort
+--
+--   This will sort a partially ordered list of elements into "less than" order.
+--   It ensures that any element that is less than another appears before it in the resulting list but makes no
+--   guarantees about elements that are not ordered.
 topologicalSort :: (Eq a) => PartialOrder a -- ^ The partial order to use
   -> [a] -- ^ The unsorted elements
   -> [a] -- ^ The sorted elements

@@ -7,12 +7,14 @@
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Camino
-Description : Data models for travelling the Camino
+Description : Data models for describing a Camino
 Copyright   : (c) Doug Palmer, 2023
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Data models for describing a Camino
 
 A camino consists of a graph of legs that can be assembled in various ways.
 The legs run between two locations, each with possible accommodation and service options.

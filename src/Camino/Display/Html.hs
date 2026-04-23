@@ -3,6 +3,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Html
 Description : Produce HTML descriptions map of caminos and trips
@@ -12,7 +13,7 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Generate HTML descriptions of 
+Generate HTML descriptions of caminos and journey plans.
 -}
 module Camino.Display.Html where
 
@@ -46,28 +47,28 @@ import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace,
 import Formatting
 import Data.Text (Text)
 
--- A useful separator
+-- | A useful separator
 endash :: Char
 endash = '\x2013'
 
--- Another useful separator
+-- | Another useful separator
 emdash :: Char
 emdash = '\x2014'
 
--- A different useful separator
+-- | A different useful separator
 nl :: Char
 nl = '\n'
 
--- Make a javascript string out of possible text
+-- | Make a javascript string out of possible text
 javascriptString :: Maybe T.Text -> T.Text
 javascriptString mtxt = maybe "null" (\t -> "'" <> (T.replace "\'" "\\'" $ T.replace "\"" "\'" t) <> "'") mtxt
 
--- Make a javascript boolean
+-- | Make a javascript boolean
 javascriptBoolean :: Bool -> T.Text
 javascriptBoolean False = "false"
 javascriptBoolean True = "true"
 
--- Show a checkmark if something is true
+-- | Show a checkmark if something is true
 checkMark :: Bool -> T.Text
 checkMark True = "\x2714"
 checkMark False = ""
@@ -81,6 +82,7 @@ conditionalLabel label values = [ihamlet|
         <h6 .pt-3>_{label}
   |]
 
+-- | Create a table of penance components
 penanceTable :: TravelPreferences -> CaminoPreferences -> Bool -> Bool -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
 penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ihamlet|
   <div .detail .border .border-info-subtle .rounded .penance-table .float-end .ms-1 .p-1>
@@ -165,6 +167,7 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
     hasAccommodationServices = accommodationDetail && not (S.null acServices)
     showAccommodation = metricsLocation metrics /= mempty || hasAccommodationServices
 
+-- | Display a summary of key penance metrics
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> Maybe Int -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
 metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
     _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
@@ -181,6 +184,7 @@ metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
     _{PenanceMsg (metricsPenance metrics)}
   |]
 
+-- | Display a summary of key penance metrics for a single day
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
 daySummary _preferences _camino _pilgrimage day = [ihamlet|
     <p>_{Txt (locationName (start day))} - _{Txt (locationName (finish day))}
@@ -196,6 +200,7 @@ daySummary _preferences _camino _pilgrimage day = [ihamlet|
   where
     metrics = score day
 
+-- | Display a summary of key penance metrics for a stage (multiple days with a rest day at the end)
 stageSummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Journey -> HtmlUrlI18n CaminoMsg CaminoRoute
 stageSummary _preferences _camino _pilgrimage stage = [ihamlet|
     <p>_{Txt (locationName (start stage))} - _{Txt (locationName (finish stage))}
@@ -211,6 +216,8 @@ stageSummary _preferences _camino _pilgrimage stage = [ihamlet|
   where
     metrics = score stage
 
+
+-- | Display a summary the stages and day stop locations for an entire trip
 tripSummary :: TravelPreferences -> CaminoPreferences -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripSummary _preferences _camino pilgrimage = [ihamlet|
     <h1>From _{Txt (locationName $ start pilgrimage)} to _{Txt (locationName $ finish pilgrimage)}
@@ -222,6 +229,7 @@ tripSummary _preferences _camino pilgrimage = [ihamlet|
         <li>_{RestpointLabel}
   |]
 
+-- | Display the services and accommodation available at a location
 locationSummary :: TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationSummary _preferences _camino location = [ihamlet|
     $if not $ T.null services
@@ -233,6 +241,7 @@ locationSummary _preferences _camino location = [ihamlet|
     services = T.intercalate ", " (map (\s -> T.pack $ show s) (S.toList $ locationServices location))
     accommodation = T.intercalate ", " (map (\a -> T.pack $ show $ accommodationType a) (locationAccommodation location))
 
+-- | Generate a route to an icon that summarises a location type and whether it is a stop or waypoint (location travelled through)
 caminoLocationTypeMapIcon :: LocationType -> Bool -> Bool -> CaminoRoute
 caminoLocationTypeMapIcon lt stop waypoint =
   let
@@ -241,6 +250,7 @@ caminoLocationTypeMapIcon lt stop waypoint =
   in
     IconRoute (T.concat ["location-", name, "-", style, ".png"])
 
+-- | Generate a route to an icon that shows a point of interest
 caminoPoiTypeMapIcon :: LocationType -> CaminoRoute
 caminoPoiTypeMapIcon lt =
   let
@@ -248,6 +258,7 @@ caminoPoiTypeMapIcon lt =
   in
     IconRoute (T.concat ["poi-", name, ".png"])
 
+-- | Generate a span that uses CSS to show an icon for an event type
 caminoEventTypeIcon :: EventType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoEventTypeIcon Religious = [ihamlet| <span .event-type .event-religious .ca-bishop title="_{ReligiousEventTitle}"> |]
 caminoEventTypeIcon Food = [ihamlet| <span .event-type .event-food .ca-food title="_{FoodEventTitle}"> |]
@@ -258,6 +269,7 @@ caminoEventTypeIcon Holiday = [ihamlet| <span .event-type .event-holiday .ca-hol
 caminoEventTypeIcon PilgrimMass= [ihamlet| <span .event-type .event-pilgrimmass .ca-altar title="_{PilgrimMassEventTitle}"> |]
 caminoEventTypeIcon Mass = [ihamlet| <span .event-type .event-mass .ca-altar title="_{MassEventTitle}"> |]
 
+-- | Generate a span that uses CSS to show an icon for an location type
 caminoLocationTypeIcon :: LocationType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationTypeIcon Village = [ihamlet| <span .location-type .ca-village title="_{VillageTitle}"> |]
 caminoLocationTypeIcon Town = [ihamlet| <span .location-type .ca-town title="_{TownTitle}"> |]
@@ -296,6 +308,7 @@ caminoLocationTypeIcon Industry = [ihamlet| <span .location-type .ca-industry ti
 caminoLocationTypeIcon PlaceholderLocation = [ihamlet| <span .text-warning .location-type .ca-poi title="_{PlaceholderLabel}"> |]
 caminoLocationTypeIcon _ = [ihamlet| <span .location-type .ca-poi title="_{PoiTitle}"> |]
 
+-- | The I18n title message for a location type
 caminoLocationTypeLabel :: LocationType -> CaminoMsg
 caminoLocationTypeLabel Village = VillageTitle
 caminoLocationTypeLabel Town = TownTitle
@@ -334,6 +347,7 @@ caminoLocationTypeLabel Industry = IndustryTitle
 caminoLocationTypeLabel Poi = PoiTitle
 caminoLocationTypeLabel PlaceholderLocation = PlaceholderLabel
 
+-- | The I18n description message for a location type
 caminoLocationTypeDescription :: LocationType -> CaminoMsg
 caminoLocationTypeDescription Village = VillageDescription
 caminoLocationTypeDescription Town = TownDescription
@@ -372,6 +386,7 @@ caminoLocationTypeDescription Industry = IndustryDescription
 caminoLocationTypeDescription Poi = PoiDescription
 caminoLocationTypeDescription _ = PlaceholderLabel
 
+-- | The I18n message that shows the category of a point of interest
 caminoPoiCategoryLabel :: PoiCategory -> CaminoMsg
 caminoPoiCategoryLabel ReligiousPoi  = ReligiousPoiTitle
 caminoPoiCategoryLabel HistoricalPoi  = HistoricalPoiTitle
@@ -380,6 +395,7 @@ caminoPoiCategoryLabel NaturalPoi  = NaturalPoiTitle
 caminoPoiCategoryLabel PilgrimPoi  = PilgrimPoiTitle
 caminoPoiCategoryLabel RecreationPoi  = RecreationPoiTitle
 
+-- | Generate a span that uses CSS to show an icon for a leg type
 caminoLegTypeIcon :: LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLegTypeIcon Trail = [ihamlet| <span .leg-type .ca-walking title="_{TrailTitle}"> |]
 caminoLegTypeIcon CyclePath = [ihamlet| <span .leg-type .ca-cycling title="_{CyclePathTitle}"> |]
@@ -389,6 +405,7 @@ caminoLegTypeIcon BusLink = [ihamlet| <span .leg-type .ca-bus-link title="_{BusT
 caminoLegTypeIcon TrainLink = [ihamlet| <span .leg-type .ca-train-link title="_{TrainTitle}"> |]
 caminoLegTypeIcon _ = [ihamlet| <span .leg-type title="_{RoadTitle}"> |]
 
+-- | The I18n message that shows the category of a leg type
 caminoLegTypeLabel :: LegType -> CaminoMsg
 caminoLegTypeLabel Trail = TrailTitle
 caminoLegTypeLabel CyclePath = CyclePathTitle
@@ -398,6 +415,7 @@ caminoLegTypeLabel BusLink = BusTitle
 caminoLegTypeLabel TrainLink = TrainTitle
 caminoLegTypeLabel _ = RoadTitle
 
+-- | Generate a span that uses CSS to show an icon for a room type
 caminoSleepingIcon :: Sleeping -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoSleepingIcon Shared = [ihamlet| <span .sleeping .ca-shared title="_{SharedTitle}"> |]
 caminoSleepingIcon Single = [ihamlet| <span.sleeping .ca-bed-single title="_{SingleTitle}"> |]
@@ -410,6 +428,7 @@ caminoSleepingIcon QuadrupleWC = [ihamlet| <span .sleeping .ca-bed-quadruple-wc 
 caminoSleepingIcon Mattress = [ihamlet| <span .sleeping .ca-mattress title="_{MattressTitle}"> |]
 caminoSleepingIcon SleepingBag = [ihamlet| <span .sleeping .ca-sleeping-bag title="_{SleepingBagTitle}"> |]
 
+-- | Generate a span that uses CSS to show an icon for an accommodation type
 caminoAccommodationTypeIcon :: AccommodationType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationTypeIcon PilgrimAlbergue = [ihamlet| <span .accommodation .municipal-albergue .ca-albergue title="_{PilgrimAlbergueTitle}"> |]
 caminoAccommodationTypeIcon PrivateAlbergue = [ihamlet| <span .accommodation .private-albergue .ca-albergue title="_{PrivateAlbergueTitle}"> |]
@@ -425,6 +444,7 @@ caminoAccommodationTypeIcon Refuge = [ihamlet| <span .accommodation .refuge .ca-
 caminoAccommodationTypeIcon Camping = [ihamlet| <span .accommodation .camping .ca-tent title="_{CampingTitle}"> |]
 caminoAccommodationTypeIcon PlaceholderAccommodation = [ihamlet| <span .accommodation title="_{PlaceholderLabel}">? |]
 
+-- | The I18n message that shows the title of an accommodation type
 caminoAccommodationTypeMsg :: AccommodationType -> CaminoMsg
 caminoAccommodationTypeMsg PilgrimAlbergue = PilgrimAlbergueTitle
 caminoAccommodationTypeMsg PrivateAlbergue = PrivateAlbergueTitle
@@ -440,6 +460,7 @@ caminoAccommodationTypeMsg Refuge = RefugeTitle
 caminoAccommodationTypeMsg Camping = CampingTitle
 caminoAccommodationTypeMsg PlaceholderAccommodation = PlaceholderLabel
 
+-- | The I18n message that shows the name of an accommodation type
 caminoAccommodationLabel :: Accommodation -> CaminoMsg
 caminoAccommodationLabel (GenericAccommodation PilgrimAlbergue) = PilgrimAlbergueTitle
 caminoAccommodationLabel (GenericAccommodation PrivateAlbergue) = PrivateAlbergueTitle
@@ -456,6 +477,7 @@ caminoAccommodationLabel (GenericAccommodation Camping) = CampingTitle
 caminoAccommodationLabel (GenericAccommodation PlaceholderAccommodation) = PlaceholderLabel
 caminoAccommodationLabel _ = AccommodationLabel
 
+-- | Generate a span that uses CSS to show an icon for a service type
 caminoServiceIcon :: Service -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoServiceIcon WiFi = [ihamlet| <span .service .ca-wifi title="_{WiFiTitle}"> |]
 caminoServiceIcon Restaurant = [ihamlet| <span .service .ca-restaurant title="_{RestaurantTitle}"> |]
@@ -486,6 +508,7 @@ caminoServiceIcon Train = [ihamlet| <span .service .ca-train title="_{TrainTitle
 caminoServiceIcon Bus = [ihamlet| <span .service .ca-bus title="_{BusTitle}"> |]
 caminoServiceIcon Ferry = [ihamlet| <span .service .ca-wharf title="_{FerryTitle}"> |]
 
+-- | The I18n message that shows the title of an service type
 caminoServiceMsg :: Service -> CaminoMsg
 caminoServiceMsg WiFi = WiFiTitle
 caminoServiceMsg Restaurant = RestaurantTitle
@@ -516,14 +539,17 @@ caminoServiceMsg Train = TrainTitle
 caminoServiceMsg Bus = BusTitle
 caminoServiceMsg Ferry = FerryTitle
 
+-- | The I18n message that shows the title of a travel type
 caminoTravelMsg :: Travel -> CaminoMsg
 caminoTravelMsg Walking = WalkingTitle
 caminoTravelMsg Cycling = CyclingTitle
 
+-- | Generate a span that uses CSS to show an icon for a travel type
 caminoTravelIcon :: Travel -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTravelIcon Walking = [ihamlet| <span .travel .travel-walking .ca-walking title="_{WalkingTitle}"> |]
 caminoTravelIcon Cycling = [ihamlet| <span .travel .travel-cycling .ca-cycling title="_{CyclingTitle}"> |]
 
+-- | The I18n message that shows the title of a fitness level
 caminoFitnessMsg :: Fitness -> CaminoMsg
 caminoFitnessMsg SuperFit = SuperFitTitle
 caminoFitnessMsg VeryFit = VeryFitTitle
@@ -533,9 +559,11 @@ caminoFitnessMsg Unfit = UnfitTitle
 caminoFitnessMsg Casual = CasualTitle
 caminoFitnessMsg VeryUnfit = VeryUnfitTitle
 
+-- | Generate a span that shows a label for a fitness level
 caminoFitnessLabel :: Fitness -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoFitnessLabel fitness = [ihamlet| <span .fitness>_{caminoFitnessMsg fitness} |]
 
+-- | The I18n message that shows the title of a comfort level
 caminoComfortMsg :: Comfort -> CaminoMsg
 caminoComfortMsg Austere = AustereTitle
 caminoComfortMsg Frugal = FrugalTitle
@@ -543,13 +571,18 @@ caminoComfortMsg Pilgrim = PilgrimTitle
 caminoComfortMsg Comfortable = ComfortableTitle
 caminoComfortMsg Luxurious = LuxuriousTitle
 
+-- | Generate a span that shows a label for a comfort level
 caminoComfortLabel :: Comfort -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoComfortLabel comfort = [ihamlet| <span .comfort>_{caminoComfortMsg comfort} |]
 
+-- | The I18n message that shows the title of a system of units
 caminoUnitsMsg :: U.SystemOfUnits -> CaminoMsg
 caminoUnitsMsg U.SIUnits = SIUnitsTitle
 caminoUnitsMsg U.USUnits = USUnitsTitle
 
+-- | Generate a short summary of some accomodation.
+--
+--   If generic accommodation then a simple type is shown, otherwise type, name, services and sleeping arrangements are shown
 caminoAccommodationSummaryHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationSummaryHtml a@(GenericAccommodation type') = [ihamlet|
     ^{caminoAccommodationTypeIcon type'} _{caminoAccommodationLabel a}
@@ -566,7 +599,7 @@ caminoAccommodationSummaryHtml a@(Accommodation _id _name _description type' ser
           ^{caminoSleepingIcon sleeping}
  |]
 
-
+-- | Generate a (pennace detail) summary of a local accommodation choice
 caminoAccommodationChoiceSummaryHtml :: Accommodation -> Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
     <span .accommodation>
@@ -584,10 +617,12 @@ caminoAccommodationChoiceSummaryHtml accommodation metrics = [ihamlet|
       services' = maybe S.empty (tripChoiceFeatures . fst) (L.uncons $ metricsAccommodationChoice metrics)
       hasServices = not (S.null services')
 
+-- | Show the name of an accommodation location, either a generic name or the actual name of the place
 caminoAccommodationNameHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationNameHtml (GenericAccommodation type') = [ihamlet|_{caminoAccommodationTypeMsg type'}|]
 caminoAccommodationNameHtml (Accommodation _id name' _description _type  _services _sleeping _multi) = [ihamlet|_{Txt name'}|]
 
+-- | Describe a piece of accommodation, with type, name, services, sleeping arrangements and any additional details
 caminoAccommodationHtml :: Accommodation -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAccommodationHtml accommodation = [ihamlet|
   <div .row .accommodation>
@@ -635,6 +670,7 @@ solutionElements _camino (Just solution) = (
   ) where
     pilgrimage' = solutionPilgrimage solution
 
+-- | Generate the I18n'd description of a calendar entry
 calendarBlock :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
 calendarBlock Daily = [ihamlet|_{DailyLabel}|]
 calendarBlock (Weekly dow) = [ihamlet|
@@ -701,6 +737,7 @@ calendarBlock (Conditional cal cond) = [ihamlet|
   <div .calendar-condition>_{Txt cond}
   |]
 
+-- | Generate the I18n'd description of a single hours range for a poi or event
 timeBlock :: EventTime -> HtmlUrlI18n CaminoMsg CaminoRoute
 timeBlock EventClosed = [ihamlet|_{ClosedText}|]
 timeBlock EventOpen = [ihamlet|_{OpenText}|]
@@ -711,6 +748,7 @@ timeBlock (EventTime hours) = [ihamlet|
   |]
 
 
+-- | Generate the I18n'd description of range of an open hours range for a poi
 hoursBlock :: OpenHours -> HtmlUrlI18n CaminoMsg CaminoRoute
 hoursBlock (OpenHours []) = [ihamlet||]
 hoursBlock (OpenHours [EventHours Daily time]) = [ihamlet|
@@ -746,7 +784,7 @@ hoursBlock (OpenHours hours) = [ihamlet|
         ^{timeBlock time}
   |]
 
-
+-- | The I18n message for the title of a description note type
 descriptionNoteTypeMsg :: NoteType -> CaminoMsg
 descriptionNoteTypeMsg Information = InformationTitle
 descriptionNoteTypeMsg Warning = WarningTitle
@@ -754,6 +792,7 @@ descriptionNoteTypeMsg Address = AddressTitle
 descriptionNoteTypeMsg Directions = DirectionsTitle
 descriptionNoteTypeMsg Access = AccessTitle
 
+-- | Generate a span that uses CSS to show an icon for a description note type
 descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
 descriptionNoteTypeIcon Warning = [ihamlet| <span .note-type .ca-warning title="_{WarningTitle}">|]
@@ -761,6 +800,7 @@ descriptionNoteTypeIcon Address = [ihamlet| <span .note-type .ca-map title="_{Ad
 descriptionNoteTypeIcon Directions = [ihamlet| <span .note-type .ca-map title="_{DirectionsTitle}">|]
 descriptionNoteTypeIcon Access = [ihamlet| <span .note-type .ca-key title="_{AccessTitle}">|]
 
+-- | Generate a note that discribes a bit of useful information about something
 descriptionNote :: Note -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNote note = [ihamlet|
   <div .note .#{nc}>
@@ -771,12 +811,19 @@ descriptionNote note = [ihamlet|
     nt = noteType note
     nc = "note-" <> (T.toLower $ T.pack $ show nt)
 
+-- | Generate a short description line
+--
+--   If there is an explicit summary, then that is used.
+--   Otherwise, a potentially shortened version of the description text is used
 descriptionLine :: Description -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionLine description = [ihamlet|
   _{Txt (descriptionSummary description)}
   |]
 
--- Only partial. This should be enclosed in a .row since it allows extra stuff to be added
+-- | Generate HTML that provides a description.
+--
+--   The description block is partial and not enclosed in its own @div@, since it gets used in various places.
+--   Generally, this should be enclosed in a .row since it allows extra stuff to be added.
 descriptionBlock :: Bool -> Bool -> Description -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionBlock showAbout showImages description = [ihamlet|
     $if showImages
@@ -799,6 +846,7 @@ descriptionBlock showAbout showImages description = [ihamlet|
     attribution = maybe Nothing imageAttribution mimg
     origin= maybe Nothing imageOrigin mimg
 
+-- | Generate a single line description of a location summarising type, name, services, accommodation and points of interest
 locationLineSimple :: Config -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLineSimple config location = [ihamlet|
     _{Txt (locationName location)}
@@ -820,18 +868,21 @@ locationLineSimple config location = [ihamlet|
         ^{caminoEventTypeIcon event}
   |]
 
+-- | See `locationLineSimple`
 locationLine :: Config -> TravelPreferences -> CaminoPreferences -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLine config _preferences _camino location = locationLineSimple config location
 
-
+-- | Generate a single line description of a point of interest with the name
 poiLineSimple :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 poiLineSimple poi = [ihamlet|
     _{Txt (poiName poi)}
   |]
 
+-- | See `poiLineSimple`
 poiLine :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 poiLine _preferences _camino poi = poiLineSimple poi
 
+-- | Generate a single line description of a leg with type, distance, ascent, descent etc.
 legLineSimple :: Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 legLineSimple leg = [ihamlet|
     <div .d-inline-block>
@@ -850,9 +901,12 @@ legLineSimple leg = [ihamlet|
         <span .leg-description>^{descriptionLine (fromJust $ legDescription leg)}
   |]
 
+-- | See `legLineSimple`
 legLine :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 legLine _preferences _camino leg = legLineSimple leg
 
+-- | Generate a leg line from the point of view of a location, showing the destination and distances etc.
+--   See `legLineSimple`
 locationLegLine :: TravelPreferences -> Bool -> Bool -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegLine preferences showLink showTo camino leg = [ihamlet|
    $if showLink
@@ -866,6 +920,7 @@ locationLegLine preferences showLink showTo camino leg = [ihamlet|
    direction = if showTo then legTo else legFrom
    locid = locationID $ direction leg
 
+-- | Generate a summary of the legs leaving a location, with used legs shown first
 locationLegSummary :: TravelPreferences -> CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegSummary preferences camino used location = [ihamlet|
   $forall leg <- usedLegs
@@ -883,6 +938,7 @@ locationLegSummary preferences camino used location = [ihamlet|
     (usedLegs, unusedLegs) = L.partition (\l -> S.member l used) outgoingLegs
 
 
+-- | Generate a summary of the legs from and to a location, with used legs shown first
 locationLegs :: TravelPreferences -> CaminoPreferences -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLegs preferences camino used location = [ihamlet|
   <div .row>
@@ -910,6 +966,7 @@ locationLegs preferences camino used location = [ihamlet|
     incomingLegs = incoming camino' location
     (usedIncomingLegs, unusedIncomingLegs) = L.partition (\l -> S.member l used) incomingLegs
 
+-- | Generate a description of an event, with type, name, description and calendar and hours
 caminoEventHtml :: Event -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoEventHtml event = [ihamlet|
   <div .row .clearfix .event .#{eventCss}>
@@ -940,6 +997,7 @@ caminoPoiCategoriesAttr categories = [ihamlet|$forall (category, i) <- zcategori
     zcategories = zip (S.toList categories) [1::Int ..]
     connector i = (if i > 1 then ", " else "") :: T.Text
 
+-- | Generate a description of a point of interest, including type, name, description, opening times and events
 caminoPointOfInterestHtml :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPointOfInterestHtml poi = [ihamlet|
   <div id="#{poiID poi}" .row>
@@ -969,6 +1027,9 @@ caminoPointOfInterestHtml poi = [ihamlet|
     hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc) || (not $ null $ descNotes desc)
     hasBody = (maybe False hasDescBody (poiDescription poi)) || (isJust $ poiHours poi) || (not $ null $ poiEvents poi)
 
+-- | Generate a transport link leg description.
+--
+--   Transport links provide optional additional facilities and are displayed as a summary, using a different style.
 caminoTransportLinkHtml :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTransportLinkHtml preferences camino tlink = [ihamlet|
   <div .row .transport-link>
@@ -1005,6 +1066,7 @@ tripChoiceSummary' _config showName choiceMap location = [ihamlet|
     #{endash}
 |]
 
+-- | Generate a table of trip choice information
 tripChoiceSummary :: Config -> Maybe Solution -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 tripChoiceSummary config msolution location = [ihamlet|
   $maybe choices <- solutionChoices <$> msolution
@@ -1030,12 +1092,15 @@ tripChoiceSummary config msolution location = [ihamlet|
         <td>
 |]
 
+-- | The format to display a lat-long-elevation triple
 latlngFormat :: (RealFrac a) => Format r (a -> a -> Maybe a -> r)
 latlngFormat = (fixed 5) % "," % (fixed 5) % (optioned $ " " % (fixed 0) % "m")
 
+-- | Format a latitude, logitude and optional elevation
 formatLatLng :: LatLong -> Text
 formatLatLng latlng = sformat latlngFormat (latitude latlng) (longitude latlng) (elevation latlng)
 
+-- | Generate a detailed description of a location
 caminoLocationHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> String -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Location -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationHtml config preferences camino msolution containerId rests stocks stops waypoints used location = [ihamlet|
   <div id="#{lid}" .accordion-item .p-0 .location-#{routeID route} :isRest:.location-rest :isStockpoint:.location-stockpoint :isStop:.location-stop :isWaypoint:.location-waypoint .location>
@@ -1119,6 +1184,7 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
     isWaypoint = not isStop && not isStockpoint && not isRest && (S.member location waypoints)
     transportLinks = locationTransportLinks camino' location
 
+-- | Generate a list of locations, with a menu at the top allowing quick lookup
 caminoLocationsHtml :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationsHtml config preferences camino solution = [ihamlet|
   <div .container-fluid>
@@ -1149,6 +1215,7 @@ caminoLocationsHtml config preferences camino solution = [ihamlet|
     locationPartition = partition (\l -> T.toUpper $ canonicalise $ T.take 1 $ locationNameLabel l) locationsSorted
     (_trip, _jerrors, _perrors, rests, stocks, stops, waypoints, usedLegs) = solutionElements camino' solution
 
+-- | Show a penference range for floats or doubles
 preferenceRangeHtml :: (RealFrac a) => U.SystemOfUnits -> U.Quantity -> PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeHtml sou quantity range = [ihamlet|
     <span .text-danger>#{maybe "." cu (rangeMinimum range)}
@@ -1168,6 +1235,7 @@ preferenceRangeHtml sou quantity range = [ihamlet|
     tu = U.preferredUnit sou quantity
     cu v = format (fixed 1) $ U.convertAmount fu tu v
 
+-- | Show a preference range for integers
 preferenceRangeIntHtml :: (Integral a) => PreferenceRange a -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferenceRangeIntHtml range = [ihamlet|
     <span .text-danger>#{maybe "." (format int) (rangeMinimum range)}
@@ -1183,6 +1251,9 @@ preferenceRangeIntHtml range = [ihamlet|
       <p .text-body-tertiary .smaller>#{d}
   |]
 
+-- | Generate a table summarising generated link-chain options
+--
+--   Intended for debugging
 failureTable :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> ChainGraph Location e Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
 failureTable _tprefs _cprefs caption graph = [ihamlet|
   <table .table .table-striped>
@@ -1213,6 +1284,9 @@ failureTable _tprefs _cprefs caption graph = [ihamlet|
   where
     arrow = '\x2192'
 
+-- | Generate a report summarising the partial plan generated before something went wrong.
+--
+--   Intended for debugging
 failureReport :: (Edge e Location) => T.Text -> T.Text -> TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
 failureReport _tlabel _plabel _tprefs _cprefs Nothing = [ihamlet|
 |]
@@ -1230,6 +1304,9 @@ failureReport tlabel plabel tprefs cprefs (Just (Failure msg loc pathGraph progr
         ^{failureTable tprefs cprefs ProgramLabel programGraph}
 |]
 
+-- | Generate a tab summarising the partial plan generated before something went wrong.
+--
+--   Intended for debugging
 failureHtml :: TravelPreferences -> CaminoPreferences -> Maybe (Failure Location Leg Metrics Metrics) -> Maybe (Failure Location Day Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
 failureHtml tprefs cprefs journey pilgrimage = [ihamlet|
   <div .container-fluid>
@@ -1249,6 +1326,7 @@ failureHtml tprefs cprefs journey pilgrimage = [ihamlet|
     ^{failureReport "failure-pilgrimage-table" "failure-pilgrimage-program" tprefs cprefs pilgrimage}
  |]
 
+-- | Generate a tab summarising the requested preferences
 preferencesHtml :: Bool -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
 preferencesHtml showLink preferences camino = [ihamlet|
   <div .container-fluid>
@@ -1424,6 +1502,7 @@ preferencesHtml showLink preferences camino = [ihamlet|
     findRSv prefs sk = M.findWithDefault mempty sk (stopRouteServices prefs)
     pois = caminoPoiMap $ preferenceCamino camino
 
+-- | Generate a tab that shows the entire trip, including detailed legs and waypoints during a day
 caminoTripHtml :: Config -> TravelPreferences -> CaminoPreferences -> Pilgrimage -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoTripHtml config preferences camino pilgrimage = [ihamlet|
   <div .container-fluid>
@@ -1536,6 +1615,7 @@ caminoMapHtml _preferences _camino _solution = [ihamlet|
         <div #map>
   |]
 
+-- | Generate SVG that shows the sort of lines used to display a route
 featureKeyLine :: Route -> LegType -> Bool -> Bool -> Text -> HtmlUrlI18n CaminoMsg CaminoRoute
 featureKeyLine route lt large used pos = [ihamlet|<line x1="0%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
   where
@@ -1543,6 +1623,7 @@ featureKeyLine route lt large used pos = [ihamlet|<line x1="0%" y1="#{pos}" x2="
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
     cap = maybe "" id mcap
 
+-- | Generate a tab that creates a map legend for a specific camino
 caminoCaminoKeyHtml :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoCaminoKeyHtml camino = [ihamlet|
 <table .table .table-striped>
@@ -1573,6 +1654,7 @@ caminoCaminoKeyHtml camino = [ihamlet|
   where
     allLegTypes = S.unions $ map routeLegTypes $ caminoRoutes camino
 
+-- | Generate a tab that creates a map legend
 caminoMapKeyHtml :: Bool -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapKeyHtml full = [ihamlet|
 $forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
@@ -1598,11 +1680,12 @@ $forall lt <- (L.delete PlaceholderLocation locationTypeEnumeration)
         _{caminoLocationTypeDescription lt}
 |]
 
-
+-- | The icon name used to show a location without reference to whether it is used or not
 caminoLocationIconSimple :: Location -> String
 caminoLocationIconSimple location =
   "icon" ++ (show $ locationType location) ++ "Used"
 
+-- | The icon name used to show a location
 caminoLocationIcon :: TravelPreferences -> CaminoPreferences -> S.Set Location -> S.Set Location -> Location -> String
 caminoLocationIcon _preferences _camino stops waypoints location =
   "icon" ++ (show $ locationType location) ++ (status location)
@@ -1612,13 +1695,16 @@ caminoLocationIcon _preferences _camino stops waypoints location =
      | S.member loc waypoints = "Used"
      | otherwise = "Unused"
 
+-- | The icon name used to show a point of interest
 caminoPoiIconSimple :: PointOfInterest -> String
 caminoPoiIconSimple poi =
   "icon" ++ (show $ poiType poi) ++ "Poi"
 
+-- | The icon name used to show a point of interest
 caminoPoiIcon :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> String
 caminoPoiIcon _preferences _camino poi = caminoPoiIconSimple poi
 
+-- | An HTML tooltip intended for mouse-over locations on a map
 caminoLocationTooltip :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> S.Set Leg -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationTooltip config preferences camino _solution usedLegs location = [ihamlet|
   <div .location-tooltip .container-fluid>
@@ -1628,6 +1714,7 @@ caminoLocationTooltip config preferences camino _solution usedLegs location = [i
     ^{locationLegSummary preferences camino usedLegs location}
   |]
 
+-- | An HTML tooltip intended for mouse-over locations on a map without trip information
 caminoLocationTooltipSimple :: Config -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoLocationTooltipSimple config location = [ihamlet|
   <div .location-tooltip .container-fluid>
@@ -1636,7 +1723,7 @@ caminoLocationTooltipSimple config location = [ihamlet|
         ^{locationLineSimple config location}
    |]
 
-
+-- | An HTML tooltip intended for mouse-over points of interest on a map, with reference to user preferences
 caminoPoiTooltip :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPoiTooltip preferences camino poi = [ihamlet|
   <div .location-tooltip .container-fluid>
@@ -1645,6 +1732,7 @@ caminoPoiTooltip preferences camino poi = [ihamlet|
         ^{poiLine preferences camino poi}
   |]
 
+-- | An HTML tooltip intended for mouse-over points of interest on a map
 caminoPoiTooltipSimple :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoPoiTooltipSimple poi = [ihamlet|
   <div .location-tooltip .container-fluid>
@@ -1653,6 +1741,7 @@ caminoPoiTooltipSimple poi = [ihamlet|
         ^{poiLineSimple poi}
   |]
 
+-- | Common javascript for map display
 caminoMapScriptBase :: HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptBase = [iophelia|
 var map = L.map('map');
@@ -1820,7 +1909,7 @@ $forall (lt, location, poi) <- icons
       , (Poi, (16, 24), (16, 24))
       ] :: [(LocationType, (Int, Int), (Int, Int))]
 
-
+-- | Javascript for manipulating and scrolling within tabs
 caminoMapScriptTabs :: HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptTabs = [iophelia|
 function showRouteDescription(id) {
@@ -1840,6 +1929,7 @@ function showLocationDescription(id) {
 
 |]
 
+-- | Javascript that generates functions that can be used to describe a style suitable for leaflet or SVG
 caminoMapScriptStyle :: Route -> Bool -> Bool -> Bool -> LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptStyle route large dummy used lt = [ihamlet|{ color: "#{colour}", weight: #{weight}, "opacity": #{opacity}, dashArray: "#{dashes}", lineCap: "#{cap}" }|]
   where
@@ -1847,6 +1937,7 @@ caminoMapScriptStyle route large dummy used lt = [ihamlet|{ color: "#{colour}", 
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
     cap = maybe "" id mcap
 
+-- | Generate a javascript function that will return style information for features and routes
 caminoMapScriptStyles :: (Route -> Bool) -> (Feature -> Bool) -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptStyles usedRoute usedFeature caminos = [iophelia|
 function chooseFeatureStyle1(id) {
@@ -1901,20 +1992,21 @@ function chooseFeatureStyle(sfid, fid, rid, cid, used) {
 }
 |]
 
-
+-- | Order routes by whether they are used by the plan
 orderRoutes :: (Route -> Bool) -> [Camino] -> [(Camino, Route)]
 orderRoutes usedRoute caminos = let
     indexedRoutes = zip [0 :: Int ..] $ concat $ map (\c -> map (\r -> (c, r)) (caminoRoutes c)) caminos
   in
     map snd $ L.sortOn (\(i, (_, r)) -> (usedRoute r, i)) indexedRoutes
 
+-- | Order features by whether they are used by the plan
 orderFeatures :: (Route -> Bool) -> (Feature -> Bool) -> [Camino] -> [(Camino, Route, Feature)]
 orderFeatures usedRoute usedFeature caminos = let
     indexedFeatures = zip [0 :: Int ..] $ concat $ map (\c -> foldr (\r -> \fs -> (map (\f -> (c, r, f)) (routeFeatures r)) ++ fs) [] (caminoRoutes c)) caminos
   in
     map snd $ L.sortOn (\(i, (_, r, f)) -> (usedFeature f, usedRoute r, i)) indexedFeatures
 
-
+-- | Generate a script that will display the camino and plan information on a leaflet map
 caminoMapScriptCamino :: Bool -> (Location -> String) -> (PointOfInterest -> String) -> (Location -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute) -> (Leg -> Bool) -> (Leg -> Bool) -> (Leg -> Text) -> S.Set Location -> S.Set Leg -> [(Camino, Route, Feature)] -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptCamino tlink chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail usedLeg chooseStyleID locations legs features = [iophelia|
 $forall location <- locations
@@ -1954,6 +2046,7 @@ $forall (camino, route, feature) <- features
     usedLegs = S.filter usedLeg legs
     unusedLegs = S.filter (not . usedLeg) legs
 
+-- | Generate labels for a camino, displaying different levels of routes
 caminoMapScriptLabels :: Camino -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScriptLabels camino = [iophelia|
 $forall route <- caminoRoutes camino
@@ -1973,7 +2066,7 @@ $with position <- locationPosition caminoStart
     defr = caminoDefaultRoute camino
     caminoStart = maybe (error "No camino start") (prItem . fst) $ L.uncons $ routeStarts defr
 
-
+-- | Generate a script that will display a map of the camino route(s)
 caminoMapScript :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapScript config tprefs cprefs solution = [iophelia|
 <script>
@@ -2006,7 +2099,9 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
     features = orderFeatures usedRoute usedFeature [camino]
 
 
-
+-- | Generate a script that will show a map for a list of caminos.
+--
+--   This map is somewhat coarser than the map generated for a single camino.
 caminoAllMapScript :: Config -> LatLong -> LatLong -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoAllMapScript config tl br caminos = [ihamlet|
 <script>
@@ -2032,7 +2127,7 @@ caminoAllMapScript config tl br caminos = [ihamlet|
     -- features = orderFeatures (const True) (const True) caminos
     features = []
 
-
+-- | Generate a tab that displays information about a camino, including regions and holidays
 aboutHtml :: Config -> Bool -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
   <div .container-fluid>
@@ -2137,7 +2232,7 @@ aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
     isHoliday holiday region = elem holiday (getRegionalHolidays region)
     isIndirectHoliday holiday region = elem holiday (getInheritedRegionalHolidays region)
 
-
+-- | Layout the generated HTML for a stand-alone page
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.
  -> Localised TaggedText -- ^ The page title
  -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute) -- ^ Any extra HTML to be added to the head
@@ -2189,12 +2284,15 @@ layoutHtml config title header body footer = [ihamlet|
        scriptsFooter = getAssets JavaScript config
 
 
+-- | Show the key
 keyHtml :: Config -> TravelPreferences -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
 keyHtml _config _preferences camino = $(ihamletFile "templates/help/key-en.hamlet")
 
+-- | Show a help page
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
 helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
 
+-- | The base display for a camino and solution, placing sub-elements in tabs
 caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtmlBase config preferences camino msolution =
   [ihamlet|
@@ -2258,7 +2356,7 @@ caminoHtmlBase config preferences camino msolution =
     pilgrimageFailure = maybe Nothing solutionPilgrimageFailure msolution
     showFailure = getDebug config && (isJust journeyFailure || isJust pilgrimageFailure)
 
--- | Display a camino wihout a chosen route
+-- | Display a camino wihout a chosen route, with information in suitable tabs
 caminoHtmlSimple :: Config -> CaminoPreferences -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtmlSimple config camino =
   [ihamlet|
@@ -2295,7 +2393,7 @@ caminoHtmlSimple config camino =
     camino' = preferenceCamino camino
     preferences = defaultTravelPreferences U.SIUnits Walking Normal Pilgrim Nothing
 
-
+-- | Generate a stand-alone camino page
 caminoHtml :: Config -> TravelPreferences -> CaminoPreferences -> Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoHtml config preferences camino solution = let
     title = caminoName $ preferenceCamino camino

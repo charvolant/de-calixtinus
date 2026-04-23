@@ -64,7 +64,11 @@ $if a > 20.0 then
     Oh dear!
 @
 
-would produce @\<span class="ascent distance"\>45m\</span\> <span class="problem">Oh dear!</span>@ when given @Ascent 45.0@.
+when given  @Ascent 45.0@ this would produce
+
+@
+\<span class="ascent distance"\>45m\</span\> \<span class="problem"\>Oh dear!\</span\>
+@
 
 -}
 module Text.MessageCatalogue (
@@ -115,7 +119,11 @@ mkMessageCatalogueSimple dt folder lang = let
 --
 --   This allows considerably more customisation than `mkMessageCatalogueSimple`.
 --
---   A typical invocation is @mkMessageCatalogue (Just ''MyApp) (mkName "MyAppMsg") ''Lang [("sub", ''MyApp), ("region", ''Region) "messages" "en" True
+--   A typical invocation is
+--   @
+--     mkMessageCatalogue (Just ''MyApp) (mkName "MyAppMsg") ''Lang [("sub", ''MyApp), ("region", ''Region) "messages" "en" True
+--   @
+--
 --   In this case:
 --
 --   * @''MyApp@ is the master application data type. This is optional and, if Nothing, will result in q "masterless" message catalogue
@@ -126,7 +134,7 @@ mkMessageCatalogueSimple dt folder lang = let
 --   * @"messages"@ is the directory that holds the message catalogue files
 --   * @"en"@ is the base message catalogue
 --
---   This will produce a main render function @renderMyAppMsg :: MyApp -> Region -> [Lang] -> MyAppMsg -> Html@ and,
+--   This will produce a main render function @renderMyAppMsg :: MyApp -> Region -> [Lang] -> MyAppMsg -> Html@ and
 --   an instance of `Text.Shakespeare.I18N.RenderMessage` that uses `def` for the region.
 mkMessageCatalogue :: Maybe Name -- ^ The optional application data type
   -> Name -- ^ The message type

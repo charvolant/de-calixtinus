@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Walking
 Description : Models of time taken to cover a distance
@@ -8,6 +9,8 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Models of time taken to cover a distance
+
 Derived from various models of time taken to walk a distance.
 The Naismith and Tobler rules assume a fit person who isn't slowed down by such minor 
 inconveniences as steep slopes, uneven ground, fatigue, heavy packs and the like.
@@ -15,17 +18,16 @@ The Tranter corrections help take care of such issues.
 
 * <https://en.wikipedia.org/wiki/Naismith%27s_rule>
 * <https://en.wikipedia.org/wiki/Tobler%27s_hiking_function>
+* <https://en.wikipedia.org/wiki/Naismith%27s_rule#Tranter's_corrections>
 
-is measured by VAM - velocità ascensionale media - with the assumption that each additional 1% of slope
+Cycling is measured by VAM - velocità ascensionale media - with the assumption that each additional 1% of slope
 reduces ascension speed by 50m/hr
 
 * https://en.wikipedia.org/wiki/VAM_(bicycling)
 
+>>> tranter Normal $ tobler Normal 4.5 100.0 0.0
+Just 0.9656979
 
-@
-let t = tobler 4.5 100 0 in
-  tranter Normal t
-@
 -}
 module Camino.Walking (
   cycling,
@@ -60,6 +62,9 @@ cyclingAscent Unfit = 700.0
 cyclingAscent Casual = 600.0
 cyclingAscent VeryUnfit = 400.0
 
+-- | Time taken while cycling
+--
+--   Cycling speeds can vary greatly, depending on level of skill and fitness
 cycling :: (Ord a, Floating a) => Fitness  -- ^ The broad level of fitness
   -> a -- ^ The distance in km
   -> a -- ^ The ascent in metres
@@ -77,6 +82,9 @@ cycling fitness distance ascent descent =
     
       
 -- | Calculate the time taken to walk a distance using simple Naismith's rule
+--
+--   Naismith was a fit old thing.
+--   This rule only accounts for ascent and a brisk walking pace
 naismith :: (Floating a) => Fitness -- ^ The broad level of fitness
   -> a -- ^ The distance in km
   -> a -- ^ The ascent in metres
@@ -85,6 +93,9 @@ naismith :: (Floating a) => Fitness -- ^ The broad level of fitness
 naismith _ distance ascent _ = (distance / 5) + (ascent / 600)
 
 -- | Calculate the time taken using Toblers's function
+--
+--   Tobler's function is a bit more forgiving of those more casual walkers and takes account of descent.
+--   A very mild descent gives the fastest walking time.
 tobler :: (Ord a, Floating a) => Fitness -- ^ The broad level of fitness
   -> a -- ^ The distance in km
   -> a -- ^ The ascent in metres
@@ -109,7 +120,7 @@ makeInterpolation' points = linearInterp $ tabulate mesh points
     l = V.length points
     mesh = uniformMesh (0.0, fromIntegral (l - 1)) l
 
--- | Tranter corrections for fit people (15 mins for 1000ft climb over 1/2 mile)
+-- | Tranter corrections for super fit people (15 mins for 1000ft climb over 1/2 mile)
 tranter15 :: LinearInterp UniformMesh
 tranter15 = makeInterpolation' tranter15' where
   tranter15' = V.fromList [
@@ -140,6 +151,7 @@ tranter15 = makeInterpolation' tranter15' where
     24 -- 24
     ]
 
+-- | Tranter corrections for very fit people (20 mins for 1000ft climb over 1/2 mile)
 tranter20 :: LinearInterp UniformMesh
 tranter20 = makeInterpolation' tranter20' where 
   tranter20' = V.fromList [
@@ -166,6 +178,7 @@ tranter20 = makeInterpolation' tranter20' where
     23 -- 20
     ]
 
+-- | Tranter corrections for fit people (25 mins for 1000ft climb over 1/2 mile)
 tranter25 :: LinearInterp UniformMesh
 tranter25 = makeInterpolation' tranter25' where
   tranter25' = V.fromList [
@@ -186,6 +199,7 @@ tranter25 = makeInterpolation' tranter25' where
     17.5 -- 14
     ]
 
+-- | Tranter corrections for normally fit people (30 mins for 1000ft climb over 1/2 mile)
 tranter30 :: LinearInterp UniformMesh
 tranter30 = makeInterpolation' tranter30' where
   tranter30' = V.fromList [
@@ -201,6 +215,7 @@ tranter30 = makeInterpolation' tranter30' where
     14.5 -- 9
     ]
 
+-- | Tranter corrections for unfit people (40 mins for 1000ft climb over 1/2 mile)
 tranter40 :: LinearInterp UniformMesh
 tranter40 = makeInterpolation' tranter40' where
   tranter40' = V.fromList [
@@ -214,6 +229,7 @@ tranter40 = makeInterpolation' tranter40' where
     11.5 -- 7
     ]
 
+-- | Tranter corrections for very unfit people (50 mins for 1000ft climb over 1/2 mile)
 tranter50 :: LinearInterp UniformMesh
 tranter50 = makeInterpolation' tranter50' where
   tranter50' = V.fromList [
@@ -235,7 +251,8 @@ tranter' Casual = tranter40
 tranter' VeryUnfit = tranter50
 
 -- | Tranter corrections based on fitness.
--- | These corrections take account of fitness levels and fatigue
+--
+-- | These corrections take account of fitness levels and estimate fatigue slowing on long trips
 tranter :: Fitness -- ^ The level of fitness of the person walking
   -> Float -- ^ The hours walked according to the base formula
   -> Maybe Float -- ^ Either Just the actual hours corrected for fitness and fatigue or Nothing for out of range
@@ -277,7 +294,7 @@ perceivedDistance :: Travel -- ^ The travel type
  -> Fitness -- ^ The fitness level
  -> Float -- ^ The actual distance
  -> Bool -- ^ If out of range, choose the upper boundary, otherwise choose the lower one
- -> Float -- ^ 
+ -> Float -- ^ The resulting perceived distance
 perceivedDistance travel fitness distance upper = let
     normalSpeed = nominalSpeed Walking Normal
     baseHours = if travel == Cycling then cycling fitness distance 0.0 0.0 else tobler fitness distance 0.0 0.0

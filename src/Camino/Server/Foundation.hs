@@ -8,7 +8,7 @@
 {-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-orphans       #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
-
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Foundation
 Description : Yesod foundation for the Calixtinus application
@@ -17,6 +17,8 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Yesod foundation for the Calixtinus application
 -}
 
 module Camino.Server.Foundation where
@@ -51,7 +53,7 @@ import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
 import Data.Util (headWithDefault)
 import Camino.Config (AssetConfig(assetPath))
 
--- | Generic placeholder date
+-- Generic placeholder date
 placeholderDate :: Day
 placeholderDate = fromGregorian 1970 1 1
 
@@ -177,6 +179,7 @@ instance (Show a, Read a) => PathPiece (PreferenceRange a) where
       max'
     ]
 
+-- | The camino application configuration
 data CaminoApp = CaminoApp {
     caminoAppPort :: Int
   , caminoAppDevel :: Bool
@@ -193,6 +196,7 @@ data CaminoApp = CaminoApp {
 caminoAppCaminos :: CaminoApp -> [Camino]
 caminoAppCaminos app = filter (not . caminoFragment) $ caminoConfigCaminos $ caminoAppCaminoConfig app
 
+-- | Preference data in a form that can be used by the individual pages
 data PreferenceData = PreferenceData {
     prefEasyMode :: Bool -- ^ Use easy preferences
   , prefUnits :: U.SystemOfUnits -- ^ The system of units
@@ -303,6 +307,7 @@ instance ToJSON PreferenceData where
         , "start-date" .= prefStartDate prefs
       ]
 
+-- | Default preference data, with a start date
 defaultPreferenceData :: CaminoApp -> Day -> PreferenceData
 defaultPreferenceData master current = let
     units' = U.SIUnits
@@ -338,6 +343,7 @@ defaultPreferenceData master current = let
       , prefStartDate = current
     }
 
+-- | Convert form preference data into travel preferences
 travelPreferencesFrom :: PreferenceData -> TravelPreferences
 travelPreferencesFrom prefs = TravelPreferences {
     preferenceUnits = prefUnits prefs
@@ -354,7 +360,7 @@ travelPreferencesFrom prefs = TravelPreferences {
   , preferencePoiCategories = prefPoiCategories prefs
 }
 
-
+-- | Convert form preference data into camino preferences
 caminoPreferencesFrom :: PreferenceData -> CaminoPreferences
 caminoPreferencesFrom prefs = CaminoPreferences {
     preferenceCamino = prefCamino prefs
@@ -508,19 +514,25 @@ defaultCookieSecure = do
   master <- getYesod
   return $ isPrefixOf "https:" (C.getWebRoot $ caminoAppConfig master)
 
--- | Update this as terms change
+-- | Notive version for notice cookie.
+--
+--   Update this as terms change
 noticeVersion :: Text
 noticeVersion = "Accept 1.0"
 
+-- | The "accept terms" notice cookie
 noticeCookie :: Text
 noticeCookie = "de-calixtinus-notice"
 
+-- | The notice cookie timeout (about half a year)
 noticeAge :: DiffTime
 noticeAge = secondsToDiffTime $ 182 * 24 * 60 * 60 -- About half a year in seconds
 
+-- | The current preferences cookie
 preferencesCookie :: Text
 preferencesCookie = "de-calixtinue-preferences"
 
+-- | The current preferences cookie timeout (about a quarter of a year)
 preferencesAge :: DiffTime
 preferencesAge = secondsToDiffTime $ 91 * 24 * 60 * 60 -- About a quarter of a year in seconds
 
@@ -547,11 +559,13 @@ setNotice accept =
   else
     deleteCookie noticeCookie "/"
 
+-- | Get current preferences from the preferences cookie
 decodePreferences :: Handler (Maybe PreferenceData)
 decodePreferences = do
   saved <- lookupCookie preferencesCookie
   return $ maybe Nothing (\v -> either (const Nothing) Just (eitherDecodeStrict $ encodeUtf8 v)) saved
 
+-- | Store current preferences in the preferences cookie
 encodePreferences :: PreferenceData -> Handler ()
 encodePreferences preferences = do
   secure <- defaultCookieSecure
@@ -566,6 +580,7 @@ encodePreferences preferences = do
   }
   setCookie cookie
 
+-- | Get requested locales from an HTTP request
 getLocales :: MonadHandler m => m [Locale]
 getLocales = do
   langs <- languages

@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Utilities
 Description : 
@@ -58,13 +59,12 @@ selectFromList :: (Ord a) => S.Set a -- ^ The elements to select
   -> [a] -- ^ The resulting list of selected elements, keeping the order of the source list
 selectFromList sel = filter (\v -> S.member v sel)
 
--- Construct a union of a set of elements, only including elements that have not already been seen
+-- | Construct a union of a set of elements, only including elements that have not already been seen
 -- and preserving the implicit order of the input list
 listUnions :: (Eq a, Foldable c) => [c a] -> [a]
 listUnions elts = foldl (\acc coll -> foldl (\acc' v -> if elem v acc' then acc' else acc' ++ [v]) acc coll) [] elts
 
 -- | Basic canonicalisation of common European accented characters
---   OK for Camino placenames
 canonicalise' :: Char -> Char
 canonicalise' '\x00c0' = 'A' -- A grave
 canonicalise' '\x00c1' = 'A' -- A acute
@@ -230,7 +230,12 @@ canonicalise' c = c
 
 
 -- | Canonicalise text, removing accents and diacritics
-canonicalise :: T.Text -> T.Text
+--
+--   This handles common European accented characters.
+--   It could be expanded but is OK for Camino placenames.
+--
+-- >>> canonicalise "Añsaiõ"
+-- "Ansaio"
 canonicalise t = T.map canonicalise' t
 
 partition' :: Eq t => (a -> t) -> [a] -> t -> [a] -> [(t, [a])]
@@ -279,6 +284,8 @@ categorise' 'Z' = "U-Z"
 categorise' _ = "..."
 
 -- | Divide text entries into alhpabetic groups
+--
+--   The fundamental groups are A-E, F-M, N-T, U-Z and ... (other)
 categorise :: T.Text -> T.Text
 categorise "" = "..."
 categorise v = categorise' $ T.head $ canonicalise $ T.toUpper $ T.take 1 v
@@ -385,7 +392,7 @@ firstM p (x:xs) = do
                 then return (Just x)
                 else firstM p xs
 
--- Create an backup file path with an unused filename as the backup
+-- | Create an backup file path with an unused filename as the backup
 backupFilePath :: FilePath -> IO FilePath
 backupFilePath file = do
   let dir = takeDirectory file
@@ -409,7 +416,8 @@ loopM act x = do
         Right v -> pure v
 
 -- | Expand a path with environment variables.
---   Any environment variable of the form `$VAR` is expanded into the equivalent environment variable
+--
+--   Any environment variable of the form @$VAR@ is expanded into the equivalent environment variable
 --   The $TMP variable refers to the temporary file directory
 --   Only simple substitions will work, "$TMP/dir" works, as will "/var/$HOME" but "$TMP-1/dir" or "${TMP} will not
 expandPath :: FilePath -> IO FilePath
@@ -427,6 +435,12 @@ expandPath' piece@('$':name) = case name of
 expandPath' piece = return piece
 
 -- | Get the head of a list or a default value
+--
+-- >>> headWithDefault 1 []
+-- 1
+-- >>> headWithDefault 1 [2, 3]
+-- 2
+
 headWithDefault :: a -> [a] -> a
 headWithDefault d [] = d
 headWithDefault _d (h:_) = h
@@ -436,6 +450,11 @@ headWithError :: [a] -> a
 headWithError l = headWithDefault (error "Unexpected empty list") l
 
 -- | Get the last element of a list or a default value
+--
+-- >>> lastWithDefault 1 []
+-- 1
+-- >>> lastWithDefault 1 [2, 3]
+-- 3
 lastWithDefault :: a -> [a] -> a
 lastWithDefault d [] = d
 lastWithDefault _d (h:t) = NE.last (h NE.:| t)

@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
+{-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Data.Xlsx.Internal
 Description : Implementation of Data.Xslx
@@ -35,16 +36,19 @@ import qualified Data.Text as T (length)
 import Data.Util (unique, maybeMin, headWithDefault)
 
 -- | Render a cell message type into text
+--
+--   Renderers convert Yesod-style I18n messages into plain text
 type Renderer t = t -> Text
 
 -- | A positionable item.
+--
 --   Positionable items can be placed in matrices, with a (row, column) pair indicating where the element goes.
 --   Positions are relative to an enclosing item and start at (0, 0)
 class Positionable a where
   -- | Get the relative position of an item
   pos :: a -> (Int, Int)
 
-  -- Test to see if this is the null (0, 0) position
+  -- | Test to see if this is the null (0, 0) position
   nullPos :: a -> Bool
   nullPos v = pos v == (0, 0)
 
@@ -55,7 +59,7 @@ class Positionable a where
     -> (RowIndex, ColumnIndex) -- ^ The absolute position relative to the base
   absolute row column v = (RowIndex $ row + fst p, ColumnIndex $ column + snd p) where p = pos v
 
--- | Set a cell width
+-- | Set a cell width that can be computed when creating the spreadsheet
 data CellWidth =
     WidthNone -- ^ The default fit, asccepting any
   | WidthFixed Int -- ^ Fixed width (a minimum, given other widths in a column)
@@ -64,7 +68,8 @@ data CellWidth =
   deriving (Eq, Ord, Show, Generic)
 
 -- | Style information.
---   Styles obey semigroup rules, where `a <> b` replaces any style in a with one in b if present
+--
+--   Styles obey semigroup rules, where @a <> b@ replaces any style in @a@ with one in @b@ if present
 data Style = Style {
     _styleAlignment :: Maybe Alignment
   , _styleBorder :: Maybe Border
@@ -153,6 +158,9 @@ instance Monoid Style where
 
 makeLenses ''Style
 
+-- | A map that allows the spreadsheet generator to create an indexed set of style specifications.
+--
+--   Once built, individual cells can be linked to the style indexes
 data StyleMap = StyleMap {
     styleMapCells :: [CellXf]
   , styleMapCellMap :: M.Map Style Int
@@ -167,6 +175,13 @@ data StyleMap = StyleMap {
   , styleMapNumFmts :: M.Map Int FormatCode
 }
 
+-- | A reference to a cell
+--
+--   When the actual spreadsheet is created, cells that need to be included in `Formula`s will have the
+--   reference replaced by the cell address.
+--
+--   When a cell is created, a cell identifier can also be created and linked to the cell.
+--   The cell reference can then be passed around whenever the cell is needed.
 data CellID =
     CellID Text Int -- ^ Base cell identifier
   | CellRangeID CellID CellID -- ^ A range between two cells
@@ -175,6 +190,7 @@ data CellID =
   | CellSubrangeID (Maybe Int) (Maybe Int) (Maybe Int) (Maybe Int) CellID -- ^ A subrange of cell IDs (offset row, offset col, row width, col width)
   deriving (Eq, Ord, Show)
 
+-- | A stream of cell identifiers, ensuring that each newly created reference
 type CellIDStream a = State Int a
 
 -- | Get the next relative cell identifier from a `CellIDStream`
@@ -184,20 +200,25 @@ nextCellID label = do
   modify (+1)
   return (CellID label v)
 
+-- | Create an absolute reference to a cell
 toAbsolute :: CellID -> CellID
 toAbsolute cid = CellAbsoluteID cid
 
+-- | Create a reference to a relative offset to a cell.
 toOffset :: Int -> Int -> CellID -> CellID
 toOffset ro co cid = CellOffsetID ro co cid
 
 toColumn :: Int -> CellID -> CellID
 toColumn co cid = CellSubrangeID Nothing (Just co) Nothing (Just 1) cid
 
--- A comment, based on a list of messages messages
+-- | A comment, based on a list of i18n messages
 data Comment t = Comment (Maybe Text) [t]
   deriving (Show)
 
 -- | A formula, based on cell references
+--
+-- >>> FApply "+" [FInt 23, FInt 2]
+-- FApply "+" [FInt 23,FInt 2]
 data Formula =
     FVar Text -- ^ A variable name (for LETs and the like)
   | FBool Bool -- ^ A literal boolean value
@@ -208,7 +229,8 @@ data Formula =
   | FApply Text [Formula] -- ^ Function application
   deriving (Show, Eq)
 
--- | An expanded cell that can be converted into the sort of index-based positioning that a @Slab needs
+-- | An expanded cell that can be converted into the sort of index-based positioning that a `Slab` needs.
+--
 --   Cells can contain a message type, based on Yesod i18n, that can later be expanded to text.
 --   The message type allows you to internationalise building a spreadsheet, rendering it into locale-appropriate
 --   text once the sheet structure has been built.
@@ -230,14 +252,15 @@ instance Default (Cell t) where
 
 makeLenses ''Cell
 
--- Test to see if a cell is empty, containing no values or styling or styling but nothing to style
+-- | Test to see if a cell is empty, containing no values or styling or styling but nothing to style
 nullCell :: Cell t -> Bool
 nullCell (Cell _ Nothing Nothing Nothing Nothing Nothing Nothing) = True
 nullCell (Cell _ Nothing (Just (Style _ Nothing Nothing _ _ _)) Nothing Nothing Nothing Nothing) = True
 nullCell _ = False
 
 -- | A slab of cells
--- These can be used to compose groups of cells into larger layouts
+--
+--   These can be used to compose groups of cells into larger layouts
 data Slab c =
     SEmpty -- ^ An empty slab of cells, usefull for accumulation
   | SCells Int Int [c] -- ^ A sequence of cells, assumed to have a size and a (0, 0) origin
@@ -263,6 +286,9 @@ instance Functor Slab where
   fmap f (SRow style slab) = SRow style $ fmap f slab
 
 -- | Above operator, argument 1 is above argument 2
+--
+--   This operator can be used to build slabs of cells into a worksheet that
+--   can be laid out in a clean manner.
 infixr 1 >>!
 (>>!) :: Slab c -> Slab c -> Slab c
 SEmpty >>! slab = slab
@@ -270,6 +296,9 @@ slab >>! SEmpty = slab
 slab1 >>! slab2 = SBelow slab1 slab2
 
 -- | Left of operator, argument 1 is left of argument 2
+--
+--   This operator can be used to build slabs of cells into a worksheet that
+--   can be laid out in a clean manner.
 infixr 1 >>-
 (>>-) :: Slab c -> Slab c -> Slab c
 SEmpty >>- slab = slab
@@ -340,6 +369,7 @@ collect collector row column context s@(SRow _ slab) = let
     c1 ++ c2
 
 -- | Create a slab out of a row of unpositioned cells.
+--
 --   If a cell has a specific position, then that position is used and other cells follow.
 --   Otherwise, the next cell will be one over from the current cell.
 --   To gernerate more than one row, set an explicit position in a cell with a row greater than zero.
@@ -366,6 +396,7 @@ rowSlab cells = let
     SCells (rsz + 1) csz (reverse cells')
 
 -- | Create a slab out of a column of unpositioned cells.
+--
 --   If a cell has a specific position, then that position is used and other cells follow.
 --   Otherwise, the next cell will be one down from the current cell.
 --   To gernerate more than one row, set an explicit position in a cell with a row greater than zero.
@@ -508,7 +539,7 @@ createCellMap renderer worksheets = let
     cellIDLookup cmap
 
 
--- | Add a style, using the `<>` operator to a slab of cells
+-- | Add a style, using the `<>` operator, to every cell in a slab of cells
 slabAddStyle :: Style -> Slab (Cell a) -> Slab (Cell a)
 slabAddStyle style slab = fmap (\cell -> cell & cellStyle <>~ Just style) slab
 
@@ -552,6 +583,8 @@ _slabShowLayout :: (Positionable c) => Slab c -> (c -> String) -> String
 _slabShowLayout slab render = unlines (_slabShowLayout' render "" 1 1 slab)
 
 -- | A named worksheet
+--
+--   Names are I18n messages
 data Worksheet t = Worksheet {
       _worksheetName :: t -- ^ The name of the worksheet
     , _worksheetSlab :: Slab (Cell t) -- ^ The slab of cells that describes the worksheet

@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Elevation
 Description : Google Maps Elevation API
@@ -8,6 +9,10 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Access the Google maps elevation API.
+
+
 -}
 module Network.Google.Elevation (
     LatLngElevation(..)
@@ -24,6 +29,7 @@ import Data.Text (intercalate)
 import Network.Google.Maps
 import Web.PathPieces
 
+-- | A location with a potentially attached elevation and resolution (accuracy)
 data LatLngElevation = LatLngElevation {
     lleLocation :: LatLng
   , lleElevation :: Maybe Double
@@ -58,6 +64,7 @@ getElevations' api locations = do
   callGet api "elevation" [("locations", locations')]
 
 -- | Get the elevations for a series of locations
+--
 --   The requests are broken into chunks and then re-assembled at the end
 getElevations :: (MonadIO m, MonadThrow m) => MapApi -> [LatLng] -> m [LatLngElevation]
 getElevations api locations = do

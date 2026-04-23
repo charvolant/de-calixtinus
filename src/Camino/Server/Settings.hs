@@ -1,3 +1,4 @@
+{-# OPTIONS_HADDOCK hide #-}
 module Camino.Server.Settings (
     widgetFile
 ) where

@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Data.Aeson.Formatting
 Description : Formatting and pretty-printing for Aeson
@@ -10,37 +11,46 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Formatting and pretty-printing for Aeson.
+
+This provides a framework where you can declare order and styles of output (seperate lines, inline etc.) and formatting
+(fixed decimals, etc.) for JSON elements.
 -}
 
 module Data.Aeson.Formatting (
-    FieldOptions(..)
-  , JPath(..)
-  , PrintOptions(..)
-
-  , buildPrintOptions
+  -- * Formatting
+    buildPrintOptions
   , encodePretty
-  , fieldFixedFormat
-  , fieldGeneralFormat
-  , fieldIntFormat
-  , foChildren
-  , foInline
-  , foNumberFormat
+  -- * Formatting options
+  , PrintOptions(..)
+  , FieldOptions(..)
+  , JPath(..)
   , foPath
   , foRemove
   , foWrap
+  , foChildren
+  , foInline
+  , foNumberFormat
   , inlineAlways
   , inlineNever
   , inlineWhenLiterals
-  , matchJPath
-  , parseJPath
   , poFields
   , poIndent
+  -- ** Numeric field formatting
+  , fieldFixedFormat
+  , fieldGeneralFormat
+  , fieldIntFormat
+  -- ** Field removal
   , removeAlways
   , removeNever
   , removeNull
   , removeNullEmpty
   , removeNullFalse
   , removeNullZero
+  -- * JPath utilities
+  , matchJPath
+  , parseJPath
+
 ) where
 
 import GHC.Generics (Generic)
@@ -50,7 +60,7 @@ import Data.Aeson
 import Data.Aeson.Key (fromString)
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Builder as B
-import Data.ByteString.Lazy as LB (ByteString, intercalate, intersperse)
+import Data.ByteString.Lazy as LB (ByteString)
 import Data.Default.Class
 import Data.List (find, intercalate, intersperse, sortBy)
 import Data.List.Split (chunksOf)
@@ -68,6 +78,15 @@ import Debug.Trace
 import Data.ByteString.Builder (lazyByteString)
 
 
+-- | A simple JPath element
+--
+--   JPath elements can be expressed as strings:
+--
+--   [*] Any JSON element
+--   [{}] A JSON object
+--   [field] A JSON object field name
+--   [\[\]] A JSON array
+--   [\[1, 2\]] The first and second elements of a JSON array
 data JPath =
     JPAny
   | JPObject
@@ -140,6 +159,13 @@ jpathParser = do
     <|> jpathFieldParser
   return jpath
 
+-- | Parse a JPath element
+--
+--   >>> parseJPath "creator"
+--   JField "creator"
+--
+--   >>> parseJPath "{}"
+--   JObject
 parseJPath :: String -> JPath
 parseJPath s = either (\e -> error $ show e) id $ parse jpathParser "" s
 
@@ -147,7 +173,11 @@ instance ST.IsString JPath where
   fromString = parseJPath
 
 -- | Match a value angainst a jpath specification
-matchJPath :: JPath -> Value -> Maybe Key -> Maybe Int -> Bool
+matchJPath :: JPath -- ^ The JPath specification
+  -> Value -- ^ The JSON value
+  -> Maybe Key -- ^ A specific object field key
+  -> Maybe Int -- ^ A specific array index
+  -> Bool -- True if the value matches
 matchJPath JPAny _ _ _ = True
 matchJPath JPObject (Object _) _ _ = True
 matchJPath (JPField key) (Object km) (Just key') _ = key == key' && KM.member key km
@@ -179,7 +209,6 @@ removeNullEmpty _ = False
 
 -- | Remove a null or false value
 removeNullFalse :: Value -> Bool
-
 removeNullFalse Null = True
 removeNullFalse (Bool False) = True
 removeNullFalse _ = False
@@ -189,7 +218,6 @@ removeNullZero :: Value -> Bool
 removeNullZero Null = True
 removeNullZero (Number 0) = True
 removeNullZero _ = False
-
 
 -- | Do not put inline
 inlineNever :: Value -> Bool
@@ -208,7 +236,7 @@ isComplex (Object _) = True
 isComplex (Array _) = True
 isComplex _ = False
 
--- | Show inline if all sub-elements are leaf values
+-- | Show inline if all sub-elements are simple literal values
 inlineWhenLiterals :: Value -> Bool
 inlineWhenLiterals Null = True
 inlineWhenLiterals (Bool _) = True
@@ -229,6 +257,12 @@ fieldFixedFormat decimals n = B.stringUtf8 $ formatScientific Fixed (Just decima
 fieldIntFormat :: Scientific -> B.Builder
 fieldIntFormat = fieldFixedFormat 0
 
+-- | Pretty-printing options for displaying a particular field
+--
+--   Field options are usually built using lenses. For example
+--   @
+--     def & foPath .~ "time"  & foRemove ?~ removeNull & foNumberFormat ?~ fieldFixedFormat 1
+--   @
 data FieldOptions = FieldOptions {
     _foPath :: JPath
   , _foRemove :: Maybe (Value -> Bool) -- ^ Conditions under which a field will not be output
@@ -284,12 +318,15 @@ mergeFieldOptions fo1 fo2 = fo2
 
 -- | Collected JSON print options
 data PrintOptions = PrintOptions {
-    _poFields :: [(FieldOptions, Int)]
-  , _poIndent :: Int
+    _poFields :: [(FieldOptions, Int)] -- ^ Fields with field options and a print order
+  , _poIndent :: Int -- ^ The indent to use for objects and arrays
 } deriving (Generic, Show)
 
 makeLenses ''PrintOptions
 
+-- | Build a set of print options from a list of field options.
+--
+--   The field options are assumed to be in order of printing and the indent is two spaces.
 buildPrintOptions :: [FieldOptions] -> PrintOptions
 buildPrintOptions options = PrintOptions {
     _poFields = zip options [0..]
@@ -396,6 +433,7 @@ encodePretty' pos fo indent v@(Object km) = let
         <> (fst $ foldl (\(bs, follow) -> \(mb, _, k) -> maybe (bs, follow) (\b -> (bs <> (if follow then "," else mempty) <> "\n" <> indentBuffer' <> (B.stringUtf8 $ show k) <> ": " <> b, True)) mb) (mempty, False) parts'')
         <> "\n" <> indentBuffer <> "}"
 
+-- | Pretty-print a JSON value according to a set of printing options.
 encodePretty :: PrintOptions -> Value -> LB.ByteString
 encodePretty po val = B.toLazyByteString $ encodePretty' [po] def 0 val
 

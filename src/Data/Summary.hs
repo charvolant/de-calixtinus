@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Summary
 Description : Show a summary of complicated information
@@ -10,7 +11,10 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-A class that allows summary information, rather than a detailed show dump of a piece of data
+Show a summary of complicated information
+
+A class that allows summary information, rather than a detailed show dump of a complex piece of data.
+This is usually used to make debugging tractable.
 -}
 module Data.Summary (
     Summary(..)
@@ -26,6 +30,8 @@ import Data.Time.Calendar (Day)
 import Data.Time.Format.ISO8601 (iso8601Show)
 import Debug.Trace (trace)
 
+-- | Instances of `Summary` can produce a cut-down textual representation, suitable for display and debugging
+--   putposes.
 class Summary a where
   -- | Generate a summary of a.
   --   A summary is generally something that can be easily printed for debugging without causing over-sharing
@@ -80,9 +86,10 @@ instance Summary Bool where
 instance Summary Day where
   summary d = pack $ iso8601Show d
 
+-- | Join a sequence of summaries into a comma-separated list of elements.
 joinSummaries :: [Maybe Text] -> Text
 joinSummaries ss = "<" <> intercalate ", " (catMaybes ss) <> ">"
 
--- | Create a trace out of a summarisable object
+-- | Create a trace out of a summarisable object, similar to `traceShowId`
 traceSummaryId :: (Summary a) => a -> a
 traceSummaryId v = trace (summaryString v) v

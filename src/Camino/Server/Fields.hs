@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Fields
 Description : Fields specialised for the De Calixtinus application
@@ -67,6 +68,7 @@ fieldSettingsLabelTooltip :: RenderMessage site msg => msg -- ^ The label messag
 fieldSettingsLabelTooltip msg tooltip = FieldSettings (SomeMessage msg) (Just $ SomeMessage tooltip) Nothing Nothing []
 
 -- | Creates an input with @type="hidden"@ where the hidden fields can be mapped to and from an actual value.
+--
 --   This can be useful when you have something that needs to be decoded in context and a @PathPiece@ just doesn't have the relevant information.
 parsingHiddenField :: (Monad m, PathPiece p, RenderMessage (HandlerSite m) FormMessage)
   => (a -> p) -- ^ The encoder function
@@ -353,7 +355,7 @@ penanceField sou accom = Field
     options = if accom then penanceAccommodationOptions sou else penanceServiceOptions sou
 
 
--- | Create a field that handles preference ranges
+-- | Create a field that maps of elements such a services onto penance values
 penanceMapField :: (RenderMessage site FormMessage, Ord a) => U.SystemOfUnits -> Bool -> Bool -> [(a, Html)] -> Field (HandlerFor site) (M.Map a Penance)
 penanceMapField sou accom allVals values = Field
     { fieldParse = \rawVals -> \_fileVals -> if null rawVals then
@@ -398,6 +400,9 @@ createCheckFieldCondition base positive zlookup (Implies p (Variable v)) = [sham
 createCheckFieldCondition _ _ _ _ = error "Only program clauses permitted"
 
 -- | Create a series of checkboxes for a series of options
+--
+--   The options may have functions that allow or prohibit other options based on selections.
+--   Suitable javascript is generated to make these display correctly.
 implyingCheckListField :: (Ord a, RenderMessage site FormMessage) => (msg -> Html) -> [(Text, msg, a, Maybe msg, Bool)] -> [Formula a] -> [Formula a] -> [Formula a] -> Field (HandlerFor site) (S.Set a)
 implyingCheckListField render options requiredClauses allowedClauses prohibitedClauses = Field
     { fieldParse = \rawVals -> \_fileVals -> let
@@ -616,6 +621,7 @@ $maybe err <- merr
       rlookup = M.fromList $ map (\(key, _, v) -> (key, v)) options
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
 
+-- | A field for a date picker
 dateField :: Monad m => RenderMessage (HandlerSite m) FormMessage => Field m Day
 dateField = Field
     { fieldParse = parseHelper $ parseDate . unpack

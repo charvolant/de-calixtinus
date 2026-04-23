@@ -7,6 +7,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Application
 Description : De Calixtinus yesod application
@@ -15,6 +16,8 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+De Calixtinus yesod application
 
 Yesod application that allows the user to enter preferences and have a route generated.
 -}
@@ -525,11 +528,11 @@ showKml solution = do
     return $ TypedContent kmlType (toContent result)
 
 
--- | The MIME type for KML
+-- The MIME type for KML
 xlsxType :: ContentType
 xlsxType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
--- | Generate a file name for this
+-- Generate a file name for this plan
 xlsxFileName :: CaminoPreferences -> Maybe Pilgrimage -> Text
 xlsxFileName camino _ = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".xlsx"
 
@@ -550,5 +553,6 @@ showXlsx solution = do
     return $ TypedContent xlsxType (toContent result)
 
 
+-- | Run the Yesod camino application
 runCaminoApp :: CaminoApp -> IO ()
 runCaminoApp app = warp (caminoAppPort app) app

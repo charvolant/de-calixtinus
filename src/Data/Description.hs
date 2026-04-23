@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Description
 Description : Descriptive information
@@ -9,19 +10,24 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Handle detailed, potentially localised, descriptive information
+Descriptive information
+
+Handle detailed, potentially localised, descriptive information.
+This information is so common that it gets its own collection.
 -}
 module Data.Description (
+  -- * Descriptive Information
     Description(..)
-  , Image(..)
-  , Note(..)
-  , NoteType(..)
-
   , descriptionSummary
+  , wildcardDescription
+  -- ** Images
+  , Image(..)
   , imageAttribution
   , imageOrigin
   , imageToLink
-  , wildcardDescription
+  -- ** Notes
+  , Note(..)
+  , NoteType(..)
 ) where
 
 import GHC.Generics (Generic)
@@ -35,7 +41,9 @@ import Data.Metadata
 import Data.Text
 import Network.URI
 
--- A type of note
+-- | The type of note
+--
+--   The note type is intended to give a quick guide as to how important a note is and its general content
 data NoteType =
     Information -- ^ A generic piece of information
   | Warning -- ^ A warning about the thing being described
@@ -49,6 +57,8 @@ instance ToJSON NoteType
 instance NFData NoteType
 
 -- | A note with a type and detailed information
+--
+--   Notes represent optional pieces of additional information that can be displayed to provide more detail
 data Note = Note {
     noteType :: NoteType -- ^ The type of note
   , noteText :: Localised TaggedText -- ^ The note substance
@@ -81,12 +91,15 @@ instance ToJSON Note where
 
 instance NFData Note
 
--- | An image descriptor
+-- | An image description and location
+--
+--   Images come as web links to external graphics.
+--   Good practice is to supply metadata with acknowledgements, licensing and other information that can be displayed alongside the image.
 data Image = Image {
-      imageSource :: URI
-    , imageThumbnail :: Maybe URI
-    , imageTitle :: Localised TaggedText
-    , imageMetadata :: Maybe Metadata
+      imageSource :: URI -- ^ The main image location
+    , imageThumbnail :: Maybe URI -- ^ A thumbnail image location
+    , imageTitle :: Localised TaggedText -- ^ A localised title
+    , imageMetadata :: Maybe Metadata -- ^ Optional metadata giving ownership, licence etc.
   } deriving (Show, Generic)
 
 instance FromJSON Image where
@@ -118,7 +131,7 @@ instance NFData Image
 joinText :: Text -> Maybe TaggedText -> Maybe Text -> Maybe Text
 joinText sep mtt mtxt = maybe mtxt (\tt -> Just $ maybe (plainText tt) (\txt -> txt <> sep <> plainText tt) mtxt) mtt
 
--- Construct an attribution statement, if there is something
+-- | Construct an attribution statement, if there is suitable data in the image metadata
 imageAttribution :: Image -> Maybe Text
 imageAttribution image = let
       mmetadata = imageMetadata image
@@ -158,14 +171,15 @@ imageToLink thumb image = let
     TaggedURL rootLocale (Hyperlink url Nothing)
 
 -- | A full description of something, including links and other bits and pieces
---   The sumamry is intended for use instead of, rather than as well as, the descriptive text
---   However, if one or the other is missing, 
+--
+--   The summary is intended for use instead of, rather than as well as, the descriptive text
+--   However, if one or the other is missing, the summary or full text will be constructed.
 data Description = Description {
       descSummary :: Maybe (Localised TaggedText) -- ^ A short, single line summary
     , descText :: Maybe (Localised TaggedText) -- ^ Any descriptive text
     , descNotes :: [Note] -- ^ Additional notes and comments
-    , descAbout :: Maybe (Localised TaggedURL) -- ^ A referencing URI, if resolvable then this can be make into a link
-    , descImage :: Maybe Image -- ^ A link to an image
+    , descAbout :: Maybe (Localised TaggedURL) -- ^ A referencing URI, if resolvable then this can be made into a link
+    , descImage :: Maybe Image -- ^ A link to an image that provides additional graphical support for the description
   }   
   deriving (Show, Generic)
 
@@ -206,13 +220,18 @@ instance ToJSON Description where
 
 instance NFData Description
 
--- | Create a localised instance from a piece of text
+-- | Create a description from a piece of text
+--
+--   The resulting description just has a piece of wildcard text.
 wildcardDescription :: Text -> Description
 wildcardDescription txt = Description Nothing (Just (wildcardText txt)) [] Nothing Nothing
 
 -- | Get a summary of the description
+--
 --   This is either the explicit summary, or the first line of the description text.
---   The result is an appropriate localised collection
+--   The result is an appropriate localised collection.
+--
+--  TODO The summary should just be the first sentence of the description text, if constructed.
 descriptionSummary :: Description -> Localised TaggedText
 descriptionSummary (Description Nothing Nothing _ _ _) = wildcardText ""
 descriptionSummary (Description (Just summary) _ _ _ _) = summary

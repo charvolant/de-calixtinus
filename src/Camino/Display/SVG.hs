@@ -1,18 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : SVG
-Description : Produce a SVG graphics for various bits and pieces
+Description : Produce a SVG graphics for embedding in a camino page
 Copyright   : (c) Doug Palmer, 2025
 License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Produce a SVG graphics for embedding in a camino page
 -}
 
 module Camino.Display.SVG (
-    buildCoordinates -- For testing
- ,  svgElevationProfile
+    svgElevationProfile
+  , buildCoordinates -- Testing
 ) where
 
 import Camino.Camino
@@ -193,6 +196,11 @@ showPathLayout = False
 showElevation :: Location -> String
 showElevation loc = maybe "" show (elevation $ locationPosition loc)
 
+-- | Create a chart showing the elevation profile of a camino.
+--
+--   Location and leg waypoint elevations are used to generate a curve that approximates the landscape that the plan follows.
+--   The curve is smoothed via a cubic spline.
+--   Important and useful locations are labelled.
 svgElevationProfile :: Config -> Double -> (Location -> Bool) -> (Location -> Bool) -> [Leg] -> HtmlUrlI18n CaminoMsg CaminoRoute
 svgElevationProfile _config maxy label important legs = [ihamlet|
   <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">

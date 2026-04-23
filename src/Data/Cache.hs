@@ -2,6 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Cache
 Description : Cache data and expire it after a while
@@ -11,28 +12,33 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-A store of items, where items can be removed from the cache before the cache gets too large or when the items
-get too old.
+Cache data and expire it after a while
+
+A store of items, where items can be removed from the cache according to a policy.
+Usually before the cache gets too large or when the items get too old.
 
 Caches are, essentially opaqueish handles to IO-like stores.
 All interactions take place within the `IO` monad and `IORef`s are used to hold mutable state.
 
 -}
 module Data.Cache (
+  -- * Cache
     Cache(..)
-  , CacheLogger
   , IsNamer(..)
-
   , cacheDelete
   , cacheEntries
   , cacheExpire
   , cacheLookup
   , cachePut
-  , newCompositeCache
-  , newDummyCache
-  , newFileCache
+
+  -- * Create caches
   , newMemCache
   , newMemCacheWithExpiry
+  , newFileCache
+  , newCompositeCache
+  , newDummyCache
+  -- * Logging
+  , CacheLogger
 ) where
 
 import Control.Monad
@@ -51,7 +57,7 @@ import System.Directory
 import System.FilePath
 import System.IO
 
--- A cache logging function
+-- | A cache logging function
 type CacheLogger = String -> IO ()
 
 -- | The null logging action
@@ -59,6 +65,8 @@ nullLog :: CacheLogger
 nullLog _msg = return ()
 
 -- | Items of this sort can be used to name keys, files etc
+--
+--   These get used when some sort of external storage is required.
 class IsNamer a where
   toName :: a -> String
 
@@ -68,7 +76,7 @@ instance IsNamer String where
 instance IsNamer Text where
   toName = toName . unpack
 
--- | The
+-- | The expiry policty for a cache
 data CachePolicy k v = CachePolicy {
     cpSize :: Maybe Int -- ^ The maximum size of the cache
   , cpRetain :: Maybe NominalDiffTime -- ^ The maximum age of data in the cache, if absent than data is returned indefinately
@@ -76,9 +84,12 @@ data CachePolicy k v = CachePolicy {
 }
 
 -- | A cache
+--
+--  Caches have an expiry policy and functions that can be used to query and manipulate the cache.
+--  The caches themselves are created by the @new...@ functions.
 data (Ord k) => Cache k v = Cache {
     caID :: String -- ^ The name, for logging
-  , caPolicy :: CachePolicy k v -- ^ The retentionm and expiry policy for this cache
+  , caPolicy :: CachePolicy k v -- ^ The retention and expiry policy for this cache
   , caEntries :: Cache k v -> IO Int  -- ^ Return the current number of entries in the cache
   , caLookup :: Cache k v -> k -> IO (Maybe v) -- ^ Lookup a value in the cache
   , caPut :: Cache k v -> k -> v -> IO () -- ^ Put a value into the cache
@@ -103,7 +114,7 @@ cachePut cache key value = (caPut cache) cache key value
 cacheDelete :: (Ord k) => Cache k v -> k -> IO ()
 cacheDelete cache key = (caDelete cache) cache key
 
--- Check the cache for expired entries
+-- | Check the cache for expired entries
 cacheExpire :: (Ord k) => Cache k v -> IO ()
 cacheExpire cache = (caExpire cache) cache
 
@@ -253,8 +264,6 @@ memCacheExpiry' cache expiry = do
 memCacheExpiry'' :: (Ord k) => UTCTime -> M.Map k (CacheEntry k v) -> (M.Map k (CacheEntry k v), ())
 memCacheExpiry'' cutoff entries = (M.filter (\ce -> ceAccessed ce >= cutoff) entries, ())
 
--- | Create a default memory cache with a specific size
---   The default cache has a least recently used removal policy
 newMemCache' :: (Ord k, Real t) => String -> Maybe CacheLogger -> Maybe Int -> Maybe t -> IO (Cache k v)
 newMemCache' ident mlogger msize mexpiry = do
   current <- getCurrentTime
@@ -279,12 +288,19 @@ newMemCache' ident mlogger msize mexpiry = do
     , caLog = maybe nullLog id mlogger
     }
 
--- | A memory cache with a size and no expiry time
-newMemCache :: (Ord k) => String -> Maybe CacheLogger -> Int -> IO (Cache k v)
+-- | Create a memory cache with a size and no expiry time
+newMemCache :: (Ord k) => String -- ^ Cache ID
+  -> Maybe CacheLogger -- ^ An optional cache action logger
+  -> Int -- ^ The cache size
+  -> IO (Cache k v) -- ^ The resulting cache
 newMemCache ident mlogger size = newMemCache' ident mlogger (Just size) (Nothing :: Maybe Float)
 
--- | A memory cache with a size and an expiry time
-newMemCacheWithExpiry :: (Ord k, Real t) => String -> Maybe CacheLogger -> Int -> t -> IO (Cache k v)
+-- | Create a memory cache with a size and an expiry time
+newMemCacheWithExpiry :: (Ord k, Real t) => String -- ^ Cache ID
+  -> Maybe CacheLogger -- ^ An optional cache action logger
+  -> Int -- ^ The cache size
+  -> t -- The expiry time in seconds
+  -> IO (Cache k v)
 newMemCacheWithExpiry ident mlogger size expiry = newMemCache' ident mlogger (Just size) (Just expiry)
 
 -- | A file-based cache.
@@ -400,7 +416,7 @@ fileCacheExpiry' cache expiry = do
     (fcRoot cache)
   writeIORef (fcLastScan cache) current
 
--- | Create a default memory cache with a specific size
+-- | Create a cache where entries are persistently stored.
 --   The default cache has a least recently used removal policy
 newFileCache' :: (IsNamer k, Ord k, ToJSON v, FromJSON v, Real t) => String -> Maybe CacheLogger -> FilePath -> Maybe Int -> Maybe t -> IO (Cache k v)
 newFileCache' ident mlogger root msize mexpiry = do
@@ -429,9 +445,19 @@ newFileCache' ident mlogger root msize mexpiry = do
   fileCacheExpire True fileCache cache
   return cache
 
--- | A new file cache with a root on the filesystem and an expiry time
--- | File roots may have environment/tmp variables in them, such as $HOME, expended by `expandPath`
-newFileCache :: (IsNamer k, Ord k, ToJSON v, FromJSON v, Real t) => String -> Maybe CacheLogger -> FilePath -> t -> IO (Cache k v)
+-- | Create new file cache with a root on the filesystem and an expiry time
+--
+--   File roots may have environment/tmp variables in them, such as $HOME, expended by `expandPath`.
+--   Subdirectories are created under the root as required.
+--
+--   Existing files in the root directory are loaded as cache elements.
+--
+--   Object being stored are stored as JSON.
+newFileCache :: (IsNamer k, Ord k, ToJSON v, FromJSON v, Real t) => String -- ^ The cache ID
+  -> Maybe CacheLogger -- ^ And optional logger
+  -> FilePath -- ^ The root storage path for cache entries.
+  -> t -- ^ The expirty time in seconds
+  -> IO (Cache k v) -- ^ A file cache
 newFileCache ident mlogger root expiry = do
   root' <- expandPath root
   newFileCache' ident mlogger root' Nothing (Just expiry)
@@ -470,7 +496,12 @@ compositeCacheExpire primary secondary _base = do
   cacheExpire secondary
 
 -- | Create a composite cache from two caches
-newCompositeCache :: (Ord k) => String -> Cache k v -> Cache k v -> Cache k v
+--
+--   Composite caches usually have a faster, smaller front cache and a slower, larger backing cache.
+newCompositeCache :: (Ord k) => String -- ^ The cache ID
+  -> Cache k v -- ^ The front cache
+  -> Cache k v -- ^ The backing cache
+  -> Cache k v -- ^ The resulting composite cache
 newCompositeCache ident primary secondary = Cache {
       caID = ident
     , caPolicy = CachePolicy {

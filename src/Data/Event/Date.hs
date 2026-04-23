@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Data.Event.Date
 Description : Calculate dates according to calendars
@@ -9,7 +10,13 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Find the nearest date in a calendar for a specific date
+Calculate dates according to `EventCalendar`s.
+
+Find the nearest date in a calendar for a specific date.
+
+Since calendars may refer to regional holidays, closed days or specific public holidays, these computations
+are evaluated in the context of a `MonadReader` that can provide an environment which implements `HasCalendarConfig`
+and `HasRegionConfig`
 -}
 module Data.Event.Date (
     calendarDateOnOrAfter
@@ -31,7 +38,11 @@ import Data.Time.Calendar.MonthDay
 
 
 -- | Calculate the nth weekday of a month for a day
+--
 --   In cases of the fifth day-of-week of the month, if it overflows it becomes the fourth day-of-week of the month
+--
+-- >>> nthWeekOnOf Third Monday (fromGregorian 2026 March 5)
+-- 2026-03-16
 nthWeekOnOf :: WeekOfMonth -- ^ The week of the month
   -> DayOfWeek -- ^ The day of the week
   -> Day -- ^ The target date
@@ -60,6 +71,9 @@ nthWeekOnOf nth dow day = let
 
 
 -- Get the closest calendar date before the given date
+--
+-- >>> runReader (calendarDateOnOrBefore (Weekly $ S.fromList [Monday, Tuesday]) (fromGregorian 2026 March 5)) (createCalendarRegionConfig [] [])
+-- 2026-03-02
 calendarDateOnOrBefore :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => EventCalendar -- ^ The calendar to test against
   -> Day -- ^ The day to use
   -> m Day -- ^ The closest calendar date
@@ -136,6 +150,9 @@ calendarDateOnOrBefore'' calendar day = do
     calendarDateOnOrBefore'' calendar prev
 
 -- Get the closest calendar date after the given date
+--
+-- >>> runReader (calendarDateOnOrAfter (Weekly $ S.fromList [Monday, Tuesday]) (fromGregorian 2026 March 5)) (createCalendarRegionConfig [] [])
+-- 2026-03-10
 calendarDateOnOrAfter :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => EventCalendar -- ^ The calendar to test against
   -> Day -- ^ The day to use
   -> m Day -- ^ The closest calendar date
@@ -222,6 +239,12 @@ calendarDateOnOrAfter'' calendar day = do
     calendarDateOnOrAfter'' calendar next
 
 -- | See if a particular day is in a calendar
+--
+-- >>> runReader (inCalendar (Weekly $ S.fromList [Monday, Tuesday]) (fromGregorian 2026 March 5)) (createCalendarRegionConfig [] [])
+-- False
+--
+-- >>> runReader (inCalendar (Weekly $ S.fromList [Monday, Tuesday]) (fromGregorian 2026 March 9)) (createCalendarRegionConfig [] [])
+-- True
 inCalendar :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => EventCalendar -- ^ The calendar to test against
   -> Day -- ^ The day to test 
   -> m Bool -- ^ True of the day fits the calendar
@@ -266,6 +289,9 @@ inCalendar (ClosedDay region) day = do
 inCalendar (Conditional calendar _note) day = inCalendar calendar day
 
 -- | Is this day a day where shops etc. are closed?
+--
+-- >>> runReader (noServicesDay europe (fromGregorian 2026 March 8)) (createCalendarRegionConfig [] [europe])
+-- True
 noServicesDay :: (MonadReader env m, HasCalendarConfig env, HasRegionConfig env) => Region -> Day -> m Bool
 noServicesDay region day = do
   holidays <- mapM (\c -> inCalendar c day) (getRegionalHolidays region)

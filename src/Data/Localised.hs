@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Localised
 Description : Locale-specific text and formatting
@@ -9,26 +10,29 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
+Locale-specific text and formatting
+
 Handle the need to have language-specific text and formatting for things like text, dates and numbers.
 Or, at least it would if things like @Formatting@ were locale-friendly.
+
+The basic unit of localisation is a `Locale` which can contain information about a specific language, dialect and  region.
+Locales contain information such as days of the week, month names, standard time formats, timezones and the like.
+Locales have identifiers that follow the standard ISO conventions for naming languages and dialogues,
+e.g. "en-AU", "es" or "fra".
+
+Locales form a heirachy, with the generic `rootLocale` at the top, essentially English.
+The root locale contains complete information about how to represent localised information.
+Children may selectively override that information;
+e.g. "*" (root locale) <- "pt" (Portuguese, overrides day and month names etc) <- "pt-BR" (Brazilian, overrides time zones)
 
 This module is intended to be JSON-friendly, with a simple JSON string having an "obvious" interpretation
 as a wild-card localisation.
 -}
 
 module Data.Localised (
-    Hyperlink(..)
-  , Locale(..)
-  , Localised(..)
-  , Tagged(..)
-  , TaggedLink(..)
-  , TaggedText(..)
-  , TaggedURL(..)
+  -- * Locales
+    Locale(..)
   , WeekOfMonth(..)
-
-  , appendText
-  , elements
-  , invalidLink
   , localeFromID
   , localeFromIDOrError
   , localeLanguageTag
@@ -36,15 +40,27 @@ module Data.Localised (
   , localeOrdinalRender
   , localeTimeLocale
   , localeWeekOfMonthRender
+  , rootLocale
+  , rootTimeLocale
+  -- * Localised Values
+  , Tagged(..)
+  , Localised(..)
+  , appendText
+  -- ** Text
+  , TaggedText(..)
   , localise
   , localiseDefault
   , localiseText
   , parseTagged
-  , rootLocale
-  , rootTimeLocale
+  , wildcardText
+  , elements
+  -- ** Links
+  , Hyperlink(..)
+  , TaggedLink(..)
+  , TaggedURL(..)
+  , invalidLink
   , textToUri
   , uriToText
-  , wildcardText
 ) where
 
 import GHC.Generics
@@ -90,7 +106,7 @@ textToUri txt = if isJust absolute' then
 uriToText :: URI -> Text
 uriToText uri = pack $ (uriToString id uri) ""
 
--- For making statements like "last Tuesday of the month" etc.
+-- | For making statements like "last Tuesday of the month" etc.
 data WeekOfMonth =
     First
   | Second
@@ -105,15 +121,17 @@ instance ToJSON WeekOfMonth
 instance NFData WeekOfMonth
 
 -- | A locale specification
+--
+-- Most of the fields are maybes and, if Nothing, then default to the value in the parent locale.
 data Locale = Locale {
     localeParent :: Maybe Locale
-  , localeID :: Text -- ^ The IETF specifier for the locale
-  , localeMatches :: [Text] -- ^ Alternative IETF specifier that match the locale
-  , localeLanguage :: Maybe [Text] -- ^ The language codes
-  , localeCountry :: Maybe [Text] -- ^ The country codes
+  , localeID :: Text -- ^ The IETF specifier for the locale (eg. "en-US")
+  , localeMatches :: [Text] -- ^ Alternative IETF specifier that match the locale ("eng_US")
+  , localeLanguage :: Maybe [Text] -- ^ The language codes ("en")
+  , localeCountry :: Maybe [Text] -- ^ The country codes ("US")
   , localeTime :: Maybe TimeLocale -- ^ The time locale to use
-  , localeOrdinals :: Maybe (Int -> Text)
-  , localeWeekOfMonth :: Maybe (WeekOfMonth -> Text)
+  , localeOrdinals :: Maybe (Int -> Text) -- ^ Format an integer to an ordinal abbreviation (1 -> "1st", 22 -> "22nd", etc)
+  , localeWeekOfMonth :: Maybe (WeekOfMonth -> Text) -- ^ Convert a week of the month into text ("second")
 } deriving (Generic)
 
 instance Show Locale where
@@ -137,6 +155,9 @@ instance NFData Locale
 instance IsString Locale where
   fromString = localeFromIDOrError . pack
 
+-- | Get the standard language tag for this locale.
+--
+--   In the case of multiple tags (eg. "en", "eng") then the first tag is considered to be the most standard
 localeLanguageTag :: Locale -> Text
 localeLanguageTag loc = case langs of
     [] -> maybe "" localeLanguageTag (localeParent loc)
@@ -372,6 +393,8 @@ rootWeekOfMonth Fifth = "fifth"
 rootWeekOfMonth Last = "last"
 
 -- | The base, wildcard locale
+--
+--  This has an ID of "*" and defaults to English-language names and conventions
 rootLocale :: Locale
 rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale) (Just rootOrdinals) (Just rootWeekOfMonth)
 
@@ -386,10 +409,20 @@ basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus",
 asturianLocale = Locale (Just rootLocale) "ast" [ ] (Just ["ast"]) Nothing (Just asturianTimeLocale) Nothing Nothing
 
 -- | Decode a locale identifier into a locale specification
---   If the locale cannot be identifier, the @rootLocale@ is returned
---   The current languages/regions are supported, corresponding to those encountered on the Camino:
---   Any(*), English, English/US, English/UK, French, Galacian, Portuguese, Spanish
-localeFromID :: Text -- ^ The locale identifier 
+--   If the locale cannot be identified, the @rootLocale@ is returned
+--   The current languages/regions are supported, mostly corresponding to those encountered on the Camino:
+--
+--   [*] The root locale
+--   [en] Generic English
+--   [en-US] English, United States localisation
+--   [en-GB] English, United Kingdom localisation
+--   [pt] Generic Portuguese
+--   [es] Generic Spanish
+--   [ga] Galacian
+--   [ast] Asturian
+--   [fr] Generic French
+--   [eu] Basque
+localeFromID :: Text -- ^ The locale identifier
   -> Maybe Locale -- ^ The resulting locale, if there is one
 localeFromID "" = Just rootLocale
 localeFromID "*" = Just rootLocale
@@ -429,7 +462,7 @@ localeFromID v = let
       localeFromID (toLower lang)  
 
 -- | Get a locale and throw a fit if it's not found
---   Useful when reading from JSON
+--   (Useful when reading from JSON)
 localeFromIDOrError :: Text -> Locale
 localeFromIDOrError v = maybe
   (error $ "Invalid locale " ++ unpack v)
@@ -437,6 +470,8 @@ localeFromIDOrError v = maybe
   (localeFromID v)
   
 -- | The separator in text that indicates a locale tagged onto the end of the string
+--
+--   Eg. "Hello\@en" or "Bonjour\@fr" means "Hello" in English and "Bonjour" in French
 localeSeparator :: Text
 localeSeparator = "@"
 
@@ -446,19 +481,20 @@ localeTimeLocale (Locale _ _ _ _ _ (Just tl) _ _) = tl
 localeTimeLocale (Locale Nothing _ _ _ _ Nothing _ _) = rootTimeLocale -- Should never happen
 localeTimeLocale (Locale (Just parent) _ _ _ _ Nothing _ _) = localeTimeLocale parent
 
--- | Get the time locale for this locale, working up the parent structure if not immediately found
+-- | Get the ordinal formatting function for this locale, working up the parent structure if not immediately found
 localeOrdinalRender :: Locale -> (Int -> Text)
 localeOrdinalRender (Locale _ _ _ _ _ _ (Just ordinals) _) = ordinals
 localeOrdinalRender (Locale Nothing _ _ _ _ _ Nothing _) = rootOrdinals -- Should never happen
 localeOrdinalRender (Locale (Just parent) _ _ _ _ _ Nothing _) = localeOrdinalRender parent
 
--- | Get the time locale for this locale, working up the parent structure if not immediately found
+-- | Get the week of month formatting function for this locale, working up the parent structure if not immediately found
 localeWeekOfMonthRender :: Locale -> (WeekOfMonth -> Text)
 localeWeekOfMonthRender (Locale _ _ _ _ _ _ _ (Just wom)) = wom
 localeWeekOfMonthRender (Locale Nothing _ _ _ _ _ _ Nothing) = rootWeekOfMonth -- Should never happen
 localeWeekOfMonthRender (Locale (Just parent) _ _ _ _ _ _ Nothing) = localeWeekOfMonthRender parent
 
 -- | Parse a piece of text with an optional locale tage at the end into a locale/text pair
+--
 --   For exampele @"Hello@fr"@ becomes @(french, "Hello")@ and @"Nothing"@ becomes @(root, "Nothing")@
 parseTagged :: Text -> (Locale, Text)
 parseTagged txt = (maybe rootLocale id locale'', txt'')
@@ -479,7 +515,7 @@ class Tagged a where
   addText :: a -> Text -> a
 
 
--- | Information that contains a link
+-- | Information that contains a link (URI)
 class TaggedLink a where
   -- | The link
   link :: a -> URI
@@ -491,7 +527,7 @@ class TaggedLink a where
   resolveLink basel tl = if uriIsAbsolute (link tl) then url' else basel <> "/" <> url' where url' = linkText tl
 
 -- | A piece of localised text tgged by a locale specification
---   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
+--   In JSON, localised text can be written as @Text\@Locale@ eg "Hello\@en", "Hola\@es"
 data TaggedText = TaggedText Locale Text 
   deriving (Show, Eq, Ord, Generic)
 
@@ -550,7 +586,6 @@ instance ToJSON Hyperlink where
 instance NFData Hyperlink
 
 -- | A URL with potential localisation and title
---   In JSON, localised text can be written as @Text\@Locale@ eg "Hello@en", "Hola@es"
 data TaggedURL = TaggedURL Locale Hyperlink
   deriving (Show, Eq, Ord, Generic)
 
@@ -563,7 +598,7 @@ instance Tagged TaggedURL where
 instance TaggedLink TaggedURL where
   link (TaggedURL _ (Hyperlink url _)) = url
 
--- A link to an invalid or 404 page
+-- | A link to an invalid or 404 page
 invalidLink :: TaggedURL
 invalidLink = TaggedURL rootLocale (Hyperlink (textToUri "invalid") (Just "Invalid"))
 
@@ -633,9 +668,10 @@ elements (Localised elts) = elts
 appendText :: (Tagged a) => Localised a -> Text -> Localised a
 appendText (Localised elts) txt = Localised (map (\elt -> elt `addText` txt) elts)
 
--- | Choose the most appropriately localised piece of text for a list of locales
---   If there is no matching text and the 
---   If there is only one piece of text, then that is used regardless
+-- | Choose the most appropriately localised element for a list of locales
+--
+--   If there is no matching locale, then the root locale is used as a backup.
+--   If there is only one element, then that is used regardless
 localise :: (Tagged a) => [Locale] -> Localised a -> Maybe a
 localise _ (Localised []) = Nothing -- ^ Empty list of tags
 localise _ (Localised [elt]) = Just elt -- Default case for a singleton
@@ -653,15 +689,15 @@ localise' (l:lr) lt@(Localised elts) = case find (\elt -> locale elt == l) elts 
   mtt' -> mtt'
   
 -- | Choose the most appropriately localised piece of text for a list of locales
---   See @localise@
+--   See `localise`
 localiseText :: (Tagged a) => [Locale] -> Localised a -> Text
 localiseText locales lt = maybe "" id (plainText <$> localise locales lt)
 
 -- | Choose the default text
---   See @localiseText@
+--   See `localiseText`
 localiseDefault :: (Tagged a) => Localised a -> Text
 localiseDefault lt = localiseText [] lt
 
--- | Create a localised instance from a piece of text
+-- | Create a simple localised instance from a piece of text
 wildcardText :: (Tagged a) => Text -> Localised a
 wildcardText txt = Localised [fromText txt]

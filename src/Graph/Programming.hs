@@ -1,6 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Programming
 Description : Forward-chaining dynamic programming 
@@ -10,27 +11,35 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-Here is a longer description of this module, containing some
-commentary with @some markup@.
+Forward-chaining dynamic programming
+
+Choose an optimal path through a graph, dividing the graph into stages.
+The programming is forward chaining: all possible routes are built, using the incremental optimisation of
+dynamic programming to reduce the search space and then the best route is selected from a table of possibilities.
+
+The optimal paths and stages are expressed as `Chains` of vertices and edges.
 -}
 module Graph.Programming (
-    AcceptFunction
-  , Chain(..)
-  , ChainGraph
+  -- * Solution Evaluation
+    Score(..)
+  , AcceptFunction
   , ChoiceFunction
   , EvaluationFunction
+  , SelectFunction
   , Failure(..)
-  , Score(..)
-
   , emptyFailure
-  , extend
   , failure
-  , forwards
-  , fromChains
-  , constructTable
+ -- * Chains
+  , Chain(..)
+  , ChainGraph
   , passed
-  , paths
+  , fromChains
+  -- * Programming
   , program
+  , constructTable
+  , extend
+  , forwards
+  , paths
   , step
 ) where
 
@@ -43,10 +52,13 @@ import Data.List (nub, find)
 import Data.Text (Text)
 
 -- | A measure that can be used to evaluate a programming solution.
+--
 --   Scores follow the rules of an ordered monoid, with @mempty@ indicating a zero
 --   score and @<>@ composing scores according to whatever rule is specified.
---   The @invalid@ score represents an unreachable path and has the following rules:
---   @invalid@ >= a and @invalid@ @<>@ a = a @<>@ @invalid@ = @invalid@.
+--   The @invalid@ score represents an unreachable path and has the following properties
+--
+--   prop> invalid >= a
+--   prop> invalid <> a = a <> invalid = invalid.
 class (Eq s, Ord s, Show s, Monoid s) => Score s where
   -- | Construct an invalid score - a score that indicates that the solution cannot be used
   invalid :: s
@@ -55,7 +67,11 @@ class (Eq s, Ord s, Show s, Monoid s) => Score s where
   isInvalid :: s -> Bool
   isInvalid sc = sc == invalid
 
--- | Describe a chain (path with a score) in
+-- | Describe a chain (path with a score) from a start to an end vertex along a sequence of edges.
+--
+--   Chains have an evaluated `Score` attached.
+--
+--   Chains are, themselves, `Edge`s, with the start and finish the source and target, and can be collected together into a `ChainGraph`.
 data (Edge e v, Score s) => Chain v e s = Chain {
   start :: v,
   finish :: v,
@@ -79,6 +95,8 @@ instance (Edge e v, Score s) => Edge (Chain v e s) v where
   target = finish
 
 -- | A chain graph for further processing
+--
+--   Chain graphs are built with `Chain`s as edges and the start and finish of each chain as vertices.
 data Edge e v => ChainGraph v e s = ChainGraph {
   forwards :: M.Map v (M.Map v (Chain v e s)),
   reverses :: M.Map v (M.Map v (Chain v e s))
@@ -108,19 +126,27 @@ instance (Edge e v, Score s, NFData v, NFData e, NFData s) => NFData (ChainGraph
     `deepseq` ()
 
 -- | Accept a sequence of elements as a possible part
+--
+--   Accept functions need to cut off sequences that are beyond saving, pruning the search space for the programming algorithm
 type AcceptFunction e = [e] -> Bool
 
--- | Evaluate a sequence of elements to give a possibly modified sequence and a score
+-- | Evaluate a sequence of elements to give a (possibly modified) sequence and a score
 type EvaluationFunction e s = [e] -> ([e], s)
 
 -- | Choose a preferred chain out of two possibilities
+--
+--   In general, the chain with the lower score will be selected, however that is subject to the whims of the programmer
 type ChoiceFunction v e s = Chain v e s -> Chain v e s -> Chain v e s
 
--- | Choose whether a vertex is usable
+-- | Choose whether a vertex is usable during programming
 type SelectFunction v = v -> Bool
 
 -- | Construct a chain graph from a list of chains
-fromChains :: (Edge e v, Score s) => EvaluationFunction e s -> [Chain v e s] -> ChainGraph v e s
+--
+--  `invalid` chains are not included
+fromChains :: (Edge e v, Score s) => EvaluationFunction e s -- ^ evaluate the chain before including it in the graph (not used)
+  -> [Chain v e s] -- ^ The list of chains to build into a graph
+  -> ChainGraph v e s -- ^ The resulting chain graph
 fromChains _evaluate chains  =
   let
      chains' = filter (\c -> start c /= finish c && (not $ isInvalid $ score c)) chains
@@ -135,10 +161,13 @@ fromChains _evaluate chains  =
         ) finishes
   }
 
--- | Construct a chain graph from a list of chains
+-- | Construct a chain graph
 emptyChainGraph :: (Edge e v) => ChainGraph v e s
 emptyChainGraph  = ChainGraph M.empty M.empty
 
+-- | A failure in programming
+--
+--   Programming failures attempt to report the source of the failure and the underlying context
 data (Edge e v, Score s1, Score s2) => Failure v e s1 s2 = Failure Text (Maybe v) (ChainGraph v e s1) (ChainGraph v (Chain v e s1) s2)
  deriving (Show)
 
@@ -163,8 +192,12 @@ emptyFailure :: (Edge e v, Score s1, Score s2) => Text -- ^ The error message
   -> Failure v e s1 s2 -- THe resulting failure
 emptyFailure msg v = failure msg v emptyChainGraph emptyChainGraph
 
--- Extend a stage with a new edge
-extend :: (Edge e v, Score s) => AcceptFunction e -> EvaluationFunction e s -> Chain v e s -> e -> Maybe (Chain v e s)
+-- | Extend a stage with a new edge
+extend :: (Edge e v, Score s) => AcceptFunction e -- ^ Accept an sequence of edges as usable before evaluation
+  -> EvaluationFunction e s -- ^ Evaluate the resulting chain
+  -> Chain v e s -- ^ The initial chain
+  -> e -- ^ The edge to add to the initial chain
+  -> Maybe (Chain v e s) -- ^ Either a new, re-evaluated, chain with the edge added or nothing if the path is not accepted
 extend accept evaluate chain edg =
   let
     path' = (path chain) ++ [edg]
@@ -181,8 +214,13 @@ extend accept evaluate chain edg =
     else
       Nothing
 
--- Compute new paths from a list of chains
-paths :: (Graph g e v, Score s) => g -> AcceptFunction e -> EvaluationFunction e s -> [Chain v e s] -> v -> [Chain v e s]
+-- | Compute new paths from a list of chains
+paths :: (Graph g e v, Score s) => g -- ^ The source graph
+  -> AcceptFunction e -- ^ Accept an sequence of edges as usable before evaluation
+  -> EvaluationFunction e s -- ^ Evaluate the resulting chain
+  -> [Chain v e s] -- ^ A pre-exisiting list of chains
+  -> v -- ^ The potential target vertex
+  -> [Chain v e s] -- ^ A list of new chains that have the target vertex as a finish
 paths graph accept eval current next =
   let
     incoming' = incoming graph next
@@ -197,7 +235,15 @@ transpose' ::(Edge e v, Score s) => ChoiceFunction v e s -> [Chain v e s] -> M.M
 transpose' choice chains =
   foldl (\sm -> \s -> let k = (start s, finish s) in M.insertWith choice k s sm) M.empty chains
 
-step :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> S.Set v -> [Chain v e s] -> [Chain v e s]
+-- | Take a single programming step
+--
+--   Extend the chains between start and finish vertices one step along the graph and choose the optimal chain between each pair.
+step :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -- ^ Choose between two chains
+  -> AcceptFunction e -- ^ Accept an sequence of edges as usable before evaluation
+  -> EvaluationFunction e s -- ^ Evaluate a candidiate chain
+  -> S.Set v -- The set of vertices that are reachable
+  -> [Chain v e s] -- ^ The current list of chains
+  -> [Chain v e s] -- ^ A new list of chains, extending the chains one step
 step graph choice accept eval reachable' current =
   let
     vertices = available graph reachable' (S.fromList $ map finish current) -- Next available vertices
@@ -218,7 +264,7 @@ constructTable' graph choice accept eval reachable' current =
   in
     if length current == length update then update else constructTable' graph choice accept eval reachable' update
 
--- | Construct a table of stages from vertices that lead from/to a begin/end point
+-- | Construct a table of stages from vertices that lead fron\/to a begin\/end point
 constructTable :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> SelectFunction v -> v -> v -> ChainGraph v e s
 constructTable graph choice accept eval select begin end =
   let
@@ -251,6 +297,8 @@ findBreak chain begin end = findBreak' chain begin end S.empty (S.singleton begi
 
 
 -- | Construct a program consisting of a chain of chains that gives the optimal value for traversing the graph from begin to end
+--
+--   The reslt is a chain of stages, with each stage a chain of edges between a start and end point.
 program :: (Graph g e v, Score s1, Score s2) => g -- ^ The graph to traverse
   -> ChoiceFunction v (Chain v e s2) s1 -- ^ The choice function for programs
   -> AcceptFunction (Chain v e s2)  -- The accept function for programs

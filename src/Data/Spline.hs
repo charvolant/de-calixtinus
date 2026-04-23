@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Spline
 Description : Create and use splines
@@ -8,25 +9,40 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Create and use cubic splines.
+
+Cubic splines can be used to take a sequence of points an draw a "natural-looking" curve that smoothly passes
+through each point.
+A series of cubic polynomials, one for each interval then connects the points.
+If the points are the sequence \( (x_0, y_0), (x_1, y_1) \ldots (x_n, y_n) \) then the splines,
+ \( S_{i}(x) \) will have the properties that \( S_{i - 1}(x_i) = S_{i}(x_i) = y_i \) and
+ \( S_{i-1}^{\prime}(x_i) = S_{i}^{\prime}(x_i) \).
+This is enough to make everything look smooth and good.
+
+Graphics systems, such as SVG, do not generally use splines.
+Instead, splines can be convered into `Bezier` curves.
 -}
 
 module Data.Spline (
-    Bezier(..)
-  , Spline(..)
+  -- * Splines
+    Spline(..)
   , SplineBoundary(..)
-
-  , bezierAt
-  , bezierSlopeAt
   , makeSpline
   , spline2ndDevs
   , splineAt
   , splineSlopeAt
+  -- * Bezier Curves
+  , Bezier(..)
+  , bezierAt
+  , bezierSlopeAt
   , toBezier
 ) where
 
 -- | A spline piece
---   The spline piece runs from x0 to x1 (x0 < x1) with the equation
---   y(x) = a * t^3 + b * t^2 + c * t + d where t = x - x0
+--
+--   The spline piece runs from \(x_0\) to \(x_1\), \( x_0 < x_1 \) with the equation
+--   \( y(x) = a t^3 + b t^2 + c  t + d \) where \( t = x - x_0 \)
 data (RealFrac a) => Spline a = Spline
   a -- ^ x0
   a -- ^ x1
@@ -37,6 +53,7 @@ data (RealFrac a) => Spline a = Spline
   deriving (Eq, Ord, Show)
 
 -- | Evaluate a spline at a specific point
+--
 --   It is possible to evaluate the spline for x-values outside the spline limits, resulting in an extrapolated value
 splineAt :: (RealFrac a) => Spline a -- ^ The spline
   -> a -- The x value
@@ -52,11 +69,12 @@ splineSlopeAt (Spline x0 _ a b c _d) x =
   (3.0 * a * x' + 2.0 * b) * x' + c where x' = x - x0
 
 -- | A cubic Bezier curve.
---   A cubic bezier curve runs from 0 <= t <= 1 with
---   x(t) = x0 * (1 - t_^3 + x1 * (1 - t)^2 * t + x2 (1 - t) * t^2 + x3 * t^3
---   y(t) = y0 * (1 - t_^3 + y1 * (1 - t)^2 * t + y2 (1 - t) * t^2 + y3 * t^3
---   The (x0, y0), (x1, y1), (x2, y2) and (x3, y3) values are the control points,
---   with the curve starting and ending at (x0, y0) and (x3, y3) and the (x1, y1) and (x2, y2) acting as handles,
+--
+--   A cubic bezier curve runs from \(0 \leq t \leq 1\) with
+--   \( x(t) = x_0 (1 - t^3) + x_1 (1 - t)^2 t + x_2 (1 - t) t^2 + x_3 t^3 \) and
+--   \( y(t) = y_0 (1 - t^3) + y_1 (1 - t)^2 t + y_2 (1 - t) t^2 + y_3 t^3 \)
+--   The \( (x_0, y_0), (x_1, y_1), (x_2, y_2) \) and \( (x_3, y_3) \) values are the control points,
+--   with the curve starting at \((x_0, y_0)\) and ending at \((x_3, y_3)\) and the \((x_1, y_1)\) and \((x_2, y_2)\) acting as handles,
 --   pulling the curve towards each point.
 data (RealFrac a) => Bezier a = Bezier
   (a, a) -- ^ (x0, y0)
@@ -75,6 +93,10 @@ bezierAt (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) x = let
   in
     (x', y')
 
+-- | Compute the rate of change of both x and y on the Bezier curve with respect to t.
+--
+--   If you want the actual slope at the point, divide the y-slope by the x-slope, keeping in mind that the
+--   curve may be veritcal.
 bezierSlopeAt :: (RealFrac a) => Bezier a -> a -> (a, a)
 bezierSlopeAt (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) x = let
     t = (x - x0) / (x3 - x0)
@@ -86,12 +108,18 @@ bezierSlopeAt (Bezier (x0, y0) (x1, y1) (x2, y2) (x3, y3)) x = let
 
 -- | Spline boundary conditions
 data (RealFrac a) => SplineBoundary a =
-  NaturalBoundary -- ^ Natural boundary conditions, where y'' = 0 and the spline continues on its natural incoming slope
+  NaturalBoundary -- ^ Natural boundary conditions, where \( y^{\prime \prime} = 0 \) and the spline continues on its natural incoming slope
   | ClampBoundary a -- ^ Clamp the slope of the spline to a specific value
   deriving (Eq, Ord, Show)
 
--- Compute the second dervivatives of the spline
--- Based on Numerical Recipes in C, 2nd ed, p115
+-- | Compute the second dervivatives of the spline
+--
+--   These form the basis of the spline calculations, linking up the spline curves by ensuring that the
+--   first derivatives match.
+--
+--   Based on /Numerical Recipes in C/, 2nd ed, p115 (but Haskellised)
+--   In theory, this involves solving a tridiagonal matrix of simultaneous equations.
+--   In practice, there's a sneaky way of solving things.
 spline2ndDevs :: (RealFrac a, Show a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [a]
 spline2ndDevs _sb0 _sbn [] = error "No points for spline"
 spline2ndDevs _sb0 _sbn [_] = error "Require at least two points for spline"
@@ -131,9 +159,9 @@ spline2ndDevs' sbn ui1 y2i1 (xi1, yi1) ((pi'@(xi, yi)):rest@((xi'1, yi'1):_)) = 
   in
     (y2i', y2i':y2s)
 
--- Create a piecewise spline, with each point between x0 = x[i] and x[i + 1] modelled
--- by a cubic equation y = a * (x - x0)^3 + b * (x - x0)^2 + c * (x - x0) + d
--- The result is a vector of (x[i], x[i+1], a, b, c, d) one less than the original data
+-- Create a piecewise spline, with each interval between \( (x_i, y_i) \) and \( (x_{i + 1}, y_{i + 1} |) modelled
+-- by a cubic equation \( y = a  (x - x_i)^3 + b  (x - x_i)^2 + c  (x - x_i) + d \)
+-- The result is a vector of `Spline`s one less than the original data
 makeSpline :: (RealFrac a, Show a) => SplineBoundary a -> SplineBoundary a -> [(a, a)] -> [Spline a]
 makeSpline sb1 sbn points = let
     y2s = spline2ndDevs sb1 sbn points
@@ -156,7 +184,7 @@ makeSpline'' xi1 yi1 xi yi y2i1 y2i = let
   in
     Spline xi1 xi a b c d
 
--- Convert a cubic spline into an equivalent cubic Bezier curve
+-- | Convert a cubic spline into an equivalent cubic Bezier curve
 toBezier :: (RealFrac a) => Spline a -> Bezier a
 toBezier s@(Spline x0 x3 _a b c d) = let
     x1 = (2.0 * x0 + x3) / 3.0

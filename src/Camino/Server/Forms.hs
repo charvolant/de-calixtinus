@@ -3,6 +3,7 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE FlexibleContexts      #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Forms
 Description : Forms for the De Calixtinus application
@@ -58,7 +59,7 @@ import Formatting
 import Text.Hamlet
 import Yesod
 
--- Gathered result and widget data
+-- | Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
     resEasyMode :: FormResult Bool
   , viewEasyMode :: FieldView CaminoApp
@@ -146,6 +147,7 @@ data PreferenceDataFields = PreferenceDataFields {
   , viewStartDate :: FieldView CaminoApp
 }
 
+-- | Find a camino in a list of caminos by unique ID
 findCaminoById :: CaminoConfig -> Text -> Maybe Camino
 findCaminoById config val = (caminoConfigLookup config) val
 
@@ -181,7 +183,7 @@ fieldSettingsLabelName msg name = FieldSettings (SomeMessage msg) Nothing Nothin
 fieldSettingsName :: Text -> FieldSettings site
 fieldSettingsName name = FieldSettings "" Nothing Nothing (Just name) []
 
--- Make a default set of preference data fields with everything hidden
+-- | Make a default set of preference data fields with everything hidden
 defaultPreferenceFields :: CaminoApp -> Maybe PreferenceData -> MForm Handler PreferenceDataFields
 defaultPreferenceFields master prefs = do
     (emRes, emView) <- mreq hiddenField (fieldSettingsName "easyMode") (prefEasyMode <$> prefs) -- Easy/detailed mode
@@ -503,6 +505,7 @@ hiddenPreferences exclude fields = [whamlet|
   $if notElem "StartDate" exclude
     ^{fvInput (viewStartDate fields)}
 |]
+
 -- | Form for basic travel preferences
 chooseTravelForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseTravelForm help prefs extra = do
@@ -936,7 +939,7 @@ makeOptions render keyer labeler recommended options = let
   in
     (render SuggestedLabel, mkOptions recommended) : (map (\(m, ls) -> (m, mkOptions ls)) (Data.Util.partition (categorise . labeler) other))
 
--- | Form to allow start and finish to be chosen
+-- | Form to allow start and finish locations to be chosen
 chooseStartForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
 chooseStartForm help prefs extra = do
     master <- getYesod

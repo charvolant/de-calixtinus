@@ -1,4 +1,5 @@
 {-# LANGUAGE FunctionalDependencies #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Graph
 Description : Abstract graph model
@@ -7,13 +8,16 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+An abstract graph model that can be fed into other algorithms
 -}
 
 module Graph.Graph(
-    Edge(..)
+  -- * Graph components
+    Vertex(..)
+  , Edge(..)
+  -- * A Complete Graph
   , Graph(..)
-  , Vertex(..)
-  
   , available
   , graphSummary
   , predecessors
@@ -25,11 +29,17 @@ import qualified Data.List as L
 import qualified Data.Set as S
 
 -- | Something that can act as a vertex node on a graph
+--
+--   Vertices can have additional attributes.
+--   The vertex class simply identifies something as suitable to be a vertex
 class (Eq v, Ord v, Show v) => Vertex v where
   -- | Get the vertex identifier
   identifier :: v -> String
 
 -- | An edge between two vertices
+--
+--   Edges can have additional attributes.
+--   The edge class simply identifies something as suitable to be an edge
 class (Vertex v, Show e) => Edge e v | e -> v where
   -- | Get the edge source (from)
   source :: e -> v
@@ -37,27 +47,55 @@ class (Vertex v, Show e) => Edge e v | e -> v where
   target :: e -> v
 
 -- | A graph implementation
+--
+--   Graphs allow something to identify the edges running between vertices
 class Edge e v => Graph g e v | g -> e, g -> v where
   -- | Find a vertex based on identifier
-  vertex :: g -> String -> v
-   -- | Find the edges that lead to a particular vertex
-  incoming :: g -> v -> [e]
+  vertex :: g -- ^ The graph
+    -> String -- ^ The vertex identifier
+    -> v -- ^ The corresponding vertex
+
+  -- | Find the edges that lead to a particular vertex
+  incoming :: g  -- ^ The graph
+    -> v -- ^ The desination vertex
+    -> [e] -- ^ The incoming edges
+
   -- | Find the edges that leave from a particular vertex
-  outgoing :: g -> v -> [e]
+  outgoing :: g  -- ^ The graph
+    -> v -- ^ The source vertex
+    -> [e] -- ^ The outgoing edges
+
   -- | Get the single edge, if it exists, between two vertices
   --   If multiple edges exist, a consistent single edge is returned
-  edge :: g -> v -> v -> Maybe e
+  edge :: g  -- ^ The graph
+    -> v -- ^ The source vertex
+    -> v -- ^ The target vertex
+    -> Maybe e -- ^ An edge running between the two vertices, if one exists
+
   -- | Construct a subgraph containing only selected vertices and edges
-  subgraph :: g -> (v -> Bool) -> (e -> Bool) -> g
+  subgraph :: g  -- ^ The original graph
+    -> (v -> Bool) -- ^ A vertex selection fuction. Only vertices that return true will be in the subgraph
+    -> (e -> Bool) -- ^ An edge selection function. Only edges that go between selected vertices and which are themselves selected will be in the subgraph
+    -> g -- ^ The resulting subgraph
+
   -- | Mirror (reverse) the graph so that all edges are reversed
+  --
+  --   Edges and vertices may need to have attributes changed to reflect the reversal
   mirror :: g -> g
-  -- | Get the preceding vertices in a graph
-  sources :: g -> v -> S.Set v
+
+  -- | Get the immediately preceding vertices in a graph
+  sources :: g -- ^ The graph
+    -> v -- ^ The vertex that is the target
+    -> S.Set v -- ^ All vertices that have an edge leading to the target
   sources g v = S.fromList $ map source (incoming g v)
-  -- | Get the following vertices in a graph
-  targets :: g -> v -> S.Set v
+
+  -- | Get the imemdiately following vertices in a graph
+  targets :: g -- ^ The graph
+    -> v -- ^ The vertex that is the source
+    -> S.Set v -- ^ All vertices that have an edge leading from the source
   targets g v = S.fromList $ map target (outgoing g v)
 
+-- | Transitive closure of either `sources` or `targets` for a graph
 transitive :: Graph g e v => g -> (g -> v -> S.Set v) -> S.Set v -> S.Set v -> S.Set v
 transitive graph direction new seen
   | S.null new = seen
@@ -81,8 +119,11 @@ predecessors :: Graph g _e v => g -- ^ The graph to traverse
 predecessors graph final = transitive graph sources (S.singleton final) S.empty
 
 -- | Compute all the vertices that have become available
+--
 --   Available vertices are those which have not yet been visited and which have all the source edges that
---   are reachable in the visited set
+--   are reachable in the visited set.
+--   This function can be used for a breadth-first traversal of a graph, ensuring that information about preceeding
+--   vertices are available before computing something about anotgher vertex.
 available :: (Graph g _e v) => g -- ^ The graph to traverse
   -> S.Set v -- ^ The reachable vertices
   -> S.Set v -- ^ The visited vertices

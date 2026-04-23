@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Css
 Description : Produce Css styles for HTML and KML display
@@ -9,23 +10,29 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Generate CSS for HTML and KML output.
 -}
 module Camino.Display.Css (
-    caminoBlue
-  , caminoCss
-  , caminoLightGrey
-  , caminoYellow
+  -- * Generate CSS
+    caminoCss
+  , staticCss
+  -- * Generate route line styles and colours
   , featureLineStyle
   , featureRouteColour
   , featureRouteDesaturatedColour
+  -- * Standard colours
+  , caminoBlue
+  , caminoLightGrey
+  , caminoYellow
   , informationBlue
   , mutedBlue
   , recreationGreen
-  , staticCss
   , successGreen
+  , warningRed
+  -- * Conversion
   , toCssColour
   , toExcelColour
-  , warningRed
 ) where
 
 import Camino.Camino
@@ -43,44 +50,50 @@ import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
 
--- The traditional blue tile colour. Used as a primary darkish colour
+-- | The traditional blue tile colour. Used as a primary darkish colour
 caminoBlue :: Colour Double
 caminoBlue = sRGB24read "1964c0"
 
--- The traditional yellow tile colour. Used as a primary lightish colour
+-- | The traditional yellow tile colour. Used as a primary lightish colour
 caminoYellow :: Colour Double
 caminoYellow = sRGB24read "f9b34a"
 
--- A light grey version of the background colour
+-- | A light grey version of the background colour
 caminoLightGrey :: Colour Double
 caminoLightGrey = sRGB24read "e4e0cb"
 
--- A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
+-- | A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
 informationBlue :: Colour Double
 informationBlue = sRGB24read "1c9cf1"
 
--- A green indicating rest and recreation
+-- | A green indicating rest and recreation
 recreationGreen :: Colour Double
 recreationGreen = sRGB24read "00b820"
 
--- A muted blue indicating deprectaed information
+-- | A muted blue indicating deprectaed information
 mutedBlue :: Colour Double
 mutedBlue = sRGB24read "a0b3ca"
 
--- A bootstrap warning color
+-- | A bootstrap warning color
 warningRed :: Colour Double
 warningRed = sRGB24read "dc3545"
 
--- A bootstrap success color
+-- | A bootstrap success color
 successGreen :: Colour Double
 successGreen = sRGB24read "198754"
 
 -- | Create a CSS-able colour
+--
+--   >>> toCssColour $ sRGB24read "dc3545"
+--   "#dc3545"
 toCssColour :: Colour Double -- ^ The colour to display
  -> String -- ^ A #rrggbb colour triple
 toCssColour = sRGB24show
 
--- | Create an Excel-able colour
+-- | Create a colour that can be used in an Excel style
+--
+--   >>> toExcelColour $ sRGB24read "dc3545"
+--   "ffdc3545"
 toExcelColour :: Colour Double -- ^ The colour to display
   -> Text -- ^ A aarrggbb colour quad
 toExcelColour v = "ff" <> (pack $ tailOrEmpty $ sRGB24show v)
@@ -249,14 +262,19 @@ caminoBaseCss :: Render CaminoRoute -> Css
 caminoBaseCss = $(cassiusFile "templates/css/base.cassius")
 
 -- | Generate CSS that can be placed in a static file
+--
+-- Use this function to generate CSS that can be placed in a static file, served from a common point.
+-- Fonts and graphics are linked to the URLs provided in the configuration.
 staticCss :: Config -- ^ The base configuration
   -> [Render CaminoRoute -> Css] -- ^ A list of CSS fragments for static CSS
 staticCss config = [caminoBaseCss, paletteCss "location-default" def] ++ (map caminoFontCss (getAssets Font config)) ++ caminoIconCss
 
 
+-- | The colour used to display a used route
 featureRouteColour :: Route -> Colour Double
 featureRouteColour route = paletteColour $ routePalette route
 
+-- | A desaturated version of the `featureRouteColour` suitable for use displaying an unused route
 featureRouteDesaturatedColour :: Route -> Colour Double
 featureRouteDesaturatedColour route = (blend 0.3 antiquewhite) $ paletteColour $ routePalette route
 
@@ -268,7 +286,14 @@ featureRouteGreyColour _route = grey
 
 
 -- | Generate information about a feature's type
---   This can be used as a start point for generating SVG line styles, colours and the like
+--
+--   This can be used as a start point for generating SVG line styles, colours and the like.
+--   It can also be used to specify [Leaflet](https://leafletjs.com) line styles.
+--   Generally:
+--
+--   * Used routes and features are thicker than unused routes an features
+--   * Non-road features have combinations of dashes to indicate
+--   * Transport routes, such as ferries tend to have unique colours
 featureLineStyle :: Route -- ^ The associated route 
   -> Bool -- ^ Is this a large-scale line (showing rough point-to-point)
   -> Bool -- ^ Is this a dummy feature (one intended as a placholder for a more sophisticated entry later)
@@ -293,7 +318,9 @@ featureLineStyle route False False False TrainLink = (toCssColour $ featureRoute
 featureLineStyle route False _ _ _ = (toCssColour $ featureRouteColour route, 4, 1.0, Just [6, 10], Just "round")
 
 -- | Generate CSS for a camino.
---   This is intended to be embedded in a camino plan and contains things like specific route palettes
+--
+--   This is intended to be embedded in a camino plan and contains things like specific route palettes.
+--   It is used in conjunction with the static CSS generated by `statiCss`.
 caminoCss :: Config -> Camino -> [Css]
 caminoCss config camino = map (\c -> c router) (default':routes')
   where

@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : JSON
 Description : JSON formatting utilities
@@ -9,6 +10,8 @@ License     : MIT
 Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
+
+Utilities to allow consistent formatting of caminois, features and the like
 -}
 module Camino.Display.JSON (
     caminoPrintOptions
@@ -108,6 +111,7 @@ legFieldOptions = [
     ]
   ]
 
+-- | Print options for laying out camino definition files
 caminoPrintOptions :: PrintOptions
 caminoPrintOptions = buildPrintOptions [
     def & foPath .~ "id" & foRemove ?~ removeNullEmpty
@@ -183,7 +187,7 @@ caminoPrintOptions = buildPrintOptions [
   , def & foPath .~ "multi-day" & foRemove ?~ removeNull
   ]
 
--- Generic geojson, includes some foreign members that are useful
+-- | Print options for generic geojson, includes some foreign members that are useful
 geojsonPrintOptions :: PrintOptions
 geojsonPrintOptions = buildPrintOptions $ dctermsFieldOptions ++ [
     def & foPath .~ "type" & foRemove ?~ removeNullEmpty
@@ -203,7 +207,7 @@ geojsonPrintOptions = buildPrintOptions $ dctermsFieldOptions ++ [
   ]
 
 
--- Geojson as used by camino features (three layers deep), includes some foreign members that are useful
+-- | Geojson as used by camino features (three layers deep), includes some foreign members that are useful
 feature3PrintOptions :: PrintOptions
 feature3PrintOptions = buildPrintOptions $ [
     def & foPath .~ "type" & foRemove ?~ removeNullEmpty
@@ -225,7 +229,7 @@ feature3PrintOptions = buildPrintOptions $ [
   ]
 
 
--- Geojson as used by camino features (two layers deep), includes some foreign members that are useful
+-- | Geojson as used by camino features (two layers deep), includes some foreign members that are useful
 feature2PrintOptions :: PrintOptions
 feature2PrintOptions = buildPrintOptions $ [
     def & foPath .~ "type" & foRemove ?~ removeNullEmpty

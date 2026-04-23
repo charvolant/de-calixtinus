@@ -9,12 +9,13 @@ Maintainer  : doug@charvolant.org
 Stability   : experimental
 Portability : POSIX
 
-A camino consists of a graph of legs that can be assembled in various ways.
-The legs run between two locations, each with possible accommodation and service options.
+Use the leg specifications to produce a KML file that describes a camino and planned route.
 
-Generally, it is expected that these models will be read from JSON files.
+This does not approach the level of detail avilable on the map.
+Detailed features are not used, instead the legs are used for simple links between locations.
+Location points contain simple summary HTML.
 
-Note that XML-Hamlet remvoes path interpolation, so routes are not a thing here.
+Icons for locations are taken from the standard map symbology.
 -}
 
 module Camino.Display.KML (
@@ -234,6 +235,7 @@ caminoLegKml camino stops waypoints leg = [xml|
     positions = (locationPosition $ legFrom leg):(legWaypoints leg ++ [locationPosition $ legTo leg])
 
 -- | Use CDATA to rander some text.
+--
 --   Used to ensure the inner HTML in the description element is encased in CDATA as KML requires
 useCDATA :: Content -> Bool
 useCDATA (ContentEntity _) = False
@@ -248,7 +250,7 @@ createCaminoTitle locales camino (Just pilgrimage) =
    <> " - "
    <> localiseText locales (locationName (finish pilgrimage))
 
--- Create a KML document of a camino
+-- | Create a KML document for a camino and optional plan
 createCaminoDoc :: Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Document
 createCaminoDoc config locales tprefs cprefs msolution = Document (Prologue [] Nothing []) kml []
   where

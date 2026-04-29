@@ -66,6 +66,7 @@ library
       Data.Xlsx.Internal
       Graph.Graph
       Graph.Programming
+      Language.Haskell.TH.Variables
       Network.Google.Elevation
       Network.Google.Maps
       Text.MessageCatalogue
@@ -523,6 +524,7 @@ test-suite de-calixtinus-test
       TestUtils
       UnitsSpec
       UtilSpec
+      VariablesSpec
       WalkingSpec
       XlsxSpec
       Paths_de_calixtinus

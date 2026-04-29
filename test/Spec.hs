@@ -21,6 +21,7 @@ import LocalisedSpec
 import SplineSpec
 import UnitsSpec
 import UtilSpec
+import VariablesSpec
 import XlsxSpec
 import qualified Data.ByteString.Lazy as B
 import Data.Aeson
@@ -64,6 +65,7 @@ testList config prefs camino = TestList [
    TestLabel "Formatting" testFormatting,
    TestLabel "EventDate" testEventDate,
    TestLabel "Propositional" testPropositional,
+   TestLabel "Variables" testVariables,
    TestLabel "MessageCatalogue" testMessageCatalogue,
    TestLabel "Cache" testCache,
    TestLabel "Xlsx" testXlsx,

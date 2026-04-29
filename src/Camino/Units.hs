@@ -33,6 +33,7 @@ import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Char (isAlpha, isSpace)
+import Data.Default.Class
 
 -- | The types of quantities that we wish to deal with
 data Quantity =
@@ -152,6 +153,9 @@ instance NFData SystemOfUnits
 instance FromJSON SystemOfUnits
 
 instance ToJSON SystemOfUnits
+
+instance Default SystemOfUnits where
+  def = SIUnits
 
 -- | Provide an enumeration of all system of units
 systemOfUnitsEnumeration :: [SystemOfUnits]

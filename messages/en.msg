@@ -50,7 +50,7 @@ ChurchDescription: A church or chapel
 ChurchTitle: Church
 CityDescription: A large urban area with multiple options for services and accommodation
 CityTitle: City
-ClosedDayLabel region@Text: Closed Day (^{renderLocalisedRegion config sou langs region})
+ClosedDayLabel region@Text: Closed Day (^{renderLocalisedRegion config sou locales region})
 ClosedDayText: Closed Day
 ClosedText: closed
 ComfortableTitle: Comfortable
@@ -63,16 +63,16 @@ CyclingTitle: Cycling
 CyclePathTitle: Cycle Path (bicycles only)
 DailyLabel: Daily
 DateLabel: Date
-DateMsg day@C.Day: <span .date>^{renderLocalisedDate sou True langs day}
+DateMsg day@C.Day: <span .date>^{renderLocalisedDate sou True locales day}
 DateRangeMsg day1@C.Day day2@C.Day:
 <span .date-range>
   $if day1 == day2
-    ^{renderLocalisedDate sou True langs day1}
+    ^{renderLocalisedDate sou True locales day1}
   $else
-    ^{renderLocalisedDate sou True langs day1} - ^{renderLocalisedDate sou True langs day2}
+    ^{renderLocalisedDate sou True locales day1} - ^{renderLocalisedDate sou True locales day2}
 DayLabel: Day
 DayOfMonthName dom@C.DayOfMonth: #{dom}
-DayOfWeekName dow@C.DayOfWeek: ^{renderLocalisedTime sou langs "%a" dow}
+DayOfWeekName dow@C.DayOfWeek: ^{renderLocalisedTime sou locales "%a" dow}
 DaysElapsedMsg days@Int: #{sformat int days} days total
 DayServicePreferencesLabel: Preferred Services during Day
 DayServicesPenanceLabel: Missing Services (Day)
@@ -163,14 +163,14 @@ KitchenTitle: Kitchen
 LatitudeLabel: Latitude
 LegendLabel: Legend
 LegPenanceMsg pen@Penance: +^{formatPenance sou True pen}
-LinkTitle locd@(Localised TaggedURL) defd@(Localised TaggedText): $if hasLocalisedText langs locd
-  ^{renderLocalisedText langs True True False locd}
+LinkTitle locd@(Localised TaggedURL) defd@(Localised TaggedText): $if hasLocalisedText locales locd
+  ^{renderLocalisedText locales True True False locd}
 $else
-  ^{renderLocalisedText langs True True False defd}
+  ^{renderLocalisedText locales True True False defd}
 LinkOut: More information
 ListMsg msgs@[CaminoMsg]: <ul .comma-separated-list>
   $forall m <- msgs
-    <li>^{renderCaminoMsg config sou langs m}
+    <li>^{renderCaminoMsg config sou locales m}
 LocationPenanceLabel: Location
 LocationPreferencesLabel: Location Preferences
 LocationLabel: Location
@@ -190,25 +190,25 @@ MetricTitle: Metric/Imperial Conversion
 MiscPenanceLabel: Other
 MonasteryDescription: A monastery or cloister, often with a hospice attached
 MonasteryTitle: Monastery
-MonthOfYearName moy@C.MonthOfYear: ^{renderLocalisedMonth sou langs moy}
+MonthOfYearName moy@C.MonthOfYear: ^{renderLocalisedMonth sou locales moy}
 MoreInformation: More Information
 MunicipalDescription: A town square, market place, town hall or other municipal building
 MunicipalTitle: Municipal
 MuseumDescription: A museum or art gallery
 MuseumTitle: Museum/gallery
 MusicEventTitle: Music
-NamedCalendarLabel key@Text: ^{renderLocalisedText langs False False False (getCalendarName config key)}
+NamedCalendarLabel key@Text: ^{renderLocalisedText locales False False False (getCalendarName config key)}
 NaturalDescription: A nature park or area of natural beauty, as well as large landscape features such as mountains
 NaturalPoiTitle: Natural
 NaturalTitle: Nature park
 NextLabel: Next
 NormalTitle: Normal
 NotesLabel: Notes
-NthWeekdayText wom@WeekOfMonth dow@C.DayOfWeek: ^{renderLocalisedWeekOfMonth sou langs wom} ^{renderLocalisedDayOfWeek sou langs dow}
+NthWeekdayText wom@WeekOfMonth dow@C.DayOfWeek: ^{renderLocalisedWeekOfMonth sou locales wom} ^{renderLocalisedDayOfWeek sou locales dow}
 OpenHoursTitle: Open Hours
 OpenText: open
-OrdinalAfterWeekday nth@Int dow@C.DayOfWeek: ^{renderLocalisedOrdinal sou langs (abs nth)} ^{renderLocalisedDayOfWeek sou langs dow} #{renderLocalisedBeforeAfter nth "before" "after"}
-OrdinalBeforeAfter nth@Int unit@CaminoMsg: ^{renderLocalisedOrdinal sou langs (abs nth)} ^{renderCaminoMsg config sou langs unit} ^#renderLocalisedBeforeAfter nth  "before" "after"}
+OrdinalAfterWeekday nth@Int dow@C.DayOfWeek: ^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderLocalisedDayOfWeek sou locales dow} #{renderLocalisedBeforeAfter nth "before" "after"}
+OrdinalBeforeAfter nth@Int unit@CaminoMsg: ^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderCaminoMsg config sou locales unit} ^#renderLocalisedBeforeAfter nth  "before" "after"}
 OtherLabel: Other
 ParkDescription: A park or garden
 ParkTitle: Park
@@ -255,7 +255,7 @@ PrivateAlbergueTitle: Private Albergue
 ProgramLabel: Program
 PromontoryDescription: A promontory, cliff or headland
 PromontoryTitle: Promontory/Headland
-PublicHolidayLabel region@Text: Public Holiday ^{renderLocalisedRegion config sou langs region}
+PublicHolidayLabel region@Text: Public Holiday ^{renderLocalisedRegion config sou locales region}
 PublicHolidayText: Public Holiday
 QuadrupleTitle: Quadruple
 QuadrupleWcTitle: Quadruple with WC
@@ -339,7 +339,7 @@ TableLabel: Table
 TestMessage: Currently under testing, see the About page
 TheatreDescription: A theatre, opera house or concert hall
 TheatreTitle: Theatre
-Time time@TimeOfDay: ^{renderLocalisedTime sou langs "%H%M" time}
+Time time@TimeOfDay: ^{renderLocalisedTime sou locales "%H%M" time}
 TimeAdjustLabel: Time Adjustment
 TimeFormatted time@Float: ^{formatHours sou time}
 TimeLabel: Time
@@ -365,8 +365,8 @@ TripFinishLabel: Trip Finish
 TripStartLabel: Trip Start
 TripleTitle: Triple
 TripleWcTitle: Triple with WC
-Txt locd@(Localised TaggedText): ^{renderLocalisedText langs False False False locd}
-TxtPlain attr@Bool js@Bool locd@(Localised TaggedText): ^{renderLocalisedText langs True attr js locd}
+Txt locd@(Localised TaggedText): ^{renderLocalisedText locales False False False locd}
+TxtPlain attr@Bool js@Bool locd@(Localised TaggedText): ^{renderLocalisedText locales True attr js locd}
 TypeLabel: Type
 UnfitTitle: Unfit
 UnitsLabel: Units

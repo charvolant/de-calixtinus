@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell       #-}
+{-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Text.MessageCatalogue.Internal
 Description : Message catalogue implementation
@@ -22,15 +23,18 @@ import qualified Data.List as L
 import qualified Data.Map as M
 import Data.Maybe
 import qualified Data.Set as S
+import Data.String
 import Data.Summary
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, decodeUtf8Lenient)
 import Language.Haskell.TH
 import Language.Haskell.TH.Lib
 import Language.Haskell.TH.Syntax
+import Language.Haskell.TH.Variables
 import System.Directory (doesFileExist, getDirectoryContents)
 import System.FilePath (FilePath, stripExtension, (</>))
+import Text.Blaze.Html (toHtml)
 import qualified Text.Blaze.Internal as TB
 import Text.Hamlet
 import Text.Parsec
@@ -335,21 +339,22 @@ parseMsgBody body = hamletFromString htmlRules defaultHamletSettings (T.unpack b
 
 makeMsgClause :: MessageContext -> Msg -> Msg -> Q Clause
 makeMsgClause ctx base msg = do
-  let just = 'Just
-  let context = map paName $ mcContext ctx
-  let constructor = mkName $ msgConstructor msg
-  let args = map (\a -> VarP $ paName a) $ msgParams msg
-  let langs = paName $ mcLocales ctx
-  let mpattern = ConP constructor [] args
-  let cpattern = (map VarP context) ++ [VarP langs, mpattern]
   expr <- parseMsgBody (msgBody msg)
+  let vars = unboundVarsExp expr
+  let varp n = if S.member n vars then VarP n else WildP
+  let just = 'Just
+  let context = map (varp . paName) $ mcContext ctx
+  let constructor = mkName $ msgConstructor msg
+  let args = map (varp . paName) $ msgParams msg
+  let locales = varp $ paName $ mcLocales ctx
+  let mpattern = ConP constructor [] args
+  let cpattern = context ++ [locales, mpattern]
   return $ Clause cpattern (NormalB (ConE just `AppE` expr)) []
 
 makeNoMatchClause :: MessageContext -> Bool -> Catalogue -> Q Clause
 makeNoMatchClause ctx base catalogue = do
   let context = map paName $ mcContext ctx
       msg = paName $ mcMsg ctx
-      cpattern = (map (const WildP) context) ++ [WildP, VarP msg]
       expr = if base then
           AppE
             (VarE $ mkName "error")
@@ -360,6 +365,9 @@ makeNoMatchClause ctx base catalogue = do
               )
         else
           ConE (mkName "Nothing")
+      vars = unboundVarsExp expr
+      varp n = if S.member n vars then VarP n else WildP
+      cpattern = (map (const WildP) context) ++ [WildP, varp msg]
   return $ Clause cpattern (NormalB expr) []
 
 makeRenderDec :: MessageContext -> [Catalogue] -> Q [Dec]
@@ -377,10 +385,10 @@ makeRenderDec ctx catalogues = do
 makeMsgRenderMain :: MessageContext -> Name -> Name -> Q Clause
 makeMsgRenderMain ctx rname rname' = do
   let msg = paName $ mcMsg ctx
-      langs = paName $ mcLocales ctx
+      locales = paName $ mcLocales ctx
       context = map paName $ mcContext ctx
-      cpattern = (map VarP context) ++ [VarP langs, VarP msg]
-      expr = foldl1 AppE $ map VarE $ [rname'] ++ context ++ [langs, langs, msg]
+      cpattern = (map VarP context) ++ [VarP locales, VarP msg]
+      expr = foldl1 AppE $ map VarE $ [rname'] ++ context ++ [locales, locales, msg]
   return $ Clause cpattern (NormalB expr) []
 
 makeMsgRenderClause :: MessageContext -> Name -> Catalogue -> Q Clause
@@ -389,12 +397,12 @@ makeMsgRenderClause ctx rname catalogue = do
       lang = caLang catalogue
       langp = LitP $ StringL $ T.unpack lang
       rest = mcLocaleRest ctx
-      langs = paName $ mcLocales ctx
+      locales = paName $ mcLocales ctx
       rlname = makeLangRenderName ctx lang
       context = map paName $ mcContext ctx
-      cpattern = (map VarP context) ++ [InfixP langp (mkName ":") (VarP rest), VarP langs, VarP msg]
-      rexpr = foldl1 AppE $ map VarE $ [rname] ++ context ++ [rest, langs, msg]
-      expr = foldl1 AppE $ map VarE $ [rlname] ++ context ++ [langs, msg]
+      cpattern = (map VarP context) ++ [InfixP langp (mkName ":") (VarP rest), VarP locales, VarP msg]
+      rexpr = foldl1 AppE $ map VarE $ [rname] ++ context ++ [rest, locales, msg]
+      expr = foldl1 AppE $ map VarE $ [rlname] ++ context ++ [locales, msg]
       mexpr = (VarE $ 'maybe) `AppE` rexpr `AppE` (VarE $ 'id) `AppE` expr
   return $ Clause cpattern (NormalB mexpr) []
 
@@ -402,29 +410,35 @@ makeMsgRenderNullClause :: MessageContext -> Q Clause
 makeMsgRenderNullClause ctx = do
   let lang = caLang $ mcBase ctx
       msg = paName $ mcMsg ctx
-      langs = paName $ mcLocales ctx
+      locales = paName $ mcLocales ctx
       rlname = makeLangRenderName ctx lang
       context = map paName $ mcContext ctx
-      cpattern = (map VarP context) ++ [ListP [], VarP langs, VarP msg]
-      expr = foldl1 AppE $ map VarE $ [rlname] ++ context ++ [langs, msg]
-      mexpr = (VarE 'maybe) `AppE` (LitE $ StringL "XXX") `AppE` (VarE 'id) `AppE` expr
+      cpattern = (map VarP context) ++ [ListP [], VarP locales, VarP msg]
+      expr = foldl1 AppE $ map VarE $ [rlname] ++ context ++ [locales, msg]
+      mexpr = (VarE 'maybe) `AppE` ((VarE 'toHtml) `AppE` ((VarE 'show) `AppE` (VarE msg))) `AppE` (VarE 'id) `AppE` expr
   return $ Clause cpattern (NormalB mexpr) []
 
 makeMsgRenderNotFoundClause :: MessageContext -> Name -> Q Clause
 makeMsgRenderNotFoundClause ctx rname' = do
   let msg = paName $ mcMsg ctx
       rest = mcLocaleRest ctx
-      langs = paName $ mcLocales ctx
+      locales = paName $ mcLocales ctx
       context = map paName $ mcContext ctx
-      cpattern = (map VarP context) ++ [InfixP WildP (mkName ":") (VarP rest), VarP langs, VarP msg]
-      rexpr = foldl1 AppE $ map VarE $ [rname'] ++ context ++ [rest, langs, msg]
+      cpattern = (map VarP context) ++ [InfixP WildP (mkName ":") (VarP rest), VarP locales, VarP msg]
+      rexpr = foldl1 AppE $ map VarE $ [rname'] ++ context ++ [rest, locales, msg]
   return $ Clause cpattern(NormalB rexpr) []
 
 makeInstanceDec :: MessageContext -> Q [Dec]
 makeInstanceDec ctx = let
     defe = VarE $ 'def
     msgp = VarP $ paName $ mcMsg ctx
-    langs = paName $ mcLocales ctx
+    locs = paName $ mcLocales ctx
+    langsn = mkName "langs"
+    decoder = InfixE (Just (VarE 'fromString)) (VarE '(.)) (Just (VarE 'unpack))
+    (langs, locales, mapper) = if locs == ''Lang then
+      (locs, locs, [])
+    else
+      (langsn, locs, [ValD (VarP locales) (NormalB $ (VarE 'map) `AppE` decoder `AppE` (VarE langsn)) []])
     mmp = maybe Nothing (\mt -> L.find (\p -> paType p == mt) (mcContext ctx)) (mcAppType ctx) -- Matching arg to application type
     (mastert, masterp, exps) = maybe
       (VarT $ mkName "a", WildP, map (const defe) (mcContext ctx))
@@ -436,13 +450,23 @@ makeInstanceDec ctx = let
       (ConT ''RenderMessage `AppT` mastert `AppT` (paType $ mcMsg ctx))
       [
         FunD ('renderMessage) [
-          Clause [masterp, VarP langs, msgp] (NormalB $ AppE (VarE 'renderMarkupToText) $ foldl AppE (VarE $ mcRender ctx) $ exps ++ [VarE langs, VarE $ paName $ mcMsg ctx]) []
+          Clause
+            [masterp, VarP langs, msgp]
+            (NormalB $ AppE (VarE 'renderMarkupToText) $ foldl AppE (VarE $ mcRender ctx) $ exps ++ [VarE locales, VarE $ paName $ mcMsg ctx])
+            mapper
         ]
       ]
   in
     return [instancedec]
 
 
+-- | Convert markup into its plain text equivalent
+--
+--   Only content is included.
+--   Elements and attributes are discarded
+--
+--   >>> renderMarkupToText [shamlet|<span .something>Hello World</span>|]
+--   Hello World!
 renderMarkupToText :: TB.MarkupM a -> Text
 renderMarkupToText (TB.Parent _ _ _ c)           = renderMarkupToText c
 renderMarkupToText (TB.CustomParent _ c)         = renderMarkupToText c
@@ -460,4 +484,4 @@ renderChoiceStringToText (TB.ByteString bs) = decodeUtf8Lenient bs
 renderChoiceStringToText (TB.PreEscaped c) = renderChoiceStringToText c
 renderChoiceStringToText (TB.External c) = renderChoiceStringToText c
 renderChoiceStringToText (TB.AppendChoiceString c1 c2) = renderChoiceStringToText c1 <> renderChoiceStringToText c2
-renderChoiceStringToText (TB.EmptyChoiceString) =""
+renderChoiceStringToText (TB.EmptyChoiceString) = ""

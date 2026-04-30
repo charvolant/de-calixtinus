@@ -518,7 +518,7 @@ defaultCookieSecure = do
 --
 --   Update this as terms change
 noticeVersion :: Text
-noticeVersion = "Accept 1.0"
+noticeVersion = "Accept 0.10"
 
 -- | The "accept terms" notice cookie
 noticeCookie :: Text
@@ -530,7 +530,7 @@ noticeAge = secondsToDiffTime $ 182 * 24 * 60 * 60 -- About half a year in secon
 
 -- | The current preferences cookie
 preferencesCookie :: Text
-preferencesCookie = "de-calixtinue-preferences"
+preferencesCookie = "de-calixtinus-preferences"
 
 -- | The current preferences cookie timeout (about a quarter of a year)
 preferencesAge :: DiffTime

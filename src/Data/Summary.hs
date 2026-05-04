@@ -20,6 +20,7 @@ module Data.Summary (
     Summary(..)
 
   , joinSummaries
+  , traceSummary
   , traceSummaryId
 ) where
 
@@ -93,3 +94,11 @@ joinSummaries ss = "<" <> intercalate ", " (catMaybes ss) <> ">"
 -- | Create a trace out of a summarisable object, similar to `traceShowId`
 traceSummaryId :: (Summary a) => a -> a
 traceSummaryId v = trace (summaryString v) v
+
+-- | Create a trace out of a pair of summarisable elements, a context and a value.
+--
+--   Since `Text` is summariable, something like @traceSummary "This is something " v@ allows you to add a context message to the trace.
+traceSummary :: (Summary a, Summary b) => a -- ^ The additional summariable context
+  -> b -- ^ The value
+  -> b -- ^ Returned value
+traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v

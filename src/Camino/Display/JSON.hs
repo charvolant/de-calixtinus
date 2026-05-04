@@ -23,7 +23,6 @@ module Camino.Display.JSON (
 import Control.Lens
 import Data.Aeson.Formatting
 import Data.Default.Class
-import Data.Aeson.Formatting (inlineAlways)
 
 -- See https://www.dublincore.org/specifications/dublin-core/dcmi-terms
 dctermsFieldOptions :: [FieldOptions]

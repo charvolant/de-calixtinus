@@ -12,20 +12,12 @@ Portability : POSIX
 module Main (main) where
 
 import Camino.Display.JSON
-import Camino.Camino
 import Data.Aeson
 import Data.Aeson.Formatting
 import qualified Data.ByteString.Lazy as LB
-import Data.Default.Class
-import qualified Data.Map as M
-import qualified Data.Set as S
 import Data.Text (Text)
-import Data.Util (backupFilePath, roundBy)
-import Formatting
-import Graph.Graph
-import Network.Google.Elevation
+import Data.Util (backupFilePath)
 import Options.Applicative
-import System.FilePath
 import System.Directory
 import System.IO
 
@@ -53,7 +45,7 @@ prettyPrint opts Nothing = do
   let evalue = eitherDecode bytes' :: Either String Value
   case evalue of
     Left msg -> hPutStrLn stderr msg
-    Right value -> LB.putStr $ encodePretty (printOptions $ prettyType opts) value
+    Right val -> LB.putStr $ encodePretty (printOptions $ prettyType opts) val
 prettyPrint opts (Just file) = do
   backup <- backupFilePath file
   renameFile file backup
@@ -61,7 +53,7 @@ prettyPrint opts (Just file) = do
   let evalue = eitherDecode bytes' :: Either String Value
   case evalue of
     Left msg -> hPutStrLn stderr msg
-    Right value -> LB.writeFile file $ encodePretty (printOptions $ prettyType opts) value
+    Right val -> LB.writeFile file $ encodePretty (printOptions $ prettyType opts) val
 
 main :: IO ()
 main = do

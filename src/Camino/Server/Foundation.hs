@@ -31,7 +31,7 @@ import qualified Camino.Config as C
 import qualified Camino.Units as U
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
-import Data.Cache (Cache(..), newDummyCache)
+import Data.Cache (Cache(..))
 import Data.Localised (Locale, Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)

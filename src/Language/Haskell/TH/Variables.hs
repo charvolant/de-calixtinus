@@ -101,7 +101,7 @@ unboundVarsPat WildP = S.empty
 unboundVarsPat (RecP _name fps) = S.unions $ map unboundVarsFieldPat fps
 unboundVarsPat (ListP ps) = S.unions $ map unboundVarsPat ps
 unboundVarsPat (SigP p _t) = unboundVarsPat p
-unboundVarsPat (ViewP e p) = unboundVarsPat p
+unboundVarsPat (ViewP _e p) = unboundVarsPat p
 
 -- | The variables declared and the variables used (including those declared) in a declaration
 unboundVarsDec :: Dec -> (S.Set Name, S.Set Name)

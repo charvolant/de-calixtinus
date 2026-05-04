@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Localised
@@ -76,6 +77,7 @@ import Data.Time.Format
 import Data.Time.LocalTime
 import Formatting
 import Network.URI
+
 
 -- Make timelocale NFData
 instance NFData TimeLocale where

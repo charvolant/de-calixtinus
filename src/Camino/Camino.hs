@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Camino
@@ -107,6 +108,7 @@ module Camino.Camino (
   -- * Utilities
   , LatLong(..)
   , Palette(..)
+  , PaletteColour
   , Prioritised(..)
   , SRS(..)
   , centroid
@@ -156,10 +158,6 @@ import Graph.Programming
 import Data.Partial (topologicalSort)
 import Data.ByteString.Lazy (ByteString)
 import Text.Read (readMaybe)
-import Debug.Trace
-
--- For debugging
--- _traceSummary l v = trace (summaryString l ++ " " ++ summaryString v) v
 
 -- | Is this a placeholder name?
 --   Used to help detect placeholders
@@ -1251,15 +1249,18 @@ buildLegSegments fl tl waypoints distance ascent descent = let
   in
     segs
 
--- Make Colour NFData
+-- | What we use to encode colours
+type PaletteColour = Colour Double
+
+-- Make PaletteColour NFData
 -- Colour is already strict, so leave it be
-instance NFData (Colour a) where
+instance NFData PaletteColour where
   rnf _ = ()
 
 -- | A palette, graphical styles to use for displaying information.
 data Palette = Palette {
-    paletteColour :: Colour Double -- ^ The basic colour of the element
-  , paletteTextColour :: Colour Double -- ^ The text colour of the element
+    paletteColour :: PaletteColour -- ^ The basic colour of the element
+  , paletteTextColour :: PaletteColour -- ^ The text colour of the element
 } deriving (Show, Generic)
       
 instance FromJSON Palette where
@@ -1268,7 +1269,7 @@ instance FromJSON Palette where
     textColour' <- v .:? "text-colour" .!= colour'
     return Palette { 
         paletteColour = sRGB24read colour'
-      , paletteTextColour = sRGB24read textColour' 
+      , paletteTextColour = sRGB24read textColour'
     }
   parseJSON v = error ("Unable to parse palette object " ++ show v)
 

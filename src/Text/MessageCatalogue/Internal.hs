@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Text.MessageCatalogue.Internal
@@ -21,7 +22,6 @@ import Data.Char (isLetter)
 import Data.Default.Class (def)
 import qualified Data.List as L
 import qualified Data.Map as M
-import Data.Maybe
 import qualified Data.Set as S
 import Data.String
 import Data.Summary
@@ -29,18 +29,15 @@ import Data.Text (Text, unpack)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, decodeUtf8Lenient)
 import Language.Haskell.TH
-import Language.Haskell.TH.Lib
-import Language.Haskell.TH.Syntax
 import Language.Haskell.TH.Variables
-import System.Directory (doesFileExist, getDirectoryContents)
-import System.FilePath (FilePath, stripExtension, (</>))
+import System.Directory (doesFileExist)
+import System.FilePath (stripExtension, (</>))
 import Text.Blaze.Html (toHtml)
 import qualified Text.Blaze.Internal as TB
 import Text.Hamlet
 import Text.Parsec
 import Text.Parsec.String (Parser)
 import Text.Shakespeare.I18N (Lang, RenderMessage, renderMessage)
-import Debug.Trace
 
 -- | An message processing exception, usually the result of a parse error or incompatible message files
 data MessageException = MessageException {
@@ -97,9 +94,10 @@ mcLocaleRest ctx = mkName $ nameBase (paName $ mcLocale ctx) ++ "_r"
 mcMsgTypeName :: MessageContext -> Name
 mcMsgTypeName ctx = mcMsgTypeName' (paType $ mcMsg ctx)
 
+mcMsgTypeName' :: Type -> Name
 mcMsgTypeName' (ConT n) = n
 mcMsgTypeName' (AppT t _) = mcMsgTypeName' t
-msMsgTypeName' _ = error "Can't get message type name"
+mcMsgTypeName' _ = error "Can't get message type name"
 
 htmlType :: Type
 htmlType = ConT ''Text.Hamlet.Html
@@ -125,8 +123,10 @@ loadLang folder file = do
         return $ Just (Catalogue lang'' defs)
       _ -> return Nothing
 
+collectMsg :: [Text] -> [Text] -> [Text]
 collectMsg msg msgs = if null msg then msgs else (T.intercalate "\n" (reverse msg)):msgs
 
+collectMessages :: [Text] -> [Text] -> [Text]
 collectMessages [] msg = collectMsg msg []
 collectMessages (line:rest) msg = case T.uncons line of
     Nothing -> collectMessages rest (line:msg)
@@ -149,13 +149,13 @@ parseMessage lang msg = do
 
 parseConstructor :: Lang -> String -> (String, [Param])
 parseConstructor lang dec = either
-  (\e -> CE.throw $ MessageException ("Can't parse constructor " <> dec) (Just lang) Nothing Nothing)
+  (\e -> CE.throw $ MessageException ("Can't parse constructor " ++ dec ++ " " ++ show e) (Just lang) Nothing Nothing)
   id
   (parse constructorParser "" dec)
 
 parseType :: String -> Type
 parseType dec = either
-  (\e -> CE.throw $ MessageException ("Can't parse type " <> dec) Nothing Nothing Nothing)
+  (\e -> CE.throw $ MessageException ("Can't parse type " ++ dec ++ " " ++ show e) Nothing Nothing Nothing)
   id
   (parse typeDecParserTop "" dec)
 
@@ -266,19 +266,22 @@ constructorParser = do
   args <- sepBy argParser whitespace
   return $ (constructor, args)
 
+checkLang'' :: (MC.MonadThrow m) => Lang -> String -> [Param] -> [Param] -> m ()
 checkLang'' _lang _msg [] [] = do
   return ()
 checkLang'' lang msg (dparam:drest) (lparam:lrest) =
   let
     merr = case (paType dparam, paType lparam) of
       (WildCardT, _) -> Just $ "Default message has no type"
-      (dtype, WildCardT) -> Nothing
+      (_dtype, WildCardT) -> Nothing
       (dtype, ltype) -> if dtype == ltype then Nothing else Just $ "Type mismatch from default"
   in
     case merr of
       Nothing -> checkLang'' lang msg drest lrest
       Just err -> MC.throwM $ MessageException err (Just lang) (Just msg) (Just $ nameBase $ paName dparam)
+checkLang'' lang msg _ _ = MC.throwM $ MessageException "Unexpected mispatch in parameeter numbers" (Just lang) (Just msg) Nothing
 
+checkLang' :: (MC.MonadThrow m) => Lang -> M.Map String Msg -> Msg -> m ()
 checkLang' lang ddefs ldef = do
   let lmsg = msgConstructor ldef
   let ddef = ddefs M.! lmsg
@@ -287,6 +290,7 @@ checkLang' lang ddefs ldef = do
   when (length dargs /= length largs) (MC.throwM $ MessageException "Mismatching parameter numbers" (Just lang) (Just lmsg) Nothing)
   checkLang'' lang lmsg dargs largs
 
+checkLang :: (MC.MonadThrow m) => Catalogue -> Catalogue -> m ()
 checkLang dcat lcat = do
   let llang = caLang lcat
   let ddefs = caMsgs dcat
@@ -338,7 +342,7 @@ parseMsgBody :: Text -> Q Exp
 parseMsgBody body = hamletFromString htmlRules defaultHamletSettings (T.unpack body)
 
 makeMsgClause :: MessageContext -> Msg -> Msg -> Q Clause
-makeMsgClause ctx base msg = do
+makeMsgClause ctx _base msg = do
   expr <- parseMsgBody (msgBody msg)
   let vars = unboundVarsExp expr
   let varp n = if S.member n vars then VarP n else WildP
@@ -352,7 +356,7 @@ makeMsgClause ctx base msg = do
   return $ Clause cpattern (NormalB (ConE just `AppE` expr)) []
 
 makeNoMatchClause :: MessageContext -> Bool -> Catalogue -> Q Clause
-makeNoMatchClause ctx base catalogue = do
+makeNoMatchClause ctx base _catalogue = do
   let context = map paName $ mcContext ctx
       msg = paName $ mcMsg ctx
       expr = if base then
@@ -383,7 +387,7 @@ makeRenderDec ctx catalogues = do
   return $ [SigD rname rtype, FunD rname [mainClause], SigD rname' rtype', FunD rname' ([nullClause] ++ clauses ++ [nfClause])]
 
 makeMsgRenderMain :: MessageContext -> Name -> Name -> Q Clause
-makeMsgRenderMain ctx rname rname' = do
+makeMsgRenderMain ctx _rname rname' = do
   let msg = paName $ mcMsg ctx
       locales = paName $ mcLocales ctx
       context = map paName $ mcContext ctx

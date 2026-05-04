@@ -35,7 +35,6 @@ import Data.Description
 import Data.Maybe (catMaybes, fromJust)
 import Data.Text (Text, intercalate, isPrefixOf, pack, toLower)
 import Data.Text.Lazy (toStrict)
-import Data.Colour (Colour)
 import Data.Colour.SRGB (toSRGB24, RGB(..))
 import Data.Localised
 import Data.Metadata
@@ -59,7 +58,7 @@ showHex2 x
 
 -- | Convert am opaque colour into an RGB triple
 --   KML is hex aabbggrr - alpha, blue, green, red for some reason
-toARGB :: Double -> Colour Double -> Text
+toARGB :: Double -> PaletteColour -> Text
 toARGB alpha colour = pack $ (showHex2 a' . showHex2 b' . showHex2 g' . showHex2 r') ""
   where
     a' = floor (alpha * 255)
@@ -72,7 +71,7 @@ htmlToNodes sou config locales html =
       message = renderCaminoMsg config sou locales
       route = renderCaminoRoute config locales
 
-kmlRouteStyle :: Text -> Double -> Double -> Colour Double -> [Node]
+kmlRouteStyle :: Text -> Double -> Double -> PaletteColour -> [Node]
 kmlRouteStyle identifier width alpha color = [xml|
     <Style id="#{identifier}">
       <LineStyle>

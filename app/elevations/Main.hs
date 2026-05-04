@@ -25,7 +25,6 @@ import Formatting
 import Graph.Graph
 import Network.Google.Elevation
 import Options.Applicative
-import System.FilePath
 import System.Directory
 import System.IO
 

@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : XLSX
@@ -116,10 +117,10 @@ longDateStyle = def
   & styleWidth ?~ WidthFixed 16
 
 pilgrimageColour :: Color
-pilgrimageColour = (def & colorARGB ?~ toExcelColour (blend 0.5 black caminoYellow))
+pilgrimageColour = def & colorARGB ?~ toExcelColour (blend 0.5 black caminoYellow)
 
 pilgrimageFontColour :: Color
-pilgrimageFontColour = (def & colorARGB ?~ toExcelColour white)
+pilgrimageFontColour = def & colorARGB ?~ toExcelColour white
 
 pilgrimageStyle :: Style
 pilgrimageStyle = def
@@ -133,7 +134,7 @@ stageStyle :: Style
 stageStyle = head3Style & styleFill ?~ (def & fillPattern ?~ (def & fillPatternFgColor ?~ stageColour & fillPatternType ?~ PatternTypeSolid))
 
 dayColour :: Color
-dayColour = (def & colorARGB ?~ toExcelColour (blend 0.5 white caminoYellow))
+dayColour = def & colorARGB ?~ toExcelColour (blend 0.5 white caminoYellow)
 
 dayStyle :: Style
 dayStyle = head4Style & styleFill ?~ (def & fillPattern ?~ (def & fillPatternFgColor ?~ dayColour & fillPatternType ?~ PatternTypeSolid))
@@ -216,7 +217,7 @@ integerStyle :: Style
 integerStyle = def & styleNumberFormat ?~ integerFormat
 
 integerCell :: Int -> Cell CaminoMsg
-integerCell v = doubleCell integerFormat $ fromIntegral v
+integerCell v = doubleCell integerFormat $ (fromIntegral v :: Double)
 
 distanceFormat :: NumberFormat
 distanceFormat = UserNumberFormat "0.0"

@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : SVG
@@ -27,13 +28,11 @@ import Data.List (partition, uncons, unsnoc)
 import Data.Localised
 import Data.Maybe (fromJust, isJust)
 import Data.Spline
-import Data.Summary
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Util (ceilingBy, floorBy, headWithError, tailOrEmpty)
 import Formatting (fixed, format)
 import Text.Hamlet
-import Debug.Trace
 
 buildCoordinates'' :: Double -> Double -> Maybe Leg -> Location -> [LegSegment] -> Double ->  [(Double, Maybe Double, Maybe Leg, Maybe Location)]
 buildCoordinates'' _scalex _scaley _leg _lt [] _d = []

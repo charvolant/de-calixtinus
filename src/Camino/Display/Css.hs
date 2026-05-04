@@ -44,49 +44,49 @@ import Data.Colour.Names (antiquewhite, grey, mediumaquamarine)
 import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Localised (rootLocale)
-import Data.Text (Text, intercalate, pack)
+import Data.Text (Text, pack)
 import Data.Util (tailOrEmpty)
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
 
 -- | The traditional blue tile colour. Used as a primary darkish colour
-caminoBlue :: Colour Double
+caminoBlue :: PaletteColour
 caminoBlue = sRGB24read "1964c0"
 
 -- | The traditional yellow tile colour. Used as a primary lightish colour
-caminoYellow :: Colour Double
+caminoYellow :: PaletteColour
 caminoYellow = sRGB24read "f9b34a"
 
 -- | A light grey version of the background colour
-caminoLightGrey :: Colour Double
+caminoLightGrey :: PaletteColour
 caminoLightGrey = sRGB24read "e4e0cb"
 
 -- | A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
-informationBlue :: Colour Double
+informationBlue :: PaletteColour
 informationBlue = sRGB24read "1c9cf1"
 
 -- | A green indicating rest and recreation
-recreationGreen :: Colour Double
+recreationGreen :: PaletteColour
 recreationGreen = sRGB24read "00b820"
 
 -- | A muted blue indicating deprectaed information
-mutedBlue :: Colour Double
+mutedBlue :: PaletteColour
 mutedBlue = sRGB24read "a0b3ca"
 
 -- | A bootstrap warning color
-warningRed :: Colour Double
+warningRed :: PaletteColour
 warningRed = sRGB24read "dc3545"
 
 -- | A bootstrap success color
-successGreen :: Colour Double
+successGreen :: PaletteColour
 successGreen = sRGB24read "198754"
 
 -- | Create a CSS-able colour
 --
 --   >>> toCssColour $ sRGB24read "dc3545"
 --   "#dc3545"
-toCssColour :: Colour Double -- ^ The colour to display
+toCssColour :: PaletteColour -- ^ The colour to display
  -> String -- ^ A #rrggbb colour triple
 toCssColour = sRGB24show
 
@@ -94,9 +94,9 @@ toCssColour = sRGB24show
 --
 --   >>> toExcelColour $ sRGB24read "dc3545"
 --   "ffdc3545"
-toExcelColour :: Colour Double -- ^ The colour to display
+toExcelColour :: PaletteColour -- ^ The colour to display
   -> Text -- ^ A aarrggbb colour quad
-toExcelColour v = "ff" <> (pack $ tailOrEmpty $ sRGB24show v)
+toExcelColour c = "ff" <> (pack $ tailOrEmpty $ sRGB24show c)
 
 paletteCss :: Text -> Palette -> Render CaminoRoute -> Css
 paletteCss ident pal = [cassius|
@@ -271,17 +271,18 @@ staticCss config = [caminoBaseCss, paletteCss "location-default" def] ++ (map ca
 
 
 -- | The colour used to display a used route
-featureRouteColour :: Route -> Colour Double
+featureRouteColour :: Route -> PaletteColour
 featureRouteColour route = paletteColour $ routePalette route
 
 -- | A desaturated version of the `featureRouteColour` suitable for use displaying an unused route
-featureRouteDesaturatedColour :: Route -> Colour Double
-featureRouteDesaturatedColour route = (blend 0.3 antiquewhite) $ paletteColour $ routePalette route
+featureRouteDesaturatedColour :: Route -> PaletteColour
+featureRouteDesaturatedColour route = blend 0.3 antiquewhite c
+  where c = paletteColour $ routePalette route
 
-featureRouteBlueColour :: Route -> Colour Double
+featureRouteBlueColour :: Route -> PaletteColour
 featureRouteBlueColour _route = mediumaquamarine
 
-featureRouteGreyColour :: Route -> Colour Double
+featureRouteGreyColour :: Route -> PaletteColour
 featureRouteGreyColour _route = grey
 
 

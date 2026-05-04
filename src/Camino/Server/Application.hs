@@ -7,6 +7,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Application

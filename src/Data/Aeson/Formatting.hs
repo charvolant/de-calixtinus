@@ -34,6 +34,8 @@ module Data.Aeson.Formatting (
   , inlineAlways
   , inlineNever
   , inlineWhenLiterals
+  , isComplex
+  , isObject
   , poFields
   , poIndent
   -- ** Numeric field formatting
@@ -69,12 +71,10 @@ import Data.Scientific (FPFormat(..), Scientific, formatScientific)
 import qualified Data.Set as S
 import qualified Data.String as ST (IsString(..))
 import qualified Data.Text as T
-import Data.Text.Encoding
 import Data.Util (headWithError, headWithDefault)
 import qualified Data.Vector as V (all, null, toList, length)
 import Text.Parsec
 import Text.Parsec.String (Parser)
-import Debug.Trace
 import Data.ByteString.Builder (lazyByteString)
 
 
@@ -227,10 +227,12 @@ inlineNever = const False
 inlineAlways :: Value -> Bool
 inlineAlways = const True
 
+-- | Is this value an object
 isObject :: Value -> Bool
 isObject (Object _) = True
 isObject _ = False
 
+-- | Is this value complex (eg an array or object)
 isComplex :: Value -> Bool
 isComplex (Object _) = True
 isComplex (Array _) = True

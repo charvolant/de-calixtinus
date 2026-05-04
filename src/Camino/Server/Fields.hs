@@ -51,7 +51,6 @@ import Yesod.Form.Fields (parseDate)
 import Yesod.Form.Types
 import Yesod.Form.Functions
 import Text.Blaze.Html (ToMarkup, preEscapedToHtml)
-import Debug.Trace
 
 parseVal :: (Read a) => (a -> a) -> Text -> Either FormMessage a
 parseVal tr s = case (reads $ unpack s) of
@@ -184,7 +183,7 @@ extendedCheckboxFieldList :: (Ord a, RenderMessage site FormMessage) =>
 extendedCheckboxFieldList render options = extendedCheckboxFieldList' (renderOptions render options)
 
 -- | Create a field that handles preference ranges for things with units
-rangeFieldQuantity :: (RenderMessage site FormMessage, RealFrac a, Read a, Show a, Ord a, ToMarkup a) => U.SystemOfUnits -> U.Quantity -> a -> a -> a -> Field (HandlerFor site) (PreferenceRange a)
+rangeFieldQuantity :: (RenderMessage site FormMessage, RealFrac a, Read a, Show a, ToMarkup a) => U.SystemOfUnits -> U.Quantity -> a -> a -> a -> Field (HandlerFor site) (PreferenceRange a)
 rangeFieldQuantity sou quantity minv maxv stepv = Field
     { fieldParse = \rawVals -> \_fileVals -> case rawVals of
       [sou', min', lower', target', upper', max'] -> let

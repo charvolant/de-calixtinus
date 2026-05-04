@@ -236,6 +236,7 @@ canonicalise' c = c
 --
 -- >>> canonicalise "Añsaiõ"
 -- "Ansaio"
+canonicalise :: T.Text -> T.Text
 canonicalise t = T.map canonicalise' t
 
 partition' :: Eq t => (a -> t) -> [a] -> t -> [a] -> [(t, [a])]

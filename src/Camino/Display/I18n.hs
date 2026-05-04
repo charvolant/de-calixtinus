@@ -47,12 +47,10 @@ module Camino.Display.I18n (
 
 import Camino.Camino
 import Camino.Config
-import qualified Camino.Planner as P
 import qualified Camino.Units as U
 import Data.Localised
 import Data.Region
 import Data.Text
-import Data.Text.Encoding (decodeUtf8Lenient)
 import qualified Data.Time.Calendar as C
 import Data.Time.Format
 import Data.Time.LocalTime
@@ -62,10 +60,8 @@ import Language.Haskell.TH
 import Text.Blaze.Html (text, text, toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as HA
-import qualified Text.Blaze.Internal as TB
 import Text.Hamlet
 import Text.MessageCatalogue
-import qualified Camino.Units as U
 
 -- | A symbol (◆) indicating something beyond a preference range or specifically rejected
 rejectSymbol :: Text
@@ -100,7 +96,7 @@ formatForSystemOfUnits :: (RealFrac a) => U.SystemOfUnits -> a -> Text
 formatForSystemOfUnits U.SIUnits v = sformat (fixed 1) v
 formatForSystemOfUnits U.USUnits v = whole <> part where
   (n, f) = properFraction v
-  (n', f') = if f > 0.875 then (n + 1, 0.0) else (n, f)
+  (n', f') = if f > 0.875 then (fromIntegral n + 1 :: Int, 0.0) else (fromInteger n :: Int, realToFrac f :: Float)
   whole = if n' == 0 then if f' < 0.25 then "0" else "" else sformat int n'
   part = if f' < 0.125 then ""
     else if f' < 0.365 then quarterSymbol
@@ -172,7 +168,7 @@ formatMaybeDistance sou (Just d) = formatDistance sou d
 -- >>> renderHtml $ formatHours def 12.4
 -- "<span class=\"time\">12.4\226\128\137hr</span>"
 formatHours :: (RealFrac a) => U.SystemOfUnits -> a -> Html
-formatHours sou t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t <> thinSpace <> symbol
+formatHours sou t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t' <> thinSpace <> symbol
   where
     unit = U.preferredUnit sou U.Time
     t' = U.convertAmount U.Hour unit t
@@ -190,7 +186,7 @@ formatDays :: U.SystemOfUnits -> Int -> Html
 formatDays sou d = H.span H.! HA.class_ "days" $ text $  sformat int d' <> thinSpace <> symbol
   where
     unit = U.preferredUnit sou U.Calendar
-    d' = round $ U.convertAmount U.Day unit (fromIntegral d :: Float)
+    d' = (round $ U.convertAmount U.Day unit (fromIntegral d :: Float)) :: Int
     symbol = pack $ U.unitSymbol unit
 
 -- | Format a number of multi-day stages
@@ -340,7 +336,7 @@ renderLocalisedRegion :: Config -- ^ The configuration containing the region dat
  -> [Locale] -- ^ A list of desired locales
  -> Text -- ^ The region identifier (see `regionID`)
  -> Html -- ^ The resulting region name
-renderLocalisedRegion config sou locs rid = maybe (toHtml rid) (\r -> renderLocalisedText locs False False False (regionName r)) region
+renderLocalisedRegion config _sou locs rid = maybe (toHtml rid) (\r -> renderLocalisedText locs False False False (regionName r)) region
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
 

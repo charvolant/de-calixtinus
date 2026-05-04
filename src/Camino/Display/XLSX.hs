@@ -25,11 +25,11 @@ module Camino.Display.XLSX (
 ) where
 
 import Camino.Camino
+import Camino.Colour
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
 import qualified Camino.Units as U
-import Camino.Display.Css
 import Camino.Display.Html
 import Camino.Display.I18n
 import Control.Applicative ((<|>))
@@ -37,8 +37,6 @@ import Control.Lens
 import Control.Monad (filterM)
 import Control.Monad.Reader
 import Control.Monad.State (evalState)
-import Data.Colour
-import Data.Colour.Names
 import Data.Description
 import Data.Event
 import Data.Event.Date
@@ -117,10 +115,10 @@ longDateStyle = def
   & styleWidth ?~ WidthFixed 16
 
 pilgrimageColour :: Color
-pilgrimageColour = def & colorARGB ?~ toExcelColour (blend 0.5 black caminoYellow)
+pilgrimageColour = def & colorARGB ?~ toExcelColour (darken caminoYellow)
 
 pilgrimageFontColour :: Color
-pilgrimageFontColour = def & colorARGB ?~ toExcelColour white
+pilgrimageFontColour = def & colorARGB ?~ toExcelColour standardWhite
 
 pilgrimageStyle :: Style
 pilgrimageStyle = def
@@ -134,7 +132,7 @@ stageStyle :: Style
 stageStyle = head3Style & styleFill ?~ (def & fillPattern ?~ (def & fillPatternFgColor ?~ stageColour & fillPatternType ?~ PatternTypeSolid))
 
 dayColour :: Color
-dayColour = def & colorARGB ?~ toExcelColour (blend 0.5 white caminoYellow)
+dayColour = def & colorARGB ?~ toExcelColour (lighten caminoYellow)
 
 dayStyle :: Style
 dayStyle = head4Style & styleFill ?~ (def & fillPattern ?~ (def & fillPatternFgColor ?~ dayColour & fillPatternType ?~ PatternTypeSolid))

@@ -20,6 +20,7 @@ module Camino.Display.Html where
 import Control.Monad.Reader
 import Camino.Camino
 import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, getDebug)
+import Camino.Colour (Palette(..))
 import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, dayLegs, journeyDays, journeyLegs, metricsDays, pilgrimageDays, pilgrimageLegs, pilgrimageRests, pilgrimageStages, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
 import qualified Camino.Units as U

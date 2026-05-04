@@ -36,67 +36,16 @@ module Camino.Display.Css (
 ) where
 
 import Camino.Camino
+import Camino.Colour
 import Camino.Config
 import Camino.Display.Routes
 import Data.Char (ord)
-import Data.Colour
-import Data.Colour.Names (antiquewhite, grey, mediumaquamarine)
-import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Localised (rootLocale)
-import Data.Text (Text, pack)
-import Data.Util (tailOrEmpty)
+import Data.Text (Text)
 import Numeric
 import Text.Cassius
 import Text.Hamlet (Render)
-
--- | The traditional blue tile colour. Used as a primary darkish colour
-caminoBlue :: PaletteColour
-caminoBlue = sRGB24read "1964c0"
-
--- | The traditional yellow tile colour. Used as a primary lightish colour
-caminoYellow :: PaletteColour
-caminoYellow = sRGB24read "f9b34a"
-
--- | A light grey version of the background colour
-caminoLightGrey :: PaletteColour
-caminoLightGrey = sRGB24read "e4e0cb"
-
--- | A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
-informationBlue :: PaletteColour
-informationBlue = sRGB24read "1c9cf1"
-
--- | A green indicating rest and recreation
-recreationGreen :: PaletteColour
-recreationGreen = sRGB24read "00b820"
-
--- | A muted blue indicating deprectaed information
-mutedBlue :: PaletteColour
-mutedBlue = sRGB24read "a0b3ca"
-
--- | A bootstrap warning color
-warningRed :: PaletteColour
-warningRed = sRGB24read "dc3545"
-
--- | A bootstrap success color
-successGreen :: PaletteColour
-successGreen = sRGB24read "198754"
-
--- | Create a CSS-able colour
---
---   >>> toCssColour $ sRGB24read "dc3545"
---   "#dc3545"
-toCssColour :: PaletteColour -- ^ The colour to display
- -> String -- ^ A #rrggbb colour triple
-toCssColour = sRGB24show
-
--- | Create a colour that can be used in an Excel style
---
---   >>> toExcelColour $ sRGB24read "dc3545"
---   "ffdc3545"
-toExcelColour :: PaletteColour -- ^ The colour to display
-  -> Text -- ^ A aarrggbb colour quad
-toExcelColour c = "ff" <> (pack $ tailOrEmpty $ sRGB24show c)
 
 paletteCss :: Text -> Palette -> Render CaminoRoute -> Css
 paletteCss ident pal = [cassius|
@@ -276,14 +225,14 @@ featureRouteColour route = paletteColour $ routePalette route
 
 -- | A desaturated version of the `featureRouteColour` suitable for use displaying an unused route
 featureRouteDesaturatedColour :: Route -> PaletteColour
-featureRouteDesaturatedColour route = blend 0.3 antiquewhite c
+featureRouteDesaturatedColour route = lighten c
   where c = paletteColour $ routePalette route
 
 featureRouteBlueColour :: Route -> PaletteColour
-featureRouteBlueColour _route = mediumaquamarine
+featureRouteBlueColour _route = routeFerry
 
 featureRouteGreyColour :: Route -> PaletteColour
-featureRouteGreyColour _route = grey
+featureRouteGreyColour _route = routeUnused
 
 
 -- | Generate information about a feature's type

@@ -27,6 +27,7 @@ source-repository head
 library
   exposed-modules:
       Camino.Camino
+      Camino.Colour
       Camino.Config
       Camino.Display.Css
       Camino.Display.Html

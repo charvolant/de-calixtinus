@@ -107,8 +107,6 @@ module Camino.Camino (
   , completeRoutes
   -- * Utilities
   , LatLong(..)
-  , Palette(..)
-  , PaletteColour
   , Prioritised(..)
   , SRS(..)
   , centroid
@@ -128,13 +126,12 @@ module Camino.Camino (
 ) where
 
 import GHC.Generics (Generic)
+import Camino.Colour
 import Control.Applicative ((<|>))
 import Control.DeepSeq
 import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (toJSONKeyText, typeMismatch)
-import Data.Colour (Colour)
-import Data.Colour.SRGB (sRGB24read, sRGB24show)
 import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
 import Data.Event
@@ -1249,48 +1246,6 @@ buildLegSegments fl tl waypoints distance ascent descent = let
   in
     segs
 
--- | What we use to encode colours
-type PaletteColour = Colour Double
-
--- Make PaletteColour NFData
--- Colour is already strict, so leave it be
-instance NFData PaletteColour where
-  rnf _ = ()
-
--- | A palette, graphical styles to use for displaying information.
-data Palette = Palette {
-    paletteColour :: PaletteColour -- ^ The basic colour of the element
-  , paletteTextColour :: PaletteColour -- ^ The text colour of the element
-} deriving (Show, Generic)
-      
-instance FromJSON Palette where
-  parseJSON (Object v) = do
-    colour' <- v .: "colour"
-    textColour' <- v .:? "text-colour" .!= colour'
-    return Palette { 
-        paletteColour = sRGB24read colour'
-      , paletteTextColour = sRGB24read textColour'
-    }
-  parseJSON v = error ("Unable to parse palette object " ++ show v)
-
-instance ToJSON Palette where
-  toJSON (Palette colour' textColour') =
-    object [
-        "colour" .= sRGB24show colour'
-      , "text-colour" .= (if colour' == textColour' then Nothing else Just $ sRGB24show textColour')
-      ]
-  toEncoding (Palette colour' textColour') =
-    pairs $ 
-        "colour" .= sRGB24show colour'
-      <> "text-colour" .?= (if colour' == textColour' then Nothing else Just $ sRGB24show textColour')
-
-instance NFData Palette
-
-instance Default Palette where
-  def = Palette {
-      paletteColour = sRGB24read "f9b34a" -- Camino yellow
-    , paletteTextColour = sRGB24read "f9b34a" -- Camino yellow
-  }
 
 -- | Read formulas from JSON
 instance (Eq a, Placeholder Text a) => FromJSON (Formula a) where

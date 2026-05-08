@@ -229,10 +229,10 @@ featureRouteDesaturatedColour route = lighten c
   where c = paletteColour $ routePalette route
 
 featureRouteBlueColour :: Route -> PaletteColour
-featureRouteBlueColour _route = routeFerry
+featureRouteBlueColour _route = ferryGreen
 
 featureRouteGreyColour :: Route -> PaletteColour
-featureRouteGreyColour _route = routeUnused
+featureRouteGreyColour _route = unusedGrey
 
 
 -- | Generate information about a feature's type

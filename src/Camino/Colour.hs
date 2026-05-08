@@ -15,7 +15,9 @@ Palettes, standard colours and conversions for use when displaying camino inform
 module Camino.Colour (
   -- * Palettes
     Palette(..)
-  , PaletteColour
+  , PaletteColour(..)
+  -- ** Properties
+  , luminance
   -- * Colour Operations
   , lighten
   , darken
@@ -26,17 +28,31 @@ module Camino.Colour (
   , toExcelColour
   , toKmlColour
   -- * Standard colours
+  --
+  -- | A collection of standard colours that make their way into the CSS files and can be used to include the colours in code.
+  --
+  -- ![colour chart](colours.svg)
+  , asideBackground
+  , caminoBackground
   , caminoBlue
   , caminoLightGrey
   , caminoYellow
+  , casaRuralCyan
+  , ferryGreen
+  , homeStayPink
+  , hostelGreen
   , informationBlue
   , mutedBlue
+  , naismithBlue
   , recreationGreen
-  , routeFerry
-  , routeUnused
-  , standardWhite
+  , refugeRed
+  , rejectedRed
   , successGreen
+  , textBlack
+  , textWhite
+  , unusedGrey
   , warningRed
+  , namedColours
 ) where
 
 import GHC.Generics (Generic)
@@ -44,6 +60,7 @@ import Control.DeepSeq
 import Data.Aeson
 import Data.Colour (blend)
 import Data.Colour.Names (antiquewhite, black, grey, mediumaquamarine)
+import qualified Data.Colour.CIE as CIE
 import Data.Colour.SRGB
 import Data.Default.Class
 import Data.Text (Text, pack)
@@ -52,13 +69,17 @@ import Data.Word (Word8)
 import Numeric (showHex)
 
 -- | What we use to encode colours
-newtype PaletteColour = PaletteColour (Colour Double)
+newtype PaletteColour = PaletteColour { unPaletteColour :: Colour Double }
   deriving (Show, Eq, Generic)
 
 -- Make PaletteColour NFData
 -- Colour is already strict, so leave it be
 instance NFData PaletteColour where
   rnf _ = ()
+
+-- Operations on underlying colour
+cmap :: (Colour Double -> Colour Double) -> PaletteColour -> PaletteColour
+cmap f (PaletteColour c) = PaletteColour (f c)
 
 -- | A palette, graphical styles to use for displaying information.
 data Palette = Palette {
@@ -95,65 +116,151 @@ instance Default Palette where
     , paletteTextColour = caminoYellow -- Camino yellow
   }
 
+-- | A light camino background colour that evokes camino yellow but pale enough to act as a background.
+--
+--   This colour corrersponds to the custom bootstrap background and
+--   is used as a reference for computing suitably contrasting text colours.
+--
+--   <https://www.colorhexa.com/faf8f0>
+caminoBackground :: PaletteColour
+caminoBackground = fromColourString "faf8f0"
+
 -- | The traditional blue tile colour. Used as a primary darkish colour
+--
+--   <https://www.colorhexa.com/1964c0>
 caminoBlue :: PaletteColour
-caminoBlue = PaletteColour $ sRGB24read "1964c0"
+caminoBlue = fromColourString "1964c0"
 
 -- | The traditional yellow tile colour. Used as a primary lightish colour
+--
+--   <https://www.colorhexa.com/f9b34a>
 caminoYellow :: PaletteColour
-caminoYellow = PaletteColour $ sRGB24read "f9b34a"
+caminoYellow = fromColourString "f9b34a"
 
 -- | A light grey version of the background colour
+--
+--   <https://www.colorhexa.com/e4e0cb>
 caminoLightGrey :: PaletteColour
-caminoLightGrey = PaletteColour $ sRGB24read "e4e0cb"
+caminoLightGrey = fromColourString "e4e0cb"
 
 -- | A blue indicating information. Not the traditional information sign colour, since it's too close to camino blue
+--
+--   <https://www.colorhexa.com/1c9cf1>
 informationBlue :: PaletteColour
-informationBlue = PaletteColour $ sRGB24read "1c9cf1"
+informationBlue = fromColourString "1c9cf1"
 
 -- | A green indicating rest and recreation
+--
+--   <https://www.colorhexa.com/00b820>
 recreationGreen :: PaletteColour
-recreationGreen = PaletteColour $ sRGB24read "00b820"
+recreationGreen = fromColourString "00b820"
 
 -- | A muted blue indicating deprectaed information
+--
+--   <https://www.colorhexa.com/a0b3ca>
 mutedBlue :: PaletteColour
-mutedBlue = PaletteColour $ sRGB24read "a0b3ca"
+mutedBlue = fromColourString "a0b3ca"
 
 -- | A bootstrap warning color
+--
+--   <https://www.colorhexa.com/dc3545>
 warningRed :: PaletteColour
-warningRed = PaletteColour $ sRGB24read "dc3545"
+warningRed = fromColourString "dc3545"
 
 -- | A bootstrap success color
+--
+--   <https://www.colorhexa.com/198754>
 successGreen :: PaletteColour
-successGreen = PaletteColour $ sRGB24read "198754"
+successGreen = fromColourString "198754"
+
+-- | Indicates that a preference has been rejected
+--
+--   <https://www.colorhexa.com/c5321b>
+rejectedRed :: PaletteColour
+rejectedRed = fromColourString "c5321b"
+
+-- | Casa rural/Quinta colour
+--
+--   <https://www.colorhexa.com/19c0bf>
+casaRuralCyan :: PaletteColour
+casaRuralCyan = fromColourString "19c0bf"
+
+-- | Hostel colour
+--
+--   <https://www.colorhexa.com/2ab472>
+hostelGreen :: PaletteColour
+hostelGreen = fromColourString "2ab472"
+
+-- | Refuge colour
+--
+--   <https://www.colorhexa.com/ff201c>
+refugeRed :: PaletteColour
+refugeRed = fromColourString "ff201c"
+
+-- | Home stay colour
+--
+--   <https://www.colorhexa.com/ff395c>
+homeStayPink :: PaletteColour
+homeStayPink = fromColourString "ff395c"
+
+-- | Naismoth's rule colour, indicating Naismith's rule is being used to estimate time
+--
+--   <https://www.colorhexa.com/506890>
+naismithBlue :: PaletteColour
+naismithBlue = fromColourString "506890"
+
+-- | Background colour for asides
+--
+--   <https://www.colorhexa.com/d0f8ff>
+asideBackground :: PaletteColour
+asideBackground = fromColourString "d0f8ff"
 
 -- | A blue for ferry routes and the like
-routeFerry :: PaletteColour
-routeFerry = PaletteColour mediumaquamarine
+--
+--   <https://www.colorhexa.com/66cdaa> (medium aquamarine)
+ferryGreen :: PaletteColour
+ferryGreen = PaletteColour mediumaquamarine
 
 -- | A grey for routes that are not used
-routeUnused :: PaletteColour
-routeUnused = PaletteColour grey
+--
+--   <https://www.colorhexa.com/80800> (grey)
+unusedGrey :: PaletteColour
+unusedGrey = PaletteColour grey
 
--- | A white to use for backgrounds and font contrast
-standardWhite :: PaletteColour
-standardWhite = PaletteColour antiquewhite
+-- | A white to use for text on a dark background
+--
+--   <https://www.colorhexa.com/faf8f0>
+textWhite :: PaletteColour
+textWhite = fromColourString "faf8f0"
+
+-- | A black to use for text on a light background
+--
+--   <https://www.colorhexa.com/212529>
+textBlack :: PaletteColour
+textBlack = fromColourString "212529"
 
 --
 -- | Lighten a palette colour
 --
--- >>> lighten successGreen
--- PaletteColour (Data.Colour.SRGB.Linear.rgb 0.2935968580989523 0.41882774875828477 0.2659216512899692)
+-- >>> toCssColour <$> [caminoYellow, lighten caminoYellow]
+-- ["#f9b34a","#f9c689"]
 lighten :: PaletteColour -> PaletteColour
-lighten (PaletteColour c) = PaletteColour $ blend 0.3 antiquewhite c
+lighten c = blend 0.3 antiquewhite `cmap` c
 
---
 -- | Darken a palette colour
 --
--- >>> darken successGreen
--- PaletteColour (Data.Colour.SRGB.Linear.rgb 4.860608660118925e-3 0.12114056123277743 4.432779314288647e-2)
+-- >>> toCssColour <$> [caminoYellow, darken caminoYellow]
+-- ["#f9b34a","#b78334"]i
 darken :: PaletteColour -> PaletteColour
-darken (PaletteColour c) = PaletteColour $ blend 0.5 black c
+darken c = blend 0.5 black `cmap` c
+
+-- | Colour luminance
+--
+-- >>> luminance caminoYellow
+-- 0.5287693392210411
+luminance :: PaletteColour -- ^ The colour
+  -> Double -- The luminance from 0.0 (black) to 1.0 (white)
+luminance (PaletteColour c) = CIE.luminance c
 
 -- | Read from an rrggbb hex colour
 --
@@ -167,7 +274,7 @@ fromColourString = PaletteColour . sRGB24read
 -- | Render as a #rrggbb hex colour
 --
 -- >>> toColourString caminoYellow
--- "f9b34a"
+-- "#f9b34a"
 toColourString :: PaletteColour -> String
 toColourString (PaletteColour c) =  sRGB24show c
 --
@@ -205,3 +312,27 @@ showHex2 x
   | x <= 0xf = ("0"++) . showHex x
   | otherwise = showHex x
 
+-- | Standard colour list of (English) names and colours
+namedColours :: [(Text, PaletteColour)]
+namedColours = [
+    ("Aside Background", asideBackground)
+  , ("Camino Background", caminoBackground)
+  , ("Camino Blue", caminoBlue)
+  , ("Camino Light Grey", caminoLightGrey)
+  , ("Camino Yellow", caminoYellow)
+  , ("Casa Rural Cyan", casaRuralCyan)
+  , ("Ferry Green", ferryGreen)
+  , ("Home Stay Pink", homeStayPink)
+  , ("Hostel Green", hostelGreen)
+  , ("Information Blue", informationBlue)
+  , ("Muted Blue", mutedBlue)
+  , ("Naismith Blue", naismithBlue)
+  , ("Recreation Green", recreationGreen)
+  , ("Refuge Red", refugeRed)
+  , ("Rejected Red", rejectedRed)
+  , ("Success Green", successGreen)
+  , ("Text Black", textBlack)
+  , ("Text White", textWhite)
+  , ("Unused Grey", unusedGrey)
+  , ("Warning Red", warningRed)
+  ]

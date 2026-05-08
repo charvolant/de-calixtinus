@@ -15,7 +15,7 @@ since it will be down a long rabbit-hole.
 The files in the `static` subdirectory can be served directly,
 without generation.
 If you change the CSS or other templated static files, run
-`generate-static-exe -c CONFIG` to generate the appropriate CSS files.
+`generate-static-exe -c CONFIG --css` to generate the appropriate CSS files.
 
 ## Docker Image
 
@@ -29,6 +29,23 @@ docker build . -t yourname/de-calixtinus:0.10-SNAPSHOT
 substituing your docker username for `yourname`.
 This builds the current source in a docker container and then
 creates a slimmed-down version for deployment.
+
+## Documentation
+
+The `haddock.sh` script generates [haddock](https://haskell-haddock.readthedocs.io/latest/) documentation from scratch.
+This is a multi-stage process, since support files, such as the colour swatch,
+need to be generated and copied into the documentation.
+To tun the script, use
+
+```shell
+./scripts/haddock.sh
+```
+
+If you don't need to completely regenerate, then the following will suffice:
+
+```shell
+stack haddock --no-haddock-deps
+```
 
 ## Icons and Fonts
 

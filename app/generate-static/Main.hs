@@ -20,22 +20,27 @@ import System.Directory
 data Generate = Generate {
   config :: FilePath,
   output :: FilePath,
-  allStatic :: Bool
+  cssStatic :: Bool,
+  helpStatic :: Bool,
+  coloursStatic :: Bool
 }
 
 arguments :: Parser Generate
 arguments =  Generate
     <$> (strOption (long "config" <> short 'c' <> value "./config.yaml" <> metavar "CONFIG" <> help "Configuration file"))
     <*> (strOption (long "output" <> short 'o' <> value "./static" <> metavar "OUTPUTDIR" <> help "Output directory"))
-    <*> (switch (long "all" <> short 'a' <> help "Generate all static files, including pre-formatted help files"))
+    <*> (switch (long "css" <> help "Generate CSS"))
+    <*> (switch (long "help" <> help "Generate pre-formatted help files"))
+    <*> (switch (long "colours" <> help "Generate colour swatch"))
 
 generate :: Generate -> IO ()
 generate opts = do
     config' <- readConfigFile (config opts)
     let output' = output opts
     createDirectoryIfMissing True output'
-    createCssFiles config' (output' </> "css")
-    when (allStatic opts) (createHelpFiles config' (output' </> "help"))
+    when (cssStatic opts) (createCssFiles config' (output' </> "css"))
+    when (coloursStatic opts) (createColourSwatch config' (output' </> "doc"))
+    when (helpStatic opts) (createHelpFiles config' (output' </> "help"))
 
 main :: IO ()
 main = do

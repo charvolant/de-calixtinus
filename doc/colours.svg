@@ -1,0 +1,61 @@
+<svg width="320" height="500" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="24" x="10" y="10" fill="#d0f8ff" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="26" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">Aside Background</text>
+<text x="170" y="26" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">#d0f8ff</text>
+<rect width="300" height="24" x="10" y="34" fill="#faf8f0" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="50" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">Camino Background</text>
+<text x="170" y="50" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">#faf8f0</text>
+<rect width="300" height="24" x="10" y="58" fill="#1964c0" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="74" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Camino Blue</text>
+<text x="170" y="74" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#1964c0</text>
+<rect width="300" height="24" x="10" y="82" fill="#e4e0cb" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="98" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">Camino Light Grey</text>
+<text x="170" y="98" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">#e4e0cb</text>
+<rect width="300" height="24" x="10" y="106" fill="#f9b34a" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="122" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">Camino Yellow</text>
+<text x="170" y="122" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">#f9b34a</text>
+<rect width="300" height="24" x="10" y="130" fill="#19c0bf" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="146" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Casa Rural Cyan</text>
+<text x="170" y="146" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#19c0bf</text>
+<rect width="300" height="24" x="10" y="154" fill="#66cdaa" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="170" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Ferry Green</text>
+<text x="170" y="170" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#66cdaa</text>
+<rect width="300" height="24" x="10" y="178" fill="#ff395c" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="194" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Home Stay Pink</text>
+<text x="170" y="194" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#ff395c</text>
+<rect width="300" height="24" x="10" y="202" fill="#2ab472" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="218" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Hostel Green</text>
+<text x="170" y="218" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#2ab472</text>
+<rect width="300" height="24" x="10" y="226" fill="#1c9cf1" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="242" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Information Blue</text>
+<text x="170" y="242" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#1c9cf1</text>
+<rect width="300" height="24" x="10" y="250" fill="#a0b3ca" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="266" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Muted Blue</text>
+<text x="170" y="266" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#a0b3ca</text>
+<rect width="300" height="24" x="10" y="274" fill="#506890" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="290" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Naismith Blue</text>
+<text x="170" y="290" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#506890</text>
+<rect width="300" height="24" x="10" y="298" fill="#00b820" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="314" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Recreation Green</text>
+<text x="170" y="314" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#00b820</text>
+<rect width="300" height="24" x="10" y="322" fill="#ff201c" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="338" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Refuge Red</text>
+<text x="170" y="338" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#ff201c</text>
+<rect width="300" height="24" x="10" y="346" fill="#c5321b" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="362" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Rejected Red</text>
+<text x="170" y="362" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#c5321b</text>
+<rect width="300" height="24" x="10" y="370" fill="#198754" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="386" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Success Green</text>
+<text x="170" y="386" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#198754</text>
+<rect width="300" height="24" x="10" y="394" fill="#212529" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="410" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Text Black</text>
+<text x="170" y="410" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#212529</text>
+<rect width="300" height="24" x="10" y="418" fill="#faf8f0" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="434" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">Text White</text>
+<text x="170" y="434" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="black">#faf8f0</text>
+<rect width="300" height="24" x="10" y="442" fill="#808080" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="458" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Unused Grey</text>
+<text x="170" y="458" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#808080</text>
+<rect width="300" height="24" x="10" y="466" fill="#dc3545" stroke="darkgrey" stroke-width="1"></rect>
+<text x="20" y="482" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">Warning Red</text>
+<text x="170" y="482" font-family="sans-serif" font-size="14" font-weight="normal" text-anchor="start" fill="white">#dc3545</text>
+</svg>

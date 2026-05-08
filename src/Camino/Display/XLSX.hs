@@ -118,7 +118,7 @@ pilgrimageColour :: Color
 pilgrimageColour = def & colorARGB ?~ toExcelColour (darken caminoYellow)
 
 pilgrimageFontColour :: Color
-pilgrimageFontColour = def & colorARGB ?~ toExcelColour standardWhite
+pilgrimageFontColour = def & colorARGB ?~ toExcelColour textWhite
 
 pilgrimageStyle :: Style
 pilgrimageStyle = def

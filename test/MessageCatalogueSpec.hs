@@ -3,9 +3,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 module MessageCatalogueSpec(testMessageCatalogue) where
 
-import Control.Exception
-import Control.Monad.IO.Class (liftIO)
-import Data.Either
 import Data.Maybe
 import qualified Data.Text as T
 import Language.Haskell.TH
@@ -16,7 +13,6 @@ import Text.Parsec (parse)
 import Text.RawString.QQ
 import Text.Shakespeare.I18N (Lang)
 import TestUtils
-import Codec.Xlsx (DynFilterType(DynFilterM1))
 
 testMessageCatalogue :: Test
 testMessageCatalogue = TestList [
@@ -27,6 +23,7 @@ testMessageCatalogue = TestList [
   , TestLabel "Make Constructor" testMakeConstructor
   , TestLabel "Make Data Dec" testMakeDataDec
   , TestLabel "Make Lang Tag" testMakeLangTag
+  , TestLabel "Make Message Clause" testMakeMessageClause
   , TestLabel "Make Catalogue Dec" testMakeCatalogueDec
   , TestLabel "Make Render Dec" testMakeRenderDec
   , TestLabel "Make Message Catalogue Decs" testMkMessageCatalogue
@@ -71,7 +68,7 @@ testReadLangs = TestList [
   ]
 
 testReadLangs1 = TestCase (do
-  entries <- loadLang "./test/messages1" "en.msg"
+  entries <- runQ $ loadLang "./test/messages1" "en.msg"
   assertBool "Read Langs 1 1" (isJust entries)
   let ca = fromJust entries
   assertEqual "Read Langs 1 2" "en" (caLang ca)
@@ -79,17 +76,17 @@ testReadLangs1 = TestCase (do
   )
 
 testReadLangs2 = TestCase (do
-  entries <- loadLang "./test/messages1" "ez.msg"
+  entries <- runQ $ loadLang "./test/messages1" "ez.msg"
   assertBool "Read Langs 2 1" (isNothing entries)
   )
 
 testReadLangs3 = TestCase (do
-  entries <- loadLang "./test/messages1" "en.txt"
+  entries <- runQ $ loadLang "./test/messages1" "en.txt"
   assertBool "Read Langs 3 1" (isNothing entries)
   )
 
 testReadLangs4 = TestCase (do
-  entries <- loadLang "./test/messages2" "pt.msg"
+  entries <- runQ $ loadLang "./test/messages2" "pt.msg"
   assertBool "Read Langs 4 1" (isJust entries)
   let ca = fromJust entries
   assertEqual "Read Langs 4 2" "pt" (caLang ca)
@@ -108,84 +105,84 @@ testParseMessage = TestList [
   ]
 
 testParseMessage1 = TestCase (do
-  msg <- parseMessage "en" "Label1: Some text"
+  msg <- runQ $ parseMessage "en" "Label1: Some text"
   assertEqual "Parse Message 1 1" "Label1" (msgConstructor msg)
   assertEqual "Parse Message 1 2" [] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 1 3" "Some text" (msgBody msg)
   )
 
 testParseMessage2 = TestCase (do
-  msg <- parseMessage "en" "Label1 :  Some text  "
+  msg <- runQ $ parseMessage "en" "Label1 :  Some text  "
   assertEqual "Parse Message 2 1" "Label1" (msgConstructor msg)
   assertEqual "Parse Message 2 2" [] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 2 3" "Some text" (msgBody msg)
   )
 
 testParseMessage3 = TestCase (do
-  msg <- parseMessage "en" "Label v: Some text"
+  msg <- runQ $ parseMessage "en" "Label v: Some text"
   assertEqual "Parse Message 3 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 3 2" [("v", "_")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 3 3" "Some text" (msgBody msg)
   )
 
 testParseMessage4 = TestCase (do
-  msg <- parseMessage "en" "Label v@Int: Some text"
+  msg <- runQ $ parseMessage "en" "Label v@Int: Some text"
   assertEqual "Parse Message 4 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 4 2" [("v", "Int")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 4 3" "Some text" (msgBody msg)
   )
 
 testParseMessage5 = TestCase (do
-  msg <- parseMessage "en" "Label v@(Maybe Text): Some text"
+  msg <- runQ $ parseMessage "en" "Label v@(Maybe Text): Some text"
   assertEqual "Parse Message 5 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 5 2" [("v", "(Maybe Text)")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 5 3" "Some text" (msgBody msg)
   )
 
 testParseMessage6 = TestCase (do
-  msg <- parseMessage "en" "Label v@( Maybe  Text ): Some text"
+  msg <- runQ $ parseMessage "en" "Label v@( Maybe  Text ): Some text"
   assertEqual "Parse Message 6 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 6 2" [("v", "(Maybe Text)")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 6 3" "Some text" (msgBody msg)
   )
 
 testParseMessage7 = TestCase (do
-  msg <- parseMessage "en" "Label v1 v2: Some text"
+  msg <- runQ $ parseMessage "en" "Label v1 v2: Some text"
   assertEqual "Parse Message 7 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 7 2" [("v1", "_"), ("v2", "_")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 7 3" "Some text" (msgBody msg)
   )
 
 testParseMessage8 = TestCase (do
-  msg <- parseMessage "en" "Label v1@Int v2@Float: Some text"
+  msg <- runQ $ parseMessage "en" "Label v1@Int v2@Float: Some text"
   assertEqual "Parse Message 8 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 8 2" [("v1", "Int"), ("v2", "Float")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 8 3" "Some text" (msgBody msg)
   )
 
 testParseMessage9 = TestCase (do
-  msg <- parseMessage "en" "Label v1@(M.Map String [Int]): Some text"
+  msg <- runQ $ parseMessage "en" "Label v1@(M.Map String [Int]): Some text"
   assertEqual "Parse Message 9 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 9 2" [("v1", "(M.Map String [Int])")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 9 3" "Some text" (msgBody msg)
   )
 
 testParseMessage10 = TestCase (do
-  msg <- parseMessage "en" "Label v1@(Int -> Text): Some text"
+  msg <- runQ $ parseMessage "en" "Label v1@(Int -> Text): Some text"
   assertEqual "Parse Message 10 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 10 2" [("v1", "(Int -> Text)")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 10 3" "Some text" (msgBody msg)
   )
 
 testParseMessage11 = TestCase (do
-  msg <- parseMessage "en" "Label v1@(Int -> [Int -> String]): Some text"
+  msg <- runQ $ parseMessage "en" "Label v1@(Int -> [Int -> String]): Some text"
   assertEqual "Parse Message 10 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 10 2" [("v1", "(Int -> [Int -> String])")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 10 3" "Some text" (msgBody msg)
   )
 
 testParseMessage12 = TestCase (do
-  msg <- parseMessage "en" "Label v1@(Int -> Text) v2@([Int]): Some text"
+  msg <- runQ $ parseMessage "en" "Label v1@(Int -> Text) v2@([Int]): Some text"
   assertEqual "Parse Message 10 1" "Label" (msgConstructor msg)
   assertEqual "Parse Message 10 2" [("v1", "(Int -> Text)"), ("v2", "([Int])")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 10 3" "Some text" (msgBody msg)
@@ -244,64 +241,40 @@ defaultMessageContext base = MessageContext {
     , mcBase = base
 }
 
-extractException :: Either SomeException a -> IO MessageException
-extractException result = do
-  let mex = fromException (either id (\_ -> error "Expecting Left") result)
-  assertBool "No MessageException" (isJust mex)
-  return $ fromJust mex
-
 testCheckLang = TestList [
   testCheckLang1, testCheckLang2, testCheckLang3, testCheckLang4,
   testCheckLang5, testCheckLang6
   ]
 
 testCheckLang1 = TestCase (do
-  checkLang lang11 lang12
+  result <- runQ $ checkLang lang11 lang12
+  assertBool "Check Lang 1" result
   )
 
 testCheckLang2 = TestCase (do
-  result <- (try $ checkLang lang11 lang13) :: IO (Either SomeException ())
-  assertBool "Check Lang 2 1" (isLeft result)
-  ex <- extractException result
-  assertEqual "Check Lang 2 2" "Additional message: {L3}" (meMsg ex)
-  assertEqual "Check Lang 2 3" (Just "es") (meLang ex)
-  assertEqual "Check Lang 2 4" Nothing (meConstructor ex)
-  assertEqual "Check Lang 2 5" Nothing (meArg ex)
+  result <- runQ $ checkLang lang11 lang13
+  assertBool "Check Lang 2" (not result)
   )
 
 
 testCheckLang3 = TestCase (do
-  checkLang lang21 lang22
+  result <- runQ $ checkLang lang21 lang22
+  assertBool "Check Lang 3" result
   )
 
 testCheckLang4 = TestCase (do
-  result <- (try $ checkLang lang22 lang21) :: IO (Either SomeException ())
-  assertBool "Check Lang 4 1" (isLeft result)
-  ex <- extractException result
-  assertEqual "Check Lang 4 2" "Default message has no type" (meMsg ex)
-  assertEqual "Check Lang 4 3" (Just "en") (meLang ex)
-  assertEqual "Check Lang 4 4" (Just "L1") (meConstructor ex)
-  assertEqual "Check Lang 4 5" (Just "x") (meArg ex)
+  result <- runQ $ checkLang lang22 lang21
+  assertBool "Check Lang 4" (not result)
   )
 
 testCheckLang5 = TestCase (do
-  result <- (try $ checkLang lang21 lang23) :: IO (Either SomeException ())
-  assertBool "Check Lang 5 1" (isLeft result)
-  ex <- extractException result
-  assertEqual "Check Lang 5 2" "Type mismatch from default" (meMsg ex)
-  assertEqual "Check Lang 5 3" (Just "es") (meLang ex)
-  assertEqual "Check Lang 5 4" (Just "L1") (meConstructor ex)
-  assertEqual "Check Lang 5 5" (Just "x") (meArg ex)
+  result <- runQ $ checkLang lang21 lang23
+  assertBool "Check Lang 5" (not result)
   )
 
 testCheckLang6 = TestCase (do
-  result <- (try $ checkLang lang21 lang24) :: IO (Either SomeException ())
-  assertBool "Check Lang 6 1" (isLeft result)
-  ex <- extractException result
-  assertEqual "Check Lang 6 2" "Mismatching parameter numbers" (meMsg ex)
-  assertEqual "Check Lang 6 3" (Just "pt") (meLang ex)
-  assertEqual "Check Lang 6 4" (Just "L1") (meConstructor ex)
-  assertEqual "Check Lang 6 5" Nothing (meArg ex)
+  result <- runQ $ checkLang lang21 lang24
+  assertBool "Check Lang 6" (not result)
   )
 
 testMakeConstructor = TestList [
@@ -356,6 +329,57 @@ testMakeLangTag = TestList [
 testMakeLangTag1 = TestCase $ assertEqual "Make LangTag 1" "ES" (makeLangTag "es")
 
 testMakeLangTag2 = TestCase $ assertEqual "Make LangTag 2" "PT_BR" (makeLangTag "pt-BR")
+
+testMakeMessageClause = TestList [
+  testMakeMessageClause1, testMakeMessageClause2, testMakeMessageClause3, testMakeMessageClause4
+  ]
+
+clause1 = [r|
+_ _ (Label1) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Something"))
+|]
+
+testMakeMessageClause1 = TestCase (do
+  let ctx = defaultMessageContext lang11
+  msg <- runQ $ parseMessage "en" "Label1: Something"
+  result <- runQ $ makeMsgClause ctx "en" (Just msg) msg
+  assertEqualStripped "Make Message Clause 1" clause1 (pprint result)
+  )
+
+clause2 = [r|
+_ _ (Label1) = GHC.Maybe.Nothing
+|]
+
+testMakeMessageClause2 = TestCase (do
+  let ctx = defaultMessageContext lang11
+  base <- runQ $ parseMessage "en" "Label1: Something"
+  msg <- runQ $ parseMessage "es" "Label1: <open tag"
+  result <- runQ $ makeMsgClause ctx "es" (Just base) msg
+  assertEqualStripped "Make Message Clause 2" clause2 (pprint result)
+  )
+
+clause3 = [r|
+_ _ (Label1 v) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Something ");
+                                     GHC.Base.id (Text.Blaze.Html.toHtml v)})
+|]
+
+testMakeMessageClause3 = TestCase (do
+  let ctx = defaultMessageContext lang11
+  msg <- runQ $ parseMessage "en" "Label1 v@Int: Something #{v}"
+  result <- runQ $ makeMsgClause ctx "en" (Just msg) msg
+  assertEqualStripped "Make Message Clause 3" clause3 (pprint result)
+  )
+
+clause4 = [r|
+_ _ (Label1 _) = GHC.Maybe.Nothing
+|]
+
+testMakeMessageClause4 = TestCase (do
+  let ctx = defaultMessageContext lang11
+  base <- runQ $ parseMessage "en" "Label1 v@Int: Something"
+  msg <- runQ $ parseMessage "es" "Label1 v: Something #{v"
+  result <- runQ $ makeMsgClause ctx "es" (Just base) msg
+  assertEqualStripped "Make Message Clause 4" clause4 (pprint result)
+  )
 
 testMakeCatalogueDec = TestList [
   testMakeCatalogueDec1, testMakeCatalogueDec2

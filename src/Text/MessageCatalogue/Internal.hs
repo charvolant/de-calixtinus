@@ -39,16 +39,6 @@ import Text.Parsec
 import Text.Parsec.String (Parser)
 import Text.Shakespeare.I18N (Lang, RenderMessage, renderMessage)
 
--- | An message processing exception, usually the result of a parse error or incompatible message files
-data MessageException = MessageException {
-      meMsg :: String -- ^ The error text
-    , meLang :: Maybe Lang -- ^ The language that caused this exception
-    , meConstructor :: Maybe String -- ^ The underlying message constructor
-    , meArg :: Maybe String -- ^ The message argument
-  } deriving (Show)
-
-instance CE.Exception MessageException
-
 data Param = Param {
     paName :: Name
   , paType :: Type
@@ -75,6 +65,15 @@ data MessageContext = MessageContext {
   , mcContext :: [Param]
   , mcBase :: Catalogue
 }
+
+-- Create a detailed error message, since the error could be anywhere in the message file
+msgError :: String -> Maybe Lang -> Maybe String -> Maybe String -> Maybe Text -> Q ()
+msgError msg mlang mcons mparam mbody =
+  reportError $ msg
+    ++ maybe "" (\l -> "\n  lang=" ++ T.unpack l) mlang
+    ++ maybe "" (\c -> "\n  message=" ++ c) mcons
+    ++ maybe "" (\p -> "\n  param=" ++ p) mparam
+    ++ maybe "" (\b -> "\n  body=" ++ T.unpack b) mbody
 
 mcRenderSig :: MessageContext -> Type
 mcRenderSig ctx =
@@ -108,14 +107,14 @@ defaultBang = Bang NoSourceUnpackedness NoSourceStrictness
 defaultBangQ :: Q Bang
 defaultBangQ = return defaultBang
 
-loadLang :: FilePath -> FilePath -> IO (Maybe Catalogue)
+loadLang :: FilePath -> FilePath -> Q (Maybe Catalogue)
 loadLang folder file = do
     let file' = folder </> file
-    e <- doesFileExist file'
+    e <- runIO $ doesFileExist file'
     let lang = stripExtension ".msg" file
     case (e, lang) of
       (True, Just lang') -> do
-        bs <- BS.readFile file'
+        bs <- runIO $ BS.readFile file'
         let lang'' = T.pack lang'
         let s = decodeUtf8 bs
         let lines' = collectMessages (T.lines s) []
@@ -140,24 +139,24 @@ collectMessages (line:rest) msg = case T.uncons line of
     Just ('_', _) -> collectMessages rest (line:msg)
     _ -> collectMsg msg (collectMessages rest [line]) -- Start of a new message
 
-parseMessage :: Lang -> Text -> IO Msg
+parseMessage :: Lang -> Text -> Q Msg
 parseMessage lang msg = do
-  let (dec, body') = T.breakOn ":" msg
-  let body = if T.null body' then CE.throw $ MessageException ("No message constructor for " ++ T.unpack msg) (Just lang) Nothing Nothing else (T.strip $ T.drop 1 body')
-  let (constructor, params) = parseConstructor lang (T.unpack dec)
+  let (dec', body') = T.breakOn ":" msg
+  (dec, body) <- if T.null body' then do
+      msgError "No message constructor found" (Just lang) Nothing Nothing (Just msg)
+      return ("Error", "")
+    else
+      return (dec', T.strip $ T.drop 1 body')
+  (constructor, params) <- parseConstructor lang (T.unpack dec)
   return $ Msg constructor params body
 
-parseConstructor :: Lang -> String -> (String, [Param])
-parseConstructor lang dec = either
-  (\e -> CE.throw $ MessageException ("Can't parse constructor " ++ dec ++ " " ++ show e) (Just lang) Nothing Nothing)
-  id
-  (parse constructorParser "" dec)
-
-parseType :: String -> Type
-parseType dec = either
-  (\e -> CE.throw $ MessageException ("Can't parse type " ++ dec ++ " " ++ show e) Nothing Nothing Nothing)
-  id
-  (parse typeDecParserTop "" dec)
+parseConstructor :: Lang -> String -> Q (String, [Param])
+parseConstructor lang dec = do
+  case parse constructorParser "" dec of
+    Left e -> do
+      msgError (show e) (Just lang) Nothing Nothing (Just $ T.pack dec)
+      return ("Error", [])
+    Right sp -> return sp
 
 whitespace :: Parser ()
 whitespace = void $ many1 space
@@ -266,9 +265,9 @@ constructorParser = do
   args <- sepBy argParser whitespace
   return $ (constructor, args)
 
-checkLang'' :: (MC.MonadThrow m) => Lang -> String -> [Param] -> [Param] -> m ()
+checkLang'' :: Lang -> String -> [Param] -> [Param] -> Q Bool
 checkLang'' _lang _msg [] [] = do
-  return ()
+  return True
 checkLang'' lang msg (dparam:drest) (lparam:lrest) =
   let
     merr = case (paType dparam, paType lparam) of
@@ -278,19 +277,30 @@ checkLang'' lang msg (dparam:drest) (lparam:lrest) =
   in
     case merr of
       Nothing -> checkLang'' lang msg drest lrest
-      Just err -> MC.throwM $ MessageException err (Just lang) (Just msg) (Just $ nameBase $ paName dparam)
-checkLang'' lang msg _ _ = MC.throwM $ MessageException "Unexpected mispatch in parameeter numbers" (Just lang) (Just msg) Nothing
+      Just err -> do
+        msgError err (Just lang) (Just msg) (Just $ nameBase $ paName dparam) Nothing
+        return False
+checkLang'' lang msg _ _ = do
+  msgError "Unexpected mispatch in parameeter numbers" (Just lang) (Just msg) Nothing Nothing
+  return False
 
-checkLang' :: (MC.MonadThrow m) => Lang -> M.Map String Msg -> Msg -> m ()
+checkLang' :: Lang -> M.Map String Msg -> Msg -> Q Bool
 checkLang' lang ddefs ldef = do
   let lmsg = msgConstructor ldef
-  let ddef = ddefs M.! lmsg
-  let dargs = msgParams ddef
-  let largs = msgParams ldef
-  when (length dargs /= length largs) (MC.throwM $ MessageException "Mismatching parameter numbers" (Just lang) (Just lmsg) Nothing)
-  checkLang'' lang lmsg dargs largs
+  case M.lookup lmsg ddefs of
+    Nothing -> do
+      msgError "Can't find default message" (Just lang) (Just $ msgConstructor ldef) Nothing Nothing
+      return False
+    Just ddef -> do
+      let dargs = msgParams ddef
+          largs = msgParams ldef
+      if length dargs /= length largs then do
+          msgError "Mismatching parameter numbers" (Just lang) (Just lmsg) Nothing Nothing
+          return False
+        else
+          checkLang'' lang lmsg dargs largs
 
-checkLang :: (MC.MonadThrow m) => Catalogue -> Catalogue -> m ()
+checkLang :: Catalogue -> Catalogue -> Q Bool
 checkLang dcat lcat = do
   let llang = caLang lcat
   let ddefs = caMsgs dcat
@@ -298,9 +308,10 @@ checkLang dcat lcat = do
   let dcons = S.fromList $ map (T.pack . msgConstructor) ddefs
   let lcons = S.fromList $ map (T.pack . msgConstructor) ldefs
   let additional = S.difference lcons dcons
-  when (not $ S.null additional) (MC.throwM $ MessageException ("Additional message: " ++ summaryString additional) (Just llang) Nothing Nothing)
+  when (not $ S.null additional) (msgError ("Additional messages: " ++ summaryString additional) (Just llang) Nothing Nothing Nothing)
   let ddefs' = M.fromList $ map (\m -> (msgConstructor m, m)) ddefs
-  mapM_ (checkLang' llang ddefs') ldefs
+  ok <- mapM (checkLang' llang ddefs') ldefs
+  return $ and ok
 
 makeDataDec :: MessageContext -> Q [Dec]
 makeDataDec ctx = do
@@ -314,23 +325,21 @@ makeConstructor :: Lang -> Msg -> Q Con
 makeConstructor lang msg = do
   let name = mkName $ msgConstructor msg
   let pts = map paType $ msgParams msg
-  when (any (== WildCardT) pts) (CE.throw $ MessageException "Untyped parameter" (Just lang) (Just $ msgConstructor msg) Nothing)
+  when (any (== WildCardT) pts) (msgError "Untyped parameter" (Just lang) (Just $ msgConstructor msg) Nothing Nothing)
   let pts' = map (\argType -> bangType defaultBangQ (return argType)) pts
   normalC name pts'
 
 makeCatalogueDec :: MessageContext ->  Catalogue -> Q [Dec]
 makeCatalogueDec ctx catalogue = do
-  let fname = makeLangRenderName ctx (caLang catalogue)
+  let lang = caLang catalogue
+      fname = makeLangRenderName ctx lang
       base = mcBase ctx
-  clauses <- mapM (\msg -> makeMsgClause ctx (findMsg msg base) msg) (caMsgs catalogue)
+  clauses <- mapM (\msg -> makeMsgClause ctx lang (findMsg msg base) msg) (caMsgs catalogue)
   final <- makeNoMatchClause ctx (caLang base == caLang catalogue) catalogue
   return $ [FunD fname (clauses ++ [final])]
 
-findMsg :: Msg -> Catalogue -> Msg
-findMsg msg catalogue = maybe
-  (CE.throw $ MessageException "Can't find base constructor" (Just $ caLang catalogue) (Just $ msgConstructor msg) Nothing)
-  id
-  (L.find (\b -> msgConstructor b == msgConstructor msg) (caMsgs catalogue))
+findMsg :: Msg -> Catalogue -> Maybe Msg
+findMsg msg catalogue = L.find (\b -> msgConstructor b == msgConstructor msg) (caMsgs catalogue)
 
 makeLangRenderName :: MessageContext -> Lang -> Name
 makeLangRenderName ctx lang = mkName (nameBase (mcRender ctx) ++ "_" ++ makeLangTag lang)
@@ -338,22 +347,36 @@ makeLangRenderName ctx lang = mkName (nameBase (mcRender ctx) ++ "_" ++ makeLang
 makeLangTag :: Lang -> String
 makeLangTag lang = T.unpack $ T.toUpper $ T.filter (\c -> isLetter c || c == '_') $ T.replace "-" "_" lang
 
-parseMsgBody :: Text -> Q Exp
-parseMsgBody body = hamletFromString htmlRules defaultHamletSettings (T.unpack body)
+-- Dear God this is messy
+parseMsgBody :: String -> Q (Either CE.SomeException Exp)
+parseMsgBody body = runIO $ CE.try $ runQ $ hamletFromString htmlRules defaultHamletSettings body
 
-makeMsgClause :: MessageContext -> Msg -> Msg -> Q Clause
-makeMsgClause ctx _base msg = do
-  expr <- parseMsgBody (msgBody msg)
-  let vars = unboundVarsExp expr
-  let varp n = if S.member n vars then VarP n else WildP
-  let just = 'Just
-  let context = map (varp . paName) $ mcContext ctx
-  let constructor = mkName $ msgConstructor msg
-  let args = map (varp . paName) $ msgParams msg
-  let locales = varp $ paName $ mcLocales ctx
-  let mpattern = ConP constructor [] args
-  let cpattern = context ++ [locales, mpattern]
-  return $ Clause cpattern (NormalB (ConE just `AppE` expr)) []
+mkClause :: MessageContext -> Msg -> Maybe Exp -> Q Clause
+mkClause ctx msg mexpr = do
+  let vars = maybe S.empty unboundVarsExp mexpr
+      varp n = if S.member n vars then VarP n else WildP
+      context = map (varp . paName) $ mcContext ctx
+      constructor = mkName $ msgConstructor msg
+      args = map (varp . paName) $ msgParams msg
+      locales = varp $ paName $ mcLocales ctx
+      mpattern = ConP constructor [] args
+      cpattern = context ++ [locales, mpattern]
+      body = maybe (ConE 'Nothing) (\e -> ConE 'Just `AppE` e) mexpr
+  return $ Clause cpattern (NormalB body) []
+
+makeMsgClause :: MessageContext -> Lang -> Maybe Msg -> Msg -> Q Clause
+makeMsgClause ctx lang Nothing msg = do
+  msgError "Can't find base message" (Just lang) (Just $ msgConstructor msg) Nothing Nothing
+  mkClause ctx msg Nothing
+makeMsgClause ctx lang _mbase msg = do
+  let body = T.unpack $ msgBody msg
+  eexpr <- parseMsgBody body
+  case eexpr of
+    Left e -> do
+      msgError ("Unable to parse body: " ++ show e) (Just lang) (Just $ msgConstructor msg) Nothing (Just $ msgBody msg)
+      mkClause ctx msg Nothing
+    Right expr ->
+      mkClause ctx msg (Just expr)
 
 makeNoMatchClause :: MessageContext -> Bool -> Catalogue -> Q Clause
 makeNoMatchClause ctx base _catalogue = do

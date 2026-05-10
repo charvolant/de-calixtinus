@@ -80,18 +80,16 @@ If the render function is being generated, include @{-# LANGUAGE MultiParamTypeC
 `RenderMessage` takes two type parameters.
 -}
 module Text.MessageCatalogue (
-    Text.MessageCatalogue.Internal.MessageException(..)
-
-  , mkMessageCatalogueSimple
+    mkMessageCatalogueSimple
   , mkMessageCatalogue
   , Text.MessageCatalogue.Internal.renderMarkupToText
 ) where
 
+import Control.Monad (unless)
 import Text.MessageCatalogue.Internal
-import Control.Exception (throw)
 import qualified Data.List as L
 import Data.Maybe (catMaybes, isJust)
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
 import System.Directory (getDirectoryContents)
@@ -155,9 +153,10 @@ mkMessageCatalogue :: Name -- ^ The message type
   -> Q [Dec]
 mkMessageCatalogue mtype ltype params folder lang mdtype = do
   files <- qRunIO $ getDirectoryContents folder
-  contents <- qRunIO $ fmap catMaybes $ mapM (loadLang folder) files
-  let base = maybe (throw $ MessageException "Did not find main language file" (Just lang) Nothing Nothing) id $ L.find (\c -> caLang c == lang) contents
-  mapM_ (checkLang base) contents
+  contents <- fmap catMaybes $ mapM (loadLang folder) files
+  base <- findBase lang contents
+  ok <- mapM (checkLang base) contents
+  unless (and ok) (fail "Error validating language files")
   let ctx = MessageContext {
       mcRender = mkName $ "render" ++ nameBase mtype
     , mcAppType = ConT <$> mdtype
@@ -174,3 +173,11 @@ mkMessageCatalogue mtype ltype params folder lang mdtype = do
   instancedec <- if isJust mdtype then makeInstanceDec ctx else return []
   let decs = datadec ++ concat msgdecs ++ renderdec ++ instancedec
   return decs
+
+findBase :: Lang -> [Catalogue] -> Q Catalogue
+findBase lang catalogues = do
+  case L.find (\c -> caLang c == lang) catalogues of
+    Nothing ->
+      fail ("Can't find main catalogue of language " ++ unpack lang)
+    (Just catalogue) ->
+      return catalogue

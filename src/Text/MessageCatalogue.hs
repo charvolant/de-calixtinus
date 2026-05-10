@@ -155,8 +155,6 @@ mkMessageCatalogue mtype ltype params folder lang mdtype = do
   files <- qRunIO $ getDirectoryContents folder
   contents <- fmap catMaybes $ mapM (loadLang folder) files
   base <- findBase lang contents
-  ok <- mapM (checkLang base) contents
-  unless (and ok) (fail "Error validating language files")
   let ctx = MessageContext {
       mcRender = mkName $ "render" ++ nameBase mtype
     , mcAppType = ConT <$> mdtype
@@ -167,6 +165,8 @@ mkMessageCatalogue mtype ltype params folder lang mdtype = do
     , mcContext = map (\(n, t) -> Param (mkName n) (ConT t)) params
     , mcBase = base
   }
+  ok <- checkMessageDeclaration ctx contents
+  unless ok (fail "Error validating language files")
   datadec <- makeDataDec ctx
   msgdecs <- mapM (makeCatalogueDec ctx) contents
   renderdec <- makeRenderDec ctx contents

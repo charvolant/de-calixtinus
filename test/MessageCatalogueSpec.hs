@@ -4,6 +4,7 @@
 module MessageCatalogueSpec(testMessageCatalogue) where
 
 import Data.Maybe
+import qualified Data.Set as S
 import qualified Data.Text as T
 import Language.Haskell.TH
 import Test.HUnit
@@ -92,7 +93,7 @@ testReadLangs4 = TestCase (do
   assertEqual "Read Langs 4 2" "pt" (caLang ca)
   assertEqual "Read Langs 4 3" 2 (length $ caMsgs ca)
   let msg = caMsgs ca !! 1
-  assertEqual "ReadLangs 4 4" "Descent" (msgConstructor msg)
+  assertEqual "ReadLangs 4 4" (mkName "Descent") (msgConstructor msg)
   assertEqual "ReadLangs 4 4" "descens\227o <div .descent>\n  ^{formatHeight sou h}" (msgBody msg)
   )
 
@@ -106,84 +107,84 @@ testParseMessage = TestList [
 
 testParseMessage1 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label1: Some text"
-  assertEqual "Parse Message 1 1" "Label1" (msgConstructor msg)
+  assertEqual "Parse Message 1 1" (mkName "Label1") (msgConstructor msg)
   assertEqual "Parse Message 1 2" [] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 1 3" "Some text" (msgBody msg)
   )
 
 testParseMessage2 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label1 :  Some text  "
-  assertEqual "Parse Message 2 1" "Label1" (msgConstructor msg)
+  assertEqual "Parse Message 2 1" (mkName "Label1") (msgConstructor msg)
   assertEqual "Parse Message 2 2" [] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 2 3" "Some text" (msgBody msg)
   )
 
 testParseMessage3 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v: Some text"
-  assertEqual "Parse Message 3 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 3 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 3 2" [("v", "_")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 3 3" "Some text" (msgBody msg)
   )
 
 testParseMessage4 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v@Int: Some text"
-  assertEqual "Parse Message 4 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 4 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 4 2" [("v", "Int")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 4 3" "Some text" (msgBody msg)
   )
 
 testParseMessage5 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v@(Maybe Text): Some text"
-  assertEqual "Parse Message 5 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 5 1" (mkName "Label")(msgConstructor msg)
   assertEqual "Parse Message 5 2" [("v", "(Maybe Text)")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 5 3" "Some text" (msgBody msg)
   )
 
 testParseMessage6 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v@( Maybe  Text ): Some text"
-  assertEqual "Parse Message 6 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 6 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 6 2" [("v", "(Maybe Text)")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 6 3" "Some text" (msgBody msg)
   )
 
 testParseMessage7 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v1 v2: Some text"
-  assertEqual "Parse Message 7 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 7 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 7 2" [("v1", "_"), ("v2", "_")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 7 3" "Some text" (msgBody msg)
   )
 
 testParseMessage8 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v1@Int v2@Float: Some text"
-  assertEqual "Parse Message 8 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 8 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 8 2" [("v1", "Int"), ("v2", "Float")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 8 3" "Some text" (msgBody msg)
   )
 
 testParseMessage9 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v1@(M.Map String [Int]): Some text"
-  assertEqual "Parse Message 9 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 9 1" (mkName "Label")(msgConstructor msg)
   assertEqual "Parse Message 9 2" [("v1", "(M.Map String [Int])")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 9 3" "Some text" (msgBody msg)
   )
 
 testParseMessage10 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v1@(Int -> Text): Some text"
-  assertEqual "Parse Message 10 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 10 1" (mkName "Label")(msgConstructor msg)
   assertEqual "Parse Message 10 2" [("v1", "(Int -> Text)")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 10 3" "Some text" (msgBody msg)
   )
 
 testParseMessage11 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v1@(Int -> [Int -> String]): Some text"
-  assertEqual "Parse Message 10 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 10 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 10 2" [("v1", "(Int -> [Int -> String])")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 10 3" "Some text" (msgBody msg)
   )
 
 testParseMessage12 = TestCase (do
   msg <- runQ $ parseMessage "en" "Label v1@(Int -> Text) v2@([Int]): Some text"
-  assertEqual "Parse Message 10 1" "Label" (msgConstructor msg)
+  assertEqual "Parse Message 10 1" (mkName "Label") (msgConstructor msg)
   assertEqual "Parse Message 10 2" [("v1", "(Int -> Text)"), ("v2", "([Int])")] (ppArgs $ msgParams msg)
   assertEqual "Parse Message 10 3" "Some text" (msgBody msg)
   )
@@ -195,39 +196,39 @@ mapType = ConT $ mkName "M.Map"
 intFloatMapType = mapType `AppT` intType `AppT` floatType
 
 lang11 = Catalogue "en" [
-    Msg "L1" [] "The message 1"
-  , Msg "L2" [] "The message 2"
+    Msg (mkName "L1") [] "The message 1"
+  , Msg (mkName "L2") [] "The message 2"
   ]
 
 lang12 = Catalogue "fr" [
-    Msg "L1" [] "Le message 1"
-  , Msg "L2" [] "Le message 2"
+    Msg (mkName "L1") [] "Le message 1"
+  , Msg (mkName "L2") [] "Le message 2"
   ]
 
 lang13 = Catalogue "es" [
-    Msg "L1" [] "El mensaje 1"
-  , Msg "L2" [] "El mensaje 2"
-  , Msg "L3" [] "El mensaje 3"
+    Msg (mkName "L1") [] "El mensaje 1"
+  , Msg (mkName "L2") [] "El mensaje 2"
+  , Msg (mkName "L3") [] "El mensaje 3"
   ]
 
 lang21 = Catalogue "en" [
-     Msg "L1" [Param (mkName "x") intType] "The message #{x}"
-   , Msg "L2" [Param (mkName "y") floatListType] "The message #{y}"
+     Msg (mkName "L1") [Param (mkName "x") intType] "The message #{x}"
+   , Msg (mkName "L2") [Param (mkName "y") floatListType] "The message #{y}"
    ]
 
 lang22 = Catalogue "fr" [
-     Msg "L1" [Param (mkName "x") WildCardT] "Le #{x} message"
-   , Msg "L2" [Param (mkName "y") floatListType] "Le message #{y}"
+     Msg (mkName "L1") [Param (mkName "x") WildCardT] "Le #{x} message"
+   , Msg (mkName "L2") [Param (mkName "y") floatListType] "Le message #{y}"
    ]
 
 lang23 = Catalogue "es" [
-     Msg "L1" [Param (mkName "x") floatType] "El mensaje #{x}"
-   , Msg "L2" [Param (mkName "y") WildCardT] "El mensaje #{y}"
+     Msg (mkName "L1") [Param (mkName "x") floatType] "El mensaje #{x}"
+   , Msg (mkName "L2") [Param (mkName "y") WildCardT] "El mensaje #{y}"
    ]
 
 lang24 = Catalogue "pt" [
-     Msg "L1" [Param (mkName "x") WildCardT, Param (mkName "y") WildCardT] "A mensagem #{x}"
-   , Msg "L2" [Param (mkName "y") WildCardT] "A mensagem #{y}"
+     Msg (mkName "L1") [Param (mkName "x") WildCardT, Param (mkName "y") WildCardT] "A mensagem #{x}"
+   , Msg (mkName "L2") [Param (mkName "y") WildCardT] "A mensagem #{y}"
    ]
 
 defaultMessageContext base = MessageContext {
@@ -243,38 +244,43 @@ defaultMessageContext base = MessageContext {
 
 testCheckLang = TestList [
   testCheckLang1, testCheckLang2, testCheckLang3, testCheckLang4,
-  testCheckLang5, testCheckLang6
+  testCheckLang5, testCheckLang6, testCheckLang7
   ]
 
 testCheckLang1 = TestCase (do
-  result <- runQ $ checkLang lang11 lang12
+  result <- runQ $ checkLang S.empty lang11 lang12
   assertBool "Check Lang 1" result
   )
 
 testCheckLang2 = TestCase (do
-  result <- runQ $ checkLang lang11 lang13
+  result <- runQ $ checkLang S.empty lang11 lang13
   assertBool "Check Lang 2" (not result)
   )
 
 
 testCheckLang3 = TestCase (do
-  result <- runQ $ checkLang lang21 lang22
+  result <- runQ $ checkLang S.empty lang21 lang22
   assertBool "Check Lang 3" result
   )
 
 testCheckLang4 = TestCase (do
-  result <- runQ $ checkLang lang22 lang21
+  result <- runQ $ checkLang S.empty lang22 lang21
   assertBool "Check Lang 4" (not result)
   )
 
 testCheckLang5 = TestCase (do
-  result <- runQ $ checkLang lang21 lang23
+  result <- runQ $ checkLang S.empty lang21 lang23
   assertBool "Check Lang 5" (not result)
   )
 
 testCheckLang6 = TestCase (do
-  result <- runQ $ checkLang lang21 lang24
+  result <- runQ $ checkLang S.empty lang21 lang24
   assertBool "Check Lang 6" (not result)
+  )
+
+testCheckLang7 = TestCase (do
+  result <- runQ $ checkLang (S.singleton (mkName "x")) lang21 lang21
+  assertBool "Check Lang 7" (not result)
   )
 
 testMakeConstructor = TestList [
@@ -283,28 +289,28 @@ testMakeConstructor = TestList [
   ]
 
 testMakeConstructor1 = TestCase (do
-  constructor <- runQ $ makeConstructor "en" $ Msg "L1" [] "A message"
+  constructor <- runQ $ makeConstructor "en" $ Msg (mkName "L1") [] "A message"
   assertEqual "Make Constructor 1 1" "L1" (pprint constructor)
   )
 
 testMakeConstructor2 = TestCase (do
-  constructor <- runQ $ makeConstructor "en" $ Msg "L2" [Param (mkName "x") floatType] "A message"
+  constructor <- runQ $ makeConstructor "en" $ Msg (mkName "L2") [Param (mkName "x") floatType] "A message"
   assertEqual "Make Constructor 2 1" "L2 Float" (pprint constructor)
   )
 
 testMakeConstructor3 = TestCase (do
-  constructor <- runQ $ makeConstructor "en" $ Msg "L3" [Param (mkName "x")  intFloatMapType] "A message"
+  constructor <- runQ $ makeConstructor "en" $ Msg (mkName "L3") [Param (mkName "x")  intFloatMapType] "A message"
   assertEqual "Make Constructor 3 1" "L3 (M.Map Int Float)" (pprint constructor)
   )
 
 testMakeConstructor4 = TestCase (do
   let atype = either (\l -> error $ "Make Constructor 4 2:" ++ show l) id $ parse typeDecParserTop "" "(M.Map Int Float)"
-  constructor <- runQ $ makeConstructor "en" $ Msg "L4" [Param (mkName "x") atype] "A message"
+  constructor <- runQ $ makeConstructor "en" $ Msg (mkName "L4") [Param (mkName "x") atype] "A message"
   assertEqual "Make Constructor 4 2" "L4 (M.Map Int Float)" (pprint constructor)
   )
 
 testMakeConstructor5 = TestCase (do
-  constructor <- runQ $ makeConstructor "en" $ Msg "L5" [Param (mkName "x") intType, Param (mkName "y") floatType] "A message"
+  constructor <- runQ $ makeConstructor "en" $ Msg (mkName "L5") [Param (mkName "x") intType, Param (mkName "y") floatType] "A message"
   assertEqual "Make Constructor 3 1" "L5 Int Float" (pprint constructor)
   )
 

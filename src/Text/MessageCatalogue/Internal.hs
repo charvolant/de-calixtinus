@@ -16,7 +16,6 @@ module Text.MessageCatalogue.Internal where
 
 import qualified Control.Exception as CE
 import Control.Monad (void, when)
-import qualified Control.Monad.Catch as MC
 import qualified Data.ByteString as BS
 import Data.Char (isLetter)
 import Data.Default.Class (def)
@@ -45,7 +44,7 @@ data Param = Param {
 } deriving (Show)
 
 data Msg = Msg {
-    msgConstructor :: String
+    msgConstructor :: Name
   , msgParams :: [Param]
   , msgBody :: Text
 } deriving (Show)
@@ -67,12 +66,12 @@ data MessageContext = MessageContext {
 }
 
 -- Create a detailed error message, since the error could be anywhere in the message file
-msgError :: String -> Maybe Lang -> Maybe String -> Maybe String -> Maybe Text -> Q ()
+msgError :: String -> Maybe Lang -> Maybe Name -> Maybe Name -> Maybe Text -> Q ()
 msgError msg mlang mcons mparam mbody =
   reportError $ msg
     ++ maybe "" (\l -> "\n  lang=" ++ T.unpack l) mlang
-    ++ maybe "" (\c -> "\n  message=" ++ c) mcons
-    ++ maybe "" (\p -> "\n  param=" ++ p) mparam
+    ++ maybe "" (\c -> "\n  message=" ++ show c) mcons
+    ++ maybe "" (\p -> "\n  param=" ++ show p) mparam
     ++ maybe "" (\b -> "\n  body=" ++ T.unpack b) mbody
 
 mcRenderSig :: MessageContext -> Type
@@ -150,12 +149,13 @@ parseMessage lang msg = do
   (constructor, params) <- parseConstructor lang (T.unpack dec)
   return $ Msg constructor params body
 
-parseConstructor :: Lang -> String -> Q (String, [Param])
+parseConstructor :: Lang -> String -> Q (Name, [Param])
 parseConstructor lang dec = do
   case parse constructorParser "" dec of
     Left e -> do
       msgError (show e) (Just lang) Nothing Nothing (Just $ T.pack dec)
-      return ("Error", [])
+      constructor <- newName "Error"
+      return (constructor, [])
     Right sp -> return sp
 
 whitespace :: Parser ()
@@ -258,38 +258,44 @@ argParser = do
   argType <- option WildCardT typeParser
   return $ Param (mkName arg) argType
 
-constructorParser :: Parser (String, [Param])
+constructorParser :: Parser (Name, [Param])
 constructorParser = do
   constructor <- identifierParser True
   void $ spaces
   args <- sepBy argParser whitespace
-  return $ (constructor, args)
+  return $ (mkName constructor, args)
 
-checkLang'' :: Lang -> String -> [Param] -> [Param] -> Q Bool
-checkLang'' _lang _msg [] [] = do
+checkLang'' :: S.Set Name -> Lang -> Name -> [Param] -> [Param] -> Q Bool
+checkLang'' _reserved _lang _msg [] [] = do
   return True
-checkLang'' lang msg (dparam:drest) (lparam:lrest) =
+checkLang'' reserved lang msg (dparam:drest) (lparam:lrest) =
   let
     merr = case (paType dparam, paType lparam) of
       (WildCardT, _) -> Just $ "Default message has no type"
       (_dtype, WildCardT) -> Nothing
       (dtype, ltype) -> if dtype == ltype then Nothing else Just $ "Type mismatch from default"
+    perr = if S.member (paName lparam) reserved then Just $ "Parameter name is reserved" else Nothing
+    errs = case (merr, perr) of
+      (Nothing, Nothing) -> Nothing
+      (e@(Just _), Nothing) -> e
+      (Nothing, e@(Just _)) -> e
+      (Just e1, Just e2) -> Just $ e1 ++ " " ++ e2
   in
-    case merr of
-      Nothing -> checkLang'' lang msg drest lrest
-      Just err -> do
-        msgError err (Just lang) (Just msg) (Just $ nameBase $ paName dparam) Nothing
+    case errs of
+      (Nothing) -> checkLang'' reserved lang msg drest lrest
+      (Just err) -> do
+        msgError err (Just lang) (Just msg) (Just $ paName dparam) Nothing
         return False
-checkLang'' lang msg _ _ = do
+checkLang'' _reserved lang msg _ _ = do
   msgError "Unexpected mispatch in parameeter numbers" (Just lang) (Just msg) Nothing Nothing
   return False
 
-checkLang' :: Lang -> M.Map String Msg -> Msg -> Q Bool
-checkLang' lang ddefs ldef = do
+checkLang' :: S.Set Name -> Lang -> M.Map Name Msg -> Msg -> Q Bool
+checkLang' reserved lang ddefs ldef = do
   let lmsg = msgConstructor ldef
   case M.lookup lmsg ddefs of
     Nothing -> do
-      msgError "Can't find default message" (Just lang) (Just $ msgConstructor ldef) Nothing Nothing
+      msgError "Can't find default message" (Just lang) (Just lmsg) Nothing Nothing
       return False
     Just ddef -> do
       let dargs = msgParams ddef
@@ -298,20 +304,40 @@ checkLang' lang ddefs ldef = do
           msgError "Mismatching parameter numbers" (Just lang) (Just lmsg) Nothing Nothing
           return False
         else
-          checkLang'' lang lmsg dargs largs
+          checkLang'' reserved lang lmsg dargs largs
 
-checkLang :: Catalogue -> Catalogue -> Q Bool
-checkLang dcat lcat = do
+checkLang :: S.Set Name -> Catalogue -> Catalogue -> Q Bool
+checkLang reserved dcat lcat = do
   let llang = caLang lcat
   let ddefs = caMsgs dcat
   let ldefs = caMsgs lcat
-  let dcons = S.fromList $ map (T.pack . msgConstructor) ddefs
-  let lcons = S.fromList $ map (T.pack . msgConstructor) ldefs
+  let dcons = S.fromList $ map msgConstructor ddefs
+  let lcons = S.fromList $ map msgConstructor ldefs
   let additional = S.difference lcons dcons
-  when (not $ S.null additional) (msgError ("Additional messages: " ++ summaryString additional) (Just llang) Nothing Nothing Nothing)
+  ok1 <- if S.null additional then
+      return True
+    else do
+      msgError ("Additional messages: " ++ summaryString (S.map (T.pack . show) additional)) (Just llang) Nothing Nothing Nothing
+      return False
   let ddefs' = M.fromList $ map (\m -> (msgConstructor m, m)) ddefs
-  ok <- mapM (checkLang' llang ddefs') ldefs
-  return $ and ok
+  ok <- mapM (checkLang' reserved llang ddefs') ldefs
+  return $ and (ok1:ok)
+
+-- | Ensure context is acceptable
+checkMessageDeclaration :: MessageContext -> [Catalogue] -> Q Bool
+checkMessageDeclaration ctx catalogues = do
+  let base = S.fromList [mcRender ctx, paName $ mcMsg ctx, paName $ mcLocale ctx, paName $ mcLocales ctx, mcLocaleRest ctx, mkName "langs", mkName "msg"]
+  let context = map paName (mcContext ctx)
+  ok <- mapM (\n -> do
+    if S.member n base then do
+      msgError "Duplicate context name" Nothing Nothing (Just n) Nothing
+      return False
+    else
+      return True
+    ) context
+  let reserved = S.union base (S.fromList context)
+  okl <- mapM (checkLang reserved (mcBase ctx)) catalogues
+  return $ and (ok ++ okl)
 
 makeDataDec :: MessageContext -> Q [Dec]
 makeDataDec ctx = do
@@ -323,7 +349,7 @@ makeDataDec ctx = do
 
 makeConstructor :: Lang -> Msg -> Q Con
 makeConstructor lang msg = do
-  let name = mkName $ msgConstructor msg
+  let name = msgConstructor msg
   let pts = map paType $ msgParams msg
   when (any (== WildCardT) pts) (msgError "Untyped parameter" (Just lang) (Just $ msgConstructor msg) Nothing Nothing)
   let pts' = map (\argType -> bangType defaultBangQ (return argType)) pts
@@ -356,7 +382,7 @@ mkClause ctx msg mexpr = do
   let vars = maybe S.empty unboundVarsExp mexpr
       varp n = if S.member n vars then VarP n else WildP
       context = map (varp . paName) $ mcContext ctx
-      constructor = mkName $ msgConstructor msg
+      constructor = msgConstructor msg
       args = map (varp . paName) $ msgParams msg
       locales = varp $ paName $ mcLocales ctx
       mpattern = ConP constructor [] args
@@ -373,7 +399,7 @@ makeMsgClause ctx lang _mbase msg = do
   eexpr <- parseMsgBody body
   case eexpr of
     Left e -> do
-      msgError ("Unable to parse body: " ++ show e) (Just lang) (Just $ msgConstructor msg) Nothing (Just $ msgBody msg)
+      msgError ("Unable to parse body: " ++ CE.displayException e) (Just lang) (Just $ msgConstructor msg) Nothing (Just $ msgBody msg)
       mkClause ctx msg Nothing
     Right expr ->
       mkClause ctx msg (Just expr)

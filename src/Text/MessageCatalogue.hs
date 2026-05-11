@@ -13,10 +13,12 @@ Portability : POSIX
 
 The message catalogue module allows a user to define HTML message catalogues.
 
-Message files reside in a common directory and have names like en.msg or pt-BR.msg.
+== Message Files
+
+Message files reside in a common directory and have names like @en.msg@ or @pt-BR.msg@.
 A message file consists of a number of lines:
 
-Comments have an initial #, eg.
+Comments have an initial @#@, eg.
 
 @
 # This next message doesn't make sense
@@ -34,13 +36,14 @@ In this case, the constructor, for use in @_{PageTitle}@ is @PageTitle@ and the 
 Constructors with arguments use \@ notation, eg
 
 @
-HelloMsg n\@Text lc@Int: Hello #{n}, you have logged-in #{lc} times
+HelloMsg n\@Text lc\@Int: Hello #{n}, you have logged-in #{lc} times
 @
 
 Similar to Yesod messages, types need only be specified in the default message file.
 Types in other message files can be left off entirely or must match the default message type.
 Variable names must start with a lower-case latter and may then be followed by any combination of letters or digits.
-Types start with a capital letter and can use namespaces, such as @LB.ByteString@
+Types start with a capital letter and can use namespaces, such as @LB.ByteString@, although multi-level module names,
+such as @Data.Maybe.Just@ won't work.
 
 A simple type name can be simply included after the \@. symbol.
 More complex types need to be enclosed in parentheses.
@@ -49,7 +52,7 @@ For example @(Maybe String)@, @(Int -> String)@, @(M.Map Int (String -> [T.Text]
 
 Messages use @#{...}@ interpolation and @^{...}@ interploation in the same manner as `shamlet`.
 Similarly @.class-name@ and @#ident@ also work, as do structures like @$if@ or @$maybe@.
-Care needs to be taken to ensure indentation works properly, since the first line implicitly has no leading spaces.
+For multi-line messages, care needs to be taken to ensure indentation works properly, since the first line implicitly has no leading spaces.
 
 Since hamlet uses indentation to process HTML tags, spaces or other hamlet markup at the start of messages in the message file are
 significant and used to denote multi-line hamlet.
@@ -70,14 +73,42 @@ when given  @Ascent 45.0@ this would produce
 \<span class="ascent distance"\>45m\<\/span\> \<span class="problem"\>Oh dear!\<\/span\>
 @
 
+== Message Parameters
+
 Parameters passed in to any message are the named parameters specified in `mkMessageCatalogue` or @master@ for the
-master context in `mkMessageCatalogueSimple`, and @locales@ for the supplied list of locales.
+master context in `mkMessageCatalogueSimple`.
+The complete list of locales is passed in using @locales@.
 Locales can be anything that implements `IsString` and `Eq`, and matches language codes.
 For simple applications, this will be the Yesod `Lang` type, but fancier implementations can be used, if you want
 to propagate additional localisation information into the message.
+As an example, if the message catalogue is created with
 
-If the render function is being generated, include @{-# LANGUAGE MultiParamTypeClasses #-}@ in the source file, since
+@
+mkMessageCatalogue (mkName "MyAppMsg") ''Lang [("sub", ''MyApp), ("region", ''Region) "messages" "en" (Just ''MyApp)
+@
+
+then a message of the sort
+
+@
+Nearby: Nearby attractions ^{showAttractions sub region locales}
+@
+
+will work as expected and the @showAttractions@ function can use the supplied locales to do its own bit of localisation, if needed.
+
+== Pragmas
+
+Generally, you will need to in add @{-# LANGUAGE OverloadedStrings #-}@ and @{-# LANGUAGE TemplateHaskell #-}@ pragmas to the source file.
+If the render function is being generated, you may need to include @{-# LANGUAGE MultiParamTypeClasses #-}@ in the source file, since
 `RenderMessage` takes two type parameters.
+
+== Differences to Yesod message catalogues
+
+`mkMessageCatalogueSimple` works similarly to the Yesod `mkMessage`, with a few differences:
+
+* The message constructor is "as-is" without an additional @Msg@ suffix.
+* The master application context is @master@ rather than @sub@
+* Output is HTML, rather than text. `renderMarkupToText` can be used to convert the resulting HTML to plain text, if needed.
+
 -}
 module Text.MessageCatalogue (
     mkMessageCatalogueSimple
@@ -96,10 +127,7 @@ import System.Directory (getDirectoryContents)
 import Text.Shakespeare.I18N (Lang)
 
 -- | Create a simple message catalogue.
---   This follows the structure of the Yesod `Yesod.Message.mkMessage` with the following differences:
---
---   * The output is `Html`, rather than `Text`
---   * Message constructors do not have a "Msg" appended to them
+--   This follows the structure of the Yesod `Yesod.Message.mkMessage` with the differences specified above.
 --
 --   The result is a message data type called @/dt/Message@ and a rendering function called @render/dt/Message@ where
 --   /dt/ is the application data type.
@@ -126,6 +154,7 @@ mkMessageCatalogueSimple dt folder lang = let
 -- | Create a message catalogue.
 --
 --   This allows considerably more customisation than `mkMessageCatalogueSimple`.
+--   In particular, it allows an arbitrary list of contextual parameters and choice over the locale specification.
 --
 --   A typical invocation is
 --   @

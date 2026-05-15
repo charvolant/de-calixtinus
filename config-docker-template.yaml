@@ -12,12 +12,13 @@ web:
     - id: "Camino Icons"
       type: Font
       path: /static/fonts/Camino-Icons.woff
+    # S3 is substituted with the correct AWS S3 link during the Docker build
     - id: features
       type: Directory
-      path: https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/features
+      path: S3/features
     - id: images
       type: Directory
-      path: https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/images
+      path: S3/images
     - id: license
       type: File
       path: https://de-calixtinus.s3.ap-southeast-2.amazonaws.com/LICENSE
@@ -31,6 +32,9 @@ caminos:
   - id: I-AT
     type: CaminoDefinition
     path: "file:/app/lib/import-astorga.json"
+  - id: I-OP
+    type: CaminoDefinition
+    path: "file:/app/lib/import-puentelareina.json"
   - id: I-BS
     type: CaminoDefinition
     path: "file:/app/lib/import-bergazos-santiago.json"
@@ -43,6 +47,9 @@ caminos:
   - id: I-PF
     type: CaminoDefinition
     path: "file:/app/lib/import-ponferrada.json"
+  - id: I-SG
+    type: CaminoDefinition
+    path: "file:/app/lib/import-sahagun.json"
   - id: I-VV
     type: CaminoDefinition
     path: "file:/app/lib/import-villaviciosa.json"
@@ -73,6 +80,12 @@ caminos:
   - id: W
     type: CaminoDefinition
     path: "file:/app/lib/camino-invierno.json"
+  - id: AR
+    type: CaminoDefinition
+    path: "file:/app/lib/camino-aragones.json"
+  - id: MD
+    type: CaminoDefinition
+    path: "file:/app/lib/camino-madrid.json"
   - id: BM
     type: CaminoDefinition
     path: "file:/app/lib/bondi-manly.json"
@@ -232,6 +245,22 @@ calendar:
       type: day-of-year
       days:
         - 02-28
+  - key: StJosephsDay
+    name:
+      - San José@es
+      - Saint Joseph's Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 03-19
+  - key: AragonDay
+    name:
+      - Día de San Jorge o Diya Nazional d’Aragón@es
+      - National Day of Aragon@en
+    calendar:
+      type: day-of-year
+      days:
+        - 04-23
   - key: FreedomDayPT
     name:
       - Freedom Day (Portugal)@en
@@ -265,6 +294,14 @@ calendar:
       type: day-of-year
       days:
         - 05-01
+  - key: MadridDay
+    name:
+      - Fiesta de la Comunidad de Madrid@es
+      - Madrid Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 05-02
   - key: GalicianLiteratureDay
     name:
       - Galician Literature Day@en
@@ -435,6 +472,14 @@ calendar:
       type: day-of-year
       days:
         - 12-08
+  - key: AragonJusticeDay
+    name:
+     - Día del Justicia de Aragón@es
+     - Aragon Justice Day@en
+    calendar:
+      type: day-of-year
+      days:
+        - 12-20
   - key: Christmas
     name:
       - Christmas Day@en
@@ -541,6 +586,22 @@ regions:
     holidays:
       - type: named
         key: AndalusiaDay
+  - id: "ES-AR"
+    name:
+      - Aragón@es
+    description:
+      text:
+        - The Autonomous Community of Aragón@en
+        - Comunidad Autonoma de Aragón@es
+      about: https://www.aragon.es
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: AragonDay
+      - type: named
+        key: AragonJusticeDay
   - id: "ES-AS"
     name:
       - Asturies@ast
@@ -623,6 +684,22 @@ regions:
       about: http://www.jcyl.es/
     type: Province
     parent: ES
+  - id: "ES-MD"
+    name:
+      - Madrid@es
+    description:
+      text:
+        - Community of Madrid@en
+        - Comunidad de Madrid@es
+      about: https://www.comunidad.madrid
+    type: Province
+    parent: ES
+    locale: es
+    holidays:
+      - type: named
+        key: StJosephsDay
+      - type: named
+        key: MadridDay
   - id: "ES-NA"
     name:
       - Navarre@es

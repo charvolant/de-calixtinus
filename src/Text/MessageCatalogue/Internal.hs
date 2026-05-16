@@ -414,7 +414,7 @@ makeNoMatchClause ctx base _catalogue = do
             (InfixE
               (Just $ LitE $ StringL "Unrecognised message ")
               (VarE $ mkName "++")
-              (Just $ AppE (VarE $ mkName "show") (VarE msg))
+              (Just $ AppE (VarE $ 'show) (VarE msg))
               )
         else
           ConE (mkName "Nothing")

@@ -135,7 +135,7 @@ import Data.Aeson.Types (toJSONKeyText, typeMismatch)
 import Data.Default.Class
 import Data.Description (Description(..), wildcardDescription)
 import Data.Event
-import Data.Foldable (foldl', minimumBy, toList)
+import Data.Foldable (minimumBy, toList)
 import qualified Data.List as L
 import Data.Localised (Localised(..), TaggedText(..), appendText, localiseDefault, rootLocale, wildcardText)
 import Data.Maybe (fromJust)

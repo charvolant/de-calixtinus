@@ -18,7 +18,6 @@ module Data.Partial (
   topologicalSort
 ) where
 
-import Data.Foldable (foldl')
 import Data.List (partition)
 
 

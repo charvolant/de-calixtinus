@@ -18,7 +18,6 @@ module Camino.Display.Static (
   , createHelpFiles
 ) where
 
-import Camino.Camino
 import Camino.Colour
 import Camino.Config
 import qualified Camino.Units as U
@@ -89,7 +88,6 @@ createColourSwatch config output = do
   let router = renderCaminoRoute config locales
   let messages = renderCaminoMsg config U.SIUnits locales
   let swatch = createColourMap config
-  let svg = swatch messages router
   let file = output </> "colours.svg"
   createDirectoryIfMissing True output
   LB.writeFile file $ renderHtml $ swatch messages router
@@ -101,15 +99,15 @@ createHelpFile config loc file html = do
   let messages = renderCaminoMsg config U.SIUnits locales
   LB.writeFile file $ renderHtml $ html messages router
   
-createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()
-createStandAloneHelpFile config loc file html title = createHelpFile config loc file (layoutHtml config (wildcardText title) Nothing html Nothing)
+_createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()
+_createStandAloneHelpFile config loc file html title = createHelpFile config loc file (layoutHtml config (wildcardText title) Nothing html Nothing)
 
 -- | Create static help files.
 --
 --  Currently not used, with help file being dynamically served
 createHelpFiles :: Config -> FilePath -> IO ()
-createHelpFiles config output = do
-  let loc = localeFromIDOrError "en"
+createHelpFiles _config output = do
+  let _loc = localeFromIDOrError "en"
   createDirectoryIfMissing True output
   {-
   createStandAloneHelpFile config loc (output </> "help-en.html") $(ihamletFile "templates/help/help-en.hamlet") "Help"

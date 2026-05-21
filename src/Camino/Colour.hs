@@ -51,6 +51,7 @@ module Camino.Colour (
   , textBlack
   , textWhite
   , unusedGrey
+  , warningOrange
   , warningRed
   , namedColours
 ) where
@@ -161,7 +162,14 @@ recreationGreen = fromColourString "00b820"
 mutedBlue :: PaletteColour
 mutedBlue = fromColourString "a0b3ca"
 
--- | A bootstrap warning color
+
+-- | A warning color
+--
+--   <https://www.colorhexa.com/fd7e13>
+warningOrange :: PaletteColour
+warningOrange = fromColourString "fd7e13"
+
+-- | A warning color
 --
 --   <https://www.colorhexa.com/dc3545>
 warningRed :: PaletteColour
@@ -334,5 +342,6 @@ namedColours = [
   , ("Text Black", textBlack)
   , ("Text White", textWhite)
   , ("Unused Grey", unusedGrey)
+  , ("Warning Orange", warningOrange)
   , ("Warning Red", warningRed)
   ]

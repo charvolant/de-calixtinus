@@ -90,6 +90,9 @@ module Camino.Camino (
   , routeCentralLocation
   , routeLegTypes
   , allFeatures
+  -- * Warnings
+  , CaminoWarning(..)
+  , matchCaminoWarningCondition
   -- * Camino
   , Camino(..)
   , caminoAllLegs
@@ -133,7 +136,7 @@ import Control.Monad.Reader
 import Data.Aeson
 import Data.Aeson.Types (toJSONKeyText, typeMismatch)
 import Data.Default.Class
-import Data.Description (Description(..), wildcardDescription)
+import Data.Description (Description(..), NoteType(..), wildcardDescription)
 import Data.Event
 import Data.Foldable (minimumBy, toList)
 import qualified Data.List as L
@@ -1656,6 +1659,89 @@ createProhibitsClauses :: RouteLogic -- ^ The piece of route logic
   -> [Formula Route] -- ^ A list of clauses that imply anything allowed is true and anything prohibited is false
 createProhibitsClauses logic = createLogicClauses' logic (routeLogicProhibits logic)
 
+-- | A warning or condition about a route, usually triggered by some combination of preferences.
+--
+--   Camino warnings are triggered by combinartions of routes and then any other conditions that apply to the warning.
+--   They are used to warn the user that they're unlikely to be able to complete a camino with the preferences they have.
+data CaminoWarning = CaminoWarning {
+    caminoWarningType :: NoteType -- ^ The type of warning or information that this warning carries.
+  , caminoWarningDescription :: Description -- ^ What the warning actually is
+  , caminoWarningCondition :: Formula Route -- ^ The combination of routes this warning applies to
+  , caminoWarningTravel :: Maybe (S.Set Travel) -- ^ The travel styles this warning applies to
+  , caminoWarningFitness :: Maybe (S.Set Fitness) -- ^ The fitness levels this warning applies to
+  , caminoWarningComfort :: Maybe (S.Set Comfort) -- ^ The comfort levels this warning applies to
+  , caminoWarningMinDistance :: Maybe Float -- ^ The maximum minimum distance that should be set (useful for caminos with very short days)
+  , caminoWarningMaxDistance :: Maybe Float -- ^ The minimum maximum distance that should be set (usually for caminos with very long legs)
+  , caminoWarningMinTime :: Maybe Float -- ^ The maximum minimum walking time that should be set
+  , caminoWarningMaxTime :: Maybe Float -- ^ The minimum maximum walking time that should be set
+} deriving (Show, Generic)
+
+instance FromJSON CaminoWarning where
+  parseJSON (Object v) = do
+    type' <- v .:? "type" .!= Warning
+    description' <- v .: "description"
+    condition' <- v .: "condition"
+    travel' <- v .:? "travel"
+    fitness' <- v .:? "fitness"
+    comfort' <- v .:? "comfort"
+    mind' <- v .:? "min-distance"
+    maxd' <- v .:? "max-distance"
+    mint' <- v .:? "min-time"
+    maxt' <- v .:? "max-time"
+    return CaminoWarning {
+        caminoWarningType = type'
+      , caminoWarningDescription = description'
+      , caminoWarningCondition = condition'
+      , caminoWarningTravel = travel'
+      , caminoWarningFitness = fitness'
+      , caminoWarningComfort = comfort'
+      , caminoWarningMinDistance = mind'
+      , caminoWarningMaxDistance = maxd'
+      , caminoWarningMinTime = mint'
+      , caminoWarningMaxTime = maxt'
+    }
+  parseJSON v = error ("Unable to parse route warning " ++ show v)
+
+instance ToJSON CaminoWarning where
+  toJSON (CaminoWarning type' description' condition' travel' fitness' comfort' mind' maxd' mint' maxt') =
+    object [
+        "type" .= if type' == Warning then Nothing else Just type'
+      , "description" .= description'
+      , "condition" .= condition'
+      , "travel" .= travel'
+      , "fitness" .= fitness'
+      , "comfort" .= comfort'
+      , "min-distance" .= mind'
+      , "max-distance" .= maxd'
+      , "min-time" .= mint'
+      , "max-time" .= maxt'
+      ]
+  toEncoding (CaminoWarning type' description' condition' travel' fitness' comfort' mind' maxd' mint' maxt') =
+    pairs $
+         "type" .?= (if type' == Warning then Nothing else Just type')
+      <> "description" .= description'
+      <> "condition" .= condition'
+      <> "travel" .?= travel'
+      <> "fitness" .?= fitness'
+      <> "comfort" .?= comfort'
+      <> "min-distance" .?= mind'
+      <> "max-distance" .?= maxd'
+      <> "min-time" .?= mint'
+      <> "max-time" .?= maxt'
+
+instance NFData CaminoWarning
+
+normaliseCaminoWarning :: Camino -> CaminoWarning -> CaminoWarning
+normaliseCaminoWarning camino warning = warning {
+      caminoWarningCondition = dereferenceFormula camino (caminoWarningCondition warning)
+  }
+
+-- | Does this set of routes match the route warning condition
+matchCaminoWarningCondition :: CaminoWarning -> S.Set Route -> Bool
+matchCaminoWarningCondition warning routes =
+  evaluate (\r -> if S.member r routes then Just T else Just F) (caminoWarningCondition warning) == T
+
+
 -- | A way, consisting of a number of locations and legs between them.
 --
 --   The purpose of the Camino Planner is to divide the selected legs of a camino into suitable
@@ -1673,6 +1759,7 @@ data Camino = Camino {
   , caminoRoutes :: [Route] -- ^ Named sub-routes
   , caminoRouteLogic :: [RouteLogic] -- ^ Additional logic for named sub-routes
   , caminoDefaultRoute :: Route -- ^ The default route to use
+  , caminoWarnings :: [CaminoWarning] -- ^ Additional warnings for sub-routes
   , caminoLocationMap :: M.Map Text Location -- ^ The camino locations as a map
   , caminoAccommodationMap :: M.Map Text (Accommodation, Location) -- ^ The camino accommodation
   , caminoPoiMap :: M.Map Text (PointOfInterest, Location) -- ^ The camino points of interest
@@ -1713,6 +1800,7 @@ instance FromJSON Camino where
     routes' <- v .: "routes"
     routeLogic' <- v .: "route-logic"
     defaultRoute' <- v .:? "default-route" .!= (routeID $ headWithError routes')
+    warnings' <- v .:? "warnings" .!= []
     let defaultRoute'' = fromJust $ L.find (\r -> routeID r == defaultRoute') routes'
     let otherRoutes = filter (\r -> routeID r /= defaultRoute') routes'
     let defaultLocations' = (defaultRouteLocations locs' otherRoutes) ++ (routeLocations defaultRoute'')
@@ -1737,6 +1825,7 @@ instance FromJSON Camino where
       , caminoRoutes = routes''
       , caminoRouteLogic = routeLogic'
       , caminoDefaultRoute = defaultRoute'''
+      , caminoWarnings = warnings'
       , caminoLocationMap = locMap'
       , caminoAccommodationMap = accommodation'
       , caminoPoiMap = pois'
@@ -1744,7 +1833,7 @@ instance FromJSON Camino where
   parseJSON v = error ("Unable to parse camino object " ++ show v)
 
 instance ToJSON Camino where
-  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation _pois) =
+  toJSON (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' warnings' _locMap _accommodation _pois) =
     object [
         "id" .= id'
       , "name" .= name'
@@ -1758,8 +1847,9 @@ instance ToJSON Camino where
       , "routes" .= map (\r -> if routeID r == routeID defaultRoute' then r { routeLocations = [], routeLocationSet = S.empty } else r) routes'
       , "route-logic" .= routeLogic'
       , "default-route" .= routeID defaultRoute'
+      , "warnings" .= nothingIfNull warnings'
       ]
-  toEncoding (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation _pois) =
+  toEncoding (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' warnings' _locMap _accommodation _pois) =
     pairs $
         "id" .= id'
       <> "name" .= name'
@@ -1773,6 +1863,7 @@ instance ToJSON Camino where
       <> "routes" .= routes'
       <> "route-logic" .= routeLogic'
       <> "default-route" .= routeID defaultRoute'
+      <> "warnings" .?= nothingIfNull warnings'
 
 instance NFData Camino
 
@@ -1781,7 +1872,7 @@ instance Graph Camino Leg Location where
   edge camino loc1 loc2 = L.find (\l -> loc1 == legFrom l && loc2 == legTo l) (caminoLegs camino)
   incoming camino location = filter (\l -> location == legTo l) (caminoLegs camino)
   outgoing camino location = filter (\l -> location == legFrom l) (caminoLegs camino)
-  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' _locMap _accommodation' _pois') locFilter legFilter  =
+  subgraph (Camino id' name' description' metadata' fragment' imports' locations' legs' links' routes' routeLogic' defaultRoute' warnings' _locMap _accommodation' _pois') locFilter legFilter  =
     let
       isAllowed = locFilter
       isAllowedLeg l = legFilter l && isAllowed (source l) && isAllowed (target l)
@@ -1819,6 +1910,7 @@ instance Graph Camino Leg Location where
         , caminoRoutes = routes''
         , caminoRouteLogic = routeLogic''
         , caminoDefaultRoute = defaultRoute''
+        , caminoWarnings = warnings'
         , caminoLocationMap = locMap''
         , caminoAccommodationMap = accommodation''
         , caminoPoiMap = pois''
@@ -1853,6 +1945,7 @@ instance Placeholder Text Camino where
       , caminoRoutes = [dr]
       , caminoRouteLogic = []
       , caminoDefaultRoute = dr
+      , caminoWarnings = []
       , caminoLocationMap = M.empty
       , caminoAccommodationMap = M.empty
       , caminoPoiMap = M.empty
@@ -1916,7 +2009,12 @@ instance Normaliser Text Camino CaminoConfig where
       }
       rl' =  map (normaliseRouteLogic camino3) (caminoRouteLogic camino3)
       rl'' = map caminoRouteLogic imports'
-      camino4 = camino3 { caminoRouteLogic = concat (rl':rl'') }
+      w' = map (normaliseCaminoWarning camino3) (caminoWarnings camino3)
+      w'' = map caminoWarnings imports'
+      camino4 = camino3 {
+          caminoRouteLogic = concat (rl':rl'')
+        , caminoWarnings = concat (w':w'')
+      }
     in
       camino4
 

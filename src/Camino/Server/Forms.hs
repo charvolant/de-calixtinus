@@ -41,7 +41,7 @@ import Camino.Camino
 import Camino.Preferences
 import qualified Camino.Units as U
 import Data.Util
-import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg, caminoUnitsMsg, descriptionBlock)
+import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg, caminoUnitsMsg, descriptionBlock, warningBlock)
 import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
@@ -893,6 +893,10 @@ chooseCaminoForm help prefs extra = do
     |]
     return (res, widget)
 
+filterWarnings :: Maybe PreferenceData -> Maybe Camino -> [CaminoWarning]
+filterWarnings Nothing (Just camino) = caminoWarnings camino
+filterWarnings (Just prefs) (Just camino) = filter (warningMatchesTravelPreferences tprefs) (caminoWarnings camino) where tprefs = travelPreferencesFrom prefs
+filterWarnings _ _ = []
 
 -- | Form to allow the routes to be chosen
 chooseRoutesForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (FormResult PreferenceData, Widget)
@@ -911,7 +915,9 @@ chooseRoutesForm help prefs extra = do
     let allowedClauses = maybe [] (\c -> Prelude.concat $ map createAllowsClauses (caminoRouteLogic c)) camino
     let prohibitedClauses = maybe [] (\c -> Prelude.concat $ map createProhibitsClauses (caminoRouteLogic c)) camino
     let routeOptions = map (\r -> (routeID r, toHtml $ localised $ routeName r, r, description $ routeDescription r, maybe False (\c -> r == caminoDefaultRoute c) camino)) routes
-    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses) (fieldSettingsLabelName RoutePreferencesLabel "routes") (prefRoutes <$> prefs)
+    let warnings = filterWarnings prefs camino
+    let warnings' = map (\w -> (caminoWarningCondition w, (warningBlock w) messages router)) warnings
+    (roRes, roView) <- mreq (implyingCheckListField id routeOptions requirementClauses allowedClauses prohibitedClauses warnings') (fieldSettingsLabelName RoutePreferencesLabel "routes") (prefRoutes <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
       resRoutes = roRes,

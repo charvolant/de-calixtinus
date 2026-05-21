@@ -442,7 +442,7 @@ detailToggle :: Widget
 detailToggle = $(widgetFile "detail-toggle")
 
 addError' :: (Edge e Location, Score s1, Score s2) => (Failure Location e s1 s2) -> [Locale] -> Html
-addError' (Failure msg loc _ _) locales = [shamlet|
+addError' (Failure msg loc _ _ _) locales = [shamlet|
   #{msg}
   $maybe l <- loc
     #{locationID l} #{localiseText locales $ locationName l}

@@ -47,6 +47,7 @@ import Network.URI
 data NoteType =
     Information -- ^ A generic piece of information
   | Warning -- ^ A warning about the thing being described
+  | Barrier -- ^ Something that means that you might not be able to get to something or do something (more serious than a warning)
   | Address -- ^ An address
   | Directions -- ^ How to get there etc.
   | Access -- ^ How to access something

@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# OPTIONS_HADDOCK prune #-}
 {-|
 Module      : Html
@@ -44,7 +44,7 @@ import Data.Util
 import Graph.Graph (Edge(..), incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
-import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, take, toLower, toUpper)
+import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, show, take, toLower, toUpper)
 import Formatting
 import Data.Text (Text)
 
@@ -160,6 +160,16 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
       <tr>
         <td>_{MiscPenanceLabel}
         <td .text-end>_{PenanceFormatted True (metricsMisc metrics)}
+        <td>
+     $if metricsArduousDays metrics > 0
+      <tr>
+        <td>_{ArduousDayLabel}
+        <td .text-end>#{metricsArduousDays metrics}
+        <td>
+     $if metricsHardDays metrics > 0
+      <tr>
+        <td>_{HardDayLabel}
+        <td .text-end>#{metricsHardDays metrics}
         <td>
    |]
   where
@@ -789,6 +799,7 @@ hoursBlock (OpenHours hours) = [ihamlet|
 descriptionNoteTypeMsg :: NoteType -> CaminoMsg
 descriptionNoteTypeMsg Information = InformationTitle
 descriptionNoteTypeMsg Warning = WarningTitle
+descriptionNoteTypeMsg Barrier = BarrierTitle
 descriptionNoteTypeMsg Address = AddressTitle
 descriptionNoteTypeMsg Directions = DirectionsTitle
 descriptionNoteTypeMsg Access = AccessTitle
@@ -797,6 +808,7 @@ descriptionNoteTypeMsg Access = AccessTitle
 descriptionNoteTypeIcon :: NoteType -> HtmlUrlI18n CaminoMsg CaminoRoute
 descriptionNoteTypeIcon Information = [ihamlet| <span .note-type .ca-information title="_{InformationTitle}">|]
 descriptionNoteTypeIcon Warning = [ihamlet| <span .note-type .ca-warning title="_{WarningTitle}">|]
+descriptionNoteTypeIcon Barrier = [ihamlet| <span .note-type .ca-warning title="_{BarrierTitle}">|]
 descriptionNoteTypeIcon Address = [ihamlet| <span .note-type .ca-map title="_{AddressTitle}">|]
 descriptionNoteTypeIcon Directions = [ihamlet| <span .note-type .ca-map title="_{DirectionsTitle}">|]
 descriptionNoteTypeIcon Access = [ihamlet| <span .note-type .ca-key title="_{AccessTitle}">|]
@@ -846,6 +858,21 @@ descriptionBlock showAbout showImages description = [ihamlet|
     mimg = descImage description
     attribution = maybe Nothing imageAttribution mimg
     origin= maybe Nothing imageOrigin mimg
+
+warningClass :: NoteType -> Text
+warningClass nt = "warning-" <> (T.toLower $ T.show nt)
+
+warningAlert :: NoteType -> Text
+warningAlert Warning = "alert-warning"
+warningAlert Barrier = "alert-danger"
+warningAlert _ = "alert-info"
+
+warningBlock :: CaminoWarning -> HtmlUrlI18n CaminoMsg CaminoRoute
+warningBlock warning = [ihamlet|
+  <div .warning .alert .#{warningAlert (caminoWarningType warning)} .#{warningClass (caminoWarningType warning)} role="alert">
+    ^{descriptionNoteTypeIcon (caminoWarningType warning)}
+    ^{descriptionBlock True True (caminoWarningDescription warning)}
+  |]
 
 -- | Generate a single line description of a location summarising type, name, services, accommodation and points of interest
 locationLineSimple :: Config -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
@@ -1285,18 +1312,51 @@ failureTable _tprefs _cprefs caption graph = [ihamlet|
   where
     arrow = '\x2192'
 
+-- | Generate a table summarising generated partial chains
+--
+--   Intended for debugging
+failureChains :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> [Chain Location e Metrics] -> HtmlUrlI18n CaminoMsg CaminoRoute
+failureChains _tprefs _cprefs caption chains = [ihamlet|
+  <table .table .table-striped>
+    <caption>_{caption}
+    <thead>
+      <tr>
+        <th>_{FromLabel}
+        <th>_{ToLabel}
+        <th>_{DistanceLabel}
+        <th>_{PenanceSummaryLabel}
+        <th>_{PathLabel}
+    <tbody>
+      $forall c <- chains
+        <tr>
+          <td>#{summary (start c)} _{Txt (locationName (start c))}
+          <td>#{summary (finish c)} _{Txt (locationName (finish c))}
+          <td>_{DistanceFormatted (metricsDistance (score c))} _{TimeMsg (metricsTime (score c))}
+          <td>#{summary (score c)}
+          <td>
+            #{summary (start c)}
+            $forall p <- path c
+                \ #{arrow} #{summary (target p)}
+
+|]
+  where
+    arrow = '\x2192'
+
 -- | Generate a report summarising the partial plan generated before something went wrong.
 --
 --   Intended for debugging
-failureReport :: (Edge e Location) => T.Text -> T.Text -> TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
-failureReport _tlabel _plabel _tprefs _cprefs Nothing = [ihamlet|
+failureReport :: (Edge e Location) => T.Text -> T.Text -> T.Text -> TravelPreferences -> CaminoPreferences -> Maybe (Failure Location e Metrics Metrics) -> HtmlUrlI18n CaminoMsg CaminoRoute
+failureReport _clabel _tlabel _plabel _tprefs _cprefs Nothing = [ihamlet|
 |]
-failureReport tlabel plabel tprefs cprefs (Just (Failure msg loc pathGraph programGraph)) = [ihamlet|
+failureReport clabel tlabel plabel tprefs cprefs (Just (Failure msg loc chains pathGraph programGraph)) = [ihamlet|
   <div .row>
     <div .col>
       #{msg}
       $maybe l <- loc
         #{summary l} _{Txt (locationName l)}
+  <div ##{clabel} .row>
+    <div .col>
+      ^{failureChains tprefs cprefs ChainsLabel chains}
   <div ##{tlabel} .row>
     <div .col>
        ^{failureTable tprefs cprefs TableLabel pathGraph}
@@ -1314,17 +1374,21 @@ failureHtml tprefs cprefs journey pilgrimage = [ihamlet|
     <nav .navbar .navbar-expand-md .bg-body>
       <ul .navbar-nav>
         $if isJust journey
+         <li .nav-item>
+            <a .nav-link href=#failure-journey-chains">_{JourneyLabel}-_{ChainsLabel}
           <li .nav-item>
             <a .nav-link href=#failure-journey-table">_{JourneyLabel}-_{TableLabel}
           <li .nav-item>
             <a .nav-link href="#failure-journey-program">_{JourneyLabel}-_{ProgramLabel}
         $if isJust pilgrimage
           <li .nav-item>
+            <a .nav-link href=#failure-pilgrimage-chains">_{PilgrimageLabel}-_{ChainsLabel}
+          <li .nav-item>
             <a .nav-link href=#failure-pilgrimage-table">_{PilgrimageLabel}-_{TableLabel}
           <li .nav-item>
             <a .nav-link href="#failure-pilgrimage-program">_{PilgrimageLabel}-_{ProgramLabel}
-    ^{failureReport "failure-journey-table" "failure-journey-program" tprefs cprefs journey}
-    ^{failureReport "failure-pilgrimage-table" "failure-pilgrimage-program" tprefs cprefs pilgrimage}
+    ^{failureReport "failure-journey-chains" "failure-journey-table" "failure-journey-program" tprefs cprefs journey}
+    ^{failureReport "failure-journey-chains" "failure-pilgrimage-table" "failure-pilgrimage-program" tprefs cprefs pilgrimage}
  |]
 
 -- | Generate a tab summarising the requested preferences
@@ -1554,6 +1618,10 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                     <span title="_{RestpointLabel}" .ca-restpoint>
                   $if metricsStockpoint dscore
                     <span title="_{StockpointLabel}" .ca-stockpoint>
+                  $if metricsArduousDays dscore > 0
+                    <span title="_{ArduousDayLabel}" .ca-arduous>
+                  $if metricsHardDays dscore > 0
+                    <span title="_{HardDayLabel}" .ca-hard>
                   $maybe (day1, day2) <- metricsDate dscore
                     _{DateRangeMsg day1 day2}
                     $maybe region <- locationRegion $ finish day
@@ -2130,7 +2198,7 @@ caminoAllMapScript config tl br caminos = [ihamlet|
 
 -- | Generate a tab that displays information about a camino, including regions and holidays
 aboutHtml :: Config -> Bool -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
-aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
+aboutHtml config showImages tprefs cprefs msolution = [ihamlet|
   <div .container-fluid>
     <h2>_{Txt (caminoName camino)}
     <div .row>
@@ -2198,6 +2266,12 @@ aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
               <td .text-center>
                 <span :isIndirectHoliday (fst holiday) region:.text-black-50>
                   #{checkMark (isHoliday (fst holiday) region)}
+    $if not (null warnings)
+      <h3>_{WarningsLabel}
+      $forall warning <- warnings
+        <div .row>
+          <div .col>
+            ^{warningBlock warning}
     <h3>_{InformationLabel}
     <p>_{InformationDescription}
     <h4>_{CaminoLabel}
@@ -2232,6 +2306,7 @@ aboutHtml config showImages _tprefs cprefs msolution = [ihamlet|
     holidays = L.sortOn snd $ map mapDate $ S.toList holidayKeys
     isHoliday holiday region = elem holiday (getRegionalHolidays region)
     isIndirectHoliday holiday region = elem holiday (getInheritedRegionalHolidays region)
+    warnings = filter (\w -> warningMatchesTravelPreferences tprefs w && warningMatchesCaminoPreferences cprefs w) (caminoWarnings camino)
 
 -- | Layout the generated HTML for a stand-alone page
 layoutHtml :: Config -- ^ The configuration to use when inserting styles, scripts, paths etc.

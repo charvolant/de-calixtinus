@@ -26,6 +26,7 @@ module Graph.Programming (
   , ChoiceFunction
   , EvaluationFunction
   , SelectFunction
+  -- ** Failure
   , Failure(..)
   , emptyFailure
   , failure
@@ -168,12 +169,13 @@ emptyChainGraph  = ChainGraph M.empty M.empty
 -- | A failure in programming
 --
 --   Programming failures attempt to report the source of the failure and the underlying context
-data (Edge e v, Score s1, Score s2) => Failure v e s1 s2 = Failure Text (Maybe v) (ChainGraph v e s1) (ChainGraph v (Chain v e s1) s2)
+data (Edge e v, Score s1, Score s2) => Failure v e s1 s2 = Failure Text (Maybe v) [Chain v e s1] (ChainGraph v e s1) (ChainGraph v (Chain v e s1) s2)
  deriving (Show)
 
 instance (Edge e v, Score s1, Score s2, NFData s1, NFData s2, NFData v, NFData e) => NFData (Failure v e s1 s2) where
-  rnf (Failure message' location' chain1' chain2') = message'
+  rnf (Failure message' location' table1' chain1' chain2') = message'
     `deepseq` location'
+    `deepseq` table1'
     `deepseq` chain1'
     `deepseq` chain2'
     `deepseq` ()
@@ -181,16 +183,17 @@ instance (Edge e v, Score s1, Score s2, NFData s1, NFData s2, NFData v, NFData e
 -- | Create a failure with the constructed link and program table for debugging
 failure :: (Edge e v, Score s1, Score s2) => Text -- ^ The error message
   -> Maybe v -- ^ The vertex where the failure occurs, if found
+  -> [Chain v e s1] -- ^ The base chains
   -> (ChainGraph v e s1) -- ^ The link table
   -> (ChainGraph v (Chain v e s1) s2) -- ^ The program table
   -> Failure v e s1 s2 -- ^ The resulting failure
-failure msg v tab prog = Failure msg v tab prog
+failure msg v tab chains prog = Failure msg v tab chains prog
 
 -- | Create a failure with no debugging information
 emptyFailure :: (Edge e v, Score s1, Score s2) => Text -- ^ The error message
   -> Maybe v -- ^ The optional location of the failure
   -> Failure v e s1 s2 -- THe resulting failure
-emptyFailure msg v = failure msg v emptyChainGraph emptyChainGraph
+emptyFailure msg v = failure msg v [] emptyChainGraph emptyChainGraph
 
 -- | Extend a stage with a new edge
 extend :: (Edge e v, Score s) => AcceptFunction e -- ^ Accept an sequence of edges as usable before evaluation
@@ -254,7 +257,7 @@ step graph choice accept eval reachable' current =
     self = map (\s -> Chain s s [] mempty) verticesList
     result = current ++ self ++ contracted
   in
-    -- trace ("Vertices = " ++ (show $ S.map identifier vertices) ++ "\n contracted = " ++ (show $ S.fromList $ map (\c -> (identifier $ start c, identifier $ finish c)) contracted)) result
+    -- trace ("Reachable = " ++ (show $ S.map identifier reachable') ++  "\n vertices = " ++ (show $ S.map identifier vertices) ++ "\n contracted = " ++ (show $ S.fromList $ map (\c -> (identifier $ start c, identifier $ finish c)) contracted)) $
     result
 
 constructTable' :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> S.Set v -> [Chain v e s] -> [Chain v e s]
@@ -265,7 +268,7 @@ constructTable' graph choice accept eval reachable' current =
     if length current == length update then update else constructTable' graph choice accept eval reachable' update
 
 -- | Construct a table of stages from vertices that lead fron\/to a begin\/end point
-constructTable :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> SelectFunction v -> v -> v -> ChainGraph v e s
+constructTable :: (Graph g e v, Score s) => g -> ChoiceFunction v e s -> AcceptFunction e -> EvaluationFunction e s -> SelectFunction v -> v -> v -> ([Chain v e s], ChainGraph v e s)
 constructTable graph choice accept eval select begin end =
   let
     origin = [Chain begin begin [] mempty]
@@ -276,7 +279,7 @@ constructTable graph choice accept eval select begin end =
   in
     -- trace ("Reachable = " ++ (show $ S.map identifier reachable') ++ " subgraph " ++ graphSummary sg reachable') result
     -- trace ("Reachable = " ++ (show $ S.map identifier reachable') ++ "\n table = " ++ (show $ S.fromList $ map (\c -> (identifier $ start c, identifier $ finish c)) table) ++ "\n reached = " ++ (show $ S.map identifier $ M.keysSet $ forwards result)) result
-    result
+    (table, result)
 
 findBreak' :: (Graph g e v) => g -> v -> v -> S.Set v -> S.Set v -> Maybe v
 findBreak' chain begin end visited horizon =
@@ -312,8 +315,8 @@ program :: (Graph g e v, Score s1, Score s2) => g -- ^ The graph to traverse
   -> Either (Failure v e s2 s1) (Chain v (Chain v e s2) s1) -- ^ A program that splits the traversal into a sequence of chains
 program graph programChoice programAccept programEval chainChoice chainAccept chainEval select begin end =
   let
-    table = constructTable graph chainChoice chainAccept chainEval select begin end
-    programs = constructTable table programChoice programAccept programEval select begin end
+    (cchains, table) = constructTable graph chainChoice chainAccept chainEval select begin end
+    (_pchains, programs) = constructTable table programChoice programAccept programEval select begin end
     route = edge programs begin end
   in
     if isJust route then
@@ -322,12 +325,12 @@ program graph programChoice programAccept programEval chainChoice chainAccept ch
         break' = findBreak table begin end
       in
         if isJust break' then
-          Left $ failure "No path at " break' table programs
+          Left $ failure "No path at " break' cchains table programs
         else let
             break'' = findBreak programs begin end
           in
             if isJust break'' then
-              Left $ failure "No chain at " break'' table programs
+              Left $ failure "No chain at " break'' cchains table programs
             else
-              Left $ failure "Unable to find break point" Nothing table programs
+              Left $ failure "Unable to find break point" Nothing cchains table programs
 

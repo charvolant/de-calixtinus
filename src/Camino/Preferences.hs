@@ -20,6 +20,8 @@ module Camino.Preferences (
   , isInsideMaximum
   , isOutOfBounds
   , isOutOfRange
+  , isArduous
+  , isHard
   , boundsDistance
   , rangeDistance
   , rangeDistanceInt
@@ -60,6 +62,9 @@ module Camino.Preferences (
   , suggestedPoiCategories
   , suggestedRestLocation
   , suggestedStarts
+  -- * Warnings
+  , warningMatchesCaminoPreferences
+  , warningMatchesTravelPreferences
 ) where
 
 import GHC.Generics
@@ -166,6 +171,19 @@ isOutOfBounds :: (Ord a) => PreferenceRange a -- ^ The preference range
 isOutOfBounds (PreferenceRange _dervived _target lower upper _minimum _maximum) value =
   value < lower || value > upper
 
+-- | Is this an arduous value? (outside the upper allowed by the preference range)
+isArduous :: (Ord a) => PreferenceRange a -- ^ The preference range
+  -> a -- ^ The value to test
+  -> Bool -- ^ True if out of bounds
+isArduous (PreferenceRange _derived _target _lower upper _mini _maxi) value =
+  value > upper
+
+-- | Is this a hard value? (outside the maximum allowed by the preference range)
+isHard :: (Ord a) => PreferenceRange a -- ^ The preference range
+  -> a -- ^ The value to test
+  -> Bool -- ^ True if out of bounds
+isHard (PreferenceRange _derived _target _lower _upper _mini maxi) value =
+  maybe False (value >) maxi
 
 -- | Get the normalised distance to the outer bounds of a value
 -- 
@@ -493,7 +511,22 @@ reachableLocations preferences = let
     finish' = preferenceFinish preferences
   in 
     S.insert start' $ S.insert finish' $ (successors camino start') `S.intersection` (predecessors camino finish') `S.intersection` (allowedLocations preferences)
-    
+
+-- | See if a camino warning matches a set of travel preferences
+warningMatchesTravelPreferences :: TravelPreferences -> CaminoWarning -> Bool
+warningMatchesTravelPreferences tprefs warning =
+     maybe True (S.member (preferenceTravel tprefs)) (caminoWarningTravel warning)
+  && maybe True (S.member (preferenceFitness tprefs)) (caminoWarningFitness warning)
+  && maybe True (S.member (preferenceComfort tprefs)) (caminoWarningComfort warning)
+  && maybe True (\md -> maybe False (\rm -> rm > md) (rangeMinimum $ preferenceDistance tprefs)) (caminoWarningMinDistance warning)
+  && maybe True (\md -> maybe False (\rm -> rm < md) (rangeMaximum $ preferenceDistance tprefs)) (caminoWarningMaxDistance warning)
+  && maybe True (\mt -> maybe False (\rm -> rm > mt) (rangeMinimum $ preferenceTime tprefs)) (caminoWarningMinTime warning)
+  && maybe True (\mt -> maybe False (\rm -> rm < mt) (rangeMaximum $ preferenceTime tprefs)) (caminoWarningMaxTime warning)
+
+-- | See if a camino warning matches a set of travel preferences
+warningMatchesCaminoPreferences :: CaminoPreferences -> CaminoWarning -> Bool
+warningMatchesCaminoPreferences cprefs warning = matchCaminoWarningCondition warning (preferenceRoutes cprefs)
+
 -- | Generate a set of recommended stops, based on the selected routes
 recommendedStops :: CaminoPreferences -- ^ The preferences (normalised, see `normalisePreferences`)
   -> S.Set Location -- ^ The allowed locations

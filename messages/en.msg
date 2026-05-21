@@ -15,6 +15,7 @@ AirportDescription: An airport, airfield or aerodrome
 AirportTitle: Airport
 AlwaysOpenLabel: Always Open
 AppName: De Calixtinus
+ArduousDayLabel: Arduous Day
 ArtworkDescription: A piece of art
 ArtworkTitle: Art
 AscentLabel: Ascent
@@ -22,6 +23,7 @@ AscentMsg ascent@Float: Ascent ^{formatHeight sou ascent}
 AustereTitle: Austere
 BackLabel: Back
 BankTitle: Bank
+BarrierTitle: Barrier
 BeachDescription: A beach (sea or river)
 BeachTitle: Beach
 BedlinenTitle: Bedlinen
@@ -46,6 +48,7 @@ CasaRuralTitle: Casa Rural/Quinta
 CasualTitle: Casual
 CathedralDescription: A cathedral, basillica, shrine or other large religious building
 CathedralTitle: Cathedral
+ChainsLabel: Chains
 ChurchDescription: A church or chapel
 ChurchTitle: Church
 CityDescription: A large urban area with multiple options for services and accommodation
@@ -123,6 +126,7 @@ GroceriesTitle: Groceries
 GuestHouseTitle: Guesthouse
 HalfBoardTitle: Half-Board
 HandwashTitle: Handwash
+HardDayLabel: Hard Day
 HazardDescription: A road crossing, bridge, slope etc. that needs to be treated with caution
 HazardTitle: Hazard
 HeatingTitle: Heating
@@ -320,7 +324,7 @@ StartLabel: Start!
 StartText: Select the start location and finish location for your trip.
 StartTitle: Start and Finish Points
 StationDescription: A train or bus station
-StationTitle: Station"
+StationTitle: Station
 StatueDescription: A statue, bas-relief, etc.
 StatueTitle: Statue
 StockpointLabel: Stocking Point
@@ -378,9 +382,10 @@ VillageDescription: A smaller locality with limited, or no, services and accommo
 VillageTitle: Village
 WalkingNaismithTitle: Walking (strong walkers)
 WalkingTitle: Walking
+WarningsLabel: Warnings
 WarningTitle: Warning
 WashingMachineTitle: Washing Machine
-WaterBodyDescription: Lake, reservoir, river, canal, etc."
+WaterBodyDescription: Lake, reservoir, river, canal, etc.
 WaterBodyTitle: Water
 WaypointLabel: Waypoint
 WharfDescription: A wharf, quay or pier connecting to a boat

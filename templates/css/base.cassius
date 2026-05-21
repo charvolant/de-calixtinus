@@ -52,6 +52,12 @@ a
 .best-accommodation-penance
   font-size: smaller
   vertical-align: top
+.ca-arduous
+  color: #{toCssColour warningOrange}
+.ca-hard
+  color: #{toCssColour warningRed}
+.ca-restpoint
+  color: #{toCssColour recreationGreen}
 .ca-restpoint
   color: #{toCssColour recreationGreen}
 .ca-stockpoint
@@ -232,8 +238,20 @@ a
   font-weight: lighter
 .note
    font-size: smaller
+.note-barrier .note-type
+  color: #{toCssColour warningRed}
+.note-warning .note-type
+  color: #{toCssColour warningOrange}
 .note-type
-   color: #{toCssColour informationBlue}
+  color: #{toCssColour informationBlue}
+.warning
+   font-size: smaller
+.warning-barrier .note-type
+  color: #{toCssColour warningRed}
+.warning-warning .note-type
+  color: #{toCssColour warningOrange}
+.note-type
+  color: #{toCssColour informationBlue}
 .or-list
   display: inline
   list-style-type: none

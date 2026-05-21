@@ -414,6 +414,21 @@
             equipment, wash clothes and whatever else you need to do.
         <tr>
           <td>
+            <span title="_{ArduousDayLabel}" .ca-arduous>
+          <td>
+            Arduous Day.
+            This is a day where the distance or time is above the preferred range.
+        <tr>
+          <td>
+            <span title="_{HardDayLabel}" .ca-hard>
+          <td>
+            Hard Day.
+            This is a day where the distance or time is above the maximum preferred value.
+            Hard days usually occur when there is a day with a long distance or significant ascent or descent and no
+            accommodation options available during the day.
+            In that case, there is no option but to soldier on.
+        <tr>
+          <td>
             <span title="_{InformationTitle}" .note-type .ca-information>
           <td>
             Note.
@@ -424,6 +439,13 @@
           <td>
             Warning.
             A warning about a hazard or difficulty.
+        <tr>
+          <td>
+            <span .note-barrier>
+              <span title="_{BarrierTitle}" .note-type .ca-warning>
+          <td>
+            Barrier.
+            Something that may make getting to a location or doing something impossible.
         <tr>
           <td>
             <span title="_{AddressTitle}" .note-type .ca-map>

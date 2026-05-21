@@ -395,15 +395,24 @@ createCheckFieldCondition' zlookup (Not f) = "!" <> createCheckFieldCondition' z
 createCheckFieldCondition' zlookup (Implies p c) = "!" <> createCheckFieldCondition' zlookup p <> " || " <> createCheckFieldCondition' zlookup c -- p -> q = !p v q
 
 createCheckFieldCondition :: (Ord a) => Text -> Text -> M.Map a Int -> Formula a -> Html
-createCheckFieldCondition base positive zlookup (Implies p (Variable v)) = [shamlet|if (#{preEscapedToHtml (createCheckFieldCondition' zlookup p)}) #{positive}.add("#{base}-#{idx}");|] where idx = zlookup M.! v
+createCheckFieldCondition base positive zlookup (Implies p (Variable v)) = [shamlet|if (#{preEscapedToHtml (createCheckFieldCondition' zlookup p)}) #{positive}.add("#{base}-o-#{idx}");|] where idx = zlookup M.! v
 createCheckFieldCondition _ _ _ _ = error "Only program clauses permitted"
+
+createFormulaCondition :: (Ord a) => M.Map a Int -> Formula a -> Text
+createFormulaCondition zlookup formula = createCheckFieldCondition' zlookup formula
 
 -- | Create a series of checkboxes for a series of options
 --
 --   The options may have functions that allow or prohibit other options based on selections.
 --   Suitable javascript is generated to make these display correctly.
-implyingCheckListField :: (Ord a, RenderMessage site FormMessage) => (msg -> Html) -> [(Text, msg, a, Maybe msg, Bool)] -> [Formula a] -> [Formula a] -> [Formula a] -> Field (HandlerFor site) (S.Set a)
-implyingCheckListField render options requiredClauses allowedClauses prohibitedClauses = Field
+implyingCheckListField :: (Ord a, RenderMessage site FormMessage) => (msg -> Html) -- ^ Rendering function for messages to html
+  -> [(Text, msg, a, Maybe msg, Bool)] -- ^ The list of options (key, label, option value, additional explanation, required)
+  -> [Formula a] -- ^ Clauses that indicate that an option is required
+  -> [Formula a] -- ^ Clauses that indicate that an option is allowed
+  -> [Formula a] -- ^ Clauses that idicate that an option is prohibited
+  -> [(Formula a, Html)] -- ^ Notes and warnings that appear with specific combinations of options
+  -> Field (HandlerFor site) (S.Set a) -- ^ The resulting field
+implyingCheckListField render options requiredClauses allowedClauses prohibitedClauses notes = Field
     { fieldParse = \rawVals -> \_fileVals -> let
              pvals = map getValue rawVals
            in
@@ -432,7 +441,11 @@ $forall (idx, (key, label, opt, mexp, _req)) <- zoptions
     <label .form-check-label for="#{inputId theId idx}">#{render label}
     $maybe exp <- mexp
       <div .clearfix .form-text>#{render exp}
-      |]
+<div .mb-2>
+$forall (idx, (_formula, note)) <- znotes
+  <div ##{noteId theId idx}>
+    ^{note}
+             |]
            toWidgetBody [hamlet|
 <script>
   function imply_#{theId}(selected, requires, allows, prohibits) {#{nl}
@@ -450,6 +463,16 @@ $forall (idx, (key, label, opt, mexp, _req)) <- zoptions
     if (nrequires.size == requires.size && requires.isSupersetOf(nrequires) && nallows.size == allows.size && allows.isSupersetOf(nallows) && nprohibits.size == prohibits.size && prohibits.isSupersetOf(nprohibits))#{nl}
       return [nrequires, nallows, nprohibits];#{nl}
     return imply_#{theId}(selected, nrequires, nallows, nprohibits);#{nl}
+  }
+
+  function notes_#{theId}(selected) {#{nl}
+    $forall (idx, (_key, _label, _opt, _mexp, _req)) <- zoptions
+      var t_#{idx} = selected.has("#{inputId theId idx}");#{nl}
+    $forall (idx, (formula, _html)) <- znotes
+      if (#{createFormulaCondition zlookup formula})#{nl}
+        \$("##{noteId theId idx}").show("fast");#{nl}
+      else#{nl}
+        \$("##{noteId theId idx}").hide("fast");#{nl}
   }
   
   function changed_#{theId}() {#{nl}
@@ -487,6 +510,8 @@ $forall (idx, (key, label, opt, mexp, _req)) <- zoptions
       var e = $('#' + v);
       e.prop("checked", true);
     });
+    var allc = selected.union(check);
+    notes_#{theId}(allc);
   }
 
   \$(document).ready(changed_#{theId});
@@ -501,9 +526,11 @@ $forall (idx, (key, label, opt, mexp, _req)) <- zoptions
       initialAllowed = optional `S.difference` conditional
       initialDisabled = conditional `S.union` required
       zoptions = zip [1::Int ..] options
+      znotes = zip [1::Int ..] notes
       zlookup = M.fromList $ map (\(idx, (_key, _label, v, _mmsg, _dflt)) -> (v, idx)) zoptions
       rlookup = M.fromList $ map (\(key, _label, v, _mmsg, _dflt) -> (key, v)) options
-      inputId base idx = pack (unpack base ++ "-" ++ show idx)
+      inputId base idx = pack (unpack base ++ "-o-" ++ show idx)
+      noteId base idx = pack (unpack base ++ "-n-" ++ show idx)
       setIds base vals = preEscapedToMarkup $ intercalate ", " $ map (\v -> cons '"' (snoc (inputId base (zlookup M.! v)) '"')) $ S.toList vals
       getValue v = maybe (Left $ MsgInvalidEntry v) Right (M.lookup v rlookup)
       nl = "\n" :: Text

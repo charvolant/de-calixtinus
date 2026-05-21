@@ -81,6 +81,7 @@ import qualified Data.Text as T
 import qualified Data.Time.Calendar as C
 import Data.Util (headWithError, initOrEmpty, lastWithError, maybeSum, tailOrEmpty)
 import Graph.Graph (Edge(..), available, incoming, mirror, reachable, subgraph)
+import GHC.Real (FractionalExponentBase(Base10))
 
 instance (Placeholder T.Text v, FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
     parseJSON (Object v) = do
@@ -246,6 +247,8 @@ data Metrics = Metrics {
     , metricsRestPoints :: Penance -- ^ Cost of non-optinal rest stops
     , metricsMisc :: Penance -- ^ Additional miscellaneous penance costs and causes
     , metricsRestDays :: Int -- ^ Number of rest days taken
+    , metricsArduousDays :: Int -- ^ The number of arduous (outside preferred range) days
+    , metricsHardDays :: Int -- ^ The number of hard (outside maximumrange) days
     , metricsDate :: Maybe (C.Day, C.Day) -- ^ An associated date range for this location
     , metricsStockpoint :: Bool -- ^ Stock-up at the end of the day 
     , metricsRestpoint :: Bool -- ^ The next day is a resting day
@@ -282,6 +285,8 @@ instance Semigroup Metrics where
     , metricsRestPoints = metricsRestPoints m1 <> metricsRestPoints m2
     , metricsMisc = metricsMisc m1 <> metricsMisc m2
     , metricsRestDays = metricsRestDays m1 + metricsRestDays m2
+    , metricsArduousDays = metricsArduousDays m1 + metricsArduousDays m2
+    , metricsHardDays = metricsHardDays m1 + metricsHardDays m2
     , metricsDate = combineDates (metricsDate m1) (metricsDate m2)
     , metricsStockpoint = (metricsStockpoint m1) || (metricsStockpoint m2)
     , metricsRestpoint = (metricsRestpoint m1) || (metricsRestpoint m2)
@@ -312,6 +317,8 @@ instance FromJSON Metrics where
     restpoints' <- v .: "rest-points"
     misc' <- v .: "misc"
     restdays' <- v .: "rest-days"
+    arduousdays' <- v .: "arduous-days"
+    harddays' <- v .: "hard-days"
     date' <- v .:? "date"
     stockpoint' <- v .: "stock-point"
     restpoint' <- v .: "rest-point"
@@ -339,6 +346,8 @@ instance FromJSON Metrics where
       , metricsRestPoints = restpoints'
       , metricsMisc = misc'
       , metricsRestDays = restdays'
+      , metricsArduousDays = arduousdays'
+      , metricsHardDays = harddays'
       , metricsDate = date'
       , metricsStockpoint = stockpoint'
       , metricsRestpoint = restpoint'
@@ -347,7 +356,7 @@ instance FromJSON Metrics where
   parseJSON v = error ("Unable to parse metrics object " ++ show v)
 
 instance ToJSON Metrics where
-  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' date' stockpoint' restpoint' penance') =
+  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' arduousdays' harddays' date' stockpoint' restpoint' penance') =
     object [
         "distance" .= distance'
       , "time" .= time'
@@ -371,6 +380,8 @@ instance ToJSON Metrics where
       , "rest-points" .= restpoints'
       , "misc" .= misc'
       , "rest-days" .= restdays'
+      , "arduous-days" .= arduousdays'
+      , "hard-days" .= harddays'
       , "date" .= date'
       , "stock-point" .= stockpoint'
       , "rest-point" .= restpoint'
@@ -401,14 +412,14 @@ metricsDays :: Metrics -> Maybe Int
 metricsDays metrics = fmap (\(f, t) -> fromInteger $ C.diffDays t f + 1) (metricsDate metrics)
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty mempty 0 Nothing False False mempty
+  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty mempty 0 0 0Nothing False False mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty Reject 0 Nothing False False Reject
+  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty Reject 0 0 0Nothing False False Reject
   isInvalid metrics = metricsPenance metrics == Reject
 
 instance Summary Metrics where
-  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' date' stockpoint' restpoint' penance') =
+  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' arduousdays' harddays' date' stockpoint' restpoint' penance') =
     joinSummaries [
       labelledSummaryIfNotNull "distance" distance'
     , labelledSummaryIfNotNull "time" time'
@@ -432,6 +443,8 @@ instance Summary Metrics where
     , labelledSummaryIfNotNull "rest-points" restpoints'
     , labelledSummaryIfNotNull "misc" misc'
     , labelledSummaryIfNotNull "rest-days" restdays'
+    , labelledSummaryIfNotNull "arduous-days" arduousdays'
+    , labelledSummaryIfNotNull "hard-days" harddays'
     , labelledSummaryIfNotNull "date" date'
     , labelledSummaryIfNotNull "stock-point" stockpoint'
     , labelledSummaryIfNotNull "rest-point" restpoint'
@@ -753,6 +766,11 @@ isAccommodationFree _tprefs _accommodationMap [] = False
 isAccommodationFree _tprefs _accommodationMap [_] = False
 isAccommodationFree _tprefs accommodationMap (_start:day) = all (\l -> (tripChoicePenance $ M.findWithDefault invalidAccommodation (legFrom l) accommodationMap) == Reject) day
 
+-- | Does this leg start at some sutable accomodation?
+isAccommodationStart :: TravelPreferences -> CaminoPreferences -> [Leg] -> Bool
+isAccommodationStart _tprefs _cprefs [] = False
+isAccommodationStart _tprefs cprefs (st:_day) = (preferenceStart cprefs == from') || (not $ null $ locationAccommodation $ from') where from' = legFrom st
+
 -- | Make a choice based on the location
 --
 --   This function analysed preferences in terms of location type and available accommodation and services.
@@ -864,6 +882,8 @@ penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
     distancePreferences = rangeFilter $ preferenceDistance tprefs
     timeAdjust = maybe Reject (adjustment timePreferences 0.0 walkingSpeed) time
     distanceAdjust = adjustment distancePreferences 0.0 walkingSpeed distance
+    arduous = isArduous (preferenceDistance tprefs) distance || maybe True (isArduous (preferenceTime tprefs)) time
+    hard = isHard (preferenceDistance tprefs) distance || maybe True (isHard (preferenceTime tprefs)) time
     (stopCost, locationCost, restPressureCost, accChoice, accCost, stopMissing, stopMissingCost) = locationMetrics sprefs tprefs cprefs accommodationMap locationMap restPressureMap stop
     (dayMissing, dayMissingCost) = routeMetrics sprefs tprefs cprefs accChoice day
     misc = travelAdditional tprefs day
@@ -891,6 +911,8 @@ penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
       mempty
       misc
       0
+      (if arduous && not hard then 1 else 0)
+      (if hard then 1 else 0)
       Nothing
       False
       False
@@ -917,13 +939,14 @@ legAccept' _ _ = True
 dayAccept :: TravelPreferences -> CaminoPreferences -> TripChoices -> [Leg] -> Bool
 dayAccept preferences camino choices day =
   let
-    legs = all (legAccept preferences) day
+    legsOk = all (legAccept preferences) day
+    startOk = isAccommodationStart preferences camino day
     atEnd = isLastDay (preferenceFinish camino) day
     accommodationFree = isAccommodationFree preferences (tcStopAccommodation choices) day
     time = travelHours preferences day
     distance = travel preferences day
     inside = isJust time && isInsideMaximum (preferenceDistance preferences) distance && isInsideMaximum (preferenceTime preferences) (fromJust time)
-    accept = legs && (atEnd || inside || accommodationFree)
+    accept = startOk && legsOk && (atEnd || inside || accommodationFree)
   in
    -- trace ("Day from " ++ (T.unpack $ locationID $ legFrom $ head day) ++ " -> " ++ (T.unpack $ locationID $ legTo $ last day) ++ " [" ++ (T.unpack $ T.intercalate "->" $ map (locationID . legFrom) $ tail day) ++ "] accept=" ++ show accept ++ " distance= " ++ show distance ++ " time=" ++ show time ++ " end=" ++ show atEnd ++ " inside=" ++ show inside ++ " accommodation free=" ++ show accommodationFree) $
    accept

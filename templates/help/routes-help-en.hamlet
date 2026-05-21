@@ -18,3 +18,25 @@
   Other routes are variants of variants and require the main variant to be selected before you can choose them.
   Required routes, disallowed routes and routes dependent on other routes will be greyed-out and set as required.
   If you unselect the route, the other routes will become available again.
+
+<h3 #route-help-warnings>Warnings
+
+<p>
+  Some combinations of routes (or entire Caminos) may present difficulties to the unprepared.
+  Warnings appear below the list of routes and display if the combination of preferences (particularly fitness, distance and time)
+  and the routes chosen (or not chosen) may present problems.
+
+<div .alert .warning .warning-warning .alert-warning>
+  <span .note-type .ca-warning title="Warning">
+  This is a warning note, suggesting that there are going to be some days that test the limits of your abilities.
+
+<div .alert .warning .warning-barrier .alert-danger>
+  <span .note-type .ca-warning title="Barrier">
+  This is a note indicating that the the planner may not be able to provide a plan for the current combination
+  of preferences and routes.
+  Usually, this is because there is a long distance somewhere without accommodation or services to break the journey.
+
+<div .alert .warning .warning-information .alert-info>
+  <span .note-type .ca-information title="Information">
+  This is an informational note, with something that you might want to know but not something that will have a
+  major impact.

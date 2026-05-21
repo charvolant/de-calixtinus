@@ -149,6 +149,18 @@ caminoPrintOptions = buildPrintOptions [
     ]
   , def & foPath .~ "route-logic"
   , def & foPath .~ "default-route"
+  , def & foPath .~ "warnings" & foChildren .~ [
+      def & foPath .~ "type"
+    , def & foPath .~ "description"
+    , def & foPath .~ "condition"
+    , def & foPath .~ "travel" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways
+    , def & foPath .~ "fitness" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways
+    , def & foPath .~ "comfort" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways
+    , def & foPath .~ "min-distance" & foNumberFormat ?~ fieldFixedFormat 2
+    , def & foPath .~ "max-distance" & foNumberFormat ?~ fieldFixedFormat 2
+    , def & foPath .~ "min-time"  & foRemove ?~ removeNull & foNumberFormat ?~ fieldFixedFormat 1
+    , def & foPath .~ "max-time"  & foRemove ?~ removeNull & foNumberFormat ?~ fieldFixedFormat 1
+    ]
   , def & foPath .~ "major" & foRemove ?~ removeNullFalse
   , def & foPath .~ "stops" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways & foWrap ?~ 10
   , def & foPath .~ "condition" & foRemove ?~ removeNull & foChildren .~ [

@@ -1673,5 +1673,25 @@
       "exclude": [ "AR-AR18" ]
     }
   ],
-  "default-route": "AR-AR"
+  "default-route": "AR-AR",
+  "warnings": [
+    {
+      "type": "Barrier",
+      "condition": { "not": "AR-SL"},
+      "description": "The distance from Sangüesa to Monreal is over 27km. This is not achievable with your current distance preferences. Consider using the Lumbier route to break the journey.@en",
+      "max-distance": 27.1
+    },
+    {
+      "type": "Barrier",
+      "condition": "AR-SP",
+      "description": "The time from Jaca to Monasterio Nuevo de San Juan de Péna is over 6 hours. This is not achievable with your current time preferences.@en",
+      "max-time": 6.6
+    },
+    {
+      "type": "Barrier",
+      "condition": "AR-Y",
+      "description": "The time from Lumbier to Monreal is over 6 hours. This is not achievable with your current time preferences.@en",
+      "max-time": 6.6
+    }
+  ]
 }

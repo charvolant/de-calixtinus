@@ -3620,5 +3620,14 @@
       "exclude": [ "SN-SN90", "SN-SN91", "SN-SN92", "SN-SN93", "SN-SN94", "SN-SN95", "SN-SN96", "SN-SN97", "SN-SN98", "SN-SN99" ]
     }
   ],
-  "default-route": "SN-SN"
+  "default-route": "SN-SN",
+  "warnings": [
+      {
+        "type": "Barrier",
+        "condition": "SN-SN",
+        "description": "The distance from Tábara to Santa Marta de Tera is over 22km. This is not achievable with your current distance preferences.@en",
+        "max-distance": 23.0
+      }
+    ]
+
 }

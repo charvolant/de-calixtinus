@@ -8271,5 +8271,13 @@
       "exclude": [ "F-F188", "F-F189", "F-F190", "F-F191", "F-F192", "F-F193" ]
     }
   ],
-  "default-route": "F-F"
+  "default-route": "F-F",
+  "warnings": [
+    {
+      "type": "Barrier",
+      "condition": "F-A3",
+      "description": "The Via Trajana route includes a leg over 23km long. This is not achievable with your current distance preferences.@en",
+      "max-distance": 24.0
+    }
+  ]
 }

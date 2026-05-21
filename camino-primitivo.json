@@ -3,12 +3,6 @@
   "name": "Camino Primitivo@es",
   "description": {
     "text": "The Camino Primitivo, or Original Camino is the oldest of the Camino routes to Santiago de Compostella. King Alfosno II of Asturias is considered its first pilgrim in the 9th century.@en",
-    "notes": [
-      {
-        "type": "Warning",
-        "text": "The Camino Primitivo involves many steep ascents and descents. Consider dropping your per-day distance target by 2-4km."
-      }
-    ],
     "image": {
       "source": "PR/PR-Lavadoira.jpg",
       "thumbnail": "PR/PR-Lavadoira-thumbnail.jpg",
@@ -3538,13 +3532,7 @@
         "Variante de Los Hospitales@es"
       ],
       "description": {
-        "text": "Orginally the main route, the Hospital Route is a mountainous track to Berducedo. It passes the ruins of hospitals - pilgrim's inns - from when this was the main route.@en",
-        "notes": [
-          {
-            "type": "Warning",
-            "text": "The route is long and there are no services. Ensure you have sufficient food and water.@en"
-          }
-        ]
+        "text": "Orginally the main route, the Hospital Route is a mountainous track to Berducedo. It passes the ruins of hospitals - pilgrim's inns - from when this was the main route.@en"
       },
       "locations": [ "PR-P49", "PR-P50", "PR-P51", "PR-P52" ],
       "palette": {
@@ -3645,5 +3633,30 @@
       "exclude": [ "PR-N4", "PR-N5", "PR-N6" ]
     }
   ],
-  "default-route": "PR-P"
+  "default-route": "PR-P",
+  "warnings": [
+    {
+      "type": "Warning",
+      "condition": "PR-P",
+      "description": {
+        "text": "The Camino Primitivo involves many steep ascents and descents. Consider dropping your per-day distance target by 2-4km."
+      },
+      "fitness": [ "Unfit", "Casual", "VeryUnfit" ]
+    },
+    {
+      "type": "Warning",
+      "condition": "PR-H",
+      "description": {
+        "text": "The hospital route is long and there are no services. Ensure you have sufficient food and water.@en"
+      }
+    },
+    {
+      "type": "Barrier",
+      "condition": "PR-B",
+      "description": {
+        "text": "The Burón route is over 21km with over 500m of ascent and descent from Castro to Buron. This is not achievable with your current distance preferences."
+      }
+    }
+  ]
+
 }

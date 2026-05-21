@@ -460,6 +460,54 @@
             "1000-1800"
           ],
           "time": 1.0
+        },
+        {
+          "id": "MD-MD9-3",
+          "name": "Catedral de Segovia@es",
+          "type": "Cathedral",
+          "description": {
+            "about": "https://catedralsegovia.es/"
+          },
+          "position": { "latitude": 40.95031, "longitude": -4.12521 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+              },
+              "hours": "0900-2130"
+             },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1245-2130"
+            }
+          ],
+          "events": [
+            {
+              "name": "Mass",
+              "type": "Mass",
+              "hours": [
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
+                  },
+                  "hours": "1000-1100"
+                },
+                {
+                  "calendar": {
+                    "type": "weekly",
+                    "days": [ "sunday" ]
+                  },
+                  "hours": "1100-1200,1230-1330"
+                }
+              ]
+            }
+          ],
+          "time": 1.0
         }
       ]
     },
@@ -2000,9 +2048,54 @@
     },
     {
       "description": "Changes for the Berrueces route",
-      "condition": "MD-SE",
+      "condition": "MD-BM",
       "exclude": [ "MD-MD30" ]
     }
   ],
-  "default-route": "MD-MD"
+  "default-route": "MD-MD",
+  "warnings": [
+    {
+      "type": "Warning",
+      "condition": "MD-MD",
+      "description": {
+        "text": "The Camino Madrid can be very arduous, particularly the segment from Madrid to Segovia. If you are below normal fitness, consider starting in Segovia.@en",
+        "image": {
+          "title": [
+            "El Montón de Trigo. San Ildefonso (Segovia, Castilla y León, España)@es",
+            "El Montón de Trigo [Pile of Wheat]. San Ildefonso, Segovia, Castile and León, Spain@en"
+          ],
+          "source": "MD/MD-San-Ildefonso.jpg",
+          "thumbnail": "MD/MD-San-Ildefonso-thumbnail.jpg",
+          "metadata": {
+            "statements": [
+              {
+                "term": "dcterms:creator",
+                "value": "Luis Bartolomé Marcos"
+              },
+              {
+                "term": "dcterms:created",
+                "value": "1974"
+              },
+              {
+                "term": "dcterms:license",
+                "value": "CC BY-SA 4.0 International <https://creativecommons.org/licenses/by-sa/4.0/>"
+              },
+              {
+                "term": "dcterms:source",
+                "value": "https://commons.wikimedia.org/wiki/File:San_Ildefonso,_monte_1974_01.jpg"
+              }
+            ]
+          }
+        }
+
+      },
+      "fitness": [ "Unfit", "Casual", "VeryUnfit" ]
+    },
+    {
+      "type": "Barrier",
+      "condition": { "not": "MD-V" },
+      "description": "The direct route from Cercedilla to Segovia passes through the Sierra de Guadarrama. It is over 28km, with over 600m ascent and descent. This is not achievable with your current distance preferences. Consider including the La Granja de San Ildefonso detour to help break the journey.@en",
+      "max-distance": 30.0
+    }
+  ]
 }

@@ -9861,5 +9861,15 @@
       "exclude": [ "N-FR4", "N-FR5", "N-FR6", "N-FR7", "N-FR8", "N-FR9", "N-FR10" ]
     }
   ],
-  "default-route": "N-N"
+  "default-route": "N-N",
+  "warnings": [
+    {
+      "type": "Warning",
+      "condition": "N-N",
+      "description": {
+        "text": "The Camino del Norte can be very arduous with many ascents and descents. Casual and very unfit walkers may wish to choose another camino.@en"
+      },
+      "fitness": [ "Casual", "VeryUnfit" ]
+    }
+  ]
 }

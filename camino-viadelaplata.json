@@ -11,10 +11,6 @@
       {
         "type": "Directions",
         "text": "The full Via de la Plata joins the Camino Frances at Azorga or the Camino Sanabrés at Granja de Moureuela. To reach Santiago de Compostela, choose the camino that you wish to join and then switch to that camino for further planning.@en"
-      },
-      {
-        "type": "Warning",
-        "text": "There are often long stretches between towns where the only waypoints are intersections or estates. Proper levels of fitness and planning are needed.@en"
       }
     ],
     "image": {
@@ -4086,5 +4082,20 @@
       "exclude": [ "V-V105", "V-V108" ]
     }
   ],
-  "default-route": "V-V"
+  "default-route": "V-V",
+  "warnings": [
+    {
+      "type": "Warning",
+      "condition": "V-V",
+      "description": "There are often long stretches between towns where the only waypoints are intersections or estates. Higher levels of fitness and planning are needed.@en",
+      "fitness": [ "VeryUnfit", "Casual", "Unfit" ]
+    },
+    {
+      "type": "Barrier",
+      "condition": "V-V",
+      "description": "The distance from Castilblanco de los Arroyos to Almadén de la Plata is over 28km. This is not achievable with your current distance preferences.@en",
+      "max-distance": 29.0
+    }
+  ]
+
 }

@@ -1719,5 +1719,14 @@
       "exclude": [ "FI-F25", "FI-F26", "FI-F27", "FI-F28", "FI-F29", "FI-F30" ]
     }
   ],
-  "default-route": "FI-F"
+  "default-route": "FI-F",
+  "warnings": [
+    {
+      "type": "Barrier",
+      "condition": "FI-M",
+      "description": "The travel time from Dumbria to Muxia and Lires to Fisterra are over 6 hours This is not achievable with your current distance preferences.@en",
+      "max-time": 6.3
+    }
+
+  ]
 }

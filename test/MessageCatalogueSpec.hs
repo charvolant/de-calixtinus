@@ -341,7 +341,7 @@ testMakeMessageClause = TestList [
   ]
 
 clause1 = [r|
-_ _ (Label1) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Something"))
+_ _ (Label1) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 9 "<binary data>")))
 |]
 
 testMakeMessageClause1 = TestCase (do
@@ -352,7 +352,7 @@ testMakeMessageClause1 = TestCase (do
   )
 
 clause2 = [r|
-_ _ (Label1) = GHC.Maybe.Nothing
+_ _ (Label1) = GHC.Internal.Maybe.Nothing
 |]
 
 testMakeMessageClause2 = TestCase (do
@@ -364,8 +364,8 @@ testMakeMessageClause2 = TestCase (do
   )
 
 clause3 = [r|
-_ _ (Label1 v) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Something ");
-                                     GHC.Base.id (Text.Blaze.Html.toHtml v)})
+_ _ (Label1 v) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 10 "<binary data>"));
+                                              GHC.Internal.Base.id (Text.Blaze.Html.toHtml v)})
 |]
 
 testMakeMessageClause3 = TestCase (do
@@ -376,7 +376,7 @@ testMakeMessageClause3 = TestCase (do
   )
 
 clause4 = [r|
-_ _ (Label1 _) = GHC.Maybe.Nothing
+_ _ (Label1 _) = GHC.Internal.Maybe.Nothing
 |]
 
 testMakeMessageClause4 = TestCase (do
@@ -391,21 +391,25 @@ testMakeCatalogueDec = TestList [
   testMakeCatalogueDec1, testMakeCatalogueDec2
   ]
 
-cd1 = [r|renderTestMessage_EN _ _ (L1) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "The message 1"))
-renderTestMessage_EN _ _ (L2) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "The message 2"))
-renderTestMessage_EN _ _ msg = error ("Unrecognised message " ++ show msg)|]
+cd1 = [r|
+renderTestMessage_EN _ _ (L1) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 13 "<binary data>")))
+renderTestMessage_EN _ _ (L2) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 13 "<binary data>")))
+renderTestMessage_EN _ _ msg = error ("Unrecognised message " ++ GHC.Internal.Show.show msg)
+|]
 
 testMakeCatalogueDec1 = TestCase (do
   dec <- runQ $ makeCatalogueDec (defaultMessageContext lang11) lang11
-  assertEqual "Make CatalogueDec 1 1" cd1 (pprint dec)
+  assertEqualStripped "Make CatalogueDec 1 1" cd1 (pprint dec)
   )
 
-cd2 = [r|renderTestMessage_FR _ _ (L1 x) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Le ");
-                                                               GHC.Base.id (Text.Blaze.Html.toHtml x);
-                                                               GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) " message")})
-renderTestMessage_FR _ _ (L2 y) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Le message ");
-                                                               GHC.Base.id (Text.Blaze.Html.toHtml y)})
-renderTestMessage_FR _ _ _ = Nothing|]
+cd2 = [r|
+renderTestMessage_FR _ _ (L1 x) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 3 "<binary data>"));
+                                                               GHC.Internal.Base.id (Text.Blaze.Html.toHtml x);
+                                                               GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 8 "<binary data>"))})
+renderTestMessage_FR _ _ (L2 y) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 11 "<binary data>"));
+                                                               GHC.Internal.Base.id (Text.Blaze.Html.toHtml y)})
+renderTestMessage_FR _ _ _ = Nothing
+|]
 
 testMakeCatalogueDec2 = TestCase (do
   dec <- runQ $ makeCatalogueDec (defaultMessageContext lang21) lang22
@@ -416,20 +420,22 @@ testMakeRenderDec = TestList [
   testMakeRenderDec1, testMakeRenderDec2
   ]
 
-rd1 = [r|renderTestMessage :: Test ->
+rd1 = [r|
+renderTestMessage :: Test ->
                      [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
 renderTestMessage master langs msg = renderTestMessage' master langs langs msg
 renderTestMessage' :: Test ->
                       [Text.Shakespeare.I18N.Lang] ->
                       [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
-renderTestMessage' master [] langs msg = Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Show.show msg)) GHC.Base.id (renderTestMessage_EN master langs msg)
-renderTestMessage' master ("en" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_EN master langs msg)
-renderTestMessage' master ("fr" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_FR master langs msg)
-renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage' master lang_r langs msg|]
+renderTestMessage' master [] langs msg = GHC.Internal.Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Internal.Show.show msg)) GHC.Internal.Base.id (renderTestMessage_EN master langs msg)
+renderTestMessage' master ("en" : lang_r) langs msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Internal.Base.id (renderTestMessage_EN master langs msg)
+renderTestMessage' master ("fr" : lang_r) langs msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Internal.Base.id (renderTestMessage_FR master langs msg)
+renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage' master lang_r langs msg
+|]
 
 testMakeRenderDec1 = TestCase (do
   dec <- runQ $ makeRenderDec (defaultMessageContext lang11) [lang11, lang12]
-  assertEqual "Make RenderDec 1 1" rd1 (pprint dec)
+  assertEqualStripped "Make RenderDec 1 1" rd1 (pprint dec)
   )
 
 rd2 = [r|
@@ -439,10 +445,10 @@ renderTestMessage master langs msg = renderTestMessage' master langs langs msg
 renderTestMessage' :: Test ->
                       [Text.Shakespeare.I18N.Lang] ->
                       [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
-renderTestMessage' master [] langs msg = Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Show.show msg)) GHC.Base.id (renderTestMessage_EN master langs msg)
-renderTestMessage' master ("en" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_EN master langs msg)
-renderTestMessage' master ("fr" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_FR master langs msg)
-renderTestMessage' master ("es" : lang_r) langs msg = Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Base.id (renderTestMessage_ES master langs msg)
+renderTestMessage' master [] langs msg = GHC.Internal.Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Internal.Show.show msg)) GHC.Internal.Base.id (renderTestMessage_EN master langs msg)
+renderTestMessage' master ("en" : lang_r) langs msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Internal.Base.id (renderTestMessage_EN master langs msg)
+renderTestMessage' master ("fr" : lang_r) langs msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Internal.Base.id (renderTestMessage_FR master langs msg)
+renderTestMessage' master ("es" : lang_r) langs msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master lang_r langs msg) GHC.Internal.Base.id (renderTestMessage_ES master langs msg)
 renderTestMessage' master (_ : lang_r) langs msg = renderTestMessage' master lang_r langs msg
 |]
 
@@ -461,11 +467,11 @@ data TestMessage
     = Label1
     | Label2
     deriving (Eq, Show)
-renderTestMessage_EN _ _ (Label1) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "This is label 1"))
-renderTestMessage_EN _ _ (Label2) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "This is label 2"))
-renderTestMessage_EN _ _ msg = error ("Unrecognised message " ++ show msg)
-renderTestMessage_FR _ _ (Label1) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "C'est le signe 1"))
-renderTestMessage_FR _ _ (Label2) = GHC.Maybe.Just (GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "C'est le signe 2"))
+renderTestMessage_EN _ _ (Label1) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 15 "<binary data>")))
+renderTestMessage_EN _ _ (Label2) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 15 "<binary data>")))
+renderTestMessage_EN _ _ msg = error ("Unrecognised message " ++ GHC.Internal.Show.show msg)
+renderTestMessage_FR _ _ (Label1) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 16 "<binary data>")))
+renderTestMessage_FR _ _ (Label2) = GHC.Internal.Maybe.Just (GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 16 "<binary data>")))
 renderTestMessage_FR _ _ _ = Nothing
 renderTestMessage :: Test ->
                      [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
@@ -473,13 +479,13 @@ renderTestMessage master locales msg = renderTestMessage' master locales locales
 renderTestMessage' :: Test ->
                       [Text.Shakespeare.I18N.Lang] ->
                       [Text.Shakespeare.I18N.Lang] -> TestMessage -> Text.Blaze.Html.Html
-renderTestMessage' master [] locales msg = Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Show.show msg)) GHC.Base.id (renderTestMessage_EN master locales msg)
-renderTestMessage' master ("en" : locale_r) locales msg = Data.Maybe.maybe (renderTestMessage' master locale_r locales msg) GHC.Base.id (renderTestMessage_EN master locales msg)
-renderTestMessage' master ("fr" : locale_r) locales msg = Data.Maybe.maybe (renderTestMessage' master locale_r locales msg) GHC.Base.id (renderTestMessage_FR master locales msg)
+renderTestMessage' master [] locales msg = GHC.Internal.Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Internal.Show.show msg)) GHC.Internal.Base.id (renderTestMessage_EN master locales msg)
+renderTestMessage' master ("en" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master locale_r locales msg) GHC.Internal.Base.id (renderTestMessage_EN master locales msg)
+renderTestMessage' master ("fr" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master locale_r locales msg) GHC.Internal.Base.id (renderTestMessage_FR master locales msg)
 renderTestMessage' master (_ : locale_r) locales msg = renderTestMessage' master locale_r locales msg
 instance Text.Shakespeare.I18N.RenderMessage Test TestMessage
     where {Text.Shakespeare.I18N.renderMessage master langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMessage master locales msg)
-                                                   where {locales = GHC.Base.map (Data.String.fromString GHC.Base.. Data.Text.Show.unpack) langs}}
+                                                   where {locales = GHC.Internal.Base.map (GHC.Internal.Data.String.fromString GHC.Internal.Base.. Data.Text.Show.unpack) langs}}
 |]
 
 testMkMessageCatalogue1 = TestCase (do
@@ -492,31 +498,31 @@ data TestMsg
     = Ascent Float
     | Descent Float
     deriving (Eq, Show)
-renderTestMsg_EN _ _ (Ascent h) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Ascent <span descent .height>");
-                                                      GHC.Base.id (Text.Blaze.Html.toHtml (sformat int h));
-                                                      GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "</span>")})
-renderTestMsg_EN _ _ (Descent h) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "Descent <span .descent .height>");
-                                                       GHC.Base.id (Text.Blaze.Html.toHtml (sformat int h));
-                                                       GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "</span>")})
-renderTestMsg_EN _ _ msg = error ("Unrecognised message " ++ show msg)
-renderTestMsg_PT _ _ (Ascent h) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "ascens\227o <span descent .height>");
-                                                      GHC.Base.id (Text.Blaze.Html.toHtml (sformat int h));
-                                                      GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "</span>")})
-renderTestMsg_PT sou _ (Descent h) = GHC.Maybe.Just (do {GHC.Base.id ((Text.Blaze.Internal.preEscapedText GHC.Base.. Data.Text.Internal.pack) "descens\227o <div .descent>");
-                                                         formatHeight sou h})
+renderTestMsg_EN _ _ (Ascent h) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 29 "<binary data>"));
+                                                               GHC.Internal.Base.id (Text.Blaze.Html.toHtml (sformat int h));
+                                                               GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 7 "<binary data>"))})
+renderTestMsg_EN _ _ (Descent h) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 31 "<binary data>"));
+                                                                GHC.Internal.Base.id (Text.Blaze.Html.toHtml (sformat int h));
+                                                                GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 7 "<binary data>"))})
+renderTestMsg_EN _ _ msg = error ("Unrecognised message " ++ GHC.Internal.Show.show msg)
+renderTestMsg_PT _ _ (Ascent h) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 32 "<binary data>"));
+                                                               GHC.Internal.Base.id (Text.Blaze.Html.toHtml (sformat int h));
+                                                               GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 7 "<binary data>"))})
+renderTestMsg_PT sou _ (Descent h) = GHC.Internal.Maybe.Just (do {GHC.Internal.Base.id (Text.Blaze.Internal.unsafeByteString (Data.ByteString.Internal.Type.unsafePackLenLiteral 25 "<binary data>"));
+                                                                  formatHeight sou h})
 renderTestMsg_PT _ _ _ = Nothing
 renderTestMsg :: SystemOfUnits ->
                  [Locale] -> TestMsg -> Text.Blaze.Html.Html
 renderTestMsg sou locales msg = renderTestMsg' sou locales locales msg
 renderTestMsg' :: SystemOfUnits ->
                   [Locale] -> [Locale] -> TestMsg -> Text.Blaze.Html.Html
-renderTestMsg' sou [] locales msg = Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Show.show msg)) GHC.Base.id (renderTestMsg_EN sou locales msg)
-renderTestMsg' sou ("en" : locale_r) locales msg = Data.Maybe.maybe (renderTestMsg' sou locale_r locales msg) GHC.Base.id (renderTestMsg_EN sou locales msg)
-renderTestMsg' sou ("pt" : locale_r) locales msg = Data.Maybe.maybe (renderTestMsg' sou locale_r locales msg) GHC.Base.id (renderTestMsg_PT sou locales msg)
+renderTestMsg' sou [] locales msg = GHC.Internal.Data.Maybe.maybe (Text.Blaze.Html.toHtml (GHC.Internal.Show.show msg)) GHC.Internal.Base.id (renderTestMsg_EN sou locales msg)
+renderTestMsg' sou ("en" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMsg' sou locale_r locales msg) GHC.Internal.Base.id (renderTestMsg_EN sou locales msg)
+renderTestMsg' sou ("pt" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMsg' sou locale_r locales msg) GHC.Internal.Base.id (renderTestMsg_PT sou locales msg)
 renderTestMsg' sou (_ : locale_r) locales msg = renderTestMsg' sou locale_r locales msg
 instance Text.Shakespeare.I18N.RenderMessage a TestMsg
-    where {Text.Shakespeare.I18N.renderMessage _ langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMsg Data.Default.Class.def locales msg)
-                                                   where {locales = GHC.Base.map (Data.String.fromString GHC.Base.. Data.Text.Show.unpack) langs}}
+    where {Text.Shakespeare.I18N.renderMessage _ langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMsg Data.Default.Internal.def locales msg)
+                                                   where {locales = GHC.Internal.Base.map (GHC.Internal.Data.String.fromString GHC.Internal.Base.. Data.Text.Show.unpack) langs}}
 |]
 testMkMessageCatalogue2 = TestCase (do
   dec <- runQ $ mkMessageCatalogue (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en" (Just $ mkName "TestApp")

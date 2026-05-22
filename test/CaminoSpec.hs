@@ -119,6 +119,7 @@ camino1 = Camino {
   , caminoRoutes = [route1, route2, route3, route4]
   , caminoRouteLogic = [logic1]
   , caminoDefaultRoute = route1
+  , caminoWarnings = []
   , caminoLocationMap = locationMap
   , caminoAccommodationMap = accommodationMap
   , caminoPoiMap = M.empty

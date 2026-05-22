@@ -165,6 +165,7 @@
                   "penance": null
                 }
               ],
+              "arduous-days": 0.0,
               "ascent": 100.0,
               "date": [
                 "2025-01-16",
@@ -175,6 +176,7 @@
               "distance": 5.5,
               "distance-adjust": 0.0,
               "fatigue": 0.0,
+              "hard-days": 0.0,
               "location": 0.0,
               "misc": 0.0,
               "missing-day-services": [
@@ -212,6 +214,7 @@
               "penance": null
             }
           ],
+          "arduous-days": 0.0,
           "ascent": 100.0,
           "date": [
             "2025-01-16",
@@ -222,6 +225,7 @@
           "distance": 5.5,
           "distance-adjust": 0.0,
           "fatigue": 16.0,
+          "hard-days": 0.0,
           "location": 0.0,
           "misc": 0.0,
           "missing-day-services": [
@@ -259,6 +263,7 @@
           "penance": null
         }
       ],
+      "arduous-days": 0.0,
       "ascent": 100.0,
       "date": [
         "2025-01-16",
@@ -269,6 +274,7 @@
       "distance": 5.5,
       "distance-adjust": 0.0,
       "fatigue": 16.0,
+      "hard-days": 0.0,
       "location": 0.0,
       "misc": 0.0,
       "missing-day-services": [

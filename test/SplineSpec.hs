@@ -368,12 +368,12 @@ testSVGSpline1 = TestCase (do
   let sp4 = sps !! 3
   let sp5 = sps !! 4
   let sp6 = sps !! 5
-  assertFloatEqual "SVG Spline 1 2" 128.0 (splineAt sp1 0.000) 0.1
-  assertFloatEqual "SVG Spline 1 3" 164.0 (splineAt sp2 1.190) 0.1
-  assertFloatEqual "SVG Spline 1 4" 244.0 (splineAt sp3 3.590) 0.1
-  assertFloatEqual "SVG Spline 1 5" 246.0 (splineAt sp4 3.817) 0.1
-  assertFloatEqual "SVG Spline 1 6" 230.0 (splineAt sp5 4.163) 0.1
-  assertFloatEqual "SVG Spline 1 7" 220.0 (splineAt sp6 6.390) 0.1
+  assertDoubleEqual "SVG Spline 1 2" 128.0 (splineAt sp1 0.000) 0.1
+  assertDoubleEqual "SVG Spline 1 3" 164.0 (splineAt sp2 1.190) 0.1
+  assertDoubleEqual "SVG Spline 1 4" 244.0 (splineAt sp3 3.590) 0.1
+  assertDoubleEqual "SVG Spline 1 5" 246.0 (splineAt sp4 3.817) 0.1
+  assertDoubleEqual "SVG Spline 1 6" 230.0 (splineAt sp5 4.163) 0.1
+  assertDoubleEqual "SVG Spline 1 7" 220.0 (splineAt sp6 6.390) 0.1
   assertBool "SVG Spline 1 8" (all (\x -> splineAt sp1 x >= 128.0 && splineAt sp1 x <= 164.0) [0.000, 0.001 .. 1.190])
   assertBool "SVG Spline 1 9" (all (\x -> splineAt sp2 x >= 164.0 && splineAt sp2 x <= 244.0) [1.190, 0.001 .. 3.590])
   forM [3.590, 0.001 .. 3.817] (\x -> assertBool ("SVG Spline 1 10 " ++ (show x) ++ "=" ++ (show $ splineAt sp3 x)) (splineAt sp3 x >= 243.5 && splineAt sp3 x <= 246.5))

@@ -40,6 +40,7 @@ testPlanner config preferences camino = TestList [
   , TestLabel "Accommodation Map Simple" testAccommodationMapSimple
   , TestLabel "Accommodation Simple" testAccommodationSimple
   , TestLabel "Penance Simple" testPenanceSimple
+  , TestLabel "Penance Complex" testPenanceComplex
   , TestLabel "Stock Up Day" (testIsStockUpDay config)
   , TestLabel "Plan Camino" (testPlanCamino config preferences camino)
   , TestLabel "Persist Solution" (testSolution config preferences camino)
@@ -239,6 +240,11 @@ legs4 = map annotateLeg [
   Leg { legType = Road, legFrom = location2, legTo = location3, legDistance = 3.5, legTime = Nothing, legAscent = 0, legDescent = 350, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
+legs5 = map annotateLeg [
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 1.0, legTime = Nothing, legAscent = 0, legDescent = 5, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
+  Leg { legType = BoatLink, legFrom = location2, legTo = location3, legDistance = 0.0, legTime = Just 6.0, legAscent = 0, legDescent = 0, legPenance = Just (Penance 10.0), legDescription = Nothing, legWaypoints = [], legSegments = [] }
+  ]
+
 links1 = map annotateLeg [
   Leg { legType = BusLink, legFrom = location1, legTo = location2, legDistance = 0.0, legTime = Just 0.5, legAscent = 0, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
@@ -261,21 +267,22 @@ route1 = Route {
 }
 
 camino1 = Camino {
-  caminoId = "Test",
-  caminoName = wildcardText "Test",
-  caminoDescription = wildcardDescription "Test camino",
-  caminoMetadata = def,
-  caminoFragment = False,
-  caminoImports = [],
-  caminoLocations = locations,
-  caminoLegs = legs1,
-  caminoTransportLinks = [],
-  caminoRoutes = [route1],
-  caminoRouteLogic = [],
-  caminoDefaultRoute = route1,
-  caminoLocationMap = locationMap,
-  caminoAccommodationMap = accommodationMap,
-  caminoPoiMap = M.empty
+    caminoId = "Test"
+  , caminoName = wildcardText "Test"
+  , caminoDescription = wildcardDescription "Test camino"
+  , caminoMetadata = def
+  , caminoFragment = False
+  , caminoImports = []
+  , caminoLocations = locations
+  , caminoLegs = legs1
+  , caminoTransportLinks = []
+  , caminoRoutes = [route1]
+  , caminoRouteLogic = []
+  , caminoDefaultRoute = route1
+  , caminoWarnings = []
+  , caminoLocationMap = locationMap
+  , caminoAccommodationMap = accommodationMap
+  , caminoPoiMap = M.empty
 }
   where
     locations = [location1, location2, location3]
@@ -395,6 +402,15 @@ testPenanceSimple2 = TestCase (assertPenanceEqual "Penance Simple 2" (Penance 6.
 testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.3) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs0) 0.1)
 
 testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs1) 0.1)
+
+testPenanceComplex = TestList [ testPenanceComplex1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
+
+testPenanceComplex1 = TestCase (do
+  let metrics = penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs5
+  assertPenanceEqual "Penance Complex 1 1" (Penance 13.1) (metricsPenance metrics) 0.1
+  assertMaybeFloatEqual "Penance Complex 1 2" (Just 6.2) (metricsTime metrics) 0.1
+  assertMaybeFloatEqual "Penance Complex 1 3" (Just 0.8) (metricsPerceivedDistance metrics) 0.1
+  )
 
 testIsStockUpDay config = TestList [
   testIsStockUpDay1 config, testIsStockUpDay2 config, testIsStockUpDay3 config, testIsStockUpDay4 config,

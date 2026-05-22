@@ -43,7 +43,7 @@ main = do
     cf <- B.readFile "camino-portuguese.json"
     let ec = eitherDecode cf :: Either String Camino
     when (isLeft ec) $ putStrLn (show ec)
-    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoFragment = False, caminoImports = [], caminoLocations = [], caminoLocationMap = Data.Map.empty, caminoLegs = [], caminoTransportLinks = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X", caminoAccommodationMap = Data.Map.empty, caminoPoiMap = Data.Map.empty }) ec
+    let camino = fromRight (Camino { caminoId = "Test", caminoName = wildcardText "Test", caminoDescription = wildcardDescription "", caminoMetadata = def, caminoFragment = False, caminoImports = [], caminoLocations = [], caminoLocationMap = Data.Map.empty, caminoLegs = [], caminoTransportLinks = [], caminoRoutes = [], caminoRouteLogic = [], caminoDefaultRoute = placeholder "X", caminoWarnings = [], caminoAccommodationMap = Data.Map.empty, caminoPoiMap = Data.Map.empty }) ec
     config <- readConfigFile "config-static.yaml"
     let cconf = createCaminoConfig (fromJust $ configCalendars config) (fromJust $ configRegions config) [camino]
     pf <- B.readFile "test-preferences.json"

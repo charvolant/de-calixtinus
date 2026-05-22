@@ -454,7 +454,7 @@ cellxf1 = def & cellXfAlignment ?~ align1
 
 cellxf2 = def & cellXfAlignment ?~ align2
 
-stylemap1 = StyleMap [def cellxf1, cellxf2] (M.fromList [(style1, 1), (style2, 2), (style1 <> style2, 3)]) [] M.empty [] M.empty [] M.empty [] M.empty M.empty
+stylemap1 = StyleMap [def, cellxf1, cellxf2] (M.fromList [(style1, 1), (style2, 2), (style1 <> style2, 3)]) [] M.empty [] M.empty [] M.empty [] M.empty M.empty
 
 testCellFromCell1 = TestCase (do
   let cell = cellFromCell id stylemap1 formulaCellMap def (def & cellValue ?~ CellDouble 1.1)

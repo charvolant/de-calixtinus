@@ -293,40 +293,40 @@ testConstructTable = TestList [testConstructTable1, testConstructTable2, testCon
 
 testConstructTable1 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
+    (_chains, chaing) = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      assertEqual "ConstructTable 1 1" 10 (chainGraphSize chains)
-      let chain1 = fromJust $ edge chains (Vertex 1) (Vertex 3)
+      assertEqual "ConstructTable 1 1" 10 (chainGraphSize chaing)
+      let chain1 = fromJust $ edge chaing (Vertex 1) (Vertex 3)
       assertEqual "ConstructTable 1 2" (Vertex 1) (start chain1)
       assertEqual "ConstructTable 1 3" (Vertex 3) (finish chain1)
       assertEqual "ConstructTable 1 4" 2 (length $ path chain1)
       assertEqual "ConstructTable 1 5" 5 (score chain1)
-      let chain2 = fromJust $ edge chains (Vertex 3) (Vertex 6)
+      let chain2 = fromJust $ edge chaing (Vertex 3) (Vertex 6)
       assertEqual "ConstructTable 1 6" (Vertex 3) (start chain2)
       assertEqual "ConstructTable 1 7" (Vertex 6) (finish chain2)
       assertEqual "ConstructTable 1 8" 2 (length $ path chain2)
       assertEqual "ConstructTable 1 9" 10 (score chain2)
-      assertBool "ConstructTable 1 10" (isNothing $ edge chains (Vertex 1) (Vertex 6))
+      assertBool "ConstructTable 1 10" (isNothing $ edge chaing (Vertex 1) (Vertex 6))
    )
 
 testConstructTable2 =
   let
-    chains = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
+    (_chains, chaing) = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      assertEqual "ConstructTable 2 1" 14 (chainGraphSize chains)
-      let chain1 = fromJust $ edge chains (Vertex 1) (Vertex 3)
+      assertEqual "ConstructTable 2 1" 14 (chainGraphSize chaing)
+      let chain1 = fromJust $ edge chaing (Vertex 1) (Vertex 3)
       assertEqual "ConstructTable 2 2" (Vertex 1) (start chain1)
       assertEqual "ConstructTable 2 3" (Vertex 3) (finish chain1)
       assertEqual "ConstructTable 2 4" 2 (length $ path chain1)
       assertEqual "ConstructTable 2 5" 5 (score chain1)
-      let chain2 = fromJust $ edge chains (Vertex 3) (Vertex 6)
+      let chain2 = fromJust $ edge chaing (Vertex 3) (Vertex 6)
       assertEqual "ConstructTable 2 6" (Vertex 3) (start chain2)
       assertEqual "ConstructTable 2 7" (Vertex 6) (finish chain2)
       assertEqual "ConstructTable 2 8" 2 (length $ path chain2)
       assertEqual "ConstructTable 2 9" 10 (score chain2)
-      let chain3 = fromJust $ edge chains (Vertex 1) (Vertex 6)
+      let chain3 = fromJust $ edge chaing (Vertex 1) (Vertex 6)
       assertEqual "ConstructTable 1 10" (Vertex 1) (start chain3)
       assertEqual "ConstructTable 1 11" (Vertex 6) (finish chain3)
       assertEqual "ConstructTable 1 12" 4 (length $ path chain3)
@@ -336,11 +336,11 @@ testConstructTable2 =
 
 testConstructTable3 =
   let
-    chains = constructTable graph2 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 4)
+    (_chains, chaing) = constructTable graph2 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 4)
   in
     TestCase (do
-      assertEqual "ConstructTable 2 1" 3 (chainGraphSize chains)
-      let chain1 = fromJust $ edge chains (Vertex 1) (Vertex 4)
+      assertEqual "ConstructTable 2 1" 3 (chainGraphSize chaing)
+      let chain1 = fromJust $ edge chaing (Vertex 1) (Vertex 4)
       assertEqual "ConstructTable 2 2" (Vertex 1) (start chain1)
       assertEqual "ConstructTable 2 3" (Vertex 4) (finish chain1)
       assertEqual "ConstructTable 2 4" 2 (length $ path chain1)
@@ -351,19 +351,19 @@ testChainGraph = TestList [testChainGraph1, testChainGraph2, testChainGraph3, te
 
 testChainGraph1 =
   let
-    chains = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
+    (_chains, chaing) = constructTable graph1 choice1 accept2 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      assertEqual "ChainGraph 1 1" (Vertex 5) (vertex chains "5")
-      assertEqual "ChainGraph 1 1" (Vertex 1) (vertex chains "1")
+      assertEqual "ChainGraph 1 1" (Vertex 5) (vertex chaing "5")
+      assertEqual "ChainGraph 1 1" (Vertex 1) (vertex chaing "1")
     )
 
 testChainGraph2 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
+    (_chains, chaing) = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      let incoming1 = incoming chains (Vertex 4)
+      let incoming1 = incoming chaing (Vertex 4)
       assertEqual "ChainGraph 2 1" 2 (length incoming1)
       assertEqual "ChainGraph 2 2" (Vertex 2) (start $ incoming1 !! 0)
       assertEqual "ChainGraph 2 3" (Vertex 4) (finish $ incoming1 !! 0)
@@ -374,10 +374,10 @@ testChainGraph2 =
 
 testChainGraph3 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
+    (_chains, chaing) = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      let outgoing1 = outgoing chains (Vertex 1)
+      let outgoing1 = outgoing chaing (Vertex 1)
       assertEqual "ChainGraph 3 1" 2 (length outgoing1)
       assertEqual "ChainGraph 3 2" (Vertex 1) (start $ outgoing1 !! 1)
       assertEqual "ChainGraph 3 3" (Vertex 3) (finish $ outgoing1 !! 1)
@@ -387,10 +387,10 @@ testChainGraph3 =
 
 testChainGraph4 =
   let
-    chains = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
+    (_chains, chaing) = constructTable graph1 choice1 accept1 evaluate1 select1 (Vertex 1) (Vertex 6)
   in
     TestCase (do
-      let sources1 = sources chains (Vertex 4)
+      let sources1 = sources chaing (Vertex 4)
       assertEqual "ChainGraph 4 1" (S.fromList [Vertex 2, Vertex 3]) sources1
     )
 

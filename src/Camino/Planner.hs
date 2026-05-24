@@ -71,7 +71,7 @@ import Data.Event
 import Data.Event.Date
 import qualified Data.List as L
 import qualified Data.Map as M
-import Data.Maybe (isJust, isNothing, fromJust, fromMaybe, mapMaybe, catMaybes)
+import Data.Maybe (isJust, isNothing, fromJust, mapMaybe, catMaybes)
 import Data.Metadata (Metadata(..))
 import Data.Placeholder
 import Data.Region
@@ -81,7 +81,6 @@ import qualified Data.Text as T
 import qualified Data.Time.Calendar as C
 import Data.Util (headWithError, initOrEmpty, lastWithError, maybeSum, tailOrEmpty)
 import Graph.Graph (Edge(..), available, incoming, mirror, reachable, subgraph)
-import Debug.Trace
 
 instance (Placeholder T.Text v, FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
     parseJSON (Object v) = do
@@ -658,7 +657,7 @@ transportHours :: LegType -> Leg -> Maybe Float
 transportHours FerryLink leg = legTime leg
 transportHours TrainLink leg = legTime leg
 transportHours BusLink leg = legTime leg
-transportHours _ leg = Nothing
+transportHours _ _leg = Nothing
 
 -- | Does this sequence of legs have a non-travel (ferry, train, etc.) component?
 hasTransport ::  TravelPreferences -- ^ The calculation preferences
@@ -732,17 +731,17 @@ travelMetrics preferences camino day =
     walkingSpeed = nominalSpeed Walking Normal
     normalSpeed = nominalSpeed travelType Normal
     actualSpeed = nominalSpeed travelType fitness
-    (effortTime, transportTime) = computeHours preferences day
-    (effortDistance, transportDistance) = computeDistance preferences day
-    totalDistance = effortDistance + transportDistance
+    (effortt, transportt) = computeHours preferences day
+    (effortd, transportd) = computeDistance preferences day
+    totald = effortd + transportd
     ascent = totalAscent preferences day
     descent = totalDescent preferences day
-    perceived = (walkingSpeed *) <$> effortTime
-    poiTime = pointOfInterestTime camino day
-    totalTime = effortTime `maybeSum` transportTime `maybeSum` poiTime
+    perceived = (walkingSpeed *) <$> effortt
+    poit = pointOfInterestTime camino day
+    totalt = effortt `maybeSum` transportt `maybeSum` poit
     transport = hasTransport preferences day
   in
-    (normalSpeed, actualSpeed, effortTime, transportTime, poiTime, totalTime, effortDistance, transportDistance, totalDistance, perceived, ascent, descent, transport)
+    (normalSpeed, actualSpeed, effortt, transportt, poit, totalt, effortd, transportd, totald, perceived, ascent, descent, transport)
 
 -- | Work out what services are missing from the desired stop list
 missingStopServices :: StopPreferences -- ^ The calculation preferences
@@ -921,7 +920,7 @@ penance :: StopPreferences -- ^ The stop preferences to use
 penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
   let
     stop = legTo $ last day
-    (_normalSpeed, _actualSpeed, effortTime, transportTime, poiTime, totalTime, effortDistance, transportDistance, distance, perceived, ascent, descent, transport) = travelMetrics tprefs cprefs day
+    (_normalspeed, _actualpeed, effortt, transportt, poit, totalt, effortd, transportd, distance, perceived, ascent, descent, transport) = travelMetrics tprefs cprefs day
     distanceCost = maybe Reject Penance perceived
     -- If there is no accommodation within this leg, then accept any distance.
     atEnd = isLastDay (preferenceFinish cprefs) day
@@ -933,22 +932,22 @@ penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
     rangeFilter = (if accommodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if transport then withoutLower else id)
     timePreferences = rangeFilter $ preferenceTime tprefs
     distancePreferences = rangeFilter $ preferenceDistance tprefs
-    timeAdjust = maybe Reject (adjustment timePreferences 0.0 walkingSpeed) totalTime
+    timeAdjust = maybe Reject (adjustment timePreferences 0.0 walkingSpeed) totalt
     distanceAdjust = adjustment distancePreferences 0.0 walkingSpeed distance
-    arduous = isArduous (preferenceDistance tprefs) distance || maybe True (isArduous (preferenceTime tprefs)) totalTime
-    hard = isHard (preferenceDistance tprefs) distance || maybe True (isHard (preferenceTime tprefs)) totalTime
+    arduous = isArduous (preferenceDistance tprefs) distance || maybe True (isArduous (preferenceTime tprefs)) totalt
+    hard = isHard (preferenceDistance tprefs) distance || maybe True (isHard (preferenceTime tprefs)) totalt
     (stopCost, locationCost, restPressureCost, accChoice, accCost, stopMissing, stopMissingCost) = locationMetrics sprefs tprefs cprefs accommodationMap locationMap restPressureMap stop
     (dayMissing, dayMissingCost) = routeMetrics sprefs tprefs cprefs accChoice day
     misc = travelAdditional tprefs day
     total = distanceCost <> locationCost <> accCost <> stopCost <> distanceAdjust <> timeAdjust <> restPressureCost <> stopMissingCost <> dayMissingCost <> misc
     metrics = Metrics
       distance
-      effortDistance
-      transportDistance
-      totalTime
-      effortTime
-      transportTime
-      poiTime
+      effortd
+      transportd
+      totalt
+      effortt
+      transportt
+      poit
       perceived
       ascent
       descent

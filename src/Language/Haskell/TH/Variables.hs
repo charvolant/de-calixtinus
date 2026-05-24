@@ -82,6 +82,7 @@ unboundVarsExp (GetFieldE e _s) = unboundVarsExp e
 unboundVarsExp (ProjectionE _ne) = S.empty
 unboundVarsExp (TypedBracketE e) = unboundVarsExp e
 unboundVarsExp (TypedSpliceE e) = unboundVarsExp e
+unboundVarsExp (TypeE _) = S.empty
 
 -- | The variables declared in a pattern
 unboundVarsPat :: Pat -> S.Set Name
@@ -102,6 +103,8 @@ unboundVarsPat (RecP _name fps) = S.unions $ map unboundVarsFieldPat fps
 unboundVarsPat (ListP ps) = S.unions $ map unboundVarsPat ps
 unboundVarsPat (SigP p _t) = unboundVarsPat p
 unboundVarsPat (ViewP _e p) = unboundVarsPat p
+unboundVarsPat (TypeP _) = S.empty
+unboundVarsPat (InvisP _) = S.empty
 
 -- | The variables declared and the variables used (including those declared) in a declaration
 unboundVarsDec :: Dec -> (S.Set Name, S.Set Name)

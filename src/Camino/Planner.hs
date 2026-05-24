@@ -21,13 +21,13 @@ module Camino.Planner (
   -- * Travel Metrics
     Metrics(..)
   , metricsDays
-  , hasNonTravel
+  , hasTransport
   , isStockUpDay
-  , nonTravelHours
+  , transportHours
   , penance
   , openSleeping
-  , travel
-  , travelHours
+  , computeDistance
+  , computeHours
   -- * Plan
   , Day
   , dayLegs
@@ -71,7 +71,7 @@ import Data.Event
 import Data.Event.Date
 import qualified Data.List as L
 import qualified Data.Map as M
-import Data.Maybe (isJust, isNothing, fromJust, fromMaybe, mapMaybe)
+import Data.Maybe (isJust, isNothing, fromJust, fromMaybe, mapMaybe, catMaybes)
 import Data.Metadata (Metadata(..))
 import Data.Placeholder
 import Data.Region
@@ -81,6 +81,7 @@ import qualified Data.Text as T
 import qualified Data.Time.Calendar as C
 import Data.Util (headWithError, initOrEmpty, lastWithError, maybeSum, tailOrEmpty)
 import Graph.Graph (Edge(..), available, incoming, mirror, reachable, subgraph)
+import Debug.Trace
 
 instance (Placeholder T.Text v, FromJSON v, FromJSON e, FromJSON s, Edge e v, Score s) => FromJSON (Chain v e s) where
     parseJSON (Object v) = do
@@ -225,7 +226,11 @@ normaliseTripChoices config (TripChoices stopaccommodation' stoplocation' stocka
 --   accumulated `Penance`.
 data Metrics = Metrics {
       metricsDistance :: Float -- ^ Actual distance in km
+    , metricsEffortDistance :: Float -- ^ The distance spent walking/cycling
+    , metricsTransportDistance :: Float -- ^ The distance spent using transport (ferry, bus, train)
     , metricsTime :: Maybe Float -- ^ Total time taken in hours, including visits to points of interest
+    , metricsEffortTime :: Maybe Float -- ^ The time spent walking/cycling
+    , metricsTransportTime :: Maybe Float -- ^ The time spent  using transport (ferry, bus, train)
     , metricsPoiTime :: Maybe Float -- ^ Any additional time spent visiting points of interest
     , metricsPerceivedDistance :: Maybe Float -- ^ Perceived distance in km (Nothing if the distance is too long)
     , metricsAscent :: Float -- ^ Ascent in metres
@@ -263,7 +268,11 @@ instance Ord Metrics where
 instance Semigroup Metrics where
   m1 <> m2 = Metrics {
       metricsDistance = metricsDistance m1 + metricsDistance m2
+    , metricsEffortDistance = metricsEffortDistance m1 + metricsEffortDistance m2
+    , metricsTransportDistance = metricsTransportDistance m1 + metricsTransportDistance m2
     , metricsTime = metricsTime m1 `maybeSum` metricsTime m2
+    , metricsEffortTime = metricsEffortTime m1 `maybeSum` metricsEffortTime m2
+    , metricsTransportTime = metricsTransportTime m1 `maybeSum` metricsTransportTime m2
     , metricsPoiTime = metricsPoiTime m1 `maybeSum` metricsPoiTime m2
     , metricsPerceivedDistance = metricsPerceivedDistance m1 `maybeSum` metricsPerceivedDistance m2
     , metricsAscent = metricsAscent m1 + metricsAscent m2
@@ -295,7 +304,11 @@ instance Semigroup Metrics where
 instance FromJSON Metrics where
   parseJSON (Object v) = do
     distance' <- v .: "distance"
+    effortdistance' <- v .:? "effort-distance" .!= 0.0
+    transportdistance' <- v .:? "transport-distance" .!= 0.0
     time' <- v .:? "time"
+    efforttime' <- v .:? "effort-time"
+    transporttime' <- v .:? "effort-time"
     poitime' <- v .:? "poi-time"
     perceiveddistance' <- v .:? "perceived-distance"
     ascent' <- v .: "ascent"
@@ -324,7 +337,11 @@ instance FromJSON Metrics where
     penance' <- v .: "penance"
     return $ Metrics {
         metricsDistance = distance'
+      , metricsEffortDistance = effortdistance'
+      , metricsTransportDistance = transportdistance'
       , metricsTime = time'
+      , metricsEffortTime = efforttime'
+      , metricsTransportTime = transporttime'
       , metricsPoiTime = poitime'
       , metricsPerceivedDistance = perceiveddistance'
       , metricsAscent = ascent'
@@ -355,10 +372,14 @@ instance FromJSON Metrics where
   parseJSON v = error ("Unable to parse metrics object " ++ show v)
 
 instance ToJSON Metrics where
-  toJSON (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' arduousdays' harddays' date' stockpoint' restpoint' penance') =
+  toJSON (Metrics distance' effortdistance' transportdistance' time' efforttime' transporttime' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' arduousdays' harddays' date' stockpoint' restpoint' penance') =
     object [
         "distance" .= distance'
+      , "effort-distance" .= (if effortdistance' == 0.0 then Nothing else Just effortdistance')
+      , "transport-distance" .= (if transportdistance' == 0.0 then Nothing else Just transportdistance')
       , "time" .= time'
+      , "effort-time" .= efforttime'
+      , "transport-time" .= transporttime'
       , "poi-time" .= poitime'
       , "perceived-distance" .= perceiveddistance'
       , "ascent" .= ascent'
@@ -411,17 +432,21 @@ metricsDays :: Metrics -> Maybe Int
 metricsDays metrics = fmap (\(f, t) -> fromInteger $ C.diffDays t f + 1) (metricsDate metrics)
 
 instance Monoid Metrics where
-  mempty = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty mempty 0 0 0Nothing False False mempty
+  mempty = Metrics 0.0 0.0 0.0(Just 0.0) Nothing Nothing Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty mempty 0 0 0Nothing False False mempty
 
 instance Score Metrics where
-  invalid = Metrics 0.0 (Just 0.0) Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty Reject 0 0 0Nothing False False Reject
+  invalid = Metrics 0.0 0.0 0.0(Just 0.0) Nothing Nothing Nothing (Just 0.0) 0.0 0.0 mempty mempty [] mempty S.empty mempty S.empty mempty mempty mempty mempty mempty mempty mempty Reject 0 0 0Nothing False False Reject
   isInvalid metrics = metricsPenance metrics == Reject
 
 instance Summary Metrics where
-  summary (Metrics distance' time' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' arduousdays' harddays' date' stockpoint' restpoint' penance') =
+  summary (Metrics distance' effortdistance' transportdistance' time' efforttime' transporttime' poitime' perceiveddistance' ascent' descent' stop' location' accommodationchoice' accommodation' missingstopservices' stopservices' missingdayservices' dayservices' distanceadjust' timeadjust' restpressure' fatigue' rest' restpoints' misc' restdays' arduousdays' harddays' date' stockpoint' restpoint' penance') =
     joinSummaries [
       labelledSummaryIfNotNull "distance" distance'
+    , labelledSummaryIfNotNull "effort-distance" effortdistance'
+    , labelledSummaryIfNotNull "transport-distance" transportdistance'
     , labelledSummaryIfNotNull "time" time'
+    , labelledSummaryIfNotNull "effort-time" efforttime'
+    , labelledSummaryIfNotNull "transport-time" transporttime'
     , labelledSummaryIfNotNull "poi-time" poitime'
     , labelledSummaryIfNotNull "perceived-distance" perceiveddistance'
     , labelledSummaryIfNotNull "ascent" ascent'
@@ -604,43 +629,54 @@ travelFunction Cycling _ = cycling
 --   The legs are borken up into segments and then contributions summed.
 --   Once a complete time has been assembled, the `tranter` corrections are applied
 --   to account for fatigue.
-travelHours :: TravelPreferences -- ^ The calculation preferences
+computeHours :: TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
-  -> Maybe Float -- ^ The hours equivalent
-travelHours preferences day = let
+  -> (Maybe Float, Maybe Float) -- ^ The (effort hours, transport hours) equivalent
+computeHours preferences day = let
     fitness = preferenceFitness preferences
     baseHours = travelFunction (preferenceTravel preferences) fitness
-    simple = sum $ map (travelHours' (baseHours fitness)) day
+    effort = sum $ map (\l -> effortHours (legType l) (baseHours fitness) l) day
+    transport' = catMaybes $ map (\l -> transportHours (legType l) l) day
+    transport = if null transport' then Nothing else Just $ sum transport'
+    adjustedEffort = tranter fitness effort
   in
-    tranter (preferenceFitness preferences) simple
+    -- trace ("Hours: effort=" ++ (show effort) ++ " adjusted=" ++ (show adjustedEffort) ++ " transport=" ++ (show transport)) $
+    (adjustedEffort, transport)
 
-travelHours' :: (Float -> Float -> Float -> Float) -> Leg -> Float
-travelHours' baseHours leg =
-  if legDistance leg == 0.0 then
-    0.0
-  else
-    sum $ map (\s -> baseHours (lsDistance s) (lsAscent s) (lsDescent s)) (legSegments leg)
+effortHours :: LegType -> (Float -> Float -> Float -> Float) -> Leg -> Float
+effortHours FerryLink _baseHours _leg = 0.0
+effortHours TrainLink _baseHours _leg = 0.0
+effortHours BusLink _baseHours _leg = 0.0
+effortHours BoatLink _baseHours leg = maybe 0.0 id (legTime leg) -- Assumed consistent time
+effortHours _ baseHours leg =
+  (maybe 0.0 id (legTime leg)) + if legDistance leg == 0.0 then
+      0.0
+    else
+      sum $ map (\s -> baseHours (lsDistance s) (lsAscent s) (lsDescent s)) (legSegments leg)
 
--- | Calculate the expected non-travel hours, for a sequence of legs
---   Usually associated with something like a ferry
-nonTravelHours :: TravelPreferences -- ^ The calculation preferences
-  -> [Leg] -- ^ The sequence of legs to use
-  -> Maybe Float -- ^ The hours equivalent
-nonTravelHours _preferences day =
-  Just $ sum $ map (\l -> fromMaybe 0.0 (legTime l)) day
+transportHours :: LegType -> Leg -> Maybe Float
+transportHours FerryLink leg = legTime leg
+transportHours TrainLink leg = legTime leg
+transportHours BusLink leg = legTime leg
+transportHours _ leg = Nothing
 
 -- | Does this sequence of legs have a non-travel (ferry, train, etc.) component?
-hasNonTravel ::  TravelPreferences -- ^ The calculation preferences
+hasTransport ::  TravelPreferences -- ^ The calculation preferences
   -> [Leg] -- ^ The sequence of legs to use
   -> Bool -- ^ The hours equivalent
-hasNonTravel _preferences day =
-  any (\l -> legDistance l <= 0.0 && isJust (legTime l)) day
+hasTransport _preferences day = any isTransportLeg day
 
 -- | Calculate the total distance covered by a sequence of legs
-travel :: TravelPreferences -- ^ The calculation preferences
+computeDistance :: TravelPreferences -- ^ The calculation preferences
   -> [Leg]-- ^ The sequence of legs to use
-  -> Float -- ^ The total distance covered by the sequence
-travel _preferences day = sum $ map legDistance day
+  -> (Float, Float)-- ^ The distance spent walking, cycling etc and the distance spent using transport
+computeDistance _preferences day = (sum $ map effortDistance day, sum $ map transportDistance day)
+
+effortDistance :: Leg -> Float
+effortDistance leg = if isTransportLeg leg then 0.0 else legDistance leg
+
+transportDistance :: Leg -> Float
+transportDistance leg = if isTransportLeg leg then legDistance leg else 0.0
 
 -- | Calculate the total ascent of a sequence of legs
 totalAscent :: TravelPreferences -- ^ The calculation preferences
@@ -671,7 +707,24 @@ pointOfInterestTime camino day = let
   foldl maybeSum Nothing $ map poiTime dpois
 
 -- | Calculate the travel metrics for a seqnece of legs
-travelMetrics :: TravelPreferences -> CaminoPreferences -> [Leg] -> (Float, Float, Maybe Float, Maybe Float, Float, Maybe Float, Float, Float, Maybe Float, Bool)
+travelMetrics :: TravelPreferences -- ^ The preferences for distance, time etc
+  -> CaminoPreferences -- ^ The preferences for route taken
+  -> [Leg] -- ^ The sequence of legs being evaluated
+  -> (
+      Float -- ^ The normal fitness travel speed for these preferences
+    , Float  -- ^ The nominal travel speed for these preferences
+    , Maybe Float -- ^ The time spent travelling with effort (walking, cycling, rowing)
+    , Maybe Float -- ^ The time spent travelling using transport (bus, train, ferry)
+    , Maybe Float -- ^ The time spent visiting points of interest during the day
+    , Maybe Float -- ^ The total time spent
+    , Float -- ^ The distance walked/cycled etc
+    , Float -- ^ The distance using transport
+    , Float -- ^ The total distance travelled
+    , Maybe Float -- ^ The percieved distance travelled, if possible
+    , Float -- ^ The total ascent
+    , Float -- ^ The total descent
+    , Bool -- ^ True if there is a non-effort component to the day
+    )
 travelMetrics preferences camino day =
   let
     travelType = preferenceTravel preferences
@@ -679,16 +732,17 @@ travelMetrics preferences camino day =
     walkingSpeed = nominalSpeed Walking Normal
     normalSpeed = nominalSpeed travelType Normal
     actualSpeed = nominalSpeed travelType fitness
-    travelTime = travelHours preferences day
-    otherTime = nonTravelHours preferences day
-    distance = travel preferences day
+    (effortTime, transportTime) = computeHours preferences day
+    (effortDistance, transportDistance) = computeDistance preferences day
+    totalDistance = effortDistance + transportDistance
     ascent = totalAscent preferences day
     descent = totalDescent preferences day
-    perceived = (walkingSpeed *) <$> travelTime
-    pois = pointOfInterestTime camino day
-    nonTravel = hasNonTravel preferences day
+    perceived = (walkingSpeed *) <$> effortTime
+    poiTime = pointOfInterestTime camino day
+    totalTime = effortTime `maybeSum` transportTime `maybeSum` poiTime
+    transport = hasTransport preferences day
   in
-    (normalSpeed, actualSpeed, travelTime, travelTime `maybeSum` otherTime `maybeSum` pois, distance, perceived, ascent, descent, pois, nonTravel)
+    (normalSpeed, actualSpeed, effortTime, transportTime, poiTime, totalTime, effortDistance, transportDistance, totalDistance, perceived, ascent, descent, transport)
 
 -- | Work out what services are missing from the desired stop list
 missingStopServices :: StopPreferences -- ^ The calculation preferences
@@ -867,17 +921,19 @@ penance :: StopPreferences -- ^ The stop preferences to use
 penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
   let
     stop = legTo $ last day
-    (_normalSpeed, _actualSpeed, travelTime, totalTime, distance, perceived, ascent, descent, poi, nonTravel) = travelMetrics tprefs cprefs day
+    (_normalSpeed, _actualSpeed, effortTime, transportTime, poiTime, totalTime, effortDistance, transportDistance, distance, perceived, ascent, descent, transport) = travelMetrics tprefs cprefs day
     distanceCost = maybe Reject Penance perceived
     -- If there is no accommodation within this leg, then accept any distance.
     atEnd = isLastDay (preferenceFinish cprefs) day
     walkingSpeed = nominalSpeed Walking Normal
     accommodationFree = isAccommodationFree tprefs accommodationMap day
-    -- If not travelling or the last day, then skip lower bounds
-    rangeFilter = (if accommodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if nonTravel then (withoutLower) else id)
+    -- If there's nowhere to stop then skip maximum
+    -- If the last day, then skip lower bounds
+    -- If there is a transport component then skip lower bounds
+    rangeFilter = (if accommodationFree then withoutMaximum else id) . (if atEnd then withoutMinimum else id) . (if transport then withoutLower else id)
     timePreferences = rangeFilter $ preferenceTime tprefs
     distancePreferences = rangeFilter $ preferenceDistance tprefs
-    timeAdjust = maybe Reject (adjustment timePreferences 0.0 walkingSpeed) travelTime
+    timeAdjust = maybe Reject (adjustment timePreferences 0.0 walkingSpeed) totalTime
     distanceAdjust = adjustment distancePreferences 0.0 walkingSpeed distance
     arduous = isArduous (preferenceDistance tprefs) distance || maybe True (isArduous (preferenceTime tprefs)) totalTime
     hard = isHard (preferenceDistance tprefs) distance || maybe True (isHard (preferenceTime tprefs)) totalTime
@@ -887,8 +943,12 @@ penance sprefs tprefs cprefs accommodationMap locationMap restPressureMap day =
     total = distanceCost <> locationCost <> accCost <> stopCost <> distanceAdjust <> timeAdjust <> restPressureCost <> stopMissingCost <> dayMissingCost <> misc
     metrics = Metrics
       distance
+      effortDistance
+      transportDistance
       totalTime
-      poi
+      effortTime
+      transportTime
+      poiTime
       perceived
       ascent
       descent
@@ -940,8 +1000,10 @@ dayAccept preferences camino choices day =
     startOk = isAccommodationStart preferences camino day
     atEnd = isLastDay (preferenceFinish camino) day
     accommodationFree = isAccommodationFree preferences (tcStopAccommodation choices) day
-    time = travelHours preferences day
-    distance = travel preferences day
+    (eh, th) = computeHours preferences day
+    time = eh `maybeSum` th
+    (ed, td) = computeDistance preferences day
+    distance = ed + td
     inside = isJust time && isInsideMaximum (preferenceDistance preferences) distance && isInsideMaximum (preferenceTime preferences) (fromJust time)
     accept = startOk && legsOk && (atEnd || inside || accommodationFree)
   in

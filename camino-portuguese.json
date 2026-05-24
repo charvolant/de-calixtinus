@@ -10281,7 +10281,7 @@
       "type": "FerryLink",
       "from": "P-E22",
       "to": "P-P258",
-      "distance": 0.00,
+      "distance": 10.00,
       "time": 2.5,
       "ascent": 0,
       "descent": 0,
@@ -10916,11 +10916,10 @@
       "description": "Via Camino by Boat",
       "from": "P-C37",
       "to": "P-T8",
-      "distance": 0.00,
-      "time": 6.0,
+      "distance": 16.00,
+      "time": 4.0,
       "ascent": 0,
-      "descent": 0,
-      "penance": 20.0
+      "descent": 0
     },
     {
       "from": "P-T8",

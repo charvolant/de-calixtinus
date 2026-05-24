@@ -181,9 +181,8 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
 -- | Display a summary of key penance metrics
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> Maybe Int -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
 metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
-    _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
-    _{TimeMsg (metricsTime metrics)}
-    _{PoiTime (metricsPoiTime metrics)} #
+    _{DistanceMsg (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)} #
+    _{TimeMsg (metricsTime metrics) (metricsEffortTime metrics) (metricsTransportTime metrics) (metricsPoiTime metrics)} #
     $maybe d <- elapsed
       \ _{DaysElapsedMsg d} #
     $maybe d <- walking
@@ -199,8 +198,8 @@ metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
 daySummary _preferences _camino _pilgrimage day = [ihamlet|
     <p>_{Txt (locationName (start day))} - _{Txt (locationName (finish day))}
-       _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
-       _{TimeMsg (metricsTime metrics)}
+       _{DistanceMsg (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)} #
+       _{TimeMsg (metricsTime metrics) (metricsEffortTime metrics) (metricsTransportTime metrics) (metricsPoiTime metrics)} #
        _{AscentMsg (metricsAscent metrics)}
        _{DescentMsg (metricsDescent metrics)}
        _{PenanceMsg (metricsPenance metrics)}
@@ -215,7 +214,7 @@ daySummary _preferences _camino _pilgrimage day = [ihamlet|
 stageSummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Journey -> HtmlUrlI18n CaminoMsg CaminoRoute
 stageSummary _preferences _camino _pilgrimage stage = [ihamlet|
     <p>_{Txt (locationName (start stage))} - _{Txt (locationName (finish stage))}
-       _{DistanceMsg (metricsDistance metrics) (metricsPerceivedDistance metrics)}
+       _{DistanceMsg (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)}
        _{DaysElapsedMsg (Prelude.length (path stage))}
        _{AscentMsg (metricsAscent metrics)}
        _{DescentMsg (metricsDescent metrics)}
@@ -1301,7 +1300,7 @@ failureTable _tprefs _cprefs caption graph = [ihamlet|
           <tr>
             <td>
             <td>#{summary (finish t)} _{Txt (locationName (finish t))}
-            <td>_{DistanceFormatted (metricsDistance (score t))} _{TimeMsg (metricsTime (score t))}
+            <td>_{DistanceFormatted (metricsDistance (score t))} _{TimeMsg (metricsTime (score t)) Nothing Nothing Nothing}
             <td>#{summary (score t)}
             <td>
               #{summary l}
@@ -1331,13 +1330,12 @@ failureChains _tprefs _cprefs caption chains = [ihamlet|
         <tr>
           <td>#{summary (start c)} _{Txt (locationName (start c))}
           <td>#{summary (finish c)} _{Txt (locationName (finish c))}
-          <td>_{DistanceFormatted (metricsDistance (score c))} _{TimeMsg (metricsTime (score c))}
+          <td>_{DistanceFormatted (metricsDistance (score c))} _{TimeMsg (metricsTime (score c)) Nothing Nothing Nothing}
           <td>#{summary (score c)}
           <td>
             #{summary (start c)}
             $forall p <- path c
                 \ #{arrow} #{summary (target p)}
-
 |]
   where
     arrow = '\x2192'

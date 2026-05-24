@@ -80,6 +80,8 @@ module Camino.Camino (
   , LegSegment(..)
   , LegType(..)
   , legTypeEnumeration
+  , isTransportLegType
+  , isTransportLeg
   -- * Routes
   , Route(..)
   , RouteLogic(..)
@@ -1084,6 +1086,13 @@ instance NFData LegType
 instance Default LegType where
   def = Road
 
+-- | Is this leg type associated with transport (bus, train, ferry etc)
+isTransportLegType :: LegType -> Bool
+isTransportLegType FerryLink = True
+isTransportLegType TrainLink = True
+isTransportLegType BusLink = True
+isTransportLegType _ = False
+
 -- | A leg segment is a convienient part of a leg
 --   It is used to partition up complex legs into segments that can be processed easily
 data LegSegment = LegSegment {
@@ -1249,6 +1258,11 @@ buildLegSegments fl tl waypoints distance ascent descent = let
   in
     segs
 
+-- | This this a leg that uses transport?
+--
+--   See `isTransportLegType`
+isTransportLeg :: Leg -> Bool
+isTransportLeg = isTransportLegType . legType
 
 -- | Read formulas from JSON
 instance (Eq a, Placeholder Text a) => FromJSON (Formula a) where

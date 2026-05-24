@@ -88,7 +88,11 @@ DirectionsTitle: Directions
 DistanceAdjustLabel: Distance Adjustment
 DistanceFormatted distance@Float: ^{formatDistance sou distance}
 DistanceLabel: Distance
-DistanceMsg actual@Float perceived@(Maybe Float): Distance ^{formatDistance sou actual} (feels like ^{formatMaybeDistance sou perceived})
+DistanceMsg actual@Float effort@Float transport@Float perceived@(Maybe Float): Distance ^{formatDistance sou actual} #
+ (feels like ^{formatMaybeDistance sou perceived}#
+ $if transport > 0
+   \, transport ^{formatDistance sou transport}#
+ \)
 DistancePenanceLabel: Distance
 DistancePreferencesLabel: Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 DistancePreferencesPerceivedLabel: Perceived Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
@@ -248,8 +252,6 @@ PoiLabel: Point of Interest
 PoiPreferencesTitle: Point of Interest Preferences
 PoisLabel: Points of Interest
 PoiText: Select the significant point of interests that you intend to stop at while travelling. These stops will be built into the planning time.
-PoiTime mtime@(Maybe Float): $maybe time <- mtime
-  (^{formatHours sou time} stops)
 PoiTitle: Locality
 PoolTitle: Pool
 PrayerTitle: Prayer
@@ -347,7 +349,15 @@ Time time@TimeOfDay: ^{renderLocalisedTime sou locales "%H%M" time}
 TimeAdjustLabel: Time Adjustment
 TimeFormatted time@Float: ^{formatHours sou time}
 TimeLabel: Time
-TimeMsg mtime@(Maybe Float): over ^{formatMaybeHours sou mtime}
+TimeMsg mtime@(Maybe Float) meffort@(Maybe Float) mtransport@(Maybe Float) mpoi@(Maybe Float): over ^{formatMaybeHours sou mtime} #
+  $case (mtransport, mpoi)
+    $of (Nothing, Nothing)
+    $of (Just t, Nothing)
+      \ (transport ^{formatHours sou t})
+    $of (Nothing, Just p)
+      \ (stops ^{formatHours sou p})
+    $of (Just t, Just p)
+      \ (transport ^{formatHours sou t}, stops ^{formatHours sou p})
 TimePenaltyLabel: Time Penalty
 TimePreferencesLabel: Time Preferences (#{U.unitSymbol (U.preferredUnit sou U.Time)})
 ToggleDetailTitle: Show/hide additional detail

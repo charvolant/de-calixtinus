@@ -175,6 +175,8 @@
               "descent": 400.0,
               "distance": 5.5,
               "distance-adjust": 0.0,
+              "effort-distance": 5.5,
+              "effort-time": 1.1603495,
               "fatigue": 0.0,
               "hard-days": 0.0,
               "location": 0.0,
@@ -196,7 +198,9 @@
               "stock-point": false,
               "stop": 2.0,
               "stop-services": 0.3,
-              "time-adjust": 0.0
+              "time-adjust": 0.0,
+              "transport-distance": null,
+              "transport-time": null
             },
             "start": "A"
           }
@@ -224,6 +228,8 @@
           "descent": 400.0,
           "distance": 5.5,
           "distance-adjust": 0.0,
+          "effort-distance": 5.5,
+          "effort-time": 1.1603495,
           "fatigue": 16.0,
           "hard-days": 0.0,
           "location": 0.0,
@@ -245,7 +251,9 @@
           "stock-point": false,
           "stop": 2.0,
           "stop-services": 0.3,
-          "time-adjust": 0.0
+          "time-adjust": 0.0,
+          "transport-distance": null,
+          "transport-time": null
         },
         "start": "A"
       }
@@ -273,6 +281,8 @@
       "descent": 400.0,
       "distance": 5.5,
       "distance-adjust": 0.0,
+      "effort-distance": 5.5,
+      "effort-time": 1.1603495,
       "fatigue": 16.0,
       "hard-days": 0.0,
       "location": 0.0,
@@ -294,7 +304,9 @@
       "stock-point": false,
       "stop": 2.0,
       "stop-services": 0.3,
-      "time-adjust": 0.0
+      "time-adjust": 0.0,
+      "transport-distance": null,
+      "transport-time": null
     },
     "start": "A"
   },

@@ -23,6 +23,7 @@ import Data.Time.Calendar
 import Graph.Graph (identifier)
 import System.Directory
 import System.FilePath
+import Camino.Planner (Metrics(metricsTransportDistance))
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
 assertPenanceEqual msg Reject Reject _precision = assertBool msg True
@@ -242,7 +243,12 @@ legs4 = map annotateLeg [
 
 legs5 = map annotateLeg [
   Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 1.0, legTime = Nothing, legAscent = 0, legDescent = 5, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
-  Leg { legType = BoatLink, legFrom = location2, legTo = location3, legDistance = 0.0, legTime = Just 6.0, legAscent = 0, legDescent = 0, legPenance = Just (Penance 10.0), legDescription = Nothing, legWaypoints = [], legSegments = [] }
+  Leg { legType = BoatLink, legFrom = location2, legTo = location3, legDistance = 20.0, legTime = Just 5.0, legAscent = 0, legDescent = 0, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] }
+  ]
+
+legs6 = map annotateLeg [
+  Leg { legType = Road, legFrom = location1, legTo = location2, legDistance = 1.0, legTime = Nothing, legAscent = 0, legDescent = 5, legPenance = Nothing, legDescription = Nothing, legWaypoints = [], legSegments = [] },
+  Leg { legType = FerryLink, legFrom = location2, legTo = location3, legDistance = 5.0, legTime = Just 1.0, legAscent = 0, legDescent = 0, legPenance = Just (Penance 2.0), legDescription = Nothing, legWaypoints = [], legSegments = [] }
   ]
 
 links1 = map annotateLeg [
@@ -308,28 +314,93 @@ locationMap1 = buildTripChoiceMap (locationChoice stopPrefs1) preferences1 camin
 
 rpMap1 = Nothing
 
-testHoursSimple = TestList [testHoursSimple1, testHoursSimple2, testHoursSimple3, testHoursSimple4, testHoursSimple5, testHoursSimple6]
+testHoursSimple = TestList [
+  testHoursSimple1, testHoursSimple2, testHoursSimple3, testHoursSimple4,
+  testHoursSimple5, testHoursSimple6, testHoursSimple7, testHoursSimple8
+  ]
 
-testHoursSimple1 = TestCase (assertMaybeFloatEqual "Hours Simple 1" (Just 1.160) (travelHours preferences1 legs1) 0.001)
+testHoursSimple1 = TestCase (do
+  let (e, t) = computeHours preferences1 legs1
+  assertMaybeFloatEqual "Hours Simple 1 1" (Just 1.160) e 0.001
+  assertMaybeFloatEqual "Hours Simple 1 2" Nothing t 0.001
+  )
 
-testHoursSimple2 = TestCase (assertMaybeFloatEqual "Hours Simple 2" (Just 2.313) (travelHours preferences1 legs2) 0.001)
+testHoursSimple2 = TestCase (do
+  let (e, t) = computeHours preferences1 legs2
+  assertMaybeFloatEqual "Hours Simple 2 1" (Just 2.313) e 0.001
+  assertMaybeFloatEqual "Hours Simple 2 2" Nothing t 0.001
+  )
 
-testHoursSimple3 = TestCase (assertMaybeFloatEqual "Hours Simple 3" (Just 0.465) (travelHours preferences1 legs0) 0.001)
+testHoursSimple3 = TestCase (do
+  let (e, t) = computeHours preferences1 legs0
+  assertMaybeFloatEqual "Hours Simple 3 1" (Just 0.465) e 0.001
+  assertMaybeFloatEqual "Hours Simple 3 2" Nothing t 0.001
+  )
 
-testHoursSimple4 = TestCase (assertMaybeFloatEqual "Hours Simple 4" (Just 0.358) (travelHours preferences2 legs1) 0.001)
+testHoursSimple4 = TestCase (do
+  let (e, t) = computeHours preferences2 legs1
+  assertMaybeFloatEqual "Hours Simple 4 1" (Just 0.358) e 0.001
+  assertMaybeFloatEqual "Hours Simple 4 2" Nothing t 0.001
+  )
 
-testHoursSimple5 = TestCase (assertMaybeFloatEqual "Hours Simple 5" (Just 0.745) (travelHours preferences2 legs2) 0.001)
+testHoursSimple5 = TestCase (do
+  let (e, t) = computeHours preferences2 legs2
+  assertMaybeFloatEqual "Hours Simple 5 1" (Just 0.745) e 0.001
+  assertMaybeFloatEqual "Hours Simple 5 2" Nothing t 0.001
+  )
 
-testHoursSimple6 = TestCase (assertMaybeFloatEqual "Hours Simple 6" (Just 0.212) (travelHours preferences2 legs0) 0.001)
+testHoursSimple6 = TestCase (do
+  let (e, t) = computeHours preferences2 legs0
+  assertMaybeFloatEqual "Hours Simple 6 1" (Just 0.212) e 0.001
+  assertMaybeFloatEqual "Hours Simple 6 2" Nothing t 0.001
+  )
 
-  
-testTravelSimple = TestList [testTravelSimple1, testTravelSimple2, testTravelSimple3]
+testHoursSimple7 = TestCase (do
+   let (e, t) = computeHours preferences1 legs5
+   assertMaybeFloatEqual "Hours Simple 7 1" (Just 6.689) e 0.001
+   assertMaybeFloatEqual "Hours Simple 7 2" Nothing t 0.001
+   )
 
-testTravelSimple1 = TestCase (assertFloatEqual "Travel Simple 1" 5.5 (travel preferences1 legs1) 0.001)
+testHoursSimple8 = TestCase (do
+   let (e, t) = computeHours preferences1 legs6
+   assertMaybeFloatEqual "Hours Simple 8 1" (Just 0.195) e 0.001
+   assertMaybeFloatEqual "Hours Simple 8 2" (Just 1.0) t 0.001
+   )
 
-testTravelSimple2 = TestCase (assertFloatEqual "Travel Simple 2" 10.0 (travel preferences1 legs2) 0.001)
+testTravelSimple = TestList [
+  testTravelSimple1, testTravelSimple2, testTravelSimple3, testTravelSimple4,
+  testTravelSimple5
+  ]
 
-testTravelSimple3 = TestCase (assertFloatEqual "Travel Simple 3" 2.0 (travel preferences1 legs0) 0.001)
+testTravelSimple1 = TestCase (do
+  let (e, t) = computeDistance preferences1 legs1
+  assertFloatEqual "Travel Simple 1 1" 5.5 e 0.001
+  assertFloatEqual "Travel Simple 1 2" 0.0 t 0.001
+  )
+
+testTravelSimple2 = TestCase (do
+  let (e, t) = computeDistance preferences1 legs2
+  assertFloatEqual "Travel Simple 2 1" 10.0 e 0.001
+  assertFloatEqual "Travel Simple 2 2" 0.0 t 0.001
+  )
+
+testTravelSimple3 = TestCase (do
+  let (e, t) = computeDistance preferences1 legs0
+  assertFloatEqual "Travel Simple 3 1" 2.0 e 0.001
+  assertFloatEqual "Travel Simple 3 2" 0.0 t 0.001
+  )
+
+testTravelSimple4 = TestCase (do
+  let (e, t) = computeDistance preferences1 legs5
+  assertFloatEqual "Travel Simple 4 1" 21.0 e 0.001
+  assertFloatEqual "Travel Simple 4 2" 0.0 t 0.001
+  )
+
+testTravelSimple5 = TestCase (do
+  let (e, t) = computeDistance preferences1 legs6
+  assertFloatEqual "Travel Simple 5 1" 1.0 e 0.001
+  assertFloatEqual "Travel Simple 5 2" 5.0 t 0.001
+  )
 
 testAccommodationMapSimple = TestList [ testAccommodationMapSimple1 ]
 
@@ -403,13 +474,25 @@ testPenanceSimple3 = TestCase (assertPenanceEqual "Penance Simple 3" (Penance 3.
 
 testPenanceSimple4 = TestCase (assertPenanceEqual "Penance Simple 4" (Penance 3.7) (metricsPenance $ penance stopPrefs2 preferences2 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs1) 0.1)
 
-testPenanceComplex = TestList [ testPenanceComplex1, testPenanceSimple2, testPenanceSimple3, testPenanceSimple4 ]
+testPenanceComplex = TestList [ testPenanceComplex1, testPenanceComplex2 ]
 
 testPenanceComplex1 = TestCase (do
   let metrics = penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs5
-  assertPenanceEqual "Penance Complex 1 1" (Penance 13.1) (metricsPenance metrics) 0.1
-  assertMaybeFloatEqual "Penance Complex 1 2" (Just 6.2) (metricsTime metrics) 0.1
-  assertMaybeFloatEqual "Penance Complex 1 3" (Just 0.8) (metricsPerceivedDistance metrics) 0.1
+  -- putStrLn $ "\nComplex 1\n" ++ show metrics
+  assertPenanceEqual "Penance Complex 1 1" Reject (metricsPenance metrics) 0.1
+  assertFloatEqual "Penance Complex 1 2" 21.0 (metricsEffortDistance metrics) 0.1
+  assertFloatEqual "Penance Complex 1 3" 0.0 (metricsTransportDistance metrics) 0.1
+  assertMaybeFloatEqual "Penance Complex 1 4" (Just 6.7) (metricsTime metrics) 0.1
+  assertMaybeFloatEqual "Penance Complex 1 5" (Just 26.8) (metricsPerceivedDistance metrics) 0.1
+  )
+testPenanceComplex2 = TestCase (do
+  let metrics = penance stopPrefs1 preferences1 cpreferences1 accommodationMap1 locationMap1 rpMap1 legs6
+  -- putStrLn $ "\nComplex 2\n" ++ show metrics
+  assertPenanceEqual "Penance Complex 2 1" (Penance 5.1) (metricsPenance metrics) 0.1
+  assertFloatEqual "Penance Complex 1 2" 1.0 (metricsEffortDistance metrics) 0.1
+  assertFloatEqual "Penance Complex 2 2" 5.0 (metricsTransportDistance metrics) 0.1
+  assertMaybeFloatEqual "Penance Complex 2 3" (Just 1.2) (metricsTime metrics) 0.1
+  assertMaybeFloatEqual "Penance Complex 2 4" (Just 0.8) (metricsPerceivedDistance metrics) 0.1
   )
 
 testIsStockUpDay config = TestList [
@@ -491,6 +574,7 @@ testSolution1 config = TestCase (do
     let solution = planCamino config preferences1 cpreferences1
     let solution' = solution { solutionID = Just "S-1" }
     let file = testdir </> "solution-1" <.> "json"
+    -- putStrLn $ "\nSolution 1 file\n" ++ show file
     let encoded = encodePretty caminoPrintOptions $ toJSON solution'
     LB.writeFile file encoded
     exists <- doesFileExist file
@@ -517,6 +601,7 @@ testSolution2 config preferences camino = TestCase (do
     let solution = planCamino config preferences cprefs
     let solution' = solution { solutionID = Just "S-2" }
     let file = testdir </> "solution-2" <.> "json"
+    -- putStrLn $ "\nSolution 2 file\n" ++ show file
     encodeFile file solution'
     exists <- doesFileExist file
     assertBool "Solution 2 1" exists

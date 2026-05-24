@@ -62,7 +62,11 @@ DescentMsg descent: Descenso ^{formatHeight sou descent}
 DirectionsTitle: Direcciones
 DinnerTitle: Cena
 DistanceAdjustLabel: Ajuste de distancia
-DistanceMsg actual perceived: Distancia ^{formatDistance sou actual} (Se siente como ^{formatMaybeDistance sou perceived})
+DistanceMsg actual effort transport perceived: Distancia ^{formatDistance sou actual} #
+ (Se siente como ^{formatMaybeDistance sou perceived}#
+ $if transport > 0
+   \, ^{formatDistance sou transport} transporte#
+ \)
 DistanceFormatted distance: ^{formatDistance sou distance}
 DistanceLabel: Distancia
 DistancePenanceLabel: Distancia
@@ -186,8 +190,6 @@ PlanLabel: Plan
 PoiDescription: Un punto de referencia o punto de interés genérico
 PoiLabel: Punto de interés
 PoisLabel: Puntos de interés
-PoiTime mtime: $maybe time <- mtime
-  (^{formatHours sou time} paradas)
 PoiTitle: Localidad
 PoolTitle: Piscina
 PrayerTitle: Rezo/oración
@@ -251,7 +253,15 @@ TheatreDescription: Un teatro, una ópera o una sala de conciertos.
 TheatreTitle: Teatro
 TimeAdjustLabel: Modificación de hora
 TimeFormatted time: ^{formatHours sou time}
-TimeMsg time: Más de ^{formatMaybeHours sou time}
+TimeMsg mtime meffort mtransport mpoi: Más de ^{formatMaybeHours sou mtime} #
+  $case (mtransport, mpoi)
+    $of (Nothing, Nothing)
+    $of (Just t, Nothing)
+      (^{formatHours sou t} transporte)
+    $of (Nothing, Just p)
+      (^{formatHours sou p} paradas)
+    $of (Just t, Just p)
+      (^{formatHours sou t} transporte, ^{formatHours sou p} paradas)
 TimeLabel: Tiempo
 TimePenaltyLabel: Penalización de tiempo
 TimePreferencesLabel: Preferencias de tiempo (#{U.unitSymbol (U.preferredUnit sou U.Time)})

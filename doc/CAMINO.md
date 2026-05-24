@@ -840,14 +840,36 @@ For example, a leg by ferry, rather than walking, might be:
 ```
 
 * `type` gives the type of travel. See [above](#types-services-etc)
-* `time` gives an explicit time of travel, rather than calculating it from fitness, distances etc.
-  Generally, if you use time, set the distance, ascent and descent to zero.
+* `time` gives an explicit time of travel.
+  How this works depends on the type of travel. See below.
 * `penance` gives an extra amount of penance to apply when using this leg.
   As well as time-based legs, such as the one above, you can use this to denote a particularly
   nasty part of the route for some reason or other and use it to influence the planner.
   For example, out of two routes, the most direct passes though a particularly miserable
   industrial area.
 * `description` Allow you to add additional description to the leg.
+
+The different types of travel result in effort and distances being calculated in different ways.
+Essentially, there are two sorts of distance calculated: 
+*effort distance* which is walking, cycling, rowing, anything that makes you tired and accumulates fatigue;
+*transport distance* which is a ferry, bus or train, where you allow an engine to do the work.
+Time is calculated in a similar ways, with
+*poi time* being the time spent looking at attractions.
+
+| Travel | Effort Distance | Effort Time | Transport Distance | Transport Time |
+| ------ |-----------------|-------------| ------------------ | -------------- |
+| Road | d   | ted + t     | 0 | 0 |
+| Trail | d  | ted + t     | 0 | 0 |
+| CyclePath | d  | ted + t     | 0 | 0 |
+| BoatLink | d  | t  | 0 | 0 |
+| FerryLink | 0 | 0  | d | t |
+| TrainLink | 0 | 0  | d | t |
+| BusLink | 0 | 0  | d | t |
+
+where *d* is the distance, *t* is the time/time adjustement (if any) and *ted* is the time
+estimated from the distance.
+Boat links are special, since they are highly dependent on how things happen, 
+and need to have a nominal amount of distance and time estimated for them.
 
 ### Waypoints
 

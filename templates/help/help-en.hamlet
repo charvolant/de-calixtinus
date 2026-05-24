@@ -291,11 +291,14 @@
       <td>
         The minimum acceptable value.
         Anything less than the minimum will be rejected.
+        (There are occasional exceptions to this limit, for example when you are within sight of your final destination.)
     <tr>
       <td>Maximum
       <td>
         The maximum acceptable value.
         Anything above the maximum will be rejected.
+        (There are some rare exceptions to this limit, for example when there is a day with no suitable accommodation
+        between two locations.)
 
  <p>
    An example preference range for distance walked is
@@ -357,6 +360,9 @@
         This is the default rule for walkers.
       <li>
         A cycling rule that is similar to Naismith's rule, but takes more account of fitness.
+      <li>
+        Certain rare legs, such as ferry links or places where you row rather than walk have special rules
+        for calculating distance and time.
   <li>
     The time taken for each leg is added together and then Tranter's corrections are applied.
     These corrections adjust for the fitness of the person walking and the effects of fatigue as the day wears on.
@@ -933,6 +939,12 @@
     <td>Rest Points
     <td>Appears when there is a mismatch between the preferred rest points and the actual rest points chosen by the planner
   <tr>
+    <td>Arduous Days
+    <td>Appears when the day is an arduous day or the stage or pilgrimage has arduous days.
+  <tr>
+    <td>Hard Days
+    <td>Appears when the day is a hard day or the stage or pilgrimage has hard days.
+  <tr>
     <td>Other
     <td>Other penance, usually included because legs between locations have some special penance associated with them
 
@@ -1106,6 +1118,15 @@
     <span title="_{RestpointLabel}" .ca-restpoint>
   <dd>
     This is a location where a rest day is scheduled.
+  <dt>
+    <span title="_{ArduousDayLabel}" .ca-arduous>
+  <dd>
+    This is a day that is more arduous than your preferred comfort levels but still within the limits that you have set.
+  <dt>
+    <span title="_{HardDayLabel}" .ca-hard>
+  <dd>
+    This is a day that is beyond the limits that you have set in terms of time and distance.
+    Hard days are usually an indicator of a long sequence of locations without accommodation or services.
 
 <p>
   The next element shows the services that the location offers.
@@ -1497,6 +1518,10 @@
     A place to stay, recover and sleep at then end of a day.
     Accommodation can be anything from a tent on the wayside to a 5-star hotel.
     <a href="accommodation-help">More
+  <dt>Arduous Day
+  <dd>
+    A day where the amount of effort is above the upper limit of what your preferences regard as comfortable.
+    (See Hard Day)
   <dt>Day
   <dd>
     A day's walking or cycling.
@@ -1505,6 +1530,12 @@
   <dd>
     An occasion associated with a particular location or point of interest, such as a special mass for pilgrims.
     <a href="#event-help">More
+  <dt>Hard Day
+  <dd>
+    A day where the lack of accommodation or services mean that the planner has had to go beyond the maximum boundaries
+    of your preferences to find a stop.
+    Hard days should be rare.
+    (See Arduous Day)
   <dt>Location
   <dd>
     A waypoint on the Camino.

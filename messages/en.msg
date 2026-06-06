@@ -40,7 +40,6 @@ CaminoLabel: Camino
 CaminoSelectTitle: Select Camino
 CaminosLabel: Caminos
 CaminoText: Select the Camino you wish to walk from the following options. Many caminos have variations and alternative routes that you can choose on the next screen.
-CloseLabel: Close
 CampGroundTitle: Camping Ground
 CampingTitle: Camping
 CampSiteTitle: Camp-site
@@ -56,6 +55,7 @@ CityTitle: City
 ClosedDayLabel region@Text: Closed Day (^{renderLocalisedRegion config sou locales region})
 ClosedDayText: Closed Day
 ClosedText: closed
+CloseLabel: Close
 ComfortableTitle: Comfortable
 ComfortLabel: Comfort
 CopyLinkTitle: Copy Link
@@ -104,7 +104,7 @@ DryerTitle: Dryer
 EasyMode: Easy Mode
 EasyModeText: Easy mode reduces the number of choices that you have to make and chooses sensible defaults for most things.
 ElevationFormatted elev@Float: ^{formatHeight sou elev}
-ElevationLabel: "Elevation (#{U.unitSymbol (U.preferredUnit sou U.Elevation)})
+ElevationLabel: Elevation (#{U.unitSymbol (U.preferredUnit sou U.Elevation)})
 EventsLabel: Events
 ExceptText: except
 ExcludedLabel: Locations not to stop at
@@ -135,8 +135,8 @@ HazardDescription: A road crossing, bridge, slope etc. that needs to be treated 
 HazardTitle: Hazard
 HeatingTitle: Heating
 HelpLabel: Help
-HelpPopupTitle: Help
 HelpPageTitle: General Help
+HelpPopupTitle: Help
 HistoricalDescription: A historical site, archaeological site, ruin or other historical point of interest
 HistoricalPoiTitle: Historical
 HistoricalTitle: Historical site
@@ -179,9 +179,9 @@ LinkOut: More information
 ListMsg msgs@[CaminoMsg]: <ul .comma-separated-list>
   $forall m <- msgs
     <li>^{renderCaminoMsg config sou locales m}
+LocationLabel: Location
 LocationPenanceLabel: Location
 LocationPreferencesLabel: Location Preferences
-LocationLabel: Location
 LocationsLabel: Locations
 LockersTitle: Lockers
 LongitudeLabel: Longitude
@@ -321,8 +321,8 @@ StablesTitle: Stables
 StageLabel: Stage
 StagesMsg stages@Int: ^{formatStages stages}
 StartDateLabel: Start Date
-StartLocationLabel: Start Location
 StartLabel: Start!
+StartLocationLabel: Start Location
 StartText: Select the start location and finish location for your trip.
 StartTitle: Start and Finish Points
 StationDescription: A train or bus station

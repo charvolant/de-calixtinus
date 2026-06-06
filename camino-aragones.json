@@ -1185,7 +1185,11 @@
       "ascent": 250,
       "descent": 240,
       "waypoints": [
-        { "latitude": 42.64477, "longitude": -1.36489, "elevation": 628 }
+        { "latitude": 42.63451, "longitude": -1.35515, "elevation": 599 },
+        { "latitude": 42.63680, "longitude": -1.36311, "elevation": 661 },
+        { "latitude": 42.64472, "longitude": -1.36489, "elevation": 628 },
+        { "latitude": 42.65456, "longitude": -1.39715, "elevation": 786 },
+        { "latitude": 42.65622, "longitude": -1.40229, "elevation": 733 }
       ]
     },
     {
@@ -1274,8 +1278,8 @@
       "from": "AR-AR27",
       "to": "AR-AR29",
       "distance": 5.50,
-      "ascent": 70,
-      "descent": 40,
+      "ascent": 80,
+      "descent": 45,
       "waypoints": [
         { "latitude": 42.71109, "longitude": -1.60980, "elevation": 501 },
         { "latitude": 42.69680, "longitude": -1.63699, "elevation": 547 }
@@ -1419,8 +1423,14 @@
       "from": "AR-L1",
       "to": "AR-L2",
       "distance": 5.66,
-      "ascent": 15,
-      "descent": 5
+      "ascent": 60,
+      "descent": 10,
+      "waypoints": [
+        { "latitude": 42.61798, "longitude": -1.28337, "elevation": 413 },
+        { "latitude": 42.61700, "longitude": -1.28847, "elevation": 405 },
+        { "latitude": 42.61827, "longitude": -1.28445, "elevation": 416 },
+        { "latitude": 42.62521, "longitude": -1.30178, "elevation": 446 }
+      ]
     },
     {
       "from": "AR-L2",
@@ -1443,9 +1453,10 @@
       "ascent": 270,
       "descent": 120,
       "waypoints": [
+        { "latitude": 42.64475, "longitude": -1.36494, "elevation": 628 },
         { "latitude": 42.64898, "longitude": -1.37523, "elevation": 698 },
         { "latitude": 42.65443, "longitude": -1.39605, "elevation": 787 },
-        { "latitude": 42.65954, "longitude": -1.42272, "elevation": 673 }
+        { "latitude": 42.65622, "longitude": -1.40229, "elevation": 733 }
       ]
     },
     {
@@ -1677,20 +1688,27 @@
   "warnings": [
     {
       "type": "Barrier",
-      "condition": { "not": "AR-SL"},
       "description": "The distance from Sangüesa to Monreal is over 27km. This is not achievable with your current distance preferences. Consider using the Lumbier route to break the journey.@en",
-      "max-distance": 27.1
+      "condition": {
+        "not": "AR-SL"
+      },
+      "min-distance": null,
+      "max-distance": 27.10
     },
     {
       "type": "Barrier",
-      "condition": "AR-SP",
       "description": "The time from Jaca to Monasterio Nuevo de San Juan de Péna is over 6 hours. This is not achievable with your current time preferences.@en",
+      "condition": "AR-SP",
+      "min-distance": null,
+      "max-distance": null,
       "max-time": 6.6
     },
     {
       "type": "Barrier",
-      "condition": "AR-Y",
       "description": "The time from Lumbier to Monreal is over 6 hours. This is not achievable with your current time preferences.@en",
+      "condition": "AR-Y",
+      "min-distance": null,
+      "max-distance": null,
       "max-time": 6.6
     }
   ]

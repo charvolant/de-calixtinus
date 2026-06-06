@@ -65,6 +65,9 @@ The basic camino file has the following format:
     ...
   ],
   "default-route": ...
+  "warnings": [
+    ...
+  ]
 ```
 
 The `id`, `name`, `description` and `metadata` entries for the [header](#header) and
@@ -91,6 +94,8 @@ are redundant.
 The consequences of multiple routes can get very complicated and the [logic](#route-logic)
 helps untangle what's in, what's out and where you can go.
 
+The `warnings` chunk allows you to warn the user of possibly unwise choices when
+they select caminos and routes.
 
 ## Metadata
 
@@ -338,7 +343,7 @@ Otherwise, a note is a JSON object with a `type` and `text` field. For example
     {
       "type": "Directions",
       "text": "The crossing can be seen from the overpass. Go down the stairs to the left.@en"
-    }
+    },
     {
       "type": "Warning",
       "text": [
@@ -1060,6 +1065,42 @@ Complex conditions can be nested so "either R3 or R2 and not R1 are selected" ca
 }
 ```
 
+## Warnings
+
+Some caminos are not suitable for all levels of fitness and some combinations
+of routes may contain long stretches without accomodation or services,
+or have significant elevation changes.
+Warnings are indicators that the combination of camino, route and travel
+preferences are likely to spell trouble.
+
+A typical warning looks like
+
+```json
+{
+  "type": "Barrier",
+  "condition": { "not": "MD-V" },
+  "description": "The direct route from Cercedilla to Segovia passes through the Sierra de Guadarrama. It is over 28km, with over 600m ascent and descent. This is not achievable with your current distance preferences. Consider including the La Granja de San Ildefonso detour to help break the journey.@en",
+  "max-distance": 30.0
+}
+```
+
+with the following elements:
+
+* `type` One of the [note types](#notes) indicating how severe the warning is.
+  Generally, one of `Warning`, `Barrier` (indicating that this may make planning impossible)
+  or `Information` (nice to know).
+* `condition` The combination of routes that triggers this warning, using the same logic as [route logic conditions](#conditions).
+  This condition is usually combined with other conditions, discussed below)
+* `description` Localised text and [description](#description) describing the warning.
+  This can contain a full complement of descriptive information, including images if you want to show why this is not a good idea.
+* `travel` A list of the travel types that this warning applies to.
+* `fitness` A list of the fitness types that this warning applies to, eg `"fitness": [ "VeryUnfit", "Casual" ]`
+* `comfort` A list of the comfort levels that this wanring applies to.
+* `min-distance` Trigger if the minimum distance preference is above this level (in km).
+* `max-distance` Trigger if the maximum distance preference is below this level (in km).
+* `min-time` Trigger if the minimum time preference is above this level (in hours).
+* `max-time` Trigger if the maximum time preference is below this level (in hours).
+
 ## Tools
 
 ### Elevations
@@ -1080,9 +1121,9 @@ elevations-exe -k KEY CAMINO [-o OUTPUT] [-r REPORT]
 |----------|---------------------------------------------------------------------|----------------------------|-------------------| 
 | CAMINO   | A camino description in JSON form                                   | camino-portuguese.json     |                   |
 | KEY      | The API key                                                         | API_KEY                    |                   |
-| OUTPUT   | An optional output file. If not specified, the output is to stdout. | camino-portuguese-new.json |                   |                                                                     
 | REPORT   | Generate a report of position and elevation information in CSV form | elevations-portuguese.csv  |                   |                                                                     
 
+The input camino will be renamed to a backup and be replaced by the camino with elevations.
 
 ### Camino Check
 

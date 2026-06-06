@@ -111,6 +111,10 @@ Most of these we used when walking the Camino ourselves.
 * The [Bondi to Manly](https://www.bonditomanly.com/) website
 * And, of course, we did our own stuff.
 
+### Translations
+
+Spanish translations by Melodie Bustios
+
 ### Beware
 
 This is intended to be a helpful tool for people planning their trip.

@@ -133,6 +133,7 @@ HolidaysLabel: Feriados
 HomePageLabel: Inicio
 HomePageText1: Bienvenido a De Calixtinus.
 HomePageText2: Si estás planeando recorrer el Camino de Santiago, este sitio te permite desarrollar un conjunto de etapas diarias adaptadas a tu nivel físico y preferencias en términos de alojamiento, comida, etc. El planificador está diseñado para darte un conjunto globalmente óptimo de etapas, ampliando algunas y reduciendo otras para ofrecerte el mejor viaje posible.
+HomePageText3: Para iniciar pulse el botón ¡Comenzar! que aparece a continuación.
 HomeStayTitle: Permanecer en casa
 HostelTitle: Hostel
 HotelTitle: Hotel
@@ -347,7 +348,7 @@ TrainTitle: Tren
 TransportLinksLabel: Conexiones de transporte
 TransportLinks: Usar conexiones de transporte
 TransportLinksText: Permitir el uso de transporte público hacia alojamientos y servicios cercanos
-TravelBottom: Ten cuidado con la condición física. Lo normal es para un joven que camina con suficiente entrenamiento; alguien que puede caminar tres horas a 5 km/h sin cansarse. Si tienes alguna duda, elige "Poco en forma".
+TravelBottom: Ten cuidado con la condición física. Lo normal es para un joven que camina con suficiente entrenamiento; alguien que puede caminar tres horas a 5 km/h sin cansarse. Si tienes alguna duda, elige "Fuera de forma".
 TravelLabel: Estimación de viaje
 TravelText1: Para comenzar, elige la manera en que deseas viajar. Luego selecciona el nivel físico que tienes.
 TravelText2: El modo fácil te permite completar algunos campos sobre tu estilo de viaje y las rutas que deseas recorrer. Se utilizan valores predeterminados sensatos para aspectos como la distancia diaria, las preferencias de alojamiento, las paradas imprescindibles, etc. El modo detallado te permite ajustar con precisión tus preferencias en cuanto a distancia, alojamiento, paradas, etc. Sin embargo, el nivel de detalle puede ser bastante complejo. Usa el modo fácil para empezar y luego desmarca esta casilla para permitir un mayor nivel de detalle una vez que te familiarices con el sistema.
@@ -362,7 +363,7 @@ UnitsLabel: Unidades
 UnusedLabel: No usado
 USUnitsTitle: Millas, pies, horas
 VeryFitTitle: Muy en format
-VeryUnfitTitle: Poco en forma
+VeryUnfitTitle: Muy fuera de forma
 VillageDescription: Pequeña localidad rural con servicios y alojamientos limitados
 VillageTitle: Aldea
 WalkingNaismithTitle: Caminando (resistencia alta)

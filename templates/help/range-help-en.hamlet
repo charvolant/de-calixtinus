@@ -46,6 +46,8 @@
   The distance preferences describe how far you want to walk each day.
   This section allows you to specify the "walk about 20km each day" advice that is often given and
   place limits on how far you are willing to stray from that advice.
+  Distances are in kilometres or miles, depending on the units chosen; there is a bug in the code which
+  currently always labels the units as kilometres, no matter which units have been chosen, so both are shown.
 
 <p>
   These distances take no account of climbs or descents — these get factored into the planning in other ways.

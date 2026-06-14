@@ -82,8 +82,8 @@ DistanceMsg actual effort transport perceived: Distancia ^{formatDistance sou ac
    \, ^{formatDistance sou transport} transporte#
  \)
 DistancePenanceLabel: Distancia
-DistancePreferencesLabel: Preferencias de distancia (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
-DistancePreferencesPerceivedLabel: Preferencias de distancia percibidas (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+DistancePreferencesLabel: Preferencias de distancia (km/mi)
+DistancePreferencesPerceivedLabel: Preferencias de distancia percibidas (km/mi)
 DoubleTitle: Doble
 DoubleWcTitle: Doble con baño
 DownloadKmlTitle: Descargar KML
@@ -238,7 +238,9 @@ PublicHolidayText: Día festivo
 QuadrupleTitle: Habitación cuádruple
 QuadrupleWcTitle: Habitación cuádruple con baño
 RangeTitle: Preferencias de distancia y tiempo
-RangeText: Selecciona los rangos que prefieres para la distancia recorrida cada día (en km) y el tiempo dedicado a caminar (en horas). También indica cuántos días te gustaría caminar antes de tomar un día de descanso (día libre). Los rangos se definen mediante un mínimo absoluto, un límite inferior preferido, un objetivo, un límite superior preferido y un máximo absoluto.
+RangeText: Selecciona los rangos que prefieres para la distancia recorrida cada día y el tiempo dedicado a caminar.
+  \ También indica cuántos días te gustaría caminar antes de tomar un día de descanso (día libre).
+  \ Los rangos se definen mediante un mínimo absoluto, un límite inferior preferido, un objetivo, un límite superior preferido y un máximo absoluto.
 RefugeTitle: Refugio
 RegionLabel: Región
 RegionsLabel: Regiones
@@ -256,7 +258,7 @@ RestpointsLabel: Puntos de descanso
 RestPointsPenanceLabel: Puntos de descanso
 #RestPreferencesLabel: Preferencias de descanso (días de viaje)
 RestPreferencesLabel: Preferencias de descanso (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
-RestPressureLabel: Presión de reposo (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+RestPressureLabel: Presión de reposo (km/mi)
 RestPressurePenanceLabel: Presión en reposo
 RestServicePreferencesLabel: Servicios de descanso
 RoadTitle: Camino/sendero

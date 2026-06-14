@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## 0.10 - 2026-06-14
+
+### Added
+
+* Camino Aragones
+* Camino Madrid
+* Partial Spanish i18n (labels and messages only)
+* US units [#1](https://github.com/charvolant/de-calixtinus/issues/1)
+* Unified message catalogue with additional arguments and hamlet-style formatting
+* Water-body (lake, reservoir etc) location
+
+### Changed
+
+* Move warnings from general camino description to triggerable messages
+* Migrate to LTS-24.40
+* Get docker build to automatically choose S3 source
+
+### Fixes
+
+* Rework travel/non-travel legs to provide more accurate information to the planner
+* Camino del Norte French Route bypass error [#11](https://github.com/charvolant/de-calixtinus/issues/11)
+
 ## 0.9 - 2026-01-03
 
 ### Added

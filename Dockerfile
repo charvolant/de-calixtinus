@@ -1,5 +1,5 @@
-ARG VERSION="0.10-SNAPSHOT"
-FROM haskell:9.8-bullseye AS build
+ARG VERSION="0.10"
+FROM haskell:9.10-bookworm AS build
 ARG VERSION
 # Add debian packages
 RUN apt-get update && apt-get install -y pkg-config libexpat1-dev libbz2-dev
@@ -19,7 +19,7 @@ RUN case "$VERSION" in \
     esac
 RUN stack install --local-bin-path /app/bin :camino-server-exe
 # Finally build a clean image without all the build gunk
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 ARG VERSION
 LABEL title="De Calixtinus"
 LABEL description="A web server that allows users to enter travel preferences and creates a staged plan for the Camino Santiago"

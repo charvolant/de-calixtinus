@@ -84,12 +84,15 @@
 <h2>Camino Options
 
 <p>
-  Currently, there is source data for nine caminos:
+  Currently, there is source data for eleven caminos:
   the Camino Portuguese, the one we walked; the Camino Frances; the Camino del Norte; the Camino Ingles;
   the Camino Primitivo; the Camino Invierno (the winter camino);
-  the Vía de la Plata (silver way) joining either the Frances or Sanabrés; the Camino Sanabrés; and the Camino Fisterra.
+  the Vía de la Plata (silver way) joining either the Frances or Sanabrés; the Camino Sanabrés; the Camino Aragones;
+  the Camino Madrid; and the Camino Fisterra.
   I've also added in the Bondi-Manly walk, about as far away from the Camino Santiago as you can get, both
   figuratively and physically, for funsies.
+
+<p>
   Setting up the data for a Camino route is quite the undertaking, with the Portuguese route weighing in at
   over 9,000 lines of JSON.
   Each release tends to include a new camino, alternating between shortish camino, such as the Camino Ingles and

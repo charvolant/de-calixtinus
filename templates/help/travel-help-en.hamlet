@@ -10,6 +10,13 @@
   \ to walk and uses sensible defaults for other parameters.
   \ Once you have a plan, you can refine it by turning easy mode off and exploring other options in more detail.
 
+<h2 #units-help>Units
+
+<p>
+  De-calixtinus uses the metric system.
+  However, different units can be used to specify preferences and display results.
+  The options are the standard SI system of units (kilometres and metres) or the US system (miles and feet).
+
 <h2 #travel-help>Travel Types
 
 <p>

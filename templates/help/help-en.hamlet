@@ -42,7 +42,7 @@
   <div .aside .col-2 .m-1 .p-1 .float-end>
     De Calixtinus will work for any long walk where you need to break the walk into stages.
     See the Bondi-Manly walk for an example.
-    We have the data for nine actual Caminos at the moment, along with various
+    We have the data for eleven actual Caminos at the moment, along with various
     alternative routes and options.
 
   De Calixtinus is a tool for people planning to walk the Camino Santiago.
@@ -120,6 +120,18 @@
        <th scope="col">Preference
        <th scope="col">Description
   <tbody>
+    <tr>
+      <td>Easy Mode
+      <td>
+          Use sensible defaults, based on travel type, fitness and comfort preferences for complicated
+          things like choice of accommodation.
+    <tr>
+      <td>Units
+      <td>
+          The units to use when specifying preferences and displaying results.
+          The options are the standard SI system of units (kilometres and metres) or the US system (miles and feet).
+          Since these systems of units are not neatly convertible, there may be slight variations in the plan
+          if you switch between them.
     <tr>
       <td>Travel Type
       <td>
@@ -315,7 +327,8 @@
   <a href="#penance-help">penance
   anything between the lower and upper bound is acceptable.
   Between the lower and minimum bounds, similarly for between the upper and maximum bounds, an additional penance is applied.
-  Falling outside the minimum and maximum values will result in a rejection.
+  Falling outside the minimum and maximum values will usually result in a rejection, unless there is some overriding
+  set of circumstances, such as the end being in sight or a long stretch with no accommodation.
 
 <h2 #penance-help>Penance
 
@@ -352,7 +365,7 @@
       <li>
         Naismith's rule, which estimates walking time based on a mixture of distance and ascent.
         \ Naismith was a surveyor who spent most of his time walking and had a very consistent stride.
-        \ It assumes that someone fit enough to not slow up when descending a slope.
+        \ It assumes that someone is strong enough to not slow up when descending a slope.
         \ This rule is used for very fit and super-fit walkers.
      <li>
         Tobler's hiking function, which combines distance, ascent and descent.
@@ -373,10 +386,9 @@
     The perceived distance forms the basis of the penance score.
   <li>
     A user can express preferences in terms of a distance range and time range.
-    A small amount of additional penance is added for being away from the target distance.
     Once the distance or time is outside the normal lower and upper bounds of the range, more penance is
     calculated to indicate either a heartbreakingly long day or an embarrassingly short walk.
-    There are also hard maximum and minimum limits, which will cause the day to be rejected as a possible solution.
+    There are also hard maximum and minimum limits, which will usually cause the day to be rejected as a possible solution.
   <li>
     A stop penance is added.
     This represents the business of settling down for the night, paying for accommodation, food costs and the like.
@@ -410,21 +422,21 @@
       accommodation in that location is chosen.
       In addition, accommodation can sometimes be chosen to fill out missing services from the surrounding location.
       For example, a hotel with a restaurant may be chosen if one is desired but not present at the stop.
+    <div .aside .col-2 .m-1 .p-1 .float-end>
+      <p>
+        For example, if the best option in this location is a hotel (1.5km preference) but 2.4km away there is an
+        albergue (5.0km preference) then the accommodation penance is (5.0 - 1.5) - 2.4 = 1.1km, essentially suggesting
+        that it might be worth breaking your journey early or keeping on going for a bit.
+      <p>
+        In most cases, the local option is the best option and the accommodation penance is 0km.
     <p>
       The preferred accommodation in that location is then compared with accommodation options in nearby locations.
       If there is a nearby location with a potentially better option then the distance-adjusted difference between
       the two preferences is added to the accommodation penance.
-    <p>
-      For example, if the best option in this location is a hotel (1.5km preference) but 2.4km away there is an
-      albergue (5.0km preference) then the accommodation penance is (5.0 - 1.5) - 2.4 = 1.1km, essentially suggesting
-      that it might be worth breaking your journey early or keeping on going for a bit.
-    <p>
-      In most cases, the local option is the best option and the accommodation penance is 0km.
   <li #rest-pressure>
     <p>
-      Rest pressure works in the same way as location penance, but looks to see if there is a suiable
+      Rest pressure works in the same way as location penance, but looks to see if there is a suitable
       rest-point nearby.
-    <p>
       Good rest-points are relatively rare and rest pressure is more diffuse than the location penance.
   <li>
     The final penance is the combined penance of the perceived walking distance,
@@ -509,7 +521,7 @@
     <button .btn .btn-secondary>
       <span .ca-document-spreadsheet>
   <dd .col-11>
-    Download the plan in the form of a spreadsheet, openable by Microsoft Office or LibreOffice.
+    Download the plan in the form of a spreadsheet, openable by Microsoft Office, LibreOffice, etc.
     The downloaded spreadsheet uses formulas when calculating dates, distances etc.
     This should allow you to adjust your plan.
     <span .text-warning>
@@ -541,6 +553,11 @@
   As you zoom in further, points of interest are displayed.
   Similarly, zoomed out, the camino route will just be lines between places.
   As you zoom in, a more accurate trail will be shown.
+
+<p>
+  The label button
+  <span .ca-label>
+  allows you to cycle between various levels of labelling of caminos, major routes and minor route variations.
 
 <p>
   The links between waypoints are shown as a line between the waypoints.
@@ -1419,10 +1436,13 @@
 <p>
   There may also be additional notes attached, with
   <span .description-icon .ca-information>
-  <span .description-icon .ca-warning>
+  <span .note-warning>
+    <span .description-icon .note-type .ca-warning>
+  <span .note-barrier>
+    <span .description-icon .note-type .ca-warning>
   <span .description-icon .ca-map>
   <span .description-icon .ca-key>
-  indicating additional information, a warning of some sort, directions or how to access something.
+  indicating additional information, a warning or danger of some sort, directions or how to access something.
 
 <h3 #event-help>Events
 

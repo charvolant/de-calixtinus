@@ -28,6 +28,7 @@ import Data.Text (Text, unpack)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, decodeUtf8Lenient)
 import Language.Haskell.TH
+import Language.Haskell.TH.Syntax
 import Language.Haskell.TH.Variables
 import System.Directory (doesFileExist)
 import System.FilePath (stripExtension, (</>))
@@ -113,6 +114,7 @@ loadLang folder file = do
     let lang = stripExtension ".msg" file
     case (e, lang) of
       (True, Just lang') -> do
+        addDependentFile file'
         bs <- runIO $ BS.readFile file'
         let lang'' = T.pack lang'
         let s = decodeUtf8 bs

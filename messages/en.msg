@@ -144,7 +144,7 @@ HolidayEventTitle: Holiday
 HolidaysLabel: Holidays
 HomePageLabel: Home
 HomePageText1: Welcome to De Calixtinus.
-HomePageText2: If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accommodation, food etc. The panner is designed to give you a globally optimal set of stages, stretching some a bit and reducing others, to give you the best overall trip.
+HomePageText2: If you are planning to walk the Camino Santiago, this site allows you to develop a set of daily stages tailored to your level of fitness and preferences in terms of accommodation, food etc. The planner is designed to give you a globally optimal set of stages, stretching some a bit and reducing others, to give you the best overall trip.
 HomePageText3: To begin, press the Start button below.
 HomeStayTitle: Home Stay
 HostelTitle: Hostel

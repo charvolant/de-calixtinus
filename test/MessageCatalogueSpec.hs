@@ -69,7 +69,7 @@ testReadLangs = TestList [
   ]
 
 testReadLangs1 = TestCase (do
-  entries <- runQ $ loadLang "./test/messages1" "en.msg"
+  entries <- runQ $ loadLang False "./test/messages1" "en.msg"
   assertBool "Read Langs 1 1" (isJust entries)
   let ca = fromJust entries
   assertEqual "Read Langs 1 2" "en" (caLang ca)
@@ -77,17 +77,17 @@ testReadLangs1 = TestCase (do
   )
 
 testReadLangs2 = TestCase (do
-  entries <- runQ $ loadLang "./test/messages1" "ez.msg"
+  entries <- runQ $ loadLang False "./test/messages1" "ez.msg"
   assertBool "Read Langs 2 1" (isNothing entries)
   )
 
 testReadLangs3 = TestCase (do
-  entries <- runQ $ loadLang "./test/messages1" "en.txt"
+  entries <- runQ $ loadLang False "./test/messages1" "en.txt"
   assertBool "Read Langs 3 1" (isNothing entries)
   )
 
 testReadLangs4 = TestCase (do
-  entries <- runQ $ loadLang "./test/messages2" "pt.msg"
+  entries <- runQ $ loadLang False "./test/messages2" "pt.msg"
   assertBool "Read Langs 4 1" (isJust entries)
   let ca = fromJust entries
   assertEqual "Read Langs 4 2" "pt" (caLang ca)
@@ -489,7 +489,7 @@ instance Text.Shakespeare.I18N.RenderMessage Test TestMessage
 |]
 
 testMkMessageCatalogue1 = TestCase (do
-  dec <- runQ $ mkMessageCatalogueSimple "Test" "./test/messages1" "en"
+  dec <- runQ $ mkMessageCatalogueSimple False "Test" "./test/messages1" "en"
   assertEqualStripped "Make MkMessageCatalogue 1 1" mk1 (pprint dec)
   )
 
@@ -525,6 +525,6 @@ instance Text.Shakespeare.I18N.RenderMessage a TestMsg
                                                    where {locales = GHC.Internal.Base.map (GHC.Internal.Data.String.fromString GHC.Internal.Base.. Data.Text.Show.unpack) langs}}
 |]
 testMkMessageCatalogue2 = TestCase (do
-  dec <- runQ $ mkMessageCatalogue (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en" (Just $ mkName "TestApp")
+  dec <- runQ $ mkMessageCatalogue False (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en" (Just $ mkName "TestApp")
   assertEqualStripped "Make MkMessageCatalogue 2 1" mk2 (pprint dec)
   )

@@ -140,16 +140,17 @@ import Text.Shakespeare.I18N (Lang)
 --
 --   The render function is an instance of `Text.Shakespeare.I18N.RenderMessage`
 
-mkMessageCatalogueSimple :: String -- ^ The application data type
-          -> FilePath -- ^ The folder containing the language-tagged message files
-          -> Lang -- ^ The default language
-          -> Q [Dec]
-mkMessageCatalogueSimple dt folder lang = let
+mkMessageCatalogueSimple :: Bool -- ^ Include message files as dependencies
+  -> String -- ^ The application data type
+  -> FilePath -- ^ The folder containing the language-tagged message files
+  -> Lang -- ^ The default language
+  -> Q [Dec]
+mkMessageCatalogueSimple deps dt folder lang = let
     aname = mkName dt
     mname = mkName $ dt ++ "Message"
     params = [("master", aname)]
   in
-    mkMessageCatalogue  mname ''Lang params folder lang (Just aname)
+    mkMessageCatalogue  deps mname ''Lang params folder lang (Just aname)
 
 -- | Create a message catalogue.
 --
@@ -173,16 +174,17 @@ mkMessageCatalogueSimple dt folder lang = let
 --
 --   This will produce a main render function @renderMyAppMsg :: MyApp -> Region -> [Lang] -> MyAppMsg -> Html@ and
 --   an instance of `Text.Shakespeare.I18N.RenderMessage` that uses `def` for the region.
-mkMessageCatalogue :: Name -- ^ The message type
+mkMessageCatalogue :: Bool -- ^ Include message files as a dependency
+  -> Name -- ^ The message type
   -> Name -- ^ The type of the language\/locale (the list of requested languages\/locales will be placed in the reserved @locales@ parameter)
   -> [(String, Name)] -- ^ The names and types of additional context parameters (see below for information about distinguished application data)
   -> FilePath -- ^ The folder containing the language-tagged message files
   -> Text -- ^ The default language, using the string representation
   -> Maybe Name -- ^ The optional application data type. If specified, an instance of `RenderMessage` for the catalogue will be created
   -> Q [Dec]
-mkMessageCatalogue mtype ltype params folder lang mdtype = do
+mkMessageCatalogue deps mtype ltype params folder lang mdtype = do
   files <- qRunIO $ getDirectoryContents folder
-  contents <- fmap catMaybes $ mapM (loadLang folder) files
+  contents <- fmap catMaybes $ mapM (loadLang deps folder) files
   base <- findBase lang contents
   let ctx = MessageContext {
       mcRender = mkName $ "render" ++ nameBase mtype

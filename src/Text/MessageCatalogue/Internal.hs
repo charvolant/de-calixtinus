@@ -107,14 +107,14 @@ defaultBang = Bang NoSourceUnpackedness NoSourceStrictness
 defaultBangQ :: Q Bang
 defaultBangQ = return defaultBang
 
-loadLang :: FilePath -> FilePath -> Q (Maybe Catalogue)
-loadLang folder file = do
+loadLang :: Bool -> FilePath -> FilePath -> Q (Maybe Catalogue)
+loadLang deps folder file = do
     let file' = folder </> file
     e <- runIO $ doesFileExist file'
     let lang = stripExtension ".msg" file
     case (e, lang) of
       (True, Just lang') -> do
-        addDependentFile file'
+        when deps (addDependentFile file')
         bs <- runIO $ BS.readFile file'
         let lang'' = T.pack lang'
         let s = decodeUtf8 bs

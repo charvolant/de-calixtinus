@@ -1,4 +1,4 @@
-ARG VERSION="0.10"
+ARG VERSION="0.11-SNAPSHOT"
 FROM haskell:9.10-bookworm AS build
 ARG VERSION
 # Add debian packages

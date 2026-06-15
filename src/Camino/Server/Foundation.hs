@@ -518,7 +518,7 @@ defaultCookieSecure = do
 --
 --   Update this as terms change
 noticeVersion :: Text
-noticeVersion = "Accept 0.10"
+noticeVersion = "Accept 0.11"
 
 -- | The "accept terms" notice cookie
 noticeCookie :: Text

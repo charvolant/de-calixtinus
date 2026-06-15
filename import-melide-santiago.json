@@ -1,7 +1,7 @@
 {
   "id": "I-MS",
   "name": "Melide to Santiago@en",
-  "description": "Import for Melide to Santiago, used by both French and Primitivo",
+  "description": "Import for Melide to Santiago, used by French and Primitivo and others",
   "metadata": {
     "statements": [
       {

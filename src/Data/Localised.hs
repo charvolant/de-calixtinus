@@ -247,7 +247,7 @@ spanishTimeLocale = rootTimeLocale {
         , ("martes", "mar")
         , ("miércoles", "mié")
         , ("jueves", "jue")
-        , ("viernes", "bie")
+        , ("viernes", "vie")
         , ("sábado", "sáb")
         ]
     , months =

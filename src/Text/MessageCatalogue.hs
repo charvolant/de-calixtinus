@@ -113,13 +113,18 @@ If the render function is being generated, you may need to include @{-# LANGUAGE
 module Text.MessageCatalogue (
     mkMessageCatalogueSimple
   , mkMessageCatalogue
+  , mkMessageCatalogueRender
+  , Text.MessageCatalogue.Internal.RenderCatalogueMessage0(..)
+  , Text.MessageCatalogue.Internal.RenderCatalogueMessage1(..)
+  , Text.MessageCatalogue.Internal.RenderCatalogueMessage2(..)
+  , Text.MessageCatalogue.Internal.Renderer
   , Text.MessageCatalogue.Internal.renderMarkupToText
 ) where
 
 import Control.Monad (unless)
 import Text.MessageCatalogue.Internal
 import qualified Data.List as L
-import Data.Maybe (catMaybes, isJust)
+import Data.Maybe (catMaybes)
 import Data.Text (Text, unpack)
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
@@ -145,12 +150,15 @@ mkMessageCatalogueSimple :: Bool -- ^ Include message files as dependencies
   -> FilePath -- ^ The folder containing the language-tagged message files
   -> Lang -- ^ The default language
   -> Q [Dec]
-mkMessageCatalogueSimple deps dt folder lang = let
+mkMessageCatalogueSimple deps dt folder lang = do
+  let
     aname = mkName dt
     mname = mkName $ dt ++ "Message"
     params = [("master", aname)]
-  in
-    mkMessageCatalogue  deps mname ''Lang params folder lang (Just aname)
+  catalogue <- mkMessageCatalogue deps mname ''Lang params folder lang
+  instances <- mkMessageCatalogueRender mname ''Lang Nothing aname params
+  return $ catalogue ++ instances
+
 
 -- | Create a message catalogue.
 --
@@ -180,18 +188,18 @@ mkMessageCatalogue :: Bool -- ^ Include message files as a dependency
   -> [(String, Name)] -- ^ The names and types of additional context parameters (see below for information about distinguished application data)
   -> FilePath -- ^ The folder containing the language-tagged message files
   -> Text -- ^ The default language, using the string representation
-  -> Maybe Name -- ^ The optional application data type. If specified, an instance of `RenderMessage` for the catalogue will be created
   -> Q [Dec]
-mkMessageCatalogue deps mtype ltype params folder lang mdtype = do
+mkMessageCatalogue deps mtype ltype params folder lang = do
   files <- qRunIO $ getDirectoryContents folder
   contents <- fmap catMaybes $ mapM (loadLang deps folder) files
   base <- findBase lang contents
   let ctx = MessageContext {
       mcRender = mkName $ "render" ++ nameBase mtype
-    , mcAppType = ConT <$> mdtype
+    , mcAppType = Nothing
     , mcMsg = Param (mkName "msg") (ConT mtype)
     , mcLocale = Param (mkName "locale") (ConT ltype)
     , mcLocales = Param (mkName "locales") (ListT `AppT` ConT ltype)
+    , mcLocaleLookup = Nothing
     , mcMarkupType = htmlType
     , mcContext = map (\(n, t) -> Param (mkName n) (ConT t)) params
     , mcBase = base
@@ -201,8 +209,7 @@ mkMessageCatalogue deps mtype ltype params folder lang mdtype = do
   datadec <- makeDataDec ctx
   msgdecs <- mapM (makeCatalogueDec ctx) contents
   renderdec <- makeRenderDec ctx contents
-  instancedec <- if isJust mdtype then makeInstanceDec ctx else return []
-  let decs = datadec ++ concat msgdecs ++ renderdec ++ instancedec
+  let decs = datadec ++ concat msgdecs ++ renderdec
   return decs
 
 findBase :: Lang -> [Catalogue] -> Q Catalogue
@@ -212,3 +219,44 @@ findBase lang catalogues = do
       fail ("Can't find main catalogue of language " ++ unpack lang)
     (Just catalogue) ->
       return catalogue
+
+-- | Create a message catalogue render instances.
+--
+--   This creates instances of `MessageCatalogueRender` and `MessageRender` for the
+--
+--   A typical invocation is
+--   @
+--     mkMessageCatalogue (mkName "MyAppMsg") ''Lang [("sub", ''MyApp), ("region", ''Region) "messages" "en" (Just ''MyApp)
+--   @
+--
+--   In this case:
+--
+--   * @"MyAppMsg"@ is the message data type. This will be created by @mkMessageCatalogue@, so @''MyAppMsg@ won't work.
+--   * @''Lang@ is the locale data type. This is the standard Lang type used by Yesod but can be any locale type that is an instance of `Data.String.IsString` and `Eq`
+--   * @("sub", ''MyApp)@ is a contextual parameter that provides the master application. This needs to be specified, as well as the data type in the first argument if you want to pass the application context to the messages.
+--   * @("region", ''Region)@ is a contextual parameter that provides an additional region parameter to the message. Non master application types need to be an instance of `Data.Default.Class.Default`
+--   * @"messages"@ is the directory that holds the message catalogue files
+--   * @"en"@ is the base message catalogue
+--   * @''MyApp@ is the master application data type. This is optional and, if Nothing, will result in a "masterless" message catalogue
+--
+--   This will produce a main render function @renderMyAppMsg :: MyApp -> Region -> [Lang] -> MyAppMsg -> Html@ and
+--   an instance of `Text.Shakespeare.I18N.RenderMessage` that uses `def` for the region.
+mkMessageCatalogueRender :: Name -- ^ The message type
+  -> Name -- ^ The type of the language\/locale (the list of requested languages\/locales will be placed in the reserved @locales@ parameter)
+  -> Maybe Name -- ^ An optional name of the function that traslates a `Lang` into a Maybe locale
+  -> Name -- ^ The type of the master application
+  -> [(String, Name)] -- ^ The names and types of additional context parameters (see below for information about distinguished application data)
+  -> Q [Dec]
+mkMessageCatalogueRender mtype ltype mlookup stype params = do
+  let ctx = MessageContext {
+      mcRender = mkName $ "render" ++ nameBase mtype
+    , mcAppType = Just (ConT stype)
+    , mcMsg = Param (mkName "msg") (ConT mtype)
+    , mcLocale = Param (mkName "locale") (ConT ltype)
+    , mcLocales = Param (mkName "locales") (ListT `AppT` ConT ltype)
+    , mcLocaleLookup = mlookup
+    , mcMarkupType = htmlType
+    , mcContext = map (\(n, t) -> Param (mkName n) (ConT t)) params
+    , mcBase = Catalogue "*" []
+  }
+  makeInstanceDec ctx

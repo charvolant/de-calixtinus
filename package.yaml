@@ -52,6 +52,7 @@ dependencies:
   - template-haskell
   - text
   - time
+  - transformers
   - uuid
   - vector
   - warp

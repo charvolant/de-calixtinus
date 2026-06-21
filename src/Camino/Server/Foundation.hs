@@ -50,8 +50,9 @@ import Camino.Server.Settings (widgetFile)
 import Text.Hamlet (HtmlUrlI18n, ihamletFile)
 import Text.Read (readMaybe)
 import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
-import Data.Util (headWithDefault)
+import Data.Util (commaJoin, headWithDefault)
 import Camino.Config (AssetConfig(assetPath))
+import Text.MessageCatalogue
 
 -- Generic placeholder date
 placeholderDate :: Day
@@ -399,11 +400,16 @@ permittedRestPoints prefs locs = let
 
 mkYesodData "CaminoApp" $(parseRoutesFile "config/routes.yesodroutes")
 
-instance RenderMessage CaminoApp FormMessage where
-    renderMessage _ _ = defaultFormMessage
+instance RenderCatalogueMessage1 U.SystemOfUnits CaminoApp CaminoMsg where
+  renderMessageHtml1 sou site langs msg = renderCaminoMsg (caminoAppConfig site) sou (catMaybes $ map localeFromID langs) msg
+  renderMessageText1 sou site langs (ListMsg msgs) = commaJoin $ map (renderMessageText1 sou site langs) msgs
+  renderMessageText1 sou site langs msg = renderMarkupToText $ renderMessageHtml1 sou site langs msg
 
 instance RenderMessage CaminoApp CaminoMsg where
-    renderMessage master langs msg = toStrict $ renderHtml $ renderCaminoMsg (caminoAppConfig master) U.SIUnits (catMaybes $ map localeFromID langs) msg
+  renderMessage site langs msg = renderMessageText1 (def :: U.SystemOfUnits) site langs msg
+
+caminoMsgRenderer :: U.SystemOfUnits -> Renderer CaminoApp CaminoMsg
+caminoMsgRenderer sou site langs msg = renderCaminoMsg (caminoAppConfig site) sou (catMaybes $ map localeFromID langs) msg
 
 instance Yesod CaminoApp where
   approot = ApprootMaster (C.getWebRoot . caminoAppConfig)

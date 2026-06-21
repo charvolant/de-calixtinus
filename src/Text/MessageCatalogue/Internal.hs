@@ -1,8 +1,12 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 {-# OPTIONS_HADDOCK hide #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-|
 Module      : Text.MessageCatalogue.Internal
 Description : Message catalogue implementation
@@ -18,7 +22,7 @@ import qualified Control.Exception as CE
 import Control.Monad (void, when)
 import qualified Data.ByteString as BS
 import Data.Char (isLetter)
-import Data.Default.Class (def)
+import Data.Default.Class (def, Default)
 import qualified Data.List as L
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -38,6 +42,46 @@ import Text.Hamlet
 import Text.Parsec
 import Text.Parsec.String (Parser)
 import Text.Shakespeare.I18N (Lang, RenderMessage, renderMessage)
+
+-- | The basic renderer for an application context and message
+type Renderer master message = master -> [Lang] -> message -> Html
+
+-- | Render a message to Html or text for a message catalgue with zero additional context parameters.
+--
+-- This corresponds to the standard shakespeare `renderMessage`.
+class RenderCatalogueMessage0 master message where
+  renderMessageHtml0 :: master -> [Lang] -> message -> Html
+  renderMessageHtml0 site langs msg = toHtml $ renderMessageText0 site langs msg
+
+  renderMessageText0 :: master -> [Lang] -> message -> Text
+  renderMessageText0 site langs msg = renderMarkupToText $ renderMessageHtml0 site langs msg
+  {-# MINIMAL renderMessageHtml0 | renderMessageText0 #-}
+
+-- | Render a message to Html or text for a message catalgue with one additional context parameter.
+--
+-- See `RenderCatalogueMessage0`
+class (Default c1) => RenderCatalogueMessage1 c1 master message where
+  renderMessageHtml1 :: c1 -> master -> [Lang] -> message -> Html
+  renderMessageHtml1 ctx1 site langs msg = toHtml $ renderMessageText1 ctx1 site langs msg
+
+  renderMessageText1 ::c1 -> master -> [Lang] -> message -> Text
+  renderMessageText1 ctx1 site langs msg = renderMarkupToText $ renderMessageHtml1 ctx1 site langs msg
+  {-# MINIMAL renderMessageHtml1 | renderMessageText1 #-}
+
+-- | Render a message to Html or text for a message catalgue with two additional context parameters.
+--
+-- See `RenderCatalogueMessage0`
+class (Default c1, Default c2) => RenderCatalogueMessage2 c1 c2 master message where
+  renderMessageHtml2 :: c1 -> c2 -> master -> [Lang] -> message -> Html
+  renderMessageHtml2 ctx1 ctx2 site langs msg = toHtml $ renderMessageText2 ctx1 ctx2 site langs msg
+
+  renderMessageText2 ::c1 -> c2 -> master -> [Lang] -> message -> Text
+  renderMessageText2 ctx1 ctx2 site langs msg = renderMarkupToText $ renderMessageHtml2 ctx1 ctx2 site langs msg
+  {-# MINIMAL renderMessageHtml2 | renderMessageText2 #-}
+
+-- Instance for simple text
+instance RenderCatalogueMessage0 master Text where
+  renderMessageText0 _site _langs = id
 
 data Param = Param {
     paName :: Name
@@ -61,6 +105,7 @@ data MessageContext = MessageContext {
   , mcMsg :: Param
   , mcLocale :: Param
   , mcLocales :: Param
+  , mcLocaleLookup :: Maybe Name
   , mcMarkupType :: Type
   , mcContext :: [Param]
   , mcBase :: Catalogue

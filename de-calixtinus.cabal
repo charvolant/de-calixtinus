@@ -44,9 +44,9 @@ library
       Camino.Server.Application
       Camino.Server.Fields
       Camino.Server.Forms
+      Camino.Server.Forms.Functions
       Camino.Server.Foundation
       Camino.Server.Settings
-      Camino.Units
       Camino.Walking
       Data.Aeson.Formatting
       Data.Cache
@@ -62,6 +62,7 @@ library
       Data.Region
       Data.Spline
       Data.Summary
+      Data.Units
       Data.Util
       Data.Xlsx
       Data.Xlsx.Internal
@@ -109,6 +110,7 @@ library
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -163,6 +165,7 @@ executable camino-check-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -217,6 +220,7 @@ executable camino-map-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -271,6 +275,7 @@ executable camino-planner-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -325,6 +330,7 @@ executable camino-server-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -379,6 +385,7 @@ executable elevations-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -433,6 +440,7 @@ executable generate-static-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -487,6 +495,7 @@ executable pretty-json-exe
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp
@@ -567,6 +576,7 @@ test-suite de-calixtinus-test
     , template-haskell
     , text
     , time
+    , transformers
     , uuid
     , vector
     , warp

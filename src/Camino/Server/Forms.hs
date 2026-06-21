@@ -45,6 +45,7 @@ import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationType
 import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
+import Camino.Server.Forms.Functions
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
 import Data.Localised (Locale, localiseText)
@@ -58,6 +59,7 @@ import Data.Time.Calendar (Day)
 import Formatting
 import Text.Hamlet
 import Yesod
+import Text.MessageCatalogue
 
 -- | Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
@@ -176,6 +178,10 @@ findLocationByPoi (Just camino) poi = snd <$> M.lookup (poiID poi) (caminoPoiMap
 fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Camino.Route
 fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
 fullRoutes _ routes = routes
+
+
+catalogueFieldSettingsLabelName :: message -> Text -> CatalogueFieldSettings master message
+catalogueFieldSettingsLabelName msg name = CatalogueFieldSettings msg Nothing Nothing (Just name) []
 
 fieldSettingsLabelName :: RenderMessage site msg => msg -> Text -> FieldSettings site
 fieldSettingsLabelName msg name = FieldSettings (SomeMessage msg) Nothing Nothing (Just name) []
@@ -592,15 +598,16 @@ chooseRangeForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (Form
 chooseRangeForm help prefs extra = do
     master <- getYesod
     let sou = maybe U.SIUnits prefUnits prefs
+    let render = caminoMsgRenderer sou
     let (dlow, dhigh, dstep) = distanceRanges (maybe Walking prefTravel prefs)
     let distanceRangeField = rangeFieldQuantity sou U.Distance dlow dhigh dstep
     let timeRangeField = rangeFieldQuantity sou U.Time 0.0 16.0 0.1
     let restRangeField = rangeFieldNumber 0 10 1 id id
     let restPressureField = floatFieldQuantity sou U.Distance 0 20 1
-    (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabelName (DistancePreferencesLabel) "distance") (prefDistance <$> prefs)
-    (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabelName TimePreferencesLabel "time") (prefTime <$> prefs)
-    (reRes, reView) <- mreq restRangeField (fieldSettingsLabelName RestPreferencesLabel "rest") (prefRest <$> prefs)
-    (rpRes, rpView) <- mopt restPressureField (fieldSettingsLabelName RestPressureLabel "restPressure") (prefRestPressure <$> prefs)
+    (diRes, diView) <- mreqr render distanceRangeField (catalogueFieldSettingsLabelName DistancePreferencesLabel "distance") (prefDistance <$> prefs)
+    (tiRes, tiView) <- mreqr render timeRangeField (catalogueFieldSettingsLabelName TimePreferencesLabel "time") (prefTime <$> prefs)
+    (reRes, reView) <- mreqr render restRangeField (catalogueFieldSettingsLabelName RestPreferencesLabel "rest") (prefRest <$> prefs)
+    (rpRes, rpView) <- moptr render restPressureField (catalogueFieldSettingsLabelName RestPressureLabel "restPressure") (prefRestPressure <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resDistance = diRes

@@ -340,10 +340,9 @@ renderLocalisedRegion config _sou locs rid = maybe (toHtml rid) (\r -> renderLoc
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
 
-mkMessageCatalogue True (mkName "CaminoMsg") ''Locale [("config", ''Config), ("sou", ''U.SystemOfUnits)] "messages" "en" Nothing
+mkMessageCatalogue True (mkName "CaminoMsg") ''Locale [("config", ''Config), ("sou", ''U.SystemOfUnits)] "messages" "en"
 
 -- | Render a camino message as un-markuped text
 renderCaminoMsgText :: Config -> U.SystemOfUnits -> [Locale] -> CaminoMsg -> Text
 renderCaminoMsgText config sou locales (ListMsg msgs) = commaJoin $ Prelude.map (renderCaminoMsgText config sou locales) msgs
 renderCaminoMsgText config sou locales msg = renderMarkupToText $ renderCaminoMsg config sou locales msg
-

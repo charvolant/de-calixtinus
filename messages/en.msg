@@ -94,8 +94,8 @@ DistanceMsg actual@Float effort@Float transport@Float perceived@(Maybe Float): D
    \, transport ^{formatDistance sou transport}#
  \)
 DistancePenanceLabel: Distance
-DistancePreferencesLabel: Distance Preferences (km/mi)
-DistancePreferencesPerceivedLabel: Perceived Distance Preferences (km/mi)
+DistancePreferencesLabel: Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+DistancePreferencesPerceivedLabel: Perceived Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 DoubleTitle: Double
 DoubleWcTitle: Double with WC
 DownloadKmlTitle: Download KML
@@ -266,7 +266,9 @@ PublicHolidayText: Public Holiday
 QuadrupleTitle: Quadruple
 QuadrupleWcTitle: Quadruple with WC
 RangeTitle: Distance and Time Preferences
-RangeText: Select the ranges that you will accept for both distance travelled over a day and time taken for each day.
+RangeText: Select the ranges that you will accept for both distance travelled over a day
+  \ (in #{U.unitSymbol (U.preferredUnit sou U.Distance)})
+  \ and time taken for each day (in #{U.unitSymbol (U.preferredUnit sou U.Time)}).
   \ Also select the range for how many days you wish to travel before resting.
   \ The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RefugeTitle: Refuge
@@ -284,7 +286,7 @@ RestpointLabel: Rest Point
 RestpointsLabel: Rest Points
 RestPointsPenanceLabel: Rest Points
 RestPreferencesLabel: Rest Preferences (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
-RestPressureLabel: Rest Pressure (km/mi)
+RestPressureLabel: Rest Pressure (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
 RestPressurePenanceLabel: Rest Pressure
 RestServicePreferencesLabel: Rest Services
 RoadTitle: Road/path

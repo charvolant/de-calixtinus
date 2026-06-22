@@ -20,7 +20,6 @@ module Camino.Display.Static (
 
 import Camino.Colour
 import Camino.Config
-import qualified Camino.Units as U
 import Camino.Display.Css
 import Camino.Display.Html
 import Camino.Display.I18n
@@ -30,6 +29,7 @@ import Data.Localised
 import Data.Text (Text)
 import qualified Data.Text.Lazy as LT (concat)
 import qualified Data.Text.Lazy.IO as LTIO (writeFile)
+import qualified Data.Units as U
 import System.Directory
 import System.FilePath
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
@@ -86,7 +86,7 @@ createColourSwatch :: Config -> FilePath -> IO ()
 createColourSwatch config output = do
   let locales = [rootLocale]
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   let swatch = createColourMap config
   let file = output </> "colours.svg"
   createDirectoryIfMissing True output
@@ -96,7 +96,7 @@ createHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRo
 createHelpFile config loc file html = do
   let locales = [loc, rootLocale]
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   LB.writeFile file $ renderHtml $ html messages router
   
 _createStandAloneHelpFile :: Config -> Locale -> FilePath -> HtmlUrlI18n CaminoMsg CaminoRoute -> Text -> IO ()

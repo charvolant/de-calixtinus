@@ -29,7 +29,6 @@ import Camino.Colour
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
-import qualified Camino.Units as U
 import Camino.Display.Html
 import Camino.Display.I18n
 import Control.Applicative ((<|>))
@@ -50,8 +49,10 @@ import qualified Data.Set as S
 import Data.Text (Text, pack)
 import qualified Data.Time.Calendar as C
 import Data.Time.Format.ISO8601
+import qualified Data.Units as U
 import Data.Util
 import Data.Xlsx
+import Data.Units (SystemOfUnits)
 
 -- What most of the sheets work in
 type Cslab = Slab (Cell CaminoMsg)
@@ -61,6 +62,12 @@ convertKm sou v = realToFrac $ U.convertAmount U.Kilometre unit v where unit = U
 
 convertM :: (RealFrac a) => U.SystemOfUnits -> a -> Double
 convertM sou v = realToFrac $ U.convertAmount U.Metre unit v where unit = U.preferredUnit sou U.Elevation
+
+convertHrs :: (RealFrac a) => U.SystemOfUnits -> a -> Double
+convertHrs sou v = realToFrac $ U.convertAmount U.Hour unit v where unit = U.preferredUnit sou U.Time
+
+convertDays :: (RealFrac a) => U.SystemOfUnits -> a -> Double
+convertDays sou v = realToFrac $ U.convertAmount U.Day unit v where unit = U.preferredUnit sou U.Calendar
 
 titleFont :: Font
 titleFont = baseFont
@@ -352,6 +359,7 @@ addPoiCategories tprefs = let
 -- | Add a table of travel preferences to the worksheet
 addTravelPreferences :: TravelPreferences -> Cslab
 addTravelPreferences tprefs = let
+    sou = preferenceUnits tprefs
     pois = addPoiCategories tprefs
     basics = rowSlab [
         head3Label TravelLabel
@@ -363,9 +371,9 @@ addTravelPreferences tprefs = let
       , head3Label UnitsLabel & cellPos .~ (3, 0)
       , def & cellText ?~ (caminoUnitsMsg $ preferenceUnits tprefs)
       ]
-    distance = addPreferenceRange realToFrac DistancePreferencesLabel (preferenceDistance tprefs)
-    time = addPreferenceRange realToFrac TimePreferencesLabel (preferenceTime tprefs)
-    rest = addPreferenceRange fromIntegral RestPreferencesLabel (preferenceRest tprefs)
+    distance = addPreferenceRange (convertKm sou) (DistancePreferencesLabel sou) (preferenceDistance tprefs)
+    time = addPreferenceRange (convertHrs sou) (TimePreferencesLabel sou) (preferenceTime tprefs)
+    rest = addPreferenceRange fromIntegral (RestPreferencesLabel sou) (preferenceRest tprefs)
     stops = addStopPreferences tprefs
   in
     basics >>! distance >>! time >>! rest >>! pois >>! stops
@@ -460,15 +468,15 @@ locationHeaders = rowSlab [
   , headingLabel RestpointLabel
   ]
 
-locationAdditionalHeaders :: Cslab
-locationAdditionalHeaders = rowSlab
+locationAdditionalHeaders :: SystemOfUnits -> Cslab
+locationAdditionalHeaders sou = rowSlab
   [   head3Label LocationLabel
     , headingLabel EventsLabel & cellPos .~ (1, 0)
     , headingLabel CampingTitle
     , headingLabel AlwaysOpenLabel
     , headingLabel LatitudeLabel
     , headingLabel LongitudeLabel
-    , headingLabel ElevationLabel
+    , headingLabel (ElevationLabel sou)
     , headingLabel IdentifierLabel
   ]
 
@@ -485,7 +493,7 @@ createLocationsSheet tprefs cprefs solution = let
       >>- headers caminoAccommodationTypeMsg AccommodationLabel accommodationTypeEnumeration
       >>- headers caminoServiceMsg ServicesLabel townServiceEnumeration
       >>- headers caminoLocationTypeLabel PoisLabel locationTypeEnumeration
-      >>- locationAdditionalHeaders
+      >>- locationAdditionalHeaders sou
       )
     locations = foldl (\s -> \l -> s >>! createLocationSlab sou rests stocks stops waypoints l) headings locationsSorted
   in do

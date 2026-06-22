@@ -28,7 +28,6 @@ import Camino.Colour
 import Camino.Config
 import Camino.Planner
 import Camino.Preferences
-import qualified Camino.Units as U
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.Routes
@@ -37,10 +36,11 @@ import Data.Maybe (catMaybes, fromJust)
 import Data.Text (Text, intercalate, isPrefixOf, pack, toLower)
 import Data.Text.Lazy (toStrict)
 import Data.Localised
+import qualified Data.Map as M
 import Data.Metadata
 import qualified Data.Set as S
-import qualified Data.Map as M
 import Data.List (find, singleton)
+import qualified Data.Units as U
 import Data.XML.Types (Content(..))
 import Graph.Graph (outgoing)
 import Text.Hamlet
@@ -52,7 +52,7 @@ htmlToNodes :: U.SystemOfUnits -> Config -> [Locale] -> HtmlUrlI18n CaminoMsg Ca
 htmlToNodes sou config locales html =
   singleton $ NodeContent $ toStrict $ renderHtml $ html message route
     where
-      message = renderCaminoMsg config sou locales
+      message = renderCaminoMsg config locales
       route = renderCaminoRoute config locales
 
 kmlRouteStyle :: Text -> Double -> Double -> PaletteColour -> [Node]
@@ -162,7 +162,7 @@ caminoLocationHtmlForPlacemark sou config locales tprefs cprefs pilgrimage _stop
 caminoTextForSolution :: U.SystemOfUnits -> Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Text
 caminoTextForSolution sou config locales _tprefs cprefs msolution =  intercalate "\n" $ catMaybes (heading ++ notes ++ caminoMd ++ solutionMd)
   where
-    message = renderCaminoMsgText config sou locales
+    message = renderCaminoMsgText config locales
     camino = preferenceCamino cprefs
     mpilgrimage = maybe Nothing solutionPilgrimage msolution
     msid = maybe Nothing solutionID msolution

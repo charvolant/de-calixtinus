@@ -23,7 +23,6 @@ import Camino.Config (Config(..), AssetConfig(..), AssetType(..), getAssets, get
 import Camino.Colour (Palette(..))
 import Camino.Planner (TripChoice(..), TripChoiceMap, TripChoices(..), Solution(..), Day, Journey, Metrics(..), Pilgrimage, dayLegs, journeyDays, journeyLegs, metricsDays, pilgrimageDays, pilgrimageLegs, pilgrimageRests, pilgrimageStages, pilgrimageStockpoints, pilgrimageStops, pilgrimageWaypoints)
 import Camino.Preferences
-import qualified Camino.Units as U
 import Camino.Display.Css (caminoCss, featureLineStyle, featureRouteColour, toCssColour, warningRed)
 import Camino.Display.I18n
 import Camino.Display.Ophelia
@@ -40,6 +39,7 @@ import Data.Metadata
 import Data.Region
 import qualified Data.Set as S
 import Data.Summary
+import qualified Data.Units as U
 import Data.Util
 import Graph.Graph (Edge(..), incoming, outgoing)
 import Text.Cassius (renderCss)
@@ -47,6 +47,7 @@ import Text.Hamlet
 import qualified Data.Text as T (Text, concat, intercalate, null, pack, replace, show, take, toLower, toUpper)
 import Formatting
 import Data.Text (Text)
+import Data.Units (SystemOfUnits)
 
 -- | A useful separator
 endash :: Char
@@ -95,27 +96,27 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
      $if metricsDistanceAdjust metrics /= mempty
       <tr>
         <td>_{DistanceAdjustLabel}
-        <td .text-end>_{PenanceFormatted True (metricsDistanceAdjust metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsDistanceAdjust metrics)}
         <td>
      $if metricsTimeAdjust metrics /= mempty
       <tr>
         <td>_{TimeAdjustLabel}
-        <td .text-end>_{PenanceFormatted True (metricsTimeAdjust metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsTimeAdjust metrics)}
         <td>
      $if metricsStop metrics /= mempty
       <tr>
         <td>_{StopPenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsStop metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsStop metrics)}
         <td>
      $if metricsLocation metrics /= mempty
       <tr>
         <td>_{LocationPenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsLocation metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsLocation metrics)}
         <td>
      $if showAccommodation
       <tr>
         <td>_{AccommodationPenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsAccommodation metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsAccommodation metrics)}
         <td>
           $if hasAccommodationServices && accommodationDetail
             $forall service <- acServices
@@ -123,7 +124,7 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
      $if metricsStopServices metrics /= mempty
        <tr>
          <td>_{StopServicesPenanceLabel}
-         <td .text-end>_{PenanceFormatted True (metricsStopServices metrics)}
+         <td .text-end>_{PenanceFormatted sou True (metricsStopServices metrics)}
          <td>
            $if serviceDetail
              $forall service <- metricsMissingStopServices metrics
@@ -131,7 +132,7 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
      $if metricsDayServices metrics /= mempty
        <tr>
          <td>_{DayServicesPenanceLabel}
-         <td .text-end>_{PenanceFormatted True (metricsDayServices metrics)}
+         <td .text-end>_{PenanceFormatted sou True (metricsDayServices metrics)}
          <td>
            $if serviceDetail
              $forall service <- metricsMissingDayServices metrics
@@ -139,27 +140,27 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
      $if metricsRestPressure metrics /= mempty
        <tr>
         <td>_{RestPressurePenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsRestPressure metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsRestPressure metrics)}
         <td>
      $if metricsFatigue metrics /= mempty
       <tr>
         <td>_{FatiguePenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsFatigue metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsFatigue metrics)}
         <td>
      $if metricsRest metrics /= mempty
       <tr>
         <td>_{RestPenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsRest metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsRest metrics)}
         <td>
      $if metricsRestPoints metrics /= mempty
       <tr>
         <td>_{RestPointsPenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsRestPoints metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsRestPoints metrics)}
         <td>
      $if metricsMisc metrics /= mempty
       <tr>
         <td>_{MiscPenanceLabel}
-        <td .text-end>_{PenanceFormatted True (metricsMisc metrics)}
+        <td .text-end>_{PenanceFormatted sou True (metricsMisc metrics)}
         <td>
      $if metricsArduousDays metrics > 0
       <tr>
@@ -180,51 +181,55 @@ penanceTable preferences _camino accommodationDetail serviceDetail metrics = [ih
 
 -- | Display a summary of key penance metrics
 metricsSummary :: TravelPreferences -> CaminoPreferences -> Metrics -> Maybe Int -> Maybe Int -> Maybe Int -> HtmlUrlI18n CaminoMsg CaminoRoute
-metricsSummary _preferences _camino metrics elapsed walking stages = [ihamlet|
-    _{DistanceMsg (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)} #
-    _{TimeMsg (metricsTime metrics) (metricsEffortTime metrics) (metricsTransportTime metrics) (metricsPoiTime metrics)} #
+metricsSummary tprefs _cprefs metrics elapsed walking stages = [ihamlet|
+    _{DistanceMsg sou (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)} #
+    _{TimeMsg sou (metricsTime metrics) (metricsEffortTime metrics) (metricsTransportTime metrics) (metricsPoiTime metrics)} #
     $maybe d <- elapsed
       \ _{DaysElapsedMsg d} #
     $maybe d <- walking
       \ (_{DaysWalkingMsg d}) #
     $maybe s <- stages
       \ _{StagesMsg s} #
-    _{AscentMsg (metricsAscent metrics)}
-    _{DescentMsg (metricsDescent metrics)}
-    _{PenanceMsg (metricsPenance metrics)}
+    _{AscentMsg sou (metricsAscent metrics)}
+    _{DescentMsg sou (metricsDescent metrics)}
+    _{PenanceMsg sou (metricsPenance metrics)}
   |]
+  where
+    sou = preferenceUnits tprefs
 
 -- | Display a summary of key penance metrics for a single day
 daySummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Day -> HtmlUrlI18n CaminoMsg CaminoRoute
-daySummary _preferences _camino _pilgrimage day = [ihamlet|
+daySummary tprefs _cprefs _pilgrimage day = [ihamlet|
     <p>_{Txt (locationName (start day))} - _{Txt (locationName (finish day))}
-       _{DistanceMsg (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)} #
-       _{TimeMsg (metricsTime metrics) (metricsEffortTime metrics) (metricsTransportTime metrics) (metricsPoiTime metrics)} #
-       _{AscentMsg (metricsAscent metrics)}
-       _{DescentMsg (metricsDescent metrics)}
-       _{PenanceMsg (metricsPenance metrics)}
+       _{DistanceMsg sou (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)} #
+       _{TimeMsg sou (metricsTime metrics) (metricsEffortTime metrics) (metricsTransportTime metrics) (metricsPoiTime metrics)} #
+       _{AscentMsg sou (metricsAscent metrics)}
+       _{DescentMsg sou (metricsDescent metrics)}
+       _{PenanceMsg sou (metricsPenance metrics)}
     <ol .bar-separated-list>
       $forall loc <- (map legFrom $ path day) ++ [finish day]
         <li>_{Txt (locationName loc)}
   |]
   where
     metrics = score day
+    sou = preferenceUnits tprefs
 
 -- | Display a summary of key penance metrics for a stage (multiple days with a rest day at the end)
 stageSummary :: TravelPreferences -> CaminoPreferences -> Maybe Pilgrimage -> Journey -> HtmlUrlI18n CaminoMsg CaminoRoute
-stageSummary _preferences _camino _pilgrimage stage = [ihamlet|
+stageSummary tprefs _cprefs _pilgrimage stage = [ihamlet|
     <p>_{Txt (locationName (start stage))} - _{Txt (locationName (finish stage))}
-       _{DistanceMsg (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)}
+       _{DistanceMsg sou (metricsDistance metrics) (metricsEffortDistance metrics) (metricsTransportDistance metrics) (metricsPerceivedDistance metrics)}
        _{DaysElapsedMsg (Prelude.length (path stage))}
-       _{AscentMsg (metricsAscent metrics)}
-       _{DescentMsg (metricsDescent metrics)}
-       _{PenanceMsg (metricsPenance metrics)}
+       _{AscentMsg sou (metricsAscent metrics)}
+       _{DescentMsg sou (metricsDescent metrics)}
+       _{PenanceMsg sou (metricsPenance metrics)}
     <ol .bar-separated-list>
       $forall loc <- (map start $ path stage) ++ [finish stage]
         <li>_{Txt (locationName loc)}
   |]
   where
     metrics = score stage
+    sou = preferenceUnits tprefs
 
 
 -- | Display a summary the stages and day stop locations for an entire trip
@@ -681,117 +686,117 @@ solutionElements _camino (Just solution) = (
     pilgrimage' = solutionPilgrimage solution
 
 -- | Generate the I18n'd description of a calendar entry
-calendarBlock :: EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
-calendarBlock Daily = [ihamlet|_{DailyLabel}|]
-calendarBlock (Weekly dow) = [ihamlet|
+calendarBlock :: SystemOfUnits -> EventCalendar -> HtmlUrlI18n CaminoMsg CaminoRoute
+calendarBlock _ Daily = [ihamlet|_{DailyLabel}|]
+calendarBlock sou (Weekly dow) = [ihamlet|
   <ol .comma-list .days-of-week-list>
     $forall d <- dow
-      <li>_{DayOfWeekName d}#
+      <li>_{DayOfWeekName sou d}#
   |]
-calendarBlock (Monthly dom) = [ihamlet|
+calendarBlock _ (Monthly dom) = [ihamlet|
   <ol .comma-list .days-of-month-list>
     $forall d <- dom
       <li>_{DayOfMonthName d}#
   |]
-calendarBlock (Yearly moy) = [ihamlet|
+calendarBlock sou (Yearly moy) = [ihamlet|
   <ol .comma-list .months-of-year-list>
     $forall m <- moy
-      <li>_{MonthOfYearName m}#
+      <li>_{MonthOfYearName sou m}#
   |]
-calendarBlock (DayOfYear days) = [ihamlet|
+calendarBlock sou (DayOfYear days) = [ihamlet|
   <ol .comma-list .days-of-year-list>
     $forall (month, day) <- days
-      <li>_{MonthOfYearName month} #{day}#
+      <li>_{MonthOfYearName sou month} #{day}#
   |]
-calendarBlock (RangeCalendar rfrom rto) = [ihamlet|
-  ^{calendarBlock rfrom} - ^{calendarBlock rto}
+calendarBlock sou (RangeCalendar rfrom rto) = [ihamlet|
+  ^{calendarBlock sou rfrom} - ^{calendarBlock sou rto}
   |]
-calendarBlock (UnionCalendar calendars) = [ihamlet|
+calendarBlock sou (UnionCalendar calendars) = [ihamlet|
   <ol .or-list .days-of-year-list>
     $forall cal <- calendars
-      <li>^{calendarBlock cal}#
+      <li>^{calendarBlock sou cal}#
   |]
-calendarBlock (IntersectionCalendar calendars) = [ihamlet|
+calendarBlock sou (IntersectionCalendar calendars) = [ihamlet|
   <ol .and-list .days-of-year-list>
     $forall cal <- calendars
-      <li>^{calendarBlock cal}#
+      <li>^{calendarBlock sou cal}#
   |]
-calendarBlock (InvertedCalendar calendar) = [ihamlet|
-  _{ExceptText} ^{calendarBlock calendar}
+calendarBlock sou (InvertedCalendar calendar) = [ihamlet|
+  _{ExceptText} ^{calendarBlock sou calendar}
   |]
-calendarBlock (NthDayAfter nth calendar) = [ihamlet|
-  _{OrdinalBeforeAfter nth DayText} ^{calendarBlock calendar}
+calendarBlock sou (NthDayAfter nth calendar) = [ihamlet|
+  _{OrdinalBeforeAfter sou nth DayText} ^{calendarBlock sou calendar}
   |]
-calendarBlock (NthWeekday wom dow) = [ihamlet|
-  _{NthWeekdayText wom dow}
+calendarBlock sou (NthWeekday wom dow) = [ihamlet|
+  _{NthWeekdayText sou wom dow}
   |]
-calendarBlock (NthWeekdayAfter nth dow calendar) = [ihamlet|
-  _{OrdinalAfterWeekday nth dow} ^{calendarBlock calendar}
+calendarBlock sou (NthWeekdayAfter nth dow calendar) = [ihamlet|
+  _{OrdinalAfterWeekday sou nth dow} ^{calendarBlock sou calendar}
   |]
-calendarBlock (ListCalendar days) = [ihamlet|
+calendarBlock sou (ListCalendar days) = [ihamlet|
   <ol .comma-list .days-list>
     $forall day <- days
-      _{DateMsg day}
+      _{DateMsg sou day}
   |]
-calendarBlock (NamedCalendar key) = [ihamlet|
+calendarBlock _ (NamedCalendar key) = [ihamlet|
   _{NamedCalendarLabel key}
   |]
-calendarBlock (PublicHoliday region) = [ihamlet|
-  _{PublicHolidayLabel region}
+calendarBlock sou (PublicHoliday region) = [ihamlet|
+  _{PublicHolidayLabel sou region}
   |]
-calendarBlock (ClosedDay region) = [ihamlet|
-  _{ClosedDayLabel region}
+calendarBlock sou (ClosedDay region) = [ihamlet|
+  _{ClosedDayLabel sou region}
   |]
-calendarBlock (Conditional cal cond) = [ihamlet|
-  ^{calendarBlock cal}
+calendarBlock sou (Conditional cal cond) = [ihamlet|
+  ^{calendarBlock sou cal}
   <div .calendar-condition>_{Txt cond}
   |]
 
 -- | Generate the I18n'd description of a single hours range for a poi or event
-timeBlock :: EventTime -> HtmlUrlI18n CaminoMsg CaminoRoute
-timeBlock EventClosed = [ihamlet|_{ClosedText}|]
-timeBlock EventOpen = [ihamlet|_{OpenText}|]
-timeBlock (EventTime hours) = [ihamlet|
+timeBlock :: U.SystemOfUnits -> EventTime -> HtmlUrlI18n CaminoMsg CaminoRoute
+timeBlock _ EventClosed = [ihamlet|_{ClosedText}|]
+timeBlock _ EventOpen = [ihamlet|_{OpenText}|]
+timeBlock sou (EventTime hours) = [ihamlet|
   <ol .comma-list .open-hours-list>
     $forall (from, to) <- hours
-      <li>_{Time from}-_{Time to}#
+      <li>_{Time sou from}-_{Time sou to}#
   |]
 
 
 -- | Generate the I18n'd description of range of an open hours range for a poi
-hoursBlock :: OpenHours -> HtmlUrlI18n CaminoMsg CaminoRoute
-hoursBlock (OpenHours []) = [ihamlet||]
-hoursBlock (OpenHours [EventHours Daily time]) = [ihamlet|
+hoursBlock :: SystemOfUnits -> OpenHours -> HtmlUrlI18n CaminoMsg CaminoRoute
+hoursBlock _ (OpenHours []) = [ihamlet||]
+hoursBlock sou (OpenHours [EventHours Daily time]) = [ihamlet|
   <div .row .event-hours>
     <div .col>
     <div .col>
       <span .description-icon .ca-clock title="_{OpenHoursTitle}">
-      ^{timeBlock time}
+      ^{timeBlock sou time}
   |]
-hoursBlock (OpenHours [EventHours calendar EventOpen]) = [ihamlet|
+hoursBlock sou (OpenHours [EventHours calendar EventOpen]) = [ihamlet|
   <div .row .event-hours>
     <div .col>
       <span .description-icon .ca-calendar title="_{CalendarTitle}">
-      ^{calendarBlock calendar}
+      ^{calendarBlock sou calendar}
     <div .col>
   |]
-hoursBlock (OpenHours hours) = [ihamlet|
+hoursBlock sou (OpenHours hours) = [ihamlet|
   $with (EventHours calendar time) <- headWithDefault (EventHours Daily EventOpen)  hours
     <div .row .event-hours>
       <div .col>
         <span .description-icon .ca-calendar title="_{CalendarTitle}">
-        ^{calendarBlock calendar}
+        ^{calendarBlock sou calendar}
       <div .col>
         <span .description-icon .ca-clock title="_{OpenHoursTitle}">
-        ^{timeBlock time}
+        ^{timeBlock sou time}
   $forall (EventHours calendar time) <- tailOrEmpty hours
     <div .row .event-hours>
       <div .col>
         <span .invisible .description-icon .ca-calendar title="_{CalendarTitle}">
-        ^{calendarBlock calendar}
+        ^{calendarBlock sou calendar}
       <div .col>
         <span .invisible .description-icon .ca-clock title="_{OpenHoursTitle}">
-        ^{timeBlock time}
+        ^{timeBlock sou time}
   |]
 
 -- | The I18n message for the title of a description note type
@@ -910,27 +915,27 @@ poiLine :: TravelPreferences -> CaminoPreferences -> PointOfInterest -> HtmlUrlI
 poiLine _preferences _camino poi = poiLineSimple poi
 
 -- | Generate a single line description of a leg with type, distance, ascent, descent etc.
-legLineSimple :: Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
-legLineSimple leg = [ihamlet|
+legLineSimple :: SystemOfUnits -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
+legLineSimple sou leg = [ihamlet|
     <div .d-inline-block>
       ^{caminoLegTypeIcon (legType leg)}
       $if legDistance leg > 0
-        <span .leg-distance>_{DistanceFormatted (legDistance leg)}
+        <span .leg-distance>_{DistanceFormatted sou (legDistance leg)}
       $if legAscent leg > 0
-        <span .leg-ascent>_{ElevationFormatted (legAscent leg)}
+        <span .leg-ascent>_{ElevationFormatted sou (legAscent leg)}
       $if legDescent leg > 0
-        <span .leg-descent>_{ElevationFormatted (legDescent leg)}
+        <span .leg-descent>_{ElevationFormatted sou (legDescent leg)}
       $if isJust $ legTime leg
-        <span .leg-time>_{TimeFormatted (fromJust $ legTime leg)}
+        <span .leg-time>_{TimeFormatted sou (fromJust $ legTime leg)}
       $if isJust $ legPenance leg
-        <span .leg-penance>_{LegPenanceMsg (fromJust $ legPenance leg)}
+        <span .leg-penance>_{LegPenanceMsg sou (fromJust $ legPenance leg)}
       $if isJust $ legDescription leg
         <span .leg-description>^{descriptionLine (fromJust $ legDescription leg)}
   |]
 
 -- | See `legLineSimple`
 legLine :: TravelPreferences -> CaminoPreferences -> Leg -> HtmlUrlI18n CaminoMsg CaminoRoute
-legLine _preferences _camino leg = legLineSimple leg
+legLine tprefs _cprefs leg = legLineSimple (preferenceUnits tprefs) leg
 
 -- | Generate a leg line from the point of view of a location, showing the destination and distances etc.
 --   See `legLineSimple`
@@ -994,8 +999,8 @@ locationLegs preferences camino used location = [ihamlet|
     (usedIncomingLegs, unusedIncomingLegs) = L.partition (\l -> S.member l used) incomingLegs
 
 -- | Generate a description of an event, with type, name, description and calendar and hours
-caminoEventHtml :: Event -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoEventHtml event = [ihamlet|
+caminoEventHtml :: SystemOfUnits -> Event -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoEventHtml sou event = [ihamlet|
   <div .row .clearfix .event .#{eventCss}>
     <div .col>
       <span .poi-types>
@@ -1006,7 +1011,7 @@ caminoEventHtml event = [ihamlet|
             <a .description-icon .about .float-end href="@{LinkRoute about}" title="_{LinkTitle about (eventName event)}">
               <span .ca-link>
         $maybe t <- eventHours event
-          ^{hoursBlock t}
+          ^{hoursBlock sou t}
   $maybe d <- eventDescription event
     <div .row>
       <div .col>
@@ -1025,8 +1030,8 @@ caminoPoiCategoriesAttr categories = [ihamlet|$forall (category, i) <- zcategori
     connector i = (if i > 1 then ", " else "") :: T.Text
 
 -- | Generate a description of a point of interest, including type, name, description, opening times and events
-caminoPointOfInterestHtml :: PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoPointOfInterestHtml poi = [ihamlet|
+caminoPointOfInterestHtml :: SystemOfUnits -> PointOfInterest -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoPointOfInterestHtml sou poi = [ihamlet|
   <div id="#{poiID poi}" .row>
     <div .card .g-0>
       <div .card-header>
@@ -1044,11 +1049,11 @@ caminoPointOfInterestHtml poi = [ihamlet|
       $if hasBody
         <div .card-body>
             $maybe c <- poiHours poi
-              ^{hoursBlock c}
+              ^{hoursBlock sou c}
             $maybe d <- poiDescription poi
               ^{descriptionBlock False True d}
             $forall event <- poiEvents poi
-              ^{caminoEventHtml event}
+              ^{caminoEventHtml sou event}
   |]
   where
     hasDescBody desc = (isJust $ descSummary desc) || (isJust $ descText desc) || (isJust $ descImage desc) || (not $ null $ descNotes desc)
@@ -1080,42 +1085,42 @@ caminoTransportLinkHtml preferences camino tlink = [ihamlet|
     tloc = legTo tlink
     tid = locationID tloc
 
-tripChoiceSummary' :: Config -> Maybe (r -> T.Text) -> TripChoiceMap r Service -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-tripChoiceSummary' _config showName choiceMap location = [ihamlet|
+tripChoiceSummary' :: Config -> SystemOfUnits -> Maybe (r -> T.Text) -> TripChoiceMap r Service -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+tripChoiceSummary' _config sou showName choiceMap location = [ihamlet|
   $maybe tc <- M.lookup location choiceMap
     $maybe sn <- showName
       #{sn (tripChoice tc)} #
     <span .services>
       $forall service <- tripChoiceFeatures tc
         ^{caminoServiceIcon service}
-    _{PenanceFormatted True (tripChoicePenance tc)}
+    _{PenanceFormatted sou True (tripChoicePenance tc)}
   $nothing
     #{endash}
 |]
 
 -- | Generate a table of trip choice information
-tripChoiceSummary :: Config -> Maybe Solution -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
-tripChoiceSummary config msolution location = [ihamlet|
+tripChoiceSummary :: Config -> SystemOfUnits -> Maybe Solution -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+tripChoiceSummary config sou msolution location = [ihamlet|
   $maybe choices <- solutionChoices <$> msolution
     <table .table  .table-sm .trip-choice-summary>
       <tr>
         <td>
-          ^{tripChoiceSummary' config Nothing (tcStopLocation choices) location}
+          ^{tripChoiceSummary' config sou Nothing (tcStopLocation choices) location}
         <td>
-          ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStopAccommodation choices) location}
+          ^{tripChoiceSummary' config sou (Just $ localiseDefault . accommodationName) (tcStopAccommodation choices) location}
       <tr>
         <td>
-          ^{tripChoiceSummary' config Nothing (tcStockLocation choices) location}
+          ^{tripChoiceSummary' config sou Nothing (tcStockLocation choices) location}
         <td>
-          ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcStockAccommodation choices) location}
+          ^{tripChoiceSummary' config sou (Just $ localiseDefault . accommodationName) (tcStockAccommodation choices) location}
       <tr>
         <td>
-          ^{tripChoiceSummary' config Nothing (tcRestLocation choices) location}
+          ^{tripChoiceSummary' config sou Nothing (tcRestLocation choices) location}
         <td>
-          ^{tripChoiceSummary' config (Just $ localiseDefault . accommodationName) (tcRestAccommodation choices) location}
+          ^{tripChoiceSummary' config sou (Just $ localiseDefault . accommodationName) (tcRestAccommodation choices) location}
       <tr>
         <td>
-          ^{tripChoiceSummary' config Nothing (tcRestPressure choices) location}
+          ^{tripChoiceSummary' config sou Nothing (tcRestPressure choices) location}
         <td>
 |]
 
@@ -1181,7 +1186,7 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
       <div .accordion-body .container-fluid>
         $if getDebug config
           <div .detail .border .border-info-subtle .rounded .float-end .ms-1 .p-1>
-            ^{tripChoiceSummary config msolution location}
+            ^{tripChoiceSummary config sou msolution location}
         ^{locationLegs preferences camino used location}
         $maybe d <- locationDescription location
           <div .row>
@@ -1192,16 +1197,17 @@ caminoLocationHtml config preferences camino msolution containerId rests stocks 
           ^{caminoAccommodationHtml accommodation}
         ^{conditionalLabel PoisLabel (locationPois location)}
         $forall poi <- locationPois location
-          ^{caminoPointOfInterestHtml poi}
+          ^{caminoPointOfInterestHtml sou poi}
         ^{conditionalLabel EventsLabel (locationEvents location)}
         $forall event <- locationEvents location
-          ^{caminoEventHtml event}
+          ^{caminoEventHtml sou event}
         ^{conditionalLabel TransportLinksLabel transportLinks}
         $forall link <- transportLinks
           ^{caminoTransportLinkHtml preferences camino link}
   |]
   where
     camino' = preferenceCamino camino
+    sou = preferenceUnits preferences
     lid = locationID location
     debugid = if getDebug config then lid else ""
     route = caminoRoute camino' (preferenceRoutes camino) location
@@ -1282,7 +1288,7 @@ preferenceRangeIntHtml range = [ihamlet|
 --
 --   Intended for debugging
 failureTable :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> ChainGraph Location e Metrics -> HtmlUrlI18n CaminoMsg CaminoRoute
-failureTable _tprefs _cprefs caption graph = [ihamlet|
+failureTable tprefs _cprefs caption graph = [ihamlet|
   <table .table .table-striped>
     <caption>_{caption}
     <thead>
@@ -1300,7 +1306,7 @@ failureTable _tprefs _cprefs caption graph = [ihamlet|
           <tr>
             <td>
             <td>#{summary (finish t)} _{Txt (locationName (finish t))}
-            <td>_{DistanceFormatted (metricsDistance (score t))} _{TimeMsg (metricsTime (score t)) Nothing Nothing Nothing}
+            <td>_{DistanceFormatted sou (metricsDistance (score t))} _{TimeMsg sou (metricsTime (score t)) Nothing Nothing Nothing}
             <td>#{summary (score t)}
             <td>
               #{summary l}
@@ -1310,12 +1316,13 @@ failureTable _tprefs _cprefs caption graph = [ihamlet|
 |]
   where
     arrow = '\x2192'
+    sou = preferenceUnits tprefs
 
 -- | Generate a table summarising generated partial chains
 --
 --   Intended for debugging
 failureChains :: (Edge e Location) => TravelPreferences -> CaminoPreferences -> CaminoMsg -> [Chain Location e Metrics] -> HtmlUrlI18n CaminoMsg CaminoRoute
-failureChains _tprefs _cprefs caption chains = [ihamlet|
+failureChains tprefs _cprefs caption chains = [ihamlet|
   <table .table .table-striped>
     <caption>_{caption}
     <thead>
@@ -1330,7 +1337,7 @@ failureChains _tprefs _cprefs caption chains = [ihamlet|
         <tr>
           <td>#{summary (start c)} _{Txt (locationName (start c))}
           <td>#{summary (finish c)} _{Txt (locationName (finish c))}
-          <td>_{DistanceFormatted (metricsDistance (score c))} _{TimeMsg (metricsTime (score c)) Nothing Nothing Nothing}
+          <td>_{DistanceFormatted sou (metricsDistance (score c))} _{TimeMsg sou (metricsTime (score c)) Nothing Nothing Nothing}
           <td>#{summary (score c)}
           <td>
             #{summary (start c)}
@@ -1339,6 +1346,7 @@ failureChains _tprefs _cprefs caption chains = [ihamlet|
 |]
   where
     arrow = '\x2192'
+    sou = preferenceUnits tprefs
 
 -- | Generate a report summarising the partial plan generated before something went wrong.
 --
@@ -1406,16 +1414,16 @@ preferencesHtml showLink preferences camino = [ihamlet|
       <div .col-4>_{UnitsLabel}
       <div .col>_{caminoUnitsMsg $ preferenceUnits preferences}
     <div .row>
-      <div .col-4>_{DistancePreferencesLabel}
+      <div .col-4>_{DistancePreferencesLabel sou}
       <div .col>^{preferenceRangeHtml sou U.Distance (preferenceDistance preferences)}
     <div .row>
-      <div .col-4>_{TimePreferencesLabel}
+      <div .col-4>_{TimePreferencesLabel sou}
       <div .col>^{preferenceRangeHtml sou U.Time (preferenceTime preferences)}
     <div .row>
-      <div .col-4>_{RestPreferencesLabel}
+      <div .col-4>_{RestPreferencesLabel sou}
       <div .col>^{preferenceRangeIntHtml (preferenceRest preferences)}
     <div .row>
-      <div .col-4>_{RestPressureLabel}
+      <div .col-4>_{RestPressureLabel sou}
       <div .col>
         $maybe rp <- preferenceRestPressure preferences
           #{formatDistance sou rp}
@@ -1443,9 +1451,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   <span .location-type-sample>^{caminoLocationTypeIcon lk}
                   \ _{caminoLocationTypeLabel lk}
-                <td>_{PenanceFormatted False (findLoc (preferenceStop preferences) lk)}
-                <td>_{PenanceFormatted False (findLoc (preferenceStockStop preferences) lk)}
-                <td>_{PenanceFormatted False (findLoc (preferenceRestStop preferences) lk)}
+                <td>_{PenanceFormatted sou False (findLoc (preferenceStop preferences) lk)}
+                <td>_{PenanceFormatted sou False (findLoc (preferenceStockStop preferences) lk)}
+                <td>_{PenanceFormatted sou False (findLoc (preferenceRestStop preferences) lk)}
             <tr colspan=4>
               <td>_{AccommodationPreferencesLabel}
             $forall ak <- accommodationTypes
@@ -1453,9 +1461,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   ^{caminoAccommodationTypeIcon ak}
                   \ _{caminoAccommodationTypeMsg ak}
-                <td>_{PenanceFormatted False (findAcc (preferenceStop preferences) ak)}
-                <td>_{PenanceFormatted False (findAcc (preferenceStockStop preferences) ak)}
-                <td>_{PenanceFormatted False (findAcc (preferenceRestStop preferences) ak)}
+                <td>_{PenanceFormatted sou False (findAcc (preferenceStop preferences) ak)}
+                <td>_{PenanceFormatted sou False (findAcc (preferenceStockStop preferences) ak)}
+                <td>_{PenanceFormatted sou False (findAcc (preferenceRestStop preferences) ak)}
             <tr>
               <td colspan=4>_{ServicesPreferencesLabel}
             $forall sk <- serviceTypes
@@ -1463,9 +1471,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   ^{caminoServiceIcon sk}
                   \ _{caminoServiceMsg sk}
-                <td>_{PenanceFormatted False (findSv (preferenceStop preferences) sk)}
-                <td>_{PenanceFormatted False (findSv (preferenceStockStop preferences) sk)}
-                <td>_{PenanceFormatted False (findSv (preferenceRestStop preferences) sk)}
+                <td>_{PenanceFormatted sou False (findSv (preferenceStop preferences) sk)}
+                <td>_{PenanceFormatted sou False (findSv (preferenceStockStop preferences) sk)}
+                <td>_{PenanceFormatted sou False (findSv (preferenceRestStop preferences) sk)}
             <tr>
               <td colspan=4>_{RouteServicesPreferencesLabel}
             $forall sk <- routeServiceTypes
@@ -1473,9 +1481,9 @@ preferencesHtml showLink preferences camino = [ihamlet|
                 <td .ps-3>
                   ^{caminoServiceIcon sk}
                   \ _{caminoServiceMsg sk}
-                <td>_{PenanceFormatted False (findRSv (preferenceStop preferences) sk)}
-                <td>_{PenanceFormatted False (findRSv (preferenceStockStop preferences) sk)}
-                <td>_{PenanceFormatted False (findRSv (preferenceRestStop preferences) sk)}
+                <td>_{PenanceFormatted sou False (findRSv (preferenceStop preferences) sk)}
+                <td>_{PenanceFormatted sou False (findRSv (preferenceStockStop preferences) sk)}
+                <td>_{PenanceFormatted sou False (findRSv (preferenceRestStop preferences) sk)}
     <div .row>
       <div .col-4>_{PoisLabel}
       <div .col>
@@ -1597,7 +1605,7 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
               \ -
               <a href="@{LocationRoute (finish stage)}" data-toggle="tab" onclick="$('#locations-toggle').tab('show')">_{Txt (locationName $ finish stage)}
               $maybe (day1, day2) <- metricsDate sscore
-                _{DateRangeMsg day1 day2}
+                _{DateRangeMsg sou day1 day2}
             <p .card-text>
               ^{metricsSummary preferences camino sscore (metricsDays sscore) (Just $ journeyDays stage) Nothing}
             <div .container-fluid>
@@ -1621,14 +1629,14 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                   $if metricsHardDays dscore > 0
                     <span title="_{HardDayLabel}" .ca-hard>
                   $maybe (day1, day2) <- metricsDate dscore
-                    _{DateRangeMsg day1 day2}
+                    _{DateRangeMsg sou day1 day2}
                     $maybe region <- locationRegion $ finish day
                       $forall (d, cal) <- runReader (namedDates region day1 day2) config
                         <span .holiday title="_{HolidayEventTitle}">
                           _{Txt (ceName cal)}
                           $if day1 /= day2
-                            \ #{endash} _{DateMsg d}
-                  _{DistanceFormatted (metricsDistance $ score day)}
+                            \ #{endash} _{DateMsg sou d}
+                  _{DistanceFormatted sou (metricsDistance $ score day)}
               <div .card-body>
                 ^{penanceTable preferences camino False True dscore}
                 <p .card-text>
@@ -1658,12 +1666,13 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
                                   ^{caminoLocationTypeIcon (poiType poi)}
                                   _{Txt (poiName poi)}
                                   $maybe time <- poiTime poi
-                                    \ _{TimeFormatted time}
+                                    \ _{TimeFormatted sou time}
                 $forall accom <- metricsAccommodationChoice $ score day
                   <p .card-text>
                     ^{caminoAccommodationChoiceSummaryHtml (tripChoice accom) (score day)}
  |]
  where
+  sou = preferenceUnits preferences
   daysElapsed = metricsDays $ score pilgrimage
   daysWalking = Just $ pilgrimageDays pilgrimage
   stages = Just $ pilgrimageStages pilgrimage
@@ -2239,10 +2248,10 @@ aboutHtml config showImages tprefs cprefs msolution = [ihamlet|
             <td>
               <ul .comma-list>
                 $forall cal <- regionClosedDays region
-                  ^{calendarBlock cal}
+                  ^{calendarBlock sou cal}
                 $forall cal <- getInheritedClosedDays region
                   <span .text-black-50>
-                    ^{calendarBlock cal}
+                    ^{calendarBlock sou cal}
     <h4>_{HolidaysLabel}
     <table .table .table-striped .>
       <thead>
@@ -2256,10 +2265,10 @@ aboutHtml config showImages tprefs cprefs msolution = [ihamlet|
         $forall holiday <- holidays
           <tr>
             <td>
-              ^{calendarBlock (fst holiday)}
+              ^{calendarBlock sou (fst holiday)}
             <td>
               $maybe d <- snd holiday
-                _{DateMsg d}
+                _{DateMsg sou d}
             $forall region <- holidayRegions
               <td .text-center>
                 <span :isIndirectHoliday (fst holiday) region:.text-black-50>
@@ -2296,6 +2305,7 @@ aboutHtml config showImages tprefs cprefs msolution = [ihamlet|
   |]
   where
     camino = preferenceCamino cprefs
+    sou = preferenceUnits tprefs
     regions = S.filter isHolidayRegion $ regionClosure $ caminoRegions camino
     holidayRegions = S.filter (\r -> not $ null $ getRegionalHolidays r) regions
     holidayKeys = S.fold S.union S.empty $ S.map (\r -> S.fromList $ catMaybes $ map calendarKey $ regionHolidays r) holidayRegions
@@ -2364,7 +2374,7 @@ keyHtml _config _preferences camino = $(ihamletFile "templates/help/key-en.hamle
 
 -- | Show a help page
 helpHtml :: Config -> HtmlUrlI18n CaminoMsg CaminoRoute
-helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet")
+helpHtml _config = $(ihamletFile "templates/help/help-en.hamlet") where sou = U.SIUnits
 
 -- | The base display for a camino and solution, placing sub-elements in tabs
 caminoHtmlBase :: Config -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute

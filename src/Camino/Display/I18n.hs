@@ -27,6 +27,8 @@ module Camino.Display.I18n (
   , renderLocalisedRegion
   , renderLocalisedBeforeAfter
   , renderLocalisedOrdinal
+  , renderLocalisedUnitName
+  , renderLocalisedUnitSymbol
   -- * Formatting
   , formatDays
   , formatDistance
@@ -47,13 +49,14 @@ module Camino.Display.I18n (
 
 import Camino.Camino
 import Camino.Config
-import qualified Camino.Units as U
 import Data.Localised
 import Data.Region
 import Data.Text
 import qualified Data.Time.Calendar as C
 import Data.Time.Format
 import Data.Time.LocalTime
+import qualified Data.Units as U
+import Data.Units (SystemOfUnits)
 import Data.Util (commaJoin)
 import Formatting (fixed, int, sformat)
 import Language.Haskell.TH
@@ -92,7 +95,7 @@ threeQuarterSymbol = "\x00be"
 -- 12.7
 -- >>> formatForSystemOfUnits USUnits 12.7
 -- 12¾
-formatForSystemOfUnits :: (RealFrac a) => U.SystemOfUnits -> a -> Text
+formatForSystemOfUnits :: (RealFrac a) => SystemOfUnits -> a -> Text
 formatForSystemOfUnits U.SIUnits v = sformat (fixed 1) v
 formatForSystemOfUnits U.USUnits v = whole <> part where
   (n, f) = properFraction v
@@ -113,7 +116,7 @@ formatForSystemOfUnits U.USUnits v = whole <> part where
 --
 -- >>> renderHtml $ formatPenance def True (Penance 12.1)
 -- "<span class=\"penance\">12.1\226\128\137km</span>"
-formatPenance :: U.SystemOfUnits -> Bool -> Penance -> Html
+formatPenance :: SystemOfUnits -> Bool -> Penance -> Html
 formatPenance _ _ Reject = H.span H.! HA.class_ "penance rejected" H.! HA.title "Rejected" $ text rejectSymbol
 formatPenance sou showZero (Penance p) = if showZero || p /= 0.0 then H.span H.! HA.class_ "penance" $ text $ p'' <> thinSpace <> symbol else text ""
   where
@@ -125,7 +128,7 @@ formatPenance sou showZero (Penance p) = if showZero || p /= 0.0 then H.span H.!
 -- | Format a penance (see `formatPenance`) without extensive markup
 -- >>> renderHtml $ formatPenancePlain def True (Penance 12.1)
 -- "12.1km"
-formatPenancePlain :: U.SystemOfUnits -> Bool -> Penance -> Html
+formatPenancePlain :: SystemOfUnits -> Bool -> Penance -> Html
 formatPenancePlain _ _ Reject = "Rejected"
 formatPenancePlain sou showZero (Penance p) = if showZero || p /= 0.0 then text $ p'' <> symbol else text ""
   where
@@ -143,7 +146,7 @@ formatPenancePlain sou showZero (Penance p) = if showZero || p /= 0.0 then text 
 -- "<span class=\"distance\">12.6\226\128\137km</span>"
 -- >>> renderHtml $ formatDistance USUnits 12.6
 -- "<span class=\"distance\">7\194\190\226\128\137mi</span>"
-formatDistance :: (RealFrac a) => U.SystemOfUnits -> a -> Html
+formatDistance :: (RealFrac a) => SystemOfUnits -> a -> Html
 formatDistance sou d = H.span H.! HA.class_ "distance" $ text $ d'' <> thinSpace <> symbol
   where
     unit = U.preferredUnit sou U.Distance
@@ -156,7 +159,7 @@ formatDistance sou d = H.span H.! HA.class_ "distance" $ text $ d'' <> thinSpace
 --
 --   If there isn't a distance then it is displayed as a `invalid` value.
 --   See `formatDistance`
-formatMaybeDistance :: (RealFrac a) => U.SystemOfUnits -> Maybe a -> Html
+formatMaybeDistance :: (RealFrac a) => SystemOfUnits -> Maybe a -> Html
 formatMaybeDistance sou Nothing = formatPenance sou True Reject
 formatMaybeDistance sou (Just d) = formatDistance sou d
 
@@ -167,7 +170,7 @@ formatMaybeDistance sou (Just d) = formatDistance sou d
 --
 -- >>> renderHtml $ formatHours def 12.4
 -- "<span class=\"time\">12.4\226\128\137hr</span>"
-formatHours :: (RealFrac a) => U.SystemOfUnits -> a -> Html
+formatHours :: (RealFrac a) => SystemOfUnits -> a -> Html
 formatHours sou t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t' <> thinSpace <> symbol
   where
     unit = U.preferredUnit sou U.Time
@@ -182,7 +185,7 @@ formatHours sou t = H.span H.! HA.class_ "time" $ text $ sformat (fixed 1) t' <>
 -- >>> renderHtml $ formatDays def 7
 -- "<span class=\"days\">7\226\128\137days</span>"
 
-formatDays :: U.SystemOfUnits -> Int -> Html
+formatDays :: SystemOfUnits -> Int -> Html
 formatDays sou d = H.span H.! HA.class_ "days" $ text $  sformat int d' <> thinSpace <> symbol
   where
     unit = U.preferredUnit sou U.Calendar
@@ -200,7 +203,7 @@ formatStages s = H.span H.! HA.class_ "stages" $ text $  sformat  int s <> thinS
 --
 --   If there isn't a period then it is displayed as a `invalid` value.
 --   See `formatHours`
-formatMaybeHours :: (RealFrac a) => U.SystemOfUnits -> Maybe a -> Html
+formatMaybeHours :: (RealFrac a) => SystemOfUnits -> Maybe a -> Html
 formatMaybeHours sou Nothing = formatPenance sou True Reject
 formatMaybeHours sou (Just t) = formatHours sou t
 
@@ -213,7 +216,7 @@ formatMaybeHours sou (Just t) = formatHours sou t
 -- "<span class=\"height\">125\226\128\137m</span>"
 -- >>> renderHtml $ formatHeight USUnits 125
 -- "<span class=\"height\">410\226\128\137ft</span>"
-formatHeight :: (RealFrac a) => U.SystemOfUnits -> a -> Html
+formatHeight :: (RealFrac a) => SystemOfUnits -> a -> Html
 formatHeight sou h = H.span H.! HA.class_ "height" $ text $  sformat  (fixed 0) h' <> thinSpace <> symbol
   where
     unit = U.preferredUnit sou U.Elevation
@@ -250,7 +253,7 @@ renderLocalisedText locales plain attr js locd = let
 --
 -- >>> renderHtml $ renderLocalisedDate def False ["fr"] (fromGregorian 2024 April 17)
 -- "2024-04-17"
-renderLocalisedDate :: (FormatTime t) => U.SystemOfUnits -- ^ Preferred system of units
+renderLocalisedDate :: (FormatTime t) => SystemOfUnits -- ^ Preferred system of units
   -> Bool -- ^ Include the weekday name
   -> [Locale] -- ^ A list of potential locales
   -> t -- ^ The date to format
@@ -268,7 +271,7 @@ renderLocalisedDate _sou weekDay (loc:_) day = toHtml $ if weekDay then dwf ++ d
 --   where appropriate. See `formatTime` for the format specification
 --
 --   renderHtml $ renderLocalisedDate def ["fr"] "%a" (fromGregorian 2024 April 17)
-renderLocalisedTime :: (FormatTime t) => U.SystemOfUnits -- ^ Preferred system of units
+renderLocalisedTime :: (FormatTime t) => SystemOfUnits -- ^ Preferred system of units
   -> [Locale] -- ^ A list of potential locales
   -> String -- ^ The time format
   -> t -- ^ The time to format
@@ -280,7 +283,7 @@ renderLocalisedTime _sou (loc:_) fmt t = toHtml $ formatTime (localeTimeLocale l
 --
 -- >>> renderHtml $ renderLocalisedMonth def ["en"] 1
 -- "Feb"
-renderLocalisedMonth :: U.SystemOfUnits -- ^ Preferred system of units
+renderLocalisedMonth :: SystemOfUnits -- ^ Preferred system of units
   -> [Locale] -- ^ A list of potential locales
   -> C.MonthOfYear -- ^ The month
   -> Html -- ^ The formatted month
@@ -293,7 +296,7 @@ renderLocalisedMonth _sou (loc:_) t = toHtml $ snd $ (months $ localeTimeLocale 
 --   "1st"
 --   >>> renderHtml $ renderLocalisedOrdinal def ["fr"] 1
 --   "1re"
-renderLocalisedOrdinal :: U.SystemOfUnits -> [Locale] -> Int -> Html
+renderLocalisedOrdinal :: SystemOfUnits -> [Locale] -> Int -> Html
 renderLocalisedOrdinal sou [] o = renderLocalisedOrdinal sou [rootLocale] o
 renderLocalisedOrdinal _sou (loc:_) o = toHtml $ (localeOrdinalRender loc) o
 
@@ -310,7 +313,7 @@ renderLocalisedBeforeAfter n before after = toHtml (if n < 0 then before else af
 --
 -- >>> renderHtml $ renderLocalisedWeekOfMonth def ["en"] Fourth
 -- "fourth"
-renderLocalisedWeekOfMonth :: U.SystemOfUnits -> [Locale] -> WeekOfMonth -> Html
+renderLocalisedWeekOfMonth :: SystemOfUnits -> [Locale] -> WeekOfMonth -> Html
 renderLocalisedWeekOfMonth sou [] wom = renderLocalisedWeekOfMonth sou [rootLocale] wom
 renderLocalisedWeekOfMonth _sou (loc:_) wom = toHtml $ (localeWeekOfMonthRender loc) wom
 
@@ -318,7 +321,7 @@ renderLocalisedWeekOfMonth _sou (loc:_) wom = toHtml $ (localeWeekOfMonthRender 
 --
 -- >>> renderHtml $ renderLocalisedDayOfWeek def ["en"] Monday
 -- "Mon"
-renderLocalisedDayOfWeek :: U.SystemOfUnits -> [Locale] -> C.DayOfWeek -> Html
+renderLocalisedDayOfWeek :: SystemOfUnits -> [Locale] -> C.DayOfWeek -> Html
 renderLocalisedDayOfWeek sou [] dow = renderLocalisedDayOfWeek sou [rootLocale] dow
 renderLocalisedDayOfWeek _sou (loc:_) dow = let
     idx = (fromEnum dow) - 1
@@ -332,7 +335,7 @@ renderLocalisedDayOfWeek _sou (loc:_) dow = let
 -- >>> renderHtml $ renderLocalisedRegion config def ["es"] "ES"
 -- "España"
 renderLocalisedRegion :: Config -- ^ The configuration containing the region data
- -> U.SystemOfUnits -- ^ The system of units in use
+ -> SystemOfUnits -- ^ The system of units in use
  -> [Locale] -- ^ A list of desired locales
  -> Text -- ^ The region identifier (see `regionID`)
  -> Html -- ^ The resulting region name
@@ -340,9 +343,23 @@ renderLocalisedRegion config _sou locs rid = maybe (toHtml rid) (\r -> renderLoc
   where
     region = (regionConfigLookup $ getRegionConfig config) rid
 
-mkMessageCatalogue True (mkName "CaminoMsg") ''Locale [("config", ''Config), ("sou", ''U.SystemOfUnits)] "messages" "en"
+-- | Get a language appropriate unit symbol for a quantity and a locale
+-- >>> renderLocalisedUnitSymbol USUnits ["pt"] Distance
+-- "mi"
+renderLocalisedUnitSymbol :: SystemOfUnits -> [Locale] -> U.Quantity -> Text
+renderLocalisedUnitSymbol sou [] q = (localeUnitSymbolRender rootLocale) (U.preferredUnit sou q)
+renderLocalisedUnitSymbol sou (loc:_) q = (localeUnitSymbolRender loc) (U.preferredUnit sou q)
+
+-- | Get a language appropriate unit name for a quantity and a locale
+-- >>> renderLocalisedUnitName USUnits ["pt"] Distance True
+-- "milhas"
+renderLocalisedUnitName :: SystemOfUnits -> [Locale] -> U.Quantity -> Bool -> Text
+renderLocalisedUnitName sou [] q plural = (localeUnitNameRender rootLocale) (U.preferredUnit sou q) plural
+renderLocalisedUnitName sou (loc:_) q plural = (localeUnitNameRender loc) (U.preferredUnit sou q) plural
+
+mkMessageCatalogue True (mkName "CaminoMsg") ''Locale [("config", ''Config)] "messages" "en"
 
 -- | Render a camino message as un-markuped text
-renderCaminoMsgText :: Config -> U.SystemOfUnits -> [Locale] -> CaminoMsg -> Text
-renderCaminoMsgText config sou locales (ListMsg msgs) = commaJoin $ Prelude.map (renderCaminoMsgText config sou locales) msgs
-renderCaminoMsgText config sou locales msg = renderMarkupToText $ renderCaminoMsg config sou locales msg
+renderCaminoMsgText :: Config -> [Locale] -> CaminoMsg -> Text
+renderCaminoMsgText config locales (ListMsg msgs) = commaJoin $ Prelude.map (renderCaminoMsgText config locales) msgs
+renderCaminoMsgText config locales msg = renderMarkupToText $ renderCaminoMsg config locales msg

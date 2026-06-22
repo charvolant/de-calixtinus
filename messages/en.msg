@@ -19,7 +19,7 @@ ArduousDayLabel: Arduous Day
 ArtworkDescription: A piece of art
 ArtworkTitle: Art
 AscentLabel: Ascent
-AscentMsg ascent@Float: Ascent ^{formatHeight sou ascent}
+AscentMsg sou@SystemOfUnits ascent@Float: Ascent ^{formatHeight sou ascent}
 AustereTitle: Austere
 BackLabel: Back
 BankTitle: Bank
@@ -52,7 +52,7 @@ ChurchDescription: A church or chapel
 ChurchTitle: Church
 CityDescription: A large urban area with multiple options for services and accommodation
 CityTitle: City
-ClosedDayLabel region@Text: Closed Day (^{renderLocalisedRegion config sou locales region})
+ClosedDayLabel sou@SystemOfUnits region@Text: Closed Day (^{renderLocalisedRegion config sou locales region})
 ClosedDayText: Closed Day
 ClosedText: closed
 CloseLabel: Close
@@ -66,8 +66,8 @@ CyclingTitle: Cycling
 CyclePathTitle: Cycle Path (bicycles only)
 DailyLabel: Daily
 DateLabel: Date
-DateMsg day@C.Day: <span .date>^{renderLocalisedDate sou True locales day}
-DateRangeMsg day1@C.Day day2@C.Day:
+DateMsg sou@SystemOfUnits day@C.Day: <span .date>^{renderLocalisedDate sou True locales day}
+DateRangeMsg sou@SystemOfUnits day1@C.Day day2@C.Day:
 <span .date-range>
   $if day1 == day2
     ^{renderLocalisedDate sou True locales day1}
@@ -75,27 +75,27 @@ DateRangeMsg day1@C.Day day2@C.Day:
     ^{renderLocalisedDate sou True locales day1} - ^{renderLocalisedDate sou True locales day2}
 DayLabel: Day
 DayOfMonthName dom@C.DayOfMonth: #{dom}
-DayOfWeekName dow@C.DayOfWeek: ^{renderLocalisedTime sou locales "%a" dow}
+DayOfWeekName sou@SystemOfUnits dow@C.DayOfWeek: ^{renderLocalisedTime sou locales "%a" dow}
 DaysElapsedMsg days@Int: #{sformat int days} days total
 DayServicePreferencesLabel: Preferred Services during Day
 DayServicesPenanceLabel: Missing Services (Day)
 DaysWalkingMsg days@Int: #{sformat int days} days walking
 DayText: day
 DescentLabel: Descent
-DescentMsg descent@Float: Descent ^{formatHeight sou descent}
+DescentMsg sou@SystemOfUnits descent@Float: Descent ^{formatHeight sou descent}
 DinnerTitle: Dinner
 DirectionsTitle: Directions
 DistanceAdjustLabel: Distance Adjustment
-DistanceFormatted distance@Float: ^{formatDistance sou distance}
+DistanceFormatted sou@SystemOfUnits distance@Float: ^{formatDistance sou distance}
 DistanceLabel: Distance
-DistanceMsg actual@Float effort@Float transport@Float perceived@(Maybe Float): Distance ^{formatDistance sou actual} #
+DistanceMsg sou@SystemOfUnits actual@Float effort@Float transport@Float perceived@(Maybe Float): Distance ^{formatDistance sou actual} #
  (feels like ^{formatMaybeDistance sou perceived}#
  $if transport > 0
    \, transport ^{formatDistance sou transport}#
  \)
 DistancePenanceLabel: Distance
-DistancePreferencesLabel: Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
-DistancePreferencesPerceivedLabel: Perceived Distance Preferences (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+DistancePreferencesLabel sou@SystemOfUnits: Distance Preferences (#{renderLocalisedUnitSymbol sou locales U.Distance})
+DistancePreferencesPerceivedLabel sou@SystemOfUnits: Perceived Distance Preferences (#{renderLocalisedUnitSymbol sou locales U.Distance})
 DoubleTitle: Double
 DoubleWcTitle: Double with WC
 DownloadKmlTitle: Download KML
@@ -103,8 +103,8 @@ DownloadSpreadsheetTitle: Download Spreadsheet
 DryerTitle: Dryer
 EasyMode: Easy Mode
 EasyModeText: Easy mode reduces the number of choices that you have to make and chooses sensible defaults for most things.
-ElevationFormatted elev@Float: ^{formatHeight sou elev}
-ElevationLabel: Elevation (#{U.unitSymbol (U.preferredUnit sou U.Elevation)})
+ElevationFormatted sou@SystemOfUnits elev@Float: ^{formatHeight sou elev}
+ElevationLabel sou@SystemOfUnits: Elevation (#{renderLocalisedUnitSymbol sou locales U.Elevation})
 EventsLabel: Events
 ExceptText: except
 ExcludedLabel: Locations not to stop at
@@ -170,7 +170,7 @@ KeyLabel: Key
 KitchenTitle: Kitchen
 LatitudeLabel: Latitude
 LegendLabel: Legend
-LegPenanceMsg pen@Penance: +^{formatPenance sou True pen}
+LegPenanceMsg sou@SystemOfUnits pen@Penance: +^{formatPenance sou True pen}
 LinkTitle locd@(Localised TaggedURL) defd@(Localised TaggedText): $if hasLocalisedText locales locd
   ^{renderLocalisedText locales True True False locd}
 $else
@@ -178,7 +178,7 @@ $else
 LinkOut: More information
 ListMsg msgs@[CaminoMsg]: <ul .comma-separated-list>
   $forall m <- msgs
-    <li>^{renderCaminoMsg config sou locales m}
+    <li>^{renderCaminoMsg config locales m}
 LocationLabel: Location
 LocationPenanceLabel: Location
 LocationPreferencesLabel: Location Preferences
@@ -198,7 +198,7 @@ MetricTitle: Metric/Imperial Conversion
 MiscPenanceLabel: Other
 MonasteryDescription: A monastery or cloister, often with a hospice attached
 MonasteryTitle: Monastery
-MonthOfYearName moy@C.MonthOfYear: ^{renderLocalisedMonth sou locales moy}
+MonthOfYearName sou@SystemOfUnits moy@C.MonthOfYear: ^{renderLocalisedMonth sou locales moy}
 MoreInformation: More Information
 MunicipalDescription: A town square, market place, town hall or other municipal building
 MunicipalTitle: Municipal
@@ -212,20 +212,20 @@ NaturalTitle: Nature park
 NextLabel: Next
 NormalTitle: Normal
 NotesLabel: Notes
-NthWeekdayText wom@WeekOfMonth dow@C.DayOfWeek: ^{renderLocalisedWeekOfMonth sou locales wom} ^{renderLocalisedDayOfWeek sou locales dow}
+NthWeekdayText sou@SystemOfUnits wom@WeekOfMonth dow@C.DayOfWeek: ^{renderLocalisedWeekOfMonth sou locales wom} ^{renderLocalisedDayOfWeek sou locales dow}
 OpenHoursTitle: Open Hours
 OpenText: open
-OrdinalAfterWeekday nth@Int dow@C.DayOfWeek: ^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderLocalisedDayOfWeek sou locales dow} #{renderLocalisedBeforeAfter nth "before" "after"}
-OrdinalBeforeAfter nth@Int unit@CaminoMsg: ^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderCaminoMsg config sou locales unit} ^#renderLocalisedBeforeAfter nth  "before" "after"}
+OrdinalAfterWeekday sou@SystemOfUnits nth@Int dow@C.DayOfWeek: ^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderLocalisedDayOfWeek sou locales dow} #{renderLocalisedBeforeAfter nth "before" "after"}
+OrdinalBeforeAfter sou@SystemOfUnits nth@Int unit@CaminoMsg: ^{renderLocalisedOrdinal sou locales (abs nth)} ^{renderCaminoMsg config locales unit} #{renderLocalisedBeforeAfter nth  "before" "after"}
 OtherLabel: Other
 ParkDescription: A park or garden
 ParkTitle: Park
 PathLabel: Path
 PeakDescription: A peak or mountain pass
 PeakTitle: Peak/pass
-PenanceFormatted showZero@Bool pen@Penance: ^{formatPenance sou showZero pen}
-PenanceFormattedPlain showZero@Bool pen@Penance: ^{formatPenancePlain sou showZero pen}
-PenanceMsg pen@Penance: Penance ^{formatPenance sou True pen}
+PenanceFormatted sou@SystemOfUnits showZero@Bool pen@Penance: ^{formatPenance sou showZero pen}
+PenanceFormattedPlain sou@SystemOfUnits showZero@Bool pen@Penance: ^{formatPenancePlain sou showZero pen}
+PenanceMsg sou@SystemOfUnits pen@Penance: Penance ^{formatPenance sou True pen}
 PenanceReject: Rejected
 PenanceSummaryLabel: Penance
 PerceivedDistanceLabel: Perceived Distance
@@ -261,14 +261,14 @@ PrivateAlbergueTitle: Private Albergue
 ProgramLabel: Program
 PromontoryDescription: A promontory, cliff or headland
 PromontoryTitle: Promontory/Headland
-PublicHolidayLabel region@Text: Public Holiday ^{renderLocalisedRegion config sou locales region}
+PublicHolidayLabel sou@SystemOfUnits region@Text: Public Holiday ^{renderLocalisedRegion config sou locales region}
 PublicHolidayText: Public Holiday
 QuadrupleTitle: Quadruple
 QuadrupleWcTitle: Quadruple with WC
 RangeTitle: Distance and Time Preferences
-RangeText: Select the ranges that you will accept for both distance travelled over a day
-  \ (in #{U.unitSymbol (U.preferredUnit sou U.Distance)})
-  \ and time taken for each day (in #{U.unitSymbol (U.preferredUnit sou U.Time)}).
+RangeText sou@SystemOfUnits: Select the ranges that you will accept for both distance travelled over a day
+  \ (in #{renderLocalisedUnitName sou locales U.Distance True})
+  \ and time taken for each day (in #{renderLocalisedUnitName sou locales U.Time True}).
   \ Also select the range for how many days you wish to travel before resting.
   \ The ranges are absolute minimum, preferred lower bound, target, preferred upper bound and absolute maximum.
 RefugeTitle: Refuge
@@ -285,8 +285,8 @@ RestPenanceLabel: Rest
 RestpointLabel: Rest Point
 RestpointsLabel: Rest Points
 RestPointsPenanceLabel: Rest Points
-RestPreferencesLabel: Rest Preferences (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
-RestPressureLabel: Rest Pressure (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+RestPreferencesLabel sou@SystemOfUnits: Rest Preferences (#{renderLocalisedUnitSymbol sou locales U.Calendar})
+RestPressureLabel sou@SystemOfUnits: Rest Pressure (#{renderLocalisedUnitSymbol sou locales U.Distance})
 RestPressurePenanceLabel: Rest Pressure
 RestServicePreferencesLabel: Rest Services
 RoadTitle: Road/path
@@ -310,7 +310,7 @@ ServicesStockText: Select the location, accomodation and services preferences fo
 ServicesStockTitle: Select Stop Preferences for a Stock-up Day
 ServicesStopText: Select the location, accomodation and services preferences for the end of the day.
 ServicesStopTitle: Select the Day's Travel Preferences
-ServicesText2: All preferences are measured in kilometres of walking and represent the amount of extra distance you would walk to get something you want.
+ServicesText2 sou@SystemOfUnits: All preferences are measured in #{renderLocalisedUnitName sou locales U.Distance True} of walking and represent the amount of extra distance you would walk to get something you want.
 SharedTitle: Shared
 ShopDescription: A shop of note or usefulness
 ShopTitle: Shop
@@ -349,11 +349,11 @@ TableLabel: Table
 TestMessage: Currently under testing, see the About page
 TheatreDescription: A theatre, opera house or concert hall
 TheatreTitle: Theatre
-Time time@TimeOfDay: ^{renderLocalisedTime sou locales "%H%M" time}
+Time sou@SystemOfUnits time@TimeOfDay: ^{renderLocalisedTime sou locales "%H%M" time}
 TimeAdjustLabel: Time Adjustment
-TimeFormatted time@Float: ^{formatHours sou time}
+TimeFormatted sou@SystemOfUnits time@Float: ^{formatHours sou time}
 TimeLabel: Time
-TimeMsg mtime@(Maybe Float) meffort@(Maybe Float) mtransport@(Maybe Float) mpoi@(Maybe Float): over ^{formatMaybeHours sou mtime} #
+TimeMsg sou@SystemOfUnits mtime@(Maybe Float) meffort@(Maybe Float) mtransport@(Maybe Float) mpoi@(Maybe Float): over ^{formatMaybeHours sou mtime} #
   $case (mtransport, mpoi)
     $of (Nothing, Nothing)
     $of (Just t, Nothing)
@@ -363,7 +363,7 @@ TimeMsg mtime@(Maybe Float) meffort@(Maybe Float) mtransport@(Maybe Float) mpoi@
     $of (Just t, Just p)
       \ (transport ^{formatHours sou t}, stops ^{formatHours sou p})
 TimePenaltyLabel: Time Penalty
-TimePreferencesLabel: Time Preferences (#{U.unitSymbol (U.preferredUnit sou U.Time)})
+TimePreferencesLabel sou@SystemOfUnits: Time Preferences (#{renderLocalisedUnitSymbol sou locales U.Time})
 ToggleDetailTitle: Show/hide additional detail
 ToLabel: To
 TowelsTitle: Towels

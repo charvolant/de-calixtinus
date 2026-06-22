@@ -70,16 +70,16 @@ module Camino.Preferences (
 import GHC.Generics
 import Control.DeepSeq
 import Data.Aeson
-import Data.Placeholder
-import Data.Text (Text)
-import Camino.Camino
-import qualified Camino.Units as U
-import Data.Util
-import Camino.Walking
-import Data.Time.Calendar (Day)
 import qualified Data.Map as M (Map, difference, fromList, singleton, union)
+import Data.Placeholder
 import qualified Data.Set as S (Set, delete, disjoint, empty, filter, fold, fromList, insert, intersection, map, member, singleton, union, unions)
 import Data.Summary
+import Data.Text (Text)
+import Data.Time.Calendar (Day)
+import qualified Data.Units as U
+import Data.Util
+import Camino.Camino
+import Camino.Walking
 import Graph.Graph (successors, predecessors)
 
 -- | Acceptable range boundaries for various parameters.

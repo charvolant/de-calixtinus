@@ -114,10 +114,7 @@ module Text.MessageCatalogue (
     mkMessageCatalogueSimple
   , mkMessageCatalogue
   , mkMessageCatalogueRender
-  , Text.MessageCatalogue.Internal.RenderCatalogueMessage0(..)
-  , Text.MessageCatalogue.Internal.RenderCatalogueMessage1(..)
-  , Text.MessageCatalogue.Internal.RenderCatalogueMessage2(..)
-  , Text.MessageCatalogue.Internal.Renderer
+  , Text.MessageCatalogue.Internal.RenderCatalogueMessage(..)
   , Text.MessageCatalogue.Internal.renderMarkupToText
 ) where
 

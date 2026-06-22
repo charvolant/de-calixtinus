@@ -28,21 +28,19 @@ import Camino.Planner (Solution)
 import Camino.Preferences
 import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import qualified Camino.Config as C
-import qualified Camino.Units as U
 import Data.Aeson
 import qualified Data.ByteString.Lazy as LB (toStrict)
 import Data.Cache (Cache(..))
-import Data.Localised (Locale, Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
+import Data.Localised (Locale, IsLocale(..), Tagged(..), TaggedLink(..), localeFromID, localeLanguageTag, localise, rootLocale)
 import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.Placeholder
 import qualified Data.Set as S
 import Data.Text (Text, concat, intercalate, isPrefixOf, pack, splitOn, unpack)
 import Data.Text.Encoding (encodeUtf8)
-import Data.Text.Lazy (toStrict)
 import Data.Time.Calendar (Day, fromGregorian)
 import Data.Time.Clock (DiffTime, secondsToDiffTime)
-import Text.Blaze.Html.Renderer.Text (renderHtml)
+import qualified Data.Units as U
 import Web.Cookie
 import Yesod
 import Yesod.Static (Static)
@@ -400,16 +398,10 @@ permittedRestPoints prefs locs = let
 
 mkYesodData "CaminoApp" $(parseRoutesFile "config/routes.yesodroutes")
 
-instance RenderCatalogueMessage1 U.SystemOfUnits CaminoApp CaminoMsg where
-  renderMessageHtml1 sou site langs msg = renderCaminoMsg (caminoAppConfig site) sou (catMaybes $ map localeFromID langs) msg
-  renderMessageText1 sou site langs (ListMsg msgs) = commaJoin $ map (renderMessageText1 sou site langs) msgs
-  renderMessageText1 sou site langs msg = renderMarkupToText $ renderMessageHtml1 sou site langs msg
-
-instance RenderMessage CaminoApp CaminoMsg where
-  renderMessage site langs msg = renderMessageText1 (def :: U.SystemOfUnits) site langs msg
-
-caminoMsgRenderer :: U.SystemOfUnits -> Renderer CaminoApp CaminoMsg
-caminoMsgRenderer sou site langs msg = renderCaminoMsg (caminoAppConfig site) sou (catMaybes $ map localeFromID langs) msg
+instance RenderCatalogueMessage CaminoApp CaminoMsg where
+  renderMessageHtml site langs msg = renderCaminoMsg (caminoAppConfig site) (langsToLocales langs) msg
+  renderMessageText site langs (ListMsg msgs) = commaJoin $ map (renderMessageText site langs) msgs
+  renderMessageText site langs msg = renderMarkupToText $ renderMessageHtml site langs msg
 
 instance Yesod CaminoApp where
   approot = ApprootMaster (C.getWebRoot . caminoAppConfig)
@@ -429,7 +421,7 @@ instance Yesod CaminoApp where
     let scriptsHeader = C.getAssets C.JavaScriptEarly config
     let scriptsFooter = C.getAssets C.JavaScript config
     let helpLabel = render HelpLabel
-    let caminoTitle c = renderCaminoMsg config U.SIUnits locales (Txt (caminoName c))
+    let caminoTitle c = renderCaminoMsg config locales (Txt (caminoName c))
     pc <- widgetToPageContent widget
     np <- noticePopup
     nc <- widgetToPageContent np
@@ -509,7 +501,7 @@ noticePopup = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   let licence = maybe "LICENSE" assetPath $ C.getAsset "license" config
   let notice = (noticePopupText licence locales) messages router
   return $(widgetFile "notice-popup")

@@ -29,7 +29,6 @@ import Camino.Camino
 import Camino.Config (AssetConfig(..), Config(..), getAsset, getNotice, getWebRoot)
 import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution, planCamino)
 import Camino.Preferences
-import qualified Camino.Units as U
 import Camino.Display.Html
 import Camino.Display.I18n
 import Camino.Display.KML
@@ -48,6 +47,7 @@ import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import Data.Time.Format.ISO8601 (iso8601Show)
+import qualified Data.Units as U
 import Data.Util
 import Data.UUID (toText)
 import Data.UUID.V4
@@ -98,7 +98,7 @@ getHelpR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI HelpPageTitle
     toWidget ((helpWidget locales) messages router)
@@ -110,6 +110,7 @@ helpWidget (loc:rest)
  | localeLanguageTag loc == "" = $(ihamletFile "templates/help/help-en.hamlet")
  | localeLanguageTag loc == "en" = $(ihamletFile "templates/help/help-en.hamlet")
  | otherwise = helpWidget rest
+ where sou = U.SIUnits
 
 
 getCaminoR :: Text -> Handler Html
@@ -132,7 +133,7 @@ caminoPage camino = do
     let cprefs = (defaultCaminoPreferences camino) { preferenceStartDate = Just current }
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let messages = renderCaminoMsg config U.SIUnits locales
+    let messages = renderCaminoMsg config locales
     let html = (caminoHtmlSimple config cprefs) messages router
     defaultLayout $ do
       setTitle [shamlet|#{localiseText locales $ caminoName (preferenceCamino cprefs)}|]
@@ -145,7 +146,7 @@ getMapR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI MapTitle
     toWidget ((mapWidget (caminoAppConfig master) (caminoAppCaminos master)) messages router)
@@ -160,7 +161,7 @@ getMetricR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI MetricTitle
     toWidget ((metricWidget locales) messages router)
@@ -179,7 +180,7 @@ getAboutR = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   defaultLayout $ do
     setTitleI AboutPageTitle
     toWidget ((aboutWidget locales) messages router)
@@ -368,10 +369,10 @@ stepPage' title top1 top2 bottom stepp nextp display help widget enctype = do
 
 stepPage :: PreferenceStep -> PreferenceStep -> Maybe PreferenceData -> Widget -> Widget -> Enctype -> Handler Html
 stepPage TravelStep nextp _ help widget enctype = stepPage' TravelTitle TravelText1 (Just TravelText2) (Just TravelBottom) TravelStep nextp Nothing help widget enctype
-stepPage RangeStep nextp _ help widget enctype = stepPage' RangeTitle RangeText Nothing Nothing RangeStep nextp Nothing help widget enctype
-stepPage ServicesStopStep nextp _ help widget enctype = stepPage' ServicesStopTitle ServicesStopText (Just ServicesText2) Nothing ServicesStopStep nextp Nothing help widget enctype
-stepPage ServicesStockStep nextp _ help widget enctype = stepPage' ServicesStockTitle ServicesStockText (Just ServicesText2) Nothing ServicesStockStep nextp Nothing help widget enctype
-stepPage ServicesRestStep nextp _ help widget enctype = stepPage' ServicesRestTitle ServicesRestText (Just ServicesText2) Nothing ServicesRestStep nextp Nothing help widget enctype
+stepPage RangeStep nextp mprefs help widget enctype = stepPage' RangeTitle (RangeText sou) Nothing Nothing RangeStep nextp Nothing help widget enctype where sou = maybe U.SIUnits prefUnits mprefs
+stepPage ServicesStopStep nextp mprefs help widget enctype = stepPage' ServicesStopTitle ServicesStopText (Just (ServicesText2 sou)) Nothing ServicesStopStep nextp Nothing help widget enctype where sou = maybe U.SIUnits prefUnits mprefs
+stepPage ServicesStockStep nextp mprefs help widget enctype = stepPage' ServicesStockTitle ServicesStockText (Just (ServicesText2 sou)) Nothing ServicesStockStep nextp Nothing help widget enctype where sou = maybe U.SIUnits prefUnits mprefs
+stepPage ServicesRestStep nextp mprefs help widget enctype = stepPage' ServicesRestTitle ServicesRestText (Just (ServicesText2 sou)) Nothing ServicesRestStep nextp Nothing help widget enctype where sou = maybe U.SIUnits prefUnits mprefs
 stepPage CaminoStep nextp _ help widget enctype = stepPage' CaminoSelectTitle CaminoText Nothing Nothing CaminoStep nextp Nothing help widget enctype
 stepPage RoutesStep nextp _ help widget enctype = stepPage' RoutesTitle RoutesText Nothing Nothing RoutesStep nextp Nothing help widget enctype
 stepPage StartStep nextp _ help widget enctype = stepPage' StartTitle StartText Nothing Nothing StartStep nextp Nothing help widget enctype
@@ -383,7 +384,7 @@ stepPage ShowPreferencesStep nextp (Just prefs) help widget enctype = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let preferences = travelPreferencesFrom prefs
-    let messages = renderCaminoMsg config (preferenceUnits preferences) locales
+    let messages = renderCaminoMsg config locales
     let camino = caminoPreferencesFrom prefs
     let display = toWidget $ (preferencesHtml False preferences camino) messages router
     stepPage' ShowPreferencesTitle ShowPreferencesText Nothing Nothing ShowPreferencesStep nextp (Just display) help widget enctype
@@ -401,7 +402,7 @@ helpPopup help' = do
   locales <- getLocales
   let config = caminoAppConfig master
   let router = renderCaminoRoute config locales
-  let messages = renderCaminoMsg config U.SIUnits locales
+  let messages = renderCaminoMsg config locales
   let help'' = (\h -> h messages router) <$> help'
   return $ case help'' of
     Nothing -> (
@@ -419,10 +420,10 @@ helpPopup help' = do
 
 preferenceHelpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
 preferenceHelpPopup' TravelStep _ = Just $(ihamletFile "templates/help/travel-help-en.hamlet")
-preferenceHelpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
-preferenceHelpPopup' ServicesStopStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
-preferenceHelpPopup' ServicesStockStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
-preferenceHelpPopup' ServicesRestStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet")
+preferenceHelpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet") where sou = U.SIUnits
+preferenceHelpPopup' ServicesStopStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet") where sou = U.SIUnits
+preferenceHelpPopup' ServicesStockStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet") where sou = U.SIUnits
+preferenceHelpPopup' ServicesRestStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet") where sou = U.SIUnits
 preferenceHelpPopup' PoiStep _ = Just $(ihamletFile "templates/help/poi-help-en.hamlet")
 preferenceHelpPopup' RoutesStep _ = Just $(ihamletFile "templates/help/routes-help-en.hamlet")
 preferenceHelpPopup' StartStep _ = Just $(ihamletFile "templates/help/start-help-en.hamlet")
@@ -496,7 +497,7 @@ showPage solution = do
     let router = renderCaminoRoute config locales
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
-    let messages = renderCaminoMsg config (preferenceUnits tprefs) locales
+    let messages = renderCaminoMsg config locales
     let html = (caminoHtmlBase config tprefs cprefs (Just solution)) messages router
     addError (solutionJourneyFailure solution)
     addError (solutionPilgrimageFailure solution)
@@ -545,8 +546,7 @@ showXlsx solution = do
     let config = caminoAppConfig master
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
-    let sou = preferenceUnits tprefs
-    let messages = renderCaminoMsgText config sou locales
+    let messages = renderCaminoMsgText config locales
     let pilgrimage = solutionPilgrimage solution
     let xlsx = createCaminoXlsx config messages tprefs cprefs solution
     let result = fromXlsx ct xlsx

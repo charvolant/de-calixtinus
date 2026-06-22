@@ -39,13 +39,12 @@ module Camino.Server.Forms (
 
 import Camino.Camino
 import Camino.Preferences
-import qualified Camino.Units as U
 import Data.Util
 import Camino.Display.Html (caminoAccommodationTypeIcon, caminoAccommodationTypeMsg, caminoComfortMsg, caminoFitnessMsg, caminoLocationTypeIcon, caminoLocationTypeLabel, caminoPoiCategoryLabel, caminoServiceIcon, caminoServiceMsg, caminoTravelMsg, caminoUnitsMsg, descriptionBlock, warningBlock)
 import Camino.Display.I18n (CaminoMsg(..), renderCaminoMsg)
 import Camino.Display.Routes (renderCaminoRoute)
 import Camino.Server.Fields
-import Camino.Server.Forms.Functions
+import Camino.Server.Forms.Functions()
 import Camino.Server.Foundation
 import Data.List (find, partition, singleton, sortOn)
 import Data.Localised (Locale, localiseText)
@@ -56,10 +55,10 @@ import qualified Data.Set as S
 import Data.Summary
 import Data.Text (Text, pack)
 import Data.Time.Calendar (Day)
+import qualified Data.Units as U
 import Formatting
 import Text.Hamlet
 import Yesod
-import Text.MessageCatalogue
 
 -- | Gathered result and widget data
 data PreferenceDataFields = PreferenceDataFields {
@@ -179,14 +178,10 @@ fullRoutes :: FormResult Camino -> S.Set Camino.Camino.Route -> S.Set Camino.Cam
 fullRoutes (FormSuccess camino) routes = fst $ completeRoutes camino routes
 fullRoutes _ routes = routes
 
-
-catalogueFieldSettingsLabelName :: message -> Text -> CatalogueFieldSettings master message
-catalogueFieldSettingsLabelName msg name = CatalogueFieldSettings msg Nothing Nothing (Just name) []
-
-fieldSettingsLabelName :: RenderMessage site msg => msg -> Text -> FieldSettings site
+fieldSettingsLabelName :: RenderMessage master message => message -> Text -> FieldSettings master
 fieldSettingsLabelName msg name = FieldSettings (SomeMessage msg) Nothing Nothing (Just name) []
 
-fieldSettingsName :: Text -> FieldSettings site
+fieldSettingsName :: Text -> FieldSettings master
 fieldSettingsName name = FieldSettings "" Nothing Nothing (Just name) []
 
 -- | Make a default set of preference data fields with everything hidden
@@ -518,8 +513,7 @@ chooseTravelForm help prefs extra = do
     master <- getYesod
     locales <- getLocales
     mRender <- getMessageRender
-    let sou = maybe U.SIUnits prefUnits prefs
-    let render = renderCaminoMsg (caminoAppConfig master) sou locales
+    let render = renderCaminoMsg (caminoAppConfig master) locales
     let easyField =  extendedCheckboxField (toHtml . mRender) EasyMode (Just EasyModeText)
     let unitsField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoUnitsMsg f, f, Nothing)) U.systemOfUnitsEnumeration)
     let travelField =  extendedRadioFieldList render (map (\f -> (pack $ show f, caminoTravelMsg f, f, Nothing)) travelEnumeration)
@@ -598,16 +592,15 @@ chooseRangeForm :: Widget -> Maybe PreferenceData -> Html -> MForm Handler (Form
 chooseRangeForm help prefs extra = do
     master <- getYesod
     let sou = maybe U.SIUnits prefUnits prefs
-    let render = caminoMsgRenderer sou
     let (dlow, dhigh, dstep) = distanceRanges (maybe Walking prefTravel prefs)
     let distanceRangeField = rangeFieldQuantity sou U.Distance dlow dhigh dstep
     let timeRangeField = rangeFieldQuantity sou U.Time 0.0 16.0 0.1
     let restRangeField = rangeFieldNumber 0 10 1 id id
     let restPressureField = floatFieldQuantity sou U.Distance 0 20 1
-    (diRes, diView) <- mreqr render distanceRangeField (catalogueFieldSettingsLabelName DistancePreferencesLabel "distance") (prefDistance <$> prefs)
-    (tiRes, tiView) <- mreqr render timeRangeField (catalogueFieldSettingsLabelName TimePreferencesLabel "time") (prefTime <$> prefs)
-    (reRes, reView) <- mreqr render restRangeField (catalogueFieldSettingsLabelName RestPreferencesLabel "rest") (prefRest <$> prefs)
-    (rpRes, rpView) <- moptr render restPressureField (catalogueFieldSettingsLabelName RestPressureLabel "restPressure") (prefRestPressure <$> prefs)
+    (diRes, diView) <- mreq distanceRangeField (fieldSettingsLabelName (DistancePreferencesLabel sou) "distance") (prefDistance <$> prefs)
+    (tiRes, tiView) <- mreq timeRangeField (fieldSettingsLabelName (TimePreferencesLabel sou) "time") (prefTime <$> prefs)
+    (reRes, reView) <- mreq restRangeField (fieldSettingsLabelName (RestPreferencesLabel sou) "rest") (prefRest <$> prefs)
+    (rpRes, rpView) <- mopt restPressureField (fieldSettingsLabelName (RestPressureLabel sou) "restPressure") (prefRestPressure <$> prefs)
     df <- defaultPreferenceFields master prefs
     let fields = df {
         resDistance = diRes
@@ -660,7 +653,7 @@ chooseStopServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg config sou locales
+    let messages = renderCaminoMsg config locales
     let transportLinksField =  extendedCheckboxField (toHtml . mRender) TransportLinks (Just TransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
@@ -733,7 +726,7 @@ chooseStockServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg config sou locales
+    let messages = renderCaminoMsg config locales
     let transportLinksField =  extendedCheckboxField (toHtml . mRender) TransportLinks (Just TransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
@@ -805,7 +798,7 @@ chooseRestServicesForm help prefs extra = do
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
     let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg config sou locales
+    let messages = renderCaminoMsg config locales
     let transportLinksField =  extendedCheckboxField (toHtml . mRender) TransportLinks (Just TransportLinksText)
     let locationOptions = map (\v -> (v, [ihamlet|<span .location-type-sample>^{caminoLocationTypeIcon v}</span>&nbsp;_{caminoLocationTypeLabel v}|] messages router)) locationStopTypeEnumeration
     let accommodationOptions = map (\v -> (v, [ihamlet|^{caminoAccommodationTypeIcon v}&nbsp;_{caminoAccommodationTypeMsg v}|] messages router)) accommodationTypeEnumeration
@@ -875,8 +868,7 @@ chooseCaminoForm help prefs extra = do
     locales <- getLocales
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg config sou locales
+    let messages = renderCaminoMsg config locales
     let localised c = localiseText locales c
     let description d = Just $ (descriptionBlock False True d) messages router
     let  caminoField = extendedRadioFieldList id (map (\c -> (caminoId c, toHtml $ localised $ caminoName c, c, description $ caminoDescription c)) (caminoAppCaminos master))
@@ -912,8 +904,7 @@ chooseRoutesForm help prefs extra = do
     locales <- getLocales
     let config = caminoAppConfig master
     let router = renderCaminoRoute config locales
-    let sou = maybe U.SIUnits prefUnits prefs
-    let messages = renderCaminoMsg config sou locales
+    let messages = renderCaminoMsg config locales
     let localised r = localiseText locales r
     let description d = Just $ (descriptionBlock False True d) messages router
     let camino = prefCamino <$> prefs

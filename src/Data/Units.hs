@@ -17,7 +17,7 @@ Don't look at this.
 This is the skeleton of a proper unit system.
 -}
 
-module Camino.Units (
+module Data.Units (
     Quantity(..)
   , SystemOfUnits(..)
   , Unit(..)

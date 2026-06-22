@@ -33,6 +33,7 @@ as a wild-card localisation.
 module Data.Localised (
   -- * Locales
     Locale(..)
+  , IsLocale(..)
   , WeekOfMonth(..)
   , localeFromID
   , localeFromIDOrError
@@ -40,6 +41,8 @@ module Data.Localised (
   , localeSeparator
   , localeOrdinalRender
   , localeTimeLocale
+  , localeUnitNameRender
+  , localeUnitSymbolRender
   , localeWeekOfMonthRender
   , rootLocale
   , rootTimeLocale
@@ -75,6 +78,7 @@ import Data.String (IsString(..))
 import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack)
 import Data.Time.Format
 import Data.Time.LocalTime
+import Data.Units
 import Formatting
 import Network.URI
 
@@ -134,10 +138,12 @@ data Locale = Locale {
   , localeTime :: Maybe TimeLocale -- ^ The time locale to use
   , localeOrdinals :: Maybe (Int -> Text) -- ^ Format an integer to an ordinal abbreviation (1 -> "1st", 22 -> "22nd", etc)
   , localeWeekOfMonth :: Maybe (WeekOfMonth -> Text) -- ^ Convert a week of the month into text ("second")
+  , localeUnitSymbol :: Maybe (Unit -> Text) -- ^ Get the symbol for a unit
+  , localeUnitName :: Maybe (Unit -> Bool -> Text) -- ^ Get the, possibly pluralised, name of a unit
 } deriving (Generic)
 
 instance Show Locale where
-  show (Locale _parent' id' _matches' _language' _country' _time' _ordinals' _wom') = "Locale:" ++ (unpack id')
+  show (Locale _parent' id' _matches' _language' _country' _time' _ordinals' _wom' _us' _un') = "Locale:" ++ (unpack id')
 
 instance Eq Locale where
   a == b = localeID a == localeID b
@@ -156,6 +162,29 @@ instance NFData Locale
 
 instance IsString Locale where
   fromString = localeFromIDOrError . pack
+
+-- | Something that can be converted into a locale-like type, sutable for further use in things like message catalogues
+--   and the like.
+class IsLocale locale where
+  -- | Convert a locale specifier, such as "en" or "pt-BR" into a locale implementation
+  langToLocale :: Text -- ^ The locale specified
+    -> Maybe locale -- ^ The corresponding locale, if found
+  -- | Convert a list of locale specifiers into a recognised list of locales
+  langsToLocales :: [Text] -- ^ The list of potential locale specifiers
+    -> [locale] -- ^ The list of matching locales, with unrecognised locales removed
+  langsToLocales langs = catMaybes $ map langToLocale langs
+  {-# MINIMAL langToLocale #-}
+
+-- | Locales are locales
+instance IsLocale Locale where
+  langToLocale = localeFromID
+
+-- | Text is treated as a locale containing a language code
+--
+--   No decoding is done and the list of codes is passed on as-is
+instance IsLocale Text where
+  langToLocale = Just . id
+  langsToLocales = id
 
 -- | Get the standard language tag for this locale.
 --
@@ -394,21 +423,117 @@ rootWeekOfMonth Fourth = "fourth"
 rootWeekOfMonth Fifth = "fifth"
 rootWeekOfMonth Last = "last"
 
+rootUnitSymbol :: Unit -> Text
+rootUnitSymbol = pack . unitSymbol
+
+basqueUnitSymbol :: Unit -> Text
+basqueUnitSymbol Day = "egunak"
+basqueUnitSymbol u = rootUnitSymbol u
+
+frenchUnitSymbol :: Unit -> Text
+frenchUnitSymbol Day = "jours"
+frenchUnitSymbol u = rootUnitSymbol u
+
+portugueseUnitSymbol :: Unit -> Text
+portugueseUnitSymbol Day = "dias"
+portugueseUnitSymbol u = rootUnitSymbol u
+
+spanishUnitSymbol :: Unit -> Text
+spanishUnitSymbol Day = "días"
+spanishUnitSymbol u = rootUnitSymbol u
+
+rootUnitName = englishUnitName
+
+basqueUnitName :: Unit -> Bool -> Text
+basqueUnitName Unit _ = ""
+basqueUnitName Metre False = "metroa"
+basqueUnitName Metre True = "metroak"
+basqueUnitName Kilometre False = "kilometroa"
+basqueUnitName Kilometre True = "kilometroak"
+basqueUnitName Mile False = "milia"
+basqueUnitName Mile True = "milia"
+basqueUnitName Foot False = "oina"
+basqueUnitName Foot True = "oinak"
+basqueUnitName Hour False = "ordua"
+basqueUnitName Hour True = "orduak"
+basqueUnitName Day False = "eguna"
+basqueUnitName Day True = "egunak"
+
+englishUnitName :: Unit -> Bool -> Text
+englishUnitName Unit _ = ""
+englishUnitName Metre False = "metre"
+englishUnitName Metre True = "metres"
+englishUnitName Kilometre False = "kilometre"
+englishUnitName Kilometre True = "kilometres"
+englishUnitName Mile False = "mile"
+englishUnitName Mile True = "miles"
+englishUnitName Foot False = "foot"
+englishUnitName Foot True = "feet"
+englishUnitName Hour False = "hour"
+englishUnitName Hour True = "hours"
+englishUnitName Day False = "day"
+englishUnitName Day True = "days"
+
+frenchUnitName :: Unit -> Bool -> Text
+frenchUnitName Unit _ = ""
+frenchUnitName Metre False = "mètre"
+frenchUnitName Metre True = "mètres"
+frenchUnitName Kilometre False = "kilomètre"
+frenchUnitName Kilometre True = "kilomètres"
+frenchUnitName Mile False = "mile"
+frenchUnitName Mile True = "miles"
+frenchUnitName Foot False = "pieds"
+frenchUnitName Foot True = "pieds"
+frenchUnitName Hour False = "heure"
+frenchUnitName Hour True = "heures"
+frenchUnitName Day False = "jour"
+frenchUnitName Day True = "jours"
+
+portugueseUnitName :: Unit -> Bool -> Text
+portugueseUnitName Unit _ = ""
+portugueseUnitName Metre False = "metro"
+portugueseUnitName Metre True = "metros"
+portugueseUnitName Kilometre False = "quilómetro"
+portugueseUnitName Kilometre True = "quilómetros"
+portugueseUnitName Mile False = "milha"
+portugueseUnitName Mile True = "milhas"
+portugueseUnitName Foot False = "pé"
+portugueseUnitName Foot True = "pés"
+portugueseUnitName Hour False = "hora"
+portugueseUnitName Hour True = "horas"
+portugueseUnitName Day False = "dia"
+portugueseUnitName Day True = "dias"
+
+spanishUnitName :: Unit -> Bool -> Text
+spanishUnitName Unit _ = ""
+spanishUnitName Metre False = "metro"
+spanishUnitName Metre True = "metros"
+spanishUnitName Kilometre False = "kilómetro"
+spanishUnitName Kilometre True = "kilómetros"
+spanishUnitName Mile False = "milla"
+spanishUnitName Mile True = "millas"
+spanishUnitName Foot False = "pie"
+spanishUnitName Foot True = "pies"
+spanishUnitName Hour False = "hora"
+spanishUnitName Hour True = "horas"
+spanishUnitName Day False = "día"
+spanishUnitName Day True = "días"
+
 -- | The base, wildcard locale
 --
 --  This has an ID of "*" and defaults to English-language names and conventions
 rootLocale :: Locale
-rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale) (Just rootOrdinals) (Just rootWeekOfMonth)
+rootLocale = Locale Nothing "*" ["root"] (Just []) (Just []) (Just rootTimeLocale) (Just rootOrdinals) (Just rootWeekOfMonth) (Just rootUnitSymbol)(Just rootUnitName)
 
-englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just []) Nothing Nothing Nothing
-englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"]) Nothing Nothing Nothing
-englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing Nothing Nothing
-frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing (Just frenchTimeLocale) Nothing Nothing
-galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing (Just galacianTimeLocale) Nothing Nothing
-portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale) Nothing Nothing
-spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale) Nothing Nothing
-basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing (Just basqueTimeLocale) Nothing Nothing
-asturianLocale = Locale (Just rootLocale) "ast" [ ] (Just ["ast"]) Nothing (Just asturianTimeLocale) Nothing Nothing
+englishLocale = Locale (Just rootLocale) "en" ["eng"] (Just ["en", "eng"]) (Just []) Nothing Nothing Nothing Nothing (Just englishUnitName)
+englishUSLocale = Locale (Just englishLocale) "en-US" ["eng-US", "en_US", "eng_US"] Nothing (Just ["US"]) Nothing Nothing Nothing Nothing Nothing
+englishUKLocale = Locale (Just englishLocale) "en-UK" ["eng-UK", "en_UK", "eng_UK", "en-GB", "eng-GB", "en_GB", "eng_GB"] Nothing (Just ["UK"]) Nothing Nothing Nothing Nothing Nothing
+frenchLocale = Locale (Just rootLocale) "fr" ["fra", "fre" ] (Just ["fr", "fra", "fre"]) Nothing (Just frenchTimeLocale) Nothing Nothing (Just frenchUnitSymbol) (Just frenchUnitName)
+galacianLocale = Locale (Just rootLocale) "ga" [ "glg" ] (Just ["ga", "glg"]) Nothing (Just galacianTimeLocale) Nothing Nothing (Just spanishUnitSymbol) (Just spanishUnitName)
+portugueseLocale = Locale (Just rootLocale) "pt" [ "por" ] (Just ["pt", "por"]) Nothing (Just portugueseTimeLocale) Nothing Nothing (Just portugueseUnitSymbol) (Just portugueseUnitName)
+spanishLocale = Locale (Just rootLocale) "es" ["spa" ] (Just ["es", "spa"]) Nothing (Just spanishTimeLocale) Nothing Nothing (Just spanishUnitSymbol) (Just spanishUnitName)
+basqueLocale = Locale (Just rootLocale) "eu" ["eus", "baq" ] (Just ["eu", "eus", "baq"]) Nothing (Just basqueTimeLocale) Nothing Nothing (Just basqueUnitSymbol) (Just basqueUnitName)
+asturianLocale = Locale (Just rootLocale) "ast" [ ] (Just ["ast"]) Nothing (Just asturianTimeLocale) Nothing Nothing (Just spanishUnitSymbol) (Just spanishUnitName)
 
 -- | Decode a locale identifier into a locale specification
 --   If the locale cannot be identified, the @rootLocale@ is returned
@@ -479,21 +604,33 @@ localeSeparator = "@"
 
 -- | Get the time locale for this locale, working up the parent structure if not immediately found
 localeTimeLocale :: Locale -> TimeLocale
-localeTimeLocale (Locale _ _ _ _ _ (Just tl) _ _) = tl
-localeTimeLocale (Locale Nothing _ _ _ _ Nothing _ _) = rootTimeLocale -- Should never happen
-localeTimeLocale (Locale (Just parent) _ _ _ _ Nothing _ _) = localeTimeLocale parent
+localeTimeLocale (Locale _ _ _ _ _ (Just tl) _ _ _ _) = tl
+localeTimeLocale (Locale Nothing _ _ _ _ Nothing _ _ _ _) = rootTimeLocale -- Should never happen
+localeTimeLocale (Locale (Just parent) _ _ _ _ Nothing _ _ _ _) = localeTimeLocale parent
 
 -- | Get the ordinal formatting function for this locale, working up the parent structure if not immediately found
 localeOrdinalRender :: Locale -> (Int -> Text)
-localeOrdinalRender (Locale _ _ _ _ _ _ (Just ordinals) _) = ordinals
-localeOrdinalRender (Locale Nothing _ _ _ _ _ Nothing _) = rootOrdinals -- Should never happen
-localeOrdinalRender (Locale (Just parent) _ _ _ _ _ Nothing _) = localeOrdinalRender parent
+localeOrdinalRender (Locale _ _ _ _ _ _ (Just ordinals) _ _ _) = ordinals
+localeOrdinalRender (Locale Nothing _ _ _ _ _ Nothing _ _ _) = rootOrdinals -- Should never happen
+localeOrdinalRender (Locale (Just parent) _ _ _ _ _ Nothing _ _ _) = localeOrdinalRender parent
 
 -- | Get the week of month formatting function for this locale, working up the parent structure if not immediately found
 localeWeekOfMonthRender :: Locale -> (WeekOfMonth -> Text)
-localeWeekOfMonthRender (Locale _ _ _ _ _ _ _ (Just wom)) = wom
-localeWeekOfMonthRender (Locale Nothing _ _ _ _ _ _ Nothing) = rootWeekOfMonth -- Should never happen
-localeWeekOfMonthRender (Locale (Just parent) _ _ _ _ _ _ Nothing) = localeWeekOfMonthRender parent
+localeWeekOfMonthRender (Locale _ _ _ _ _ _ _ (Just wom) _ _) = wom
+localeWeekOfMonthRender (Locale Nothing _ _ _ _ _ _ Nothing _ _) = rootWeekOfMonth -- Should never happen
+localeWeekOfMonthRender (Locale (Just parent) _ _ _ _ _ _ Nothing _ _) = localeWeekOfMonthRender parent
+
+-- | Get the unit symbol formatting function for this locale, working up the parent structure if not immediately found
+localeUnitSymbolRender :: Locale -> (Unit -> Text)
+localeUnitSymbolRender (Locale _ _ _ _ _ _ _ _ (Just us) _) = us
+localeUnitSymbolRender (Locale Nothing _ _ _ _ _ _ _ Nothing _) = rootUnitSymbol -- Should never happen
+localeUnitSymbolRender (Locale (Just parent) _ _ _ _ _ _ _ Nothing _) = localeUnitSymbolRender parent
+
+-- | Get the unit name formatting function for this locale, working up the parent structure if not immediately found
+localeUnitNameRender :: Locale -> (Unit -> Bool -> Text)
+localeUnitNameRender (Locale _ _ _ _ _ _ _ _ _ (Just un)) = un
+localeUnitNameRender (Locale Nothing _ _ _ _ _ _ _ _ Nothing) = rootUnitName -- Should never happen
+localeUnitNameRender (Locale (Just parent) _ _ _ _ _ _ _ _ Nothing) = localeUnitNameRender parent
 
 -- | Parse a piece of text with an optional locale tage at the end into a locale/text pair
 --

@@ -35,7 +35,6 @@ module Camino.Server.Fields (
 
 import Camino.Camino (Penance(..))
 import Camino.Preferences (PreferenceRange(..), validRange)
-import qualified Camino.Units as U
 import Camino.Display.I18n (formatPenance)
 import Data.Either (fromRight, isLeft, rights)
 import Data.List (find)
@@ -44,6 +43,7 @@ import Data.Propositional
 import qualified Data.Set as S
 import Data.Text (Text, cons, intercalate, pack, snoc, splitOn, unpack)
 import Data.Time.Calendar (Day)
+import qualified Data.Units as U
 import Data.Util (roundBy)
 import Text.Read (readEither)
 import Yesod.Core

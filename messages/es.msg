@@ -17,7 +17,7 @@ AppName: De Calixtinus
 ArtworkDescription: Una pieza de arte
 ArtworkTitle: Arte
 AscentLabel: Ascenso
-AscentMsg ascent: Ascenso ^{formatHeight sou ascent}
+AscentMsg sou ascent: Ascenso ^{formatHeight sou ascent}
 AustereTitle: Austero
 BackLabel: Atrás
 BankTitle: Banco
@@ -48,7 +48,7 @@ ChurchDescription: Una iglesia o capilla
 ChurchTitle: Iglesia
 CityDescription: Una gran área urbana con múltiples opciones de servicios y alojamiento
 CityTitle: Ciudad
-ClosedDayLabel region@Text: Día cerrado (^{renderLocalisedRegion config sou locales region})
+ClosedDayLabel sou region: Día cerrado (^{renderLocalisedRegion config sou locales region})
 ClosedDayText: Día cerrado
 ClosedText: cerrado
 CloseLabel: Cerrar
@@ -70,20 +70,20 @@ DayServicesPenanceLabel: Servicios no prestados (día)
 DaysWalkingMsg d: #{sformat int d} días caminando
 DayText: día
 DescentLabel: Descenso
-DescentMsg descent: Descenso ^{formatHeight sou descent}
+DescentMsg sou descent: Descenso ^{formatHeight sou descent}
 DirectionsTitle: Direcciones
 DinnerTitle: Cena
 DistanceAdjustLabel: Ajuste de distancia
-DistanceFormatted distance: ^{formatDistance sou distance}
+DistanceFormatted sou distance: ^{formatDistance sou distance}
 DistanceLabel: Distancia
-DistanceMsg actual effort transport perceived: Distancia ^{formatDistance sou actual} #
+DistanceMsg sou actual effort transport perceived: Distancia ^{formatDistance sou actual} #
  (Se siente como ^{formatMaybeDistance sou perceived}#
  $if transport > 0
    \, ^{formatDistance sou transport} transporte#
  \)
 DistancePenanceLabel: Distancia
-DistancePreferencesLabel: Preferencias de distancia (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
-DistancePreferencesPerceivedLabel: Preferencias de distancia percibidas (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+DistancePreferencesLabel sou: Preferencias de distancia (#{renderLocalisedUnitSymbol sou locales U.Distance})
+DistancePreferencesPerceivedLabel sou: Preferencias de distancia percibidas (#{renderLocalisedUnitSymbol sou locales U.Distance})
 DoubleTitle: Doble
 DoubleWcTitle: Doble con baño
 DownloadKmlTitle: Descargar KML
@@ -91,8 +91,8 @@ DownloadSpreadsheetTitle: Descargar Excel
 DryerTitle: Secadora de ropa
 EasyMode: Modo fácil
 EasyModeText: El modo fácil reduce la cantidad de decisiones que debes tomar y selecciona opciones predeterminadas adecuadas para la mayoría de las cosas.
-ElevationFormatted elev: ^{formatHeight sou elev}
-ElevationLabel: Altura (#{U.unitSymbol (U.preferredUnit sou U.Elevation)})
+ElevationFormatted sou elev: ^{formatHeight sou elev}
+ElevationLabel sou: Altura (#{renderLocalisedUnitSymbol sou locales U.Elevation})
 EventsLabel: Eventos
 ExceptText: excepción
 ExcludedLabel: Lugares donde no detenerse
@@ -157,7 +157,7 @@ KeyLabel: Llave
 KitchenTitle: Cocina
 LatitudeLabel: Latitud
 LegendLabel: Leyenda
-LegPenanceMsg pen: +^{formatPenance sou True pen}
+LegPenanceMsg sou pen: +^{formatPenance sou True pen}
 LinkOut: Más información
 LocationLabel: Ubicación
 LocationPenanceLabel: Ubicación
@@ -197,7 +197,7 @@ ParkTitle: Parque
 PathLabel: Camino
 PeakDescription: Cima o paso de montaña
 PeakTitle: Cima/paso de montaña
-PenanceMsg pen: Penitencia ^{formatPenance sou True pen}
+PenanceMsg sou pen: Penitencia ^{formatPenance sou True pen}
 PenanceReject: Rechazado
 PenanceSummaryLabel: Penitencia
 PerceivedDistanceLabel: Distancia percibida
@@ -233,12 +233,13 @@ PrivateAlbergueTitle: Albergue privado
 ProgramLabel: Programa
 PromontoryDescription: Un risco, acantilado o cabo
 PromontoryTitle: Risco/Cabo
-PublicHolidayLabel region@Text: Día festivo ^{renderLocalisedRegion config sou locales region}
+PublicHolidayLabel sou region: Día festivo ^{renderLocalisedRegion config sou locales region}
 PublicHolidayText: Día festivo
 QuadrupleTitle: Habitación cuádruple
 QuadrupleWcTitle: Habitación cuádruple con baño
 RangeTitle: Preferencias de distancia y tiempo
-RangeText: Selecciona los rangos que prefieres para la distancia recorrida cada día y el tiempo dedicado a caminar.
+RangeText sou: Selecciona los rangos que prefieres para la distancia recorrida cada día (en #{renderLocalisedUnitName sou locales U.Distance True})
+  \ y el tiempo dedicado a caminar (en #{renderLocalisedUnitName sou locales U.Time True}).
   \ También indica cuántos días te gustaría caminar antes de tomar un día de descanso (día libre).
   \ Los rangos se definen mediante un mínimo absoluto, un límite inferior preferido, un objetivo, un límite superior preferido y un máximo absoluto.
 RefugeTitle: Refugio
@@ -257,8 +258,8 @@ RestpointLabel: Punto de descanso
 RestpointsLabel: Puntos de descanso
 RestPointsPenanceLabel: Puntos de descanso
 #RestPreferencesLabel: Preferencias de descanso (días de viaje)
-RestPreferencesLabel: Preferencias de descanso (#{U.unitSymbol (U.preferredUnit sou U.Calendar)})
-RestPressureLabel: Presión de reposo (#{U.unitSymbol (U.preferredUnit sou U.Distance)})
+RestPreferencesLabel sou: Preferencias de descanso (#{renderLocalisedUnitSymbol sou locales U.Calendar})
+RestPressureLabel sou: Presión de reposo (#{renderLocalisedUnitSymbol sou locales U.Distance})
 RestPressurePenanceLabel: Presión en reposo
 RestServicePreferencesLabel: Servicios de descanso
 RoadTitle: Camino/sendero
@@ -269,8 +270,8 @@ RoutesLabel: Rutas
 RoutesText: Selecciona las variantes de ruta que deseas recorrer. La ruta estándar siempre estará seleccionada. Algunas rutas requieren otras rutas o no pueden realizarse junto con otras.
 RoutesTitle: Seleccionar rutas
 RangeTitle: Preferencias de distancia y tiempo
-RangeText: Selecciona los rangos que prefieres para la distancia recorrida cada día (en #{U.unitSymbol (U.preferredUnit sou U.Distance)})
-  \ y el tiempo dedicado a caminar (en horas).
+RangeText sou: Selecciona los rangos que prefieres para la distancia recorrida cada día (en #{renderLocalisedUnitName sou locales U.Distance True})
+  \ y el tiempo dedicado a caminar (en #{renderLocalisedUnitName sou locales U.Time True}).
   \ También indica cuántos días te gustaría caminar antes de tomar un día de descanso (día libre).
   \ Los rangos se definen mediante un mínimo absoluto, un límite inferior preferido, un objetivo, un límite superior preferido y un máximo absoluto.
 RequiredStopsLabel: Paradas obligatorias
@@ -288,7 +289,7 @@ ServicesStockText: Selecciona las preferencias de ubicación, alojamiento y serv
 ServicesStockTitle: Seleccionar preferencias de parada para abastecimiento
 ServicesStopText: Seleccionar preferencias de ubicación, alojamiento y servicios para el final del día.
 ServicesStopTitle: Seleccionar preferencias de viaje para el día.
-ServicesText2: Todas las preferencias se miden en kilómetros caminados y representan la distancia extra que caminarías para obtener algo que deseas.
+ServicesText2 sou: Todas las preferencias se miden en #{renderLocalisedUnitName sou locales U.Distance True} caminados y representan la distancia extra que caminarías para obtener algo que deseas.
 SharedTitle: Compartido
 ShopDescription: Tienda destacada o útil
 ShopTitle: Tienda
@@ -330,9 +331,9 @@ TestMessage: Actualmente en pruebas, consulta la página Acerca de
 TheatreDescription: Un teatro, una ópera o una sala de conciertos.
 TheatreTitle: Teatro
 TimeAdjustLabel: Modificación de hora
-TimeFormatted time: ^{formatHours sou time}
+TimeFormatted sou time: ^{formatHours sou time}
 TimeLabel: Tiempo
-TimeMsg mtime meffort mtransport mpoi: Más de ^{formatMaybeHours sou mtime} #
+TimeMsg sou mtime meffort mtransport mpoi: Más de ^{formatMaybeHours sou mtime} #
   $case (mtransport, mpoi)
     $of (Nothing, Nothing)
     $of (Just t, Nothing)
@@ -342,7 +343,7 @@ TimeMsg mtime meffort mtransport mpoi: Más de ^{formatMaybeHours sou mtime} #
     $of (Just t, Just p)
       (^{formatHours sou t} transporte, ^{formatHours sou p} paradas)
 TimePenaltyLabel: Penalización de tiempo
-TimePreferencesLabel: Preferencias de tiempo (#{U.unitSymbol (U.preferredUnit sou U.Time)})
+TimePreferencesLabel sou: Preferencias de tiempo (#{renderLocalisedUnitSymbol sou locales U.Time})
 ToggleDetailTitle: Mostrar/ocultar detalles adicionales
 ToLabel: A
 TowelsTitle: Toallas

@@ -2,7 +2,7 @@
 module UnitsSpec(testUnits) where
 
 import Test.HUnit
-import Camino.Units
+import Data.Units
 import Text.Read (readEither)
 import TestUtils
 

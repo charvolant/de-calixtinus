@@ -153,7 +153,7 @@ mkMessageCatalogueSimple deps dt folder lang = do
     mname = mkName $ dt ++ "Message"
     params = [("master", aname)]
   catalogue <- mkMessageCatalogue deps mname ''Lang params folder lang
-  instances <- mkMessageCatalogueRender mname ''Lang Nothing aname params
+  instances <- mkMessageCatalogueRender mname ''Lang aname params
   return $ catalogue ++ instances
 
 
@@ -196,7 +196,6 @@ mkMessageCatalogue deps mtype ltype params folder lang = do
     , mcMsg = Param (mkName "msg") (ConT mtype)
     , mcLocale = Param (mkName "locale") (ConT ltype)
     , mcLocales = Param (mkName "locales") (ListT `AppT` ConT ltype)
-    , mcLocaleLookup = Nothing
     , mcMarkupType = htmlType
     , mcContext = map (\(n, t) -> Param (mkName n) (ConT t)) params
     , mcBase = base
@@ -240,18 +239,16 @@ findBase lang catalogues = do
 --   an instance of `Text.Shakespeare.I18N.RenderMessage` that uses `def` for the region.
 mkMessageCatalogueRender :: Name -- ^ The message type
   -> Name -- ^ The type of the language\/locale (the list of requested languages\/locales will be placed in the reserved @locales@ parameter)
-  -> Maybe Name -- ^ An optional name of the function that traslates a `Lang` into a Maybe locale
   -> Name -- ^ The type of the master application
   -> [(String, Name)] -- ^ The names and types of additional context parameters (see below for information about distinguished application data)
   -> Q [Dec]
-mkMessageCatalogueRender mtype ltype mlookup stype params = do
+mkMessageCatalogueRender mtype ltype stype params = do
   let ctx = MessageContext {
       mcRender = mkName $ "render" ++ nameBase mtype
     , mcAppType = Just (ConT stype)
     , mcMsg = Param (mkName "msg") (ConT mtype)
     , mcLocale = Param (mkName "locale") (ConT ltype)
     , mcLocales = Param (mkName "locales") (ListT `AppT` ConT ltype)
-    , mcLocaleLookup = mlookup
     , mcMarkupType = htmlType
     , mcContext = map (\(n, t) -> Param (mkName n) (ConT t)) params
     , mcBase = Catalogue "*" []

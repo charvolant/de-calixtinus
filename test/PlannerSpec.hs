@@ -7,7 +7,6 @@ import Camino.Planner
 import Camino.Camino
 import Camino.Display.JSON
 import Camino.Preferences
-import qualified Camino.Units as U
 import TestUtils
 import Data.Aeson
 import Data.Aeson.Formatting (encodePretty)
@@ -20,10 +19,10 @@ import qualified Data.Set as S
 import Data.Default.Class
 import Data.Placeholder
 import Data.Time.Calendar
+import qualified Data.Units as U
 import Graph.Graph (identifier)
 import System.Directory
 import System.FilePath
-import Camino.Planner (Metrics(metricsTransportDistance))
 
 assertPenanceEqual :: String -> Penance -> Penance -> Float -> Assertion
 assertPenanceEqual msg Reject Reject _precision = assertBool msg True

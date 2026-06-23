@@ -1,8 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 module MessageCatalogueSpec(testMessageCatalogue) where
 
+import Data.Localised
 import Data.Maybe
 import qualified Data.Set as S
 import qualified Data.Text as T
@@ -14,6 +16,8 @@ import Text.Parsec (parse)
 import Text.RawString.QQ
 import Text.Shakespeare.I18N (Lang)
 import TestUtils
+
+data TestApp = TestApp String
 
 testMessageCatalogue :: Test
 testMessageCatalogue = TestList [
@@ -28,6 +32,7 @@ testMessageCatalogue = TestList [
   , TestLabel "Make Catalogue Dec" testMakeCatalogueDec
   , TestLabel "Make Render Dec" testMakeRenderDec
   , TestLabel "Make Message Catalogue Decs" testMkMessageCatalogue
+  , TestLabel "Make Message Catalogue Instances" testMkMessageRender
  ]
 
   
@@ -483,10 +488,8 @@ renderTestMessage' master [] locales msg = GHC.Internal.Data.Maybe.maybe (Text.B
 renderTestMessage' master ("en" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master locale_r locales msg) GHC.Internal.Base.id (renderTestMessage_EN master locales msg)
 renderTestMessage' master ("fr" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMessage' master locale_r locales msg) GHC.Internal.Base.id (renderTestMessage_FR master locales msg)
 renderTestMessage' master (_ : locale_r) locales msg = renderTestMessage' master locale_r locales msg
-instance Text.Shakespeare.I18N.RenderMessage Test TestMessage
-    where {Text.Shakespeare.I18N.renderMessage master langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMessage master locales msg)
-                                                   where {locales = GHC.Internal.Base.map (GHC.Internal.Data.String.fromString GHC.Internal.Base.. Data.Text.Show.unpack) langs}}
-|]
+instance Text.MessageCatalogue.Internal.RenderCatalogueMessage Test TestMessage
+    where {Text.MessageCatalogue.Internal.renderMessageHtml master langs msg = renderTestMessage master (Data.Localised.langsToLocales langs) msg}|]
 
 testMkMessageCatalogue1 = TestCase (do
   dec <- runQ $ mkMessageCatalogueSimple False "Test" "./test/messages1" "en"
@@ -520,11 +523,35 @@ renderTestMsg' sou [] locales msg = GHC.Internal.Data.Maybe.maybe (Text.Blaze.Ht
 renderTestMsg' sou ("en" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMsg' sou locale_r locales msg) GHC.Internal.Base.id (renderTestMsg_EN sou locales msg)
 renderTestMsg' sou ("pt" : locale_r) locales msg = GHC.Internal.Data.Maybe.maybe (renderTestMsg' sou locale_r locales msg) GHC.Internal.Base.id (renderTestMsg_PT sou locales msg)
 renderTestMsg' sou (_ : locale_r) locales msg = renderTestMsg' sou locale_r locales msg
-instance Text.Shakespeare.I18N.RenderMessage a TestMsg
-    where {Text.Shakespeare.I18N.renderMessage _ langs msg = Text.MessageCatalogue.Internal.renderMarkupToText (renderTestMsg Data.Default.Internal.def locales msg)
-                                                   where {locales = GHC.Internal.Base.map (GHC.Internal.Data.String.fromString GHC.Internal.Base.. Data.Text.Show.unpack) langs}}
 |]
 testMkMessageCatalogue2 = TestCase (do
-  dec <- runQ $ mkMessageCatalogue False (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en" (Just $ mkName "TestApp")
+  dec <- runQ $ mkMessageCatalogue False (mkName "TestMsg") (mkName "Locale") [("sou", mkName "SystemOfUnits")] "./test/messages2" "en"
   assertEqualStripped "Make MkMessageCatalogue 2 1" mk2 (pprint dec)
   )
+
+
+testMkMessageRender = TestList [
+  testMkMessageRender1, testMkMessageRender2
+  ]
+
+mkr1 = [r|
+instance Text.MessageCatalogue.Internal.RenderCatalogueMessage a TestMsg
+    where {Text.MessageCatalogue.Internal.renderMessageHtml _ langs msg = renderTestMsg Data.Default.Internal.def (Data.Localised.langsToLocales langs) msg}
+|]
+testMkMessageRender1 = TestCase (do
+  dec <- runQ $ mkMessageCatalogueRender (mkName "TestMsg") (mkName "Locale") (mkName "TestApp") [("sou", mkName "SystemOfUnits")]
+  assertEqualStripped "Make MkMessageRender 1 1" mkr1 (pprint dec)
+  )
+
+mkr2 = [r|
+instance Text.MessageCatalogue.Internal.RenderCatalogueMessage TestApp TestMsg
+    where {Text.MessageCatalogue.Internal.renderMessageHtml site langs msg = renderTestMsg site Data.Default.Internal.def (Data.Localised.langsToLocales langs) msg}
+|]
+testMkMessageRender2 = TestCase (do
+  dec <- runQ $ mkMessageCatalogueRender (mkName "TestMsg") (mkName "Locale") (mkName "TestApp") [("site", mkName "TestApp"), ("sou", mkName "SystemOfUnits")]
+  assertEqualStripped "Make MkMessageRender 2 1" mkr2 (pprint dec)
+  )
+
+-- Check that everything works as advertised; tests won't compile unless all is good
+mkMessageCatalogue True (mkName "TestMsg") ''Locale [("master", ''TestApp), ("region", ''String)] "./test/messages1" "en"
+mkMessageCatalogueRender ''TestMsg ''Locale ''TestApp [("master", ''TestApp), ("region", ''String)]

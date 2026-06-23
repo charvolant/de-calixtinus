@@ -31,11 +31,11 @@ import Data.Placeholder
 import Camino.Camino
 import Camino.Config
 import Camino.Preferences
-import qualified Camino.Units as U
 import Data.Description (wildcardDescription)
 import Data.Either (fromRight, isLeft)
 import Data.Localised (wildcardText)
 import Data.Maybe (fromJust)
+import qualified Data.Units as U
 import Control.Monad (when)
 
 main :: IO ()

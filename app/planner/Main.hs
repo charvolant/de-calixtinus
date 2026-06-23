@@ -14,7 +14,6 @@ import Camino.Camino
 import Camino.Preferences
 import Graph.Graph
 import Camino.Planner
-import qualified Camino.Units as U
 import Camino.Display.KML
 import Camino.Display.Html
 import Camino.Display.I18n
@@ -28,6 +27,7 @@ import Data.Placeholder
 import Data.Region
 import qualified Data.Set as S
 import qualified Data.Text as ST (pack, splitOn)
+import qualified Data.Units as U
 import Options.Applicative
 import Text.XML
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
@@ -91,7 +91,7 @@ plan opts = do
     let langs = ["en", ""]
     let locales = map localeFromIDOrError langs
     let router = renderCaminoRoute config' locales
-    let messages1 = renderCaminoMsg config' U.SIUnits locales
+    let messages1 = renderCaminoMsg config' locales
     let solution = planCamino cconf preferences' caminoPrefs'''
     createDirectoryIfMissing True output'
     let kml = createCaminoDoc config' locales preferences' caminoPrefs''' (Just solution)

@@ -24,6 +24,7 @@ import qualified Data.ByteString as BS
 import Data.Char (isLetter)
 import Data.Default.Class (def, Default)
 import qualified Data.List as L
+import Data.Localised (IsLocale(..))
 import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.String
@@ -88,7 +89,6 @@ data MessageContext = MessageContext {
   , mcMsg :: Param
   , mcLocale :: Param
   , mcLocales :: Param
-  , mcLocaleLookup :: Maybe Name
   , mcMarkupType :: Type
   , mcContext :: [Param]
   , mcBase :: Catalogue
@@ -515,13 +515,8 @@ makeInstanceDec :: MessageContext -> Q [Dec]
 makeInstanceDec ctx = let
     defe = VarE $ 'def
     msgp = VarP $ paName $ mcMsg ctx
-    locs = paName $ mcLocales ctx
-    langsn = mkName "langs"
-    decoder = InfixE (Just (VarE 'fromString)) (VarE '(.)) (Just (VarE 'unpack))
-    (langs, locales, mapper) = if locs == ''Lang then
-      (locs, locs, [])
-    else
-      (langsn, locs, [ValD (VarP locales) (NormalB $ (VarE 'map) `AppE` decoder `AppE` (VarE langsn)) []])
+    langs = mkName "langs"
+    locales = (VarE 'langsToLocales) `AppE` (VarE langs)
     mmp = maybe Nothing (\mt -> L.find (\p -> paType p == mt) (mcContext ctx)) (mcAppType ctx) -- Matching arg to application type
     (mastert, masterp, exps) = maybe
       (VarT $ mkName "a", WildP, map (const defe) (mcContext ctx))
@@ -530,13 +525,13 @@ makeInstanceDec ctx = let
     instancedec = InstanceD
       Nothing
       []
-      (ConT ''RenderMessage `AppT` mastert `AppT` (paType $ mcMsg ctx))
+      (ConT ''RenderCatalogueMessage `AppT` mastert `AppT` (paType $ mcMsg ctx))
       [
-        FunD ('renderMessage) [
+        FunD ('renderMessageHtml) [
           Clause
             [masterp, VarP langs, msgp]
-            (NormalB $ AppE (VarE 'renderMarkupToText) $ foldl AppE (VarE $ mcRender ctx) $ exps ++ [VarE locales, VarE $ paName $ mcMsg ctx])
-            mapper
+            (NormalB $ foldl AppE (VarE $ mcRender ctx) $ exps ++ [locales, VarE $ paName $ mcMsg ctx])
+            []
         ]
       ]
   in

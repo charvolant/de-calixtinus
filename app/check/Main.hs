@@ -40,15 +40,16 @@ rangeCheckSegment leg (LegSegment sf st distance ascent descent) = do
   let straight = realToFrac $ haversineDistance lfp ltp / 1000.0
   let checkRange = distance > straight * 1.2
   let checkElevation = ascent > de + slop || descent > de + slop
+  let latlng ll = show (latitude ll) ++ "," ++ show (longitude ll) ++ "," ++ show (maybe 0.0 id (elevation ll))
   when (checkRange || checkElevation) $ putStrLn (
     (unpack $ locationID lf) ++ "," ++
     (unpack $ locationNameLabel lf) ++ "," ++
-    show (latitude lfp, longitude lfp, maybe 0.0 id (elevation lfp)) ++ "," ++
+    latlng lfp ++ "," ++
     (unpack $ locationID lt) ++ "," ++
     (unpack $ locationNameLabel lt) ++ "," ++
-    show (latitude ltp, longitude ltp, maybe 0.0 id (elevation ltp)) ++ "," ++
-    show (latitude sf, longitude sf, maybe 0.0 id (elevation sf)) ++ "," ++
-    show (latitude st, longitude st, maybe 0.0 id (elevation st)) ++ "," ++
+    latlng ltp ++ "," ++
+    latlng sf ++ "," ++
+    latlng st ++ "," ++
     show distance ++ "," ++
     show ascent ++ "," ++
     show descent ++ "," ++
@@ -79,7 +80,7 @@ rangeCheck opts = do
     config <- readConfigFile (rangeConfig opts)
     caminos <- mapM loadCamino (getCaminos config)
     let cconfig = createCaminoConfig (getCalendarConfig config) (getRegionConfig config) caminos
-    putStrLn "From ID,From Name,From,To ID,To Name,To,Segment From,Segment To,Distance,Ascent,Descent,Straight,Range Check,Delta Elevation,Elevation Check,Slop"
+    putStrLn "From ID,From Name,From Latitude,From Longitude,From Elevation,To ID,To Name,To Latitude,To Longitude,To Elevation,Segment From Latitude,Segment From Longitude,Segment From Elevation,Segment To Latitude,Segment To Longitude,Segment To Elevation,Distance,Ascent,Descent,Straight,Range Check,Delta Elevation,Elevation Check,Slop"
     rangeCheckCamino $ (caminoConfigLookup cconfig) (rangeCamino opts)
 
 main :: IO ()

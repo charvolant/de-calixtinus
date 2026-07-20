@@ -295,10 +295,12 @@ caminoLocationTypeIcon Monastery = [ihamlet| <span .location-type .ca-monastery 
 caminoLocationTypeIcon Peak = [ihamlet| <span .location-type .ca-peak title="_{PeakTitle}"> |]
 caminoLocationTypeIcon Lookout = [ihamlet| <span .location-type .ca-lookout title="_{LookoutTitle}"> |]
 caminoLocationTypeIcon Promontory = [ihamlet| <span .location-type .ca-promontory title="_{PromontoryTitle}"> |]
+caminoLocationTypeIcon Shrine = [ihamlet| <span .location-type .ca-shrine title="_{ShrineTitle}"> |]
 caminoLocationTypeIcon Church = [ihamlet| <span .location-type .ca-church title="_{ChurchTitle}"> |]
 caminoLocationTypeIcon Cathedral = [ihamlet| <span .location-type .ca-cathedral title="_{CathedralTitle}"> |]
 caminoLocationTypeIcon Cross = [ihamlet| <span .location-type .ca-cross title="_{CrossTitle}"> |]
 caminoLocationTypeIcon Fountain = [ihamlet| <span .location-type .ca-fountain title="_{FountainTitle}"> |]
+caminoLocationTypeIcon Bath = [ihamlet| <span .location-type .ca-bath title="_{BathTitle}"> |]
 caminoLocationTypeIcon Statue = [ihamlet| <span .location-type .ca-statue title="_{StatueTitle}"> |]
 caminoLocationTypeIcon Artwork = [ihamlet| <span .location-type .ca-artwork title="_{ArtworkTitle}"> |]
 caminoLocationTypeIcon Municipal = [ihamlet| <span .location-type .ca-municipal title="_{MunicipalTitle}"> |]
@@ -334,10 +336,12 @@ caminoLocationTypeLabel Monastery = MonasteryTitle
 caminoLocationTypeLabel Peak = PeakTitle
 caminoLocationTypeLabel Lookout = LookoutTitle
 caminoLocationTypeLabel Promontory = PromontoryTitle
+caminoLocationTypeLabel Shrine = ShrineTitle
 caminoLocationTypeLabel Church = ChurchTitle
 caminoLocationTypeLabel Cathedral = CathedralTitle
 caminoLocationTypeLabel Cross = CrossTitle
 caminoLocationTypeLabel Fountain = FountainTitle
+caminoLocationTypeLabel Bath = BathTitle
 caminoLocationTypeLabel Statue = StatueTitle
 caminoLocationTypeLabel Artwork = ArtworkTitle
 caminoLocationTypeLabel Municipal = MunicipalTitle
@@ -373,10 +377,12 @@ caminoLocationTypeDescription Monastery = MonasteryDescription
 caminoLocationTypeDescription Peak = PeakDescription
 caminoLocationTypeDescription Lookout = LookoutDescription
 caminoLocationTypeDescription Promontory = PromontoryDescription
+caminoLocationTypeDescription Shrine = ShrineDescription
 caminoLocationTypeDescription Church = ChurchDescription
 caminoLocationTypeDescription Cathedral = CathedralDescription
 caminoLocationTypeDescription Cross = CrossDescription
 caminoLocationTypeDescription Fountain = FountainDescription
+caminoLocationTypeDescription Bath = BathDescription
 caminoLocationTypeDescription Statue = StatueDescription
 caminoLocationTypeDescription Artwork = ArtworkDescription
 caminoLocationTypeDescription Municipal = MunicipalDescription
@@ -1957,10 +1963,12 @@ $forall (lt, location, poi) <- icons
       , (Peak, (24, 24), (20, 18))
       , (Lookout, (24, 24), (24, 13))
       , (Promontory, (24, 24), (24, 17))
+      , (Shrine, (24, 24), (24, 21))
       , (Church, (24, 24), (24, 21))
       , (Cathedral, (24, 24), (19, 24))
       , (Cross, (24, 24), (15, 24))
       , (Fountain, (24, 24), (19, 24))
+      , (Bath, (24, 24), (19, 24))
       , (Statue, (24, 24), (12, 24))
       , (Artwork, (24, 24), (24, 24))
       , (Municipal, (24, 24), (24, 21))

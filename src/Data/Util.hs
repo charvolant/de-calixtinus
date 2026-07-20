@@ -52,6 +52,7 @@ import qualified Data.Text as T
 import System.Directory
 import System.Environment
 import System.FilePath
+import Debug.Trace
 
 -- | Select elements from a list that are in a set, keeping the order of the list
 selectFromList :: (Ord a) => S.Set a -- ^ The elements to select

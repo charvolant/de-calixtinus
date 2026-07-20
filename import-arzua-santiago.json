@@ -611,7 +611,7 @@
   ],
   "routes": [
     {
-      "id": "MA-MA",
+      "id": "AS-AS",
       "name": "Default route",
       "description": "The default route for importing",
       "palette": {
@@ -620,5 +620,5 @@
     }
   ],
   "route-logic": [ ],
-  "default-route": "MA-MA"
+  "default-route": "AS-AS"
 }

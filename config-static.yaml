@@ -49,6 +49,12 @@ caminos:
   - id: I-VV
     type: CaminoDefinition
     path: "file:import-villaviciosa.json"
+  - id: I-GAS
+    type: CaminoDefinition
+    path: "file:import-geira-start.json"
+  - id: I-GAE
+    type: CaminoDefinition
+    path: "file:import-geira-end.json"
   - id: F
     type: CaminoDefinition
     path: "file:camino-frances.json"
@@ -82,6 +88,12 @@ caminos:
   - id: MD
     type: CaminoDefinition
     path: "file:camino-madrid.json"
+  - id: GA
+    type: CaminoDefinition
+    path: "file:camino-geira.json"
+  - id: MR
+    type: CaminoDefinition
+    path: "file:camino-minoto.json"
   - id: BM
     type: CaminoDefinition
     path: "file:bondi-manly.json"

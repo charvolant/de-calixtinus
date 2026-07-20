@@ -51,6 +51,7 @@ import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
 import Data.Util (commaJoin, headWithDefault)
 import Camino.Config (AssetConfig(assetPath))
 import Text.MessageCatalogue
+import Debug.Trace
 
 -- Generic placeholder date
 placeholderDate :: Day

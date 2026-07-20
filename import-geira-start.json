@@ -1,0 +1,371 @@
+{
+  "id": "I-GAS",
+  "name": "Braga to Bico@en",
+  "description": {
+    "text": "Import for the start leg of both the Geira and Minoto-Ribeiro caminos"
+  },
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Braga to Bico@en"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2026-07-18"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2026-07-18"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "imports": [
+  ],
+  "fragment": true,
+  "locations": [
+    {
+      "id": "GA-GA1",
+      "name": "Braga",
+      "type": "City",
+      "description": {
+        "text": "Capital city of Portugal and the start of the Portuguese Camino",
+        "about": "https://en.wikipedia.org/wiki/Lisbon",
+        "image": {
+          "title": "Praça do Comércio@pt",
+          "source": "P/P-P1-Lisbon.jpg",
+          "thumbnail": "P/P-P1-Lisbon-thumbnail.jpg",
+          "metadata": {
+            "statements": [
+              {
+                "term": "dcterms:creator",
+                "value": "Berthold Werner"
+              },
+              {
+                "term": "dcterms:rightsHolder",
+                "value": "Wikimedia Commons"
+              },
+              {
+                "term": "dcterms:license",
+                "value": "CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>"
+              },
+              {
+                "term": "dcterms:source",
+                "value": "https://commons.wikimedia.org/wiki/File:Lisbon_Pra%C3%A7a_do_Com%C3%A9rcio_BW_2018-10-03_13-33-44_s.jpg"
+              }
+            ]
+          }
+        }
+      },
+      "position": { "latitude": 41.54979, "longitude": -8.42741, "elevation": 186 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Train", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Cada de Roda",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        "GuestHouse",
+        "House",
+        "Hotel"
+      ],
+      "pois": [
+        {
+          "id": "AG-AG1-1",
+          "name": "Braga Cathedral@en",
+          "type": "Cathedral",
+          "description": {
+            "text": "The start point for the Camino da Geira e dos Arrieiros@en",
+            "notes": [
+              "You can obtain a pilgrim's credential from inside the cathedral or at the tourist office.@en"
+            ],
+            "about": "https://se-braga.pt"
+          },
+          "position": { "latitude": 41.55022, "longitude": -8.42693, "elevation": 186 },
+          "hours": [
+            "0930-1230, 1430-1730"
+          ],
+          "time": 0.5
+        },
+        {
+          "id": "AG-AG1-2",
+          "name": [
+            "Posto de Turismo de Braga@pt",
+            "Braga Tourist Office@en"
+          ],
+          "type": "InformationPoint",
+          "description": {
+            "notes": [
+              "You can obtain a pilgrim's credential at the tourist office or the cathedral.@en"
+            ]
+          },
+          "position": { "latitude": 41.55107, "longitude": -8.42259, "elevation": 189 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "0900-1830"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday", "sunday" ]
+              },
+              "hours": "0900-1300, 1400-1730"
+            }
+          ]
+        },
+        {
+          "id": "AG-AG1-3",
+          "name": "Arco da Porta Nova@pt",
+          "type": "Historical",
+          "position": { "latitude": 41.55028, "longitude": -8.42934, "elevation": 177 }
+        },
+        {
+          "id": "AG-AG1-4",
+          "name": "Chafariz do Castelos@pt",
+          "type": "Historical",
+          "position": { "latitude": 41.55076, "longitude": -8.42635, "elevation": 187 }
+        },
+        {
+          "id": "AG-AG1-5",
+          "name": [
+            "Jardim de Santa Bárbara@pt",
+            "Garden of Santa Barbara@en"
+          ],
+          "type": "Park",
+          "position": { "latitude": 41.55138, "longitude": -8.42590, "elevation": 187 }
+        },
+        {
+          "id": "AG-AG1-6",
+          "name": [
+            "Praça da Republica@pt",
+            "Republic Square@en"
+          ],
+          "type": "Municipal",
+          "position": { "latitude": 41.55143, "longitude": -8.42301, "elevation": 190 }
+        },
+        {
+          "id": "AG-AG1-7",
+          "name": [
+            "Praça da Republica@pt",
+            "Chapel and Tower of the Coimbras@en"
+          ],
+          "type": "Church",
+          "position": { "latitude": 41.54991, "longitude": -8.42478 },
+          "hours": [
+            "0930-1830"
+          ]
+        },
+        {
+          "id": "AG-AG1-7",
+          "name": [
+            "Igreja de Santa Cruz de Braga@pt",
+            "Church of Santa Cruz@en"
+          ],
+          "type": "Church",
+          "description": {
+            "about": "https://irmandadesantacruz.pt"
+          },
+          "position": { "latitude": 41.54952, "longitude": -8.42430, "elevation": 189 },
+          "hours": [
+            "0930-1300, 1500-1900"
+          ]
+        },
+        {
+          "id": "AG-AG1-8",
+          "name": [
+            "Igreja de S. Marcos@pt",
+            "Church of San Marcos@en"
+          ],
+          "type": "Church",
+          "position": { "latitude": 41.54919, "longitude": -8.42340, "elevation": 184 }
+        },
+        {
+          "id": "AG-AG1-9",
+          "name": [
+            "Palácio do Raio@pt",
+            "Raio Palace@en"
+          ],
+          "type": "Historical",
+          "description": {
+            "about": "https://www.scmbraga.pt"
+          },
+          "position": { "latitude": 41.54859, "longitude": -8.42253, "elevation": 182 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "1000-1300, 1430-1830"
+            }
+          ]
+        },
+        {
+          "id": "AG-AG1-10",
+          "name": [
+            "Termas Romanas do Alto da Cividade@pt",
+            "Roman Baths of Alto da Cividade@en"
+          ],
+          "type": "Historical",
+          "position": { "latitude": 41.54642, "longitude": -8.42958, "elevation": 196 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "monday", "tuesday", "wednesday", "thursday", "friday" ]
+              },
+              "hours": "0930-1300, 1400-1730"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday" ]
+              },
+              "hours": "1100-1730"
+            }
+          ]
+        },
+        {
+          "id": "AG-AG1-11",
+          "name": [
+            "Museu de Arqueologia D. Diogo de Sousa@pt",
+            "D. Diogo de Sousa Archaeological Museum@en"
+          ],
+          "type": "Museum",
+          "description": {
+            "about": "https://www.museuddiogodesousa.gov.pt"
+          },
+          "position": { "latitude": 41.54622, "longitude": -8.42717, "elevation": 184 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "1000-1730"
+            }
+          ]
+        },
+        {
+          "id": "AG-AG1-12",
+          "name": [
+            "Estrada do Bom Jesus do Monte@pt",
+            "Sanctuary of Bom Jesus do Monte@en"
+          ],
+          "type": "Church",
+          "description": {
+            "text": "A UNESCO World Heritage site, the sanctuary has been developed over six centuries.",
+            "about": "https://bomjesus.pt"
+          },
+          "position": { "latitude": 41.55485, "longitude": -8.37704, "elevation": 402 },
+          "hours": [
+            "0800-1900"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA2",
+      "name": "San Martinho de Dume",
+      "type": "Village",
+      "position": { "latitude": 41.56925, "longitude": -8.43447, "elevation": 99 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA3",
+      "name": "Palmeira",
+      "type": "Village",
+      "position": { "latitude": 41.59483, "longitude": -8.43478, "elevation": 79 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA4",
+      "name": "Ponte do Bico",
+      "type": "Village",
+      "position": { "latitude": 41.60777, "longitude": -8.43016, "elevation": 29 },
+      "region": "PT",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA4-1",
+          "name": [
+            "Ponte do Bico@pt",
+            "Bico Bridge@en"
+          ],
+          "type": "Bridge",
+          "position": { "latitude": 41.60660, "longitude": -8.42944, "elevation": 26 }
+        }
+      ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "GA-GA1",
+      "to": "GA-GA2",
+      "distance": 3.30,
+      "ascent": 20,
+      "descent": 105
+    },
+    {
+      "from": "GA-GA2",
+      "to": "GA-GA3",
+      "distance": 3.46,
+      "ascent": 35,
+      "descent": 60
+    },
+    {
+      "from": "GA-GA3",
+      "to": "GA-GA4",
+      "distance": 1.52,
+      "descent": 40
+    }
+  ],
+  "routes": [
+    {
+      "id": "GAS-GAS",
+      "name": "Default route",
+      "description": "The default route for importing",
+      "palette": {
+        "colour": "#fec953"
+      },
+      "features": [
+        {
+          "id": "GAS-GAS-F1",
+          "name": "Braga - Ponte de Bico",
+          "geometry": "GA/GAS-GAS-F1.geojson"
+        }
+      ]
+    }
+  ],
+  "route-logic": [
+  ],
+  "default-route": "GAS-GAS",
+  "warnings": null
+}

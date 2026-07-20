@@ -1,0 +1,1415 @@
+{
+  "id": "GA",
+  "name": [
+    "Camino da Geira e dos Arrieiros@pt",
+    "Camino de la Geira y los Arrieiros@es",
+    "Geira and Arrieiros Way@en"
+  ],
+  "description": {
+    "text": "The Camino da Geira e dos Arrieiros connects Braga with Santiago. A large part of the Way follows part of the ancient Roman Road XVIII, built to connect Braga (Bracara Augusta) with Astorga (Asturica Augusta).",
+    "image": {
+      "title": [
+        "Marco miliário XXIX da Via Romana XVIII@pt",
+        "Milestone XXIX from the Via Romana XVIII@en"
+      ],
+      "source": "GA/GA-Milestone.jpg",
+      "thumbnail": "GA/GA-Milestone-thumbnail.jpg",
+      "metadata": {
+        "statements": [
+          {
+            "term": "dcterms:creator",
+            "value": "Júlio Reis"
+          },
+          {
+            "term": "dcterms:created",
+            "value": "2004"
+          },
+          {
+            "term": "dcterms:license",
+            "value": "CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>"
+          },
+          {
+            "term": "dcterms:source",
+            "value": "https://commons.wikimedia.org/wiki/File:Geira_Milha_XXIX_caminho.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "statements": [
+      {
+        "term": "dcterms:title",
+        "value": "Camino da Geira e dos Arrieiros@pt"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Camino de la Geira y los Arrieiros@es"
+      },
+      {
+        "term": "dcterms:title",
+        "value": "Geira and Arrieiros Way@en"
+      },
+      {
+        "term": "dcterms:creator",
+        "value": "Doug Palmer"
+      },
+      {
+        "term": "dcterms:created",
+        "value": "2026-06-23"
+      },
+      {
+        "term": "dcterms:modified",
+        "value": "2026-06-23"
+      },
+      {
+        "term": "dcterms:version",
+        "value": "0.1"
+      },
+      {
+        "term": "dcterms:license",
+        "value": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "term": "dcterms:source",
+        "value": "https://www.editorialbuencamino.com/"
+      }
+    ]
+  },
+  "imports": [
+    "I-GAS",
+    "I-GAE"
+  ],
+  "locations": [
+    {
+      "id": "GA-GA5",
+      "name": "Lago",
+      "type": "Village",
+      "position": { "latitude": 41.62017, "longitude": -8.41438, "elevation": 71 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA6",
+      "name": "Rendufe",
+      "type": "Village",
+      "position": { "latitude": 41.63597, "longitude": -8.40668, "elevation": 58 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA6-1",
+          "name": "Mosteiro de Santo André de Rendufe",
+          "type": "Monastery",
+          "position": { "latitude": 41.63598, "longitude": -8.40590, "elevation": 61 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday" ]
+              },
+              "hours": "1000-1300, 1430-1630"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "sunday" ]
+              },
+              "hours": "1000-1300, 1430-1830"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA7",
+      "name": "Bico",
+      "type": "Village",
+      "position": { "latitude": 41.64224, "longitude": -8.40322, "elevation": 73 },
+      "region": "PT",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA7-1",
+          "name": "São Bento Square@en",
+          "type": "Municipal",
+          "position": { "latitude": 41.63983, "longitude": -8.40429, "elevation": 88 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA8",
+      "name": "Fiscal",
+      "type": "Village",
+      "position": { "latitude": 41.65322, "longitude": -8.39595, "elevation": 77 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA9",
+      "name": "Torre",
+      "type": "Village",
+      "position": { "latitude": 41.65926, "longitude": -8.38549, "elevation": 93 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA10",
+      "name": "Caldelas",
+      "type": "Town",
+      "position": { "latitude": 41.66789, "longitude": -8.37577, "elevation": 133 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Pilgrims Hostel of Santiago de Caldelas",
+          "type": "PilgrimAlbergue",
+          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage" ],
+          "sleeping": [ "Shared" ]
+        },
+        {
+          "name": "Corredoura Garden Alojamento",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "WashingMachine", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "QuadrupleWC" ]
+        },
+        {
+          "name": "Alojamento Correia",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Eirado Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA11",
+      "name": "Real",
+      "type": "Village",
+      "position": { "latitude": 41.67321, "longitude": -8.36092, "elevation": 209 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA12",
+      "name": "Covas",
+      "type": "Village",
+      "position": { "latitude": 41.67677, "longitude": -8.34742, "elevation": 288 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA13",
+      "name": "Parahos",
+      "type": "Village",
+      "position": { "latitude": 41.67291, "longitude": -8.34572, "elevation": 384 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Casa do Rancho",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Breakfast", "Pets", "BicycleStorage", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA14",
+      "name": "Santa Cruz",
+      "type": "Village",
+      "position": { "latitude": 41.68005, "longitude": -8.32575, "elevation": 415 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA14-1",
+          "name": "Via Geira",
+          "type": "Historical",
+          "description": {
+            "text": "The Via Nova, Via XVIII or Via Geira forms the backbone of this camino. It runs from Braga (Bracara Augusta) to Astorga (Asturica Augusta).",
+            "about": "https://geira.pt"
+          },
+          "position": { "latitude": 41.68011, "longitude": -8.32498, "elevation": 419 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA15",
+      "name": "Geira Fork",
+      "type": "Junction",
+      "description": "Alternative routes to Travassos, either travelling through Terras de Bouro or following the Geira",
+      "position": { "latitude": 41.69690, "longitude": -8.31490, "elevation": 446 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA16",
+      "name": "São Sebastião de Geria",
+      "type": "Church",
+      "position": { "latitude": 41.69633, "longitude": -8.29855, "elevation": 453 },
+      "region": "PT",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA17",
+      "name": "Road to Travessos",
+      "type": "Intersection",
+      "position": { "latitude": 41.72231, "longitude": -8.27646, "elevation": 445 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA17-1",
+          "name": "Junction with route from Terras de Bouro",
+          "type": "Junction",
+          "position": { "latitude": 41.71527, "longitude": -8.28957, "elevation": 423 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA18",
+      "name": "N307 Crossing",
+      "type": "Intersection",
+      "position": { "latitude": 41.73387, "longitude": -8.24224, "elevation": 479 },
+      "region": "PT",
+      "services": [ "Bus" ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA19",
+      "name": "Covide",
+      "type": "Village",
+      "position": { "latitude": 41.73843, "longitude": -8.21469, "elevation": 542 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa da Venda",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC", "TripleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA20",
+      "name": "Campo de Gerês",
+      "type": "Village",
+      "position": { "latitude": 41.75926, "longitude": -8.19651, "elevation": 633 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "HI Gerês",
+          "type": "Hostel",
+          "services": [ "WiFi", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Shared", "DoubleWC" ]
+        },
+        {
+          "name": "Abrigo da Geira House",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Casa da Fonte",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Kitchen", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Albergaria Stop",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Bedlinen" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "GA-GA20-1",
+          "name": [
+            "Museu Etnográfico de Campo do Gerês@pt",
+            "Ethnographic Museum Campo do Gerês@en"
+          ],
+          "type": "Museum",
+          "description": {
+            "about": "https://turismo.cm-terrasdebouro.pt/listings/museu-etnografico-de-vilarinho-da-furna/"
+          },
+          "position": { "latitude": 41.75216, "longitude": -8.19784, "elevation": 617 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+              },
+              "hours": "0930-1230, 1330-1700"
+            }
+          ]
+        },
+        {
+          "id": "GA-GA20-2",
+          "name": [
+            "Museu da Geira@pt",
+            "Geira Museum@en"
+          ],
+          "type": "Museum",
+          "description": {
+            "about": "https://turismo.cm-terrasdebouro.pt/listings/museu-da-geira/"
+          },
+          "position": { "latitude": 41.75094, "longitude": -8.19770, "elevation": 623 }
+        },
+        {
+          "id": "GA-GA20-3",
+          "name": [
+            "Ponte de Eixões@pt",
+            "Eixões Bridgae@en"
+          ],
+          "type": "Bridge",
+          "description": {
+            "about": "https://turismo.cm-terrasdebouro.pt/listings/museu-da-geira/"
+          },
+          "position": { "latitude": 41.75218, "longitude": -8.19938, "elevation": 616 }
+        },
+        {
+          "id": "GA-GA20-4",
+          "name": [
+            "Parque Nacional da Peneda-Gerês@pt",
+            "Peneda-Gerês National Park@en"
+          ],
+          "type": "Natural",
+          "description": {
+            "about": "https://pnpgeres.pt"
+          },
+          "position": { "latitude": 41.76848, "longitude": -8.18837 }
+        },
+        {
+          "id": "GA-GA20-4",
+          "name": [
+            "Reservatório Vilharinho das Furnas@pt",
+            "Vilharinho das Furnas Reservoir@en"
+          ],
+          "type": "WaterBody",
+          "position": { "latitude": 41.77637, "longitude": -8.19133, "elevation": 560 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA21",
+      "name": "Ribeiro do Sarihão",
+      "type": "Bridge",
+      "position": { "latitude": 41.77268, "longitude": -8.17368, "elevation": 599 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA21-1",
+          "name": "Fonte do Vale dos Porcos@pt",
+          "type": "Fountain",
+          "position": { "latitude": 41.79062, "longitude": -8.15388, "elevation": 636 }
+        },
+        {
+          "id": "GA-GA21-2",
+          "name": "Fonte do Balsada@pt",
+          "type": "Fountain",
+          "position": { "latitude": 41.79336, "longitude": -8.14484, "elevation": 650 }
+        },
+        {
+          "id": "GA-GA21-3",
+          "name": "Pools of the Homem River@pt",
+          "type": "WaterBody",
+          "position": { "latitude": 41.79518, "longitude": -8.13576, "elevation": 654 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA22",
+      "name": "Ponte de São Miguel",
+      "type": "Bridge",
+      "position": { "latitude": 41.79924, "longitude": -8.13422, "elevation": 671 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA22-1",
+          "name": "Ascent to Portela do Homem@en",
+          "type": "Hazard",
+          "position": { "latitude": 41.79989, "longitude": -8.13345, "elevation": 679 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA23",
+      "name": "Portela do Homem",
+      "type": "Peak",
+      "position": { "latitude": 41.80911, "longitude": -8.13146, "elevation": 760 },
+      "region": "PT",
+      "services": [ "Restaurant" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA23-1",
+          "name": "Miliaria Gallery@en",
+          "type": "Museum",
+          "position": { "latitude": 41.80871, "longitude": -8.13145, "elevation": 760 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA24",
+      "name": "As Mourás",
+      "type": "Historical",
+      "position": { "latitude": 41.81885, "longitude": -8.12670, "elevation": 650 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA25",
+      "name": "Os Báños",
+      "type": "Village",
+      "position": { "latitude": 41.86281, "longitude": -8.10628, "elevation": 380 },
+      "region": "ES-GA",
+      "services": [ "Restaurant" ],
+      "accommodation": [
+        {
+          "name": "Guesthouse As Termas",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        },
+        {
+          "name": "Lobios Caldaria Spa Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Bedlinen", "Towels", "Pool" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "GA-GA25-1",
+          "name": "Aquis Originis@en",
+          "type": "Historical",
+          "position": { "latitude": 41.85657, "longitude": -8.10719, "elevation": 395 }
+        },
+        {
+          "id": "GA-GA25-2",
+          "name": [
+            "Presa Termal@es",
+            "Thermal Pool@en"
+          ],
+          "type": "Bath",
+          "position": { "latitude": 41.86258, "longitude": -8.10654, "elevation": 378 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA26",
+      "name": "Vilameá",
+      "type": "Village",
+      "position": { "latitude": 41.87191, "longitude": -8.09979, "elevation": 417 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA26-1",
+          "name": "Vilameá Cross@en",
+          "type": "Cross",
+          "position": { "latitude": 41.86592, "longitude": -8.10228, "elevation": 430 }
+        },
+        {
+          "id": "GA-GA26-2",
+          "name": "Devesa Bridge and Mill@en",
+          "type": "Bridge",
+          "position": { "latitude": 41.87462, "longitude": -8.09572, "elevation": 420 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA27",
+      "name": "Lobios",
+      "type": "Town",
+      "position": { "latitude": 41.90175, "longitude": -8.08412, "elevation": 410 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa da Praza",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Hotel AV Apartamentos Lobios",
+          "type": "House",
+          "services": [ "WiFi", "Kitchen", "Accessible", "Pets", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Lusitano Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Dinner", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "GA-GA27-1",
+          "name": "Pazo das Frascas@es",
+          "type": "Historical",
+          "position": { "latitude": 41.89777, "longitude": -8.08534, "elevation": 419 }
+        },
+        {
+          "id": "GA-GA27-2",
+          "name": "Wayside Cross@en",
+          "type": "Cross",
+          "position": { "latitude": 41.90158, "longitude": -8.08423, "elevation": 408 }
+        },
+        {
+          "id": "GA-GA27-3",
+          "name": [
+            "Centro de Interpretación del Parque Natural Baixa Limia-Serra do Xurés@es",
+            "Interpretation Centre of the Baixa Limia-Serro do Xurés Natural Park@en"
+          ],
+          "type": "InformationPoint",
+          "description": {
+            "about": "https://patrimonionatural.xunta.gal/baixa-limia-serra-xures"
+          },
+          "position": { "latitude": 41.90158, "longitude": -8.08423, "elevation": 408 },
+          "hours": [
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "tuesday", "wednesday", "thursday", "friday", "sunday" ]
+              },
+              "hours": "1000-1400, 1600-1800"
+            },
+            {
+              "calendar": {
+                "type": "weekly",
+                "days": [ "saturday" ]
+              },
+              "hours": "1000-1430, 1600-1900"
+            }
+          ]
+        },
+        {
+          "id": "GA-GA27-4",
+          "name": "Rest Area and Drinking Fountain@en",
+          "type": "Fountain",
+          "position": { "latitude": 41.90537, "longitude": -8.08784, "elevation": 398 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA28",
+      "name": "Embalse de Lindoso",
+      "type": "WaterBody",
+      "position": { "latitude": 41.90954, "longitude": -8.09267, "elevation": 319 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA29",
+      "name": "A Feira Velia",
+      "type": "Village",
+      "position": { "latitude": 41.92067, "longitude": -8.09943, "elevation": 494 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Barcelona Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Heating", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA30",
+      "name": "O Casal",
+      "type": "Village",
+      "position": { "latitude": 41.92421, "longitude": -8.10835, "elevation": 471 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA30-1",
+          "name": [
+            "Peto de Ánimas@es",
+            "Shrine of Souls@en"
+          ],
+          "type": "Shrine",
+          "position": { "latitude": 41.92504, "longitude": -8.10962, "elevation": 481 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA31",
+      "name": "Entrimo",
+      "type": "Town",
+      "position": { "latitude": 41.93315, "longitude": -8.11735, "elevation": 500 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Hostal Entrimeña 2",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "Single", "DoubleWC" ]
+        }
+      ]
+    },
+    {
+      "id": "GA-GA32",
+      "name": "Ferreiros",
+      "type": "Village",
+      "position": { "latitude": 41.94053, "longitude": -8.13235, "elevation": 528 },
+      "region": "ES-GA",
+      "services": [ "Groceries" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA32-1",
+          "name": [
+            "Pontella do Folón@ga",
+            "Pontillón do Portomuiño@es"
+          ],
+          "type": "Bridge",
+          "position": { "latitude": 41.94774, "longitude": -8.13753, "elevation": 467 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA33",
+      "name": "A Pereira",
+      "type": "Village",
+      "position": { "latitude": 41.95578, "longitude": -8.15058, "elevation": 699 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA33-1",
+          "name": "Granite Landscape of Baixa Limia - Serra do Xurés@en",
+          "type": "Lookout",
+          "position": { "latitude": 41.96731, "longitude": -8.16017, "elevation": 789 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA34",
+      "name": "Ameijoeira",
+      "type": "Village",
+      "position": { "latitude": 41.98479, "longitude": -8.15787, "elevation": 776 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA34-1",
+          "name": "Portugeuse Border Marker@en",
+          "type": "Poi",
+          "position": { "latitude": 41.98404, "longitude": -8.15849, "elevation": 766 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA35",
+      "name": "Ponte da Cava da Velha",
+      "type": "Bridge",
+      "position": { "latitude": 42.00316, "longitude": -8.16406, "elevation": 752 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA35-1",
+          "name": "Ponte e Moinhos da Assureira@pt",
+          "type": "Historical",
+          "position": { "latitude": 42.00385, "longitude": -8.16562, "elevation": 756 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA36",
+      "name": "Castro Laboreiro",
+      "type": "Town",
+      "position": { "latitude": 42.03030, "longitude": -8.15842, "elevation": 941 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Pharmacy" ],
+      "accommodation": [
+        {
+          "name": "Just Natur Guesthouse",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Heating", "Kitchen", "Breakfast", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "MiraCastro Hotel and Restaurant",
+          "type": "Hotel",
+          "services": [ "Restaurant", "Breakfast", "Dinner", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        },
+        {
+          "name": "Castrum Villae Hotel",
+          "type": "Hotel",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Accessible", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "GA-GA36-1",
+          "name": "Steep Ascent@en",
+          "type": "Hazard",
+          "position": { "latitude": 42.01754, "longitude": -8.16355, "elevation": 785 }
+        },
+        {
+          "id": "GA-GA36-2",
+          "name": "Pelourinho de Castro Laboreiro@pt",
+          "type": "Historical",
+          "position": { "latitude": 42.03007, "longitude": -8.15841, "elevation": 941 }
+        },
+        {
+          "id": "GA-GA36-3",
+          "name": "Castelo de Castro Laboreiroo@pt",
+          "type": "Historical",
+          "position": { "latitude": 42.02290, "longitude": -8.15858, "elevation": 984 }
+        },
+        {
+          "id": "GA-GA36-4",
+          "name": "Dog Sculpture@pt",
+          "type": "Statue",
+          "position": { "latitude": 42.02667, "longitude": -8.15878, "elevation": 958 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA37",
+      "name": "Lazer das Vegas",
+      "type": "Park",
+      "position": { "latitude": 42.04039, "longitude": -8.16327, "elevation": 952 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA38",
+      "name": "Portelinha",
+      "type": "Village",
+      "position": { "latitude": 42.05388, "longitude": -8.17130, "elevation": 1030 },
+      "region": "PT",
+      "services": [ ],
+      "accommodation": [
+        {
+          "name": "Casa da Macheta",
+          "type": "CasaRural",
+          "services": [ "WiFi", "Heating", "Kitchen", "BicycleStorage", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "GA-GA38-1",
+          "name": "Flood-prone Section@en",
+          "type": "Hazard",
+          "position": { "latitude": 42.05997, "longitude": -8.17629, "elevation": 1002 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA39",
+      "name": "Azoreira",
+      "type": "Village",
+      "position": { "latitude": 42.07146, "longitude": -8.18357, "elevation": 873 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA39-1",
+          "name": "Border Marker@en",
+          "type": "Poi",
+          "position": { "latitude": 42.06612, "longitude": -8.18278, "elevation": 880 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA40",
+      "name": "Monterredondo",
+      "type": "Village",
+      "position": { "latitude": 42.11170, "longitude": -8.16012, "elevation": 571 },
+      "region": "ES-GA",
+      "services": [ "Bus" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA40-1",
+          "name": "Rest Area with Fountain@en",
+          "type": "Park",
+          "position": { "latitude": 42.10977, "longitude": -8.16128, "elevation": 591 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA41",
+      "name": "San Amaro",
+      "type": "Village",
+      "position": { "latitude": 42.13339, "longitude": -8.16531, "elevation": 433 },
+      "region": "ES-GA",
+      "services": [ "Restaurant", "Groceries", "Pharmacy", "Medical" ],
+      "accommodation": [ ],
+      "pois": [
+        {
+          "id": "GA-GA41-1",
+          "name": "Rest Area with Fountain@en",
+          "type": "Park",
+          "position": { "latitude": 42.12791, "longitude": -8.16426, "elevation": 532 }
+        },
+        {
+          "id": "GA-GA41-2",
+          "name": "Capela de San Miguel@es",
+          "type": "Church",
+          "description": {
+            "notes": [
+              "Associated with the tradition of, \"turning the stone to change the weather.\""
+            ],
+            "about": "https://www.turismo.gal/recurso/-/detalle/24351/capela-de-san-miguel"
+          },
+          "position": { "latitude": 42.12844, "longitude": -8.16349, "elevation": 539 }
+        }
+      ]
+    },
+    {
+      "id": "GA-GA42",
+      "name": [
+        "Igrexa da Portela@ga",
+        "Chapel of A Portela@en"
+      ],
+      "type": "Church",
+      "position": { "latitude": 42.15177, "longitude": -8.15952, "elevation": 416 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+    {
+      "id": "GA-GA43",
+      "name": [
+        "Igrexa da San Xusto@ga",
+        "Capilla de San Justo@es",
+        "Chapel of San Xusto@en"
+      ],
+      "type": "Church",
+      "position": { "latitude": 42.16984, "longitude": -8.15679, "elevation": 295 },
+      "region": "ES-GA",
+      "services": [ ],
+      "accommodation": [ ]
+    },
+   {
+      "id": "GA-TB1",
+      "name": "Terras de Bouro",
+      "type": "Town",
+      "position": { "latitude": 41.71872, "longitude": -8.30812, "elevation": 162 },
+      "region": "PT",
+      "services": [ "Restaurant", "Groceries", "Medical", "Bank", "Bus" ],
+      "accommodation": [
+        {
+          "name": "Casa da Fonte",
+          "type": "GuestHouse",
+          "services": [ "WiFi", "Restaurant", "Heating", "Breakfast", "Accessible", "Bedlinen", "Towels" ],
+          "sleeping": [ "DoubleWC" ]
+        }
+      ],
+      "pois": [
+        {
+          "id": "GA-TB1-1",
+          "name": "Fonte do Paço@pt",
+          "type": "Fountain",
+          "position": { "latitude": 41.71632, "longitude": -8.30548, "elevation": 181 }
+        }
+      ]
+    }
+  ],
+  "legs": [
+    {
+      "from": "GA-GA4",
+      "to": "GA-GA5",
+      "distance": 2.46,
+      "ascent": 50,
+      "descent": 15
+    },
+    {
+      "from": "GA-GA5",
+      "to": "GA-GA6",
+      "distance": 1.87,
+      "ascent": 10,
+      "descent": 25
+    },
+    {
+      "from": "GA-GA6",
+      "to": "GA-GA7",
+      "distance": 0.76,
+      "ascent": 25,
+      "descent": 10
+    },
+    {
+      "from": "GA-GA7",
+      "to": "GA-GA8",
+      "distance": 1.83,
+      "ascent": 30,
+      "descent": 25
+    },
+    {
+      "from": "GA-GA8",
+      "to": "GA-GA9",
+      "distance": 1.06,
+      "ascent": 30,
+      "descent": 15
+    },
+    {
+      "from": "GA-GA9",
+      "to": "GA-GA10",
+      "distance": 1.56,
+      "ascent": 60,
+      "descent": 20
+    },
+    {
+      "from": "GA-GA10",
+      "to": "GA-GA11",
+      "distance": 1.54,
+      "ascent": 75
+    },
+    {
+      "from": "GA-GA11",
+      "to": "GA-GA12",
+      "distance": 1.18,
+      "ascent": 110,
+      "descent": 35,
+      "waypoints": [
+        { "latitude": 41.67611, "longitude": -8.35366, "elevation": 318 }
+      ]
+    },
+    {
+      "from": "GA-GA12",
+      "to": "GA-GA13",
+      "distance": 0.91,
+      "ascent": 100,
+      "waypoints": [
+        { "latitude": 41.67402, "longitude": -8.34730, "elevation": 324 },
+        { "latitude": 41.67522, "longitude": -8.34545, "elevation": 351 }
+      ]
+    },
+    {
+      "from": "GA-GA13",
+      "to": "GA-GA14",
+      "distance": 2.41,
+      "ascent": 75,
+      "descent": 45,
+      "waypoints": [
+        { "latitude": 41.67918, "longitude": -8.33466, "elevation": 459 }
+      ]
+    },
+    {
+      "from": "GA-GA14",
+      "to": "GA-GA15",
+      "distance": 2.64,
+      "ascent": 35,
+      "waypoints": [
+        { "latitude": 41.68741, "longitude": -8.32222, "elevation": 443 },
+        { "latitude": 41.69609, "longitude": -8.31871, "elevation": 444 }
+      ]
+    },
+    {
+      "from": "GA-GA15",
+      "to": "GA-GA16",
+      "distance": 2.37,
+      "ascent": 25,
+      "descent": 14,
+      "waypoints": [
+        { "latitude": 41.69532, "longitude": -8.30853, "elevation": 438 },
+        { "latitude": 41.69390, "longitude": -8.30978, "elevation": 459 },
+        { "latitude": 41.69236, "longitude": -8.30226, "elevation": 457 }
+      ]
+    },
+    {
+      "from": "GA-GA16",
+      "to": "GA-GA17",
+      "distance": 6.69,
+      "ascent": 125,
+      "descent": 135,
+      "waypoints": [
+        { "latitude": 41.69776, "longitude": -8.29222, "elevation": 466 },
+        { "latitude": 41.69817, "longitude": -8.29536, "elevation": 444 },
+        { "latitude": 41.70114, "longitude": -8.29661, "elevation": 434 },
+        { "latitude": 41.70233, "longitude": -8.29206, "elevation": 456 },
+        { "latitude": 41.70388, "longitude": -8.29585, "elevation": 447 },
+        { "latitude": 41.70903, "longitude": -8.28595, "elevation": 449 },
+        { "latitude": 41.71049, "longitude": -8.29535, "elevation": 428 },
+        { "latitude": 41.71526, "longitude": -8.28958, "elevation": 423 }
+      ]
+    },
+    {
+      "from": "GA-GA17",
+      "to": "GA-GA18",
+      "distance": 4.44,
+      "ascent": 55,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 41.72023, "longitude": -8.27317, "elevation": 457 },
+        { "latitude": 41.72526, "longitude": -8.27064, "elevation": 454 },
+        { "latitude": 41.72451, "longitude": -8.26363, "elevation": 479 },
+        { "latitude": 41.73040, "longitude": -8.25679, "elevation": 465 }
+      ]
+    },
+    {
+      "from": "GA-GA18",
+      "to": "GA-GA19",
+      "distance": 3.35,
+      "ascent": 95,
+      "descent": 5
+    },
+    {
+      "from": "GA-GA19",
+      "to": "GA-GA20",
+      "distance": 3.73,
+      "ascent": 95,
+      "descent": 5,
+      "waypoints": [
+        { "latitude": 41.74960, "longitude": -8.19703, "elevation": 629 },
+        { "latitude": 41.75462, "longitude": -8.20121, "elevation": 634 }
+      ]
+    },
+    {
+      "from": "GA-GA20",
+      "to": "GA-GA21",
+      "distance": 3.08,
+      "ascent": 25,
+      "descent": 60,
+      "waypoints": [
+        { "latitude": 41.75815, "longitude": -8.19415, "elevation": 623 },
+        { "latitude": 41.76709, "longitude": -8.19036, "elevation": 647 }
+      ]
+    },
+    {
+      "from": "GA-GA21",
+      "to": "GA-GA22",
+      "distance": 5.50,
+      "ascent": 75,
+      "waypoints": [
+        { "latitude": 41.79452, "longitude": -8.14701, "elevation": 618 },
+        { "latitude": 41.79257, "longitude": -8.13781, "elevation": 660 }
+      ]
+    },
+    {
+      "from": "GA-GA22",
+      "to": "GA-GA23",
+      "distance": 1.19,
+      "ascent": 75
+    },
+    {
+      "from": "GA-GA23",
+      "to": "GA-GA24",
+      "distance": 1.40,
+      "descent": 80
+    },
+    {
+      "from": "GA-GA24",
+      "to": "GA-GA25",
+      "distance": 5.05,
+      "ascent": 10,
+      "descent": 305
+    },
+    {
+      "from": "GA-GA25",
+      "to": "GA-GA26",
+      "distance": 1.61,
+      "ascent": 35
+    },
+    {
+      "from": "GA-GA26",
+      "to": "GA-GA27",
+      "distance": 4.48,
+      "ascent": 125,
+      "descent": 135,
+      "waypoints": [
+        { "latitude": 41.87792, "longitude": -8.09251, "elevation": 464 },
+        { "latitude": 41.88373, "longitude": -8.09218, "elevation": 498 },
+        { "latitude": 41.88822, "longitude": -8.08577, "elevation": 541 },
+        { "latitude": 41.89490, "longitude": -8.08923, "elevation": 451 }
+      ]
+    },
+    {
+      "from": "GA-GA27",
+      "to": "GA-GA28",
+      "distance": 1.42,
+      "descent": 40
+    },
+    {
+      "from": "GA-GA28",
+      "to": "GA-GA29",
+      "distance": 1.67,
+      "ascent": 175,
+      "waypoints": [
+        { "latitude": 41.91800, "longitude": -8.09392, "elevation": 443 }
+      ]
+    },
+    {
+      "from": "GA-GA29",
+      "to": "GA-GA30",
+      "distance": 1.07,
+      "ascent": 20,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 41.92350, "longitude": -8.10673, "elevation": 454 }
+      ]
+    },
+    {
+      "from": "GA-GA30",
+      "to": "GA-GA31",
+      "distance": 1.23,
+      "ascent": 50
+    },
+    {
+      "from": "GA-GA31",
+      "to": "GA-GA32",
+      "distance": 1.59,
+      "ascent": 40,
+      "descent": 15,
+      "waypoints": [
+        { "latitude": 41.93382, "longitude": -8.12498, "elevation": 525 }
+      ]
+    },
+    {
+      "from": "GA-GA32",
+      "to": "GA-GA33",
+      "distance": 3.32,
+      "ascent": 235,
+      "descent": 65,
+      "waypoints": [
+        { "latitude": 41.94225, "longitude": -8.13542, "elevation": 496 },
+        { "latitude": 41.94774, "longitude": -8.13733, "elevation": 465 },
+        { "latitude": 41.95419, "longitude": -8.14041, "elevation": 587 }
+      ]
+    },
+    {
+      "from": "GA-GA33",
+      "to": "GA-GA34",
+      "distance": 4.05,
+      "ascent": 95,
+      "descent": 20,
+      "waypoints": [
+        { "latitude": 41.96323, "longitude": -8.16230, "elevation": 790 }
+      ]
+    },
+    {
+      "from": "GA-GA34",
+      "to": "GA-GA35",
+      "distance": 2.80,
+      "ascent": 30,
+      "descent": 55,
+      "waypoints": [
+        { "latitude": 41.99050, "longitude": -8.15906, "elevation": 722 },
+        { "latitude": 41.99483, "longitude": -8.16127, "elevation": 729 }
+      ]
+    },
+    {
+      "from": "GA-GA35",
+      "to": "GA-GA36",
+      "distance": 3.40,
+      "ascent": 210,
+      "descent": 20
+    },
+    {
+      "from": "GA-GA36",
+      "to": "GA-GA37",
+      "distance": 1.44,
+      "ascent": 35,
+      "descent": 25,
+      "waypoints": [
+        { "latitude": 42.03353, "longitude": -8.16277, "elevation": 976 }
+      ]
+    },
+    {
+      "from": "GA-GA37",
+      "to": "GA-GA38",
+      "distance": 1.85,
+      "ascent": 80
+    },
+    {
+      "from": "GA-GA38",
+      "to": "GA-GA39",
+      "distance": 2.67,
+      "ascent": 5,
+      "descent": 165,
+      "waypoints": [
+        { "latitude": 42.06613, "longitude": -8.18278, "elevation": 880 }
+      ]
+    },
+    {
+      "from": "GA-GA39",
+      "to": "GA-GA40",
+      "distance": 6.40,
+      "ascent": 35,
+      "descent": 335,
+      "waypoints": [
+        { "latitude": 42.07408, "longitude": -8.18179, "elevation": 857 },
+        { "latitude": 42.07355, "longitude": -8.17934, "elevation": 843 },
+        { "latitude": 42.07817, "longitude": -8.17902, "elevation": 825 },
+        { "latitude": 42.08014, "longitude": -8.17444, "elevation": 800 },
+        { "latitude": 42.08175, "longitude": -8.17732, "elevation": 808 },
+        { "latitude": 42.09407, "longitude": -8.17384, "elevation": 809 },
+        { "latitude": 42.10711, "longitude": -8.16031, "elevation": 663 }
+      ]
+    },
+    {
+      "from": "GA-GA40",
+      "to": "GA-GA41",
+      "distance": 3.44,
+      "descent": 140
+    },
+    {
+      "from": "GA-GA41",
+      "to": "GA-GA42",
+      "distance": 2.66,
+      "ascent": 20,
+      "descent": 40,
+      "waypoints": [
+        { "latitude": 42.13821, "longitude": -8.16750, "elevation": 439 },
+        { "latitude": 42.14616, "longitude": -8.16101, "elevation": 453 },
+        { "latitude": 42.14998, "longitude": -8.15720, "elevation": 438 }
+      ]
+    },
+    {
+      "from": "GA-GA42",
+      "to": "GA-GA43",
+      "distance": 2.19,
+      "ascent": 5,
+      "descent": 125,
+      "waypoints": [
+        { "latitude": 42.15256, "longitude": -8.15805, "elevation": 408 },
+        { "latitude": 42.15956, "longitude": -8.16018, "elevation": 410 }
+      ]
+    },
+    {
+      "from": "GA-GA43",
+      "to": "GA-GA44",
+      "distance": 0.98,
+      "descent": 80
+    },
+
+    {
+      "from": "GA-GA15",
+      "to": "GA-TB1",
+      "distance": 3.57,
+      "ascent": 10,
+      "descent": 295,
+      "waypoints": [
+        { "latitude": 41.70365, "longitude": -8.31322, "elevation": 267 },
+        { "latitude": 41.70368, "longitude": -8.30947, "elevation": 225 },
+        { "latitude": 41.70998, "longitude": -8.30749, "elevation": 234 },
+        { "latitude": 41.71297, "longitude": -8.30958, "elevation": 210 }
+      ]
+    },
+    {
+      "from": "GA-TB1",
+      "to": "GA-GA17",
+      "distance": 4.42,
+      "ascent": 285,
+      "waypoints": [
+        { "latitude": 41.71430, "longitude": -8.29971, "elevation": 317 },
+        { "latitude": 41.71472, "longitude": -8.29480, "elevation": 354 }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "GA-GA",
+      "name": "Geira and Arrieiros",
+      "description": "The main Camino route starting in Braga",
+      "major": true,
+      "stops": [ "GA-GA20", "GA-GA27" ],
+      "starts": [ "GA-GA1" ],
+      "finishes": [ "ST-ST1" ],
+      "palette": {
+        "colour": "#fec953"
+      },
+      "features": [
+        {
+          "id": "GA-GA-F1",
+          "name": "Braga - Ponte de Bico",
+          "geometry": "GA/GAS-GAS-F1.geojson"
+        },
+        {
+          "id": "MR-MR-F1",
+          "name": "Ponte de Bico - Trado",
+          "geometry": "MR/MR-MR-F1.geojson"
+        },
+        {
+          "id": "GAE-GAE-F1",
+          "name": "Trado - SdC",
+          "geometry": "GA/GAE-GAE-F1.geojson"
+        }
+      ]
+    },
+    {
+      "id": "GA-TB",
+      "name": "Terras de Bouros",
+      "description": {
+        "text": "Bypass the main Via XVIII (Geira) route and travel through Terras de Bouros",
+        "notes": [
+          "Caldeas to Campo de Gerês is an arduous leg. Using this route allows you to break your journey in Terras de Bouros, "
+        ]
+      },
+      "locations": [ "GA-TB1" ],
+      "palette": {
+        "colour": "#f09860"
+      },
+      "features": [
+        {
+          "id": "GA-TB-F1",
+          "name": "Terras de Bouro/Geira Junction - Travessos Turnoff",
+          "geometry": "GA/GA-TB-F1.geojson"
+        }
+      ]
+    }
+  ],
+  "route-logic": [
+    {
+      "description": "Terras de Bouros route logic",
+      "condition": "GA-TB",
+      "exclude": [ "GA-GA16" ]
+    }
+  ],
+  "default-route": "GA-GA",
+  "warnings": [
+    {
+      "type": "Warning",
+      "condition": "GA-GA",
+      "description": {
+        "text": "This route is relatively sparse. There are few albergues and relatively few accommodation options. In many cases, the single available option is a casa rural only capable of accommodating one group a night. Booking ahead may be necessary, especially during the summer months."
+      }
+    }
+  ]
+}

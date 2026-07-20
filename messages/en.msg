@@ -23,6 +23,8 @@ AscentMsg sou@SystemOfUnits ascent@Float: Ascent ^{formatHeight sou ascent}
 AustereTitle: Austere
 BackLabel: Back
 BankTitle: Bank
+BathDescription: A bathing area, thermal pools, spa or similar
+BathTitle: Bathing
 BarrierTitle: Barrier
 BeachDescription: A beach (sea or river)
 BeachTitle: Beach
@@ -318,6 +320,8 @@ ShowLabelsTitle: Show camino and route labels on map
 ShowOnMapTitle: Show on map
 ShowPreferencesText: If you are happy with these preferences, you can generate a plan. Otherwise, use the Back button to change your choices.
 ShowPreferencesTitle: Review Preferences
+ShrineDescription: A roadside shrine or small chapel
+ShrineTitle: Shrine or Chapel
 SingleTitle: Single
 SIUnitsTitle: Kilometres, metres, hours
 SleepingBagTitle: Sleeping Bag

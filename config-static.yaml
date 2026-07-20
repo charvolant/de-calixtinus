@@ -91,9 +91,6 @@ caminos:
   - id: GA
     type: CaminoDefinition
     path: "file:camino-geira.json"
-  - id: MR
-    type: CaminoDefinition
-    path: "file:camino-minoto.json"
   - id: BM
     type: CaminoDefinition
     path: "file:bondi-manly.json"

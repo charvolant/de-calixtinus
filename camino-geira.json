@@ -1357,14 +1357,27 @@
       },
       "features": [
         {
-          "id": "GA-GA-F1",
+          "id": "GAS-GAS-F1",
           "name": "Braga - Ponte de Bico",
           "geometry": "GA/GAS-GAS-F1.geojson"
         },
         {
-          "id": "MR-MR-F1",
-          "name": "Ponte de Bico - Trado",
-          "geometry": "MR/MR-MR-F1.geojson"
+          "id": "GA-GA-F1",
+          "name": "Ponte de Bico - Terras de Bouro Junction",
+          "geometry": "GA/GA-GA-F1.geojson"
+        },
+        {
+          "id": "GA-GA-F2",
+          "condition": {
+            "not": "GA-TB1"
+          },
+          "name": "Terras de Bouro Junction - Road to Travassos",
+          "geometry": "GA/GA-GA-F2.geojson"
+        },
+        {
+          "id": "GA-GA-F3",
+          "name": "Road to Travassos - Trado",
+          "geometry": "GA/GA-GA-F3.geojson"
         },
         {
           "id": "GAE-GAE-F1",

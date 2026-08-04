@@ -53,6 +53,7 @@ import qualified Data.Units as U
 import Data.Util
 import Data.Xlsx
 import Data.Units (SystemOfUnits)
+import Geo.LatLong
 
 -- What most of the sheets work in
 type Cslab = Slab (Cell CaminoMsg)

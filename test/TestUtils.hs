@@ -2,6 +2,7 @@
 module TestUtils where
   
 import Test.HUnit
+import qualified Data.ByteString.Lazy as LB
 import Data.Char
 import Data.Maybe
 import qualified Data.Text as T
@@ -40,6 +41,14 @@ assertEqualStripped msg expected actual = let
       Just (common, s1', s2') -> (T.length s1' == 0 && T.length s2' == 0, T.length common, s1', s2')
   in
     assertBool (msg ++ " mismatch at " ++ show p ++ "\"..." ++ take 20 (T.unpack s1) ++ "\" and \"..." ++ take 20 (T.unpack s2)) match
+
+assertEqualBSStripped :: String -> LB.ByteString -> LB.ByteString -> Assertion
+assertEqualBSStripped msg expected actual = let
+    expected' = LB.filter (not . isSpace . chr . fromEnum) expected
+    actual' = LB.filter (not . isSpace . chr . fromEnum) actual
+    match = expected' == actual'
+  in
+    assertBool (msg ++ " mismatch " ++ show expected' ++ " and " ++ show actual') match
 
 openTestDir :: IO FilePath
 openTestDir = do

@@ -22,6 +22,7 @@ import qualified Data.Set as S
 import Data.Text (Text)
 import Data.Util (backupFilePath, roundBy)
 import Formatting
+import Geo.LatLong
 import Graph.Graph
 import Network.Google.Elevation
 import Options.Applicative

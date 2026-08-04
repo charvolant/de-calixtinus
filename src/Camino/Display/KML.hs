@@ -42,6 +42,7 @@ import qualified Data.Set as S
 import Data.List (find, singleton)
 import qualified Data.Units as U
 import Data.XML.Types (Content(..))
+import Geo.LatLong
 import Graph.Graph (outgoing)
 import Text.Hamlet
 import Text.Hamlet.XML

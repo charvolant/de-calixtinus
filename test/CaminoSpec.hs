@@ -15,6 +15,7 @@ import Data.Placeholder
 import Data.Propositional
 import qualified Data.Set as S
 import Camino.Camino
+import Geo.LatLong
 import Text.RawString.QQ
 import TestUtils
 

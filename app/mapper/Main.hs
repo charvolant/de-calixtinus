@@ -16,7 +16,7 @@ import Data.Localised
 import Data.Region
 import Data.Text (Text, intercalate, unpack)
 import Formatting
-
+import Geo.LatLong
 import Options.Applicative
 
 data Map = Map {

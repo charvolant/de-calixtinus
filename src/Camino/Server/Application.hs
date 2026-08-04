@@ -51,6 +51,7 @@ import qualified Data.Units as U
 import Data.Util
 import Data.UUID (toText)
 import Data.UUID.V4
+import Geo.LatLong
 import Graph.Graph
 import Text.Hamlet
 import Text.Read (readMaybe)

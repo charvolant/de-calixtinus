@@ -17,6 +17,7 @@ import Camino.Config
 import Data.Event (getCalendarConfig)
 import Data.Region (getRegionConfig)
 import Data.Text (Text, unpack)
+import Geo.LatLong
 import Options.Applicative
 
 data RangeCheck = RangeCheck {

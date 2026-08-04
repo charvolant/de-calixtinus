@@ -111,11 +111,7 @@ module Camino.Camino (
   , caminoWithRoutes
   , completeRoutes
   -- * Utilities
-  , LatLong(..)
   , Prioritised(..)
-  , SRS(..)
-  , centroid
-  , haversineDistance
   -- * Configuration
   , CaminoConfig(..)
   , HasCaminoConfig(..)
@@ -155,6 +151,8 @@ import Data.Summary
 import Data.Text (Text, isPrefixOf, pack, unpack)
 import qualified Data.Text as T
 import Data.Util (headWithError, lastWithError, nothingIfDef, nothingIfNull, nothingIfZero)
+import Geo.LatLong
+import Geo.Geometry
 import Graph.Graph
 import Graph.Programming
 import Data.Partial (topologicalSort)
@@ -221,101 +219,6 @@ subtractFloor :: Penance -> Penance -> Penance
 subtractFloor Reject _ = Reject
 subtractFloor _ Reject = mempty
 subtractFloor (Penance p1) (Penance p2) = if p2 > p1 then mempty else Penance (p1 - p2)
-
--- | Spatial reference system
-data SRS = SRS Text
-  deriving (Eq, Ord, Show, Generic)
-
-srsID :: SRS -> Text
-srsID (SRS sid) = sid
-
-instance Default SRS where
-  def = SRS "WGS84"
-
-instance FromJSON SRS where
-  parseJSON Null = return $ def
-  parseJSON (String v) = return $ SRS v
-  parseJSON v = error ("Can't parse SRS object " ++ show v)
-
-instance ToJSON SRS where
-  toJSON srs' = if srs' == def then Null else String (srsID srs')
-
-instance NFData SRS
-
-data LatLong = LatLong {
-    latitude :: Double
-  , longitude :: Double
-  , elevation :: Maybe Double
-  , srs :: SRS
-} deriving (Eq, Ord, Show, Generic)
-
-instance FromJSON LatLong where
-  parseJSON (Object v) = do
-    latitude' <- v .: "latitude"
-    longitude' <- v .: "longitude"
-    elevation' <- v .:? "elevation"
-    srs' <- v .:? "srs" .!= def
-    return LatLong {
-        latitude = latitude'
-      , longitude = longitude'
-      , elevation = elevation'
-      , srs = srs'
-      }
-  parseJSON v = error ("Unable to parse lat/long object " ++ show v)
-
-instance ToJSON LatLong where
-  toJSON (LatLong latitude' longitude' elevation' srs') =
-    object [
-        "latitude" .= latitude'
-      , "longitude" .= longitude'
-      , "elevation" .= elevation'
-      , "srs" .= nothingIfDef srs'
-    ]
-  toEncoding (LatLong latitude' longitude' elevation' srs') =
-    pairs $
-         "latitude" .= latitude'
-      <> "longitude" .= longitude'
-      <> "elevation" .?= elevation'
-      <> "srs" .?= nothingIfDef srs'
-
-instance NFData LatLong
-
-instance Default LatLong where
-  def = LatLong 0.0 0.0 Nothing def
-
--- Compute the centroid of a list of lat/longs
-centroid :: (Foldable t) => t LatLong -> LatLong
-centroid lls = let
-    (slats, slongs, selevs, len, len', srs'') = foldl' (\(lats, longs, elevs, slen, slen', _srs) -> \(LatLong lat lon elev srs') -> (lats + lat, longs + lon, elevs + maybe 0.0 id elev, slen + 1, slen' + maybe 0 (const 1) elev, srs')) (0.0, 0.0, 0.0, 0, 0, def) lls
-  in
-    LatLong
-      (if len == 0 then 0.0 else (slats / len))
-      (if len == 0 then 0.0 else (slongs / len))
-      (if len' == 0 then Nothing else Just (selevs / len'))
-      srs''
-
--- Squared Euclidian distance between two lat longs
--- This is not accurate, but good enough for quick estimation
-euclidianDistance2 :: LatLong -> LatLong -> Double
-euclidianDistance2 (LatLong lat1 long1 _elev1 _srs1) (LatLong lat2 long2 _elev2 _srs2) = (lat2 - lat1) * (lat2 - lat1) + (long2 - long1) * (long2 - long1)
-
--- | Distance for small angle differences using the Haverisne formula
---   https://en.wikipedia.org/wiki/Haversine_formula
-haversineDistance :: LatLong -- ^ From lat/long
-  -> LatLong -- ^ To lat/long
-  -> Double -- ^ Distance in metres
-haversineDistance (LatLong lat1 long1 _elev1 _srs1) (LatLong lat2 long2 _elev2 _srs2) = let
-  lat1r = lat1 * pi / 180.0
-  long1r = long1 * pi / 180.0
-  lat2r = lat2 * pi / 180.0
-  long2r = long2 * pi / 180.0
-  deltalat = lat2r - lat1r
-  deltalong = long2r - long1r
-  r = 6378137.0
-  hav = sqrt (1.0 - cos deltalat + cos lat1r * cos lat2r * (1 - cos deltalong))
-  hav' = max (-1.0) (min 1.0 hav)
-  in
-    2.0 * r * hav'
 
 -- | Broad accommodation types
 data AccommodationType = PilgrimAlbergue -- ^ A pilgrims hostel run by local volunteers
@@ -1571,7 +1474,7 @@ routeCentralLocation route = let
     if S.null locations then
       error ("No locations for route " ++ (T.unpack $ routeID route))
     else let
-        centre = centroid $ S.map locationPosition locations
+        centre = centroidFromGeometries $ S.map locationPosition locations
         closest = minimumBy (\l1 -> \l2 -> compare (euclidianDistance2 centre (locationPosition l1)) (euclidianDistance2 centre (locationPosition l2))) locations
       in
         closest

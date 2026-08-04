@@ -41,6 +41,7 @@ import qualified Data.Set as S
 import Data.Summary
 import qualified Data.Units as U
 import Data.Util
+import Geo.LatLong
 import Graph.Graph (Edge(..), incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet

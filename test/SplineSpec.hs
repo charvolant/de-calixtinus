@@ -8,6 +8,7 @@ import Data.Placeholder
 import Data.Spline
 import Camino.Camino
 import Camino.Display.SVG
+import Geo.LatLong
 import TestUtils
 
 testSpline :: Test

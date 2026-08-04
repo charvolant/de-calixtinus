@@ -32,6 +32,7 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Util (ceilingBy, floorBy, headWithError, tailOrEmpty)
 import Formatting (fixed, format)
+import Geo.LatLong
 import Text.Hamlet
 
 buildCoordinates'' :: Double -> Double -> Maybe Leg -> Location -> [LegSegment] -> Double ->  [(Double, Maybe Double, Maybe Leg, Maybe Location)]

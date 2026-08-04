@@ -224,6 +224,7 @@ feature3PrintOptions = buildPrintOptions $ [
     def & foPath .~ "type" & foRemove ?~ removeNullEmpty
   , def & foPath .~ "id" & foRemove ?~ removeNullEmpty
   , def & foPath .~ "name"  & foRemove ?~ removeNullEmpty
+  , def & foPath .~ "description"  & foRemove ?~ removeNullEmpty
   , def & foPath .~ "properties" & foRemove ?~ removeNullEmpty & foChildren .~ dctermsFieldOptions
   , def & foPath .~ "crs" & foRemove ?~ removeAlways
   , def & foPath .~ "bbox" & foRemove ?~ removeNullEmpty & foInline ?~ inlineAlways
@@ -233,7 +234,8 @@ feature3PrintOptions = buildPrintOptions $ [
         def & foPath .~ "[]" & foInline ?~ inlineWhenLiterals & foChildren .~ [
           def & foPath .~ "[]" & foInline ?~ inlineWhenLiterals & foChildren .~ [
             def & foPath .~ "[0, 1]" & foNumberFormat ?~ fieldFixedFormat 5
-          , def & foPath .~ "[2 .. 20]" & foRemove ?~ removeAlways
+          , def & foPath .~ "[2]" & foRemove ?~ removeNull & foNumberFormat ?~ fieldIntFormat
+          , def & foPath .~ "[3 .. 20]" & foRemove ?~ removeAlways
           ]
         ]
       ]

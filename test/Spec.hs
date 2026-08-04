@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
 import Test.HUnit
+import AttributesSpec
 import CacheSpec
 import CaminoSpec
 import ConfigSpec
@@ -11,12 +12,16 @@ import FormattingSpec
 import WalkingSpec
 import PlannerSpec
 import RegionSpec
+import FeatureSpec
+import GeoJSONSpec
+import GeometrySpec
 import GraphSpec
 import MessageCatalogueSpec
 import PartialSpec
 import ProgrammingSpec
 import MetadataSpec
 import PropositionalSpec
+import LatLongSpec
 import LocalisedSpec
 import SplineSpec
 import UnitsSpec
@@ -54,26 +59,31 @@ main = do
     putStrLn $ show results
 
 testList config prefs camino = TestList [
-   TestLabel "Util" testUtils,
-   TestLabel "Spline" testSpline,
-   TestLabel "Partial" testPartial,
-   TestLabel "Localised" testLocalised,
-   TestLabel "Metadata" testMetadata,
-   TestLabel "Description" testDescription,
-   TestLabel "Event" testEvent,
-   TestLabel "Region" testRegion,
-   TestLabel "Formatting" testFormatting,
-   TestLabel "EventDate" testEventDate,
-   TestLabel "Propositional" testPropositional,
-   TestLabel "Variables" testVariables,
-   TestLabel "MessageCatalogue" testMessageCatalogue,
-   TestLabel "Cache" testCache,
-   TestLabel "Xlsx" testXlsx,
-   TestLabel "Config" testConfig,
-   TestLabel "Camino" testCamino,
-   TestLabel "Units" testUnits,
-   TestLabel "Walking" testWalking,
-   TestLabel "Graph" testGraph,
-   TestLabel "Programming" testProgramming,
-   TestLabel "Planner" (testPlanner config prefs camino)
+     TestLabel "Util" testUtils
+   , TestLabel "Spline" testSpline
+   , TestLabel "Partial" testPartial
+   , TestLabel "Localised" testLocalised
+   , TestLabel "Attributes" testAttributes
+   , TestLabel "Metadata" testMetadata
+   , TestLabel "Description" testDescription
+   , TestLabel "Event" testEvent
+   , TestLabel "Region" testRegion
+   , TestLabel "Formatting" testFormatting
+   , TestLabel "EventDate" testEventDate
+   , TestLabel "Propositional" testPropositional
+   , TestLabel "Variables" testVariables
+   , TestLabel "MessageCatalogue" testMessageCatalogue
+   , TestLabel "Cache" testCache
+   , TestLabel "Xlsx" testXlsx
+   , TestLabel "LatLong" testLatLong
+   , TestLabel "Geometry" testGeometry
+   , TestLabel "Feature" testFeature
+   , TestLabel "GeoJSON" testGeoJSON
+   , TestLabel "Config" testConfig
+   , TestLabel "Camino" testCamino
+   , TestLabel "Units" testUnits
+   , TestLabel "Walking" testWalking
+   , TestLabel "Graph" testGraph
+   , TestLabel "Programming" testProgramming
+   , TestLabel "Planner" (testPlanner config prefs camino)
   ]

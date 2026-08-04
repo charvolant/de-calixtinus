@@ -8,10 +8,8 @@ import Data.Aeson
 import Data.Default.Class
 import Geo.Geometry
 import Geo.LatLong
-import Text.Read (readEither)
 import TestUtils
 import Text.RawString.QQ
-import Data.Aeson.Text (encodeToLazyText)
 
 testGeometry :: Test
 testGeometry = TestList [
@@ -21,9 +19,6 @@ testGeometry = TestList [
 
 ll1 :: LatLong
 ll1 = LatLong 12.3657 (-8.1229) (Just 34) def
-
-ll2 :: LatLong
-ll2 = LatLong (-12.9) 148.7 Nothing (SRS "EPSG:7844")
 
 ll3 :: LatLong
 ll3 = LatLong (-12.9) 148.7 Nothing def

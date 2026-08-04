@@ -16,7 +16,6 @@ module Geo.Feature (
     Feature(..)
 ) where
 
-import Control.Applicative ((<|>))
 import Control.DeepSeq
 import Data.Aeson
 import Data.Aeson.Types (unexpected)
@@ -82,7 +81,6 @@ instance (Geo a, NFData a) => NFData (Feature a) where
     featureSubFeatures feature `deepseq` ()
 
 instance  {-# OVERLAPPING #-} (Geo a) => Geo (Feature a) where
-  centroid :: Geo a => Feature a -> LatLong
   centroid f = centroidFromGeometries (points f)
   points f = foldl' (\pts -> \f' -> pts `S.union` points f') (maybe S.empty points (featureGeometry f)) (featureSubFeatures f)
   remap f feature = feature {
@@ -91,6 +89,5 @@ instance  {-# OVERLAPPING #-} (Geo a) => Geo (Feature a) where
     , featureSubFeatures = map (remap f) (featureSubFeatures feature)
     }
   isMultiGeometry f = maybe ((not $ null fs) && all isMultiGeometry fs) (\g -> all isMultiGeometry fs && isMultiGeometry g) (featureGeometry f) where fs = featureSubFeatures f
-  isClosedGeometry :: Geo a => Feature a -> Bool
   isClosedGeometry f = maybe ((not $ null fs) && all isClosedGeometry fs) (\g -> all isClosedGeometry fs && isClosedGeometry g) (featureGeometry f) where fs = featureSubFeatures f
   

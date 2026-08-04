@@ -14,10 +14,9 @@ See https://datatracker.ietf.org/doc/html/rfc7946
 -}
 module Geo.GeoJSON where
 
-import Control.Applicative ((<|>))
 import Data.Aeson
 import Data.Aeson.Encoding (list, pair)
-import Data.Aeson.Types (Parser, Pair, parse, parseFail, unexpected, parseEither)
+import Data.Aeson.Types (Parser, parseFail, unexpected, parseEither)
 import qualified Data.ByteString.Lazy as LB
 import Data.Default.Class
 import Data.Text (Text)

@@ -17,7 +17,6 @@ import Geo.Feature
 import Geo.GeoJSON
 import Geo.Geometry
 import Geo.LatLong
-import Text.Read (readEither)
 import TestUtils
 import Text.RawString.QQ
 

@@ -421,7 +421,7 @@ helpPopup help' = do
 
 preferenceHelpPopup' :: PreferenceStep -> [Locale] -> Maybe (HtmlUrlI18n CaminoMsg CaminoRoute)
 preferenceHelpPopup' TravelStep _ = Just $(ihamletFile "templates/help/travel-help-en.hamlet")
-preferenceHelpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet") where sou = U.SIUnits
+preferenceHelpPopup' RangeStep _ = Just $(ihamletFile "templates/help/range-help-en.hamlet")
 preferenceHelpPopup' ServicesStopStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet") where sou = U.SIUnits
 preferenceHelpPopup' ServicesStockStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet") where sou = U.SIUnits
 preferenceHelpPopup' ServicesRestStep _ = Just $(ihamletFile "templates/help/services-help-en.hamlet") where sou = U.SIUnits

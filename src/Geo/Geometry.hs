@@ -96,7 +96,6 @@ instance {-# OVERLAPPING #-} (Foldable t, Functor t, Geo a) => Geo (t a) where
   centroid gl = centroidFromGeometries gl
   points gl = foldl' (\pts -> \g -> pts `S.union` points g) S.empty gl
   remap f gl = fmap (remap f) gl
-  isMultiGeometry :: (Foldable t, Functor t, Geo a) => t a -> Bool
   isMultiGeometry gl = (not $ null gl) && all isMultiGeometry gl
   isClosedGeometry gl = (not $ null gl) && all isClosedGeometry gl
   

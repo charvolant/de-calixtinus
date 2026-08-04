@@ -14,7 +14,6 @@ import Data.Maybe
 import Geo.Feature
 import Geo.Geometry
 import Geo.LatLong
-import Data.Localised
 import TestUtils
 import Text.RawString.QQ
 

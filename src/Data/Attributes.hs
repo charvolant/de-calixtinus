@@ -77,7 +77,6 @@ instance FromJSON AttributeValue where
   parseJSON v@(Object _) = do
     a <- parseJSON v
     return $ ObjectV a
-  parseJSON v = unexpected v
 
 instance ToJSON AttributeValue where
   toJSON :: AttributeValue -> Value

@@ -50,7 +50,7 @@ import Text.XML
 import Text.Blaze.Html.Renderer.Text
 
 htmlToNodes :: U.SystemOfUnits -> Config -> [Locale] -> HtmlUrlI18n CaminoMsg CaminoRoute -> [Node]
-htmlToNodes sou config locales html =
+htmlToNodes _sou config locales html =
   singleton $ NodeContent $ toStrict $ renderHtml $ html message route
     where
       message = renderCaminoMsg config locales
@@ -161,7 +161,7 @@ caminoLocationHtmlForPlacemark sou config locales tprefs cprefs pilgrimage _stop
     usedLegs = S.fromList $ filter (\l -> S.member (legTo l) waypoints) legs
 
 caminoTextForSolution :: U.SystemOfUnits -> Config -> [Locale] -> TravelPreferences -> CaminoPreferences -> Maybe Solution -> Text
-caminoTextForSolution sou config locales _tprefs cprefs msolution =  intercalate "\n" $ catMaybes (heading ++ notes ++ caminoMd ++ solutionMd)
+caminoTextForSolution _sou config locales _tprefs cprefs msolution =  intercalate "\n" $ catMaybes (heading ++ notes ++ caminoMd ++ solutionMd)
   where
     message = renderCaminoMsgText config locales
     camino = preferenceCamino cprefs

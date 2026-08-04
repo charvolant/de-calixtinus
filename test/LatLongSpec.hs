@@ -7,10 +7,8 @@ import qualified Data.ByteString.Lazy as LB
 import Data.Aeson
 import Data.Default.Class
 import Geo.LatLong
-import Text.Read (readEither)
 import TestUtils
 import Text.RawString.QQ
-import Data.Aeson.Text (encodeToLazyText)
 
 testLatLong :: Test
 testLatLong = TestList [
@@ -33,8 +31,6 @@ lls1 = [r|
 }
 |] :: LB.ByteString
 
-llg1 = [-8.1229, 12.3657, 34.0]
-
 ll2 :: LatLong
 ll2 = LatLong (-12.9) 148.7 Nothing (SRS "EPSG:7844")
 
@@ -49,18 +45,6 @@ lls2 = [r|
 testLatLongJSON = TestList [
   testLatLongJSON1, testLatLongJSON2,  testLatLongJSON3, testLatLongJSON4
   ]
-
-ll3 :: LatLong
-ll3 = LatLong (-12.9) 148.7 Nothing def
-
-llg3 = [148.7, -12.9]
-
-
-ll4 :: LatLong
-ll4 = LatLong 30.56 148.7 (Just 70.0) def
-
-ll5 :: LatLong
-ll5 = LatLong 12.6 150.5 Nothing def
 
 testLatLongJSON1 = TestCase (assertEqualBSStripped "Test LatLong JSON 1" lls1 (encode ll1))
 

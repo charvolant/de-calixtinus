@@ -50,6 +50,7 @@ module Data.Localised (
   , Tagged(..)
   , Localised(..)
   , appendText
+  , firstSentences
   -- ** Text
   , TaggedText(..)
   , localise
@@ -58,6 +59,7 @@ module Data.Localised (
   , parseTagged
   , wildcardText
   , elements
+  , firstSentence
   -- ** Links
   , Hyperlink(..)
   , TaggedLink(..)
@@ -75,7 +77,7 @@ import Data.Char (isAlpha)
 import Data.List (find, singleton, uncons)
 import Data.Maybe (catMaybes, fromJust, isJust, isNothing)
 import Data.String (IsString(..))
-import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack)
+import Data.Text (Text, breakOnEnd, dropEnd, intercalate, isInfixOf, null, pack, splitOn, takeWhile, toLower, unpack, breakOn)
 import Data.Time.Format
 import Data.Time.LocalTime
 import Data.Units
@@ -702,6 +704,13 @@ instance NFData TaggedText
 instance IsString TaggedText where
   fromString txt = fromText $ pack txt
 
+-- | Convert a piece of tagged text into the first sentence of that text
+firstSentence :: TaggedText -> TaggedText
+firstSentence (TaggedText locale' txt) = TaggedText locale' txt'
+  where
+    (start', end') = breakOn ". " txt
+    txt' = if Data.Text.null end' then start' else start' <> "."
+
 -- | A URL with an optional title
 data Hyperlink = Hyperlink URI (Maybe Text)
   deriving (Show, Eq, Ord, Generic)
@@ -840,3 +849,7 @@ localiseDefault lt = localiseText [] lt
 -- | Create a simple localised instance from a piece of text
 wildcardText :: (Tagged a) => Text -> Localised a
 wildcardText txt = Localised [fromText txt]
+
+-- | Create a new version of localised text containing only the first sentence
+firstSentences :: Localised TaggedText -> Localised TaggedText
+firstSentences (Localised txts) = Localised $ map firstSentence txts

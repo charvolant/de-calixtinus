@@ -13,7 +13,6 @@ import WalkingSpec
 import PlannerSpec
 import RegionSpec
 import FeatureSpec
-import GeoJSONSpec
 import GeometrySpec
 import GraphSpec
 import MessageCatalogueSpec
@@ -78,7 +77,6 @@ testList config prefs camino = TestList [
    , TestLabel "LatLong" testLatLong
    , TestLabel "Geometry" testGeometry
    , TestLabel "Feature" testFeature
-   , TestLabel "GeoJSON" testGeoJSON
    , TestLabel "Config" testConfig
    , TestLabel "Camino" testCamino
    , TestLabel "Units" testUnits

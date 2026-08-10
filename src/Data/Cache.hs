@@ -79,6 +79,7 @@ instance IsNamer Text where
 -- | The expiry policty for a cache
 data CachePolicy k v = CachePolicy {
     cpSize :: Maybe Int -- ^ The maximum size of the cache
+  , cpFree :: Maybe Int -- ^ The number of entries to free if space is needed
   , cpRetain :: Maybe NominalDiffTime -- ^ The maximum age of data in the cache, if absent than data is returned indefinately
   , cpScan :: Maybe NominalDiffTime -- ^ The minimum time before a rescan for expiry, if not set then rescans occur any time requested
 }
@@ -166,7 +167,7 @@ cacheRemovalLRU ce1 ce2 = compare (ceAccessed ce1) (ceAccessed ce2)
 newDummyCache :: (Ord k) => String -> Cache k v
 newDummyCache cid = Cache {
     caID = cid
-  , caPolicy = CachePolicy Nothing Nothing Nothing
+  , caPolicy = CachePolicy Nothing Nothing Nothing Nothing
   , caEntries = \_c -> return 0
   , caLookup = \_c -> \_k -> return Nothing
   , caPut = \_c -> \_k -> \_v -> return ()
@@ -204,7 +205,7 @@ memCacheLookup' current key entries = let
 memCachePut :: (Ord k) => MemCache k v -> Cache k v  -> k -> v -> IO ()
 memCachePut cache base key value = do
   current <- getCurrentTime
-  memCacheFree cache base 1
+  memCacheFree cache base (maybe 1 id (cpFree $ caPolicy base))
   memCacheExpire cache base
   atomicModifyIORef' (mcEntries cache) (memCachePut' current key value)
 
@@ -276,7 +277,8 @@ newMemCache' ident mlogger msize mexpiry = do
   return $ Cache {
       caID = ident
     , caPolicy = CachePolicy {
-        cpSize = msize
+          cpSize = msize
+        , cpFree = (\s -> max 1 (s `div` 10)) <$> msize
         , cpRetain = toRetainTime <$> mexpiry
         , cpScan = toScanTime <$> mexpiry
       }
@@ -353,7 +355,7 @@ fileCachePut cache base key value = do
   let path = fileForKey (fcRoot cache) key
   let dir = takeDirectory path
   fileCacheExpire False cache base
-  fileCacheFree cache base 1
+  fileCacheFree cache base (maybe 1 id (cpFree $ caPolicy base))
   createDirectoryIfMissing True dir
   writeCacheFile path value
 
@@ -429,7 +431,8 @@ newFileCache' ident mlogger root msize mexpiry = do
   let cache = Cache {
       caID = ident
     , caPolicy = CachePolicy {
-      cpSize = msize
+        cpSize = msize
+      , cpFree = (\s -> max 1 (s `div` 10)) <$> msize
       , cpRetain = toRetainTime <$> mexpiry
       , cpScan = toScanTime <$> mexpiry
       }
@@ -506,6 +509,7 @@ newCompositeCache ident primary secondary = Cache {
       caID = ident
     , caPolicy = CachePolicy {
           cpSize = Nothing
+        , cpFree = Nothing
         , cpRetain = Nothing
         , cpScan = Nothing
         }

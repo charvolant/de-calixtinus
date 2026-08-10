@@ -78,7 +78,7 @@ newtype PaletteColour = PaletteColour { unPaletteColour :: Colour Double }
 instance NFData PaletteColour where
   rnf _ = ()
 
--- Operations on underlying colour
+-- | Operations on underlying colour
 cmap :: (Colour Double -> Colour Double) -> PaletteColour -> PaletteColour
 cmap f (PaletteColour c) = PaletteColour (f c)
 

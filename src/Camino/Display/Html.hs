@@ -42,6 +42,7 @@ import Data.Summary
 import qualified Data.Units as U
 import Data.Util
 import Geo.LatLong
+import Geo.Geometry
 import Graph.Graph (Edge(..), incoming, outgoing)
 import Text.Cassius (renderCss)
 import Text.Hamlet
@@ -885,6 +886,22 @@ warningBlock warning = [ihamlet|
     ^{descriptionBlock True True (caminoWarningDescription warning)}
   |]
 
+-- | Icons showing accommodation, services etc available
+locationLineIcons :: Config -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
+locationLineIcons _config location = [ihamlet|
+<span .accommodation-types>
+  $forall accommodation <- locationAccommodationTypes location
+    ^{caminoAccommodationTypeIcon accommodation}
+<span .services .ms-1>
+  $forall service <- locationServices location
+    ^{caminoServiceIcon service}
+<span .poi-types .ms-1>
+  $forall poi <- locationPoiTypes location
+    ^{caminoLocationTypeIcon poi}
+  $forall event <- locationEventTypes location
+    ^{caminoEventTypeIcon event}
+|]
+
 -- | Generate a single line description of a location summarising type, name, services, accommodation and points of interest
 locationLineSimple :: Config -> Location -> HtmlUrlI18n CaminoMsg CaminoRoute
 locationLineSimple config location = [ihamlet|
@@ -894,17 +911,7 @@ locationLineSimple config location = [ihamlet|
     $maybe r <- locationRegion location
       <span .region>
         _{Txt (regionName r)}
-    <span .accommodation-types>
-      $forall accommodation <- locationAccommodationTypes location
-        ^{caminoAccommodationTypeIcon accommodation}
-    <span .services .ms-1>
-      $forall service <- locationServices location
-        ^{caminoServiceIcon service}
-    <span .poi-types .ms-1>
-      $forall poi <- locationPoiTypes location
-        ^{caminoLocationTypeIcon poi}
-      $forall event <- locationEventTypes location
-        ^{caminoEventTypeIcon event}
+    ^{locationLineIcons config location}
   |]
 
 -- | See `locationLineSimple`
@@ -1687,8 +1694,8 @@ caminoTripHtml config preferences camino pilgrimage = [ihamlet|
   stageImportant stage loc = loc == start stage || loc == finish stage
   pilgrimageLabel pilg loc = loc == start pilg || elem loc (map finish (path pilg)) || (S.member loc $ preferenceStops camino) || (S.member loc $ preferenceRestPoints camino)
   pilgrimageImportant pilg loc = loc == start pilg || loc == finish pilg
-  (_minll, maxll) = caminoBbox (preferenceCamino camino)
-  maxelev = ceilingBy 500.0 (maybe 1000.0 id (elevation maxll))
+  (BoundingBox _sw ne) = caminoBbox (preferenceCamino camino)
+  maxelev = ceilingBy 500.0 (maybe 1000.0 id (elevation ne))
 
 caminoMapHtml :: TravelPreferences -> CaminoPreferences -> Maybe Solution -> HtmlUrlI18n CaminoMsg CaminoRoute
 caminoMapHtml _preferences _camino _solution = [ihamlet|
@@ -1700,9 +1707,9 @@ caminoMapHtml _preferences _camino _solution = [ihamlet|
 
 -- | Generate SVG that shows the sort of lines used to display a route
 featureKeyLine :: Route -> LegType -> Bool -> Bool -> Text -> HtmlUrlI18n CaminoMsg CaminoRoute
-featureKeyLine route lt large used pos = [ihamlet|<line x1="0%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
+featureKeyLine route lt large used pos = [ihamlet|<line x1="0%" y1="#{pos}" x2="100%" y2="#{pos}" stroke="#{toCssColour colour}" stroke-width="#{weight}" stroke-opacity="#{opacity}" stroke-dasharray="#{dashes}" stroke-linecap="#{cap}"/>|]
   where
-    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large False used lt
+    (colour, weight, opacity, _dopacity, mdashes, mcap) = featureLineStyle route large False used lt
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
     cap = maybe "" id mcap
 
@@ -2016,9 +2023,9 @@ function showLocationDescription(id) {
 
 -- | Javascript that generates functions that can be used to describe a style suitable for leaflet or SVG
 caminoMapScriptStyle :: Route -> Bool -> Bool -> Bool -> LegType -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoMapScriptStyle route large dummy used lt = [ihamlet|{ color: "#{colour}", weight: #{weight}, "opacity": #{opacity}, dashArray: "#{dashes}", lineCap: "#{cap}" }|]
+caminoMapScriptStyle route large dummy used lt = [ihamlet|{ color: "#{toCssColour colour}", weight: #{weight}, "opacity": #{opacity}, dashArray: "#{dashes}", lineCap: "#{cap}" }|]
   where
-    (colour, weight, opacity, mdashes, mcap) = featureLineStyle route large dummy used lt
+    (colour, weight, opacity, _dopacity, mdashes, mcap) = featureLineStyle route large dummy used lt
     dashes = maybe "" (\ds -> L.intercalate " " $ map show ds) mdashes
     cap = maybe "" id mcap
 
@@ -2158,7 +2165,7 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
   ^{caminoMapScriptBase}
   ^{caminoMapScriptStyles usedRoute usedFeature [camino]}
   ^{caminoMapScriptTabs}
-  map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
+  map.fitBounds([ [#{latitude ne}, #{longitude sw}], [#{latitude sw}, #{longitude ne}] ]);
   ^{caminoMapScriptCamino True chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail usedLeg legStyleID locations legs features}
   ^{caminoMapScriptLabels camino}
   selectZoom();
@@ -2171,7 +2178,7 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
     usedRoutes = maybe routes (preferenceRoutes . solutionCaminoPreferences) solution
     (_trip, _jerrors, _perrors, _rests, _stockpoints, stops, waypoints, usedLegs) = solutionElements camino solution
     usedFeatures = caminoUsedFeatures camino usedRoutes waypoints
-    (tl, br) = if S.null waypoints then caminoBbox camino else locationBbox waypoints
+    (BoundingBox sw ne) = if S.null waypoints then caminoBbox camino else locationBbox waypoints
     chooseLocationIcon loc = caminoLocationIcon tprefs cprefs stops waypoints loc
     choosePoiIcon poi = caminoPoiIcon tprefs cprefs poi
     chooseLocationTooltip loc = caminoLocationTooltip config tprefs cprefs solution usedLegs loc
@@ -2187,15 +2194,15 @@ caminoMapScript config tprefs cprefs solution = [iophelia|
 -- | Generate a script that will show a map for a list of caminos.
 --
 --   This map is somewhat coarser than the map generated for a single camino.
-caminoAllMapScript :: Config -> LatLong -> LatLong -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
-caminoAllMapScript config tl br caminos = [ihamlet|
+caminoAllMapScript :: Config -> BoundingBox -> [Camino] -> HtmlUrlI18n CaminoMsg CaminoRoute
+caminoAllMapScript config (BoundingBox sw ne) caminos = [ihamlet|
 <script>
   ^{caminoMapScriptBase}
   ^{caminoMapScriptStyles (const True) (const True) caminos}
   ^{caminoMapScriptCamino False chooseLocationIcon choosePoiIcon chooseLocationTooltip choosePoiTooltip legWithoutTrail usedLeg legStyleID locations legs features}
   $forall camino <- caminos
     ^{caminoMapScriptLabels camino}
-  map.fitBounds([ [#{latitude tl}, #{longitude tl}], [#{latitude br}, #{longitude br}] ]);
+  map.fitBounds([ [#{latitude ne}, #{longitude sw}], [#{latitude sw}, #{longitude ne}] ]);
   selectZoom();
  |]
   where

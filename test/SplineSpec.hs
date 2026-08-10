@@ -6,6 +6,7 @@ import Control.Monad
 import Data.Default.Class
 import Data.Placeholder
 import Data.Spline
+import Data.Util
 import Camino.Camino
 import Camino.Display.SVG
 import Geo.LatLong
@@ -207,7 +208,7 @@ testToBezier = TestList [
   ]
 
 testToBezier1 = TestCase (do
-  let [spline] = makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
+  let spline = headWithError (makeSpline NaturalBoundary NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float])
   let bezier = toBezier spline
   assertFloatEqual "To Bezier 1 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 1 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
@@ -221,7 +222,7 @@ testToBezier1 = TestCase (do
  )
 
 testToBezier2 = TestCase (do
-  let [spline] = makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
+  let spline = headWithError (makeSpline NaturalBoundary (ClampBoundary 0.0) [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float])
   let bezier = toBezier spline
   assertFloatEqual "To Bezier 2 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 2 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001
@@ -235,7 +236,7 @@ testToBezier2 = TestCase (do
   )
 
 testToBezier3 = TestCase (do
-  let [spline] = makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float]
+  let spline = headWithError (makeSpline (ClampBoundary 0.0) NaturalBoundary [(0.0, 1.0), (1.0, 1.0)] :: [Spline Float])
   let bezier = toBezier spline
   assertFloatEqual "To Bezier 3 1" (splineAt spline 0.0) (snd $ bezierAt bezier 0.0) 0.001
   assertFloatEqual "To Bezier 3 2" (splineAt spline 0.5) (snd $ bezierAt bezier 0.5) 0.001

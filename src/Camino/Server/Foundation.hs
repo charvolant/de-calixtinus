@@ -41,6 +41,7 @@ import Data.Text.Encoding (encodeUtf8)
 import Data.Time.Calendar (Day, fromGregorian)
 import Data.Time.Clock (DiffTime, secondsToDiffTime)
 import qualified Data.Units as U
+import Geo.Feature
 import Web.Cookie
 import Yesod
 import Yesod.Static (Static)
@@ -51,7 +52,6 @@ import Camino.Display.Routes (CaminoRoute, renderCaminoRoute)
 import Data.Util (commaJoin, headWithDefault)
 import Camino.Config (AssetConfig(assetPath))
 import Text.MessageCatalogue
-import Debug.Trace
 
 -- Generic placeholder date
 placeholderDate :: Day
@@ -187,6 +187,7 @@ data CaminoApp = CaminoApp {
   , caminoAppFeature :: Static
   , caminoAppImage :: Static
   , caminoAppPlans :: Cache Text Solution
+  , caminoAppFeatures :: Cache Text SimpleFeature
   , caminoAppConfig :: C.Config
   , caminoAppCaminoConfig :: CaminoConfig
 }

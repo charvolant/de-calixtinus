@@ -8,7 +8,6 @@ import Control.Monad.Reader
 import Data.Event
 import Data.Event.Date
 import Data.Localised
-import Data.Maybe
 import Data.Region
 import qualified Data.Set as S
 import Data.Time.Calendar

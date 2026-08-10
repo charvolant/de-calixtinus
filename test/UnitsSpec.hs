@@ -35,7 +35,7 @@ testShow6 = TestCase (assertEqual "Units Show 6" "hr" (show Hour))
 testRead :: Test
 testRead = TestList [
     testRead1, testRead2, testRead3, testRead4
-  , testRead5, testRead6
+  , testRead5, testRead6, testRead7
   ]
   
 testRead1 = TestCase (assertEqual "Units Read 1" Unit (read ""))
@@ -50,7 +50,7 @@ testRead5 = TestCase (assertEqual "Units Read 5" Foot (read "   ft   "))
 
 testRead6 = TestCase (assertEqual "Units Read 6" Hour (read "hr"))
 
-testRead7 = TestCase (assertEqual "Units Read 7" (Left "blah") (readEither "blah" :: Either String Unit))
+testRead7 = TestCase (assertEqual "Units Read 7" (Left "Prelude.read: no parse") (readEither "blah" :: Either String Unit))
 
 
 testConvert :: Test

@@ -20,6 +20,8 @@ module Geo.LatLong (
   -- * Distances
   , haversineDistance
   , euclidianDistance2
+  -- * GeoJSON
+  , toGeoJSONLatLong
 ) where
 
 import GHC.Generics (Generic)
@@ -53,11 +55,12 @@ instance ToJSON SRS where
 
 instance NFData SRS
 
+-- | A latitude/longitude with a
 data LatLong = LatLong {
-    latitude :: Double
-  , longitude :: Double
-  , elevation :: Maybe Double
-  , srs :: SRS
+    latitude :: Double -- ^ The latitude value in degrees
+  , longitude :: Double -- ^ The longitude value in degrees
+  , elevation :: Maybe Double -- ^ The elevation in meters
+  , srs :: SRS -- ^ The spatial reference system for the lat/long
 } deriving (Eq, Ord, Show, Generic)
 
 instance FromJSON LatLong where
@@ -73,8 +76,16 @@ instance FromJSON LatLong where
       , elevation = elevation'
       , srs = srs'
       }
+  -- GeoJSON Style
+  parseJSON v@(Array _) = do
+    v' <- parseJSON v
+    case v' of
+      [long', lat'] -> return $ LatLong lat' long' Nothing def
+      [long', lat', elev'] -> return $ LatLong lat' long' (Just elev') def
+      _ -> parseFail ("Invalid GeoJSON point " ++ show v)
   parseJSON v = typeMismatch "Object" v
 
+-- Output using named object style, see `toGeoJSONLatLong` for GeoJSON format
 instance ToJSON LatLong where
   toJSON (LatLong latitude' longitude' elevation' srs') =
     object [
@@ -89,6 +100,11 @@ instance ToJSON LatLong where
       <> "longitude" .= longitude'
       <> "elevation" .?= elevation'
       <> "srs" .?= nothingIfDef srs'
+
+-- | Outpuit a LatLong as a GeoJSON point
+toGeoJSONLatLong :: LatLong -> Value
+toGeoJSONLatLong (LatLong lat' long' Nothing _) = toJSONList [long', lat']
+toGeoJSONLatLong (LatLong lat' long' (Just elev') _) = toJSONList [long', lat', elev']
 
 instance NFData LatLong
 

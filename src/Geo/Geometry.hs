@@ -24,12 +24,18 @@ module Geo.Geometry (
   -- * Utilities
   , centroidFromGeometries
   , unionMaybeBoundingBox
+  -- * GeoJSON
+  , toGeoJSONBoundingBox
+  , toGeoJSONBoundingBoxEncoding
+  , toGeoJSONSimpleGeometry
+  , toGeoJSONSimpleGeometryEncoding
 ) where
 
 import GHC.Generics (Generic)
 import Control.Applicative ((<|>))
 import Control.DeepSeq (NFData)
 import Data.Aeson
+import Data.Aeson.Encoding (list, pair)
 import Data.Aeson.Types (parseFail, unexpected)
 import Data.Default.Class
 import qualified Data.Set as S
@@ -136,15 +142,37 @@ class BoundedGeo a where
   withComputedBoundingBox v = withBoundingBox v (computeBoundingBox v)
 
 instance FromJSON BoundingBox where
+  -- Named object style
   parseJSON (Object v) = do
     sw' <- v .: "sw"
     ne' <- v .: "ne"
     return $ BoundingBox sw' ne'
+  -- GeoJSON style
+  parseJSON v@(Array _) = do
+    v' <- parseJSON v
+    case v' of
+      [swlong', swlat', nelong', nelat'] -> return $ BoundingBox
+        (LatLong swlat' swlong' Nothing def)
+        (LatLong nelat' nelong' Nothing def)
+      [swlong', swlat', swelev', nelong', nelat', neelev'] -> return $ BoundingBox
+        (LatLong swlat' swlong' (Just swelev') def)
+        (LatLong nelat' nelong' (Just neelev') def)
+      _ -> parseFail ("Invalid GeoJSON bounding box " ++ show v)
   parseJSON v = unexpected v
 
 instance ToJSON BoundingBox where
   toJSON (BoundingBox sw ne) = object [ "sw" .= sw, "ne" .= ne ]
   toEncoding (BoundingBox sw ne) = pairs $  "sw" .= sw <> "ne" .= ne
+
+-- | Convert a Bounding into GeoJSON format
+toGeoJSONBoundingBox :: BoundingBox -> Value
+toGeoJSONBoundingBox (BoundingBox (LatLong swlat' swlong' Nothing _) (LatLong nelat' nelong' Nothing _)) = toJSONList [swlong', swlat', nelong', nelat']
+toGeoJSONBoundingBox (BoundingBox (LatLong swlat' swlong' (Just swelev') _) (LatLong nelat' nelong' (Just neelev') _)) = toJSONList [swlong', swlat', swelev', nelong', nelat', neelev']
+toGeoJSONBoundingBox v = error ("Ivalid bounding box " ++ show v)
+
+-- | Convert a Bounding into GeoJSON format
+toGeoJSONBoundingBoxEncoding :: BoundingBox -> Encoding
+toGeoJSONBoundingBoxEncoding bbox = toEncoding $ toGeoJSONBoundingBox bbox
 
 instance NFData BoundingBox
 
@@ -247,22 +275,22 @@ instance FromJSON SimpleGeometry where
     bbox' <- v .:? "bbox"
     case type' :: Text of
       "Point" -> do
-        pt <- v .: "point"
+        pt <- v .: "coordinates"
         return $ Point bbox' pt
       "MultiPoint" -> do
-        pts <- v .: "points"
+        pts <- v .: "coordinates"
         return $ MultiPoint bbox' pts
       "LineString" -> do
-        ln <- v .: "line"
+        ln <- v .: "coordinates"
         return $ LineString bbox' ln
       "MultiLineString" -> do
-        lns <- v .: "lines"
+        lns <- v .: "coordinates"
         return $ MultiLineString bbox' lns
       "Polygon" -> do
-        pg <- v .: "polygon"
+        pg <- v .: "coordinates"
         return $ Polygon bbox' pg
       "MultiPolygon" -> do
-        pgs <- v .: "polygons"
+        pgs <- v .: "coordinates"
         return $ MultiPolygon bbox' pgs
       "GeometryCollection" -> do
         gs <- v .: "geometries"
@@ -270,22 +298,34 @@ instance FromJSON SimpleGeometry where
       t -> parseFail ("Unexpected geometry type " ++ show t)
   parseJSON v = unexpected v
 
-instance ToJSON SimpleGeometry where
-  toJSON (Point bbox pt) = object [ "type" .= ("Point" :: Text), "bbox" .= bbox, "point" .= pt ]
-  toJSON (MultiPoint bbox pts) = object [ "type" .= ("MultiPoint" :: Text), "bbox" .= bbox, "points" .= pts ]
-  toJSON (LineString bbox ln) = object [ "type" .= ("LineString" :: Text), "bbox" .= bbox, "line" .= ln ]
-  toJSON (MultiLineString bbox lns) = object [ "type" .= ("MultiLineString" :: Text), "bbox" .= bbox, "lines" .= lns ]
-  toJSON (Polygon bbox pg) = object [ "type" .= ("Polygon" :: Text), "bbox" .= bbox, "polygon" .= pg ]
-  toJSON (MultiPolygon bbox pgs) = object [ "type" .= ("MultiPolygon" :: Text), "bbox" .= bbox, "polygons" .= pgs ]
-  toJSON (GeometryCollection bbox gs) = object [ "type" .= ("GeometryCollection" :: Text), "bbox" .= bbox, "geometries" .= gs ]
+toJSONGeometry :: (LatLong -> Value) -> (BoundingBox -> Value) -> (SimpleGeometry -> Value) -> SimpleGeometry -> Value
+toJSONGeometry llv bbv _gv (Point bbox pt) = object [ "type" .= ("Point" :: Text), "bbox" .=  (bbv <$> bbox), "coordinates" .= llv pt ]
+toJSONGeometry llv bbv _gv (MultiPoint bbox pts) = object [ "type" .= ("MultiPoint" :: Text), "bbox" .= (bbv <$> bbox), "coordinates" .= map llv pts ]
+toJSONGeometry llv bbv _gv (LineString bbox ln) = object [ "type" .= ("LineString" :: Text), "bbox" .= (bbv <$> bbox), "coordinates" .= map llv ln ]
+toJSONGeometry llv bbv _gv (MultiLineString bbox lns) = object [ "type" .= ("MultiLineString" :: Text), "bbox" .= (bbv <$> bbox), "coordinates" .= map (map llv) lns ]
+toJSONGeometry llv bbv _gv (Polygon bbox pg) = object [ "type" .= ("Polygon" :: Text), "bbox" .= (bbv <$> bbox), "coordinates" .= map llv pg ]
+toJSONGeometry llv bbv _gv (MultiPolygon bbox pgs) = object [ "type" .= ("MultiPolygon" :: Text) , "bbox" .= (bbv <$> bbox), "coordinates" .=  map (map llv) pgs ]
+toJSONGeometry _llv bbv gv (GeometryCollection bbox gs) = object [ "type" .= ("GeometryCollection" :: Text), "bbox" .= (bbv <$> bbox), "geometries" .= map gv gs ]
 
-  toEncoding (Point bbox pt) = pairs $ "type" .= ("Point" :: Text) <> "bbox" .?= bbox <> "point" .= pt
-  toEncoding (MultiPoint bbox pts) = pairs $ "type" .= ("MultiPoint" :: Text) <> "bbox" .?= bbox <> "points" .= pts
-  toEncoding (LineString bbox ln) = pairs $ "type" .= ("LineString" :: Text) <> "bbox" .?= bbox <> "line" .= ln
-  toEncoding (MultiLineString bbox lns) = pairs $ "type" .= ("MultiLineString" :: Text) <> "bbox" .?= bbox <> "lines" .= lns
-  toEncoding (Polygon bbox pg) = pairs $ "type" .= ("Polygon" :: Text) <> "bbox" .?= bbox <> "polygon" .= pg
-  toEncoding (MultiPolygon bbox pgs) = pairs $ "type" .= ("MultiPolygon" :: Text) <> "bbox" .?= bbox <> "polygons" .= pgs
-  toEncoding (GeometryCollection bbox gs) = pairs $ "type" .= ("GeometryCollection" :: Text) <> "bbox" .?= bbox <> "geometries" .= gs
+toJSONGeometryEncoding :: (LatLong -> Encoding) -> (BoundingBox -> Value) -> (SimpleGeometry -> Encoding) -> SimpleGeometry -> Encoding
+toJSONGeometryEncoding llv bbv _gv (Point bbox pt) = pairs $ "type" .= ("Point" :: Text) <> "bbox" .?=  (bbv <$> bbox) <> pair "coordinates" (llv pt)
+toJSONGeometryEncoding llv bbv _gv (MultiPoint bbox pts) = pairs $ "type" .= ("MultiPoint" :: Text) <> "bbox" .?= (bbv <$> bbox) <> pair "coordinates" (list llv pts)
+toJSONGeometryEncoding llv bbv _gv (LineString bbox ln) = pairs $ "type" .= ("LineString" :: Text) <> "bbox" .?= (bbv <$> bbox) <> pair "coordinates" (list llv ln)
+toJSONGeometryEncoding llv bbv _gv (MultiLineString bbox lns) = pairs $ "type" .= ("MultiLineString" :: Text) <> "bbox" .?= (bbv <$> bbox) <> pair "coordinates" (list (list llv) lns)
+toJSONGeometryEncoding llv bbv _gv (Polygon bbox pg) = pairs $ "type" .= ("Polygon" :: Text) <> "bbox" .?= (bbv <$> bbox) <> pair "coordinates" (list llv pg)
+toJSONGeometryEncoding llv bbv _gv (MultiPolygon bbox pgs) = pairs $ "type" .= ("MultiPolygon" :: Text)  <> "bbox" .?= (bbv <$> bbox) <> pair "coordinates" (list (list llv) pgs)
+toJSONGeometryEncoding _llv bbv gv (GeometryCollection bbox gs) = pairs $ "type" .= ("GeometryCollection" :: Text) <> "bbox" .?= (bbv <$> bbox) <> pair "geometries" (list gv gs)
+
+instance ToJSON SimpleGeometry where
+  toJSON g = toJSONGeometry toJSON toJSON toJSON g
+  toEncoding :: SimpleGeometry -> Encoding
+  toEncoding g = toJSONGeometryEncoding toEncoding toJSON toEncoding g
+
+toGeoJSONSimpleGeometry :: SimpleGeometry -> Value
+toGeoJSONSimpleGeometry g = toJSONGeometry toGeoJSONLatLong toGeoJSONBoundingBox toGeoJSONSimpleGeometry g
+
+toGeoJSONSimpleGeometryEncoding :: SimpleGeometry -> Encoding
+toGeoJSONSimpleGeometryEncoding g = toJSONGeometryEncoding (toEncoding . toGeoJSONLatLong) toGeoJSONBoundingBox toGeoJSONSimpleGeometryEncoding g
 
 instance Geo SimpleGeometry where
   centroid (Point _bbox pt) = pt

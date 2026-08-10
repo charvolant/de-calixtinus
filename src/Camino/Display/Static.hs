@@ -29,7 +29,6 @@ import Data.Localised
 import Data.Text (Text)
 import qualified Data.Text.Lazy as LT (concat)
 import qualified Data.Text.Lazy.IO as LTIO (writeFile)
-import qualified Data.Units as U
 import System.Directory
 import System.FilePath
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)

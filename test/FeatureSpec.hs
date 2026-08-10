@@ -37,7 +37,7 @@ fs1 = [r|
   "id": "F1",
   "geometry": {
     "type": "Point",
-    "point": { "latitude": 12.5, "longitude": 55.2 }
+    "coordinates": { "latitude": 12.5, "longitude": 55.2 }
   }
 }
 |] :: LB.ByteString
@@ -63,7 +63,7 @@ fs2 = [r|
   },
   "geometry": {
     "type": "LineString",
-    "line": [
+    "coordinates": [
       { "latitude": 12.5, "longitude": 55.2 },
       { "latitude": 12.52, "longitude": 55.3 }
     ]

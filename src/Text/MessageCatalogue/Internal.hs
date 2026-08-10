@@ -22,14 +22,13 @@ import qualified Control.Exception as CE
 import Control.Monad (void, when)
 import qualified Data.ByteString as BS
 import Data.Char (isLetter)
-import Data.Default.Class (def, Default)
+import Data.Default.Class (def)
 import qualified Data.List as L
 import Data.Localised (IsLocale(..))
 import qualified Data.Map as M
 import qualified Data.Set as S
-import Data.String
 import Data.Summary
-import Data.Text (Text, unpack)
+import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, decodeUtf8Lenient)
 import Language.Haskell.TH

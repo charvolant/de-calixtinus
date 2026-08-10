@@ -38,6 +38,8 @@ module Camino.Config (
   , getAsset
   , getAssets
   , readAsset
+  , readAssetPath
+  , assetPathWithRoot
   -- ** Links
   , LinkConfig(..)
   , LinkType(..)
@@ -47,6 +49,8 @@ module Camino.Config (
   , CacheConfig(..)
   , getCacheConfig
   , createCache
+  -- * Areas
+  , defaultBoundingBox
 ) where
 
 import GHC.Generics (Generic)
@@ -62,8 +66,10 @@ import Data.List (find)
 import Data.Localised
 import qualified Data.Map as M
 import Data.Region (HasRegionConfig(..), RegionConfig(..), createRegionConfig)
-import Data.Text (Text, breakOn, drop, unpack)
+import Data.Text (Text, breakOn, drop, isPrefixOf, unpack)
 import Data.Yaml (ParseException, decodeEither')
+import Geo.Geometry (BoundingBox(..))
+import Geo.LatLong (LatLong(..))
 import Network.HTTP.Simple
 
 -- | Configuration for a plan cache
@@ -171,11 +177,11 @@ instance ToJSON CrossOriginType
 
 -- | Configuration for an external asset source
 data AssetConfig = Asset {
-  assetId :: Text, -- ^ The asset identifier
-  assetType :: AssetType, -- ^ The type of asset
-  assetPath :: Text, -- ^ The path to the asset
-  assetIntegrity :: Maybe Text, -- ^ The integrity checksum for the asset
-  assetCrossOrigin :: CrossOriginType -- ^ How to handle cross-origin requests
+    assetId :: Text -- ^ The asset identifier
+  , assetType :: AssetType -- ^ The type of asset
+  , assetPath :: Text -- ^ The path to the asset
+  , assetIntegrity :: Maybe Text -- ^ The integrity checksum for the asset
+  , assetCrossOrigin :: CrossOriginType -- ^ How to handle cross-origin requests
 } deriving (Show)
 
 instance FromJSON AssetConfig where
@@ -192,19 +198,40 @@ instance ToJSON AssetConfig where
   toJSON (Asset id' type' path' integrity' cors') =
     object [ "id" .= id', "type" .= type', "path" .= path', "integrity" .= integrity', "crossorigin" .= cors' ]
 
+-- | Get the path with a root attached, if the source doesn't have an absolute path
+assetPathWithRoot :: AssetConfig -> Text -> Text
+assetPathWithRoot asset root = let
+    path = assetPath asset
+  in
+    if isPrefixOf "http://" path then
+      path
+    else if isPrefixOf "https://" path then
+      path
+    else if isPrefixOf "http:" path then
+      root <> (Data.Text.drop 5 path)
+    else if isPrefixOf "https:" path then
+      root <> (Data.Text.drop 6 path)
+    else if isPrefixOf "file:" path then
+      path
+    else
+      root <> path
+
 -- | Read an asset via it's path, via HTTP or as a file, depending on prefix
 readAsset :: AssetConfig -> IO LB.ByteString
-readAsset asset = let
-    path = assetPath asset
+readAsset asset = readAssetPath (assetPath asset)
+
+-- | Read an asset via it's path, via HTTP or as a file, depending on prefix
+readAssetPath :: Text -> IO LB.ByteString
+readAssetPath path = let
     path' = unpack path
     (scheme, path'') = breakOn ":" path
   in
     if scheme == "file" then
       LB.readFile (unpack $ Data.Text.drop 1 path'')
     else if null path' then
-      LB.readFile path'
+      LB.readFile (path')
     else if scheme == "http" || scheme == "https" then do
-      request <- parseRequest path'
+      request <- parseRequest (path')
       response <- httpLBS request
       return $ getResponseBody response
     else
@@ -393,8 +420,15 @@ instance Default Config where
         , cacheConfigFileSize = Just 1000
         , cacheConfigFileExpiry = Just 30.0
         , cacheConfigFileStore = Just "$TMP/de-calixtinus/store"
-      }
-    ],
+      },
+      CacheConfig {
+           cacheConfigID = "features"
+         , cacheConfigMemSize = Just 100
+         , cacheConfigFileSize = Just 1000
+         , cacheConfigFileExpiry = Just 1.0
+         , cacheConfigFileStore = Just "$TMP/de-calixtinus/features"
+       }
+   ],
     configNotice = Nothing,
     configDebug = Just False
   }
@@ -598,3 +632,9 @@ readConfigFile file = do
   return $ case decoded of
     Left ex -> error $ show ex
     Right config' -> config'
+
+-- | The bounding box that covers most caminos
+--
+--   This covers Spain and Portugal and the majority of caminos
+defaultBoundingBox :: BoundingBox
+defaultBoundingBox = BoundingBox (LatLong 36.0 (-9.0) Nothing def) (LatLong 44.0 (-1.0) Nothing def)

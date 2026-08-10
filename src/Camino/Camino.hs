@@ -962,8 +962,10 @@ locationNameLabel location = localiseDefault $ locationName location
 
 -- | Get a bounding box for set of locations
 locationBbox :: (Foldable f) => f Location -- ^ The collection of locations
- -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
-locationBbox locations = (LatLong (maximum lats) (minimum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just minelev)  def, LatLong (minimum lats) (maximum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just maxelev) def)
+ -> BoundingBox -- ^ The bouding box (top-left, bottom-right)
+locationBbox locations = BoundingBox
+    (LatLong (minimum lats) (minimum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just minelev)  def)
+    (LatLong (maximum lats) (maximum longs) (if maxelev == 0.0 && minelev == 0.0 then Nothing else Just maxelev) def)
   where
     positions = map locationPosition $ toList locations
     lats = map latitude positions
@@ -1954,7 +1956,7 @@ caminoNameLabel camino = localiseDefault $ caminoName camino
 
 -- | Get a bounding box for the camino
 caminoBbox :: Camino -- ^ The entire camino
- -> (LatLong, LatLong) -- ^ The bouding box (top-left, bottom-right)
+ -> BoundingBox -- ^ The bouding box (top-left, bottom-right)
 caminoBbox camino = locationBbox $ caminoLocations camino
 
 -- | All the locations on the camino assumed to be part of the default route
@@ -2042,7 +2044,7 @@ caminoRegions camino = foldl (\rs -> \l -> maybe rs (\r -> S.insert r rs) (locat
 
 -- Get all the geographical features as a map
 caminoFeatureMap :: Camino -> M.Map Text Feature
-caminoFeatureMap camino = foldr (\r -> \fs -> M.union fs (M.fromList $ map (\f -> (placeholderID f, f)) (routeFeatures r))) M.empty (caminoRoutes camino)
+caminoFeatureMap camino = foldr (\r -> \fs -> M.union fs (M.fromList $ map (\f -> (featureID f, f)) (routeFeatures r))) M.empty (caminoRoutes camino)
 
 -- | Get any transport links from this location
 locationTransportLinks :: Camino -> Location -> [Leg]

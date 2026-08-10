@@ -26,7 +26,7 @@ Yesod application that allows the user to enter preferences and have a route gen
 module Camino.Server.Application where
 
 import Camino.Camino
-import Camino.Config (AssetConfig(..), Config(..), getAsset, getNotice, getWebRoot)
+import Camino.Config (AssetConfig(..), Config(..), assetPathWithRoot, defaultBoundingBox, getAsset, getNotice, getWebRoot, readAssetPath)
 import Camino.Planner (Solution(..), Pilgrimage, normaliseSolution, planCamino)
 import Camino.Preferences
 import Camino.Display.Html
@@ -41,7 +41,8 @@ import Codec.Xlsx
 import Data.Cache
 import Data.DublinCore
 import Data.Localised
-import Data.Maybe (isJust)
+import qualified Data.Map as M
+import Data.Maybe (catMaybes, isJust)
 import Data.Metadata
 import Data.Text (Text, unpack, pack)
 import Data.Time.Clock (getCurrentTime, utctDay)
@@ -51,7 +52,7 @@ import qualified Data.Units as U
 import Data.Util
 import Data.UUID (toText)
 import Data.UUID.V4
-import Geo.LatLong
+import Geo.Feature (SimpleFeature, readGeoJSONFeature)
 import Graph.Graph
 import Text.Hamlet
 import Text.Read (readMaybe)
@@ -251,8 +252,47 @@ getPlanKmlR sid = do
           Can't find #{sid}
         |]
       notFound
-    Just solution ->
-      showKml solution
+    Just solution -> do
+      features <- liftIO $ do
+        let featureCache = caminoAppFeatures master
+        let camino = preferenceCamino (solutionCaminoPreferences solution)
+        let featureAsset = getAsset "features" $ caminoAppConfig master
+        let root = getWebRoot $ caminoAppConfig master
+        collectFeatures featureCache camino featureAsset root
+      showKml solution features
+
+-- Collect features either from the cache or from the source (and then cache them)
+collectFeatures :: Cache Text SimpleFeature -> Camino -> Maybe AssetConfig -> Text -> IO (M.Map Text SimpleFeature)
+collectFeatures _cache _camino Nothing _root = return $ M.empty
+collectFeatures cache camino (Just asset) root = do
+  let apath = assetPathWithRoot asset root
+  let cfs = M.elems $ caminoFeatureMap camino
+  features <- mapM (\f -> do
+    let fid = featureID f
+    let mgeom = featureGeometry f
+    case mgeom of
+      Nothing -> do
+        putStrLn ("No geometry for " ++ show fid)
+        return Nothing
+      (Just geom) -> do
+        mcf <- cacheLookup cache (featureID f)
+        mcf' <- case mcf of
+          (Just _) -> return $ mcf
+          Nothing -> do
+            ca <- readAssetPath (apath <> "/" <> geom)
+            let mcf'' = readGeoJSONFeature ca
+            case mcf'' of
+              (Left e) -> do
+                putStrLn ("Unable to load " ++ unpack fid ++ " from " ++ unpack geom ++ ": " ++ e)
+                return Nothing
+              (Right cf') -> return $ Just cf'
+        case mcf' of
+          Nothing -> return Nothing
+          (Just cf') -> do
+            cachePut cache fid cf'
+            return $ Just (fid, cf')
+    ) cfs
+  return $ M.fromList $ catMaybes features
 
 getPlanXlsxR :: Text -> Handler TypedContent
 getPlanXlsxR sid = do
@@ -517,15 +557,15 @@ kmlFileName :: CaminoPreferences -> Maybe Pilgrimage -> Text
 kmlFileName camino Nothing = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> ".kml"
 kmlFileName camino (Just trip) = (toFileName $ caminoNameLabel $ preferenceCamino camino) <> "-" <> (toFileName $ locationNameLabel $ start trip) <> "-" <> (toFileName $ locationNameLabel $ finish trip) <> ".kml"
 
-showKml :: Solution -> Handler TypedContent
-showKml solution = do
+showKml :: Solution -> M.Map Text SimpleFeature -> Handler TypedContent
+showKml solution features = do
     master <- getYesod
     locales <- getLocales
     let tprefs = solutionTravelPreferences solution
     let cprefs = solutionCaminoPreferences solution
     let pilgrimage = solutionPilgrimage solution
     let config = caminoAppConfig master
-    let kml = createCaminoDoc config locales tprefs cprefs (Just solution)
+    let kml = createCaminoDoc config locales tprefs cprefs (Just solution) features
     let result = renderLBS (def { rsUseCDATA = useCDATA }) kml
     addHeader "content-disposition" ("attachment; filename=\"" <> kmlFileName cprefs pilgrimage <> "\"")
     return $ TypedContent kmlType (toContent result)

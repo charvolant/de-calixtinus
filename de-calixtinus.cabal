@@ -68,7 +68,6 @@ library
       Data.Xlsx
       Data.Xlsx.Internal
       Geo.Feature
-      Geo.GeoJSON
       Geo.Geometry
       Geo.LatLong
       Graph.Graph
@@ -583,7 +582,6 @@ test-suite de-calixtinus-test
       EventSpec
       FeatureSpec
       FormattingSpec
-      GeoJSONSpec
       GeometrySpec
       GraphSpec
       LatLongSpec

@@ -12,7 +12,6 @@ Portability : POSIX
 module Main (main) where
 
 import Camino.Display.JSON
-import Data.Aeson
 import Data.Aeson.Formatting
 import qualified Data.ByteString.Lazy as LB
 import Data.Default.Class
@@ -20,12 +19,9 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.Text (Text)
 import Data.Util (backupFilePath, roundBy)
-import Formatting
 import Geo.Feature
-import Geo.GeoJSON
 import Geo.Geometry
 import Geo.LatLong
-import Graph.Graph
 import Network.Google.Elevation
 import Options.Applicative
 import System.Directory
@@ -62,7 +58,7 @@ elevations opts Nothing = do
     let feature = either error id $ readGeoJSONFeature bytes'
     feature' <- addElevations api feature
     let pos = if isMultiGeometry feature' then feature3PrintOptions else feature2PrintOptions
-    LB.putStr $ encodePretty pos $ toGJFeature feature'
+    LB.putStr $ encodePretty pos $ toGeoJSONFeature feature'
 elevations opts (Just file) = do
     let api = def { apiKey = mapApiKey opts }
     bytes' <- LB.readFile file
@@ -71,7 +67,7 @@ elevations opts (Just file) = do
     backup <- backupFilePath file
     renameFile file backup
     let pos = if isMultiGeometry feature' then feature3PrintOptions else feature2PrintOptions
-    LB.writeFile file $ encodePretty pos $ toGJFeature feature'
+    LB.writeFile file $ encodePretty pos $ toGeoJSONFeature feature'
 
 main :: IO ()
 main = do

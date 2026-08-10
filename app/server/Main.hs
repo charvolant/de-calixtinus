@@ -54,14 +54,16 @@ main = do
   static' <- (if devel opts then staticDevel else static) (staticDir opts)
   feature' <- (if devel opts then staticDevel else static) (featureDir opts)
   image' <- (if devel opts then staticDevel else static) (imageDir opts)
-  cache' <- createCache config'' "plans"
+  planCache' <- createCache config'' "plans"
+  featureCache' <- createCache config'' "features"
   let app = CaminoApp {
       caminoAppPort = port opts
     , caminoAppDevel = devel opts
     , caminoAppStatic = static'
     , caminoAppFeature = feature'
     , caminoAppImage = image'
-    , caminoAppPlans = cache'
+    , caminoAppPlans = planCache'
+    , caminoAppFeatures = featureCache'
     , caminoAppConfig = config''
     , caminoAppCaminoConfig = cconfig'
   }

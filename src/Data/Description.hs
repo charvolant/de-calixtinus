@@ -16,11 +16,12 @@ Handle detailed, potentially localised, descriptive information.
 This information is so common that it gets its own collection.
 -}
 module Data.Description (
-  -- * Descriptive Information
+  -- * Descriptive Inlformation
     Description(..)
-  , descriptionSummary
   , wildcardDescription
-  -- ** Images
+  , localisedDescriptionText
+  , descriptionSummary
+ -- ** Images
   , Image(..)
   , imageAttribution
   , imageOrigin
@@ -227,13 +228,20 @@ instance NFData Description
 wildcardDescription :: Text -> Description
 wildcardDescription txt = Description Nothing (Just (wildcardText txt)) [] Nothing Nothing
 
+
 -- | Get a summary of the description
 --
 --   This is either the explicit summary, or the first line of the description text.
 --   The result is an appropriate localised collection.
 --
---  TODO The summary should just be the first sentence of the description text, if constructed.
 descriptionSummary :: Description -> Localised TaggedText
 descriptionSummary (Description Nothing Nothing _ _ _) = wildcardText ""
 descriptionSummary (Description (Just summary) _ _ _ _) = summary
-descriptionSummary (Description Nothing (Just txt) _ _ _) = txt
+descriptionSummary (Description Nothing (Just txt) _ _ _) = firstSentences txt
+
+-- | Get a full text of the description, using newlines between
+localisedDescriptionText :: [Locale] -> Description -> Text
+localisedDescriptionText locales desc = intercalate "\n" $
+  (maybe [] (\t -> [localiseText locales t]) (descText desc)) ++
+  (Prelude.map (\n -> " * " <> localiseText locales (noteText n)) (descNotes desc)) ++
+  (maybe [] (\a -> [maybe "" Data.Text.show $ link <$> localise locales a]) (descAbout desc))
